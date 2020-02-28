@@ -1,0 +1,40 @@
+# https://github.com/awslabs/serverless-application-model/blob/develop/versions/2016-10-31.md
+# Indentation needs to be set with spaces, because YAML...
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: API endpoint to simulate the result of a Battlegrounds battle
+
+Globals:
+    Api:
+        # API Gateway regional endpoints
+        EndpointConfiguration: EDGE
+        Cors:
+            AllowMethods: "'*'"
+            AllowHeaders: "'*'"
+            AllowOrigin: "'*'"
+
+Resources:
+    SimulateBgsBattleFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: simulate-bgs-battle.default
+            Runtime: nodejs8.10
+            Timeout: 180
+            CodeUri: ./dist/simulate-bgs-battle
+            Policies:
+                - AWSLambdaVPCAccessExecutionRole
+                - AmazonSESFullAccess
+                - SecretsManagerReadWrite
+            Events:
+                GetMatchStatsResource:
+                    Type: Api
+                    Properties:
+                        Path: /{proxy+}
+                        Method: any
+
+Outputs:
+    SimulateBgsBattleApi:
+        Description: URL to trigger a simulation of a battlegrounds battle
+        Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+        Export:
+            Name: SimulateBgsBattleApi

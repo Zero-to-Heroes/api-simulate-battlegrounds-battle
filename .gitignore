@@ -1,0 +1,10 @@
+# NodeJS
+node_modules
+dist
+
+# Editor
+.vscode
+
+# Litter
+*.log
+template.packaged.yaml
