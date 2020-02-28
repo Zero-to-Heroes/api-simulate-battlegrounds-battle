@@ -109,42 +109,106 @@ export class Simulator {
 	): [readonly BoardEntity[], readonly BoardEntity[]] {
 		const newAttackingEntity = this.bumpEntities(attackingEntity, defendingEntity);
 		const newDefendingEntity = this.bumpEntities(defendingEntity, attackingEntity);
-		if (newAttackingEntity.health <= 0) {
-			console.log('newAttackingEntity died', newAttackingEntity);
-			attackingBoard = this.processMinionDeath(attackingBoard, newAttackingEntity);
-		} else {
-			const attackerIndex: number = attackingBoard
-				.map(entity => entity.entityId)
-				.indexOf(newAttackingEntity.entityId);
-			const newBoardA = [...attackingBoard];
-			newBoardA.splice(attackerIndex, 1, newAttackingEntity);
-			attackingBoard = newBoardA;
+		const updatedDefenders = [newDefendingEntity];
+		// Cleave
+		if (attackingEntity.cleave) {
+			const neighbours: readonly BoardEntity[] = this.getNeighbours(defendingBoard, defendingEntity);
+			updatedDefenders.push(...neighbours.map(entity => this.bumpEntities(entity, attackingEntity)));
 		}
-		if (newDefendingEntity.health <= 0) {
-			defendingBoard = this.processMinionDeath(defendingBoard, newDefendingEntity);
-		} else {
-			const defenderIndex: number = defendingBoard
-				.map(entity => entity.entityId)
-				.indexOf(newDefendingEntity.entityId);
-			const newBoardD = [...defendingBoard];
-			newBoardD.splice(defenderIndex, 1, newDefendingEntity);
-			defendingBoard = newBoardD;
-		}
+		// Approximate the play order
+		updatedDefenders.sort((a, b) => a.entityId - b.entityId);
+
+		attackingBoard = this.processMinionDeath(attackingBoard, [newAttackingEntity]);
+		// if (newAttackingEntity.health <= 0) {
+		// 	console.log('newAttackingEntity died', newAttackingEntity);
+		// 	attackingBoard = this.processMinionDeath(attackingBoard, newAttackingEntity);
+		// } else {
+		// 	const attackerIndex: number = attackingBoard
+		// 		.map(entity => entity.entityId)
+		// 		.indexOf(newAttackingEntity.entityId);
+		// 	const newBoardA = [...attackingBoard];
+		// 	newBoardA.splice(attackerIndex, 1, newAttackingEntity);
+		// 	attackingBoard = newBoardA;
+		// }
+		// We have to first remove all the minions, so that there is room for the deathrattles to proc
+		defendingBoard = this.processMinionDeath(defendingBoard, updatedDefenders);
+		// let defenderIndexes: number[];
+		// [defendingBoard, defenderIndexes] = this.makeMinionsDie(defendingBoard, updatedDefenders);
+
+		// for (let i = 0; i < defenderIndexes.length; i++) {
+		// 	const defender = updatedDefenders[i];
+		// 	const index = defenderIndexes[i];
+		// 	if (defender.health <= 0) {
+		// 		defendingBoard = this.buildBoardAfterDeathrattleSpawns(defendingBoard, defender, index);
+		// 	} else {
+		// 		// const defenderIndex: number = defendingBoard
+		// 		// 	.map(entity => entity.entityId)
+		// 		// 	.indexOf(defender.entityId);
+		// 		const newBoardD = [...defendingBoard];
+		// 		newBoardD.splice(index, 1, defender);
+		// 		defendingBoard = newBoardD;
+		// 	}
+		// }
 		return [attackingBoard, defendingBoard];
 	}
 
-	private processMinionDeath(board: readonly BoardEntity[], deadEntity: BoardEntity): readonly BoardEntity[] {
-		// For now ignore all deathrattles and special effects
-		// const boardWithoutDeadEntity = board.filter(entity => entity.entityId !== deadEntity.entityId);
-		// console.log('boardWithoutDeadEntity', boardWithoutDeadEntity, deadEntity);
-		const boardWithDeathrattles = this.buildBoardAfterDeathrattleSpawns(board, deadEntity);
-		console.log('boardWithDeathrattles', boardWithDeathrattles);
-		return boardWithDeathrattles;
+	private getNeighbours(board: readonly BoardEntity[], entity: BoardEntity): readonly BoardEntity[] {
+		const index = board.map(e => e.entityId).indexOf(entity.entityId);
+		const neighbours = [];
+		if (index - 1 >= 0) {
+			neighbours.push(board[index - 1]);
+		}
+		neighbours.push(entity);
+		if (index + 1 < board.length) {
+			neighbours.push(board[index + 1]);
+		}
+		return neighbours;
+	}
+
+	private processMinionDeath(
+		board: readonly BoardEntity[],
+		entities: readonly BoardEntity[],
+	): readonly BoardEntity[] {
+		let indexes: number[];
+		[board, indexes] = this.makeMinionsDie(board, entities);
+
+		for (let i = 0; i < indexes.length; i++) {
+			const entity = entities[i];
+			const index = indexes[i];
+			if (entity.health <= 0) {
+				board = this.buildBoardAfterDeathrattleSpawns(board, entity, index);
+			} else {
+				// const defenderIndex: number = defendingBoard
+				// 	.map(entity => entity.entityId)
+				// 	.indexOf(defender.entityId);
+				const newBoardD = [...board];
+				newBoardD.splice(index, 1, entity);
+				board = newBoardD;
+			}
+		}
+		return board;
+	}
+
+	private makeMinionsDie(
+		defendingBoard: readonly BoardEntity[],
+		updatedDefenders: readonly BoardEntity[],
+	): [readonly BoardEntity[], number[]] {
+		const indexes = [];
+		let boardCopy = [...defendingBoard];
+		for (const defender of updatedDefenders) {
+			const index = boardCopy.map(entity => entity.entityId).indexOf(defender.entityId);
+			indexes.push(index);
+			if (defender.health <= 0) {
+				boardCopy.splice(index, 1);
+			}
+		}
+		return [boardCopy, indexes];
 	}
 
 	private buildBoardAfterDeathrattleSpawns(
 		board: readonly BoardEntity[],
 		deadEntity: BoardEntity,
+		deadMinionIndex: number,
 	): readonly BoardEntity[] {
 		const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 			deadEntity,
@@ -176,10 +240,11 @@ export class Simulator {
 		const roomToSpawn: number = 7 - board.length;
 		const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
 		console.log('spawnedEntities', spawnedEntities);
-		const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);
-		console.log('deadMinionIndex', deadMinionIndex, board);
+		// const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);
+		// console.log('deadMinionIndex', deadMinionIndex, board);
 		const newBoard = [...board];
-		newBoard.splice(deadMinionIndex, 1, ...spawnedEntities);
+		// Minion has already been removed from the board in the previous step
+		newBoard.splice(deadMinionIndex, 0, ...spawnedEntities);
 		console.log('newBoard', newBoard);
 		return newBoard;
 	}

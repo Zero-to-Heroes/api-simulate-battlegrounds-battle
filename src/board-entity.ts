@@ -7,6 +7,7 @@ export interface BoardEntity {
 	divineShield: boolean;
 	// Because Lich King can give Reborn to a non-reborn minion
 	reborn: boolean;
+	cleave: boolean;
 	enchantmentsCardIds: readonly string[];
 	attacksPerformed: number;
 }
