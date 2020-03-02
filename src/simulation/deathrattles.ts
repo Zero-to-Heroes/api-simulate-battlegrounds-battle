@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
@@ -105,6 +106,42 @@ export const spawnEntitiesFromDeathrattle = (
 			return [
 				buildBoardEntity('TB_BaconUps_049t', allCards, sharedState.currentEntityId++),
 				buildBoardEntity('TB_BaconUps_049t', allCards, sharedState.currentEntityId++),
+			];
+		case CardIds.Collectible.Neutral.SatedThreshadon:
+			return [
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+			];
+		case CardIds.NonCollectible.Neutral.SatedThreshadonTavernBrawl:
+			return [
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+					allCards,
+					sharedState.currentEntityId++,
+				),
 			];
 		// Ghastcoiler
 		case 'BGS_008':

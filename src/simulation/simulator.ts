@@ -7,6 +7,7 @@ import { buildBoardEntity } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattles';
 import { SharedState } from './shared-state';
+import { handleSpawnEffects } from './spawn-effect';
 
 // New simulator should be instantiated for each match
 // TODO: implement all the cards, including:
@@ -133,36 +134,7 @@ export class Simulator {
 		updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 
 		attackingBoard = this.processMinionDeath(attackingBoard, [newAttackingEntity]);
-		// if (newAttackingEntity.health <= 0) {
-		// 	console.log('newAttackingEntity died', newAttackingEntity);
-		// 	attackingBoard = this.processMinionDeath(attackingBoard, newAttackingEntity);
-		// } else {
-		// 	const attackerIndex: number = attackingBoard
-		// 		.map(entity => entity.entityId)
-		// 		.indexOf(newAttackingEntity.entityId);
-		// 	const newBoardA = [...attackingBoard];
-		// 	newBoardA.splice(attackerIndex, 1, newAttackingEntity);
-		// 	attackingBoard = newBoardA;
-		// }
-		// We have to first remove all the minions, so that there is room for the deathrattles to proc
 		defendingBoard = this.processMinionDeath(defendingBoard, updatedDefenders);
-		// let defenderIndexes: number[];
-		// [defendingBoard, defenderIndexes] = this.makeMinionsDie(defendingBoard, updatedDefenders);
-
-		// for (let i = 0; i < defenderIndexes.length; i++) {
-		// 	const defender = updatedDefenders[i];
-		// 	const index = defenderIndexes[i];
-		// 	if (defender.health <= 0) {
-		// 		defendingBoard = this.buildBoardAfterDeathrattleSpawns(defendingBoard, defender, index);
-		// 	} else {
-		// 		// const defenderIndex: number = defendingBoard
-		// 		// 	.map(entity => entity.entityId)
-		// 		// 	.indexOf(defender.entityId);
-		// 		const newBoardD = [...defendingBoard];
-		// 		newBoardD.splice(index, 1, defender);
-		// 		defendingBoard = newBoardD;
-		// 	}
-		// }
 		return [attackingBoard, defendingBoard];
 	}
 
@@ -192,9 +164,6 @@ export class Simulator {
 			if (entity.health <= 0) {
 				board = this.buildBoardAfterDeathrattleSpawns(board, entity, index);
 			} else {
-				// const defenderIndex: number = defendingBoard
-				// 	.map(entity => entity.entityId)
-				// 	.indexOf(defender.entityId);
 				const newBoardD = [...board];
 				newBoardD.splice(index, 1, entity);
 				board = newBoardD;
@@ -230,7 +199,7 @@ export class Simulator {
 			this.spawns,
 			this.sharedState,
 		);
-		console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
+		// console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
 		const entitiesFromReborn: readonly BoardEntity[] = deadEntity.reborn
 			? [
 					{
@@ -250,17 +219,18 @@ export class Simulator {
 			...entitiesFromReborn,
 			...entitiesFromEnchantments,
 		];
-		console.log('candidateEntities', candidateEntities);
+		// console.log('candidateEntities', candidateEntities);
 		const roomToSpawn: number = 7 - board.length;
 		const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
-		console.log('spawnedEntities', spawnedEntities);
+		// console.log('spawnedEntities', spawnedEntities);
 		// const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);
 		// console.log('deadMinionIndex', deadMinionIndex, board);
 		const newBoard = [...board];
 		// Minion has already been removed from the board in the previous step
 		newBoard.splice(deadMinionIndex, 0, ...spawnedEntities);
-		console.log('newBoard', newBoard);
-		return newBoard;
+		const boardAfterMinionSpawnEffects = handleSpawnEffects(newBoard, spawnedEntities, this.allCards);
+		console.log('newBoard', boardAfterMinionSpawnEffects);
+		return boardAfterMinionSpawnEffects;
 	}
 
 	private bumpEntities(entity: BoardEntity, bumpInto: BoardEntity) {
