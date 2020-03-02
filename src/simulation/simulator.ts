@@ -5,7 +5,8 @@ import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { buildBoardEntity } from '../utils';
 import { applyAuras, removeAuras } from './auras';
-import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattles';
+import { handleDeathrattleEffects } from './deathrattle-effects';
+import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
 
@@ -193,6 +194,7 @@ export class Simulator {
 		deadEntity: BoardEntity,
 		deadMinionIndex: number,
 	): readonly BoardEntity[] {
+		board = handleDeathrattleEffects(board, deadEntity, deadMinionIndex);
 		const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 			deadEntity,
 			this.allCards,
