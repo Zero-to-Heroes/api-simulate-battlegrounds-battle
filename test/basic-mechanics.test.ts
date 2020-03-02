@@ -1,6 +1,6 @@
 import { BoardEntity } from '../src/board-entity';
 import { AllCardsService } from '../src/cards/cards';
-import { CardsSpawn } from '../src/cards/cards-spawn.service';
+import { CardsData } from '../src/cards/cards-data';
 import { PlayerEntity } from '../src/player-entity';
 import { Simulator } from '../src/simulation/simulator';
 import { buildBoardEntity } from '../src/utils';
@@ -9,7 +9,7 @@ import cardsJson from './cards.json';
 test('Cleave works properly', async () => {
 	const cards = buildCardsService();
 	await cards.initializeCardsDb();
-	const spawns = new CardsSpawn(cards);
+	const spawns = new CardsData(cards);
 	const simulator = new Simulator(cards, spawns);
 	const playerBoard: readonly BoardEntity[] = [
 		{ ...buildBoardEntity('LOOT_078', cards, 1), attack: 10 } as BoardEntity, // Cave Hydra

@@ -14,12 +14,16 @@ const REMOVED_CARD_IDS = [
 	'OG_300', // Boogeymonster
 ];
 
-export class CardsSpawn {
+export class CardsData {
 	public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
 	public sneedsSpawns: readonly string[];
+	public auraEnchantments: readonly string[][];
+	public auraOrigins: readonly string[];
 
-	constructor(private readonly allCards: AllCardsService) {}
+	constructor(private readonly allCards: AllCardsService) {
+		this.init();
+	}
 
 	public init() {
 		this.shredderSpawns = this.allCards
@@ -44,5 +48,16 @@ export class CardsSpawn {
 			.filter(card => card.rarity === 'Legendary')
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map(card => card.id);
+		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
+		// and that stop once the origin entity leaves play (so it doesn't include buffs)
+		this.auraEnchantments = [
+			['EX1_162', 'EX1_162e'],
+			['TB_BaconUps_088', 'TB_BaconUps_088e'], // Dire Wolf Alpha
+			['EX1_185', 'EX1_185e'],
+			['TB_BaconUps_053', 'TB_BaconUps_053e'], // Siegebreaker
+			['GVG_021', 'GVG_021e'],
+			['TB_BaconUps_060', 'TB_BaconUps_060e'], // Mal'Ganis
+		];
+		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
 	}
 }

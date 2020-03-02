@@ -1,13 +1,13 @@
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
-import { CardsSpawn } from '../cards/cards-spawn.service';
+import { CardsData } from '../cards/cards-data';
 import { buildBoardEntity } from '../utils';
 import { SharedState } from './shared-state';
 
 export const spawnEntitiesFromDeathrattle = (
 	deadEntity: BoardEntity,
 	allCards: AllCardsService,
-	spawns: CardsSpawn,
+	spawns: CardsData,
 	sharedState: SharedState,
 ): readonly BoardEntity[] => {
 	switch (deadEntity.cardId) {
@@ -184,7 +184,7 @@ export const spawnEntitiesFromDeathrattle = (
 export const spawnEntitiesFromEnchantments = (
 	deadEntity: BoardEntity,
 	allCards: AllCardsService,
-	spawns: CardsSpawn,
+	spawns: CardsData,
 	sharedState: SharedState,
 ): readonly BoardEntity[] => {
 	switch (deadEntity.cardId) {

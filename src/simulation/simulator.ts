@@ -1,9 +1,10 @@
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
-import { CardsSpawn } from '../cards/cards-spawn.service';
+import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { buildBoardEntity } from '../utils';
+import { applyAuras, removeAuras } from './auras';
 import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattles';
 import { SharedState } from './shared-state';
 
@@ -23,10 +24,12 @@ export class Simulator {
 	private sharedState: SharedState;
 
 	// It should come already initialized
-	constructor(private readonly allCards: AllCardsService, private readonly spawns: CardsSpawn) {
+	constructor(private readonly allCards: AllCardsService, private readonly spawns: CardsData) {
 		this.sharedState = new SharedState();
 	}
 
+	// Here we suppose that the BoardEntity only contain at most the enchantments that are linked
+	// to auras (so we probably should hand-filter that, since there are actually few auras)
 	public simulateSingleBattle(
 		playerBoard: readonly BoardEntity[],
 		playerEntity: PlayerEntity,
@@ -47,20 +50,20 @@ export class Simulator {
 		console.log('starting player', this.currentAttacker);
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			console.log('starting round', playerBoard.length, opponentBoard.length, playerBoard, opponentBoard);
+			if (this.currentAttacker === 0) {
+				[playerBoard, opponentBoard] = this.simulateAttack(
+					playerBoard,
+					opponentBoard,
+					this.lastPlayerAttackerEntityId,
+				);
+			} else {
+				[opponentBoard, playerBoard] = this.simulateAttack(
+					opponentBoard,
+					playerBoard,
+					this.lastOpponentAttackerEntityId,
+				);
+			}
 			this.currentAttacker = (this.currentAttacker + 1) % 2;
-			// if (this.currentAttacker === 0) {
-			[playerBoard, opponentBoard] = this.simulateAttack(
-				playerBoard,
-				opponentBoard,
-				this.lastPlayerAttackerEntityId,
-			);
-			// } else {
-			// 	[opponentBoard, playerBoard] = this.simulateAttack(
-			// 		opponentBoard,
-			// 		playerBoard,
-			// 		this.lastOpponentAttackerEntityId,
-			// 	);
-			// }
 		}
 		console.log('battle over', playerBoard, opponentBoard);
 		if (playerBoard.length === 0 && opponentBoard.length === 0) {
@@ -85,6 +88,13 @@ export class Simulator {
 		defendingBoard: readonly BoardEntity[],
 		lastAttackerEntityId: number,
 	): [readonly BoardEntity[], readonly BoardEntity[]] {
+		// TODO: handle windfury
+		if (attackingBoard.length === 0 || defendingBoard.length === 0) {
+			return [attackingBoard, defendingBoard];
+		}
+		attackingBoard = applyAuras(attackingBoard, this.spawns);
+		defendingBoard = applyAuras(defendingBoard, this.spawns);
+
 		const attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {
 			const defendingEntity: BoardEntity = this.getDefendingEntity(defendingBoard);
@@ -98,6 +108,10 @@ export class Simulator {
 			console.log('attacking board', attackingBoard, 'defending board', defendingBoard);
 		}
 		// return [[], []];
+		console.log('before removing auras', attackingBoard, defendingBoard);
+		attackingBoard = removeAuras(attackingBoard, this.spawns);
+		defendingBoard = removeAuras(defendingBoard, this.spawns);
+		console.log('after removing auras', attackingBoard, defendingBoard);
 		return [attackingBoard, defendingBoard];
 	}
 
