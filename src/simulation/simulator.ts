@@ -92,8 +92,8 @@ export class Simulator {
 		if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 			return [attackingBoard, defendingBoard];
 		}
-		attackingBoard = applyAuras(attackingBoard, this.spawns);
-		defendingBoard = applyAuras(defendingBoard, this.spawns);
+		attackingBoard = applyAuras(attackingBoard, this.spawns, this.allCards);
+		defendingBoard = applyAuras(defendingBoard, this.spawns, this.allCards);
 
 		const attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {

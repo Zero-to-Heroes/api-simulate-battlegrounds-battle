@@ -19,4 +19,5 @@ export interface ReferenceCard {
 	readonly rarity?: RarityTYpe;
 	readonly collectible?: boolean;
 	readonly techLevel?: number;
+	readonly race?: string;
 }
