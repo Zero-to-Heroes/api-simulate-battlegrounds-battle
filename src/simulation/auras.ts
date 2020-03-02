@@ -46,6 +46,9 @@ const applyAura = (
 		case 'EX1_185':
 		case 'TB_BaconUps_053':
 			return applySiegebreakerAura(board, i, enchantmentId, cards);
+		case 'GVG_021':
+		case 'TB_BaconUps_060':
+			return applyMalGanisAura(board, i, enchantmentId, cards);
 	}
 };
 
@@ -57,6 +60,9 @@ const removeAura = (entity: BoardEntity, enchantmentId: string): BoardEntity => 
 		case 'EX1_185e':
 		case 'TB_BaconUps_053e':
 			return removeSiegebreakerAura(entity, enchantmentId);
+		case 'GVG_021e':
+		case 'TB_BaconUps_060e':
+			return removeMalGanisAura(entity, enchantmentId);
 	}
 	return entity;
 };
@@ -108,7 +114,7 @@ const applySiegebreakerAura = (
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (i === index || cards.getCard(entity.cardId).race !== 'DEMON') {
-			console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
+			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			newBoard.push(entity);
 			continue;
 		}
@@ -132,11 +138,47 @@ const applySiegebreakerAura = (
 	return newBoard;
 };
 
+const applyMalGanisAura = (
+	board: readonly BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+): readonly BoardEntity[] => {
+	const originEntity = board[index];
+	const newBoard = [];
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (i === index || cards.getCard(entity.cardId).race !== 'DEMON') {
+			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
+			newBoard.push(entity);
+			continue;
+		}
+
+		if (
+			!entity.enchantments.some(
+				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+			)
+		) {
+			const newEntity = {
+				...entity,
+				attack: entity.attack + (enchantmentId === 'GVG_021e' ? 2 : 4),
+				health: entity.health + (enchantmentId === 'GVG_021e' ? 2 : 4),
+				enchantments: [
+					...entity.enchantments,
+					{ cardId: enchantmentId, originEntityId: originEntity.entityId },
+				],
+			} as BoardEntity;
+			newBoard.push(newEntity);
+		}
+	}
+	return newBoard;
+};
+
 const removeDireWolfAura = (entity: BoardEntity, enchantmentId: string): BoardEntity => {
 	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
 	return {
 		...entity,
-		attack: entity.attack - numberOfBuffs * (enchantmentId === 'EX1_162e' ? 1 : 2),
+		attack: Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === 'EX1_162e' ? 1 : 2)),
 		enchantments: entity.enchantments.filter(aura => aura.cardId !== enchantmentId),
 	} as BoardEntity;
 };
@@ -145,7 +187,17 @@ const removeSiegebreakerAura = (entity: BoardEntity, enchantmentId: string): Boa
 	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
 	return {
 		...entity,
-		attack: entity.attack - numberOfBuffs * (enchantmentId === 'EX1_185e' ? 1 : 2),
+		attack: Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === 'EX1_185e' ? 1 : 2)),
+		enchantments: entity.enchantments.filter(aura => aura.cardId !== enchantmentId),
+	} as BoardEntity;
+};
+
+const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): BoardEntity => {
+	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	return {
+		...entity,
+		attack: Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === 'GVG_021e' ? 2 : 4)),
+		health: Math.max(1, entity.health - numberOfBuffs * (enchantmentId === 'GVG_021e' ? 2 : 4)),
 		enchantments: entity.enchantments.filter(aura => aura.cardId !== enchantmentId),
 	} as BoardEntity;
 };
