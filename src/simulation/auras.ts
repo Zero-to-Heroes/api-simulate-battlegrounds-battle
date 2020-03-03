@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
@@ -10,13 +11,13 @@ export const applyAuras = (
 	cards: AllCardsService,
 ): readonly BoardEntity[] => {
 	// There is a precondition earlier that if the board is empty we don't go in this method
-	console.log('ready to apply auras', board);
+	// console.log('ready to apply auras', board);
 	for (let i = 0; i < board.length; i++) {
 		if (data.auraOrigins.indexOf(board[i].cardId) !== -1) {
 			const enchantmentId = data.auraEnchantments.find(aura => aura[0] === board[i].cardId)[1];
-			console.log('applying aura', enchantmentId, board);
+			// console.log('applying aura', enchantmentId, board);
 			board = applyAura(board, i, enchantmentId, cards);
-			console.log('applied aura', enchantmentId, board);
+			// console.log('applied aura', enchantmentId, board);
 		}
 	}
 	return board;

@@ -38,12 +38,36 @@ export const handleDeathrattleEffects = (
 			return [board, opponentBoard];
 		case CardIds.Collectible.Neutral.KaboomBot:
 			console.log('dealing damage to opponent board from bot', opponentBoard, board);
-			[opponentBoard, board] = dealDamageToRandomEnemy(opponentBoard, 4, board, allCards, cardsData, sharedState);
+			[opponentBoard, board] = dealDamageToRandomEnemy(
+				opponentBoard,
+				deadEntity,
+				4,
+				board,
+				allCards,
+				cardsData,
+				sharedState,
+			);
 			console.log('after damage from bot', opponentBoard, board);
 			return [board, opponentBoard];
 		case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
-			[opponentBoard, board] = dealDamageToRandomEnemy(opponentBoard, 4, board, allCards, cardsData, sharedState);
-			[opponentBoard, board] = dealDamageToRandomEnemy(opponentBoard, 4, board, allCards, cardsData, sharedState);
+			[opponentBoard, board] = dealDamageToRandomEnemy(
+				opponentBoard,
+				deadEntity,
+				4,
+				board,
+				allCards,
+				cardsData,
+				sharedState,
+			);
+			[opponentBoard, board] = dealDamageToRandomEnemy(
+				opponentBoard,
+				deadEntity,
+				4,
+				board,
+				allCards,
+				cardsData,
+				sharedState,
+			);
 			return [board, opponentBoard];
 	}
 	return [board, opponentBoard];

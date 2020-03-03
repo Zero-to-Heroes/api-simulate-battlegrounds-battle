@@ -131,6 +131,7 @@ export class Simulator {
 			console.log('[start of combat] damage', damage);
 			[defendingBoard, attackingBoard] = dealDamageToRandomEnemy(
 				defendingBoard,
+				attacker,
 				damage,
 				attackingBoard,
 				this.allCards,
@@ -143,6 +144,7 @@ export class Simulator {
 				.filter(race => race === 'DRAGON').length;
 			[defendingBoard, attackingBoard] = dealDamageToRandomEnemy(
 				defendingBoard,
+				attacker,
 				damage,
 				attackingBoard,
 				this.allCards,
@@ -151,6 +153,7 @@ export class Simulator {
 			);
 			[defendingBoard, attackingBoard] = dealDamageToRandomEnemy(
 				defendingBoard,
+				attacker,
 				damage,
 				attackingBoard,
 				this.allCards,
@@ -217,7 +220,7 @@ export class Simulator {
 		console.log('after damage', newAttackingEntity, newDefendingEntity);
 		const updatedDefenders = [newDefendingEntity];
 		// Cleave
-		if (attackingEntity.cleave) {
+		if (newAttackingEntity.cleave) {
 			const neighbours: readonly BoardEntity[] = this.getNeighbours(defendingBoard, defendingEntity);
 			updatedDefenders.push(...neighbours.map(entity => bumpEntities(entity, attackingEntity)));
 		}
@@ -234,19 +237,23 @@ export class Simulator {
 			updatedDefendingBoard.splice(defenderIndex, 1, def);
 		}
 
+		console.log('processing minion death in attacking board', attackingBoard, 'killer?', newDefendingEntity);
 		[attackingBoard, defendingBoard] = processMinionDeath(
 			updatedAttackingBoard,
 			[newAttackingEntity],
 			updatedDefendingBoard,
+			newDefendingEntity,
 			this.allCards,
 			this.spawns,
 			this.sharedState,
 		);
 		console.log('baords after porocessing minion death in attacker', attackingBoard, defendingBoard);
+		console.log('processing minion death in defending board', defendingBoard, 'killer?', newAttackingEntity);
 		[defendingBoard, attackingBoard] = processMinionDeath(
 			defendingBoard,
 			updatedDefenders,
 			attackingBoard,
+			newAttackingEntity,
 			this.allCards,
 			this.spawns,
 			this.sharedState,
@@ -281,7 +288,10 @@ export class Simulator {
 				minNumberOfAttacks = entity.attacksPerformed;
 			}
 		}
-		return attackingEntity;
+		return {
+			...attackingEntity,
+			attacksPerformed: attackingEntity.attacksPerformed + 1,
+		};
 	}
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]) {
