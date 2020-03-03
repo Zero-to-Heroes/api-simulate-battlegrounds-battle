@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
@@ -97,12 +99,28 @@ export const processMinionDeath = (
 	return [board, opponentBoard];
 };
 
+export const applyOnAttackBuffs = (entity: BoardEntity): BoardEntity => {
+	if (entity.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS) {
+		return {
+			...entity,
+			attack: 2 * entity.attack,
+		};
+	}
+	if (entity.cardId === CardIds.NonCollectible.Mage.GlyphGuardianTavernBrawl) {
+		return {
+			...entity,
+			attack: 3 * entity.attack,
+		};
+	}
+	return entity;
+};
+
 const makeMinionsDie = (
 	defendingBoard: readonly BoardEntity[],
 	updatedDefenders: readonly BoardEntity[],
 ): [readonly BoardEntity[], number[]] => {
 	const indexes = [];
-	let boardCopy = [...defendingBoard];
+	const boardCopy = [...defendingBoard];
 	for (const defender of updatedDefenders) {
 		const index = boardCopy.map(entity => entity.entityId).indexOf(defender.entityId);
 		indexes.push(index);

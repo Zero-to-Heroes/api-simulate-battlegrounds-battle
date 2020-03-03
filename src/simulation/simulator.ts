@@ -3,7 +3,13 @@ import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
-import { bumpEntities, dealDamageToRandomEnemy, getDefendingEntity, processMinionDeath } from './attack';
+import {
+	applyOnAttackBuffs,
+	bumpEntities,
+	dealDamageToRandomEnemy,
+	getDefendingEntity,
+	processMinionDeath,
+} from './attack';
 import { applyAuras, removeAuras } from './auras';
 import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
@@ -173,8 +179,9 @@ export class Simulator {
 		attackingBoard = applyAuras(attackingBoard, this.spawns, this.allCards);
 		defendingBoard = applyAuras(defendingBoard, this.spawns, this.allCards);
 
-		const attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
+		let attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {
+			attackingEntity = applyOnAttackBuffs(attackingEntity);
 			const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
 			console.log('battling between', attackingEntity, defendingEntity);
 			[attackingBoard, defendingBoard] = this.performAttack(
@@ -221,7 +228,7 @@ export class Simulator {
 		const updatedAttackingBoard = [...attackingBoard];
 		updatedAttackingBoard.splice(attackerIndex, 1, newAttackingEntity);
 
-		let updatedDefendingBoard = [...defendingBoard];
+		const updatedDefendingBoard = [...defendingBoard];
 		for (const def of updatedDefenders) {
 			const defenderIndex = defendingBoard.map(e => e.entityId).indexOf(def.entityId);
 			updatedDefendingBoard.splice(defenderIndex, 1, def);
