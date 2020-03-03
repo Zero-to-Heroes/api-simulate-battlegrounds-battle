@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
@@ -23,6 +24,12 @@ export const handleDeathrattleEffects = (
 			board = grantRandomDivineShield(board);
 			board = grantRandomDivineShield(board);
 			return [board, opponentBoard];
+		case CardIds.Collectible.Neutral.SpawnOfNzoth:
+			board = addStatsToBoard(board, 1, 1);
+			return [board, opponentBoard];
+		case CardIds.NonCollectible.Neutral.SpawnOfNzothTavernBrawl:
+			board = addStatsToBoard(board, 2, 2);
+			return [board, opponentBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
 			return [grantRandomAttack(board, deadEntity.attack), opponentBoard];
 		case CardIds.NonCollectible.Warlock.FiendishServantTavernBrawl:
@@ -40,6 +47,14 @@ export const handleDeathrattleEffects = (
 			return [board, opponentBoard];
 	}
 	return [board, opponentBoard];
+};
+
+const addStatsToBoard = (board: readonly BoardEntity[], attack: number, health: number): readonly BoardEntity[] => {
+	return board.map(entity => ({
+		...entity,
+		attack: entity.attack + attack,
+		health: entity.health + health,
+	}));
 };
 
 const applyMinionDeathEffect = (

@@ -23,6 +23,6 @@
 			"core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"]
 		}
 	},
-	"include": ["src/**/*", "test/**/*"],
+	"include": ["src", "test"],
 	"exclude": ["node_modules/*"]
 }
