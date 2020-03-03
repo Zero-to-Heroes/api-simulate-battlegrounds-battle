@@ -14,6 +14,7 @@ export const handleDeathrattleEffects = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
+	board = applyMinionDeathEffect(deadEntity, board, allCards);
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
 			board = grantRandomDivineShield(board);
@@ -39,6 +40,37 @@ export const handleDeathrattleEffects = (
 			return [board, opponentBoard];
 	}
 	return [board, opponentBoard];
+};
+
+const applyMinionDeathEffect = (
+	deadEntity: BoardEntity,
+	board: readonly BoardEntity[],
+	allCards: AllCardsService,
+): readonly BoardEntity[] => {
+	if (allCards.getCard(deadEntity.cardId).race === 'BEAST') {
+		board = applyScavengingHyenaEffect(board);
+	}
+	return board;
+};
+
+const applyScavengingHyenaEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
+	const copy = [...board];
+	for (let i = 0; i < copy.length; i++) {
+		if (copy[i].cardId === CardIds.Collectible.Hunter.ScavengingHyena) {
+			copy[i] = {
+				...copy[i],
+				attack: copy[i].attack + 2,
+				health: copy[i].health + 1,
+			};
+		} else if (copy[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaTavernBrawl) {
+			copy[i] = {
+				...copy[i],
+				attack: copy[i].attack + 4,
+				health: copy[i].health + 2,
+			};
+		}
+	}
+	return copy;
 };
 
 const grantRandomAttack = (board: readonly BoardEntity[], additionalAttack: number): readonly BoardEntity[] => {
