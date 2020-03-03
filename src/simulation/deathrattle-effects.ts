@@ -5,23 +5,31 @@ export const handleDeathrattleEffects = (
 	board: readonly BoardEntity[],
 	deadEntity: BoardEntity,
 	deadMinionIndex: number,
-): readonly BoardEntity[] => {
+	opponentBoard: readonly BoardEntity[],
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
 			board = grantRandomDivineShield(board);
-			return board;
+			return [board, opponentBoard];
 		case CardIds.NonCollectible.Paladin.SelflessHeroTavernBrawl:
 			board = grantRandomDivineShield(board);
 			board = grantRandomDivineShield(board);
-			return board;
+			return [board, opponentBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
-			return grantRandomAttack(board, deadEntity.attack);
+			return [grantRandomAttack(board, deadEntity.attack), opponentBoard];
 		case CardIds.NonCollectible.Warlock.FiendishServantTavernBrawl:
 			board = grantRandomAttack(board, deadEntity.attack);
 			board = grantRandomAttack(board, deadEntity.attack);
-			return board;
+			return [board, opponentBoard];
+		// case CardIds.Collectible.Neutral.KaboomBot:
+		// 	opponentBoard = dealDamageToRandomEnemy(opponentBoard, 4);
+		// 	return [board, opponentBoard];
+		// case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
+		// 	opponentBoard = dealDamageToRandomEnemy(opponentBoard, 4);
+		// 	opponentBoard = dealDamageToRandomEnemy(opponentBoard, 4);
+		// 	return [board, opponentBoard];
 	}
-	return board;
+	return [board, opponentBoard];
 };
 
 const grantRandomAttack = (board: readonly BoardEntity[], additionalAttack: number): readonly BoardEntity[] => {

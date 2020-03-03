@@ -3,12 +3,9 @@ import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
-import { buildBoardEntity } from '../utils';
+import { bumpEntities, dealDamageToRandomEnemy, getDefendingEntity, processMinionDeath } from './attack';
 import { applyAuras, removeAuras } from './auras';
-import { handleDeathrattleEffects } from './deathrattle-effects';
-import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
-import { handleSpawnEffects } from './spawn-effect';
 
 // New simulator should be instantiated for each match
 // TODO: implement all the cards, including:
@@ -125,28 +122,36 @@ export class Simulator {
 				.map(entity => this.allCards.getCard(entity.cardId).race)
 				.filter(race => race === 'DRAGON').length;
 			console.log('[start of combat] damage', damage);
-			defendingBoard = this.dealDamageToRandomEnemy(defendingBoard, damage);
+			[defendingBoard, attackingBoard] = dealDamageToRandomEnemy(
+				defendingBoard,
+				damage,
+				attackingBoard,
+				this.allCards,
+				this.spawns,
+				this.sharedState,
+			);
 		} else if (attacker.cardId === 'TB_BaconUps_102') {
 			const damage = attackingBoard
 				.map(entity => this.allCards.getCard(entity.cardId).race)
 				.filter(race => race === 'DRAGON').length;
-			defendingBoard = this.dealDamageToRandomEnemy(defendingBoard, damage);
-			defendingBoard = this.dealDamageToRandomEnemy(defendingBoard, damage);
+			[defendingBoard, attackingBoard] = dealDamageToRandomEnemy(
+				defendingBoard,
+				damage,
+				attackingBoard,
+				this.allCards,
+				this.spawns,
+				this.sharedState,
+			);
+			[defendingBoard, attackingBoard] = dealDamageToRandomEnemy(
+				defendingBoard,
+				damage,
+				attackingBoard,
+				this.allCards,
+				this.spawns,
+				this.sharedState,
+			);
 		}
 		return [attackingBoard, defendingBoard];
-	}
-
-	private dealDamageToRandomEnemy(defendingBoard: readonly BoardEntity[], damage: number): readonly BoardEntity[] {
-		const defendingEntity: BoardEntity = this.getDefendingEntity(defendingBoard);
-		console.log('[start of combat] defendingEntity', defendingEntity);
-		const fakeAttacker = {
-			attack: damage,
-		} as BoardEntity;
-		const newDefendingEntity = this.bumpEntities(defendingEntity, fakeAttacker);
-		console.log('[start of combat] newDefendingEntity', newDefendingEntity);
-		defendingBoard = this.processMinionDeath(defendingBoard, [newDefendingEntity]);
-		console.log('[start of combat] defendingBoard', defendingBoard);
-		return defendingBoard;
 	}
 
 	private simulateAttack(
@@ -163,7 +168,7 @@ export class Simulator {
 
 		const attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {
-			const defendingEntity: BoardEntity = this.getDefendingEntity(defendingBoard);
+			const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
 			console.log('battling between', attackingEntity, defendingEntity);
 			[attackingBoard, defendingBoard] = this.performAttack(
 				attackingEntity,
@@ -187,19 +192,33 @@ export class Simulator {
 		attackingBoard: readonly BoardEntity[],
 		defendingBoard: readonly BoardEntity[],
 	): [readonly BoardEntity[], readonly BoardEntity[]] {
-		const newAttackingEntity = this.bumpEntities(attackingEntity, defendingEntity);
-		const newDefendingEntity = this.bumpEntities(defendingEntity, attackingEntity);
+		const newAttackingEntity = bumpEntities(attackingEntity, defendingEntity);
+		const newDefendingEntity = bumpEntities(defendingEntity, attackingEntity);
 		const updatedDefenders = [newDefendingEntity];
 		// Cleave
 		if (attackingEntity.cleave) {
 			const neighbours: readonly BoardEntity[] = this.getNeighbours(defendingBoard, defendingEntity);
-			updatedDefenders.push(...neighbours.map(entity => this.bumpEntities(entity, attackingEntity)));
+			updatedDefenders.push(...neighbours.map(entity => bumpEntities(entity, attackingEntity)));
 		}
 		// Approximate the play order
 		updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 
-		attackingBoard = this.processMinionDeath(attackingBoard, [newAttackingEntity]);
-		defendingBoard = this.processMinionDeath(defendingBoard, updatedDefenders);
+		[attackingBoard, defendingBoard] = processMinionDeath(
+			attackingBoard,
+			[newAttackingEntity],
+			defendingBoard,
+			this.allCards,
+			this.spawns,
+			this.sharedState,
+		);
+		[defendingBoard, attackingBoard] = processMinionDeath(
+			defendingBoard,
+			updatedDefenders,
+			attackingBoard,
+			this.allCards,
+			this.spawns,
+			this.sharedState,
+		);
 		return [attackingBoard, defendingBoard];
 	}
 
@@ -216,106 +235,6 @@ export class Simulator {
 		return neighbours;
 	}
 
-	private processMinionDeath(
-		board: readonly BoardEntity[],
-		entities: readonly BoardEntity[],
-	): readonly BoardEntity[] {
-		let indexes: number[];
-		[board, indexes] = this.makeMinionsDie(board, entities);
-
-		for (let i = 0; i < indexes.length; i++) {
-			const entity = entities[i];
-			const index = indexes[i];
-			if (entity.health <= 0) {
-				board = this.buildBoardAfterDeathrattleSpawns(board, entity, index);
-			} else {
-				const newBoardD = [...board];
-				newBoardD.splice(index, 1, entity);
-				board = newBoardD;
-			}
-		}
-		return board;
-	}
-
-	private makeMinionsDie(
-		defendingBoard: readonly BoardEntity[],
-		updatedDefenders: readonly BoardEntity[],
-	): [readonly BoardEntity[], number[]] {
-		const indexes = [];
-		let boardCopy = [...defendingBoard];
-		for (const defender of updatedDefenders) {
-			const index = boardCopy.map(entity => entity.entityId).indexOf(defender.entityId);
-			indexes.push(index);
-			if (defender.health <= 0) {
-				boardCopy.splice(index, 1);
-			}
-		}
-		return [boardCopy, indexes];
-	}
-
-	private buildBoardAfterDeathrattleSpawns(
-		board: readonly BoardEntity[],
-		deadEntity: BoardEntity,
-		deadMinionIndex: number,
-	): readonly BoardEntity[] {
-		board = handleDeathrattleEffects(board, deadEntity, deadMinionIndex);
-		const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
-			deadEntity,
-			this.allCards,
-			this.spawns,
-			this.sharedState,
-		);
-		// console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
-		const entitiesFromReborn: readonly BoardEntity[] = deadEntity.reborn
-			? [
-					{
-						...buildBoardEntity(deadEntity.cardId, this.allCards, this.sharedState.currentEntityId++),
-						health: 1,
-					} as BoardEntity,
-			  ]
-			: [];
-		const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
-			deadEntity,
-			this.allCards,
-			this.spawns,
-			this.sharedState,
-		);
-		const candidateEntities: readonly BoardEntity[] = [
-			...entitiesFromNativeDeathrattle,
-			...entitiesFromReborn,
-			...entitiesFromEnchantments,
-		];
-		// console.log('candidateEntities', candidateEntities);
-		const roomToSpawn: number = 7 - board.length;
-		const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
-		// console.log('spawnedEntities', spawnedEntities);
-		// const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);
-		// console.log('deadMinionIndex', deadMinionIndex, board);
-		const newBoard = [...board];
-		// Minion has already been removed from the board in the previous step
-		newBoard.splice(deadMinionIndex, 0, ...spawnedEntities);
-		const boardAfterMinionSpawnEffects = handleSpawnEffects(newBoard, spawnedEntities, this.allCards);
-		console.log('newBoard', boardAfterMinionSpawnEffects);
-		return boardAfterMinionSpawnEffects;
-	}
-
-	private bumpEntities(entity: BoardEntity, bumpInto: BoardEntity) {
-		// No attack has no impact
-		if (bumpInto.attack === 0) {
-			return entity;
-		}
-		if (entity.divineShield) {
-			return {
-				...entity,
-				divineShield: false,
-			} as BoardEntity;
-		}
-		return {
-			...entity,
-			health: entity.health - bumpInto.attack,
-		} as BoardEntity;
-	}
-
 	private getAttackingEntity(attackingBoard: readonly BoardEntity[], lastAttackerEntityId: number): BoardEntity {
 		const validAttackers = attackingBoard.filter(entity => entity.attack > 0);
 		if (validAttackers.length === 0) {
@@ -330,12 +249,6 @@ export class Simulator {
 			}
 		}
 		return attackingEntity;
-	}
-
-	private getDefendingEntity(defendingBoard: readonly BoardEntity[]): BoardEntity {
-		const taunts = defendingBoard.filter(entity => entity.taunt);
-		const possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
-		return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 	}
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]) {
