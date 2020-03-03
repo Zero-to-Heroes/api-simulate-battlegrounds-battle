@@ -7,8 +7,8 @@ import { Simulator } from '../../src/simulation/simulator';
 import { buildBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
-describe('MalGanis', () => {
-	test('MalGanis aura works properly even on a minion two spaces removed', async () => {
+describe('Murloc Warleader', () => {
+	test('Murloc Warleader aura works properly even on a minion two spaces removed', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
@@ -19,9 +19,9 @@ describe('MalGanis', () => {
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
-			buildBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
-			buildBoardEntity('GVG_021', cards, 4), // Mal'Ganis
+			{ ...buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3), taunt: true },
+			buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
+			buildBoardEntity(CardIds.Collectible.Neutral.MurlocWarleader, cards, 4),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -29,10 +29,10 @@ describe('MalGanis', () => {
 
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('lost');
-		expect(result.damageDealt).toBe(8);
+		expect(result.damageDealt).toBe(4);
 	});
 
-	test('MalGanis aura works only on demons', async () => {
+	test('Murloc Warleader aura works only on murlocs', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
@@ -44,7 +44,7 @@ describe('MalGanis', () => {
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
 			buildBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
-			buildBoardEntity('GVG_021', cards, 4), // Mal'Ganis
+			buildBoardEntity(CardIds.Collectible.Neutral.MurlocWarleader, cards, 4),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -52,10 +52,10 @@ describe('MalGanis', () => {
 
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('lost');
-		expect(result.damageDealt).toBe(6);
+		expect(result.damageDealt).toBe(3);
 	});
 
-	test('MalGanis aura ends once it is killed', async () => {
+	test('Murloc Warleader aura ends once it is killed', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
@@ -68,8 +68,8 @@ describe('MalGanis', () => {
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity('EX1_185', cards, 2), taunt: true }, // MalGanis
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), taunt: false },
+			{ ...buildBoardEntity(CardIds.Collectible.Neutral.MurlocWarleader, cards, 2), taunt: true },
+			buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

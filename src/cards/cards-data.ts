@@ -53,12 +53,35 @@ export class CardsData {
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
 		this.auraEnchantments = [
-			['EX1_162', 'EX1_162e'],
-			['TB_BaconUps_088', 'TB_BaconUps_088e'], // Dire Wolf Alpha
-			['EX1_185', 'EX1_185e'],
-			['TB_BaconUps_053', 'TB_BaconUps_053e'], // Siegebreaker
-			['GVG_021', 'GVG_021e'],
-			['TB_BaconUps_060', 'TB_BaconUps_060e'], // Mal'Ganis
+			[
+				CardIds.Collectible.Neutral.DireWolfAlpha,
+				CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantment,
+			],
+			[
+				CardIds.NonCollectible.Neutral.DireWolfAlphaTavernBrawl,
+				CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantmentTavernBrawl,
+			],
+			[
+				CardIds.Collectible.Warlock.Siegebreaker,
+				CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment,
+			],
+			[
+				CardIds.NonCollectible.Warlock.SiegebreakerTavernBrawl,
+				CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantmentTavernBrawl,
+			],
+			[CardIds.Collectible.Warlock.Malganis, CardIds.NonCollectible.Warlock.MalGanis_GraspOfMalganisEnchantment],
+			[
+				CardIds.NonCollectible.Warlock.MalganisTavernBrawl,
+				CardIds.NonCollectible.Warlock.MalGanis_GraspOfMalganisEnchantmentTavernBrawl,
+			],
+			[
+				CardIds.Collectible.Neutral.MurlocWarleader,
+				CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment,
+			],
+			[
+				CardIds.NonCollectible.Neutral.MurlocWarleaderTavernBrawl,
+				CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl,
+			],
 		];
 		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
 		this.startOfCombats = [

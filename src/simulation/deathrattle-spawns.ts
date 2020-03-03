@@ -226,17 +226,41 @@ export const spawnEntitiesFromEnchantments = (
 ): readonly BoardEntity[] => {
 	switch (deadEntity.cardId) {
 		// Replicating Menace
-		case 'BOT_312e':
+		case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment:
 			return [
-				buildBoardEntity('BOT_312t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('BOT_312t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('BOT_312t', allCards, sharedState.currentEntityId++),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+					allCards,
+					sharedState.currentEntityId++,
+				),
 			];
-		case 'TB_BaconUps_032e':
+		case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl:
 			return [
-				buildBoardEntity('TB_BaconUps_032e', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_032e', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_032e', allCards, sharedState.currentEntityId++),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+					allCards,
+					sharedState.currentEntityId++,
+				),
+				buildBoardEntity(
+					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+					allCards,
+					sharedState.currentEntityId++,
+				),
 			];
 		default:
 			return [];
