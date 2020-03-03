@@ -9,5 +9,7 @@ export interface BoardEntity {
 	reborn: boolean;
 	cleave: boolean;
 	enchantments: readonly { cardId: string; originEntityId: number }[];
+
 	attacksPerformed: number;
+	previousAttack: number;
 }

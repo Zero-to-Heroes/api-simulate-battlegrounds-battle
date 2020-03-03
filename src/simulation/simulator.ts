@@ -5,6 +5,7 @@ import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { bumpEntities, dealDamageToRandomEnemy, getDefendingEntity, processMinionDeath } from './attack';
 import { applyAuras, removeAuras } from './auras';
+import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
 
 // New simulator should be instantiated for each match
@@ -163,6 +164,12 @@ export class Simulator {
 		if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 			return [attackingBoard, defendingBoard];
 		}
+		[attackingBoard, defendingBoard] = applyGlobalModifiers(
+			attackingBoard,
+			defendingBoard,
+			this.spawns,
+			this.allCards,
+		);
 		attackingBoard = applyAuras(attackingBoard, this.spawns, this.allCards);
 		defendingBoard = applyAuras(defendingBoard, this.spawns, this.allCards);
 
@@ -182,6 +189,12 @@ export class Simulator {
 		console.log('before removing auras', attackingBoard, defendingBoard);
 		attackingBoard = removeAuras(attackingBoard, this.spawns);
 		defendingBoard = removeAuras(defendingBoard, this.spawns);
+		[attackingBoard, defendingBoard] = removeGlobalModifiers(
+			attackingBoard,
+			defendingBoard,
+			this.spawns,
+			this.allCards,
+		);
 		console.log('after removing auras', attackingBoard, defendingBoard);
 		return [attackingBoard, defendingBoard];
 	}
