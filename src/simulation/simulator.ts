@@ -41,6 +41,7 @@ export class Simulator {
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
 			1;
+		[playerBoard, opponentBoard] = this.handleStartOfCombat(playerBoard, opponentBoard);
 		// let boards = [playerBoard, opponentBoard];
 		// console.log('boards', boards);
 		this.currentAttacker =
@@ -50,6 +51,7 @@ export class Simulator {
 				? 1
 				: Math.round(Math.random());
 		console.log('starting player', this.currentAttacker);
+
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			console.log('starting round', playerBoard.length, opponentBoard.length, playerBoard, opponentBoard);
 			if (this.currentAttacker === 0) {
@@ -83,6 +85,68 @@ export class Simulator {
 			result: 'won',
 			damageDealt: this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier,
 		};
+	}
+
+	// TODO: hero power start of combat
+	private handleStartOfCombat(
+		playerBoard: readonly BoardEntity[],
+		opponentBoard: readonly BoardEntity[],
+	): [readonly BoardEntity[], readonly BoardEntity[]] {
+		let currentAttacker = Math.round(Math.random());
+		console.log('[start of combat] attacker', currentAttacker);
+		const playerAttackers = playerBoard.filter(entity => this.spawns.startOfCombats.indexOf(entity.cardId) !== -1);
+		const opponentAttackers = opponentBoard.filter(
+			entity => this.spawns.startOfCombats.indexOf(entity.cardId) !== -1,
+		);
+		console.log('[start of combat] cazndidates', playerAttackers, opponentAttackers);
+		while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
+			if (currentAttacker === 0 && playerAttackers.length > 0) {
+				const attacker = playerAttackers.splice(0, 1)[0];
+				console.log('[start of combat] will perform player attack', attacker);
+				[playerBoard, opponentBoard] = this.performStartOfCombat(attacker, playerBoard, opponentBoard);
+			} else if (currentAttacker === 1 && opponentAttackers.length > 0) {
+				const attacker = opponentAttackers.splice(0, 1)[0];
+				console.log('[start of combat] will perform opponent attack', attacker);
+				[opponentBoard, playerBoard] = this.performStartOfCombat(attacker, opponentBoard, playerBoard);
+			}
+			currentAttacker = (currentAttacker + 1) % 2;
+		}
+		return [playerBoard, opponentBoard];
+	}
+
+	private performStartOfCombat(
+		attacker: BoardEntity,
+		attackingBoard: readonly BoardEntity[],
+		defendingBoard: readonly BoardEntity[],
+	): [readonly BoardEntity[], readonly BoardEntity[]] {
+		// For now we're only dealing with the red whelp
+		if (attacker.cardId === 'BGS_019') {
+			const damage = attackingBoard
+				.map(entity => this.allCards.getCard(entity.cardId).race)
+				.filter(race => race === 'DRAGON').length;
+			console.log('[start of combat] damage', damage);
+			defendingBoard = this.dealDamageToRandomEnemy(defendingBoard, damage);
+		} else if (attacker.cardId === 'TB_BaconUps_102') {
+			const damage = attackingBoard
+				.map(entity => this.allCards.getCard(entity.cardId).race)
+				.filter(race => race === 'DRAGON').length;
+			defendingBoard = this.dealDamageToRandomEnemy(defendingBoard, damage);
+			defendingBoard = this.dealDamageToRandomEnemy(defendingBoard, damage);
+		}
+		return [attackingBoard, defendingBoard];
+	}
+
+	private dealDamageToRandomEnemy(defendingBoard: readonly BoardEntity[], damage: number): readonly BoardEntity[] {
+		const defendingEntity: BoardEntity = this.getDefendingEntity(defendingBoard);
+		console.log('[start of combat] defendingEntity', defendingEntity);
+		const fakeAttacker = {
+			attack: damage,
+		} as BoardEntity;
+		const newDefendingEntity = this.bumpEntities(defendingEntity, fakeAttacker);
+		console.log('[start of combat] newDefendingEntity', newDefendingEntity);
+		defendingBoard = this.processMinionDeath(defendingBoard, [newDefendingEntity]);
+		console.log('[start of combat] defendingBoard', defendingBoard);
+		return defendingBoard;
 	}
 
 	private simulateAttack(

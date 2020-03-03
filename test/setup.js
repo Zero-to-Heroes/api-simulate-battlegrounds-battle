@@ -5,6 +5,7 @@ console.error = function(message) {
 
 global.console = {
 	log: jest.fn(), // console.log are ignored in tests
+	// log: console.log,
 	warn: jest.fn(),
 	info: jest.fn(),
 

@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { AllCardsService } from './cards';
 
 const REMOVED_CARD_IDS = [
@@ -20,6 +21,7 @@ export class CardsData {
 	public sneedsSpawns: readonly string[];
 	public auraEnchantments: readonly string[][];
 	public auraOrigins: readonly string[];
+	public startOfCombats: readonly string[];
 
 	constructor(private readonly allCards: AllCardsService) {
 		this.init();
@@ -59,5 +61,9 @@ export class CardsData {
 			['TB_BaconUps_060', 'TB_BaconUps_060e'], // Mal'Ganis
 		];
 		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
+		this.startOfCombats = [
+			CardIds.NonCollectible.Neutral.RedWhelp,
+			CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl,
+		];
 	}
 }
