@@ -68,13 +68,11 @@ describe('Basic attributes', () => {
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
 		// The player will attack first always, and never kill the Pogo, thus always taking 3 damage
-		for (let i = 0; i < 10; i++) {
-			const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
-			expect(result).not.toBeNull();
-			expect(result.result).toBe('lost');
-			expect(result.damageDealt).toBe(3);
-		}
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('lost');
+		expect(result.damageDealt).toBe(3);
 	}, 10000);
 
 	test('Reborn works properly', async () => {

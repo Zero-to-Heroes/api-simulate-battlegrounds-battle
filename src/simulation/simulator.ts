@@ -194,6 +194,7 @@ export class Simulator {
 	): [readonly BoardEntity[], readonly BoardEntity[]] {
 		const newAttackingEntity = bumpEntities(attackingEntity, defendingEntity);
 		const newDefendingEntity = bumpEntities(defendingEntity, attackingEntity);
+		console.log('after damage', newAttackingEntity, newDefendingEntity);
 		const updatedDefenders = [newDefendingEntity];
 		// Cleave
 		if (attackingEntity.cleave) {
@@ -203,14 +204,25 @@ export class Simulator {
 		// Approximate the play order
 		updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 
+		const attackerIndex = attackingBoard.map(e => e.entityId).indexOf(newAttackingEntity.entityId);
+		const updatedAttackingBoard = [...attackingBoard];
+		updatedAttackingBoard.splice(attackerIndex, 1, newAttackingEntity);
+
+		let updatedDefendingBoard = [...defendingBoard];
+		for (const def of updatedDefenders) {
+			const defenderIndex = defendingBoard.map(e => e.entityId).indexOf(def.entityId);
+			updatedDefendingBoard.splice(defenderIndex, 1, def);
+		}
+
 		[attackingBoard, defendingBoard] = processMinionDeath(
-			attackingBoard,
+			updatedAttackingBoard,
 			[newAttackingEntity],
-			defendingBoard,
+			updatedDefendingBoard,
 			this.allCards,
 			this.spawns,
 			this.sharedState,
 		);
+		console.log('baords after porocessing minion death in attacker', attackingBoard, defendingBoard);
 		[defendingBoard, attackingBoard] = processMinionDeath(
 			defendingBoard,
 			updatedDefenders,
@@ -219,6 +231,7 @@ export class Simulator {
 			this.spawns,
 			this.sharedState,
 		);
+		console.log('baords after porocessing minion death in defendingBoard', attackingBoard, defendingBoard);
 		return [attackingBoard, defendingBoard];
 	}
 

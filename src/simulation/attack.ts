@@ -15,8 +15,11 @@ export const dealDamageToRandomEnemy = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
+	if (defendingBoard.length === 0) {
+		return [defendingBoard, opponentBoard];
+	}
 	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
-	// console.log('[start of combat] defendingEntity', defendingEntity);
+	console.log('defendingEntity', defendingEntity, defendingBoard);
 	const fakeAttacker = {
 		attack: damage,
 	} as BoardEntity;
@@ -67,6 +70,7 @@ export const processMinionDeath = (
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	let indexes: number[];
 	[board, indexes] = makeMinionsDie(board, entities);
+	console.log('made minions die', board, indexes);
 
 	for (let i = 0; i < indexes.length; i++) {
 		const entity = entities[i];
@@ -81,12 +85,15 @@ export const processMinionDeath = (
 				cardsData,
 				sharedState,
 			);
-		} else {
+			console.log('board after dr spawns', entity, board, opponentBoard);
+		} else if (board.length > 0) {
 			const newBoardD = [...board];
 			newBoardD.splice(index, 1, entity);
 			board = newBoardD;
+			console.log('board after minions fight without death', entity, board, opponentBoard);
 		}
 	}
+	console.log('board from processMinionDeath', board, opponentBoard);
 	return [board, opponentBoard];
 };
 
@@ -115,7 +122,15 @@ const buildBoardAfterDeathrattleSpawns = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	[board, opponentBoard] = handleDeathrattleEffects(board, deadEntity, deadMinionIndex, opponentBoard);
+	[board, opponentBoard] = handleDeathrattleEffects(
+		board,
+		deadEntity,
+		deadMinionIndex,
+		opponentBoard,
+		allCards,
+		cardsData,
+		sharedState,
+	);
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
 		allCards,
@@ -152,6 +167,6 @@ const buildBoardAfterDeathrattleSpawns = (
 	// Minion has already been removed from the board in the previous step
 	newBoard.splice(deadMinionIndex, 0, ...spawnedEntities);
 	const boardAfterMinionSpawnEffects = handleSpawnEffects(newBoard, spawnedEntities, allCards);
-	console.log('newBoard', boardAfterMinionSpawnEffects);
+	console.log('newBoard', boardAfterMinionSpawnEffects, opponentBoard);
 	return [boardAfterMinionSpawnEffects, opponentBoard];
 };

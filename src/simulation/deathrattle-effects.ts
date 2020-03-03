@@ -1,11 +1,18 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
+import { AllCardsService } from '../cards/cards';
+import { CardsData } from '../cards/cards-data';
+import { dealDamageToRandomEnemy } from './attack';
+import { SharedState } from './shared-state';
 
 export const handleDeathrattleEffects = (
 	board: readonly BoardEntity[],
 	deadEntity: BoardEntity,
 	deadMinionIndex: number,
 	opponentBoard: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
@@ -21,13 +28,15 @@ export const handleDeathrattleEffects = (
 			board = grantRandomAttack(board, deadEntity.attack);
 			board = grantRandomAttack(board, deadEntity.attack);
 			return [board, opponentBoard];
-		// case CardIds.Collectible.Neutral.KaboomBot:
-		// 	opponentBoard = dealDamageToRandomEnemy(opponentBoard, 4);
-		// 	return [board, opponentBoard];
-		// case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
-		// 	opponentBoard = dealDamageToRandomEnemy(opponentBoard, 4);
-		// 	opponentBoard = dealDamageToRandomEnemy(opponentBoard, 4);
-		// 	return [board, opponentBoard];
+		case CardIds.Collectible.Neutral.KaboomBot:
+			console.log('dealing damage to opponent board from bot', opponentBoard, board);
+			[opponentBoard, board] = dealDamageToRandomEnemy(opponentBoard, 4, board, allCards, cardsData, sharedState);
+			console.log('after damage from bot', opponentBoard, board);
+			return [board, opponentBoard];
+		case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
+			[opponentBoard, board] = dealDamageToRandomEnemy(opponentBoard, 4, board, allCards, cardsData, sharedState);
+			[opponentBoard, board] = dealDamageToRandomEnemy(opponentBoard, 4, board, allCards, cardsData, sharedState);
+			return [board, opponentBoard];
 	}
 	return [board, opponentBoard];
 };
