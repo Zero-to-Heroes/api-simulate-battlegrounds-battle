@@ -26,7 +26,21 @@ export const spawnEntities = (
 	// console.log('will spawn entities', cardId, minionsToSpawn, boardToSpawnInto);
 	const result = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
-		result.push(buildSingleBoardEntity(cardId, allCards, sharedState.currentEntityId++));
+		const newMinion = buildSingleBoardEntity(cardId, allCards, sharedState.currentEntityId++);
+		const attackBuff =
+			allCards.getCard(newMinion.cardId).race === 'BEAST'
+				? 3 *
+						boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader)
+							.length +
+				  6 *
+						boardToSpawnInto.filter(
+							entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
+						).length
+				: 0;
+		result.push({
+			...newMinion,
+			attack: newMinion.attack + attackBuff,
+		});
 	}
 	return result;
 };
