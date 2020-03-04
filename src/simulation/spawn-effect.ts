@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
@@ -17,18 +18,23 @@ export const handleSpawn = (
 ): BoardEntity => {
 	switch (entity.cardId) {
 		case CardIds.Collectible.Neutral.MurlocTidecaller:
-			const result = {
+			return {
 				...entity,
 				attack: entity.attack + spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
 			};
-			console.log(
-				'buffing murloc tidecaller',
-				// entity,
-				// spawned,
-				// spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
-				result,
-			);
-			return result;
+		case CardIds.NonCollectible.Neutral.MurlocTidecallerTavernBrawl:
+			return {
+				...entity,
+				attack:
+					entity.attack + 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
+			};
+		case CardIds.Collectible.Paladin.CobaltGuardian:
+			return spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0
+				? {
+						...entity,
+						divineShield: true,
+				  }
+				: entity;
 	}
 	return entity;
 };
