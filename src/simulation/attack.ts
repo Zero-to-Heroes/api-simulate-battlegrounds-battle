@@ -27,7 +27,14 @@ export const dealDamageToRandomEnemy = (
 		...damageSource,
 		attack: damage,
 	} as BoardEntity;
-	const newDefendingEntity = bumpEntities(defendingEntity, fakeAttacker);
+	let newDefendingEntity;
+	[newDefendingEntity, defendingBoard] = bumpEntities(
+		defendingEntity,
+		fakeAttacker,
+		defendingBoard,
+		allCards,
+		sharedState,
+	);
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(newDefendingEntity.entityId);
 	const updatedBoard = [...defendingBoard];
 	updatedBoard[defendingEntityIndex] = newDefendingEntity;
@@ -52,22 +59,59 @@ export const getDefendingEntity = (defendingBoard: readonly BoardEntity[]): Boar
 	return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 };
 
-export const bumpEntities = (entity: BoardEntity, bumpInto: BoardEntity) => {
+export const bumpEntities = (
+	entity: BoardEntity,
+	bumpInto: BoardEntity,
+	entityBoard: readonly BoardEntity[],
+	allCards: AllCardsService,
+	sharedState: SharedState,
+): [BoardEntity, readonly BoardEntity[]] => {
 	// No attack has no impact
 	if (bumpInto.attack === 0) {
-		return entity;
+		return [entity, entityBoard];
 	}
 	if (entity.divineShield) {
-		return {
-			...entity,
-			divineShield: false,
-		} as BoardEntity;
+		return [
+			{
+				...entity,
+				divineShield: false,
+			} as BoardEntity,
+			entityBoard,
+		];
 	}
-	return {
-		...entity,
-		health: entity.health - bumpInto.attack,
-		lastAffectedByEntity: { ...bumpInto },
-	} as BoardEntity;
+	const updatedEntityBoard = [...entityBoard];
+	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss && updatedEntityBoard.length < 7) {
+		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
+		updatedEntityBoard.splice(
+			index,
+			0,
+			buildBoardEntity(
+				CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
+				allCards,
+				sharedState.currentEntityId++,
+			),
+		);
+	}
+	if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl && updatedEntityBoard.length < 7) {
+		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
+		updatedEntityBoard.splice(
+			index,
+			0,
+			buildBoardEntity(
+				CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
+				allCards,
+				sharedState.currentEntityId++,
+			),
+		);
+	}
+	return [
+		{
+			...entity,
+			health: entity.health - bumpInto.attack,
+			lastAffectedByEntity: { ...bumpInto },
+		} as BoardEntity,
+		updatedEntityBoard,
+	];
 };
 
 export const processMinionDeath = (

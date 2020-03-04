@@ -29,13 +29,13 @@ export const spawnEntitiesFromDeathrattle = (
 			return [buildBoardEntity('TB_BaconUps_004t', allCards, sharedState.currentEntityId++)];
 		// Rat Pack
 		case 'CFM_316':
-			let ratPackSpawns = [];
+			const ratPackSpawns = [];
 			for (let i = 0; i < deadEntity.attack; i++) {
 				ratPackSpawns.push(buildBoardEntity('CFM_316t', allCards, sharedState.currentEntityId++));
 			}
 			return ratPackSpawns;
 		case 'TB_BaconUps_027':
-			let goldenRatPackSpawns = [];
+			const goldenRatPackSpawns = [];
 			for (let i = 0; i < deadEntity.attack; i++) {
 				goldenRatPackSpawns.push(buildBoardEntity('TB_BaconUps_027t', allCards, sharedState.currentEntityId++));
 			}

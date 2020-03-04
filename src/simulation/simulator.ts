@@ -217,14 +217,36 @@ export class Simulator {
 		attackingBoard: readonly BoardEntity[],
 		defendingBoard: readonly BoardEntity[],
 	): [readonly BoardEntity[], readonly BoardEntity[]] {
-		const newAttackingEntity = bumpEntities(attackingEntity, defendingEntity);
-		const newDefendingEntity = bumpEntities(defendingEntity, attackingEntity);
+		let newAttackingEntity, newDefendingEntity;
+		[newAttackingEntity, attackingBoard] = bumpEntities(
+			attackingEntity,
+			defendingEntity,
+			attackingBoard,
+			this.allCards,
+			this.sharedState,
+		);
+		[newDefendingEntity, defendingBoard] = bumpEntities(
+			defendingEntity,
+			attackingEntity,
+			defendingBoard,
+			this.allCards,
+			this.sharedState,
+		);
 		console.log('after damage', newAttackingEntity, newDefendingEntity);
 		const updatedDefenders = [newDefendingEntity];
 		// Cleave
 		if (newAttackingEntity.cleave) {
 			const neighbours: readonly BoardEntity[] = this.getNeighbours(defendingBoard, defendingEntity);
-			updatedDefenders.push(...neighbours.map(entity => bumpEntities(entity, attackingEntity)));
+			for (let neighbour of neighbours) {
+				[neighbour, defendingBoard] = bumpEntities(
+					neighbour,
+					attackingEntity,
+					defendingBoard,
+					this.allCards,
+					this.sharedState,
+				);
+				updatedDefenders.push(neighbour);
+			}
 		}
 
 		// Approximate the play order

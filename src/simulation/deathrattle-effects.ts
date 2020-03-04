@@ -128,16 +128,35 @@ const dealDamageToAllMinions = (
 	if (board1.length === 0 && board2.length === 0) {
 		return [board1, board2];
 	}
+	let updatedBoard1 = [...board1];
+	let updatedBoard2 = [...board2];
 	const fakeAttacker = {
 		...damageSource,
 		attack: damageDealt,
 	} as BoardEntity;
-	[board1, board2] = [
-		board1.map(entity => bumpEntities(entity, fakeAttacker)),
-		board2.map(entity => bumpEntities(entity, fakeAttacker)),
-	];
-	[board1, board2] = processMinionDeath(board1, board2, allCards, cardsData, sharedState);
-	return [board1, board2];
+	for (let i = 0; i < updatedBoard1.length; i++) {
+		const [entity, boardResult] = bumpEntities(
+			updatedBoard1[i],
+			fakeAttacker,
+			updatedBoard1,
+			allCards,
+			sharedState,
+		);
+		updatedBoard1 = [...boardResult];
+		updatedBoard1[i] = entity;
+	}
+	for (let i = 0; i < updatedBoard2.length; i++) {
+		const [entity, boardResult] = bumpEntities(
+			updatedBoard2[i],
+			fakeAttacker,
+			updatedBoard2,
+			allCards,
+			sharedState,
+		);
+		updatedBoard2 = [...boardResult];
+		updatedBoard2[i] = entity;
+	}
+	return processMinionDeath(updatedBoard1, updatedBoard2, allCards, cardsData, sharedState);
 };
 
 const applyScavengingHyenaEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
