@@ -76,11 +76,22 @@ export const bumpEntities = (
 					...updatedBoard[i],
 					attack: updatedBoard[i].attack + 2,
 				};
-				console.log('updated bolvar', updatedBoard);
 			} else if (updatedBoard[i].cardId === CardIds.NonCollectible.Paladin.BolvarFirebloodTavernBrawl) {
 				updatedBoard[i] = {
 					...updatedBoard[i],
 					attack: updatedBoard[i].attack + 4,
+				};
+			} else if (updatedBoard[i].cardId === CardIds.NonCollectible.Neutral.DrakonidEnforcer) {
+				updatedBoard[i] = {
+					...updatedBoard[i],
+					attack: updatedBoard[i].attack + 2,
+					health: updatedBoard[i].health + 2,
+				};
+			} else if (updatedBoard[i].cardId === CardIds.NonCollectible.Neutral.DrakonidEnforcerTavernBrawl) {
+				updatedBoard[i] = {
+					...updatedBoard[i],
+					attack: updatedBoard[i].attack + 4,
+					health: updatedBoard[i].health + 4,
 				};
 			}
 			// So that self-buffs from Bolvar are taken into account
