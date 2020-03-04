@@ -3,7 +3,7 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
-import { dealDamageToRandomEnemy } from './attack';
+import { bumpEntities, dealDamageToRandomEnemy, processMinionDeath } from './attack';
 import { SharedState } from './shared-state';
 
 export const handleDeathrattleEffects = (
@@ -15,7 +15,7 @@ export const handleDeathrattleEffects = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	board = applyMinionDeathEffect(deadEntity, board, allCards);
+	[board, opponentBoard] = applyMinionDeathEffect(deadEntity, board, opponentBoard, allCards, cardsData, sharedState);
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
 			board = grantRandomDivineShield(board);
@@ -84,12 +84,60 @@ const addStatsToBoard = (board: readonly BoardEntity[], attack: number, health: 
 const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
 	board: readonly BoardEntity[],
+	opponentBoard: readonly BoardEntity[],
 	allCards: AllCardsService,
-): readonly BoardEntity[] => {
+	cardsData: CardsData,
+	sharedState: SharedState,
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	if (allCards.getCard(deadEntity.cardId).race === 'BEAST') {
 		board = applyScavengingHyenaEffect(board);
 	}
-	return board;
+	if (deadEntity.cardId === CardIds.Collectible.Neutral.UnstableGhoul) {
+		[board, opponentBoard] = dealDamageToAllMinions(
+			board,
+			opponentBoard,
+			deadEntity,
+			1,
+			allCards,
+			cardsData,
+			sharedState,
+		);
+	} else if (deadEntity.cardId === CardIds.NonCollectible.Neutral.UnstableGhoulTavernBrawl) {
+		[board, opponentBoard] = dealDamageToAllMinions(
+			board,
+			opponentBoard,
+			deadEntity,
+			2,
+			allCards,
+			cardsData,
+			sharedState,
+		);
+	}
+	return [board, opponentBoard];
+};
+
+const dealDamageToAllMinions = (
+	board1: readonly BoardEntity[],
+	board2: readonly BoardEntity[],
+	damageSource: BoardEntity,
+	damageDealt: number,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
+	if (board1.length === 0 && board2.length === 0) {
+		return [board1, board2];
+	}
+	const fakeAttacker = {
+		...damageSource,
+		attack: damageDealt,
+	} as BoardEntity;
+	[board1, board2] = [
+		board1.map(entity => bumpEntities(entity, fakeAttacker)),
+		board2.map(entity => bumpEntities(entity, fakeAttacker)),
+	];
+	[board1, board2] = processMinionDeath(board1, board2, allCards, cardsData, sharedState);
+	return [board1, board2];
 };
 
 const applyScavengingHyenaEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
