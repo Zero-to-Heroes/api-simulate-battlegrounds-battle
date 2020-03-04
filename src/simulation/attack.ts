@@ -37,7 +37,7 @@ export const dealDamageToRandomEnemy = (
 		updatedBoard,
 		// [newDefendingEntity],
 		opponentBoard,
-		fakeAttacker,
+		// fakeAttacker,
 		allCards,
 		cardsData,
 		sharedState,
@@ -66,46 +66,94 @@ export const bumpEntities = (entity: BoardEntity, bumpInto: BoardEntity) => {
 	return {
 		...entity,
 		health: entity.health - bumpInto.attack,
+		lastAffectedByEntity: { ...bumpInto },
 	} as BoardEntity;
 };
 
 export const processMinionDeath = (
-	boardWithMaybeDeadMinions: readonly BoardEntity[],
-	opponentBoard: readonly BoardEntity[],
-	killer: BoardEntity,
+	board1: readonly BoardEntity[],
+	board2: readonly BoardEntity[],
+	// killer: BoardEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	const [boardWithRemovedMinions, deadMinionIndexes, deadEntities] = makeMinionsDie(boardWithMaybeDeadMinions);
-	if (deadEntities.length === 0) {
-		return [boardWithMaybeDeadMinions, opponentBoard];
+	const [board1WithRemovedMinions, deadMinionIndexes1, deadEntities1] = makeMinionsDie(board1);
+	const [board2WithRemovedMinions, deadMinionIndexes2, deadEntities2] = makeMinionsDie(board2);
+	// No death to process, we can return
+	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
+		return [board1, board2];
 	}
-	boardWithMaybeDeadMinions = boardWithRemovedMinions;
+	board1 = board1WithRemovedMinions;
+	board2 = board2WithRemovedMinions;
+
+	// Now proceed to trigger all deathrattle effects on baord1
+	// I don't know how accurate this is. I assume that normally the deathrattles could trigger
+	// alternating between board1 and board2 based on the play order
+	// For now I'll trigger everything from board1 first, then everything from board 2
+	// It might not be fully accurate, but is probably a good first approximation
+	[board1, board2] = handleDeathsForFirstBoard(
+		board1,
+		board2,
+		deadMinionIndexes1,
+		deadEntities1,
+		allCards,
+		cardsData,
+		sharedState,
+	);
+	// Now handle the other board's deathrattles
+	[board2, board1] = handleDeathsForFirstBoard(
+		board2,
+		board1,
+		deadMinionIndexes2,
+		deadEntities2,
+		allCards,
+		cardsData,
+		sharedState,
+	);
+	console.log('board from processMinionDeath', board1, board2);
+	// Make sure we only return when there are no more deaths to process
+	// FIXME: this will propagate the killer between rounds, which is incorrect. For instance,
+	// if a dragon kills a Ghoul, then the Ghoul's deathrattle kills a Kaboom, the killer should
+	// now be the ghoul. Then if the Kaboom kills someone, the killer should again change. You could
+	// also have multiple killers, which is not taken into account here.
+	// The current assumption is that it's a suffienctly fringe case to not matter too much
+	return processMinionDeath(board1, board2, allCards, cardsData, sharedState);
+	// return [boardWithMaybeDeadMinions, opponentBoard];
+};
+
+const handleDeathsForFirstBoard = (
+	firstBoard: readonly BoardEntity[],
+	otherBoard: readonly BoardEntity[],
+	deadMinionIndexes: readonly number[],
+	deadEntities: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	for (let i = 0; i < deadMinionIndexes.length; i++) {
 		const entity = deadEntities[i];
 		const index = deadMinionIndexes[i];
 		if (entity.health <= 0) {
-			[boardWithMaybeDeadMinions, opponentBoard] = buildBoardAfterDeathrattleSpawns(
-				boardWithMaybeDeadMinions,
+			[firstBoard, otherBoard] = buildBoardAfterDeathrattleSpawns(
+				firstBoard,
 				entity,
 				index,
-				opponentBoard,
-				killer,
+				otherBoard,
+				// killer,
 				allCards,
 				cardsData,
 				sharedState,
 			);
-			console.log('board after dr spawns', entity, boardWithMaybeDeadMinions, opponentBoard);
-		} else if (boardWithMaybeDeadMinions.length > 0) {
-			const newBoardD = [...boardWithMaybeDeadMinions];
+			console.log('board after dr spawns', entity, firstBoard, otherBoard);
+		} else if (firstBoard.length > 0) {
+			const newBoardD = [...firstBoard];
 			newBoardD.splice(index, 1, entity);
-			boardWithMaybeDeadMinions = newBoardD;
-			console.log('board after minions fight without death', entity, boardWithMaybeDeadMinions, opponentBoard);
+			firstBoard = newBoardD;
+			console.log('board after minions fight without death', entity, firstBoard, otherBoard);
 		}
 	}
-	console.log('board from processMinionDeath', boardWithMaybeDeadMinions, opponentBoard);
-	return [boardWithMaybeDeadMinions, opponentBoard];
+	return [firstBoard, otherBoard];
 };
 
 export const applyOnAttackBuffs = (entity: BoardEntity): BoardEntity => {
@@ -156,31 +204,36 @@ const makeMinionsDie = (
 const handleKillEffects = (
 	boardWithKilledMinion: readonly BoardEntity[],
 	killerBoard: readonly BoardEntity[],
-	killer: BoardEntity,
+	deadEntity: BoardEntity,
+	// killer: BoardEntity,
 	allCards: AllCardsService,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	if (allCards.getCard(killer.cardId).race === 'DRAGON') {
-		return [
-			boardWithKilledMinion,
-			killerBoard.map(entity => {
-				if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggle) {
-					return {
-						...entity,
-						attack: entity.attack + 2,
-						health: entity.health + 2,
-					};
-				} else if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggleTavernBrawl) {
-					return {
-						...entity,
-						attack: entity.attack + 4,
-						health: entity.health + 4,
-					};
-				}
-				return entity;
-			}),
-		];
+	console.log('handling kill effects', boardWithKilledMinion, killerBoard);
+	if (
+		!deadEntity.lastAffectedByEntity ||
+		allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race !== 'DRAGON'
+	) {
+		return [boardWithKilledMinion, killerBoard];
 	}
-	return [boardWithKilledMinion, killerBoard];
+	return [
+		boardWithKilledMinion,
+		killerBoard.map(entity => {
+			if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggle) {
+				return {
+					...entity,
+					attack: entity.attack + 2,
+					health: entity.health + 2,
+				};
+			} else if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggleTavernBrawl) {
+				return {
+					...entity,
+					attack: entity.attack + 4,
+					health: entity.health + 4,
+				};
+			}
+			return entity;
+		}),
+	];
 };
 
 const buildBoardAfterDeathrattleSpawns = (
@@ -188,13 +241,17 @@ const buildBoardAfterDeathrattleSpawns = (
 	deadEntity: BoardEntity,
 	deadMinionIndex: number,
 	opponentBoard: readonly BoardEntity[],
-	killer: BoardEntity,
+	// killer: BoardEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	console.log('handling kill effects', boardWithKilledMinion, opponentBoard, killer);
-	[boardWithKilledMinion, opponentBoard] = handleKillEffects(boardWithKilledMinion, opponentBoard, killer, allCards);
+	[boardWithKilledMinion, opponentBoard] = handleKillEffects(
+		boardWithKilledMinion,
+		opponentBoard,
+		deadEntity,
+		allCards,
+	);
 	[boardWithKilledMinion, opponentBoard] = handleDeathrattleEffects(
 		boardWithKilledMinion,
 		deadEntity,

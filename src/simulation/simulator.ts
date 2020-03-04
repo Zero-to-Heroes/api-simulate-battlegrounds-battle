@@ -183,6 +183,8 @@ export class Simulator {
 		defendingBoard = applyAuras(defendingBoard, this.spawns, this.allCards);
 
 		let attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
+		attackingBoard = attackingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
+		defendingBoard = defendingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
 		if (attackingEntity) {
 			attackingEntity = applyOnAttackBuffs(attackingEntity);
 			const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
@@ -243,22 +245,22 @@ export class Simulator {
 			updatedAttackingBoard,
 			// [newAttackingEntity],
 			updatedDefendingBoard,
-			newDefendingEntity,
+			// newDefendingEntity,
 			this.allCards,
 			this.spawns,
 			this.sharedState,
 		);
-		console.log('baords after porocessing minion death in attacker', attackingBoard, defendingBoard);
-		console.log('processing minion death in defending board', defendingBoard, 'killer?', newAttackingEntity);
-		[defendingBoard, attackingBoard] = processMinionDeath(
-			defendingBoard,
-			// updatedDefenders,
-			attackingBoard,
-			newAttackingEntity,
-			this.allCards,
-			this.spawns,
-			this.sharedState,
-		);
+		console.log('baords after porocessing minion deaths', attackingBoard, defendingBoard);
+		// console.log('processing minion death in defending board', defendingBoard, 'killer?', newAttackingEntity);
+		// [defendingBoard, attackingBoard] = processMinionDeath(
+		// 	defendingBoard,
+		// 	// updatedDefenders,
+		// 	attackingBoard,
+		// 	newAttackingEntity,
+		// 	this.allCards,
+		// 	this.spawns,
+		// 	this.sharedState,
+		// );
 		console.log('baords after porocessing minion death in defendingBoard', attackingBoard, defendingBoard);
 		return [attackingBoard, defendingBoard];
 	}
