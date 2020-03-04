@@ -28,10 +28,14 @@ export const dealDamageToRandomEnemy = (
 		attack: damage,
 	} as BoardEntity;
 	const newDefendingEntity = bumpEntities(defendingEntity, fakeAttacker);
+	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(newDefendingEntity.entityId);
+	const updatedBoard = [...defendingBoard];
+	updatedBoard[defendingEntityIndex] = newDefendingEntity;
 	// console.log('[start of combat] newDefendingEntity', newDefendingEntity);
+	// TODO: loop until things are stabilized
 	[defendingBoard, opponentBoard] = processMinionDeath(
-		defendingBoard,
-		[newDefendingEntity],
+		updatedBoard,
+		// [newDefendingEntity],
 		opponentBoard,
 		fakeAttacker,
 		allCards,
@@ -67,20 +71,20 @@ export const bumpEntities = (entity: BoardEntity, bumpInto: BoardEntity) => {
 
 export const processMinionDeath = (
 	boardWithMaybeDeadMinions: readonly BoardEntity[],
-	entities: readonly BoardEntity[],
 	opponentBoard: readonly BoardEntity[],
 	killer: BoardEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	let indexes: number[];
-	[boardWithMaybeDeadMinions, indexes] = makeMinionsDie(boardWithMaybeDeadMinions, entities);
-	// console.log('made minions die', boardWithMaybeDeadMinions, indexes);
-
-	for (let i = 0; i < indexes.length; i++) {
-		const entity = entities[i];
-		const index = indexes[i];
+	const [boardWithRemovedMinions, deadMinionIndexes, deadEntities] = makeMinionsDie(boardWithMaybeDeadMinions);
+	if (deadEntities.length === 0) {
+		return [boardWithMaybeDeadMinions, opponentBoard];
+	}
+	boardWithMaybeDeadMinions = boardWithRemovedMinions;
+	for (let i = 0; i < deadMinionIndexes.length; i++) {
+		const entity = deadEntities[i];
+		const index = deadMinionIndexes[i];
 		if (entity.health <= 0) {
 			[boardWithMaybeDeadMinions, opponentBoard] = buildBoardAfterDeathrattleSpawns(
 				boardWithMaybeDeadMinions,
@@ -121,19 +125,32 @@ export const applyOnAttackBuffs = (entity: BoardEntity): BoardEntity => {
 };
 
 const makeMinionsDie = (
-	defendingBoard: readonly BoardEntity[],
-	updatedDefenders: readonly BoardEntity[],
-): [readonly BoardEntity[], number[]] => {
-	const indexes = [];
-	const boardCopy = [...defendingBoard];
-	for (const defender of updatedDefenders) {
-		const index = boardCopy.map(entity => entity.entityId).indexOf(defender.entityId);
-		indexes.push(index);
-		if (defender.health <= 0) {
+	board: readonly BoardEntity[],
+	// updatedDefenders: readonly BoardEntity[],
+): [readonly BoardEntity[], number[], readonly BoardEntity[]] => {
+	const deadMinionIndexes: number[] = [];
+	const deadEntities: BoardEntity[] = [];
+	const boardCopy = [...board];
+	for (let i = 0; i < board.length; i++) {
+		const index = boardCopy.map(entity => entity.entityId).indexOf(board[i].entityId);
+		if (board[i].health <= 0) {
+			deadMinionIndexes.push(i);
+			deadEntities.push(board[i]);
 			boardCopy.splice(index, 1);
 		}
 	}
-	return [boardCopy, indexes];
+	return [boardCopy, deadMinionIndexes, deadEntities];
+
+	// const indexes = [];
+	// const boardCopy = [...board];
+	// for (const defender of updatedDefenders) {
+	// 	const index = boardCopy.map(entity => entity.entityId).indexOf(defender.entityId);
+	// 	indexes.push(index);
+	// 	if (defender.health <= 0) {
+	// 		boardCopy.splice(index, 1);
+	// 	}
+	// }
+	// return [boardCopy, indexes];
 };
 
 const handleKillEffects = (

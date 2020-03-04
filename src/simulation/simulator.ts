@@ -224,23 +224,24 @@ export class Simulator {
 			const neighbours: readonly BoardEntity[] = this.getNeighbours(defendingBoard, defendingEntity);
 			updatedDefenders.push(...neighbours.map(entity => bumpEntities(entity, attackingEntity)));
 		}
+
 		// Approximate the play order
 		updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 
 		const attackerIndex = attackingBoard.map(e => e.entityId).indexOf(newAttackingEntity.entityId);
 		const updatedAttackingBoard = [...attackingBoard];
-		updatedAttackingBoard.splice(attackerIndex, 1, newAttackingEntity);
+		updatedAttackingBoard[attackerIndex] = newAttackingEntity;
 
 		const updatedDefendingBoard = [...defendingBoard];
 		for (const def of updatedDefenders) {
 			const defenderIndex = defendingBoard.map(e => e.entityId).indexOf(def.entityId);
-			updatedDefendingBoard.splice(defenderIndex, 1, def);
+			updatedDefendingBoard[defenderIndex] = def;
 		}
 
 		console.log('processing minion death in attacking board', attackingBoard, 'killer?', newDefendingEntity);
 		[attackingBoard, defendingBoard] = processMinionDeath(
 			updatedAttackingBoard,
-			[newAttackingEntity],
+			// [newAttackingEntity],
 			updatedDefendingBoard,
 			newDefendingEntity,
 			this.allCards,
@@ -251,7 +252,7 @@ export class Simulator {
 		console.log('processing minion death in defending board', defendingBoard, 'killer?', newAttackingEntity);
 		[defendingBoard, attackingBoard] = processMinionDeath(
 			defendingBoard,
-			updatedDefenders,
+			// updatedDefenders,
 			attackingBoard,
 			newAttackingEntity,
 			this.allCards,
