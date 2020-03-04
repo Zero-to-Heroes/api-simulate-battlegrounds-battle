@@ -12,13 +12,13 @@ export const dealDamageToRandomEnemy = (
 	defendingBoard: readonly BoardEntity[],
 	damageSource: BoardEntity,
 	damage: number,
-	opponentBoard: readonly BoardEntity[],
+	boardWithAttackOrigin: readonly BoardEntity[],
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	if (defendingBoard.length === 0) {
-		return [defendingBoard, opponentBoard];
+		return [defendingBoard, boardWithAttackOrigin];
 	}
 	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
 	console.log('defendingEntity', defendingEntity, defendingBoard);
@@ -37,18 +37,16 @@ export const dealDamageToRandomEnemy = (
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(newDefendingEntity.entityId);
 	const updatedBoard = [...defendingBoard];
 	updatedBoard[defendingEntityIndex] = newDefendingEntity;
-	// console.log('[start of combat] newDefendingEntity', newDefendingEntity);
-	[defendingBoard, opponentBoard] = processMinionDeath(
+	console.log('newDefendingEntity', newDefendingEntity);
+	[defendingBoard, boardWithAttackOrigin] = processMinionDeath(
 		updatedBoard,
-		// [newDefendingEntity],
-		opponentBoard,
-		// fakeAttacker,
+		boardWithAttackOrigin,
 		allCards,
 		cardsData,
 		sharedState,
 	);
-	// console.log('[start of combat] defendingBoard', defendingBoard);
-	return [defendingBoard, opponentBoard];
+	console.log('defendingBoard', defendingBoard);
+	return [defendingBoard, boardWithAttackOrigin];
 };
 
 export const getDefendingEntity = (defendingBoard: readonly BoardEntity[]): BoardEntity => {

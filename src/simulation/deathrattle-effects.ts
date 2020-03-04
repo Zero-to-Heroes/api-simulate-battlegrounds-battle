@@ -92,6 +92,10 @@ const applyMinionDeathEffect = (
 	if (allCards.getCard(deadEntity.cardId).race === 'BEAST') {
 		board = applyScavengingHyenaEffect(board);
 	}
+	if (allCards.getCard(deadEntity.cardId).race === 'DEMON') {
+		console.log('will apply juggler effect', deadEntity, board, opponentBoard);
+		[board, opponentBoard] = applySoulJugglerEffect(board, opponentBoard, allCards, cardsData, sharedState);
+	}
 	if (deadEntity.cardId === CardIds.Collectible.Neutral.UnstableGhoul) {
 		[board, opponentBoard] = dealDamageToAllMinions(
 			board,
@@ -157,6 +161,56 @@ const dealDamageToAllMinions = (
 		updatedBoard2[i] = entity;
 	}
 	return processMinionDeath(updatedBoard1, updatedBoard2, allCards, cardsData, sharedState);
+};
+
+const applySoulJugglerEffect = (
+	boardWithJugglers: readonly BoardEntity[],
+	boardToAttack: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
+	if (boardWithJugglers.length === 0 && boardToAttack.length === 0) {
+		return [boardWithJugglers, boardToAttack];
+	}
+	const jugglers = boardWithJugglers.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.SoulJuggler);
+	console.log('jugglers in board', boardWithJugglers);
+	for (const juggler of jugglers) {
+		[boardToAttack, boardWithJugglers] = dealDamageToRandomEnemy(
+			boardToAttack,
+			juggler,
+			3,
+			boardWithJugglers,
+			allCards,
+			cardsData,
+			sharedState,
+		);
+	}
+	const goldenJugglers = boardWithJugglers.filter(
+		entity => entity.cardId === CardIds.NonCollectible.Neutral.SoulJugglerTavernBrawl,
+	);
+	console.log('golden jugglers in board', boardWithJugglers);
+	for (const juggler of goldenJugglers) {
+		[boardToAttack, boardWithJugglers] = dealDamageToRandomEnemy(
+			boardToAttack,
+			juggler,
+			3,
+			boardWithJugglers,
+			allCards,
+			cardsData,
+			sharedState,
+		);
+		[boardToAttack, boardWithJugglers] = dealDamageToRandomEnemy(
+			boardToAttack,
+			juggler,
+			3,
+			boardWithJugglers,
+			allCards,
+			cardsData,
+			sharedState,
+		);
+	}
+	return processMinionDeath(boardWithJugglers, boardToAttack, allCards, cardsData, sharedState);
 };
 
 const applyScavengingHyenaEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
