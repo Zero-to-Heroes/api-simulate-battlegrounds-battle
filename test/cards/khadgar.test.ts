@@ -7,20 +7,20 @@ import { Simulator } from '../../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
-describe('Glyph Guardian', () => {
-	test('Glyph Guardian attack buff is triggered on attack (normal)', async () => {
+describe('Khadgar', () => {
+	test('Khadgar makes Mecharoo spawn two minions (normal)', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS, cards, 1),
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 2),
+			buildSingleBoardEntity(CardIds.Collectible.Mage.Khadgar, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -28,22 +28,22 @@ describe('Glyph Guardian', () => {
 
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('won');
-		expect(result.damageDealt).toBe(4);
+		expect(result.damageDealt).toBe(6);
 	});
 
-	test('Glyph Guardian attack buff is triggered on attack (normal) (second case))', async () => {
+	test('Khadgar makes Mecharoo spawn three minions (upgraded)', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS, cards, 1), attack: 4 },
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Mage.KhadgarTavernBrawl, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 8 },
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -51,26 +51,22 @@ describe('Glyph Guardian', () => {
 
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('won');
-		expect(result.damageDealt).toBe(4);
+		expect(result.damageDealt).toBe(7);
 	});
 
-	test('Glyph Guardian attack buff is triggered on attack (upgraded)', async () => {
+	test('Khadgar makes Rat Pack spawn four minions', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{
-				...buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianTavernBrawl, cards, 1),
-				attack: 4,
-				health: 1,
-			},
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
+			buildSingleBoardEntity(CardIds.Collectible.Hunter.RatPack, cards, 2),
+			buildSingleBoardEntity(CardIds.Collectible.Mage.Khadgar, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 12 },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3), attack: 2 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -78,30 +74,32 @@ describe('Glyph Guardian', () => {
 
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('won');
-		expect(result.damageDealt).toBe(2);
+		expect(result.damageDealt).toBe(8);
 	});
 
-	test('Glyph Guardian attack buff is not triggered on defense', async () => {
+	test('Khadgar makes Rat Pack spawn three minions if there is only room for three', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS, cards, 1), attack: 4 },
+			buildSingleBoardEntity(CardIds.Collectible.Hunter.RatPack, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 5),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 6),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 7),
+			buildSingleBoardEntity(CardIds.Collectible.Mage.Khadgar, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 12 },
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3), attack: 6, health: 10 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
 		expect(result).not.toBeNull();
-		expect(result.result).toBe('lost');
-		expect(result.damageDealt).toBe(2);
+		expect(result.result).toBe('tied');
 	});
 });
 

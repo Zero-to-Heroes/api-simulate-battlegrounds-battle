@@ -2,217 +2,311 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
-import { buildBoardEntity } from '../utils';
+import { buildSingleBoardEntity } from '../utils';
 import { SharedState } from './shared-state';
+
+export const spawnEntities = (
+	cardId: string,
+	quantity: number,
+	boardToSpawnInto: readonly BoardEntity[],
+	allCards: AllCardsService,
+	sharedState: SharedState,
+	// In most cases the business of knowing the number of minions to handle is left to the caller
+	limitSpawns = false,
+): readonly BoardEntity[] => {
+	const spawnMultiplier =
+		2 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.Collectible.Mage.Khadgar).length || 1;
+	const spawnMultiplierGolden =
+		3 *
+			boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Mage.KhadgarTavernBrawl)
+				.length || 1;
+	const minionsToSpawn = limitSpawns
+		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
+		: quantity * spawnMultiplier * spawnMultiplierGolden;
+	// console.log('will spawn entities', cardId, minionsToSpawn, boardToSpawnInto);
+	const result = [];
+	for (let i = 0; i < minionsToSpawn; i++) {
+		result.push(buildSingleBoardEntity(cardId, allCards, sharedState.currentEntityId++));
+	}
+	return result;
+};
 
 export const spawnEntitiesFromDeathrattle = (
 	deadEntity: BoardEntity,
+	boardToSpawnInto: readonly BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 ): readonly BoardEntity[] => {
 	switch (deadEntity.cardId) {
-		// Mecharoo
-		case 'BOT_445':
-			return [buildBoardEntity('BOT_445t', allCards, sharedState.currentEntityId++)];
-		case 'TB_BaconUps_002':
-			return [buildBoardEntity('TB_BaconUps_002t', allCards, sharedState.currentEntityId++)];
-		// Harvest Golem
-		case 'EX1_556':
-			return [buildBoardEntity('skele21', allCards, sharedState.currentEntityId++)];
-		case 'TB_BaconUps_006':
-			return [buildBoardEntity('TB_BaconUps_006t', allCards, sharedState.currentEntityId++)];
-		// Kindly Grandmother
-		case 'KAR_005':
-			return [buildBoardEntity('KAR_005a', allCards, sharedState.currentEntityId++)];
-		case 'TB_BaconUps_004':
-			return [buildBoardEntity('TB_BaconUps_004t', allCards, sharedState.currentEntityId++)];
-		// Rat Pack
-		case 'CFM_316':
-			const ratPackSpawns = [];
-			for (let i = 0; i < deadEntity.attack; i++) {
-				ratPackSpawns.push(buildBoardEntity('CFM_316t', allCards, sharedState.currentEntityId++));
-			}
-			return ratPackSpawns;
-		case 'TB_BaconUps_027':
-			const goldenRatPackSpawns = [];
-			for (let i = 0; i < deadEntity.attack; i++) {
-				goldenRatPackSpawns.push(buildBoardEntity('TB_BaconUps_027t', allCards, sharedState.currentEntityId++));
-			}
-			return goldenRatPackSpawns;
-		// Imprisoner
-		case 'BGS_014':
-			return [buildBoardEntity('BRM_006t', allCards, sharedState.currentEntityId++)];
-		case 'TB_BaconUps_113':
-			return [buildBoardEntity('TB_BaconUps_030t', allCards, sharedState.currentEntityId++)];
-		// Infested Wolf
-		case 'OG_216':
+		case CardIds.Collectible.Neutral.Mecharoo:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.Mecharoo_JoEBotToken,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.MecharooTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.Mecharoo_JoEBotTokenTavernBrawl,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Neutral.HarvestGolem:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.DamagedGolemClassic,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.HarvestGolemTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.HarvestGolem_DamagedGolemTokenTavernBrawl,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Hunter.KindlyGrandmother:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolf,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Hunter.KindlyGrandmotherTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolfTokenTavernBrawl,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Hunter.RatPack:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.RatPack_RatToken,
+				deadEntity.attack,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Hunter.RatPackTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.RatPack_RatTokenTavernBrawl,
+				deadEntity.attack,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.Imprisoner:
+			return spawnEntities(
+				CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.ImprisonerTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Hunter.InfestedWolf:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.InfestedWolf_Spider,
+				2,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Hunter.InfestedWolfTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.InfestedWolf_SpiderTokenTavernBrawl,
+				2,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Neutral.PilotedShredder:
+			return spawnEntities(
+				spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.PilotedShredderTavernBrawl:
 			return [
-				buildBoardEntity('OG_216a', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('OG_216a', allCards, sharedState.currentEntityId++),
-			];
-		case 'TB_BaconUps_026':
-			return [
-				buildBoardEntity('TB_BaconUps_026t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_026t', allCards, sharedState.currentEntityId++),
-			];
-		// Piloted Shredder
-		case 'BGS_014':
-			return [
-				buildBoardEntity(
+				...spawnEntities(
 					spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
+				),
+				...spawnEntities(
+					spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
+					1,
+					boardToSpawnInto,
+					allCards,
+					sharedState,
 				),
 			];
-		case 'TB_BaconUps_035':
-			return [
-				buildBoardEntity(
-					spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
-				),
-			];
-		// Replicating Menace
-		case 'BOT_312':
-			return [
-				buildBoardEntity('BOT_312t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('BOT_312t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('BOT_312t', allCards, sharedState.currentEntityId++),
-			];
-		case 'TB_BaconUps_032':
-			return [
-				buildBoardEntity('TB_BaconUps_032t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_032t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_032t', allCards, sharedState.currentEntityId++),
-			];
-		// Mechano-Egg
-		case 'BOT_537':
-			return [buildBoardEntity('BOT_537t', allCards, sharedState.currentEntityId++)];
-		case 'TB_BaconUps_039':
-			return [buildBoardEntity('TB_BaconUps_039t', allCards, sharedState.currentEntityId++)];
-		// Savannah Highmane
-		case 'EX1_534':
-			return [
-				buildBoardEntity('EX1_534t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('EX1_534t', allCards, sharedState.currentEntityId++),
-			];
-		case 'TB_BaconUps_049':
-			return [
-				buildBoardEntity('TB_BaconUps_049t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_049t', allCards, sharedState.currentEntityId++),
-			];
+		case CardIds.Collectible.Neutral.ReplicatingMenace:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.ReplicatingMenaceTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Paladin.MechanoEgg:
+			return spawnEntities(
+				CardIds.NonCollectible.Paladin.MechanoEgg_RobosaurToken,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Paladin.MechanoEggTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Paladin.MechanoEgg_RobosaurTokenTavernBrawl,
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.Collectible.Hunter.SavannahHighmane:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaToken,
+				2,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Hunter.SavannahHighmaneTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaTokenTavernBrawl,
+				2,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
 		case CardIds.Collectible.Neutral.SatedThreshadon:
-			return [
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-			];
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
 		case CardIds.NonCollectible.Neutral.SatedThreshadonTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Priest.GhastcoilerBATTLEGROUNDS:
 			return [
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+				...spawnEntities(
+					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
 				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+				...spawnEntities(
+					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
-					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
 				),
 			];
-		// Ghastcoiler
-		case 'BGS_008':
+		case CardIds.NonCollectible.Priest.GhastcoilerTavernBrawl:
 			return [
-				buildBoardEntity(
+				...spawnEntities(
 					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
 				),
-				buildBoardEntity(
+				...spawnEntities(
 					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
+				),
+				...spawnEntities(
+					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
+					1,
+					boardToSpawnInto,
+					allCards,
+					sharedState,
+				),
+				...spawnEntities(
+					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
+					1,
+					boardToSpawnInto,
+					allCards,
+					sharedState,
 				),
 			];
-		case 'TB_BaconUps_057':
+		case CardIds.Collectible.Neutral.SneedsOldShredder:
+			return spawnEntities(
+				spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
+				1,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
+		case CardIds.NonCollectible.Neutral.SneedsOldShredderTavernBrawl:
 			return [
-				buildBoardEntity(
-					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
-				),
-			];
-		// Sneed's Old Shredder
-		case 'GVG_114':
-			return [
-				buildBoardEntity(
+				...spawnEntities(
 					spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
 				),
-			];
-		case 'TB_BaconUps_080':
-			return [
-				buildBoardEntity(
+				...spawnEntities(
 					spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
+					1,
+					boardToSpawnInto,
 					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-					allCards,
-					sharedState.currentEntityId++,
+					sharedState,
 				),
 			];
-		// Voidlord
-		case 'LOOT_368':
-			return [
-				buildBoardEntity('CS2_065', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('CS2_065', allCards, sharedState.currentEntityId++),
-			];
-		case 'TB_BaconUps_059':
-			return [
-				buildBoardEntity('TB_BaconUps_059t', allCards, sharedState.currentEntityId++),
-				buildBoardEntity('TB_BaconUps_059t', allCards, sharedState.currentEntityId++),
-			];
+		case CardIds.Collectible.Warlock.Voidlord:
+			return spawnEntities(CardIds.Collectible.Warlock.Voidwalker, 3, boardToSpawnInto, allCards, sharedState);
+		case CardIds.NonCollectible.Warlock.VoidlordTavernBrawl:
+			return spawnEntities(
+				CardIds.NonCollectible.Warlock.Voidlord_VoidwalkerTokenTavernBrawl,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
 		default:
 			return [];
 	}
@@ -220,6 +314,7 @@ export const spawnEntitiesFromDeathrattle = (
 
 export const spawnEntitiesFromEnchantments = (
 	deadEntity: BoardEntity,
+	boardToSpawnInto: readonly BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -227,41 +322,21 @@ export const spawnEntitiesFromEnchantments = (
 	switch (deadEntity.cardId) {
 		// Replicating Menace
 		case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment:
-			return [
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-			];
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
 		case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl:
-			return [
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-				buildBoardEntity(
-					CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
-					allCards,
-					sharedState.currentEntityId++,
-				),
-			];
+			return spawnEntities(
+				CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+				3,
+				boardToSpawnInto,
+				allCards,
+				sharedState,
+			);
 		default:
 			return [];
 	}

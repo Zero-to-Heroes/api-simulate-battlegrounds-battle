@@ -232,7 +232,7 @@ export class Simulator {
 			this.allCards,
 			this.sharedState,
 		);
-		console.log('after damage', newAttackingEntity, newDefendingEntity);
+		// console.log('after damage', newAttackingEntity, newDefendingEntity);
 		const updatedDefenders = [newDefendingEntity];
 		// Cleave
 		if (newAttackingEntity.cleave) {

@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Kaboom bot', () => {
@@ -14,10 +14,10 @@ describe('Kaboom bot', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [buildBoardEntity(CardIds.Collectible.Neutral.KaboomBot, cards, 1)];
+		const playerBoard: readonly BoardEntity[] = [buildSingleBoardEntity(CardIds.Collectible.Neutral.KaboomBot, cards, 1)];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -34,12 +34,12 @@ describe('Kaboom bot', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl, cards, 1), health: 1 },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl, cards, 1), health: 1 },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 4, taunt: false },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 4, taunt: false },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

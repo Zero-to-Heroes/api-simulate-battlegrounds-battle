@@ -6,7 +6,7 @@ const CLEAVE_IDS = [
 	'GVG_113', // Foe Reaper 4000
 ];
 
-export const buildBoardEntity = (cardId: string, allCards: AllCardsService, entityId: number = 1): BoardEntity => {
+export const buildSingleBoardEntity = (cardId: string, allCards: AllCardsService, entityId = 1): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	return {
 		attack: card.attack,

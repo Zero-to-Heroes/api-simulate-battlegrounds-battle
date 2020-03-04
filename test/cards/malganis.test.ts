@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('MalGanis', () => {
@@ -15,13 +15,13 @@ describe('MalGanis', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity('LOOT_013', cards, 1), attack: 4 }, // Vulgar Homonculus
+			{ ...buildSingleBoardEntity('LOOT_013', cards, 1), attack: 4 }, // Vulgar Homonculus
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
-			buildBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
-			buildBoardEntity('GVG_021', cards, 4), // Mal'Ganis
+			buildSingleBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
+			buildSingleBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
+			buildSingleBoardEntity('GVG_021', cards, 4), // Mal'Ganis
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -39,12 +39,12 @@ describe('MalGanis', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
+			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
-			buildBoardEntity('GVG_021', cards, 4), // Mal'Ganis
+			buildSingleBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
+			buildSingleBoardEntity('GVG_021', cards, 4), // Mal'Ganis
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -62,14 +62,14 @@ describe('MalGanis', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
-			buildBoardEntity('UNG_073', cards, 1), // Rockpool hunter
-			buildBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
+			{ ...buildSingleBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
+			buildSingleBoardEntity('UNG_073', cards, 1), // Rockpool hunter
+			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity('EX1_185', cards, 2), taunt: true }, // MalGanis
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), taunt: false },
+			{ ...buildSingleBoardEntity('EX1_185', cards, 2), taunt: true }, // MalGanis
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), taunt: false },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

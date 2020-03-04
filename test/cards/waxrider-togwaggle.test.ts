@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Waxrider Togwaggle', () => {
@@ -15,14 +15,14 @@ describe('Waxrider Togwaggle', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 1), taunt: false },
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggle, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 1), taunt: false },
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggle, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
-			{ ...buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 6, health: 5 },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 6, health: 5 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -40,14 +40,14 @@ describe('Waxrider Togwaggle', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 1), taunt: false },
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggleTavernBrawl, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 1), taunt: false },
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggleTavernBrawl, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
-			{ ...buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 9, health: 7 },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 9, health: 7 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -65,14 +65,14 @@ describe('Waxrider Togwaggle', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggle, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggle, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true, attack: 2 },
-			{ ...buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 9, health: 3 },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true, attack: 2 },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 9, health: 3 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -89,14 +89,14 @@ describe('Waxrider Togwaggle', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggle, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WaxriderTogwaggle, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
-			{ ...buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 6, health: 5 },
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1), taunt: true },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 1), attack: 6, health: 5 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

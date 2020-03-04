@@ -3,9 +3,8 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
-import { buildBoardEntity } from '../utils';
 import { handleDeathrattleEffects } from './deathrattle-effects';
-import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
+import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
 
@@ -39,7 +38,6 @@ export const dealDamageToRandomEnemy = (
 	const updatedBoard = [...defendingBoard];
 	updatedBoard[defendingEntityIndex] = newDefendingEntity;
 	// console.log('[start of combat] newDefendingEntity', newDefendingEntity);
-	// TODO: loop until things are stabilized
 	[defendingBoard, opponentBoard] = processMinionDeath(
 		updatedBoard,
 		// [newDefendingEntity],
@@ -80,29 +78,32 @@ export const bumpEntities = (
 		];
 	}
 	const updatedEntityBoard = [...entityBoard];
+	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
+	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
+	// like this for now
 	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss && updatedEntityBoard.length < 7) {
 		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
-		updatedEntityBoard.splice(
-			index,
-			0,
-			buildBoardEntity(
-				CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
-				allCards,
-				sharedState.currentEntityId++,
-			),
+		const newEntities = spawnEntities(
+			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
+			1,
+			updatedEntityBoard,
+			allCards,
+			sharedState,
+			true,
 		);
+		updatedEntityBoard.splice(index, 0, ...newEntities);
 	}
 	if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl && updatedEntityBoard.length < 7) {
 		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
-		updatedEntityBoard.splice(
-			index,
-			0,
-			buildBoardEntity(
-				CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
-				allCards,
-				sharedState.currentEntityId++,
-			),
+		const newEntities = spawnEntities(
+			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
+			1,
+			updatedEntityBoard,
+			allCards,
+			sharedState,
+			true,
 		);
+		updatedEntityBoard.splice(index, 0, ...newEntities);
 	}
 	return [
 		{
@@ -252,7 +253,7 @@ const handleKillEffects = (
 	// killer: BoardEntity,
 	allCards: AllCardsService,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	console.log('handling kill effects', boardWithKilledMinion, killerBoard);
+	// console.log('handling kill effects', boardWithKilledMinion, killerBoard);
 	if (
 		!deadEntity.lastAffectedByEntity ||
 		allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race !== 'DRAGON'
@@ -307,21 +308,21 @@ const buildBoardAfterDeathrattleSpawns = (
 	);
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
+		boardWithKilledMinion,
 		allCards,
 		cardsData,
 		sharedState,
 	);
 	// console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
 	const entitiesFromReborn: readonly BoardEntity[] = deadEntity.reborn
-		? [
-				{
-					...buildBoardEntity(deadEntity.cardId, allCards, sharedState.currentEntityId++),
-					health: 1,
-				} as BoardEntity,
-		  ]
+		? spawnEntities(deadEntity.cardId, 1, boardWithKilledMinion, allCards, sharedState).map(entity => ({
+				...entity,
+				health: 1,
+		  }))
 		: [];
 	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
 		deadEntity,
+		boardWithKilledMinion,
 		allCards,
 		cardsData,
 		sharedState,

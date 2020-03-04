@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Red Whelp', () => {
@@ -15,14 +15,14 @@ describe('Red Whelp', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.NonCollectible.Neutral.RedWhelp, cards, 1),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 5),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.RedWhelp, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 5),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -40,15 +40,15 @@ describe('Red Whelp', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl, cards, 1), health: 1 },
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 5),
+			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl, cards, 1), health: 1 },
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 5),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

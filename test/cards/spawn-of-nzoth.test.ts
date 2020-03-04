@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Spawn of Nzoth', () => {
@@ -15,13 +15,13 @@ describe('Spawn of Nzoth', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.Collectible.Neutral.SpawnOfNzoth, cards, 1),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.SpawnOfNzoth, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -38,13 +38,13 @@ describe('Spawn of Nzoth', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.NonCollectible.Neutral.SpawnOfNzothTavernBrawl, cards, 1),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.SpawnOfNzothTavernBrawl, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 10, attack: 4 },
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 10, attack: 4 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

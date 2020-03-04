@@ -37,7 +37,7 @@ export const handleDeathrattleEffects = (
 			board = grantRandomAttack(board, deadEntity.attack);
 			return [board, opponentBoard];
 		case CardIds.Collectible.Neutral.KaboomBot:
-			console.log('dealing damage to opponent board from bot', opponentBoard, board);
+			// console.log('dealing damage to opponent board from bot', opponentBoard, board);
 			[opponentBoard, board] = dealDamageToRandomEnemy(
 				opponentBoard,
 				deadEntity,
@@ -47,7 +47,7 @@ export const handleDeathrattleEffects = (
 				cardsData,
 				sharedState,
 			);
-			console.log('after damage from bot', opponentBoard, board);
+			// console.log('after damage from bot', opponentBoard, board);
 			return [board, opponentBoard];
 		case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
 			[opponentBoard, board] = dealDamageToRandomEnemy(

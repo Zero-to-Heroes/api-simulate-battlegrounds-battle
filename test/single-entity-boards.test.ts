@@ -3,7 +3,7 @@ import { AllCardsService } from '../src/cards/cards';
 import { CardsData } from '../src/cards/cards-data';
 import { PlayerEntity } from '../src/player-entity';
 import { Simulator } from '../src/simulation/simulator';
-import { buildBoardEntity } from '../src/utils';
+import { buildSingleBoardEntity } from '../src/utils';
 import cardsJson from './cards.json';
 
 describe('Single entity boards', () => {
@@ -13,7 +13,7 @@ describe('Single entity boards', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity('EX1_162', cards), // Dire Wolf Alpha
+			buildSingleBoardEntity('EX1_162', cards), // Dire Wolf Alpha
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [];
@@ -34,7 +34,7 @@ describe('Single entity boards', () => {
 		const playerBoard: readonly BoardEntity[] = [];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('EX1_162', cards), // Dire Wolf Alpha
+			buildSingleBoardEntity('EX1_162', cards), // Dire Wolf Alpha
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -68,11 +68,11 @@ describe('Single entity boards', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity('EX1_162', cards, 1), // Dire Wolf Alpha
+			buildSingleBoardEntity('EX1_162', cards, 1), // Dire Wolf Alpha
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('EX1_162', cards, 2), // Dire Wolf Alpha
+			buildSingleBoardEntity('EX1_162', cards, 2), // Dire Wolf Alpha
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

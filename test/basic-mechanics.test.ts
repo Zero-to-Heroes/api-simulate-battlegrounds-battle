@@ -3,7 +3,7 @@ import { AllCardsService } from '../src/cards/cards';
 import { CardsData } from '../src/cards/cards-data';
 import { PlayerEntity } from '../src/player-entity';
 import { Simulator } from '../src/simulation/simulator';
-import { buildBoardEntity } from '../src/utils';
+import { buildSingleBoardEntity } from '../src/utils';
 import cardsJson from './cards.json';
 
 describe('Basic mechanics', () => {
@@ -13,14 +13,14 @@ describe('Basic mechanics', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity('LOOT_078', cards, 1), attack: 10 } as BoardEntity, // Cave Hydra
+			{ ...buildSingleBoardEntity('LOOT_078', cards, 1), attack: 10 } as BoardEntity, // Cave Hydra
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('BGS_004', cards, 2), // Wrath Weaver, will attack first and die
-			buildBoardEntity('BGS_043', cards, 3), // Murozond, who will die from the cleave
-			buildBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant, who will tank the Hydra's attack, die and not kill the Hydra
-			buildBoardEntity('BGS_043', cards, 5), // Murozond, who will die from the cleave
+			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver, will attack first and die
+			buildSingleBoardEntity('BGS_043', cards, 3), // Murozond, who will die from the cleave
+			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant, who will tank the Hydra's attack, die and not kill the Hydra
+			buildSingleBoardEntity('BGS_043', cards, 5), // Murozond, who will die from the cleave
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

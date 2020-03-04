@@ -10,7 +10,7 @@ export interface BoardEntity {
 	cleave: boolean;
 	enchantments: readonly { cardId: string; originEntityId: number }[];
 
-	attacksPerformed: number;
-	previousAttack: number;
-	lastAffectedByEntity: BoardEntity;
+	attacksPerformed?: number;
+	previousAttack?: number;
+	lastAffectedByEntity?: BoardEntity;
 }

@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Siegebreaker', () => {
@@ -15,13 +15,13 @@ describe('Siegebreaker', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
+			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
-			buildBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
-			buildBoardEntity('EX1_185', cards, 4), // Siegebreaker
+			buildSingleBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
+			buildSingleBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
+			buildSingleBoardEntity('EX1_185', cards, 4), // Siegebreaker
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -40,12 +40,12 @@ describe('Siegebreaker', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
+			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
-			{ ...buildBoardEntity('EX1_185', cards, 4), taunt: false }, // Siegebreaker
+			buildSingleBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
+			{ ...buildSingleBoardEntity('EX1_185', cards, 4), taunt: false }, // Siegebreaker
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 
@@ -63,14 +63,14 @@ describe('Siegebreaker', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			{ ...buildBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
-			buildBoardEntity('UNG_073', cards, 1), // Rockpool hunter
-			buildBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
+			{ ...buildSingleBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
+			buildSingleBoardEntity('UNG_073', cards, 1), // Rockpool hunter
+			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
-			buildBoardEntity('EX1_185', cards, 2), // Siegebreaker
-			buildBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
+			buildSingleBoardEntity('EX1_185', cards, 2), // Siegebreaker
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

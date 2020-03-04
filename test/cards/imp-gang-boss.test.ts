@@ -4,7 +4,7 @@ import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Imp Gang Boss', () => {
@@ -15,12 +15,12 @@ describe('Imp Gang Boss', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.Collectible.Warlock.ImpGangBoss, cards, 2),
+			buildSingleBoardEntity(CardIds.Collectible.Warlock.ImpGangBoss, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
 			{
-				...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				attack: 4,
 				health: 3,
 			},
@@ -40,12 +40,12 @@ describe('Imp Gang Boss', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
 			{
-				...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				attack: 8,
 				health: 6,
 			},
@@ -65,18 +65,18 @@ describe('Imp Gang Boss', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.Collectible.Warlock.ImpGangBoss, cards, 2),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.Collectible.Warlock.ImpGangBoss, cards, 2),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
 			{
-				...buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				attack: 4,
 				health: 8,
 			},
@@ -96,18 +96,18 @@ describe('Imp Gang Boss', () => {
 		const simulator = new Simulator(cards, spawns);
 
 		const playerBoard: readonly BoardEntity[] = [
-			buildBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 3), // So that board stays full even after attack
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			buildBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
-			{ ...buildBoardEntity(CardIds.Collectible.Warlock.ImpGangBoss, cards, 2), taunt: true },
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 3), // So that board stays full even after attack
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.ImpGangBoss, cards, 2), taunt: true },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
 			{
-				...buildBoardEntity(CardIds.Collectible.Hunter.CaveHydra, cards, 3),
+				...buildSingleBoardEntity(CardIds.Collectible.Hunter.CaveHydra, cards, 3),
 				attack: 4,
 				health: 8,
 			},
