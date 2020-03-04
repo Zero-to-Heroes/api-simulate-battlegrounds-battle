@@ -24,7 +24,7 @@ export const spawnEntities = (
 		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
 	// console.log('will spawn entities', cardId, minionsToSpawn, boardToSpawnInto);
-	const result = [];
+	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
 		const newMinion = buildSingleBoardEntity(cardId, allCards, sharedState.currentEntityId++);
 		const attackBuff =
@@ -35,11 +35,30 @@ export const spawnEntities = (
 				  6 *
 						boardToSpawnInto.filter(
 							entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
+						).length +
+				  5 *
+						boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear)
+							.length +
+				  10 *
+						boardToSpawnInto.filter(
+							entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
 						).length
 				: 0;
+		const healthBuff =
+			allCards.getCard(newMinion.cardId).race === 'BEAST'
+				? 5 *
+						boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear)
+							.length +
+				  10 *
+						boardToSpawnInto.filter(
+							entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
+						).length
+				: 0;
+		// console.log('buffs', attackBuff, healthBuff, newMinion, boardToSpawnInto);
 		result.push({
 			...newMinion,
 			attack: newMinion.attack + attackBuff,
+			health: newMinion.health + healthBuff,
 		});
 	}
 	return result;
