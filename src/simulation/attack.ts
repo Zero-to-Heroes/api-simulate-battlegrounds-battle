@@ -67,13 +67,31 @@ export const bumpEntities = (
 		return [entity, entityBoard];
 	}
 	if (entity.divineShield) {
-		return [
-			{
-				...entity,
-				divineShield: false,
-			} as BoardEntity,
-			entityBoard,
-		];
+		// Handle all the divine shield loss effects here
+		const updatedBoard = [...entityBoard];
+		console.log('handling divine shield loss effect', updatedBoard);
+		for (let i = 0; i < updatedBoard.length; i++) {
+			if (updatedBoard[i].cardId === CardIds.Collectible.Paladin.BolvarFireblood) {
+				updatedBoard[i] = {
+					...updatedBoard[i],
+					attack: updatedBoard[i].attack + 2,
+				};
+				console.log('updated bolvar', updatedBoard);
+			} else if (updatedBoard[i].cardId === CardIds.NonCollectible.Paladin.BolvarFirebloodTavernBrawl) {
+				updatedBoard[i] = {
+					...updatedBoard[i],
+					attack: updatedBoard[i].attack + 4,
+				};
+			}
+			// So that self-buffs from Bolvar are taken into account
+			if (updatedBoard[i].entityId === entity.entityId) {
+				entity = {
+					...updatedBoard[i],
+					divineShield: false,
+				} as BoardEntity;
+			}
+		}
+		return [entity, updatedBoard];
 	}
 	const updatedEntityBoard = [...entityBoard];
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
