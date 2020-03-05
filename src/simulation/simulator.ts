@@ -97,20 +97,20 @@ export class Simulator {
 		opponentBoard: readonly BoardEntity[],
 	): [readonly BoardEntity[], readonly BoardEntity[]] {
 		let currentAttacker = Math.round(Math.random());
-		console.log('[start of combat] attacker', currentAttacker);
+		// console.log('[start of combat] attacker', currentAttacker);
 		const playerAttackers = playerBoard.filter(entity => this.spawns.startOfCombats.indexOf(entity.cardId) !== -1);
 		const opponentAttackers = opponentBoard.filter(
 			entity => this.spawns.startOfCombats.indexOf(entity.cardId) !== -1,
 		);
-		console.log('[start of combat] cazndidates', playerAttackers, opponentAttackers);
+		// console.log('[start of combat] cazndidates', playerAttackers, opponentAttackers);
 		while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 			if (currentAttacker === 0 && playerAttackers.length > 0) {
 				const attacker = playerAttackers.splice(0, 1)[0];
-				console.log('[start of combat] will perform player attack', attacker);
+				// console.log('[start of combat] will perform player attack', attacker);
 				[playerBoard, opponentBoard] = this.performStartOfCombat(attacker, playerBoard, opponentBoard);
 			} else if (currentAttacker === 1 && opponentAttackers.length > 0) {
 				const attacker = opponentAttackers.splice(0, 1)[0];
-				console.log('[start of combat] will perform opponent attack', attacker);
+				// console.log('[start of combat] will perform opponent attack', attacker);
 				[opponentBoard, playerBoard] = this.performStartOfCombat(attacker, opponentBoard, playerBoard);
 			}
 			currentAttacker = (currentAttacker + 1) % 2;
@@ -182,9 +182,9 @@ export class Simulator {
 		attackingBoard = applyAuras(attackingBoard, this.spawns, this.allCards);
 		defendingBoard = applyAuras(defendingBoard, this.spawns, this.allCards);
 
-		let attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		attackingBoard = attackingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
 		defendingBoard = defendingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
+		let attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {
 			attackingEntity = applyOnAttackBuffs(attackingEntity);
 			const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
@@ -195,10 +195,10 @@ export class Simulator {
 				attackingBoard,
 				defendingBoard,
 			);
-			console.log('attacking board', attackingBoard, 'defending board', defendingBoard);
+			// console.log('attacking board', attackingBoard, 'defending board', defendingBoard);
 		}
 		// return [[], []];
-		console.log('before removing auras', attackingBoard, defendingBoard);
+		// console.log('before removing auras', attackingBoard, defendingBoard);
 		attackingBoard = removeAuras(attackingBoard, this.spawns);
 		defendingBoard = removeAuras(defendingBoard, this.spawns);
 		[attackingBoard, defendingBoard] = removeGlobalModifiers(
@@ -232,7 +232,7 @@ export class Simulator {
 			this.allCards,
 			this.sharedState,
 		);
-		// console.log('after damage', newAttackingEntity, newDefendingEntity);
+		console.log('after damage', newAttackingEntity, newDefendingEntity);
 		const updatedDefenders = [newDefendingEntity];
 		// Cleave
 		if (newAttackingEntity.cleave) {
@@ -240,7 +240,7 @@ export class Simulator {
 			for (let neighbour of neighbours) {
 				[neighbour, defendingBoard] = bumpEntities(
 					neighbour,
-					attackingEntity,
+					newAttackingEntity,
 					defendingBoard,
 					this.allCards,
 					this.sharedState,
@@ -262,7 +262,7 @@ export class Simulator {
 			updatedDefendingBoard[defenderIndex] = def;
 		}
 
-		console.log('processing minion death in attacking board', attackingBoard, 'killer?', newDefendingEntity);
+		// console.log('processing minion death in attacking board', attackingBoard, 'killer?', newDefendingEntity);
 		[attackingBoard, defendingBoard] = processMinionDeath(
 			updatedAttackingBoard,
 			// [newAttackingEntity],
@@ -272,7 +272,7 @@ export class Simulator {
 			this.spawns,
 			this.sharedState,
 		);
-		console.log('baords after porocessing minion deaths', attackingBoard, defendingBoard);
+		// console.log('baords after porocessing minion deaths', attackingBoard, defendingBoard);
 		// console.log('processing minion death in defending board', defendingBoard, 'killer?', newAttackingEntity);
 		// [defendingBoard, attackingBoard] = processMinionDeath(
 		// 	defendingBoard,
@@ -283,7 +283,7 @@ export class Simulator {
 		// 	this.spawns,
 		// 	this.sharedState,
 		// );
-		console.log('baords after porocessing minion death in defendingBoard', attackingBoard, defendingBoard);
+		// console.log('baords after porocessing minion death in defendingBoard', attackingBoard, defendingBoard);
 		return [attackingBoard, defendingBoard];
 	}
 
@@ -316,6 +316,7 @@ export class Simulator {
 		return {
 			...attackingEntity,
 			attacksPerformed: attackingEntity.attacksPerformed + 1,
+			attacking: true,
 		};
 	}
 

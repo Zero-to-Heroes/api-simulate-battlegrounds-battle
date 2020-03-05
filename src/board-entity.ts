@@ -13,4 +13,5 @@ export interface BoardEntity {
 	attacksPerformed?: number;
 	previousAttack?: number;
 	lastAffectedByEntity?: BoardEntity;
+	attacking?: boolean;
 }

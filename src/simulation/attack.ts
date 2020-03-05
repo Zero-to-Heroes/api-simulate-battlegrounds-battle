@@ -21,10 +21,33 @@ export const dealDamageToRandomEnemy = (
 		return [defendingBoard, boardWithAttackOrigin];
 	}
 	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
+	return dealDamageToEnemy(
+		defendingEntity,
+		defendingBoard,
+		damageSource,
+		damage,
+		boardWithAttackOrigin,
+		allCards,
+		cardsData,
+		sharedState,
+	);
+};
+
+export const dealDamageToEnemy = (
+	defendingEntity: BoardEntity,
+	defendingBoard: readonly BoardEntity[],
+	damageSource: BoardEntity,
+	damage: number,
+	boardWithAttackOrigin: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	console.log('defendingEntity', defendingEntity, defendingBoard);
 	const fakeAttacker = {
 		...damageSource,
 		attack: damage,
+		attacking: true,
 	} as BoardEntity;
 	let newDefendingEntity;
 	[newDefendingEntity, defendingBoard] = bumpEntities(
@@ -51,6 +74,7 @@ export const dealDamageToRandomEnemy = (
 
 export const getDefendingEntity = (defendingBoard: readonly BoardEntity[]): BoardEntity => {
 	const taunts = defendingBoard.filter(entity => entity.taunt);
+	console.log('taunts', taunts);
 	const possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
 	return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 };
@@ -177,6 +201,7 @@ export const processMinionDeath = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
+	console.log('boards before minions die', board1, board2);
 	const [board1WithRemovedMinions, deadMinionIndexes1, deadEntities1] = makeMinionsDie(board1);
 	const [board2WithRemovedMinions, deadMinionIndexes2, deadEntities2] = makeMinionsDie(board2);
 	// No death to process, we can return
@@ -191,6 +216,7 @@ export const processMinionDeath = (
 	// alternating between board1 and board2 based on the play order
 	// For now I'll trigger everything from board1 first, then everything from board 2
 	// It might not be fully accurate, but is probably a good first approximation
+	console.log('boards after minions died', board1, board2);
 	[board1, board2] = handleDeathsForFirstBoard(
 		board1,
 		board2,
@@ -200,6 +226,7 @@ export const processMinionDeath = (
 		cardsData,
 		sharedState,
 	);
+	console.log('boards after minions died and first board processed', board1, board2);
 	// Now handle the other board's deathrattles
 	[board2, board1] = handleDeathsForFirstBoard(
 		board2,
@@ -244,12 +271,12 @@ const handleDeathsForFirstBoard = (
 				cardsData,
 				sharedState,
 			);
-			console.log('board after dr spawns', entity, firstBoard, otherBoard);
+			// console.log('board after dr spawns', entity, firstBoard, otherBoard);
 		} else if (firstBoard.length > 0) {
 			const newBoardD = [...firstBoard];
 			newBoardD.splice(index, 1, entity);
 			firstBoard = newBoardD;
-			console.log('board after minions fight without death', entity, firstBoard, otherBoard);
+			// console.log('board after minions fight without death', entity, firstBoard, otherBoard);
 		}
 	}
 	return [firstBoard, otherBoard];

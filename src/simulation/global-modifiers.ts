@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
@@ -26,12 +27,22 @@ export const removeGlobalModifiers = (
 	cards: AllCardsService,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	return [
-		board1.map(entity =>
-			entity.previousAttack ? { ...entity, previousAttack: undefined, attack: entity.previousAttack } : entity,
-		),
-		board2.map(entity =>
-			entity.previousAttack ? { ...entity, previousAttack: undefined, attack: entity.previousAttack } : entity,
-		),
+		board1.map(entity => {
+			let newEntity = entity.previousAttack
+				? { ...entity, previousAttack: undefined, attack: entity.previousAttack }
+				: entity;
+			newEntity = entity.attacking ? { ...entity, attacking: undefined } : entity;
+			newEntity = entity.lastAffectedByEntity ? { ...entity, lastAffectedByEntity: undefined } : entity;
+			return newEntity;
+		}),
+		board2.map(entity => {
+			let newEntity = entity.previousAttack
+				? { ...entity, previousAttack: undefined, attack: entity.previousAttack }
+				: entity;
+			newEntity = entity.attacking ? { ...entity, attacking: undefined } : entity;
+			newEntity = entity.lastAffectedByEntity ? { ...entity, lastAffectedByEntity: undefined } : entity;
+			return newEntity;
+		}),
 	];
 };
 
