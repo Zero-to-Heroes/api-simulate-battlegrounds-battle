@@ -68,6 +68,24 @@ export const handleDeathrattleEffects = (
 				'BEAST',
 			);
 			return [boardWithDeadEntity, otherBoard];
+		case CardIds.NonCollectible.Neutral.KingBagurgle:
+			boardWithDeadEntity = addStatsToBoard(
+				boardWithDeadEntity,
+				multiplier * 2,
+				multiplier * 2,
+				allCards,
+				'MURLOC',
+			);
+			return [boardWithDeadEntity, otherBoard];
+		case CardIds.NonCollectible.Neutral.KingBagurgleTavernBrawl:
+			boardWithDeadEntity = addStatsToBoard(
+				boardWithDeadEntity,
+				multiplier * 4,
+				multiplier * 4,
+				allCards,
+				'MURLOC',
+			);
+			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
 				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
