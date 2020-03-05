@@ -96,6 +96,9 @@ const applyMinionDeathEffect = (
 		console.log('will apply juggler effect', deadEntity, board, opponentBoard);
 		[board, opponentBoard] = applySoulJugglerEffect(board, opponentBoard, allCards, cardsData, sharedState);
 	}
+	if (allCards.getCard(deadEntity.cardId).race === 'MECH') {
+		board = applyJunkbotEffect(board);
+	}
 	if (deadEntity.cardId === CardIds.Collectible.Neutral.UnstableGhoul) {
 		[board, opponentBoard] = dealDamageToAllMinions(
 			board,
@@ -227,6 +230,26 @@ const applyScavengingHyenaEffect = (board: readonly BoardEntity[]): readonly Boa
 				...copy[i],
 				attack: copy[i].attack + 4,
 				health: copy[i].health + 2,
+			};
+		}
+	}
+	return copy;
+};
+
+const applyJunkbotEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
+	const copy = [...board];
+	for (let i = 0; i < copy.length; i++) {
+		if (copy[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
+			copy[i] = {
+				...copy[i],
+				attack: copy[i].attack + 2,
+				health: copy[i].health + 2,
+			};
+		} else if (copy[i].cardId === CardIds.NonCollectible.Neutral.JunkbotTavernBrawl) {
+			copy[i] = {
+				...copy[i],
+				attack: copy[i].attack + 4,
+				health: copy[i].health + 4,
 			};
 		}
 	}
