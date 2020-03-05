@@ -119,11 +119,38 @@ export const bumpEntities = (
 			true,
 		);
 		updatedEntityBoard.splice(index, 0, ...newEntities);
-	}
-	if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl && updatedEntityBoard.length < 7) {
+	} else if (
+		entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl &&
+		updatedEntityBoard.length < 7
+	) {
 		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
+			1,
+			updatedEntityBoard,
+			allCards,
+			sharedState,
+			true,
+		);
+		updatedEntityBoard.splice(index, 0, ...newEntities);
+	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover && updatedEntityBoard.length < 7) {
+		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
+		const newEntities = spawnEntities(
+			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
+			1,
+			updatedEntityBoard,
+			allCards,
+			sharedState,
+			true,
+		);
+		updatedEntityBoard.splice(index, 0, ...newEntities);
+	} else if (
+		entity.cardId === CardIds.NonCollectible.Warrior.SecurityRoverTavernBrawl &&
+		updatedEntityBoard.length < 7
+	) {
+		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
+		const newEntities = spawnEntities(
+			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenTavernBrawl,
 			1,
 			updatedEntityBoard,
 			allCards,
