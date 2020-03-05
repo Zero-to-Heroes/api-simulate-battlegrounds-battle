@@ -4,6 +4,7 @@ import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, processMinionDeath } from './attack';
+import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 
 export const handleDeathrattleEffects = (
@@ -164,6 +165,7 @@ const applyMinionDeathEffect = (
 		boardWithDeadEntity = applyJunkbotEffect(boardWithDeadEntity);
 	}
 	// Overkill
+	console.log('is there overkill?', deadEntity);
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity.attacking) {
 		console.log('overkill', deadEntity);
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS) {
@@ -198,6 +200,35 @@ const applyMinionDeathEffect = (
 					sharedState,
 				);
 			}
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
+			console.log('will apply direhorn overkill', deadEntity, otherBoard);
+			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
+			const newEntities = spawnEntities(
+				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntToken,
+				1,
+				otherBoard,
+				allCards,
+				sharedState,
+				true,
+			);
+			const updatedBoard = [...otherBoard];
+			updatedBoard.splice(index, 0, ...newEntities);
+			otherBoard = updatedBoard;
+		} else if (
+			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Druid.IronhideDirehornTavernBrawl
+		) {
+			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
+			const newEntities = spawnEntities(
+				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntTokenTavernBrawl,
+				1,
+				otherBoard,
+				allCards,
+				sharedState,
+				true,
+			);
+			const updatedBoard = [...otherBoard];
+			updatedBoard.splice(index, 0, ...newEntities);
+			otherBoard = updatedBoard;
 		}
 	}
 
