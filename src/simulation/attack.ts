@@ -74,7 +74,7 @@ export const dealDamageToEnemy = (
 
 export const getDefendingEntity = (defendingBoard: readonly BoardEntity[]): BoardEntity => {
 	const taunts = defendingBoard.filter(entity => entity.taunt);
-	console.log('taunts', taunts);
+	// console.log('taunts', taunts);
 	const possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
 	return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 };

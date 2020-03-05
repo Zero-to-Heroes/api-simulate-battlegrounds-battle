@@ -11,13 +11,16 @@ export const applyGlobalModifiers = (
 	data: CardsData,
 	cards: AllCardsService,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
+	// console.log('before applying global modifiers', board1, board2);
 	const totalMurlocs =
 		board1.map(entity => cards.getCard(entity.cardId).race).filter(race => race === 'MURLOC').length +
 		board2.map(entity => cards.getCard(entity.cardId).race).filter(race => race === 'MURLOC').length;
-	return [
+	const result: [readonly BoardEntity[], readonly BoardEntity[]] = [
 		board1.map(entity => mapEntity(entity, totalMurlocs)),
 		board2.map(entity => mapEntity(entity, totalMurlocs)),
 	];
+	// console.log('after applying global modifiers', board1, board2);
+	return result;
 };
 
 export const removeGlobalModifiers = (
@@ -26,7 +29,8 @@ export const removeGlobalModifiers = (
 	data: CardsData,
 	cards: AllCardsService,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	return [
+	// console.log('before removing global modifiers', board1, board2);
+	const result: [readonly BoardEntity[], readonly BoardEntity[]] = [
 		board1.map(entity => {
 			let newEntity = entity.previousAttack
 				? { ...entity, previousAttack: undefined, attack: entity.previousAttack }
@@ -44,6 +48,8 @@ export const removeGlobalModifiers = (
 			return newEntity;
 		}),
 	];
+	// console.log('after removing global modifiers', board1, board2);
+	return result;
 };
 
 const mapEntity = (entity: BoardEntity, totalMurlocs: number): BoardEntity => {

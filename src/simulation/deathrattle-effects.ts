@@ -44,10 +44,28 @@ export const handleDeathrattleEffects = (
 			}
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
-			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1);
+			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards);
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.SpawnOfNzothTavernBrawl:
-			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2);
+			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards);
+			return [boardWithDeadEntity, otherBoard];
+		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf:
+			boardWithDeadEntity = addStatsToBoard(
+				boardWithDeadEntity,
+				multiplier * 4,
+				multiplier * 4,
+				allCards,
+				'BEAST',
+			);
+			return [boardWithDeadEntity, otherBoard];
+		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfTavernBrawl:
+			boardWithDeadEntity = addStatsToBoard(
+				boardWithDeadEntity,
+				multiplier * 8,
+				multiplier * 8,
+				allCards,
+				'BEAST',
+			);
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
@@ -102,12 +120,23 @@ export const handleDeathrattleEffects = (
 	return [boardWithDeadEntity, otherBoard];
 };
 
-const addStatsToBoard = (board: readonly BoardEntity[], attack: number, health: number): readonly BoardEntity[] => {
-	return board.map(entity => ({
-		...entity,
-		attack: entity.attack + attack,
-		health: entity.health + health,
-	}));
+const addStatsToBoard = (
+	board: readonly BoardEntity[],
+	attack: number,
+	health: number,
+	allCards: AllCardsService,
+	tribe?: string,
+): readonly BoardEntity[] => {
+	return board.map(entity => {
+		if (!tribe || allCards.getCard(entity.cardId).race === tribe) {
+			return {
+				...entity,
+				attack: entity.attack + attack,
+				health: entity.health + health,
+			};
+		}
+		return entity;
+	});
 };
 
 const applyMinionDeathEffect = (
