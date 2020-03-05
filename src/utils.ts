@@ -18,6 +18,7 @@ export const buildSingleBoardEntity = (cardId: string, allCards: AllCardsService
 		taunt: card.mechanics && card.mechanics.indexOf('TAUNT') !== -1,
 		reborn: card.mechanics && card.mechanics.indexOf('REBORN') !== -1,
 		cleave: CLEAVE_IDS.indexOf(cardId) !== -1,
+		poisonous: card.mechanics && card.mechanics.indexOf('POISONOUS') !== -1,
 		enchantments: [],
 	} as BoardEntity;
 };

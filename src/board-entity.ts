@@ -5,6 +5,7 @@ export interface BoardEntity {
 	health: number;
 	taunt: boolean;
 	divineShield: boolean;
+	poisonous: boolean; // TODO
 	// Because Lich King can give Reborn to a non-reborn minion
 	reborn: boolean;
 	cleave: boolean;

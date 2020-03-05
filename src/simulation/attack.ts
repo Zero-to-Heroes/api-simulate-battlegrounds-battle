@@ -128,6 +128,14 @@ export const bumpEntities = (
 		}
 		return [entity, updatedBoard];
 	}
+	if (bumpInto.poisonous) {
+		entity = {
+			...entity,
+			health: 0,
+			lastAffectedByEntity: { ...bumpInto },
+		};
+		return [entity, entityBoard];
+	}
 	const updatedEntityBoard = [...entityBoard];
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it

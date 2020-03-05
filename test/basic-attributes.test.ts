@@ -1,12 +1,16 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../src/board-entity';
 import { AllCardsService } from '../src/cards/cards';
 import { CardsData } from '../src/cards/cards-data';
 import { PlayerEntity } from '../src/player-entity';
+import { SharedState } from '../src/simulation/shared-state';
 import { Simulator } from '../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../src/utils';
 import cardsJson from './cards.json';
 
 describe('Basic attributes', () => {
+	const sharedState = new SharedState();
+
 	test('Divine Shield works properly', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
@@ -97,6 +101,65 @@ describe('Basic attributes', () => {
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('won');
 		expect(result.damageDealt).toBe(4);
+	});
+
+	test('Poisonous one-shots any non-divine shield minion', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: readonly BoardEntity[] = [
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.Maexxna, cards, sharedState.currentEntityId++),
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				health: 999,
+				attack: 999,
+			},
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('tied');
+	});
+
+	test('Poisonous does not work on divine shield minion', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: readonly BoardEntity[] = [
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.Maexxna, cards, sharedState.currentEntityId++),
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				divineShield: true,
+				health: 999,
+				attack: 999,
+			},
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('lost');
 	});
 });
 
