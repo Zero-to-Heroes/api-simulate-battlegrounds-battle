@@ -23,58 +23,80 @@ export const handleDeathrattleEffects = (
 		cardsData,
 		sharedState,
 	);
+
+	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
+	const goldenRivendare = boardWithDeadEntity.find(
+		entity => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
+	);
+	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
+	// We do it on a case by case basis so that we deal all the damage in one go for instance
+	// and avoid proccing deathrattle spawns between the times the damage triggers
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
-			boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+			for (let i = 0; i < multiplier; i++) {
+				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+			}
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Paladin.SelflessHeroTavernBrawl:
-			boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
-			boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+			for (let i = 0; i < multiplier; i++) {
+				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+			}
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
-			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, 1, 1);
+			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1);
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.SpawnOfNzothTavernBrawl:
-			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, 2, 2);
+			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2);
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
-			return [grantRandomAttack(boardWithDeadEntity, deadEntity.attack), otherBoard];
+			for (let i = 0; i < multiplier; i++) {
+				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+			}
+			return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Warlock.FiendishServantTavernBrawl:
-			boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
-			boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+			for (let i = 0; i < multiplier; i++) {
+				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+			}
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.KaboomBot:
-			// console.log('dealing damage to opponent board from bot', opponentBoard, board);
-			[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
-				otherBoard,
-				deadEntity,
-				4,
-				boardWithDeadEntity,
-				allCards,
-				cardsData,
-				sharedState,
-			);
+			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+			// could be spawned between the shots firing), but let's say it's good enough for now
+			for (let i = 0; i < multiplier; i++) {
+				[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
+					otherBoard,
+					deadEntity,
+					4,
+					boardWithDeadEntity,
+					allCards,
+					cardsData,
+					sharedState,
+				);
+			}
 			// console.log('after damage from bot', opponentBoard, board);
 			return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
-			[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
-				otherBoard,
-				deadEntity,
-				4,
-				boardWithDeadEntity,
-				allCards,
-				cardsData,
-				sharedState,
-			);
-			[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
-				otherBoard,
-				deadEntity,
-				4,
-				boardWithDeadEntity,
-				allCards,
-				cardsData,
-				sharedState,
-			);
+			for (let i = 0; i < multiplier; i++) {
+				[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
+					otherBoard,
+					deadEntity,
+					4,
+					boardWithDeadEntity,
+					allCards,
+					cardsData,
+					sharedState,
+				);
+				[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
+					otherBoard,
+					deadEntity,
+					4,
+					boardWithDeadEntity,
+					allCards,
+					cardsData,
+					sharedState,
+				);
+			}
 			return [boardWithDeadEntity, otherBoard];
 	}
 	return [boardWithDeadEntity, otherBoard];
@@ -149,12 +171,18 @@ const applyMinionDeathEffect = (
 			}
 		}
 	}
+
+	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
+	const goldenRivendare = boardWithDeadEntity.find(
+		entity => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
+	);
+	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	if (deadEntity.cardId === CardIds.Collectible.Neutral.UnstableGhoul) {
 		[boardWithDeadEntity, otherBoard] = dealDamageToAllMinions(
 			boardWithDeadEntity,
 			otherBoard,
 			deadEntity,
-			1,
+			multiplier * 1,
 			allCards,
 			cardsData,
 			sharedState,
@@ -164,7 +192,7 @@ const applyMinionDeathEffect = (
 			boardWithDeadEntity,
 			otherBoard,
 			deadEntity,
-			2,
+			multiplier * 2,
 			allCards,
 			cardsData,
 			sharedState,

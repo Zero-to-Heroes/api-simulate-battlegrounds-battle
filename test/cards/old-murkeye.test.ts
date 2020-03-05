@@ -73,12 +73,12 @@ describe('Old Murkeye', () => {
 		const playerBoard: readonly BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.OldMurkEye, cards, 1),
-			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: readonly BoardEntity[] = [
 			{
-				...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3),
+				...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 4),
 				health: 7,
 				attack: 20,
 				taunt: true,
