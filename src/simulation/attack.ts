@@ -20,7 +20,7 @@ export const dealDamageToRandomEnemy = (
 	if (defendingBoard.length === 0) {
 		return [defendingBoard, boardWithAttackOrigin];
 	}
-	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
+	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, damageSource);
 	return dealDamageToEnemy(
 		defendingEntity,
 		defendingBoard,
@@ -73,10 +73,23 @@ export const dealDamageToEnemy = (
 	return [defendingBoard, boardWithAttackOrigin];
 };
 
-export const getDefendingEntity = (defendingBoard: readonly BoardEntity[]): BoardEntity => {
-	const taunts = defendingBoard.filter(entity => entity.taunt);
-	// console.log('taunts', taunts);
-	const possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
+export const getDefendingEntity = (
+	defendingBoard: readonly BoardEntity[],
+	attackingEntity: BoardEntity,
+): BoardEntity => {
+	let possibleDefenders: readonly BoardEntity[];
+	if (
+		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywick ||
+		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl
+	) {
+		const minAttack = Math.min(...defendingBoard.map(entity => entity.attack));
+		console.log('minAttack', minAttack, defendingBoard.filter(entity => entity.attack === minAttack));
+		possibleDefenders = defendingBoard.filter(entity => entity.attack === minAttack);
+	} else {
+		const taunts = defendingBoard.filter(entity => entity.taunt);
+		// console.log('taunts', taunts);
+		possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
+	}
 	return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 };
 
@@ -258,7 +271,7 @@ export const processMinionDeath = (
 	// alternating between board1 and board2 based on the play order
 	// For now I'll trigger everything from board1 first, then everything from board 2
 	// It might not be fully accurate, but is probably a good first approximation
-	console.log('boards after minions died', board1, board2);
+	// console.log('boards after minions died', board1, board2);
 	[board1, board2] = handleDeathsForFirstBoard(
 		board1,
 		board2,
@@ -268,7 +281,7 @@ export const processMinionDeath = (
 		cardsData,
 		sharedState,
 	);
-	console.log('boards after minions died and first board processed', board1, board2);
+	// console.log('boards after minions died and first board processed', board1, board2);
 	// Now handle the other board's deathrattles
 	[board2, board1] = handleDeathsForFirstBoard(
 		board2,
@@ -279,7 +292,7 @@ export const processMinionDeath = (
 		cardsData,
 		sharedState,
 	);
-	console.log('board from processMinionDeath', board1, board2);
+	// console.log('board from processMinionDeath', board1, board2);
 	// Make sure we only return when there are no more deaths to process
 	// FIXME: this will propagate the killer between rounds, which is incorrect. For instance,
 	// if a dragon kills a Ghoul, then the Ghoul's deathrattle kills a Kaboom, the killer should
@@ -465,6 +478,6 @@ const buildBoardAfterDeathrattleSpawns = (
 	// Minion has already been removed from the board in the previous step
 	newBoard.splice(deadMinionIndex, 0, ...spawnedEntities);
 	const boardAfterMinionSpawnEffects = handleSpawnEffects(newBoard, spawnedEntities, allCards);
-	console.log('newBoard', boardAfterMinionSpawnEffects, opponentBoard);
+	// console.log('newBoard', boardAfterMinionSpawnEffects, opponentBoard);
 	return [boardAfterMinionSpawnEffects, opponentBoard];
 };

@@ -188,14 +188,14 @@ const applyMinionDeathEffect = (
 		boardWithDeadEntity = applyJunkbotEffect(boardWithDeadEntity);
 	}
 	// Overkill
-	console.log('is there overkill?', deadEntity);
+	// console.log('is there overkill?', deadEntity);
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity.attacking) {
-		console.log('overkill', deadEntity);
+		// console.log('overkill', deadEntity);
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS) {
 			const targets = boardWithDeadEntity.filter(entity => entity.health > 0);
 			if (targets.length > 0) {
 				const target = targets[0];
-				console.log('hof target', target);
+				// console.log('hof target', target);
 				[boardWithDeadEntity, otherBoard] = dealDamageToEnemy(
 					target,
 					boardWithDeadEntity,
@@ -206,7 +206,7 @@ const applyMinionDeathEffect = (
 					cardsData,
 					sharedState,
 				);
-				console.log('board after overkill handling', boardWithDeadEntity);
+				// console.log('board after overkill handling', boardWithDeadEntity);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlameTavernBrawl) {
 			const targets = boardWithDeadEntity.filter(entity => entity.health > 0);
@@ -224,7 +224,7 @@ const applyMinionDeathEffect = (
 				);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
-			console.log('will apply direhorn overkill', deadEntity, otherBoard);
+			// console.log('will apply direhorn overkill', deadEntity, otherBoard);
 			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
 			const newEntities = spawnEntities(
 				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntToken,

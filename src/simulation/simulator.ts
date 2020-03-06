@@ -190,13 +190,16 @@ export class Simulator {
 			const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 			for (let i = 0; i < numberOfAttacks; i++) {
 				// We refresh the entity in case of windfury
-				console.log('before', attackingEntity);
+				if (attackingBoard.length === 0 || defendingBoard.length === 0) {
+					return [attackingBoard, defendingBoard];
+				}
+				// console.log('before', attackingEntity);
 				attackingEntity = attackingBoard.find(entity => entity.entityId === attackingEntity.entityId);
-				console.log('after', attackingEntity);
+				// console.log('after', attackingEntity);
 				if (attackingEntity) {
 					// console.log('attackingEntity', attackingEntity, attackingBoard);
 					attackingEntity = applyOnAttackBuffs(attackingEntity);
-					const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
+					const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 					console.log('battling between', attackingEntity, defendingEntity);
 					[attackingBoard, defendingBoard] = this.performAttack(
 						attackingEntity,
@@ -336,12 +339,12 @@ export class Simulator {
 			attacksPerformed: attackingEntity.attacksPerformed + 1,
 			attacking: true,
 		};
-		console.log('board before', attackingBoard);
+		// console.log('board before', attackingBoard);
 		const index = attackingBoard.map(entity => entity.entityId).indexOf(attackingEntity.entityId);
 		const tempBoard = [...attackingBoard];
 		tempBoard.splice(index, 1, newAttackingEntity);
 		attackingBoard = tempBoard;
-		console.log('board after', attackingBoard, index);
+		// console.log('board after', attackingBoard, index);
 		return [newAttackingEntity, attackingBoard];
 	}
 
