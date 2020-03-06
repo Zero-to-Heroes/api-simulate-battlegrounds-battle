@@ -9,6 +9,10 @@ export default async (event): Promise<any> => {
 		const playerBoard: readonly BoardEntity[] = battleInput.playerBoard;
 		const opponentBoard: readonly BoardEntity[] = battleInput.opponentBoard;
 
+		// TODO: add implicit info from cards (like poisonous and stuff if not present)
+		// remove enchantments, except the ones from entities on the board (auras) (to be confirmed)
+		// and micro machine magnetic, because of hte deathrattle
+
 		const response = {
 			statusCode: 200,
 			isBase64Encoded: false,

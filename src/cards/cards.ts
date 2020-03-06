@@ -28,10 +28,10 @@ export class AllCardsService {
 	}
 
 	public async initializeCardsDb(): Promise<void> {
-		console.debug('[all-cards] initializing card db');
+		// console.debug('[all-cards] initializing card db');
 		return new Promise<void>(async (resolve, reject) => {
 			if (this.allCards) {
-				console.debug('[all-cards] already loaded all cards');
+				// console.debug('[all-cards] already loaded all cards');
 				resolve();
 				return;
 			}

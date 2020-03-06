@@ -161,6 +161,218 @@ describe('Basic attributes', () => {
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('lost');
 	});
+
+	test('Cleave works properly', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+		const playerBoard: readonly BoardEntity[] = [
+			{ ...buildSingleBoardEntity('LOOT_078', cards, 1), attack: 10 } as BoardEntity, // Cave Hydra
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver, will attack first and die
+			buildSingleBoardEntity('BGS_043', cards, 3), // Murozond, who will die from the cleave
+			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant, who will tank the Hydra's attack, die and not kill the Hydra
+			buildSingleBoardEntity('BGS_043', cards, 5), // Murozond, who will die from the cleave
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('won');
+		expect(result.damageDealt).toBe(5);
+	});
+
+	test('Windfury works properly', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				windfury: true,
+				attack: 4,
+				health: 8,
+			},
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				taunt: true,
+				health: 5,
+			},
+			{
+				...buildSingleBoardEntity(
+					CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS,
+					cards,
+					sharedState.currentEntityId++,
+				),
+			},
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('won');
+	});
+
+	test('Windfury has only one attack if attacker is dead after first', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				windfury: true,
+				attack: 4,
+				health: 4,
+			},
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				taunt: true,
+				health: 5,
+			},
+			{
+				...buildSingleBoardEntity(
+					CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS,
+					cards,
+					sharedState.currentEntityId++,
+				),
+			},
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('lost');
+	});
+
+	test('Damage between windfury attacks carry over', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				windfury: true,
+				attack: 4,
+				health: 6,
+			},
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				taunt: true,
+				health: 5,
+			},
+			{
+				...buildSingleBoardEntity(
+					CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS,
+					cards,
+					sharedState.currentEntityId++,
+				),
+			},
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('tied');
+	});
+
+	test('Mega-windfury works properly', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				megaWindfury: true,
+				attack: 4,
+				health: 12,
+			},
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: readonly BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(
+					CardIds.Collectible.Neutral.RockpoolHunter,
+					cards,
+					sharedState.currentEntityId++,
+				),
+				taunt: true,
+				health: 5,
+			},
+			buildSingleBoardEntity(
+				CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS,
+				cards,
+				sharedState.currentEntityId++,
+			),
+			buildSingleBoardEntity(
+				CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS,
+				cards,
+				sharedState.currentEntityId++,
+			),
+			buildSingleBoardEntity(
+				CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS,
+				cards,
+				sharedState.currentEntityId++,
+			),
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('won');
+	});
 });
 
 function buildCardsService() {

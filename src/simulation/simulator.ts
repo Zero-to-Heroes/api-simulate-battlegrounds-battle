@@ -184,17 +184,28 @@ export class Simulator {
 
 		attackingBoard = attackingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
 		defendingBoard = defendingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
-		let attackingEntity: BoardEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
+		let attackingEntity: BoardEntity;
+		[attackingEntity, attackingBoard] = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {
-			attackingEntity = applyOnAttackBuffs(attackingEntity);
-			const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
-			console.log('battling between', attackingEntity, defendingEntity);
-			[attackingBoard, defendingBoard] = this.performAttack(
-				attackingEntity,
-				defendingEntity,
-				attackingBoard,
-				defendingBoard,
-			);
+			const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
+			for (let i = 0; i < numberOfAttacks; i++) {
+				// We refresh the entity in case of windfury
+				console.log('before', attackingEntity);
+				attackingEntity = attackingBoard.find(entity => entity.entityId === attackingEntity.entityId);
+				console.log('after', attackingEntity);
+				if (attackingEntity) {
+					// console.log('attackingEntity', attackingEntity, attackingBoard);
+					attackingEntity = applyOnAttackBuffs(attackingEntity);
+					const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard);
+					console.log('battling between', attackingEntity, defendingEntity);
+					[attackingBoard, defendingBoard] = this.performAttack(
+						attackingEntity,
+						defendingEntity,
+						attackingBoard,
+						defendingBoard,
+					);
+				}
+			}
 			// console.log('attacking board', attackingBoard, 'defending board', defendingBoard);
 		}
 		// return [[], []];
@@ -300,10 +311,13 @@ export class Simulator {
 		return neighbours;
 	}
 
-	private getAttackingEntity(attackingBoard: readonly BoardEntity[], lastAttackerEntityId: number): BoardEntity {
+	private getAttackingEntity(
+		attackingBoard: readonly BoardEntity[],
+		lastAttackerEntityId: number,
+	): [BoardEntity, readonly BoardEntity[]] {
 		const validAttackers = attackingBoard.filter(entity => entity.attack > 0);
 		if (validAttackers.length === 0) {
-			return null;
+			return [null, attackingBoard];
 		}
 		let attackingEntity = validAttackers[0];
 		let minNumberOfAttacks: number = attackingEntity.attacksPerformed;
@@ -313,11 +327,19 @@ export class Simulator {
 				minNumberOfAttacks = entity.attacksPerformed;
 			}
 		}
-		return {
+
+		const newAttackingEntity = {
 			...attackingEntity,
 			attacksPerformed: attackingEntity.attacksPerformed + 1,
 			attacking: true,
 		};
+		console.log('board before', attackingBoard);
+		const index = attackingBoard.map(entity => entity.entityId).indexOf(attackingEntity.entityId);
+		const tempBoard = [...attackingBoard];
+		tempBoard.splice(index, 1, newAttackingEntity);
+		attackingBoard = tempBoard;
+		console.log('board after', attackingBoard, index);
+		return [newAttackingEntity, attackingBoard];
 	}
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]) {
