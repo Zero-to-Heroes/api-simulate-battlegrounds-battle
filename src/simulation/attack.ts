@@ -118,6 +118,16 @@ export const bumpEntities = (
 					health: updatedBoard[i].health + 4,
 				};
 			}
+			// Only "other" friendly minions
+			else if (
+				updatedBoard[i].cardId === CardIds.NonCollectible.Paladin.HolyMackerel &&
+				updatedBoard[i].entityId !== entity.entityId
+			) {
+				updatedBoard[i] = {
+					...updatedBoard[i],
+					divineShield: true,
+				};
+			}
 			// So that self-buffs from Bolvar are taken into account
 			if (updatedBoard[i].entityId === entity.entityId) {
 				entity = {
