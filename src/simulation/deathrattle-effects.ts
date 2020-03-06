@@ -44,6 +44,11 @@ export const handleDeathrattleEffects = (
 				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
 			}
 			return [boardWithDeadEntity, otherBoard];
+		case CardIds.NonCollectible.Neutral.NadinaTheRed:
+			for (let i = 0; i < multiplier; i++) {
+				boardWithDeadEntity = grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
+			}
+			return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
 			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards);
 			return [boardWithDeadEntity, otherBoard];
@@ -304,6 +309,7 @@ const dealDamageToAllMinions = (
 			fakeAttacker,
 			updatedBoard1,
 			allCards,
+			cardsData,
 			sharedState,
 		);
 		updatedBoard1 = [...boardResult];
@@ -315,6 +321,7 @@ const dealDamageToAllMinions = (
 			fakeAttacker,
 			updatedBoard2,
 			allCards,
+			cardsData,
 			sharedState,
 		);
 		updatedBoard2 = [...boardResult];
@@ -435,6 +442,28 @@ const grantRandomDivineShield = (board: readonly BoardEntity[]): readonly BoardE
 		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
 		board = board.map(entity =>
 			entity.entityId === chosen.entityId
+				? {
+						...entity,
+						divineShield: true,
+				  }
+				: entity,
+		);
+	}
+	return board;
+};
+
+const grantAllDivineShield = (
+	board: readonly BoardEntity[],
+	tribe: string,
+	cards: AllCardsService,
+): readonly BoardEntity[] => {
+	const elligibleEntities = board
+		.filter(entity => !entity.divineShield)
+		.filter(entity => cards.getCard(entity.cardId).race === tribe)
+		.map(entity => entity.entityId);
+	if (elligibleEntities.length > 0) {
+		board = board.map(entity =>
+			elligibleEntities.indexOf(entity.entityId) !== -1
 				? {
 						...entity,
 						divineShield: true,

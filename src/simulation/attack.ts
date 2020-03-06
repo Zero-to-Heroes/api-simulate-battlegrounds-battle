@@ -55,6 +55,7 @@ export const dealDamageToEnemy = (
 		fakeAttacker,
 		defendingBoard,
 		allCards,
+		cardsData,
 		sharedState,
 	);
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(newDefendingEntity.entityId);

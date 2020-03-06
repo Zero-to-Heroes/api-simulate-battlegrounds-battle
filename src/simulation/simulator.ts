@@ -234,6 +234,7 @@ export class Simulator {
 			defendingEntity,
 			attackingBoard,
 			this.allCards,
+			this.spawns,
 			this.sharedState,
 		);
 		[newDefendingEntity, defendingBoard] = bumpEntities(
@@ -241,6 +242,7 @@ export class Simulator {
 			attackingEntity,
 			defendingBoard,
 			this.allCards,
+			this.spawns,
 			this.sharedState,
 		);
 		console.log('after damage', newAttackingEntity, newDefendingEntity);
@@ -254,6 +256,7 @@ export class Simulator {
 					newAttackingEntity,
 					defendingBoard,
 					this.allCards,
+					this.spawns,
 					this.sharedState,
 				);
 				updatedDefenders.push(neighbour);
