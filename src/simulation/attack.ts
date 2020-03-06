@@ -84,6 +84,7 @@ export const bumpEntities = (
 	bumpInto: BoardEntity,
 	entityBoard: readonly BoardEntity[],
 	allCards: AllCardsService,
+	cardsData: CardsData,
 	sharedState: SharedState,
 ): [BoardEntity, readonly BoardEntity[]] => {
 	// No attack has no impact
@@ -174,6 +175,28 @@ export const bumpEntities = (
 			sharedState,
 			true,
 		);
+		updatedEntityBoard.splice(index, 0, ...newEntities);
+	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMama && updatedEntityBoard.length < 7) {
+		const newEntities = spawnEntities(
+			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
+			1,
+			updatedEntityBoard,
+			allCards,
+			sharedState,
+			true,
+		).map(entity => ({ ...entity, taunt: true }));
+		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
+		updatedEntityBoard.splice(index, 0, ...newEntities);
+	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMamaTavernBrawl && updatedEntityBoard.length < 7) {
+		const newEntities = spawnEntities(
+			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
+			2,
+			updatedEntityBoard,
+			allCards,
+			sharedState,
+			true,
+		).map(entity => ({ ...entity, taunt: true }));
+		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		updatedEntityBoard.splice(index, 0, ...newEntities);
 	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover && updatedEntityBoard.length < 7) {
 		const index = updatedEntityBoard.map(e => e.entityId).indexOf(entity.entityId);

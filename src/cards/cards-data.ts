@@ -18,6 +18,7 @@ const REMOVED_CARD_IDS = [
 export class CardsData {
 	public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
+	public impMamaSpawns: readonly string[];
 	public sneedsSpawns: readonly string[];
 	public auraEnchantments: readonly string[][];
 	public auraOrigins: readonly string[];
@@ -40,6 +41,13 @@ export class CardsData {
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.id !== 'BGS_008')
 			.filter(card => card.mechanics && card.mechanics.indexOf('DEATHRATTLE') !== -1)
+			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map(card => card.id);
+		this.impMamaSpawns = this.allCards
+			.getCards()
+			.filter(card => card.techLevel)
+			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter(card => card.race === 'DEMON')
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map(card => card.id);
 		this.sneedsSpawns = this.allCards
