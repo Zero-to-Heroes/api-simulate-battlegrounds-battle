@@ -21,12 +21,6 @@ export const applyGlobalModifiers = (
 	for (const entity of board2) {
 		mapEntity(entity, totalMurlocs);
 	}
-	// const result: [readonly BoardEntity[], readonly BoardEntity[]] = [
-	// 	board1.map(entity => mapEntity(entity, totalMurlocs)),
-	// 	board2.map(entity => mapEntity(entity, totalMurlocs)),
-	// ];
-	// console.log('after applying global modifiers', board1, board2);
-	// return result;
 };
 
 export const removeGlobalModifiers = (board1: BoardEntity[], board2: BoardEntity[]): void => {
@@ -36,27 +30,6 @@ export const removeGlobalModifiers = (board1: BoardEntity[], board2: BoardEntity
 	for (const entity of board2) {
 		removeGlobalModifiersForEntity(entity);
 	}
-	// console.log('before removing global modifiers', board1, board2);
-	// const result: [readonly BoardEntity[], readonly BoardEntity[]] = [
-	// 	board1.map(entity => {
-	// 		let newEntity = entity.previousAttack
-	// 			? { ...entity, previousAttack: undefined, attack: entity.previousAttack }
-	// 			: entity;
-	// 		newEntity = entity.attacking ? { ...entity, attacking: undefined } : entity;
-	// 		newEntity = entity.lastAffectedByEntity ? { ...entity, lastAffectedByEntity: undefined } : entity;
-	// 		return newEntity;
-	// 	}),
-	// 	board2.map(entity => {
-	// 		let newEntity = entity.previousAttack
-	// 			? { ...entity, previousAttack: undefined, attack: entity.previousAttack }
-	// 			: entity;
-	// 		newEntity = entity.attacking ? { ...entity, attacking: undefined } : entity;
-	// 		newEntity = entity.lastAffectedByEntity ? { ...entity, lastAffectedByEntity: undefined } : entity;
-	// 		return newEntity;
-	// 	}),
-	// ];
-	// // console.log('after removing global modifiers', board1, board2);
-	// return result;
 };
 
 const removeGlobalModifiersForEntity = (entity: BoardEntity): void => {
@@ -81,9 +54,4 @@ const mapEntity = (entity: BoardEntity, totalMurlocs: number): void => {
 const applyMurkeyeBuff = (entity: BoardEntity, totalMurlocs: number): void => {
 	entity.previousAttack = entity.attack;
 	entity.attack += totalMurlocs * (entity.cardId === CardIds.Collectible.Neutral.OldMurkEye ? 1 : 2);
-	// return {
-	// 	...entity,
-	// 	previousAttack: entity.attack,
-	// 	attack: entity.attack + totalMurlocs * (entity.cardId === CardIds.Collectible.Neutral.OldMurkEye ? 1 : 2),
-	// };
 };

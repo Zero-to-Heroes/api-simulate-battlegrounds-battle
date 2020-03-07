@@ -54,11 +54,11 @@ export class Simulator {
 				: opponentBoard.length > playerBoard.length
 				? 1
 				: Math.round(Math.random());
-		console.log('starting player', this.currentAttacker);
+		// console.log('starting player', this.currentAttacker);
 
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
-			console.log('starting round', playerBoard.length, opponentBoard.length); //, playerBoard, opponentBoard);
+			// console.log('starting round', playerBoard.length, opponentBoard.length); //, playerBoard, opponentBoard);
 			if (this.currentAttacker === 0) {
 				this.simulateAttack(playerBoard, opponentBoard, this.lastPlayerAttackerEntityId);
 			} else {
@@ -163,17 +163,13 @@ export class Simulator {
 		defendingBoard: BoardEntity[],
 		lastAttackerEntityId: number,
 	): void {
-		// TODO: handle windfury
 		if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 			return;
-			// return [attackingBoard, defendingBoard];
 		}
 		applyGlobalModifiers(attackingBoard, defendingBoard, this.spawns, this.allCards);
 		applyAuras(attackingBoard, this.spawns, this.allCards);
 		applyAuras(defendingBoard, this.spawns, this.allCards);
 
-		// attackingBoard = attackingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
-		// defendingBoard = defendingBoard.map(entity => ({ ...entity, lastAffectedByEntity: undefined } as BoardEntity));
 		let attackingEntity = this.getAttackingEntity(attackingBoard, lastAttackerEntityId);
 		if (attackingEntity) {
 			const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
@@ -227,34 +223,7 @@ export class Simulator {
 
 		// Approximate the play order
 		updatedDefenders.sort((a, b) => a.entityId - b.entityId);
-
-		// const attackerIndex = attackingBoard.map(e => e.entityId).indexOf(newAttackingEntity.entityId);
-		// const updatedAttackingBoard = [...attackingBoard];
-		// updatedAttackingBoard[attackerIndex] = newAttackingEntity;
-
-		// const updatedDefendingBoard = [...defendingBoard];
-		// for (const def of updatedDefenders) {
-		// 	const defenderIndex = defendingBoard.map(e => e.entityId).indexOf(def.entityId);
-		// 	updatedDefendingBoard[defenderIndex] = def;
-		// }
-
-		// console.log('processing minion death in attacking board', attackingBoard, 'killer?', newDefendingEntity);
-		// console.log('before minion death', defendingBoard.length);
 		processMinionDeath(attackingBoard, defendingBoard, this.allCards, this.spawns, this.sharedState);
-		// console.log('after minion death', defendingBoard.length);
-		// console.log('baords after porocessing minion deaths', attackingBoard, defendingBoard);
-		// console.log('processing minion death in defending board', defendingBoard, 'killer?', newAttackingEntity);
-		// [defendingBoard, attackingBoard] = processMinionDeath(
-		// 	defendingBoard,
-		// 	// updatedDefenders,
-		// 	attackingBoard,
-		// 	newAttackingEntity,
-		// 	this.allCards,
-		// 	this.spawns,
-		// 	this.sharedState,
-		// );
-		// console.log('baords after porocessing minion death in defendingBoard', attackingBoard, defendingBoard);
-		// return [attackingBoard, defendingBoard];
 	}
 
 	private getNeighbours(board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] {
@@ -286,17 +255,6 @@ export class Simulator {
 
 		attackingEntity.attacksPerformed++;
 		attackingEntity.attacking = true;
-		// const newAttackingEntity = {
-		// 	...attackingEntity,
-		// 	attacksPerformed: attackingEntity.attacksPerformed + 1,
-		// 	attacking: true,
-		// };
-		// console.log('board before', attackingBoard);
-		// const index = attackingBoard.map(entity => entity.entityId).indexOf(attackingEntity.entityId);
-		// const tempBoard = [...attackingBoard];
-		// tempBoard.splice(index, 1, newAttackingEntity);
-		// attackingBoard = tempBoard;
-		// console.log('board after', attackingBoard, index);
 		return attackingEntity;
 	}
 

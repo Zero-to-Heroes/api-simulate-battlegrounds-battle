@@ -3,12 +3,10 @@ import jsonEvent1 from './game1.json';
 import jsonEvent2 from './game2.json';
 import jsonEvent3 from './game3.json';
 
-describe.skip('Full tests for performance and accuracy', () => {
+describe('Full tests for performance and accuracy', () => {
 	test('full test 1', async () => {
-		const start = Date.now();
 		const result = await runSimulation({ 'body': JSON.stringify(jsonEvent1) });
 		// Need to return in less than 1s
-		expect(Date.now() - start).toBeLessThan(1000 * 1000);
 		console.debug('result', result);
 		const simulationResult = JSON.parse(result.body);
 		expect(simulationResult.wonPercent).toBe(100);
@@ -18,10 +16,8 @@ describe.skip('Full tests for performance and accuracy', () => {
 	});
 
 	test('full test 2', async () => {
-		const start = Date.now();
 		const result = await runSimulation({ 'body': JSON.stringify(jsonEvent2) });
 		// Need to return in less than 1s
-		expect(Date.now() - start).toBeLessThan(1000 * 1000);
 		console.debug('result2', result);
 		const simulationResult = JSON.parse(result.body);
 		validateInterval(simulationResult.wonPercent, 31.5);
@@ -32,15 +28,13 @@ describe.skip('Full tests for performance and accuracy', () => {
 	});
 
 	test('full test 3', async () => {
-		const start = Date.now();
 		const result = await runSimulation({ 'body': JSON.stringify(jsonEvent3) });
 		// Need to return in less than 1s
-		expect(Date.now() - start).toBeLessThan(1000 * 1000);
 		console.debug('result3', result);
 		const simulationResult = JSON.parse(result.body);
-		validateInterval(simulationResult.wonPercent, 7.8);
-		validateInterval(simulationResult.lostPercent, 91);
-		validateInterval(simulationResult.tiedPercent, 1.2);
+		validateInterval(simulationResult.wonPercent, 4.7);
+		validateInterval(simulationResult.lostPercent, 94);
+		validateInterval(simulationResult.tiedPercent, 1.3);
 		validateInterval(simulationResult.averageDamageWon, 9);
 		validateInterval(simulationResult.averageDamageLost, 12.5);
 	});

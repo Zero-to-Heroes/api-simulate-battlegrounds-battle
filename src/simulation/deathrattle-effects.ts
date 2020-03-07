@@ -211,7 +211,7 @@ const applyMinionDeathEffect = (
 				);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
-			console.log('will apply direhorn overkill', deadEntity, otherBoard);
+			// console.log('will apply direhorn overkill', deadEntity, otherBoard);
 			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
 			const newEntities = spawnEntities(
 				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntToken,

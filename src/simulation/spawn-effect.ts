@@ -19,18 +19,9 @@ export const handleSpawn = (entity: BoardEntity, spawned: readonly BoardEntity[]
 		case CardIds.Collectible.Neutral.MurlocTidecaller:
 			entity.attack += spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length;
 			return;
-		// return {
-		// 	...entity,
-		// 	attack: entity.attack + spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
-		// };
 		case CardIds.NonCollectible.Neutral.MurlocTidecallerTavernBrawl:
 			entity.attack += 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length;
 			return;
-		// return {
-		// 	...entity,
-		// 	attack:
-		// 		entity.attack + 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
-		// };
 		case CardIds.Collectible.Paladin.CobaltGuardian:
 			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
 				entity.divineShield = true;

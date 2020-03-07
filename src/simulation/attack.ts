@@ -92,7 +92,7 @@ export const bumpEntities = (
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
 		// const updatedBoard = [...entityBoard];
-		console.log('handling divine shield loss effect', entityBoard, entity);
+		// console.log('handling divine shield loss effect', entityBoard, entity);
 		for (let i = 0; i < entityBoard.length; i++) {
 			if (entityBoard[i].cardId === CardIds.Collectible.Paladin.BolvarFireblood) {
 				entityBoard[i].attack = entityBoard[i].attack + 2;
@@ -124,7 +124,7 @@ export const bumpEntities = (
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
 	// like this for now
 	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss && entityBoard.length < 7) {
-		console.log('board before IGB spawn', entityBoard);
+		// console.log('board before IGB spawn', entityBoard);
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
@@ -135,7 +135,7 @@ export const bumpEntities = (
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
-		console.log('board after IGB spawn', entityBoard);
+		// console.log('board after IGB spawn', entityBoard);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl && entityBoard.length < 7) {
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
@@ -199,7 +199,8 @@ export const bumpEntities = (
 		entity.health = 0;
 		// return entity;
 	}
-	entity.lastAffectedByEntity = { ...bumpInto };
+	// entity.lastAffectedByEntity = { ...bumpInto };
+	entity.lastAffectedByEntity = bumpInto;
 	return;
 	// return entity;
 };
