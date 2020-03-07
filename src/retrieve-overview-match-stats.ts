@@ -1,33 +1,113 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import { CardIds } from '@firestone-hs/reference-data';
+import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
+import { AllCardsService } from './cards/cards';
+import { CardsData } from './cards/cards-data';
+import { Simulator } from './simulation/simulator';
+
+const cards = new AllCardsService();
+const cardsData = new CardsData(cards, false);
 
 // This example demonstrates a NodeJS 8.10 async handler[1], however of course you could use
 // the more traditional callback-style handler.
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
 	try {
-		const battleInput = JSON.parse(event.body);
-		const playerBoard: readonly BoardEntity[] = battleInput.playerBoard;
-		const opponentBoard: readonly BoardEntity[] = battleInput.opponentBoard;
+		await cards.initializeCardsDb();
+		cardsData.inititialize();
+		const simulator = new Simulator(cards, cardsData);
 
-		// TODO: add implicit info from cards (like poisonous and stuff if not present)
-		// remove enchantments, except the ones from entities on the board (auras) (to be confirmed)
-		// and micro machine magnetic, because of hte deathrattle
+		const battleInput: BgsBattleInfo = JSON.parse(event.body);
+		const playerInfo = battleInput.playerBoard;
+		const opponentInfo = battleInput.opponentBoard;
+
+		const playerBoard = cleanEnchantments(playerInfo.board);
+		const opponentBoard = cleanEnchantments(opponentInfo.board);
+
+		const simulationResult = {
+			won: 0,
+			tied: 0,
+			lost: 0,
+			damageWon: 0,
+			damageLost: 0,
+			wonPercent: undefined,
+			tiedPercent: undefined,
+			lostPercent: undefined,
+			averageDamageWon: undefined,
+			averageDamageLost: undefined,
+		};
+		console.time('simulation');
+		for (let i = 0; i < 5000; i++) {
+			const battleResult = simulator.simulateSingleBattle(
+				playerBoard,
+				playerInfo.player,
+				opponentBoard,
+				opponentInfo.player,
+			);
+			if (battleResult.result === 'won') {
+				simulationResult.won++;
+				simulationResult.damageWon += battleResult.damageDealt;
+				if (!battleResult.damageDealt || battleResult.damageDealt === NaN) {
+					console.debug('no damage dealt', battleResult);
+				}
+			} else if (battleResult.result === 'lost') {
+				simulationResult.lost++;
+				simulationResult.damageLost += battleResult.damageDealt;
+			} else if (battleResult.result === 'tied') {
+				simulationResult.tied++;
+			}
+		}
+		const toatlMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
+		simulationResult.wonPercent = (100 * simulationResult.won) / toatlMatches;
+		simulationResult.tiedPercent = (100 * simulationResult.tied) / toatlMatches;
+		simulationResult.lostPercent = (100 * simulationResult.lost) / toatlMatches;
+		simulationResult.averageDamageWon = simulationResult.won
+			? simulationResult.damageWon / simulationResult.won
+			: undefined;
+		simulationResult.averageDamageLost = simulationResult.lost
+			? simulationResult.damageLost / simulationResult.lost
+			: undefined;
+		console.timeEnd('simulation');
+		console.debug('simulation result', simulationResult);
 
 		const response = {
 			statusCode: 200,
 			isBase64Encoded: false,
-			body: JSON.stringify({ 'hop': 'hop' }),
+			body: JSON.stringify(simulationResult),
 		};
-		console.log('sending back success reponse');
+		// console.log('sending back success reponse');
 		return response;
 	} catch (e) {
 		console.error('issue retrieving stats', e);
 		const response = {
 			statusCode: 500,
 			isBase64Encoded: false,
-			body: JSON.stringify({ message: 'not ok', exception: e }),
+			body: null,
 		};
 		console.log('sending back error reponse', response);
 		return response;
 	}
+};
+
+const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
+	const entityIds = board.map(entity => entity.entityId);
+	return board.map(entity => ({
+		...entity,
+		enchantments: cleanEnchantmentsForEntity(entity.enchantments, entityIds),
+	}));
+};
+
+const validEnchantments = [
+	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment,
+	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl,
+];
+
+const cleanEnchantmentsForEntity = (
+	enchantments: readonly { cardId: string; originEntityId: number }[],
+	entityIds: readonly number[],
+): readonly { cardId: string; originEntityId: number }[] => {
+	return enchantments.filter(
+		enchant => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
+	);
 };

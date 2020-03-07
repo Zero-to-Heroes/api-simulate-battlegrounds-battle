@@ -24,11 +24,13 @@ export class CardsData {
 	public auraOrigins: readonly string[];
 	public startOfCombats: readonly string[];
 
-	constructor(private readonly allCards: AllCardsService) {
-		this.init();
+	constructor(private readonly allCards: AllCardsService, init = true) {
+		if (init) {
+			this.inititialize();
+		}
 	}
 
-	public init() {
+	public inititialize() {
 		this.shredderSpawns = this.allCards
 			.getCards()
 			.filter(card => card.techLevel)

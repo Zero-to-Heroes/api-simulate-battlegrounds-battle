@@ -9,6 +9,8 @@ global.console = {
 	// log: console.log,
 	warn: jest.fn(),
 	info: jest.fn(),
+	time: console.time,
+	timeEnd: console.timeEnd,
 
 	// Keep native behaviour for other methods, use those to print out things in your own tests, not `console.log`
 	error: console.error,
