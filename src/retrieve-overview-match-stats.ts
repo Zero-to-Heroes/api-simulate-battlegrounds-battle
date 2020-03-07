@@ -18,13 +18,6 @@ export default async (event): Promise<any> => {
 		cardsData.inititialize();
 		const simulator = new Simulator(cards, cardsData);
 
-		const battleInput: BgsBattleInfo = JSON.parse(event.body);
-		const playerInfo = battleInput.playerBoard;
-		const opponentInfo = battleInput.opponentBoard;
-
-		const playerBoard = cleanEnchantments(playerInfo.board);
-		const opponentBoard = cleanEnchantments(opponentInfo.board);
-
 		const simulationResult = {
 			won: 0,
 			tied: 0,
@@ -37,13 +30,34 @@ export default async (event): Promise<any> => {
 			averageDamageWon: undefined,
 			averageDamageLost: undefined,
 		};
+
+		const battleInput: BgsBattleInfo = JSON.parse(event.body);
+		const playerInfo = battleInput.playerBoard;
+		const opponentInfo = battleInput.opponentBoard;
+
+		const playerBoard = cleanEnchantments(playerInfo.board);
+		const opponentBoard = cleanEnchantments(opponentInfo.board);
+
+		// We do this so that we can have mutated objects inside the simulation and still
+		// be able to start from a fresh copy for each simulation
+		const inputReady = JSON.stringify({
+			playerBoard: {
+				board: playerBoard,
+				player: playerInfo.player,
+			},
+			opponentBoard: {
+				board: opponentBoard,
+				player: opponentInfo.player,
+			},
+		});
 		console.time('simulation');
 		for (let i = 0; i < 5000; i++) {
+			const input = JSON.parse(inputReady);
 			const battleResult = simulator.simulateSingleBattle(
-				playerBoard,
-				playerInfo.player,
-				opponentBoard,
-				opponentInfo.player,
+				input.playerBoard.board,
+				input.playerBoard.player,
+				input.opponentBoard.board,
+				input.opponentBoard.player,
 			);
 			if (battleResult.result === 'won') {
 				simulationResult.won++;
@@ -104,9 +118,9 @@ const validEnchantments = [
 ];
 
 const cleanEnchantmentsForEntity = (
-	enchantments: readonly { cardId: string; originEntityId: number }[],
+	enchantments: { cardId: string; originEntityId: number }[],
 	entityIds: readonly number[],
-): readonly { cardId: string; originEntityId: number }[] => {
+): { cardId: string; originEntityId: number }[] => {
 	return enchantments.filter(
 		enchant => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
 	);

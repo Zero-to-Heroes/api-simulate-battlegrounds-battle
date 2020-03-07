@@ -16,11 +16,11 @@ describe('Basic attributes', () => {
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_008', cards, 1), // Argent Squire
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -37,11 +37,11 @@ describe('Basic attributes', () => {
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BOT_445', cards, 1), // Mecharoo
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -59,13 +59,13 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 1), // Wrath Weaver
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver
 			buildSingleBoardEntity('BGS_004', cards, 3), // Wrath Weaver
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 			buildSingleBoardEntity('BGS_028', cards, 5), // Pogo
 		];
@@ -85,11 +85,11 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_034', cards, 1), // Bronze Warden
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_028', cards, 5), // Pogo
 			buildSingleBoardEntity('BGS_028', cards, 6), // Pogo
 			buildSingleBoardEntity('BGS_028', cards, 7), // Pogo
@@ -109,11 +109,11 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Maexxna, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -138,11 +138,11 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Maexxna, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -167,11 +167,11 @@ describe('Basic attributes', () => {
 		await cards.initializeCardsDb();
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('LOOT_078', cards, 1), attack: 10 } as BoardEntity, // Cave Hydra
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver, will attack first and die
 			buildSingleBoardEntity('BGS_043', cards, 3), // Murozond, who will die from the cleave
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant, who will tank the Hydra's attack, die and not kill the Hydra
@@ -192,7 +192,7 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -205,7 +205,7 @@ describe('Basic attributes', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -237,7 +237,7 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -250,7 +250,7 @@ describe('Basic attributes', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -282,7 +282,7 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -295,7 +295,7 @@ describe('Basic attributes', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -327,7 +327,7 @@ describe('Basic attributes', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -340,7 +340,7 @@ describe('Basic attributes', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,

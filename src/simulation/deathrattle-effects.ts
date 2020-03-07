@@ -8,22 +8,15 @@ import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 
 export const handleDeathrattleEffects = (
-	boardWithDeadEntity: readonly BoardEntity[],
+	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	deadMinionIndex: number,
-	otherBoard: readonly BoardEntity[],
+	otherBoard: BoardEntity[],
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
-): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	[boardWithDeadEntity, otherBoard] = applyMinionDeathEffect(
-		deadEntity,
-		boardWithDeadEntity,
-		otherBoard,
-		allCards,
-		cardsData,
-		sharedState,
-	);
+): void => {
+	applyMinionDeathEffect(deadEntity, boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState);
 
 	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
@@ -35,78 +28,65 @@ export const handleDeathrattleEffects = (
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
 			for (let i = 0; i < multiplier; i++) {
-				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+				grantRandomDivineShield(boardWithDeadEntity);
 			}
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Paladin.SelflessHeroTavernBrawl:
 			for (let i = 0; i < multiplier; i++) {
-				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
-				boardWithDeadEntity = grantRandomDivineShield(boardWithDeadEntity);
+				grantRandomDivineShield(boardWithDeadEntity);
+				grantRandomDivineShield(boardWithDeadEntity);
 			}
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.NadinaTheRed:
 			for (let i = 0; i < multiplier; i++) {
-				boardWithDeadEntity = grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
+				grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
 			}
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
-			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards);
-			return [boardWithDeadEntity, otherBoard];
+			addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards);
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.SpawnOfNzothTavernBrawl:
-			boardWithDeadEntity = addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards);
-			return [boardWithDeadEntity, otherBoard];
+			addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards);
+			// return [boardWithDeadEntity, otherBoard];
+			return;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf:
-			boardWithDeadEntity = addStatsToBoard(
-				boardWithDeadEntity,
-				multiplier * 4,
-				multiplier * 4,
-				allCards,
-				'BEAST',
-			);
-			return [boardWithDeadEntity, otherBoard];
+			addStatsToBoard(boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, 'BEAST');
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfTavernBrawl:
-			boardWithDeadEntity = addStatsToBoard(
-				boardWithDeadEntity,
-				multiplier * 8,
-				multiplier * 8,
-				allCards,
-				'BEAST',
-			);
-			return [boardWithDeadEntity, otherBoard];
+			addStatsToBoard(boardWithDeadEntity, multiplier * 8, multiplier * 8, allCards, 'BEAST');
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KingBagurgle:
-			boardWithDeadEntity = addStatsToBoard(
-				boardWithDeadEntity,
-				multiplier * 2,
-				multiplier * 2,
-				allCards,
-				'MURLOC',
-			);
-			return [boardWithDeadEntity, otherBoard];
+			addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, 'MURLOC');
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KingBagurgleTavernBrawl:
-			boardWithDeadEntity = addStatsToBoard(
-				boardWithDeadEntity,
-				multiplier * 4,
-				multiplier * 4,
-				allCards,
-				'MURLOC',
-			);
-			return [boardWithDeadEntity, otherBoard];
+			addStatsToBoard(boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, 'MURLOC');
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
-				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 			}
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Warlock.FiendishServantTavernBrawl:
 			for (let i = 0; i < multiplier; i++) {
-				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
-				boardWithDeadEntity = grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 			}
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.KaboomBot:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
-				[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
+				dealDamageToRandomEnemy(
 					otherBoard,
 					deadEntity,
 					4,
@@ -116,11 +96,12 @@ export const handleDeathrattleEffects = (
 					sharedState,
 				);
 			}
-			// console.log('after damage from bot', opponentBoard, board);
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// console.log('after damage from bot', opponentBoard, board);
+		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
 			for (let i = 0; i < multiplier; i++) {
-				[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
+				dealDamageToRandomEnemy(
 					otherBoard,
 					deadEntity,
 					4,
@@ -129,7 +110,7 @@ export const handleDeathrattleEffects = (
 					cardsData,
 					sharedState,
 				);
-				[otherBoard, boardWithDeadEntity] = dealDamageToRandomEnemy(
+				dealDamageToRandomEnemy(
 					otherBoard,
 					deadEntity,
 					4,
@@ -139,53 +120,59 @@ export const handleDeathrattleEffects = (
 					sharedState,
 				);
 			}
-			return [boardWithDeadEntity, otherBoard];
+			return;
+		// return [boardWithDeadEntity, otherBoard];
 	}
-	return [boardWithDeadEntity, otherBoard];
+	// return [boardWithDeadEntity, otherBoard];
 };
 
 const addStatsToBoard = (
-	board: readonly BoardEntity[],
+	board: BoardEntity[],
 	attack: number,
 	health: number,
 	allCards: AllCardsService,
 	tribe?: string,
-): readonly BoardEntity[] => {
-	return board.map(entity => {
+): void => {
+	for (const entity of board) {
 		if (!tribe || allCards.getCard(entity.cardId).race === tribe) {
-			return {
-				...entity,
-				attack: entity.attack + attack,
-				health: entity.health + health,
-			};
+			entity.attack += attack;
+			entity.health += health;
+			// return {
+			// 	...entity,
+			// 	attack: entity.attack + attack,
+			// 	health: entity.health + health,
+			// };
 		}
-		return entity;
-	});
+	}
+	// return board.map(entity => {
+	// 	if (!tribe || allCards.getCard(entity.cardId).race === tribe) {
+	// 		return {
+	// 			...entity,
+	// 			attack: entity.attack + attack,
+	// 			health: entity.health + health,
+	// 		};
+	// 	}
+	// 	return entity;
+	// });
 };
 
 const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
-	boardWithDeadEntity: readonly BoardEntity[],
-	otherBoard: readonly BoardEntity[],
+	boardWithDeadEntity: BoardEntity[],
+	otherBoard: BoardEntity[],
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
-): [readonly BoardEntity[], readonly BoardEntity[]] => {
+): void => {
 	if (allCards.getCard(deadEntity.cardId).race === 'BEAST') {
-		boardWithDeadEntity = applyScavengingHyenaEffect(boardWithDeadEntity);
+		applyScavengingHyenaEffect(boardWithDeadEntity);
 	}
 	if (allCards.getCard(deadEntity.cardId).race === 'DEMON') {
 		// console.log('will apply juggler effect', deadEntity, boardWithDeadEntity, otherBoard);
-		[boardWithDeadEntity, otherBoard] = applySoulJugglerEffect(
-			boardWithDeadEntity,
-			otherBoard,
-			allCards,
-			cardsData,
-			sharedState,
-		);
+		applySoulJugglerEffect(boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState);
 	}
 	if (allCards.getCard(deadEntity.cardId).race === 'MECH') {
-		boardWithDeadEntity = applyJunkbotEffect(boardWithDeadEntity);
+		applyJunkbotEffect(boardWithDeadEntity);
 	}
 	// Overkill
 	// console.log('is there overkill?', deadEntity);
@@ -196,7 +183,7 @@ const applyMinionDeathEffect = (
 			if (targets.length > 0) {
 				const target = targets[0];
 				// console.log('hof target', target);
-				[boardWithDeadEntity, otherBoard] = dealDamageToEnemy(
+				dealDamageToEnemy(
 					target,
 					boardWithDeadEntity,
 					deadEntity.lastAffectedByEntity,
@@ -212,7 +199,7 @@ const applyMinionDeathEffect = (
 			const targets = boardWithDeadEntity.filter(entity => entity.health > 0);
 			if (targets.length > 0) {
 				const target = targets[0];
-				[boardWithDeadEntity, otherBoard] = dealDamageToEnemy(
+				dealDamageToEnemy(
 					target,
 					boardWithDeadEntity,
 					deadEntity.lastAffectedByEntity,
@@ -224,7 +211,7 @@ const applyMinionDeathEffect = (
 				);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
-			// console.log('will apply direhorn overkill', deadEntity, otherBoard);
+			console.log('will apply direhorn overkill', deadEntity, otherBoard);
 			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
 			const newEntities = spawnEntities(
 				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntToken,
@@ -234,9 +221,9 @@ const applyMinionDeathEffect = (
 				sharedState,
 				true,
 			);
-			const updatedBoard = [...otherBoard];
-			updatedBoard.splice(index, 0, ...newEntities);
-			otherBoard = updatedBoard;
+			// const updatedBoard = [...otherBoard];
+			otherBoard.splice(index, 0, ...newEntities);
+			// otherBoard = updatedBoard;
 		} else if (
 			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Druid.IronhideDirehornTavernBrawl
 		) {
@@ -249,9 +236,9 @@ const applyMinionDeathEffect = (
 				sharedState,
 				true,
 			);
-			const updatedBoard = [...otherBoard];
-			updatedBoard.splice(index, 0, ...newEntities);
-			otherBoard = updatedBoard;
+			// const updatedBoard = [...otherBoard];
+			otherBoard.splice(index, 0, ...newEntities);
+			// otherBoard = updatedBoard;
 		}
 	}
 
@@ -261,7 +248,7 @@ const applyMinionDeathEffect = (
 	);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	if (deadEntity.cardId === CardIds.Collectible.Neutral.UnstableGhoul) {
-		[boardWithDeadEntity, otherBoard] = dealDamageToAllMinions(
+		dealDamageToAllMinions(
 			boardWithDeadEntity,
 			otherBoard,
 			deadEntity,
@@ -271,7 +258,7 @@ const applyMinionDeathEffect = (
 			sharedState,
 		);
 	} else if (deadEntity.cardId === CardIds.NonCollectible.Neutral.UnstableGhoulTavernBrawl) {
-		[boardWithDeadEntity, otherBoard] = dealDamageToAllMinions(
+		dealDamageToAllMinions(
 			boardWithDeadEntity,
 			otherBoard,
 			deadEntity,
@@ -281,195 +268,115 @@ const applyMinionDeathEffect = (
 			sharedState,
 		);
 	}
-	return [boardWithDeadEntity, otherBoard];
+	// return [boardWithDeadEntity, otherBoard];
 };
 
 const dealDamageToAllMinions = (
-	board1: readonly BoardEntity[],
-	board2: readonly BoardEntity[],
+	board1: BoardEntity[],
+	board2: BoardEntity[],
 	damageSource: BoardEntity,
 	damageDealt: number,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
-): [readonly BoardEntity[], readonly BoardEntity[]] => {
+): void => {
 	if (board1.length === 0 && board2.length === 0) {
-		return [board1, board2];
+		return;
+		// return [board1, board2];
 	}
-	let updatedBoard1 = [...board1];
-	let updatedBoard2 = [...board2];
+	// let updatedBoard1 = [...board1];
+	// let updatedBoard2 = [...board2];
 	const fakeAttacker = {
 		...damageSource,
 		attack: damageDealt,
 		attacking: true,
 	} as BoardEntity;
-	for (let i = 0; i < updatedBoard1.length; i++) {
-		const [entity, boardResult] = bumpEntities(
-			updatedBoard1[i],
-			fakeAttacker,
-			updatedBoard1,
-			allCards,
-			cardsData,
-			sharedState,
-		);
-		updatedBoard1 = [...boardResult];
-		updatedBoard1[i] = entity;
+	for (let i = 0; i < board1.length; i++) {
+		bumpEntities(board1[i], fakeAttacker, board1, allCards, cardsData, sharedState);
+		// board1[i] = entity;
 	}
-	for (let i = 0; i < updatedBoard2.length; i++) {
-		const [entity, boardResult] = bumpEntities(
-			updatedBoard2[i],
-			fakeAttacker,
-			updatedBoard2,
-			allCards,
-			cardsData,
-			sharedState,
-		);
-		updatedBoard2 = [...boardResult];
-		updatedBoard2[i] = entity;
+	for (let i = 0; i < board2.length; i++) {
+		bumpEntities(board2[i], fakeAttacker, board2, allCards, cardsData, sharedState);
+		// updatedBoard2 = [...boardResult];
+		// updatedBoard2[i] = entity;
 	}
-	return processMinionDeath(updatedBoard1, updatedBoard2, allCards, cardsData, sharedState);
+	processMinionDeath(board1, board2, allCards, cardsData, sharedState);
 };
 
 const applySoulJugglerEffect = (
-	boardWithJugglers: readonly BoardEntity[],
-	boardToAttack: readonly BoardEntity[],
+	boardWithJugglers: BoardEntity[],
+	boardToAttack: BoardEntity[],
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
-): [readonly BoardEntity[], readonly BoardEntity[]] => {
+): void => {
 	if (boardWithJugglers.length === 0 && boardToAttack.length === 0) {
-		return [boardWithJugglers, boardToAttack];
+		return;
+		// return [boardWithJugglers, boardToAttack];
 	}
 	const jugglers = boardWithJugglers.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.SoulJuggler);
 	// console.log('jugglers in board', boardWithJugglers);
 	for (const juggler of jugglers) {
-		[boardToAttack, boardWithJugglers] = dealDamageToRandomEnemy(
-			boardToAttack,
-			juggler,
-			3,
-			boardWithJugglers,
-			allCards,
-			cardsData,
-			sharedState,
-		);
+		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
 	}
 	const goldenJugglers = boardWithJugglers.filter(
 		entity => entity.cardId === CardIds.NonCollectible.Neutral.SoulJugglerTavernBrawl,
 	);
 	// console.log('golden jugglers in board', boardWithJugglers);
 	for (const juggler of goldenJugglers) {
-		[boardToAttack, boardWithJugglers] = dealDamageToRandomEnemy(
-			boardToAttack,
-			juggler,
-			3,
-			boardWithJugglers,
-			allCards,
-			cardsData,
-			sharedState,
-		);
-		[boardToAttack, boardWithJugglers] = dealDamageToRandomEnemy(
-			boardToAttack,
-			juggler,
-			3,
-			boardWithJugglers,
-			allCards,
-			cardsData,
-			sharedState,
-		);
+		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
+		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
 	}
-	return processMinionDeath(boardWithJugglers, boardToAttack, allCards, cardsData, sharedState);
+	processMinionDeath(boardWithJugglers, boardToAttack, allCards, cardsData, sharedState);
 };
 
-const applyScavengingHyenaEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
-	const copy = [...board];
-	for (let i = 0; i < copy.length; i++) {
-		if (copy[i].cardId === CardIds.Collectible.Hunter.ScavengingHyena) {
-			copy[i] = {
-				...copy[i],
-				attack: copy[i].attack + 2,
-				health: copy[i].health + 1,
-			};
-		} else if (copy[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaTavernBrawl) {
-			copy[i] = {
-				...copy[i],
-				attack: copy[i].attack + 4,
-				health: copy[i].health + 2,
-			};
+const applyScavengingHyenaEffect = (board: BoardEntity[]): void => {
+	// const copy = [...board];
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].cardId === CardIds.Collectible.Hunter.ScavengingHyena) {
+			board[i].attack += 2;
+			board[i].health += 1;
+		} else if (board[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaTavernBrawl) {
+			board[i].attack += 4;
+			board[i].health += 2;
 		}
 	}
-	return copy;
 };
 
-const applyJunkbotEffect = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
-	const copy = [...board];
-	for (let i = 0; i < copy.length; i++) {
-		if (copy[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
-			copy[i] = {
-				...copy[i],
-				attack: copy[i].attack + 2,
-				health: copy[i].health + 2,
-			};
-		} else if (copy[i].cardId === CardIds.NonCollectible.Neutral.JunkbotTavernBrawl) {
-			copy[i] = {
-				...copy[i],
-				attack: copy[i].attack + 4,
-				health: copy[i].health + 4,
-			};
+const applyJunkbotEffect = (board: BoardEntity[]): void => {
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
+			board[i].attack += 2;
+			board[i].health += 2;
+		} else if (board[i].cardId === CardIds.NonCollectible.Neutral.JunkbotTavernBrawl) {
+			board[i].attack += 4;
+			board[i].health += 4;
 		}
 	}
-	return copy;
 };
 
-const grantRandomAttack = (board: readonly BoardEntity[], additionalAttack: number): readonly BoardEntity[] => {
-	const elligibleEntities = board;
-	if (elligibleEntities.length > 0) {
-		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
-		board = board.map(entity =>
-			entity.entityId === chosen.entityId
-				? {
-						...entity,
-						attack: entity.attack + additionalAttack,
-				  }
-				: entity,
-		);
+const grantRandomAttack = (board: BoardEntity[], additionalAttack: number): void => {
+	if (board.length > 0) {
+		const chosen = board[Math.floor(Math.random() * board.length)];
+		chosen.attack += additionalAttack;
 	}
-	return board;
 };
 
-const grantRandomDivineShield = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
+const grantRandomDivineShield = (board: BoardEntity[]): void => {
 	const elligibleEntities = board.filter(entity => !entity.divineShield);
 	if (elligibleEntities.length > 0) {
 		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
-		board = board.map(entity =>
-			entity.entityId === chosen.entityId
-				? {
-						...entity,
-						divineShield: true,
-				  }
-				: entity,
-		);
+		chosen.divineShield = true;
 	}
-	return board;
+	// return board;
 };
 
-const grantAllDivineShield = (
-	board: readonly BoardEntity[],
-	tribe: string,
-	cards: AllCardsService,
-): readonly BoardEntity[] => {
+const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCardsService): void => {
 	const elligibleEntities = board
 		.filter(entity => !entity.divineShield)
-		.filter(entity => cards.getCard(entity.cardId).race === tribe)
-		.map(entity => entity.entityId);
-	if (elligibleEntities.length > 0) {
-		board = board.map(entity =>
-			elligibleEntities.indexOf(entity.entityId) !== -1
-				? {
-						...entity,
-						divineShield: true,
-				  }
-				: entity,
-		);
+		.filter(entity => cards.getCard(entity.cardId).race === tribe);
+	for (const entity of elligibleEntities) {
+		entity.divineShield = true;
 	}
-	return board;
+	// return board;
 };

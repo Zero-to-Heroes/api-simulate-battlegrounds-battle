@@ -11,7 +11,7 @@ export interface BoardEntity {
 	cleave: boolean;
 	windfury: boolean;
 	megaWindfury: boolean;
-	enchantments: readonly { cardId: string; originEntityId: number }[];
+	enchantments: { cardId: string; originEntityId: number }[];
 
 	attacksPerformed?: number;
 	previousAttack?: number;

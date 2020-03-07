@@ -8,7 +8,7 @@ import { SharedState } from './shared-state';
 export const spawnEntities = (
 	cardId: string,
 	quantity: number,
-	boardToSpawnInto: readonly BoardEntity[],
+	boardToSpawnInto: BoardEntity[],
 	allCards: AllCardsService,
 	sharedState: SharedState,
 	// In most cases the business of knowing the number of minions to handle is left to the caller
@@ -55,18 +55,16 @@ export const spawnEntities = (
 						).length
 				: 0;
 		// console.log('buffs', attackBuff, healthBuff, newMinion, boardToSpawnInto);
-		result.push({
-			...newMinion,
-			attack: newMinion.attack + attackBuff,
-			health: newMinion.health + healthBuff,
-		});
+		newMinion.attack += attackBuff;
+		newMinion.health += healthBuff;
+		result.push(newMinion);
 	}
 	return result;
 };
 
 export const spawnEntitiesFromDeathrattle = (
 	deadEntity: BoardEntity,
-	boardWithDeadEntity: readonly BoardEntity[],
+	boardWithDeadEntity: BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -446,7 +444,7 @@ export const spawnEntitiesFromDeathrattle = (
 
 export const spawnEntitiesFromEnchantments = (
 	deadEntity: BoardEntity,
-	boardWithDeadEntity: readonly BoardEntity[],
+	boardWithDeadEntity: BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,

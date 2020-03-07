@@ -4,37 +4,38 @@ import { BoardEntity } from '../board-entity';
 import { AllCardsService } from '../cards/cards';
 
 export const handleSpawnEffects = (
-	board: readonly BoardEntity[],
+	board: BoardEntity[],
 	spawned: readonly BoardEntity[],
 	cards: AllCardsService,
-): readonly BoardEntity[] => {
-	return board.map(entity => handleSpawn(entity, spawned, cards));
+): void => {
+	for (const entity of board) {
+		handleSpawn(entity, spawned, cards);
+	}
+	// return board.map(entity => handleSpawn(e/ntity, spawned, cards));
 };
 
-export const handleSpawn = (
-	entity: BoardEntity,
-	spawned: readonly BoardEntity[],
-	cards: AllCardsService,
-): BoardEntity => {
+export const handleSpawn = (entity: BoardEntity, spawned: readonly BoardEntity[], cards: AllCardsService): void => {
 	switch (entity.cardId) {
 		case CardIds.Collectible.Neutral.MurlocTidecaller:
-			return {
-				...entity,
-				attack: entity.attack + spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
-			};
+			entity.attack += spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length;
+			return;
+		// return {
+		// 	...entity,
+		// 	attack: entity.attack + spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
+		// };
 		case CardIds.NonCollectible.Neutral.MurlocTidecallerTavernBrawl:
-			return {
-				...entity,
-				attack:
-					entity.attack + 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
-			};
+			entity.attack += 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length;
+			return;
+		// return {
+		// 	...entity,
+		// 	attack:
+		// 		entity.attack + 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length,
+		// };
 		case CardIds.Collectible.Paladin.CobaltGuardian:
-			return spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0
-				? {
-						...entity,
-						divineShield: true,
-				  }
-				: entity;
+			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
+				entity.divineShield = true;
+			}
+			return;
 	}
-	return entity;
+	// return entity;
 };

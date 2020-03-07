@@ -14,12 +14,12 @@ describe('Old Murkeye', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.OldMurkEye, cards, 1),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 				health: 4,
@@ -42,12 +42,12 @@ describe('Old Murkeye', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.OldMurkEyeTavernBrawl, cards, 1),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 				health: 8,
@@ -70,13 +70,41 @@ describe('Old Murkeye', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.OldMurkEye, cards, 1),
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3), taunt: true },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
+			{
+				...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 4),
+				health: 6,
+				attack: 20,
+				taunt: true,
+			},
+		];
+		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+
+		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+		expect(result).not.toBeNull();
+		expect(result.result).toBe('tied');
+	});
+
+	test('Old Murkeye attack is updated as minions die (2)', async () => {
+		const cards = buildCardsService();
+		await cards.initializeCardsDb();
+		const spawns = new CardsData(cards);
+		const simulator = new Simulator(cards, spawns);
+
+		const playerBoard: BoardEntity[] = [
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
+			buildSingleBoardEntity(CardIds.Collectible.Neutral.OldMurkEye, cards, 1),
+			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3), taunt: true },
+		];
+		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 4),
 				health: 8,
@@ -89,7 +117,7 @@ describe('Old Murkeye', () => {
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
 		expect(result).not.toBeNull();
-		expect(result.result).toBe('tied');
+		expect(result.result).toBe('lost');
 	});
 });
 
