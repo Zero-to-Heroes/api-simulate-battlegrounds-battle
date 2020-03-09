@@ -17,7 +17,7 @@ describe('Goldrinn', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf,
@@ -30,7 +30,7 @@ describe('Goldrinn', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -56,7 +56,7 @@ describe('Goldrinn', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfTavernBrawl,
@@ -69,7 +69,7 @@ describe('Goldrinn', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -95,7 +95,7 @@ describe('Goldrinn', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfTavernBrawl,
@@ -108,7 +108,7 @@ describe('Goldrinn', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.MicroMachine, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,

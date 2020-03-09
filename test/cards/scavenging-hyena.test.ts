@@ -14,13 +14,13 @@ describe('Scavenging Hyena', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 1),
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.ScavengingHyena, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
 				health: 8,
@@ -42,13 +42,13 @@ describe('Scavenging Hyena', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 1),
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.NonCollectible.Hunter.ScavengingHyenaTavernBrawl, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
 				health: 14,
@@ -70,13 +70,13 @@ describe('Scavenging Hyena', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.ScavengingHyena, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),
 				health: 8,
@@ -98,13 +98,13 @@ describe('Scavenging Hyena', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.ScavengingHyena, cards, 3),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, 2), taunt: true },
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DragonspawnLieutenant, cards, 4),

@@ -13,11 +13,11 @@ describe('Dire Wolf Alpha', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
 			buildSingleBoardEntity('EX1_162', cards, 3), // Dire Wolf Alpha
 		];
@@ -37,11 +37,11 @@ describe('Dire Wolf Alpha', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 3), // Dragonspawn Lieutenant
 			buildSingleBoardEntity('EX1_162', cards, 2), // Dire Wolf Alpha
 		];
@@ -61,11 +61,11 @@ describe('Dire Wolf Alpha', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('UNG_073', cards, 4), // Rockpool hunter
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 3), // Dragonspawn Lieutenant
 			buildSingleBoardEntity('UNG_073', cards, 4), // Rockpool hunter
 			buildSingleBoardEntity('EX1_162', cards, 2), // Dire Wolf Alpha
@@ -86,13 +86,13 @@ describe('Dire Wolf Alpha', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('UNG_073', cards, 1), // Rockpool hunter
 			buildSingleBoardEntity('UNG_073', cards, 4), // Rockpool hunter
 			buildSingleBoardEntity('BGS_039', cards, 5), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_162', cards, 2), // Dire Wolf Alpha
 			buildSingleBoardEntity('BGS_039', cards, 3), // Dragonspawn Lieutenant
 		];

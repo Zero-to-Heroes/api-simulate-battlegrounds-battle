@@ -17,7 +17,7 @@ describe('Baron Rivendare', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(
@@ -29,7 +29,7 @@ describe('Baron Rivendare', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, sharedState.currentEntityId++),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -47,7 +47,7 @@ describe('Baron Rivendare', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.KaboomBot, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(
@@ -59,7 +59,7 @@ describe('Baron Rivendare', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -93,7 +93,7 @@ describe('Baron Rivendare', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.SpawnOfNzoth, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(
@@ -106,7 +106,7 @@ describe('Baron Rivendare', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -131,7 +131,7 @@ describe('Baron Rivendare', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.SpawnOfNzoth, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(
@@ -144,7 +144,7 @@ describe('Baron Rivendare', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,
@@ -170,7 +170,7 @@ describe('Baron Rivendare', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.SpawnOfNzoth, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(
@@ -192,7 +192,7 @@ describe('Baron Rivendare', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Neutral.RockpoolHunter,

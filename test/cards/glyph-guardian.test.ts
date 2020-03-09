@@ -14,12 +14,12 @@ describe('Glyph Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS, cards, 1),
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3) },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -37,12 +37,12 @@ describe('Glyph Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS, cards, 1), attack: 4 },
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 8 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -60,7 +60,7 @@ describe('Glyph Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianTavernBrawl, cards, 1),
 				attack: 4,
@@ -69,7 +69,7 @@ describe('Glyph Guardian', () => {
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 12 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -87,11 +87,11 @@ describe('Glyph Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS, cards, 1), attack: 4 },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 12 },
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 1),
 		];

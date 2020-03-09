@@ -14,12 +14,12 @@ describe('Fiendish Servant', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Warlock.FiendishServant, cards, 1),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -36,12 +36,12 @@ describe('Fiendish Servant', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Warlock.FiendishServant, cards, 1),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 7 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -58,12 +58,12 @@ describe('Fiendish Servant', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Warlock.FiendishServantTavernBrawl, cards, 1),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 10 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;

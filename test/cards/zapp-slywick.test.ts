@@ -17,7 +17,7 @@ describe('Zapp Slywick', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Neutral.ZappSlywick,
@@ -31,7 +31,7 @@ describe('Zapp Slywick', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.Alleycat, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Warlock.VulgarHomunculus,

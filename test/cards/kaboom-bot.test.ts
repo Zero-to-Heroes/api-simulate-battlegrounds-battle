@@ -14,9 +14,9 @@ describe('Kaboom bot', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [buildSingleBoardEntity(CardIds.Collectible.Neutral.KaboomBot, cards, 1)];
+		const playerBoard: BoardEntity[] = [buildSingleBoardEntity(CardIds.Collectible.Neutral.KaboomBot, cards, 1)];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -33,13 +33,17 @@ describe('Kaboom bot', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl, cards, 1), health: 1 },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 6 },
-			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 4, taunt: false },
+			{
+				...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3),
+				health: 4,
+				taunt: false,
+			},
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

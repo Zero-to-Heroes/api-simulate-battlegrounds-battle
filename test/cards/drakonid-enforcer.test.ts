@@ -14,12 +14,12 @@ describe('Drakonid Enforcer', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.ArgentSquire, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DrakonidEnforcer, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 4 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				taunt: true,
@@ -42,12 +42,12 @@ describe('Drakonid Enforcer', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.ArgentSquire, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DrakonidEnforcerTavernBrawl, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 4 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				taunt: true,
@@ -70,11 +70,11 @@ describe('Drakonid Enforcer', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.DrakonidEnforcer, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 4 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.ArgentSquire, cards, 2), taunt: true },
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),

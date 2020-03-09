@@ -14,11 +14,11 @@ describe('MalGanis', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('LOOT_013', cards, 1), attack: 4 }, // Vulgar Homonculus
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
 			buildSingleBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
 			buildSingleBoardEntity('GVG_021', cards, 4), // Mal'Ganis
@@ -38,11 +38,11 @@ describe('MalGanis', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
 			buildSingleBoardEntity('GVG_021', cards, 4), // Mal'Ganis
 		];
@@ -61,13 +61,13 @@ describe('MalGanis', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
 			buildSingleBoardEntity('UNG_073', cards, 1), // Rockpool hunter
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('EX1_185', cards, 2), taunt: true }, // MalGanis
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), taunt: false },
 		];

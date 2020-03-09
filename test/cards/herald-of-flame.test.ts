@@ -17,7 +17,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS,
@@ -30,7 +30,7 @@ describe('Herald of Flame', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(
@@ -56,7 +56,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameTavernBrawl,
@@ -69,7 +69,7 @@ describe('Herald of Flame', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, sharedState.currentEntityId++),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Warlock.VulgarHomunculus,
@@ -102,7 +102,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS,
@@ -113,7 +113,7 @@ describe('Herald of Flame', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Warlock.VulgarHomunculus,
@@ -139,7 +139,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS,
@@ -150,7 +150,7 @@ describe('Herald of Flame', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.Collectible.Warlock.VulgarHomunculus,
@@ -176,7 +176,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS,
@@ -187,7 +187,7 @@ describe('Herald of Flame', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, sharedState.currentEntityId++),
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, sharedState.currentEntityId++),
 			buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, sharedState.currentEntityId++),
@@ -210,7 +210,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS,
@@ -221,7 +221,7 @@ describe('Herald of Flame', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, sharedState.currentEntityId++),
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, sharedState.currentEntityId++),
 		];
@@ -240,7 +240,7 @@ describe('Herald of Flame', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
 					CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS,
@@ -251,7 +251,7 @@ describe('Herald of Flame', () => {
 			},
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, sharedState.currentEntityId++),
 			{
 				...buildSingleBoardEntity(

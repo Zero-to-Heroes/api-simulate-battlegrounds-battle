@@ -14,13 +14,13 @@ describe('Murloc Tidecaller', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('UNG_010', cards, 1), // Sated Threshadon
 			{ ...buildSingleBoardEntity('EX1_509', cards, 3), taunt: true }, // Murloc Tidecaller
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2), // So that we attack first
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('BGS_039', cards, 4), attack: 10 }, // Dragonspawn Lieutenant
 			{ ...buildSingleBoardEntity('BGS_039', cards, 5), health: 7, taunt: false }, // Dragonspawn Lieutenant
 		];
@@ -38,13 +38,13 @@ describe('Murloc Tidecaller', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BOT_312', cards, 1), // Replicating Menace
 			{ ...buildSingleBoardEntity('EX1_509', cards, 3), taunt: true }, // Murloc Tidecaller
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('BGS_039', cards, 2), attack: 10 }, // Dragonspawn Lieutenant
 			{ ...buildSingleBoardEntity('BGS_039', cards, 4), health: 7 }, // Dragonspawn Lieutenant
 		];

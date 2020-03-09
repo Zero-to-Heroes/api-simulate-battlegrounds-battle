@@ -14,11 +14,11 @@ describe('Siegebreaker', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('LOOT_013', cards, 2), // Vulgar Homonculus
 			buildSingleBoardEntity('UNG_073', cards, 3), // Rockpool Hunter
 			buildSingleBoardEntity('EX1_185', cards, 4), // Siegebreaker
@@ -39,11 +39,11 @@ describe('Siegebreaker', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
 			{ ...buildSingleBoardEntity('EX1_185', cards, 4), taunt: false }, // Siegebreaker
 		];
@@ -62,13 +62,13 @@ describe('Siegebreaker', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
 			buildSingleBoardEntity('UNG_073', cards, 1), // Rockpool hunter
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_185', cards, 2), // Siegebreaker
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 		];

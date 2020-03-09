@@ -1,9 +1,9 @@
-import runSimulation from '../../src/retrieve-overview-match-stats';
+import runSimulation from '../../src/simulate-bgs-battle';
 import jsonEvent1 from './game1.json';
 import jsonEvent2 from './game2.json';
 import jsonEvent3 from './game3.json';
 
-describe('Full tests for performance and accuracy', () => {
+describe.skip('Full tests for performance and accuracy', () => {
 	test('full test 1', async () => {
 		const result = await runSimulation({ 'body': JSON.stringify(jsonEvent1) });
 		// Need to return in less than 1s

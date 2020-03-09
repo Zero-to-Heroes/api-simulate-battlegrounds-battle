@@ -14,13 +14,13 @@ describe('Cobalt Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 2),
 			buildSingleBoardEntity(CardIds.Collectible.Paladin.CobaltGuardian, cards, 1),
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3), taunt: true },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				taunt: true,
@@ -43,11 +43,11 @@ describe('Cobalt Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Paladin.CobaltGuardian, cards, 1), health: 2 },
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 3), taunt: true },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -64,12 +64,12 @@ describe('Cobalt Guardian', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.Imprisoner, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.Collectible.Paladin.CobaltGuardian, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 				taunt: true,

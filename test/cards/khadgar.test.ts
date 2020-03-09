@@ -14,12 +14,12 @@ describe('Khadgar', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 2),
 			buildSingleBoardEntity(CardIds.Collectible.Mage.Khadgar, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -37,12 +37,12 @@ describe('Khadgar', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Mecharoo, cards, 2),
 			buildSingleBoardEntity(CardIds.NonCollectible.Mage.KhadgarTavernBrawl, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3),
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -60,12 +60,12 @@ describe('Khadgar', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.RatPack, cards, 2),
 			buildSingleBoardEntity(CardIds.Collectible.Mage.Khadgar, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3), attack: 2 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
@@ -83,7 +83,7 @@ describe('Khadgar', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Hunter.RatPack, cards, 2),
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 5),
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 6),
@@ -91,7 +91,7 @@ describe('Khadgar', () => {
 			buildSingleBoardEntity(CardIds.Collectible.Mage.Khadgar, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 3), attack: 6, health: 10 },
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;

@@ -14,11 +14,11 @@ describe('Murloc Warleader', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('LOOT_013', cards, 1), attack: 4 }, // Vulgar Homonculus
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3), taunt: true },
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 2),
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.MurlocWarleader, cards, 4),
@@ -38,11 +38,11 @@ describe('Murloc Warleader', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 1), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 2), // Dragonspawn Lieutenant
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.MurlocWarleader, cards, 4),
 		];
@@ -61,13 +61,13 @@ describe('Murloc Warleader', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: readonly BoardEntity[] = [
+		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('BGS_039', cards, 5), attack: 8 } as BoardEntity, // Dragonspawn Lieutenant
 			buildSingleBoardEntity('UNG_073', cards, 1), // Rockpool hunter
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
-		const opponentBoard: readonly BoardEntity[] = [
+		const opponentBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity(CardIds.Collectible.Neutral.MurlocWarleader, cards, 2), taunt: true },
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.RockpoolHunter, cards, 3),
 		];
