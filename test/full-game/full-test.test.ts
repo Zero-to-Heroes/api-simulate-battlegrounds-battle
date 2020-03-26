@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import runSimulation from '../../src/simulate-bgs-battle';
 import jsonEvent1 from './game1.json';
 import jsonEvent2 from './game2.json';
@@ -40,7 +41,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 	});
 });
 
-const validateInterval = (value: number, target: number, band: number = 1) => {
+const validateInterval = (value: number, target: number, band = 1) => {
 	// Showing 8.5% instead of 8% is considered as acceptable as showing 60.5% instead of 60%
 	// and easier to calibrate in tests
 	expect(value).toBeGreaterThan(target - band);

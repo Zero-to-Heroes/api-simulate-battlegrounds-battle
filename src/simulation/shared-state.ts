@@ -1,3 +1,3 @@
 export class SharedState {
-	public currentEntityId: number = 1;
+	public currentEntityId = 1;
 }

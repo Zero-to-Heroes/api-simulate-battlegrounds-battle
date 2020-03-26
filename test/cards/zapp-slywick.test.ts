@@ -42,7 +42,7 @@ describe('Zapp Slywick', () => {
 			},
 			{
 				...buildSingleBoardEntity(
-					CardIds.NonCollectible.Neutral.SoulJugglerTavernBrawl,
+					CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl,
 					cards,
 					sharedState.currentEntityId++,
 				),
@@ -50,7 +50,7 @@ describe('Zapp Slywick', () => {
 			},
 			{
 				...buildSingleBoardEntity(
-					CardIds.NonCollectible.Neutral.SoulJugglerTavernBrawl,
+					CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl,
 					cards,
 					sharedState.currentEntityId++,
 				),

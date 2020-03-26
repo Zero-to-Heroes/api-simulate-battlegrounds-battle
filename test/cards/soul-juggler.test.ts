@@ -16,7 +16,7 @@ describe('Soul Juggler', () => {
 
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Warlock.Voidwalker, cards, 2),
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.SoulJuggler, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Warlock.SoulJuggler, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: BoardEntity[] = [
@@ -39,7 +39,7 @@ describe('Soul Juggler', () => {
 
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Warlock.Voidwalker, cards, 2),
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.SoulJugglerTavernBrawl, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: BoardEntity[] = [
@@ -62,7 +62,7 @@ describe('Soul Juggler', () => {
 
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.WrathWeaver, cards, 2),
-			buildSingleBoardEntity(CardIds.NonCollectible.Neutral.SoulJuggler, cards, 1),
+			buildSingleBoardEntity(CardIds.NonCollectible.Warlock.SoulJuggler, cards, 1),
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: BoardEntity[] = [

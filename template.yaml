@@ -18,8 +18,9 @@ Resources:
         Type: AWS::Serverless::Function
         Properties:
             Handler: simulate-bgs-battle.default
-            Runtime: nodejs8.10
+            Runtime: nodejs10.x
             Timeout: 180
+            MemorySize: 512
             CodeUri: ./dist/simulate-bgs-battle
             Policies:
                 - AWSLambdaVPCAccessExecutionRole

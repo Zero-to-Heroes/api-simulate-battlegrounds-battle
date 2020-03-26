@@ -314,13 +314,13 @@ const applySoulJugglerEffect = (
 		return;
 		// return [boardWithJugglers, boardToAttack];
 	}
-	const jugglers = boardWithJugglers.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.SoulJuggler);
+	const jugglers = boardWithJugglers.filter(entity => entity.cardId === CardIds.NonCollectible.Warlock.SoulJuggler);
 	// console.log('jugglers in board', boardWithJugglers);
 	for (const juggler of jugglers) {
 		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
 	}
 	const goldenJugglers = boardWithJugglers.filter(
-		entity => entity.cardId === CardIds.NonCollectible.Neutral.SoulJugglerTavernBrawl,
+		entity => entity.cardId === CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl,
 	);
 	// console.log('golden jugglers in board', boardWithJugglers);
 	for (const juggler of goldenJugglers) {
