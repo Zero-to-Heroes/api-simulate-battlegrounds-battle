@@ -1,5 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
-import { AllCardsService } from './cards';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 
 const REMOVED_CARD_IDS = [
 	'GVG_085', // Annoy-o-Tron

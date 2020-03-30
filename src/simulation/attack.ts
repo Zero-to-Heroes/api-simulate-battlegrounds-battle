@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -376,6 +375,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		? spawnEntities(deadEntity.cardId, 1, boardWithKilledMinion, allCards, sharedState).map(entity => ({
 				...entity,
 				health: 1,
+				reborn: false,
 		  }))
 		: [];
 	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(

@@ -1,6 +1,5 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../src/board-entity';
-import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
@@ -94,9 +93,7 @@ describe('Junkbot', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 
-		const playerBoard: BoardEntity[] = [
-			buildSingleBoardEntity(CardIds.Collectible.Neutral.Junkbot, cards, 3),
-		];
+		const playerBoard: BoardEntity[] = [buildSingleBoardEntity(CardIds.Collectible.Neutral.Junkbot, cards, 3)];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{

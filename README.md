@@ -8,7 +8,8 @@ sam local start-api
 
 ```
 npm run build && npm run package && npm run deploy
-npm run build; npm run package; npm run deploy
+
+rm -rf dist/simulate-bgs-battle/ && tsc && npm publish
 ```
 
 # Reference

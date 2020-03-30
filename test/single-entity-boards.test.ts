@@ -1,5 +1,5 @@
+import { AllCardsService } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../src/board-entity';
-import { AllCardsService } from '../src/cards/cards';
 import { CardsData } from '../src/cards/cards-data';
 import { PlayerEntity } from '../src/player-entity';
 import { Simulator } from '../src/simulation/simulator';

@@ -1,6 +1,5 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from './board-entity';
-import { AllCardsService } from './cards/cards';
 
 const CLEAVE_IDS = [
 	'LOOT_078', // Cave Hydra

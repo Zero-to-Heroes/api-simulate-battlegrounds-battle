@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.0.0",
+	"version": "1.0.7",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
@@ -10,8 +10,7 @@
 		"build": "npm audit fix && webpack --env.buildEnv=prod --color",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
-		"clean": "rm -rf -v dist/*",
-		"prepublish": "tsc"
+		"clean": "rm -rf -v dist/*"
 	},
 	"repository": {},
 	"author": "",
@@ -19,11 +18,15 @@
 	"private": false,
 	"main": "dist/simulate-bgs-battle.js",
 	"types": "dist/simulate-bgs-battle.d.ts",
+	"files": [
+		"dist/**/*"
+	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.32",
-		"@firestone-hs/reference-data": "^0.1.23",
+		"@firestone-hs/reference-data": "^0.1.25",
 		"aws-sdk": "^2.524.0",
 		"copy-webpack-plugin": "^5.1.1",
+		"cross-fetch": "^3.0.4",
 		"jest-extended": "^0.11.5",
 		"jest-text-transformer": "^1.0.2",
 		"mysql": "^2.17.1",

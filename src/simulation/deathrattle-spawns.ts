@@ -1,6 +1,5 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
 import { buildSingleBoardEntity } from '../utils';
 import { SharedState } from './shared-state';
@@ -57,6 +56,9 @@ export const spawnEntities = (
 		// console.log('buffs', attackBuff, healthBuff, newMinion, boardToSpawnInto);
 		newMinion.attack += attackBuff;
 		newMinion.health += healthBuff;
+		if (!newMinion.cardId) {
+			console.warn('Invalid spawn', newMinion, cardId);
+		}
 		result.push(newMinion);
 	}
 	return result;

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
-import { AllCardsService } from './cards/cards';
 import { CardsData } from './cards/cards-data';
 import { Simulator } from './simulation/simulator';
 
@@ -15,7 +14,9 @@ const cardsData = new CardsData(cards, false);
 export default async (event): Promise<any> => {
 	try {
 		const battleInput: BgsBattleInfo = JSON.parse(event.body);
-		const simulationResult = simulateBattle(battleInput);
+		await cards.initializeCardsDb();
+		cardsData.inititialize();
+		const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
 		const response = {
 			statusCode: 200,
@@ -36,9 +37,13 @@ export default async (event): Promise<any> => {
 	}
 };
 
-export const simulateBattle = async (battleInput: BgsBattleInfo) => {
-	await cards.initializeCardsDb();
-	cardsData.inititialize();
+export const simulateBattle = (
+	battleInput: BgsBattleInfo,
+	cards: AllCardsService,
+	cardsData: CardsData,
+	maxAcceptableDuration = 2000,
+) => {
+	const start = Date.now();
 	const simulator = new Simulator(cards, cardsData);
 
 	const simulationResult = {
@@ -81,6 +86,11 @@ export const simulateBattle = async (battleInput: BgsBattleInfo) => {
 			input.opponentBoard.board,
 			input.opponentBoard.player,
 		);
+		if (Date.now() - start > maxAcceptableDuration || !battleResult) {
+			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
+			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
+			break;
+		}
 		if (battleResult.result === 'won') {
 			simulationResult.won++;
 			simulationResult.damageWon += battleResult.damageDealt;
@@ -105,7 +115,7 @@ export const simulateBattle = async (battleInput: BgsBattleInfo) => {
 		? simulationResult.damageLost / simulationResult.lost
 		: undefined;
 	console.timeEnd('simulation');
-	// console.log('sending back success reponse');
+	console.log('sending back success reponse', simulationResult);
 	return simulationResult;
 };
 

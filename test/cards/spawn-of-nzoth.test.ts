@@ -1,6 +1,5 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../src/board-entity';
-import { AllCardsService } from '../../src/cards/cards';
 import { CardsData } from '../../src/cards/cards-data';
 import { PlayerEntity } from '../../src/player-entity';
 import { Simulator } from '../../src/simulation/simulator';
@@ -44,7 +43,11 @@ describe('Spawn of Nzoth', () => {
 		];
 		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 		const opponentBoard: BoardEntity[] = [
-			{ ...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3), health: 10, attack: 4 },
+			{
+				...buildSingleBoardEntity(CardIds.Collectible.Warlock.VulgarHomunculus, cards, 3),
+				health: 10,
+				attack: 4,
+			},
 		];
 		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
 

@@ -15,6 +15,8 @@ global.console = {
 	// Keep native behaviour for other methods, use those to print out things in your own tests, not `console.log`
 	error: console.error,
 	debug: console.debug,
+	warn: console.warn,
+	log: console.log,
 };
 
 let isConsoleError;

@@ -1,6 +1,5 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../src/board-entity';
-import { AllCardsService } from '../src/cards/cards';
 import { CardsData } from '../src/cards/cards-data';
 import { PlayerEntity } from '../src/player-entity';
 import { SharedState } from '../src/simulation/shared-state';

@@ -1,5 +1,5 @@
+import { AllCardsService } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { AllCardsService } from '../cards/cards';
 import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
@@ -66,9 +66,10 @@ export class Simulator {
 			}
 			this.currentAttacker = (this.currentAttacker + 1) % 2;
 			counter++;
-			// if (counter > 10) {
-			// 	break;
-			// }
+			if (counter > 200) {
+				console.warn('short-circuiting simulation, too many iterations', counter);
+				return null;
+			}
 		}
 		// console.log('battle over', playerBoard, opponentBoard);
 		if (playerBoard.length === 0 && opponentBoard.length === 0) {
