@@ -21,8 +21,20 @@ export const handleSpawn = (entity: BoardEntity, spawned: readonly BoardEntity[]
 			entity.attack += 2 * spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MURLOC').length;
 			return;
 		case CardIds.Collectible.Paladin.CobaltGuardian:
+		case CardIds.NonCollectible.Neutral.DeflectOBot:
+		case CardIds.NonCollectible.Neutral.DeflectOBotTavernBrawl:
 			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
 				entity.divineShield = true;
+			}
+			return;
+		case CardIds.NonCollectible.Neutral.DeflectOBot:
+			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
+				entity.attack = entity.attack + 1;
+			}
+			return;
+		case CardIds.NonCollectible.Neutral.DeflectOBotTavernBrawl:
+			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
+				entity.attack = entity.attack + 2;
 			}
 			return;
 	}

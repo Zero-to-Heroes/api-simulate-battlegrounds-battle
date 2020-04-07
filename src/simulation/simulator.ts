@@ -15,14 +15,6 @@ import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers'
 import { SharedState } from './shared-state';
 
 // New simulator should be instantiated for each match
-// TODO: implement all the cards, including:
-// - Start of turn effects
-// - Native deathrattles
-// - Deathrattles received via enchantments
-// - Pre-attack effects, like the dragon doubling its attack
-// - Pre-attack effects on other cards, like the one that gets +1 attack when another minion attacks
-// - Cleaves
-// - Procs on minion death (like Junkbot)
 export class Simulator {
 	private currentAttacker: number;
 	private lastPlayerAttackerEntityId: number;
