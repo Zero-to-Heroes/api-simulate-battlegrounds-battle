@@ -4,7 +4,12 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 
 // Check if aura is already applied, and if not re-apply it
-export const applyAuras = (board: BoardEntity[], data: CardsData, cards: AllCardsService): void => {
+export const applyAuras = (
+	board: BoardEntity[],
+	isDeathwingPresent: boolean,
+	data: CardsData,
+	cards: AllCardsService,
+): void => {
 	// console.log('ready to apply auras', board);
 	for (let i = 0; i < board.length; i++) {
 		if (data.auraOrigins.indexOf(board[i].cardId) !== -1) {
@@ -14,10 +19,14 @@ export const applyAuras = (board: BoardEntity[], data: CardsData, cards: AllCard
 			// console.log('applied aura', enchantmentId, board);
 		}
 	}
+
+	if (isDeathwingPresent) {
+		applyDeathwingAura(board, CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl);
+	}
 	// return board;
 };
 
-export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
+export const removeAuras = (board: BoardEntity[], isDeathwingPresent: boolean, data: CardsData): void => {
 	for (const entity of board) {
 		removeAurasFrom(entity, data);
 	}
@@ -73,6 +82,9 @@ const removeAura = (entity: BoardEntity, enchantmentId: string): void => {
 		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl:
 			removeMurlocWarleaderAura(entity, enchantmentId);
 			return;
+		case CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl:
+			removeDeathwingAura(entity, enchantmentId);
+			return;
 	}
 };
 
@@ -101,6 +113,16 @@ const applyDireWolfAura = (board: BoardEntity[], i: number, enchantmentId: strin
 	// return boardCopy;
 };
 
+const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string): void => {
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (!entity.enchantments.some(aura => aura.cardId === enchantmentId)) {
+			entity.attack += 2;
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
+		}
+	}
+};
+
 const applySiegebreakerAura = (
 	board: BoardEntity[],
 	index: number,
@@ -125,20 +147,8 @@ const applySiegebreakerAura = (
 			entity.attack +=
 				enchantmentId === CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment ? 1 : 2;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
-			// const newEntity = {
-			// 	...entity,
-			// 	attack:
-			// 		entity.attack +
-			// 		(enchantmentId === CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment ? 1 : 2),
-			// 	enchantments: [
-			// 		...entity.enchantments,
-			// 		{ cardId: enchantmentId, originEntityId: originEntity.entityId },
-			// 	],
-			// } as BoardEntity;
-			// newBoard.push(newEntity);
 		}
 	}
-	// return newBoard;
 };
 
 const applyMalGanisAura = (
@@ -209,6 +219,12 @@ const removeDireWolfAura = (entity: BoardEntity, enchantmentId: string): void =>
 			numberOfBuffs *
 				(enchantmentId === CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantment ? 1 : 2),
 	);
+	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+};
+
+const removeDeathwingAura = (entity: BoardEntity, enchantmentId: string): void => {
+	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 2);
 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
 };
 

@@ -270,7 +270,7 @@ const applyMinionDeathEffect = (
 	// return [boardWithDeadEntity, otherBoard];
 };
 
-const dealDamageToAllMinions = (
+export const dealDamageToAllMinions = (
 	board1: BoardEntity[],
 	board2: BoardEntity[],
 	damageSource: BoardEntity,
@@ -286,7 +286,7 @@ const dealDamageToAllMinions = (
 	// let updatedBoard1 = [...board1];
 	// let updatedBoard2 = [...board2];
 	const fakeAttacker = {
-		...damageSource,
+		...(damageSource || {}),
 		attack: damageDealt,
 		attacking: true,
 	} as BoardEntity;

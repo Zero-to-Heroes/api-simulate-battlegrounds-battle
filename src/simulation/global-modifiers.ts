@@ -3,7 +3,6 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 
-// Check if aura is already applied, and if not re-apply it
 export const applyGlobalModifiers = (
 	board1: BoardEntity[],
 	board2: BoardEntity[],

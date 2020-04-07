@@ -2,10 +2,136 @@
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { PlayerEntity } from '../player-entity';
+import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
+import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
+
+export const simulateAttack = (
+	attackingBoard: BoardEntity[],
+	attackingHero: PlayerEntity,
+	defendingBoard: BoardEntity[],
+	defendingHero: PlayerEntity,
+	lastAttackerEntityId: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	attackingEntityIndex?: number,
+): void => {
+	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
+		return;
+	}
+	const isDeathwingPresent =
+		attackingHero.cardId === CardIds.NonCollectible.Neutral.DeathwingTavernBrawl ||
+		defendingHero.cardId === CardIds.NonCollectible.Neutral.DeathwingTavernBrawl;
+	applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
+	applyAuras(attackingBoard, isDeathwingPresent, spawns, allCards);
+	applyAuras(defendingBoard, isDeathwingPresent, spawns, allCards);
+
+	let attackingEntity =
+		attackingEntityIndex != null
+			? attackingBoard[attackingEntityIndex]
+			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
+	if (attackingEntity) {
+		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
+		for (let i = 0; i < numberOfAttacks; i++) {
+			// We refresh the entity in case of windfury
+			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
+				return;
+				// return [attackingBoard, defendingBoard];
+			}
+			// console.log('before', attackingEntity);
+			attackingEntity = attackingBoard.find(entity => entity.entityId === attackingEntity.entityId);
+			// console.log('after', attackingEntity);
+			if (attackingEntity) {
+				// console.log('attackingEntity', attackingEntity, attackingBoard);
+				applyOnAttackBuffs(attackingEntity);
+				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
+				// console.log('battling between', attackingEntity, defendingEntity);
+				performAttack(
+					attackingEntity,
+					defendingEntity,
+					attackingBoard,
+					defendingBoard,
+					allCards,
+					spawns,
+					sharedState,
+				);
+			}
+		}
+		// console.log('attacking board', attackingBoard, 'defending board', defendingBoard);
+	}
+	// return [[], []];
+	// console.log('before removing auras', attackingBoard, defendingBoard);
+	removeAuras(attackingBoard, isDeathwingPresent, spawns);
+	removeAuras(defendingBoard, isDeathwingPresent, spawns);
+	removeGlobalModifiers(attackingBoard, defendingBoard);
+	// console.log('after removing auras', attackingBoard, defendingBoard);
+	// return [attackingBoard, defendingBoard];
+};
+
+const performAttack = (
+	attackingEntity: BoardEntity,
+	defendingEntity: BoardEntity,
+	attackingBoard: BoardEntity[],
+	defendingBoard: BoardEntity[],
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+): void => {
+	// let newAttackingEntity, newDefendingEntity;
+	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState);
+	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState);
+	// console.log('after damage', attackingEntity, defendingEntity);
+	const updatedDefenders = [defendingEntity];
+	// Cleave
+	if (attackingEntity.cleave) {
+		const neighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
+		for (const neighbour of neighbours) {
+			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState);
+			updatedDefenders.push(neighbour);
+		}
+	}
+
+	// Approximate the play order
+	updatedDefenders.sort((a, b) => a.entityId - b.entityId);
+	processMinionDeath(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+};
+
+const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId: number): BoardEntity => {
+	const validAttackers = attackingBoard.filter(entity => entity.attack > 0);
+	if (validAttackers.length === 0) {
+		return null;
+	}
+	let attackingEntity = validAttackers[0];
+	let minNumberOfAttacks: number = attackingEntity.attacksPerformed;
+	for (const entity of validAttackers) {
+		if (entity.attacksPerformed < minNumberOfAttacks) {
+			attackingEntity = entity;
+			minNumberOfAttacks = entity.attacksPerformed;
+		}
+	}
+
+	attackingEntity.attacksPerformed++;
+	attackingEntity.attacking = true;
+	return attackingEntity;
+};
+
+const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] => {
+	const index = board.map(e => e.entityId).indexOf(entity.entityId);
+	const neighbours = [];
+	if (index - 1 >= 0) {
+		neighbours.push(board[index - 1]);
+	}
+	neighbours.push(entity);
+	if (index + 1 < board.length) {
+		neighbours.push(board[index + 1]);
+	}
+	return neighbours;
+};
 
 export const dealDamageToRandomEnemy = (
 	defendingBoard: BoardEntity[],
@@ -45,7 +171,7 @@ export const dealDamageToEnemy = (
 ): void => {
 	// console.log('defendingEntity', defendingEntity, defendingBoard);
 	const fakeAttacker = {
-		...damageSource,
+		...(damageSource || {}),
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
