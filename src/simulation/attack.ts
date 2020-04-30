@@ -3,12 +3,14 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
+import { stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
+import { getHeroPowerForHero } from './start-of-combat';
 
 export const simulateAttack = (
 	attackingBoard: BoardEntity[],
@@ -24,17 +26,20 @@ export const simulateAttack = (
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
-	const isDeathwingPresent =
-		attackingHero.cardId === CardIds.NonCollectible.Neutral.DeathwingTavernBrawl ||
-		defendingHero.cardId === CardIds.NonCollectible.Neutral.DeathwingTavernBrawl;
 	applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
-	applyAuras(attackingBoard, isDeathwingPresent, spawns, allCards);
-	applyAuras(defendingBoard, isDeathwingPresent, spawns, allCards);
+	const attackingHeroPowerId = attackingHero.heroPowerId || getHeroPowerForHero(attackingHero.cardId);
+	const defendingHeroPowerId = defendingHero.heroPowerId || getHeroPowerForHero(defendingHero.cardId);
+	const numberOfDeathwingPresents =
+		(attackingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0) +
+		(defendingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0);
+	applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
+	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 
-	let attackingEntity =
+	const attackingEntity =
 		attackingEntityIndex != null
 			? attackingBoard[attackingEntityIndex]
 			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
+	console.log('attackingEntity', stringifySimpleCard(attackingEntity));
 	if (attackingEntity) {
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
@@ -44,13 +49,18 @@ export const simulateAttack = (
 				// return [attackingBoard, defendingBoard];
 			}
 			// console.log('before', attackingEntity);
-			attackingEntity = attackingBoard.find(entity => entity.entityId === attackingEntity.entityId);
+			// attackingEntity = attackingBoard.find(entity => entity.entityId === attackingEntity.entityId);
 			// console.log('after', attackingEntity);
-			if (attackingEntity) {
+			// Check that didn't die
+			if (attackingBoard.find(entity => entity.entityId === attackingEntity.entityId)) {
 				// console.log('attackingEntity', attackingEntity, attackingBoard);
 				applyOnAttackBuffs(attackingEntity);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
-				// console.log('battling between', attackingEntity, defendingEntity);
+				console.log(
+					'battling between',
+					stringifySimpleCard(attackingEntity),
+					stringifySimpleCard(defendingEntity),
+				);
 				performAttack(
 					attackingEntity,
 					defendingEntity,
@@ -66,8 +76,8 @@ export const simulateAttack = (
 	}
 	// return [[], []];
 	// console.log('before removing auras', attackingBoard, defendingBoard);
-	removeAuras(attackingBoard, isDeathwingPresent, spawns);
-	removeAuras(defendingBoard, isDeathwingPresent, spawns);
+	removeAuras(attackingBoard, spawns);
+	removeAuras(defendingBoard, spawns);
 	removeGlobalModifiers(attackingBoard, defendingBoard);
 	// console.log('after removing auras', attackingBoard, defendingBoard);
 	// return [attackingBoard, defendingBoard];
@@ -85,7 +95,7 @@ const performAttack = (
 	// let newAttackingEntity, newDefendingEntity;
 	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState);
 	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState);
-	// console.log('after damage', attackingEntity, defendingEntity);
+	console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	const updatedDefenders = [defendingEntity];
 	// Cleave
 	if (attackingEntity.cleave) {
@@ -107,15 +117,15 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 		return null;
 	}
 	let attackingEntity = validAttackers[0];
-	let minNumberOfAttacks: number = attackingEntity.attacksPerformed;
+	let minNumberOfAttacks: number = attackingEntity.attacksPerformed || 0;
 	for (const entity of validAttackers) {
-		if (entity.attacksPerformed < minNumberOfAttacks) {
+		if ((entity.attacksPerformed || 0) < minNumberOfAttacks) {
 			attackingEntity = entity;
 			minNumberOfAttacks = entity.attacksPerformed;
 		}
 	}
 
-	attackingEntity.attacksPerformed++;
+	attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
 	attackingEntity.attacking = true;
 	return attackingEntity;
 };
@@ -516,8 +526,10 @@ const buildBoardAfterDeathrattleSpawns = (
 		...entitiesFromReborn,
 		...entitiesFromEnchantments,
 	];
-	// console.log('candidateEntities', candidateEntities);
 	const roomToSpawn: number = 7 - boardWithKilledMinion.length;
+	if (candidateEntities.length > 0) {
+		console.log('candidateEntities', roomToSpawn, candidateEntities.map(entity => entity.cardId));
+	}
 	const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
 	// console.log('spawnedEntities', spawnedEntities);
 	// const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);

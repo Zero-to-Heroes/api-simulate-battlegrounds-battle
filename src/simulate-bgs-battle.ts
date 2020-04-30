@@ -41,10 +41,12 @@ export const simulateBattle = (
 	battleInput: BgsBattleInfo,
 	cards: AllCardsService,
 	cardsData: CardsData,
-	maxAcceptableDuration = 2000,
 ) => {
 	const start = Date.now();
 	const simulator = new Simulator(cards, cardsData);
+
+	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 4000;
+	const numberOfSimulations = battleInput.options?.numberOfSimulations || 2500;
 
 	const simulationResult = {
 		won: 0,
@@ -78,7 +80,7 @@ export const simulateBattle = (
 		},
 	});
 	console.time('simulation');
-	for (let i = 0; i < 2500; i++) {
+	for (let i = 0; i < numberOfSimulations; i++) {
 		const input = JSON.parse(inputReady);
 		const battleResult = simulator.simulateSingleBattle(
 			input.playerBoard.board,
@@ -108,12 +110,16 @@ export const simulateBattle = (
 	simulationResult.wonPercent = (100 * simulationResult.won) / toatlMatches;
 	simulationResult.tiedPercent = (100 * simulationResult.tied) / toatlMatches;
 	simulationResult.lostPercent = (100 * simulationResult.lost) / toatlMatches;
-	simulationResult.averageDamageWon = simulationResult.won
-		? simulationResult.damageWon / simulationResult.won
-		: undefined;
+	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost
-		: undefined;
+		: 0;
+	if (simulationResult.averageDamageWon > 0 && simulationResult.averageDamageWon < playerInfo.player.tavernTier) {
+		console.warn('average damage won issue', simulationResult, playerInfo);
+	}
+	if (simulationResult.averageDamageLost > 0 && simulationResult.averageDamageLost < opponentInfo.player.tavernTier) {
+		console.warn('average damage lost issue', simulationResult, opponentInfo);
+	}
 	console.timeEnd('simulation');
 	console.log('sending back success reponse', simulationResult);
 	return simulationResult;

@@ -3,6 +3,7 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
+import { stringifySimple } from '../utils';
 import { simulateAttack } from './attack';
 import { SharedState } from './shared-state';
 import { handleStartOfCombat } from './start-of-combat';
@@ -51,7 +52,7 @@ export class Simulator {
 
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
-			// console.log('starting round', playerBoard.length, opponentBoard.length); //, playerBoard, opponentBoard);
+			console.debug('starting round\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 			if (this.currentAttacker === 0) {
 				simulateAttack(
 					playerBoard,

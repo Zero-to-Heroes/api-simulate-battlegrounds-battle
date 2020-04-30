@@ -28,16 +28,9 @@ describe.skip('Full tests for performance and accuracy', () => {
 		validateInterval(simulationResult.averageDamageLost, 15.2);
 	});
 
-	test('full test 3', async () => {
+	test.only('full test 3', async () => {
 		const result = await runSimulation({ 'body': JSON.stringify(jsonEvent3) });
-		// Need to return in less than 1s
-		console.debug('result3', result);
 		const simulationResult = JSON.parse(result.body);
-		validateInterval(simulationResult.wonPercent, 4.7);
-		validateInterval(simulationResult.lostPercent, 94);
-		validateInterval(simulationResult.tiedPercent, 1.3);
-		validateInterval(simulationResult.averageDamageWon, 9);
-		validateInterval(simulationResult.averageDamageLost, 12.5);
 	});
 });
 

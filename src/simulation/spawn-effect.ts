@@ -22,19 +22,16 @@ export const handleSpawn = (entity: BoardEntity, spawned: readonly BoardEntity[]
 			return;
 		case CardIds.Collectible.Paladin.CobaltGuardian:
 		case CardIds.NonCollectible.Neutral.DeflectOBot:
-		case CardIds.NonCollectible.Neutral.DeflectOBotTavernBrawl:
 			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
-				entity.divineShield = true;
-			}
-			return;
-		case CardIds.NonCollectible.Neutral.DeflectOBot:
-			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
+				console.log('mech spawned, granting DS and +1 attack');
 				entity.attack = entity.attack + 1;
+				entity.divineShield = true;
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.DeflectOBotTavernBrawl:
 			if (spawned.filter(spawn => cards.getCard(spawn.cardId).race === 'MECH').length > 0) {
 				entity.attack = entity.attack + 2;
+				entity.divineShield = true;
 			}
 			return;
 	}

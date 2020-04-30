@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from './board-entity';
 
@@ -25,4 +26,12 @@ export const buildSingleBoardEntity = (cardId: string, allCards: AllCardsService
 		megaWindfury: megaWindfury,
 		enchantments: [],
 	} as BoardEntity;
+};
+
+export const stringifySimple = (board: readonly BoardEntity[]): string => {
+	return '[' + board.map(entity => stringifySimpleCard(entity)).join(', ') + ']';
+};
+
+export const stringifySimpleCard = (entity: BoardEntity): string => {
+	return entity ? `${entity.attack}/${entity.health}/${entity.divineShield}/${entity.attacksPerformed || 0}` : null;
 };

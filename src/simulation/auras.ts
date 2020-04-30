@@ -6,7 +6,7 @@ import { CardsData } from '../cards/cards-data';
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (
 	board: BoardEntity[],
-	isDeathwingPresent: boolean,
+	numberOfDeathwingPresents: number,
 	data: CardsData,
 	cards: AllCardsService,
 ): void => {
@@ -20,13 +20,13 @@ export const applyAuras = (
 		}
 	}
 
-	if (isDeathwingPresent) {
+	for (let i = 0; i < numberOfDeathwingPresents; i++) {
 		applyDeathwingAura(board, CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl);
 	}
 	// return board;
 };
 
-export const removeAuras = (board: BoardEntity[], isDeathwingPresent: boolean, data: CardsData): void => {
+export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
 	for (const entity of board) {
 		removeAurasFrom(entity, data);
 	}

@@ -78,44 +78,40 @@ export const handleStartOfCombat = (
 	sharedState: SharedState,
 ): void => {
 	let currentAttacker = Math.round(Math.random());
+	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
+	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
 
-	if (playerEntity.cardId === CardIds.NonCollectible.Neutral.IllidanStormrageTavernBrawl2 && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
 		handleIllidan(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState);
 	} else if (
-		opponentEntity.cardId === CardIds.NonCollectible.Neutral.IllidanStormrageTavernBrawl2 &&
+		opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handleIllidan(opponentBoard, opponentEntity, playerBoard, playerEntity, allCards, spawns, sharedState);
 	}
 
-	if (playerEntity.cardId === CardIds.NonCollectible.Neutral.TheLichKingTavernBrawl2 && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl && playerBoard.length > 0) {
 		handleLichKing(playerBoard);
 	} else if (
-		opponentEntity.cardId === CardIds.NonCollectible.Neutral.TheLichKingTavernBrawl2 &&
+		opponentHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handleLichKing(opponentBoard);
 	}
 
-	if (
-		playerEntity.cardId === CardIds.NonCollectible.Neutral.ProfessorPutricideTavernBrawl &&
-		playerBoard.length > 0
-	) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl && playerBoard.length > 0) {
 		handlePutricide(playerBoard);
 	} else if (
-		opponentEntity.cardId === CardIds.NonCollectible.Neutral.ProfessorPutricideTavernBrawl &&
+		opponentHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handlePutricide(opponentBoard);
 	}
 
-	if (
-		playerEntity.cardId === CardIds.NonCollectible.Neutral.NefarianTavernBrawlBATTLEGROUNDS &&
-		playerBoard.length > 0
-	) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl && playerBoard.length > 0) {
 		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState);
 	} else if (
-		opponentEntity.cardId === CardIds.NonCollectible.Neutral.NefarianTavernBrawlBATTLEGROUNDS &&
+		opponentHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handleNefarian(opponentBoard, playerBoard, allCards, spawns, sharedState);
@@ -140,6 +136,22 @@ export const handleStartOfCombat = (
 	// return [playerBoard, opponentBoard];
 };
 
+export const getHeroPowerForHero = (heroCardId: string): string => {
+	switch (heroCardId) {
+		case CardIds.NonCollectible.Neutral.IllidanStormrageTavernBrawl2:
+			return CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl;
+		case CardIds.NonCollectible.Neutral.TheLichKingTavernBrawl2:
+			return CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl;
+		case CardIds.NonCollectible.Neutral.ProfessorPutricideTavernBrawl:
+			return CardIds.NonCollectible.Neutral.RagePotionTavernBrawl;
+		case CardIds.NonCollectible.Neutral.NefarianTavernBrawlBATTLEGROUNDS:
+			return CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl;
+		case CardIds.NonCollectible.Neutral.DeathwingTavernBrawl:
+			return CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl;
+	}
+	return null;
+};
+
 export const performStartOfCombat = (
 	attacker: BoardEntity,
 	attackingBoard: BoardEntity[],
@@ -149,13 +161,13 @@ export const performStartOfCombat = (
 	sharedState: SharedState,
 ): void => {
 	// For now we're only dealing with the red whelp
-	if (attacker.cardId === 'BGS_019') {
+	if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelp) {
 		const damage = attackingBoard
 			.map(entity => allCards.getCard(entity.cardId).race)
 			.filter(race => race === 'DRAGON').length;
 		// console.log('[start of combat] damage', damage);
 		dealDamageToRandomEnemy(defendingBoard, attacker, damage, attackingBoard, allCards, spawns, sharedState);
-	} else if (attacker.cardId === 'TB_BaconUps_102') {
+	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl) {
 		const damage = attackingBoard
 			.map(entity => allCards.getCard(entity.cardId).race)
 			.filter(race => race === 'DRAGON').length;

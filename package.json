@@ -1,12 +1,13 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.0.8",
+	"version": "1.0.15",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
 		"start": "webpack -w --color",
 		"test": "jest",
 		"singleTest": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand -t",
+		"singleFile": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand",
 		"build": "npm audit fix && webpack --env.buildEnv=prod --color",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
@@ -23,7 +24,7 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.32",
-		"@firestone-hs/reference-data": "^0.1.25",
+		"@firestone-hs/reference-data": "^0.1.32",
 		"aws-sdk": "^2.524.0",
 		"copy-webpack-plugin": "^5.1.1",
 		"cross-fetch": "^3.0.4",
@@ -49,7 +50,7 @@
 		"ts-jest": "^25.2.1",
 		"ts-loader": "^6.0.4",
 		"ts-node": "^8.3.0",
-		"typescript": "^3.6.2",
+		"typescript": "^3.8.3",
 		"uglifyjs-webpack-plugin": "^2.2.0",
 		"webpack": "^4.39.3",
 		"webpack-cli": "^3.3.8",
