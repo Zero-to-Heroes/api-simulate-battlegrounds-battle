@@ -3,7 +3,6 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { PlayerEntity } from '../player-entity';
-import { stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -39,7 +38,7 @@ export const simulateAttack = (
 		attackingEntityIndex != null
 			? attackingBoard[attackingEntityIndex]
 			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
-	console.log('attackingEntity', stringifySimpleCard(attackingEntity));
+	// console.log('attackingEntity', stringifySimpleCard(attackingEntity));
 	if (attackingEntity) {
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
@@ -56,11 +55,11 @@ export const simulateAttack = (
 				// console.log('attackingEntity', attackingEntity, attackingBoard);
 				applyOnAttackBuffs(attackingEntity);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
-				console.log(
-					'battling between',
-					stringifySimpleCard(attackingEntity),
-					stringifySimpleCard(defendingEntity),
-				);
+				// console.log(
+				// 	'battling between',
+				// 	stringifySimpleCard(attackingEntity),
+				// 	stringifySimpleCard(defendingEntity),
+				// );
 				performAttack(
 					attackingEntity,
 					defendingEntity,
@@ -95,7 +94,7 @@ const performAttack = (
 	// let newAttackingEntity, newDefendingEntity;
 	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState);
 	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState);
-	console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
+	// console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	const updatedDefenders = [defendingEntity];
 	// Cleave
 	if (attackingEntity.cleave) {
@@ -527,9 +526,9 @@ const buildBoardAfterDeathrattleSpawns = (
 		...entitiesFromEnchantments,
 	];
 	const roomToSpawn: number = 7 - boardWithKilledMinion.length;
-	if (candidateEntities.length > 0) {
-		console.log('candidateEntities', roomToSpawn, candidateEntities.map(entity => entity.cardId));
-	}
+	// if (candidateEntities.length > 0) {
+	// 	console.log('candidateEntities', roomToSpawn, candidateEntities.map(entity => entity.cardId));
+	// }
 	const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
 	// console.log('spawnedEntities', spawnedEntities);
 	// const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);
