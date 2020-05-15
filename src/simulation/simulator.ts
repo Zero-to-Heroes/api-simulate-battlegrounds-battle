@@ -30,6 +30,7 @@ export class Simulator {
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
 			1;
+		// console.debug('before start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 		handleStartOfCombat(
 			playerEntity,
 			playerBoard,
@@ -39,6 +40,7 @@ export class Simulator {
 			this.spawns,
 			this.sharedState,
 		);
+		// console.debug('after start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 		// let boards = [playerBoard, opponentBoard];
 		// console.log('boards', boards);
 		this.currentAttacker =

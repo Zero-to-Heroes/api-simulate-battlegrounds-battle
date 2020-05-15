@@ -3,6 +3,7 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { removeAuras } from './simulation/auras';
 import { Simulator } from './simulation/simulator';
 
 const cards = new AllCardsService();
@@ -37,11 +38,7 @@ export default async (event): Promise<any> => {
 	}
 };
 
-export const simulateBattle = (
-	battleInput: BgsBattleInfo,
-	cards: AllCardsService,
-	cardsData: CardsData,
-) => {
+export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData) => {
 	const start = Date.now();
 	const simulator = new Simulator(cards, cardsData);
 
@@ -64,8 +61,12 @@ export const simulateBattle = (
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = cleanEnchantments(playerInfo.board);
-	const opponentBoard = cleanEnchantments(opponentInfo.board);
+	const playerBoard = playerInfo.board;
+	const opponentBoard = opponentInfo.board;
+	// console.log('opponent board before enchantments clean', stringifySimple(opponentBoard));
+	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
+	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
+	// console.log('opponent board after enchantments clean', stringifySimple(opponentBoard));
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation
@@ -107,9 +108,9 @@ export const simulateBattle = (
 		}
 	}
 	const toatlMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
-	simulationResult.wonPercent = (100 * simulationResult.won) / toatlMatches;
-	simulationResult.tiedPercent = (100 * simulationResult.tied) / toatlMatches;
-	simulationResult.lostPercent = (100 * simulationResult.lost) / toatlMatches;
+	simulationResult.wonPercent = Math.round((10 * (100 * simulationResult.won)) / toatlMatches) / 10;
+	simulationResult.tiedPercent = Math.round((10 * (100 * simulationResult.tied)) / toatlMatches) / 10;
+	simulationResult.lostPercent = Math.round((10 * (100 * simulationResult.lost)) / toatlMatches) / 10;
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost

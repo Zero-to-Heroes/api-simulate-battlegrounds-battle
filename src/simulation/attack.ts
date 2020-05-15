@@ -25,14 +25,18 @@ export const simulateAttack = (
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
+	// console.log('opponent board before global modifiers', stringifySimple(defendingBoard));
 	applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
+	// console.log('opponent board after global modifiers', stringifySimple(defendingBoard));
 	const attackingHeroPowerId = attackingHero.heroPowerId || getHeroPowerForHero(attackingHero.cardId);
 	const defendingHeroPowerId = defendingHero.heroPowerId || getHeroPowerForHero(defendingHero.cardId);
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0);
+	// console.log('opponent board before auras', stringifySimple(defendingBoard));
 	applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
 	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
+	// console.log('opponent board after auras', stringifySimple(defendingBoard));
 
 	const attackingEntity =
 		attackingEntityIndex != null
@@ -155,7 +159,9 @@ export const dealDamageToRandomEnemy = (
 		return;
 		// return [defendingBoard, boardWithAttackOrigin];
 	}
-	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, damageSource);
+	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, damageSource, true);
+	// console.log('board before damage', damage, stringifySimple(defendingBoard));
+	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity));
 	dealDamageToEnemy(
 		defendingEntity,
 		defendingBoard,
@@ -166,6 +172,7 @@ export const dealDamageToRandomEnemy = (
 		cardsData,
 		sharedState,
 	);
+	// console.log('board after damage', damage, stringifySimple(defendingBoard));
 };
 
 export const dealDamageToEnemy = (
@@ -193,7 +200,11 @@ export const dealDamageToEnemy = (
 	// return [defendingBoard, boardWithAttackOrigin];
 };
 
-export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntity: BoardEntity): BoardEntity => {
+export const getDefendingEntity = (
+	defendingBoard: BoardEntity[],
+	attackingEntity: BoardEntity,
+	ignoreTaunts = false,
+): BoardEntity => {
 	let possibleDefenders: readonly BoardEntity[];
 	if (
 		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywick ||
@@ -202,10 +213,12 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 		const minAttack = Math.min(...defendingBoard.map(entity => entity.attack));
 		// console.log('minAttack', minAttack, defendingBoard.filter(entity => entity.attack === minAttack));
 		possibleDefenders = defendingBoard.filter(entity => entity.attack === minAttack);
-	} else {
+	} else if (!ignoreTaunts) {
 		const taunts = defendingBoard.filter(entity => entity.taunt);
 		// console.log('taunts', taunts);
 		possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
+	} else {
+		possibleDefenders = defendingBoard;
 	}
 	return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 };

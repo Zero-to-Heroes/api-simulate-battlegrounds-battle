@@ -120,7 +120,7 @@ export const handleStartOfCombat = (
 	// console.log('[start of combat] attacker', currentAttacker);
 	const playerAttackers = playerBoard.filter(entity => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
 	const opponentAttackers = opponentBoard.filter(entity => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
-	// console.log('[start of combat] cazndidates', playerAttackers, opponentAttackers);
+	// console.log('[start of combat] cazndidates', stringifySimple(playerAttackers), stringifySimple(opponentAttackers));
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (currentAttacker === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
@@ -171,8 +171,21 @@ export const performStartOfCombat = (
 		const damage = attackingBoard
 			.map(entity => allCards.getCard(entity.cardId).race)
 			.filter(race => race === 'DRAGON').length;
+		// console.log(
+		// 	'red whelp start of combat',
+		// 	stringifySimpleCard(attacker),
+		// 	damage + '\n',
+		// 	stringifySimple(defendingBoard) + '\n',
+		// 	stringifySimple(attackingBoard),
+		// );
 		dealDamageToRandomEnemy(defendingBoard, attacker, damage, attackingBoard, allCards, spawns, sharedState);
 		dealDamageToRandomEnemy(defendingBoard, attacker, damage, attackingBoard, allCards, spawns, sharedState);
+		// console.log(q
+		// 	'red whelp after start of combat',
+		// 	stringifySimpleCard(attacker) + '\n',
+		// 	stringifySimple(defendingBoard) + '\n',
+		// 	stringifySimple(attackingBoard),
+		// );
 	}
 	// return [attackingBoard, defendingBoard];
 };
