@@ -81,36 +81,56 @@ export const handleStartOfCombat = (
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
 
-	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
+	if (
+		playerEntity.heroPowerUsed &&
+		playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
+		playerBoard.length > 0
+	) {
 		handleIllidan(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState);
 	} else if (
+		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handleIllidan(opponentBoard, opponentEntity, playerBoard, playerEntity, allCards, spawns, sharedState);
 	}
 
-	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl && playerBoard.length > 0) {
+	if (
+		playerEntity.heroPowerUsed &&
+		playerHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
+		playerBoard.length > 0
+	) {
 		handleLichKing(playerBoard);
 	} else if (
+		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handleLichKing(opponentBoard);
 	}
 
-	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl && playerBoard.length > 0) {
+	if (
+		playerEntity.heroPowerUsed &&
+		playerHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
+		playerBoard.length > 0
+	) {
 		handlePutricide(playerBoard);
 	} else if (
+		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handlePutricide(opponentBoard);
 	}
 
-	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl && playerBoard.length > 0) {
+	if (
+		playerEntity.heroPowerUsed &&
+		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
+		playerBoard.length > 0
+	) {
 		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState);
 	} else if (
+		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
 		opponentBoard.length > 0
 	) {
