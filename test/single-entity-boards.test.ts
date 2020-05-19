@@ -1,7 +1,7 @@
 import { AllCardsService } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../src/bgs-player-entity';
 import { BoardEntity } from '../src/board-entity';
 import { CardsData } from '../src/cards/cards-data';
-import { PlayerEntity } from '../src/player-entity';
 import { Simulator } from '../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../src/utils';
 import cardsJson from './cards.json';
@@ -15,9 +15,9 @@ describe('Single entity boards', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_162', cards), // Dire Wolf Alpha
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -32,11 +32,11 @@ describe('Single entity boards', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 		const playerBoard: BoardEntity[] = [];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_162', cards), // Dire Wolf Alpha
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -51,9 +51,9 @@ describe('Single entity boards', () => {
 		const spawns = new CardsData(cards);
 		const simulator = new Simulator(cards, spawns);
 		const playerBoard: BoardEntity[] = [];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -70,11 +70,11 @@ describe('Single entity boards', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_162', cards, 1), // Dire Wolf Alpha
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_162', cards, 2), // Dire Wolf Alpha
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 

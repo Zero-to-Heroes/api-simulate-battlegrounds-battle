@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { PlayerEntity } from '../player-entity';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -13,9 +13,9 @@ import { getHeroPowerForHero } from './start-of-combat';
 
 export const simulateAttack = (
 	attackingBoard: BoardEntity[],
-	attackingHero: PlayerEntity,
+	attackingHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
-	defendingHero: PlayerEntity,
+	defendingHero: BgsPlayerEntity,
 	lastAttackerEntityId: number,
 	allCards: AllCardsService,
 	spawns: CardsData,

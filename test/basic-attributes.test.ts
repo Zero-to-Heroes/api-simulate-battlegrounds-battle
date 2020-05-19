@@ -1,7 +1,7 @@
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../src/bgs-player-entity';
 import { BoardEntity } from '../src/board-entity';
 import { CardsData } from '../src/cards/cards-data';
-import { PlayerEntity } from '../src/player-entity';
 import { SharedState } from '../src/simulation/shared-state';
 import { Simulator } from '../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../src/utils';
@@ -18,11 +18,11 @@ describe('Basic attributes', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('EX1_008', cards, 1), // Argent Squire
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -39,11 +39,11 @@ describe('Basic attributes', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BOT_445', cards, 1), // Mecharoo
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -63,12 +63,12 @@ describe('Basic attributes', () => {
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver
 			buildSingleBoardEntity('BGS_004', cards, 3), // Wrath Weaver
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant
 			buildSingleBoardEntity('BGS_028', cards, 5), // Pogo
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		// The player will attack first always, and never kill the Pogo, thus always taking 3 damage
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
@@ -87,13 +87,13 @@ describe('Basic attributes', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_034', cards, 1), // Bronze Warden
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_028', cards, 5), // Pogo
 			buildSingleBoardEntity('BGS_028', cards, 6), // Pogo
 			buildSingleBoardEntity('BGS_028', cards, 7), // Pogo
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -111,7 +111,7 @@ describe('Basic attributes', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Maexxna, cards, sharedState.currentEntityId++),
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -123,7 +123,7 @@ describe('Basic attributes', () => {
 				attack: 999,
 			},
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -140,7 +140,7 @@ describe('Basic attributes', () => {
 		const playerBoard: BoardEntity[] = [
 			buildSingleBoardEntity(CardIds.Collectible.Neutral.Maexxna, cards, sharedState.currentEntityId++),
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -153,7 +153,7 @@ describe('Basic attributes', () => {
 				attack: 999,
 			},
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -169,14 +169,14 @@ describe('Basic attributes', () => {
 		const playerBoard: BoardEntity[] = [
 			{ ...buildSingleBoardEntity('LOOT_078', cards, 1), attack: 10 } as BoardEntity, // Cave Hydra
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			buildSingleBoardEntity('BGS_004', cards, 2), // Wrath Weaver, will attack first and die
 			buildSingleBoardEntity('BGS_043', cards, 3), // Murozond, who will die from the cleave
 			buildSingleBoardEntity('BGS_039', cards, 4), // Dragonspawn Lieutenant, who will tank the Hydra's attack, die and not kill the Hydra
 			buildSingleBoardEntity('BGS_043', cards, 5), // Murozond, who will die from the cleave
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -203,7 +203,7 @@ describe('Basic attributes', () => {
 				health: 8,
 			},
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -222,7 +222,7 @@ describe('Basic attributes', () => {
 				),
 			},
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -248,7 +248,7 @@ describe('Basic attributes', () => {
 				health: 4,
 			},
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -267,7 +267,7 @@ describe('Basic attributes', () => {
 				),
 			},
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -293,7 +293,7 @@ describe('Basic attributes', () => {
 				health: 6,
 			},
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -312,7 +312,7 @@ describe('Basic attributes', () => {
 				),
 			},
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
@@ -338,7 +338,7 @@ describe('Basic attributes', () => {
 				health: 12,
 			},
 		];
-		const playerEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -365,7 +365,7 @@ describe('Basic attributes', () => {
 				sharedState.currentEntityId++,
 			),
 		];
-		const opponentEntity: PlayerEntity = { tavernTier: 1 } as PlayerEntity;
+		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
 		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
 

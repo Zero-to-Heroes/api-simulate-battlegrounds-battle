@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { PlayerEntity } from '../player-entity';
 import { dealDamageToRandomEnemy, simulateAttack } from './attack';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 
 const handleIllidan = (
 	playerBoard: BoardEntity[],
-	playerEntity: PlayerEntity,
+	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
-	opponentEntity: PlayerEntity,
+	opponentEntity: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -69,9 +69,9 @@ const handlePutricide = (playerBoard: BoardEntity[]): void => {
 };
 
 export const handleStartOfCombat = (
-	playerEntity: PlayerEntity,
+	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
-	opponentEntity: PlayerEntity,
+	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,

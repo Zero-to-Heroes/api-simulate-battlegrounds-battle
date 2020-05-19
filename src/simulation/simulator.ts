@@ -1,7 +1,7 @@
 import { AllCardsService } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { PlayerEntity } from '../player-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { simulateAttack } from './attack';
 import { SharedState } from './shared-state';
@@ -23,9 +23,9 @@ export class Simulator {
 	// to auras (so we probably should hand-filter that, since there are actually few auras)
 	public simulateSingleBattle(
 		playerBoard: BoardEntity[],
-		playerEntity: PlayerEntity,
+		playerEntity: BgsPlayerEntity,
 		opponentBoard: BoardEntity[],
-		opponentEntity: PlayerEntity,
+		opponentEntity: BgsPlayerEntity,
 	): SingleSimulationResult {
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
