@@ -41,8 +41,6 @@ export class Simulator {
 			this.sharedState,
 		);
 		// console.debug('after start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
-		// let boards = [playerBoard, opponentBoard];
-		// console.log('boards', boards);
 		this.currentAttacker =
 			playerBoard.length > opponentBoard.length
 				? 0

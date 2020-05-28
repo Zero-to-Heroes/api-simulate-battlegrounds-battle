@@ -33,10 +33,10 @@ export const simulateAttack = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0);
-	// console.log('opponent board before auras', stringifySimple(defendingBoard));
+	// console.log('defendingBoard before auras', stringifySimple(defendingBoard), numberOfDeathwingPresents);
 	applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
 	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
-	// console.log('opponent board after auras', stringifySimple(defendingBoard));
+	// console.log('boards after auras\n', stringifySimple(attackingBoard), '\n', stringifySimple(defendingBoard));
 
 	const attackingEntity =
 		attackingEntityIndex != null
@@ -49,14 +49,9 @@ export const simulateAttack = (
 			// We refresh the entity in case of windfury
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 				return;
-				// return [attackingBoard, defendingBoard];
 			}
-			// console.log('before', attackingEntity);
-			// attackingEntity = attackingBoard.find(entity => entity.entityId === attackingEntity.entityId);
-			// console.log('after', attackingEntity);
 			// Check that didn't die
 			if (attackingBoard.find(entity => entity.entityId === attackingEntity.entityId)) {
-				// console.log('attackingEntity', attackingEntity, attackingBoard);
 				applyOnAttackBuffs(attackingEntity);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				// console.log(
@@ -75,15 +70,22 @@ export const simulateAttack = (
 				);
 			}
 		}
-		// console.log('attacking board', attackingBoard, 'defending board', defendingBoard);
 	}
-	// return [[], []];
-	// console.log('before removing auras', attackingBoard, defendingBoard);
+	// console.log(
+	// 	'boards before removing auras\n',
+	// 	stringifySimple(attackingBoard),
+	// 	'\n',
+	// 	stringifySimple(defendingBoard),
+	// );
 	removeAuras(attackingBoard, spawns);
 	removeAuras(defendingBoard, spawns);
 	removeGlobalModifiers(attackingBoard, defendingBoard);
-	// console.log('after removing auras', attackingBoard, defendingBoard);
-	// return [attackingBoard, defendingBoard];
+	// console.log(
+	// 	'boards after removing auras\n',
+	// 	stringifySimple(attackingBoard),
+	// 	'\n',
+	// 	stringifySimple(defendingBoard),
+	// );
 };
 
 const performAttack = (

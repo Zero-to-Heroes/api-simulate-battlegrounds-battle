@@ -34,6 +34,8 @@ export const stringifySimple = (board: readonly BoardEntity[]): string => {
 
 export const stringifySimpleCard = (entity: BoardEntity): string => {
 	return entity
-		? `${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${entity.attacksPerformed || 0}`
+		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${
+				entity.divineShield
+		  }/${entity.attacksPerformed || 0}`
 		: null;
 };

@@ -98,7 +98,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			simulationResult.won++;
 			simulationResult.damageWon += battleResult.damageDealt;
 			if (!battleResult.damageDealt || battleResult.damageDealt === NaN) {
-				console.debug('no damage dealt', battleResult);
+				// console.debug('no damage dealt', battleResult);
 			}
 		} else if (battleResult.result === 'lost') {
 			simulationResult.lost++;
