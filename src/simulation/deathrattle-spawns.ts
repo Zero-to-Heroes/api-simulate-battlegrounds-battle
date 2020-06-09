@@ -608,8 +608,99 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			// case TheTideRazor:
-			// 	break;
+			case CardIds.NonCollectible.Neutral.TheTideRazor:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				break;
+			case CardIds.NonCollectible.Neutral.TheTideRazorTavernBrawl:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				break;
 			default:
 			// spawnedEntities.push(...[]);
 		}
