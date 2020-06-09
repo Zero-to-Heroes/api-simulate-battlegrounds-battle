@@ -506,14 +506,27 @@ const handleDeathsForFirstBoard = (
 	// return [firstBoard, otherBoard];
 };
 
-export const applyOnAttackBuffs = (entity: BoardEntity, attackingBoard: BoardEntity[]): void => {
-	if (entity.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS) {
-		entity.attack *= 2;
+export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardEntity[]): void => {
+	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS) {
+		attacker.attack *= 2;
 	}
-	if (entity.cardId === CardIds.NonCollectible.Mage.GlyphGuardianTavernBrawl) {
-		entity.attack *= 3;
+	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardianTavernBrawl) {
+		attacker.attack *= 3;
 	}
-	// TODO: Ripsnarl Captain
+
+	// Ripsnarl Captain
+	const ripsnarls = attackingBoard
+		.filter(e => e.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptain)
+		.filter(e => e.entityId !== attacker.entityId);
+	attacker.attack += ripsnarls.length * 2;
+	attacker.health += ripsnarls.length * 2;
+
+	const ripsnarlsTB = attackingBoard
+		.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptainTavernBrawl)
+		.filter(e => e.entityId !== attacker.entityId);
+	attacker.attack += ripsnarlsTB.length * 4;
+	attacker.health += ripsnarlsTB.length * 4;
+
 	// Dread Admiral Eliza
 };
 
