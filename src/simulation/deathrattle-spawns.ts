@@ -10,8 +10,10 @@ export const spawnEntities = (
 	boardToSpawnInto: BoardEntity[],
 	allCards: AllCardsService,
 	sharedState: SharedState,
+	friendly: boolean,
 	// In most cases the business of knowing the number of minions to handle is left to the caller
-	limitSpawns = false,
+	limitSpawns: boolean,
+	// limitSpawns = false,
 ): readonly BoardEntity[] => {
 	const spawnMultiplier =
 		2 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.Collectible.Mage.Khadgar).length || 1;
@@ -25,7 +27,7 @@ export const spawnEntities = (
 	// console.log('will spawn entities', cardId, minionsToSpawn, boardToSpawnInto);
 	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
-		const newMinion = buildSingleBoardEntity(cardId, allCards, sharedState.currentEntityId++);
+		const newMinion = buildSingleBoardEntity(cardId, allCards, friendly, sharedState.currentEntityId++);
 		const attackBuff =
 			allCards.getCard(newMinion.cardId).race === 'BEAST'
 				? 3 *
@@ -87,6 +89,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -98,6 +102,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -109,6 +115,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -120,6 +128,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -131,6 +141,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -142,6 +154,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -153,6 +167,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -164,6 +180,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -175,6 +193,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -186,6 +206,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -197,6 +219,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -208,6 +232,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -219,6 +245,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -231,6 +259,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 						...spawnEntities(
 							spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
@@ -238,6 +268,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 					],
 				);
@@ -250,6 +282,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -261,6 +295,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -272,6 +308,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -283,6 +321,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -294,6 +334,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -305,6 +347,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -316,6 +360,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -327,6 +373,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -339,6 +387,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
@@ -346,6 +396,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 					],
 				);
@@ -359,6 +411,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
@@ -366,6 +420,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
@@ -373,6 +429,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
@@ -380,6 +438,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 					],
 				);
@@ -392,6 +452,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -404,6 +466,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 						...spawnEntities(
 							spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
@@ -411,6 +475,8 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntity,
 							allCards,
 							sharedState,
+							deadEntity.friendly,
+							false,
 						),
 					],
 				);
@@ -423,6 +489,8 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -434,9 +502,53 @@ export const spawnEntitiesFromDeathrattle = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
+			case CardIds.NonCollectible.Neutral.KangorsApprentice:
+				const cardIdsToSpawn = sharedState.deaths
+					.filter(entity => entity.friendly === deadEntity.friendly)
+					.slice(0, 2)
+					.map(entity => entity.cardId);
+				cardIdsToSpawn.forEach(cardId =>
+					spawnedEntities.push(
+						...spawnEntities(
+							cardId,
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					),
+				);
+				break;
+			case CardIds.NonCollectible.Neutral.KangorsApprenticeTavernBrawl:
+				const cardIdsToSpawn2 = sharedState.deaths
+					.filter(entity => entity.friendly === deadEntity.friendly)
+					.slice(0, 4)
+					.map(entity => entity.cardId);
+				cardIdsToSpawn2.forEach(cardId =>
+					spawnedEntities.push(
+						...spawnEntities(
+							cardId,
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					),
+				);
+				break;
+			// case Treasure Chest:
+			// 	break;
+			// case TheTideRazor:
+			// 	break;
 			default:
 			// spawnedEntities.push(...[]);
 		}
@@ -468,6 +580,8 @@ export const spawnEntitiesFromEnchantments = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;
@@ -479,6 +593,8 @@ export const spawnEntitiesFromEnchantments = (
 						boardWithDeadEntity,
 						allCards,
 						sharedState,
+						deadEntity.friendly,
+						false,
 					),
 				);
 				break;

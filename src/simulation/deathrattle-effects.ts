@@ -219,6 +219,7 @@ const applyMinionDeathEffect = (
 				otherBoard,
 				allCards,
 				sharedState,
+				!deadEntity.friendly,
 				true,
 			);
 			// const updatedBoard = [...otherBoard];
@@ -234,12 +235,18 @@ const applyMinionDeathEffect = (
 				otherBoard,
 				allCards,
 				sharedState,
+				!deadEntity.friendly,
 				true,
 			);
 			// const updatedBoard = [...otherBoard];
 			otherBoard.splice(index, 0, ...newEntities);
 			// otherBoard = updatedBoard;
 		}
+		// else if (Seabreaker Goliath) {
+
+		// } else if (Nat Pagle) {
+
+		// }
 	}
 
 	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);

@@ -63,8 +63,8 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = playerInfo.board.map(entity => addImpliedMechanics(entity));
-	const opponentBoard = opponentInfo.board.map(entity => addImpliedMechanics(entity));
+	const playerBoard = playerInfo.board.map(entity => ({...addImpliedMechanics(entity), friendly: true } as BoardEntity));
+	const opponentBoard = opponentInfo.board.map(entity => ({...addImpliedMechanics(entity), friendly: false } as BoardEntity));
 	// console.log('boards before enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);

@@ -3,6 +3,7 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -52,13 +53,15 @@ export const simulateAttack = (
 			}
 			// Check that didn't die
 			if (attackingBoard.find(entity => entity.entityId === attackingEntity.entityId)) {
-				applyOnAttackBuffs(attackingEntity);
+				applyOnAttackBuffs(attackingEntity, attackingBoard);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
-				// console.log(
-				// 	'battling between',
-				// 	stringifySimpleCard(attackingEntity),
-				// 	stringifySimpleCard(defendingEntity),
-				// );
+				if (sharedState.debug) {
+					console.log(
+						'battling between',
+						stringifySimpleCard(attackingEntity),
+						stringifySimpleCard(defendingEntity),
+					);
+				}
 				performAttack(
 					attackingEntity,
 					defendingEntity,
@@ -68,6 +71,9 @@ export const simulateAttack = (
 					spawns,
 					sharedState,
 				);
+				// if (defendingEntity.health > 0 && defendingEntity.cardId === YoHoOgre) {
+				// 	defendingEntity.attackImmediately = true;
+				// }
 			}
 		}
 	}
@@ -112,6 +118,10 @@ const performAttack = (
 		}
 		// console.log('after cleave', stringifySimple(neighbours));
 	}
+	// After attack hooks
+	// Arcane Cannon
+	// Monstrous Macaw
+	// attackingEntity.attackImmediately = false;
 
 	// Approximate the play order
 	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
@@ -283,6 +293,7 @@ export const bumpEntities = (
 			entityBoard,
 			allCards,
 			sharedState,
+			entity.friendly,
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
@@ -295,6 +306,7 @@ export const bumpEntities = (
 			entityBoard,
 			allCards,
 			sharedState,
+			entity.friendly,
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
@@ -305,6 +317,7 @@ export const bumpEntities = (
 			entityBoard,
 			allCards,
 			sharedState,
+			entity.friendly,
 			true,
 		).map(entity => ({ ...entity, taunt: true }));
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
@@ -316,6 +329,7 @@ export const bumpEntities = (
 			entityBoard,
 			allCards,
 			sharedState,
+			entity.friendly,
 			true,
 		).map(entity => ({ ...entity, taunt: true }));
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
@@ -328,6 +342,7 @@ export const bumpEntities = (
 			entityBoard,
 			allCards,
 			sharedState,
+			entity.friendly,
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
@@ -340,6 +355,7 @@ export const bumpEntities = (
 			entityBoard,
 			allCards,
 			sharedState,
+			entity.friendly,
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
@@ -372,6 +388,8 @@ export const processMinionDeath = (
 		return;
 		// return [board1, board2];
 	}
+	sharedState.deaths.push(...deadEntities1);
+	sharedState.deaths.push(...deadEntities2);
 	// board1 = board1WithRemovedMinions;
 	// board2 = board2WithRemovedMinions;
 
@@ -421,22 +439,15 @@ const handleDeathsForFirstBoard = (
 	// return [firstBoard, otherBoard];
 };
 
-export const applyOnAttackBuffs = (entity: BoardEntity): void => {
+export const applyOnAttackBuffs = (entity: BoardEntity, attackingBoard: BoardEntity[]): void => {
 	if (entity.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS) {
 		entity.attack *= 2;
-		// return {
-		// 	...entity,
-		// 	attack: 2 * entity.attack,
-		// };
 	}
 	if (entity.cardId === CardIds.NonCollectible.Mage.GlyphGuardianTavernBrawl) {
 		entity.attack *= 3;
-		// return {
-		// 	...entity,
-		// 	attack: 3 * entity.attack,
-		// };
 	}
-	// return entity;
+	// TODO: Ripsnarl Captain
+	// Dread Admiral Eliza
 };
 
 const makeMinionsDie = (
@@ -524,7 +535,15 @@ const buildBoardAfterDeathrattleSpawns = (
 	);
 	// console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
 	const entitiesFromReborn: readonly BoardEntity[] = deadEntity.reborn
-		? spawnEntities(deadEntity.cardId, 1, boardWithKilledMinion, allCards, sharedState).map(entity => ({
+		? spawnEntities(
+				deadEntity.cardId,
+				1,
+				boardWithKilledMinion,
+				allCards,
+				sharedState,
+				deadEntity.friendly,
+				false,
+		  ).map(entity => ({
 				...entity,
 				health: 1,
 				reborn: false,

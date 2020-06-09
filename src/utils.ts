@@ -8,7 +8,12 @@ const CLEAVE_IDS = [
 ];
 const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl];
 
-export const buildSingleBoardEntity = (cardId: string, allCards: AllCardsService, entityId = 1): BoardEntity => {
+export const buildSingleBoardEntity = (
+	cardId: string,
+	allCards: AllCardsService,
+	friendly: boolean,
+	entityId = 1,
+): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
 	return {
@@ -25,6 +30,7 @@ export const buildSingleBoardEntity = (cardId: string, allCards: AllCardsService
 		windfury: !megaWindfury && card.mechanics && card.mechanics.indexOf('WINDFURY') !== -1,
 		megaWindfury: megaWindfury,
 		enchantments: [],
+		friendly: friendly,
 	} as BoardEntity;
 };
 
