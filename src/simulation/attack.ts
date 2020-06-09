@@ -71,9 +71,11 @@ export const simulateAttack = (
 					spawns,
 					sharedState,
 				);
-				// if (defendingEntity.health > 0 && defendingEntity.cardId === YoHoOgre) {
-				// 	defendingEntity.attackImmediately = true;
-				// }
+				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
+				// the windfury triggers again? The current behavior attacks after the windfury is over
+				if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
+					defendingEntity.attackImmediately = true;
+				}
 			}
 		}
 	}

@@ -11,6 +11,7 @@ import { handleStartOfCombat } from './start-of-combat';
 // New simulator should be instantiated for each match
 export class Simulator {
 	private currentAttacker: number;
+	private currentSpeedAttacker: number = -1;
 	private lastPlayerAttackerEntityId: number;
 	private lastOpponentAttackerEntityId: number;
 	private sharedState: SharedState;
@@ -55,7 +56,7 @@ export class Simulator {
 			if (this.sharedState.debug) {
 				console.debug('starting round\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 			}
-			if (this.currentAttacker === 0) {
+			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
 				simulateAttack(
 					playerBoard,
 					playerEntity,
@@ -83,10 +84,11 @@ export class Simulator {
 			// minions that spawn on both player sides it might get a bit more complex
 			// but overall it works
 			if (playerBoard.some(entity => entity.attackImmediately)) {
-				this.currentAttacker = 0;
+				this.currentSpeedAttacker = 0;
 			} else if (opponentBoard.some(entity => entity.attackImmediately)) {
-				this.currentAttacker = 1;
+				this.currentSpeedAttacker = 1;
 			} else {
+				this.currentSpeedAttacker = -1;
 				this.currentAttacker = (this.currentAttacker + 1) % 2;
 			}
 			counter++;
