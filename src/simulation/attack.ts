@@ -120,7 +120,6 @@ const performAttack = (
 	}
 	// After attack hooks
 	// Arcane Cannon
-	console.log('attackingEntity', stringifySimpleCard(attackingEntity));
 	const attackerNeighbours: readonly BoardEntity[] = getNeighbours(attackingBoard, attackingEntity);
 	const cannonNeighbours = attackerNeighbours.filter(
 		entity => CardIds.NonCollectible.Neutral.ArcaneCannon === entity.cardId,
@@ -149,12 +148,46 @@ const performAttack = (
 		});
 	}
 	// Monstrous Macaw
+	if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacaw) {
+		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+	} else if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacawTavernBrawl) {
+		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+	}
 
 	attackingEntity.attackImmediately = false;
 
 	// Approximate the play order
 	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 	processMinionDeath(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+};
+
+const triggerRandomDeathrattle = (
+	attackingBoard: BoardEntity[],
+	defendingBoard: BoardEntity[],
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+): void => {
+	const validDeathrattles = attackingBoard.filter(
+		entity =>
+			(allCards.getCard(entity.cardId).mechanics &&
+				allCards.getCard(entity.cardId).mechanics.indexOf('DEATHRATTLE') !== -1) ||
+			((entity.enchantments &&
+				entity.enchantments
+					.map(enchantment => enchantment.cardId)
+					.indexOf(CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment) !== -1) ||
+				entity.enchantments
+					.map(enchantment => enchantment.cardId)
+					.indexOf(
+						CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl,
+					) !== -1),
+	);
+	if (validDeathrattles.length === 0) {
+		return;
+	}
+	const targetEntity = validDeathrattles[Math.floor(Math.random() * validDeathrattles.length)];
+	buildBoardAfterDeathrattleSpawns(attackingBoard, targetEntity, -1, defendingBoard, allCards, spawns, sharedState);
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId: number): BoardEntity => {
@@ -548,7 +581,9 @@ const buildBoardAfterDeathrattleSpawns = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): void => {
-	handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards);
+	if (deadMinionIndex >= 0) {
+		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards);
+	}
 	handleDeathrattleEffects(
 		boardWithKilledMinion,
 		deadEntity,
@@ -566,21 +601,22 @@ const buildBoardAfterDeathrattleSpawns = (
 		sharedState,
 	);
 	// console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
-	const entitiesFromReborn: readonly BoardEntity[] = deadEntity.reborn
-		? spawnEntities(
-				deadEntity.cardId,
-				1,
-				boardWithKilledMinion,
-				allCards,
-				sharedState,
-				deadEntity.friendly,
-				false,
-		  ).map(entity => ({
-				...entity,
-				health: 1,
-				reborn: false,
-		  }))
-		: [];
+	const entitiesFromReborn: readonly BoardEntity[] =
+		deadEntity.reborn && deadMinionIndex >= 0
+			? spawnEntities(
+					deadEntity.cardId,
+					1,
+					boardWithKilledMinion,
+					allCards,
+					sharedState,
+					deadEntity.friendly,
+					false,
+			  ).map(entity => ({
+					...entity,
+					health: 1,
+					reborn: false,
+			  }))
+			: [];
 	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
 		deadEntity,
 		boardWithKilledMinion,

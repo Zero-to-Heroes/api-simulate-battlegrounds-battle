@@ -15,7 +15,9 @@ export const handleDeathrattleEffects = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): void => {
-	applyMinionDeathEffect(deadEntity, boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState);
+	if (deadMinionIndex >= 0) {
+		applyMinionDeathEffect(deadEntity, boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState);
+	}
 
 	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
