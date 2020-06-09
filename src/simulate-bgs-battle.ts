@@ -42,7 +42,6 @@ export default async (event): Promise<any> => {
 
 export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData) => {
 	const start = Date.now();
-	const simulator = new Simulator(cards, cardsData);
 
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 4000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 2500;
@@ -85,6 +84,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	});
 	console.time('simulation');
 	for (let i = 0; i < numberOfSimulations; i++) {
+		const simulator = new Simulator(cards, cardsData);
 		const input = JSON.parse(inputReady);
 		const battleResult = simulator.simulateSingleBattle(
 			input.playerBoard.board,

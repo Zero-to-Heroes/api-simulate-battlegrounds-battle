@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.0.25",
+	"version": "1.0.26",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
@@ -23,9 +23,8 @@
 		"dist/**/*"
 	],
 	"dependencies": {
-		"@firestone-hs/compute-bgs-run-stats": "^1.0.2",
-		"@firestone-hs/hs-replay-xml-parser": "0.0.32",
-		"@firestone-hs/reference-data": "^0.1.32",
+		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
+		"@firestone-hs/reference-data": "^0.1.34",
 		"aws-sdk": "^2.524.0",
 		"copy-webpack-plugin": "^5.1.1",
 		"cross-fetch": "^3.0.4",
