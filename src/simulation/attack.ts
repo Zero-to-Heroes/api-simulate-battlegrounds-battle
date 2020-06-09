@@ -53,7 +53,7 @@ export const simulateAttack = (
 			}
 			// Check that didn't die
 			if (attackingBoard.find(entity => entity.entityId === attackingEntity.entityId)) {
-				applyOnAttackBuffs(attackingEntity, attackingBoard);
+				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				if (sharedState.debug) {
 					console.log(
