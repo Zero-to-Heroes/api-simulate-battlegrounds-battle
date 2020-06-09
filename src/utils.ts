@@ -28,6 +28,13 @@ export const buildSingleBoardEntity = (cardId: string, allCards: AllCardsService
 	} as BoardEntity;
 };
 
+export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
+	return {
+		...entity,
+		cleave: CLEAVE_IDS.indexOf(entity.cardId) !== -1,
+	} as BoardEntity;
+};
+
 export const stringifySimple = (board: readonly BoardEntity[]): string => {
 	return '[' + board.map(entity => stringifySimpleCard(entity)).join(', ') + ']';
 };

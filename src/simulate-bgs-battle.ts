@@ -4,7 +4,9 @@ import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { removeAuras } from './simulation/auras';
+import { removeGlobalModifiers } from './simulation/global-modifiers';
 import { Simulator } from './simulation/simulator';
+import { addImpliedMechanics } from './utils';
 
 const cards = new AllCardsService();
 const cardsData = new CardsData(cards, false);
@@ -61,12 +63,13 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = playerInfo.board;
-	const opponentBoard = opponentInfo.board;
-	// console.log('opponent board before enchantments clean', stringifySimple(opponentBoard));
+	const playerBoard = playerInfo.board.map(entity => addImpliedMechanics(entity));
+	const opponentBoard = opponentInfo.board.map(entity => addImpliedMechanics(entity));
+	// console.log('boards before enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
-	// console.log('opponent board after enchantments clean', stringifySimple(opponentBoard));
+	removeGlobalModifiers(playerBoard, opponentBoard, cards);
+	// console.log('boards after enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation

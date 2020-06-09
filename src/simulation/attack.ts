@@ -79,7 +79,7 @@ export const simulateAttack = (
 	// );
 	removeAuras(attackingBoard, spawns);
 	removeAuras(defendingBoard, spawns);
-	removeGlobalModifiers(attackingBoard, defendingBoard);
+	removeGlobalModifiers(attackingBoard, defendingBoard, allCards);
 	// console.log(
 	// 	'boards after removing auras\n',
 	// 	stringifySimple(attackingBoard),
@@ -101,18 +101,20 @@ const performAttack = (
 	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState);
 	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState);
 	// console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
-	const updatedDefenders = [defendingEntity];
+	// const updatedDefenders = [defendingEntity];
 	// Cleave
 	if (attackingEntity.cleave) {
 		const neighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
+		// console.log('cleaving', stringifySimple(neighbours));
 		for (const neighbour of neighbours) {
 			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState);
-			updatedDefenders.push(neighbour);
+			// updatedDefenders.push(neighbour);
 		}
+		// console.log('after cleave', stringifySimple(neighbours));
 	}
 
 	// Approximate the play order
-	updatedDefenders.sort((a, b) => a.entityId - b.entityId);
+	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 	processMinionDeath(attackingBoard, defendingBoard, allCards, spawns, sharedState);
 };
 

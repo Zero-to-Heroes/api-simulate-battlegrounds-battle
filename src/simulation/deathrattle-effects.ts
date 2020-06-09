@@ -135,6 +135,7 @@ const addStatsToBoard = (
 	for (const entity of board) {
 		if (!tribe || allCards.getCard(entity.cardId).race === tribe) {
 			entity.attack += attack;
+			entity.previousAttack += attack;
 			entity.health += health;
 			// return {
 			// 	...entity,
