@@ -121,7 +121,7 @@ const performAttack = (
 	// After attack hooks
 	// Arcane Cannon
 	// Monstrous Macaw
-	// attackingEntity.attackImmediately = false;
+	attackingEntity.attackImmediately = false;
 
 	// Approximate the play order
 	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);

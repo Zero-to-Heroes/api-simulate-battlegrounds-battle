@@ -15,6 +15,7 @@ export interface BoardEntity {
 	friendly: boolean;
 
 	attacksPerformed?: number;
+	attackImmediately?: boolean;
 	previousAttack?: number;
 	lastAffectedByEntity?: BoardEntity;
 	attacking?: boolean;

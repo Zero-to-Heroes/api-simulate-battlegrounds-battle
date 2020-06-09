@@ -78,7 +78,17 @@ export class Simulator {
 					this.sharedState,
 				);
 			}
-			this.currentAttacker = (this.currentAttacker + 1) % 2;
+			// If there are "attack immediately" minions, we keep the same player
+			// FIXME: This is not strictly correct - if there are multiple attack immediately
+			// minions that spawn on both player sides it might get a bit more complex
+			// but overall it works
+			if (playerBoard.some(entity => entity.attackImmediately)) {
+				this.currentAttacker = 0;
+			} else if (opponentBoard.some(entity => entity.attackImmediately)) {
+				this.currentAttacker = 1;
+			} else {
+				this.currentAttacker = (this.currentAttacker + 1) % 2;
+			}
 			counter++;
 			if (counter > 200) {
 				console.warn('short-circuiting simulation, too many iterations', counter);

@@ -6,6 +6,10 @@ const CLEAVE_IDS = [
 	'LOOT_078', // Cave Hydra
 	'GVG_113', // Foe Reaper 4000
 ];
+const ATTACK_IMMEDIATELY_IDS = [
+	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
+	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
+];
 const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl];
 
 export const buildSingleBoardEntity = (
@@ -16,6 +20,7 @@ export const buildSingleBoardEntity = (
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
+	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId) !== -1;
 	return {
 		attack: card.attack,
 		attacksPerformed: 0,
@@ -31,6 +36,7 @@ export const buildSingleBoardEntity = (
 		megaWindfury: megaWindfury,
 		enchantments: [],
 		friendly: friendly,
+		attackImmediately: attackImmediately,
 	} as BoardEntity;
 };
 

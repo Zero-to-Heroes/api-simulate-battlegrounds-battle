@@ -107,6 +107,32 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
+			case CardIds.NonCollectible.Neutral.Scallywag:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
+						1,
+						boardWithDeadEntity,
+						allCards,
+						sharedState,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.NonCollectible.Neutral.ScallywagTavernBrawl:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
+						1,
+						boardWithDeadEntity,
+						allCards,
+						sharedState,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
 			case CardIds.Collectible.Neutral.HarvestGolem:
 				spawnedEntities.push(
 					...spawnEntities(
