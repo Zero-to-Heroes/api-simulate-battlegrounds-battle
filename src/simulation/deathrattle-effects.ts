@@ -177,9 +177,7 @@ const applyMinionDeathEffect = (
 		applyJunkbotEffect(boardWithDeadEntity);
 	}
 	// Overkill
-	// console.log('is there overkill?', deadEntity);
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity.attacking) {
-		// console.log('overkill', deadEntity);
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS) {
 			const targets = boardWithDeadEntity.filter(entity => entity.health > 0);
 			if (targets.length > 0) {
@@ -243,6 +241,26 @@ const applyMinionDeathEffect = (
 			// const updatedBoard = [...otherBoard];
 			otherBoard.splice(index, 0, ...newEntities);
 			// otherBoard = updatedBoard;
+		} else if (
+			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBATTLEGROUNDS
+		) {
+			const otherPirates = otherBoard
+				.filter(entity => allCards.getCard(entity.cardId).race === 'PIRATE')
+				.filter(entity => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
+			otherPirates.forEach(pirate => {
+				pirate.attack += 2;
+				pirate.health += 2;
+			});
+		} else if (
+			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathTavernBrawl
+		) {
+			const otherPirates = otherBoard
+				.filter(entity => allCards.getCard(entity.cardId).race === 'PIRATE')
+				.filter(entity => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
+			otherPirates.forEach(pirate => {
+				pirate.attack += 4;
+				pirate.health += 4;
+			});
 		}
 		// else if (Seabreaker Goliath) {
 
