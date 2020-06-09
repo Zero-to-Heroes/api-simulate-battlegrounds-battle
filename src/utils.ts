@@ -11,6 +11,10 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
 ];
 const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl];
+const CANT_ATTACK_IDS = [
+	CardIds.NonCollectible.Neutral.ArcaneCannon,
+	CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl,
+];
 
 export const buildSingleBoardEntity = (
 	cardId: string,
@@ -21,7 +25,7 @@ export const buildSingleBoardEntity = (
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId) !== -1;
-	return {
+	return addImpliedMechanics({
 		attack: card.attack,
 		attacksPerformed: 0,
 		cardId: cardId,
@@ -30,20 +34,20 @@ export const buildSingleBoardEntity = (
 		health: card.health,
 		taunt: card.mechanics && card.mechanics.indexOf('TAUNT') !== -1,
 		reborn: card.mechanics && card.mechanics.indexOf('REBORN') !== -1,
-		cleave: CLEAVE_IDS.indexOf(cardId) !== -1,
 		poisonous: card.mechanics && card.mechanics.indexOf('POISONOUS') !== -1,
 		windfury: !megaWindfury && card.mechanics && card.mechanics.indexOf('WINDFURY') !== -1,
 		megaWindfury: megaWindfury,
 		enchantments: [],
 		friendly: friendly,
 		attackImmediately: attackImmediately,
-	} as BoardEntity;
+	} as BoardEntity);
 };
 
 export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 	return {
 		...entity,
 		cleave: CLEAVE_IDS.indexOf(entity.cardId) !== -1,
+		cantAttack: CANT_ATTACK_IDS.indexOf(entity.cardId) !== -1,
 	} as BoardEntity;
 };
 

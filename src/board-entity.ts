@@ -12,8 +12,9 @@ export interface BoardEntity {
 	windfury: boolean;
 	megaWindfury: boolean;
 	enchantments: { cardId: string; originEntityId: number }[];
-	friendly: boolean;
 
+	friendly?: boolean;
+	cantAttack?: boolean;
 	attacksPerformed?: number;
 	attackImmediately?: boolean;
 	previousAttack?: number;

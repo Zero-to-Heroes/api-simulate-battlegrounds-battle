@@ -3,7 +3,7 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { stringifySimpleCard } from '../utils';
+import { stringifySimple, stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -110,9 +110,9 @@ const performAttack = (
 	// const updatedDefenders = [defendingEntity];
 	// Cleave
 	if (attackingEntity.cleave) {
-		const neighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
+		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		// console.log('cleaving', stringifySimple(neighbours));
-		for (const neighbour of neighbours) {
+		for (const neighbour of defenderNeighbours) {
 			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState);
 			// updatedDefenders.push(neighbour);
 		}
@@ -120,7 +120,36 @@ const performAttack = (
 	}
 	// After attack hooks
 	// Arcane Cannon
+	console.log('attackingEntity', stringifySimpleCard(attackingEntity));
+	const attackerNeighbours: readonly BoardEntity[] = getNeighbours(attackingBoard, attackingEntity);
+	const cannonNeighbours = attackerNeighbours.filter(
+		entity => CardIds.NonCollectible.Neutral.ArcaneCannon === entity.cardId,
+	);
+	if (sharedState.debug) {
+		console.log('heighbours', stringifySimple(attackerNeighbours), stringifySimple(cannonNeighbours));
+	}
+	if (cannonNeighbours.length > 0) {
+		if (sharedState.debug) {
+			console.log('dealing arcane cannon damage', stringifySimple(cannonNeighbours));
+		}
+		cannonNeighbours.forEach(cannon =>
+			dealDamageToRandomEnemy(defendingBoard, cannon, 2, attackingBoard, allCards, spawns, sharedState),
+		);
+	}
+	const cannonNeighboursTB = attackerNeighbours.filter(
+		entity => CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl === entity.cardId,
+	);
+	if (cannonNeighboursTB.length > 0) {
+		if (sharedState.debug) {
+			console.log('dealing golden arcane cannon damage', stringifySimple(cannonNeighboursTB));
+		}
+		cannonNeighboursTB.forEach(cannon => {
+			dealDamageToRandomEnemy(defendingBoard, cannon, 2, attackingBoard, allCards, spawns, sharedState);
+			dealDamageToRandomEnemy(defendingBoard, cannon, 2, attackingBoard, allCards, spawns, sharedState);
+		});
+	}
 	// Monstrous Macaw
+
 	attackingEntity.attackImmediately = false;
 
 	// Approximate the play order
@@ -129,7 +158,7 @@ const performAttack = (
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId: number): BoardEntity => {
-	const validAttackers = attackingBoard.filter(entity => entity.attack > 0);
+	const validAttackers = attackingBoard.filter(entity => entity.attack > 0).filter(entity => !entity.cantAttack);
 	if (validAttackers.length === 0) {
 		return null;
 	}
@@ -149,12 +178,15 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 
 const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] => {
 	const index = board.map(e => e.entityId).indexOf(entity.entityId);
+	// console.log('index', index);
 	const neighbours = [];
 	if (index - 1 >= 0) {
+		// console.log('pushing previous', index);
 		neighbours.push(board[index - 1]);
 	}
 	neighbours.push(entity);
 	if (index + 1 < board.length) {
+		// console.log('pushing next', index);
 		neighbours.push(board[index + 1]);
 	}
 	return neighbours;
