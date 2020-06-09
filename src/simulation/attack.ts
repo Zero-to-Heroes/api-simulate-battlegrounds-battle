@@ -506,7 +506,11 @@ const handleDeathsForFirstBoard = (
 	// return [firstBoard, otherBoard];
 };
 
-export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardEntity[]): void => {
+export const applyOnAttackBuffs = (
+	attacker: BoardEntity,
+	attackingBoard: BoardEntity[],
+	allCards: AllCardsService,
+): void => {
 	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS) {
 		attacker.attack *= 2;
 	}
@@ -517,17 +521,26 @@ export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardE
 	// Ripsnarl Captain
 	const ripsnarls = attackingBoard
 		.filter(e => e.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptain)
-		.filter(e => e.entityId !== attacker.entityId);
-	attacker.attack += ripsnarls.length * 2;
-	attacker.health += ripsnarls.length * 2;
-
+		.filter(e => e.entityId !== attacker.entityId).length;
 	const ripsnarlsTB = attackingBoard
 		.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptainTavernBrawl)
-		.filter(e => e.entityId !== attacker.entityId);
-	attacker.attack += ripsnarlsTB.length * 4;
-	attacker.health += ripsnarlsTB.length * 4;
+		.filter(e => e.entityId !== attacker.entityId).length;
+	const ripsnarlBuff = ripsnarls * 2 + ripsnarlsTB * 4;
+	attacker.attack += ripsnarlBuff;
+	attacker.health += ripsnarlBuff;
 
 	// Dread Admiral Eliza
+	if (allCards.getCard(attacker.cardId).race === 'PIRATE') {
+		const elizas = attackingBoard.filter(e => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralEliza).length;
+		const elizasTB = attackingBoard.filter(
+			e => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralElizaTavernBrawl,
+		).length;
+		const elizaBuff = elizas * 1 + elizasTB * 2;
+		attackingBoard.forEach(entity => {
+			entity.attack += elizaBuff;
+			entity.health += elizaBuff;
+		});
+	}
 };
 
 const makeMinionsDie = (
