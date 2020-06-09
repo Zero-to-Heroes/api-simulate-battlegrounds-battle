@@ -91,6 +91,14 @@ export class CardsData {
 				CardIds.NonCollectible.Neutral.MurlocWarleaderTavernBrawl,
 				CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl,
 			],
+			[
+				CardIds.Collectible.Neutral.SouthseaCaptain,
+				CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment,
+			],
+			[
+				CardIds.NonCollectible.Neutral.SouthseaCaptainTavernBrawl,
+				CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentTavernBrawl,
+			],
 		];
 		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
 		this.startOfCombats = [

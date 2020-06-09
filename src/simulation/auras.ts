@@ -61,6 +61,10 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.NonCollectible.Neutral.MurlocWarleaderTavernBrawl:
 			applyMurlocWarleaderAura(board, i, enchantmentId, cards);
 			return;
+		case CardIds.Collectible.Neutral.SouthseaCaptain:
+		case CardIds.NonCollectible.Neutral.SouthseaCaptainTavernBrawl:
+			applySouthseaCaptainAura(board, i, enchantmentId, cards);
+			return;
 	}
 };
 
@@ -81,6 +85,10 @@ const removeAura = (entity: BoardEntity, enchantmentId: string): void => {
 		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment:
 		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl:
 			removeMurlocWarleaderAura(entity, enchantmentId);
+			return;
+		case CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment:
+		case CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentTavernBrawl:
+			removeSouthseaCaptainAura(entity, enchantmentId);
 			return;
 		case CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl:
 			removeDeathwingAura(entity, enchantmentId);
@@ -182,35 +190,6 @@ const applyMalGanisAura = (
 	// return newBoard;
 };
 
-const applyMurlocWarleaderAura = (
-	board: BoardEntity[],
-	index: number,
-	enchantmentId: string,
-	cards: AllCardsService,
-): void => {
-	const originEntity = board[index];
-	// const newBoard = [];
-	for (let i = 0; i < board.length; i++) {
-		const entity = board[i];
-		if (i === index || cards.getCard(entity.cardId).race !== 'MURLOC') {
-			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
-			// newBoard.push(entity);
-			continue;
-		}
-
-		if (
-			!entity.enchantments.some(
-				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
-			)
-		) {
-			entity.attack +=
-				enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment ? 2 : 4;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
-		}
-	}
-	// return newBoard;
-};
-
 const removeDireWolfAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(
@@ -256,6 +235,35 @@ const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): void =>
 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
 };
 
+const applyMurlocWarleaderAura = (
+	board: BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+): void => {
+	const originEntity = board[index];
+	// const newBoard = [];
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (i === index || cards.getCard(entity.cardId).race !== 'MURLOC') {
+			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
+			// newBoard.push(entity);
+			continue;
+		}
+
+		if (
+			!entity.enchantments.some(
+				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+			)
+		) {
+			entity.attack +=
+				enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment ? 2 : 4;
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+		}
+	}
+	// return newBoard;
+};
+
 const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(
@@ -263,6 +271,47 @@ const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): 
 		entity.attack -
 			numberOfBuffs *
 				(enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment ? 2 : 4),
+	);
+	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+};
+
+const applySouthseaCaptainAura = (
+	board: BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+): void => {
+	const originEntity = board[index];
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (i === index || cards.getCard(entity.cardId).race !== 'PIRATE') {
+			continue;
+		}
+
+		if (
+			!entity.enchantments.some(
+				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+			)
+		) {
+			entity.attack += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2;
+			entity.health += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2;
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+		}
+	}
+	// return newBoard;
+};
+
+const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string): void => {
+	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	entity.attack = Math.max(
+		0,
+		entity.attack -
+			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2),
+	);
+	entity.health = Math.max(
+		1,
+		entity.health -
+			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 2 : 4),
 	);
 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
 };
