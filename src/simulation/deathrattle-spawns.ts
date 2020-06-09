@@ -571,8 +571,43 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			// case Treasure Chest:
-			// 	break;
+			case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken:
+				spawnedEntities.push(
+					...spawnEntities(
+						spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
+						1,
+						boardWithDeadEntity,
+						allCards,
+						sharedState,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				break;
 			// case TheTideRazor:
 			// 	break;
 			default:

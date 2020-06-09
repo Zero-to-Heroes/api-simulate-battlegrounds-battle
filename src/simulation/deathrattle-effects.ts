@@ -261,6 +261,32 @@ const applyMinionDeathEffect = (
 				pirate.attack += 4;
 				pirate.health += 4;
 			});
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.NatPagleExtremeAngler) {
+			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
+			const newEntities = spawnEntities(
+				CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken,
+				1,
+				otherBoard,
+				allCards,
+				sharedState,
+				!deadEntity.friendly,
+				true,
+			);
+			otherBoard.splice(index, 0, ...newEntities);
+		} else if (
+			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.NatPagleExtremeAnglerTavernBrawl
+		) {
+			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
+			const newEntities = spawnEntities(
+				CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl,
+				1,
+				otherBoard,
+				allCards,
+				sharedState,
+				!deadEntity.friendly,
+				true,
+			);
+			otherBoard.splice(index, 0, ...newEntities);
 		}
 		// else if (Seabreaker Goliath) {
 

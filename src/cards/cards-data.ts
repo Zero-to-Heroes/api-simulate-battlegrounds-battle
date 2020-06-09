@@ -19,6 +19,8 @@ export class CardsData {
 	public ghastcoilerSpawns: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public sneedsSpawns: readonly string[];
+	public treasureChestSpawns: readonly string[];
+
 	public auraEnchantments: readonly string[][];
 	public auraOrigins: readonly string[];
 	public startOfCombats: readonly string[];
@@ -58,6 +60,11 @@ export class CardsData {
 			.filter(card => card.id !== 'GVG_114')
 			.filter(card => card.rarity === 'Legendary')
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map(card => card.id);
+		this.treasureChestSpawns = this.allCards
+			.getCards()
+			.filter(card => card.techLevel)
+			.filter(card => card.id.startsWith('TB_BaconUps')) // Only golden
 			.map(card => card.id);
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
