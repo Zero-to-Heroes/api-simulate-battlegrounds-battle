@@ -67,6 +67,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	// console.log('boards before enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
+	// console.log('boards after removing auras\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeGlobalModifiers(playerBoard, opponentBoard, cards);
 	// console.log('boards after enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 
@@ -92,7 +93,10 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			input.opponentBoard.board,
 			input.opponentBoard.player,
 		);
-		if (Date.now() - start > maxAcceptableDuration || !battleResult) {
+		if (!battleResult) {
+			continue;
+		}
+		if (Date.now() - start > maxAcceptableDuration) {
 			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
 			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
 			break;

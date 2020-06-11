@@ -2,6 +2,7 @@
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { stringifySimpleCard } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (
@@ -265,7 +266,9 @@ const applyMurlocWarleaderAura = (
 };
 
 const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	const numberOfBuffs = entity.enchantments.filter(
+		e => e.cardId === enchantmentId && e.originEntityId !== entity.entityId,
+	).length;
 	entity.attack = Math.max(
 		0,
 		entity.attack -
@@ -302,7 +305,19 @@ const applySouthseaCaptainAura = (
 };
 
 const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	const debug = false && entity.entityId === 3879;
+	if (debug) {
+		console.log('removing aura for', stringifySimpleCard(entity));
+	}
+	const numberOfBuffs = entity.enchantments.filter(
+		e => e.cardId === enchantmentId && e.originEntityId !== entity.entityId,
+	).length;
+	if (debug) {
+		console.log(
+			'buffs',
+			entity.enchantments.filter(e => e.cardId === enchantmentId && e.originEntityId !== entity.entityId),
+		);
+	}
 	entity.attack = Math.max(
 		0,
 		entity.attack -
@@ -311,7 +326,10 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string): 
 	entity.health = Math.max(
 		1,
 		entity.health -
-			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 2 : 4),
+			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2),
 	);
 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	if (debug) {
+		console.log('removed aura for', stringifySimpleCard(entity));
+	}
 };

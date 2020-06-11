@@ -1,4 +1,7 @@
 {
+	"options": {
+		"numberOfSimulations": 10000
+	},
 	"playerBoard": {
 		"player": {
 			"tavernTier": 4,

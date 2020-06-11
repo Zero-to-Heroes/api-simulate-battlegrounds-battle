@@ -105,7 +105,14 @@ export class Simulator {
 			}
 			counter++;
 			if (counter > 200) {
-				console.warn('short-circuiting simulation, too many iterations', counter);
+				console.warn(
+					'short-circuiting simulation, too many iterations',
+					counter,
+					'\n',
+					stringifySimple(playerBoard),
+					'\n',
+					stringifySimple(opponentBoard),
+				);
 				return null;
 			}
 		}
