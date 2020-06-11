@@ -32,7 +32,13 @@ export class Simulator {
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
 			1;
-		// console.debug('before start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
+		if (this.sharedState.debug) {
+			console.debug(
+				'before start of combat\n',
+				stringifySimple(opponentBoard) + '\n',
+				stringifySimple(playerBoard),
+			);
+		}
 		handleStartOfCombat(
 			playerEntity,
 			playerBoard,
@@ -42,7 +48,13 @@ export class Simulator {
 			this.spawns,
 			this.sharedState,
 		);
-		// console.debug('after start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
+		if (this.sharedState.debug) {
+			console.debug(
+				'after start of combat\n',
+				stringifySimple(opponentBoard) + '\n',
+				stringifySimple(playerBoard),
+			);
+		}
 		this.currentAttacker =
 			playerBoard.length > opponentBoard.length
 				? 0

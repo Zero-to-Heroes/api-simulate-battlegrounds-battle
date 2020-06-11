@@ -108,7 +108,9 @@ const performAttack = (
 	// let newAttackingEntity, newDefendingEntity;
 	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState);
 	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState);
-	// console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
+	if (sharedState.debug) {
+		console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
+	}
 	// const updatedDefenders = [defendingEntity];
 	// Cleave
 	if (attackingEntity.cleave) {
@@ -127,7 +129,7 @@ const performAttack = (
 		entity => CardIds.NonCollectible.Neutral.ArcaneCannon === entity.cardId,
 	);
 	if (sharedState.debug) {
-		console.log('heighbours', stringifySimple(attackerNeighbours), stringifySimple(cannonNeighbours));
+		// console.log('heighbours', stringifySimple(attackerNeighbours), stringifySimple(cannonNeighbours));
 	}
 	if (cannonNeighbours.length > 0) {
 		if (sharedState.debug) {

@@ -721,35 +721,37 @@ export const spawnEntitiesFromEnchantments = (
 	);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
-	for (let i = 0; i < multiplier; i++) {
-		switch (deadEntity.cardId) {
-			// Replicating Menace
-			case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment:
-				spawnedEntities.push(
-					...spawnEntities(
-						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
-						3,
-						boardWithDeadEntity,
-						allCards,
-						sharedState,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				break;
-			case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl:
-				spawnedEntities.push(
-					...spawnEntities(
-						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
-						3,
-						boardWithDeadEntity,
-						allCards,
-						sharedState,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				break;
+	for (let enchantment of deadEntity.enchantments || []) {
+		for (let i = 0; i < multiplier; i++) {
+			switch (enchantment.cardId) {
+				// Replicating Menace
+				case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+							3,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+							3,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+			}
 		}
 	}
 	return spawnedEntities;
