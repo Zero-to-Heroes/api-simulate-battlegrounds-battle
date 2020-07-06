@@ -2,6 +2,7 @@
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { stringifySimple, stringifySimpleCard } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -87,6 +88,13 @@ export const handleDeathrattleEffects = (
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
+				if (sharedState.debug) {
+					console.debug(
+						'dealing kaboom bot damage\n',
+						stringifySimpleCard(deadEntity) + '\n',
+						stringifySimple(otherBoard),
+					);
+				}
 				dealDamageToRandomEnemy(
 					otherBoard,
 					deadEntity,
@@ -96,6 +104,13 @@ export const handleDeathrattleEffects = (
 					cardsData,
 					sharedState,
 				);
+				if (sharedState.debug) {
+					console.debug(
+						'dealt kaboom bot damage\n',
+						stringifySimpleCard(deadEntity) + '\n',
+						stringifySimple(otherBoard),
+					);
+				}
 			}
 			return;
 		// console.log('after damage from bot', opponentBoard, board);

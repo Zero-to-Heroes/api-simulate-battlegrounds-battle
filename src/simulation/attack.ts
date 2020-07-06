@@ -230,7 +230,7 @@ const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly Boar
 };
 
 export const dealDamageToRandomEnemy = (
-	defendingBoard: BoardEntity[],
+	boardToBeDamaged: BoardEntity[],
 	damageSource: BoardEntity,
 	damage: number,
 	boardWithAttackOrigin: BoardEntity[],
@@ -238,16 +238,16 @@ export const dealDamageToRandomEnemy = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 ): void => {
-	if (defendingBoard.length === 0) {
+	if (boardToBeDamaged.length === 0) {
 		return;
 		// return [defendingBoard, boardWithAttackOrigin];
 	}
-	const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, damageSource, true);
+	const defendingEntity: BoardEntity = getDefendingEntity(boardToBeDamaged, damageSource, true);
 	// console.log('board before damage', damage, stringifySimple(defendingBoard));
 	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity));
 	dealDamageToEnemy(
 		defendingEntity,
-		defendingBoard,
+		boardToBeDamaged,
 		damageSource,
 		damage,
 		boardWithAttackOrigin,
@@ -462,16 +462,21 @@ export const processMinionDeath = (
 	// board1 = board1WithRemovedMinions;
 	// board2 = board2WithRemovedMinions;
 
-	// Now proceed to trigger all deathrattle effects on baord1
-	// I don't know how accurate this is. I assume that normally the deathrattles could trigger
-	// alternating between board1 and board2 based on the play order
-	// For now I'll trigger everything from board1 first, then everything from board 2
-	// It might not be fully accurate, but is probably a good first approximation
-	// console.log('boards after minions died', board1, board2);
-	handleDeathsForFirstBoard(board1, board2, deadMinionIndexes1, deadEntities1, allCards, cardsData, sharedState);
-	// console.log('boards after minions died and first board processed', board1, board2);
-	// Now handle the other board's deathrattles
-	handleDeathsForFirstBoard(board2, board1, deadMinionIndexes2, deadEntities2, allCards, cardsData, sharedState);
+	// From what we've seem, it looks like the order of the board who first procs the deathrattle
+	// can be random
+	// if (Math.random() > 0.5) {
+	// [board1, board2] = [board2, board1];
+	// }
+	if (Math.random() > 0.5) {
+		// Now proceed to trigger all deathrattle effects on baord1
+		handleDeathsForFirstBoard(board1, board2, deadMinionIndexes1, deadEntities1, allCards, cardsData, sharedState);
+
+		// Now handle the other board's deathrattles
+		handleDeathsForFirstBoard(board2, board1, deadMinionIndexes2, deadEntities2, allCards, cardsData, sharedState);
+	} else {
+		handleDeathsForFirstBoard(board2, board1, deadMinionIndexes2, deadEntities2, allCards, cardsData, sharedState);
+		handleDeathsForFirstBoard(board1, board2, deadMinionIndexes1, deadEntities1, allCards, cardsData, sharedState);
+	}
 	// console.log('board from processMinionDeath', board1, board2);
 	// Make sure we only return when there are no more deaths to process
 	// FIXME: this will propagate the killer between rounds, which is incorrect. For instance,
@@ -497,7 +502,13 @@ const handleDeathsForFirstBoard = (
 		const index = deadMinionIndexes[i];
 		if (entity.health <= 0) {
 			buildBoardAfterDeathrattleSpawns(firstBoard, entity, index, otherBoard, allCards, cardsData, sharedState);
-			// console.log('board after dr spawns', entity, firstBoard, otherBoard);
+			if (sharedState.debug) {
+				console.debug(
+					'boards after deathrattle spawns\n',
+					stringifySimple(firstBoard) + '\n',
+					stringifySimple(otherBoard),
+				);
+			}
 		} else if (firstBoard.length > 0) {
 			// const newBoardD = [...firstBoard];
 			firstBoard.splice(index, 1, entity);
@@ -613,6 +624,15 @@ const buildBoardAfterDeathrattleSpawns = (
 ): void => {
 	if (deadMinionIndex >= 0) {
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards);
+	}
+
+	if (sharedState.debug) {
+		console.debug(
+			'wilml handle deathrattle effect\n',
+			stringifySimple(boardWithKilledMinion) + '\n',
+			stringifySimpleCard(deadEntity) + '\n',
+			stringifySimple(opponentBoard),
+		);
 	}
 	handleDeathrattleEffects(
 		boardWithKilledMinion,
