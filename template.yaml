@@ -20,12 +20,14 @@ Resources:
             Handler: simulate-bgs-battle.default
             Runtime: nodejs10.x
             Timeout: 180
-            MemorySize: 512
+            MemorySize: 192
             CodeUri: ./dist/simulate-bgs-battle
             Policies:
                 - AWSLambdaVPCAccessExecutionRole
                 - AmazonSESFullAccess
                 - SecretsManagerReadWrite
+            Tags:
+                LambdaName: api-simulate-battlegrounds-battle
             Events:
                 GetMatchStatsResource:
                     Type: Api
