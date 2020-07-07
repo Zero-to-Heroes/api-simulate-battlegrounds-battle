@@ -15,6 +15,20 @@ const REMOVED_CARD_IDS = [
 ];
 
 export class CardsData {
+	public static CARDS_WITH_NO_BACONUP_VERSION = [
+		CardIds.Collectible.Paladin.RighteousProtector,
+		CardIds.Collectible.Warlock.VulgarHomunculus,
+		CardIds.NonCollectible.Neutral.DragonspawnLieutenant,
+		CardIds.NonCollectible.Neutral.BronzeWarden,
+		CardIds.NonCollectible.Neutral.YoHoOgre,
+		CardIds.Collectible.Hunter.CaveHydra,
+		CardIds.Collectible.Neutral.Toxfin,
+		CardIds.Collectible.Neutral.FoeReaper4000,
+		CardIds.Collectible.Neutral.Maexxna,
+		CardIds.NonCollectible.Paladin.HolyMackerel,
+		CardIds.NonCollectible.Neutral.NadinaTheRed,
+	];
+
 	public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
 	public impMamaSpawns: readonly string[];
@@ -65,7 +79,9 @@ export class CardsData {
 		this.treasureChestSpawns = this.allCards
 			.getCards()
 			.filter(card => card.techLevel)
-			.filter(card => card.id.startsWith('TB_BaconUps')) // Only golden
+			.filter(
+				card => card.id.startsWith('TB_BaconUps') || CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(card.id),
+			) // Only golden
 			.map(card => card.id);
 		this.pirateSpawns = this.allCards
 			.getCards()

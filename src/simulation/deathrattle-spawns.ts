@@ -66,6 +66,27 @@ export const spawnEntities = (
 	return result;
 };
 
+export const spawnPremiumEntities = (
+	cardId: string,
+	quantity: number,
+	boardToSpawnInto: BoardEntity[],
+	allCards: AllCardsService,
+	sharedState: SharedState,
+	friendly: boolean,
+	// In most cases the business of knowing the number of minions to handle is left to the caller
+	limitSpawns: boolean,
+	// limitSpawns = false,
+): readonly BoardEntity[] => {
+	const entities = spawnEntities(cardId, quantity, boardToSpawnInto, allCards, sharedState, friendly, limitSpawns);
+	entities.forEach(entity => {
+		if (CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(cardId)) {
+			entity.attack *= 2;
+			entity.health *= 2;
+		}
+	});
+	return entities;
+};
+
 export const spawnEntitiesFromDeathrattle = (
 	deadEntity: BoardEntity,
 	boardWithDeadEntity: BoardEntity[],
@@ -573,7 +594,7 @@ export const spawnEntitiesFromDeathrattle = (
 				break;
 			case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken:
 				spawnedEntities.push(
-					...spawnEntities(
+					...spawnPremiumEntities(
 						spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
 						1,
 						boardWithDeadEntity,
@@ -587,7 +608,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl:
 				spawnedEntities.push(
 					...[
-						...spawnEntities(
+						...spawnPremiumEntities(
 							spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
 							1,
 							boardWithDeadEntity,
@@ -596,7 +617,7 @@ export const spawnEntitiesFromDeathrattle = (
 							deadEntity.friendly,
 							false,
 						),
-						...spawnEntities(
+						...spawnPremiumEntities(
 							spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
 							1,
 							boardWithDeadEntity,
