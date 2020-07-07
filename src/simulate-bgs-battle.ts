@@ -9,7 +9,6 @@ import { Simulator } from './simulation/simulator';
 import { addImpliedMechanics } from './utils';
 
 const cards = new AllCardsService();
-const cardsData = new CardsData(cards, false);
 
 // This example demonstrates a NodeJS 8.10 async handler[1], however of course you could use
 // the more traditional callback-style handler.
@@ -18,7 +17,8 @@ export default async (event): Promise<any> => {
 	try {
 		const battleInput: BgsBattleInfo = JSON.parse(event.body);
 		await cards.initializeCardsDb();
-		cardsData.inititialize();
+		const cardsData = new CardsData(cards, false);
+		cardsData.inititialize(battleInput.options.validTribes);
 		const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
 		const response = {

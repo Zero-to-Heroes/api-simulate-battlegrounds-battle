@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 
 const REMOVED_CARD_IDS = [
 	'GVG_085', // Annoy-o-Tron
@@ -46,12 +46,15 @@ export class CardsData {
 		}
 	}
 
-	public inititialize() {
+	public inititialize(validTribes?: readonly Race[]) {
 		this.shredderSpawns = this.allCards
 			.getCards()
 			.filter(card => card.techLevel)
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.cost === 2)
+			.filter(
+				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
+			)
 			.map(card => card.id);
 		this.ghastcoilerSpawns = this.allCards
 			.getCards()
@@ -60,6 +63,9 @@ export class CardsData {
 			.filter(card => card.id !== 'BGS_008')
 			.filter(card => card.mechanics && card.mechanics.indexOf('DEATHRATTLE') !== -1)
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter(
+				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
+			)
 			.map(card => card.id);
 		this.impMamaSpawns = this.allCards
 			.getCards()
@@ -72,9 +78,12 @@ export class CardsData {
 			.getCards()
 			.filter(card => card.techLevel)
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.id !== 'GVG_114')
+			.filter(card => card.id !== 'GVG_114' && card.id !== 'BGS_006')
 			.filter(card => card.rarity === 'Legendary')
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter(
+				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
+			)
 			.map(card => card.id);
 		this.treasureChestSpawns = this.allCards
 			.getCards()
@@ -82,6 +91,9 @@ export class CardsData {
 			.filter(
 				card => card.id.startsWith('TB_BaconUps') || CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(card.id),
 			) // Only golden
+			.filter(
+				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
+			)
 			.map(card => card.id);
 		this.pirateSpawns = this.allCards
 			.getCards()
@@ -89,6 +101,7 @@ export class CardsData {
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.race === 'PIRATE')
 			.map(card => card.id);
+		console.log('initialized cards data', this);
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
 		this.auraEnchantments = [
@@ -135,5 +148,9 @@ export class CardsData {
 			CardIds.NonCollectible.Neutral.RedWhelp,
 			CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl,
 		];
+	}
+
+	private getRaceEnum(race: string): Race {
+		return Race[race];
 	}
 }

@@ -9,6 +9,7 @@ sam local start-api
 ```
 npm run build && npm run package && npm run deploy
 
+rm -rf dist && tsc && 'cp' -rf dist/ /g/Source/zerotoheroes/firestone/core/node_modules/\@firestone-hs/simulate-bgs-battle/
 rm -rf dist && tsc && npm publish
 ```
 
