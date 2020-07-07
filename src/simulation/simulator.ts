@@ -95,6 +95,10 @@ export class Simulator {
 			// FIXME: This is not strictly correct - if there are multiple attack immediately
 			// minions that spawn on both player sides it might get a bit more complex
 			// but overall it works
+			// Also, this doesn't work when there are several deathrattle competing
+			// to know who triggers first. See the second test case of the scallywag.test.ts
+			// that is not handled properly today (the attack should in some cases happen before
+			// the other deathrattle procs)
 			if (playerBoard.some(entity => entity.attackImmediately)) {
 				this.currentSpeedAttacker = 0;
 			} else if (opponentBoard.some(entity => entity.attackImmediately)) {

@@ -617,7 +617,6 @@ const buildBoardAfterDeathrattleSpawns = (
 	deadEntity: BoardEntity,
 	deadMinionIndex: number,
 	opponentBoard: BoardEntity[],
-	// killer: BoardEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -650,7 +649,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		cardsData,
 		sharedState,
 	);
-	// console.log('entitiesFromNativeDeathrattle', entitiesFromNativeDeathrattle);
+
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndex >= 0
 			? spawnEntities(
@@ -680,17 +679,11 @@ const buildBoardAfterDeathrattleSpawns = (
 		...entitiesFromEnchantments,
 	];
 	const roomToSpawn: number = 7 - boardWithKilledMinion.length;
-	// if (candidateEntities.length > 0) {
-	// 	console.log('candidateEntities', roomToSpawn, candidateEntities.map(entity => entity.cardId));
-	// }
 	const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
-	// console.log('spawnedEntities', spawnedEntities);
-	// const deadMinionIndex: number = board.map(entity => entity.entityId).indexOf(deadEntity.entityId);
-	// console.log('deadMinionIndex', deadMinionIndex, board);
-	// const newBoard = [...boardWithKilledMinion];
 	// Minion has already been removed from the board in the previous step
 	boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards);
-	// console.log('newBoard', boardAfterMinionSpawnEffects, opponentBoard);
-	// return [boardAfterMinionSpawnEffects, opponentBoard];
+	// FIXME: here we should probably handle the case of Scallywag and "attack immediately"
+	// It requires a pretty strong refactor of the code though, so for
+	// now the simulator has this known flaw
 };
