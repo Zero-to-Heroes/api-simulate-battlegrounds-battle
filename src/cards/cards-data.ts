@@ -101,7 +101,7 @@ export class CardsData {
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.race === 'PIRATE')
 			.map(card => card.id);
-		console.log('initialized cards data', this);
+		// console.log('initialized cards data', this);
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
 		this.auraEnchantments = [

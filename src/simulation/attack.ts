@@ -10,6 +10,7 @@ import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantme
 import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
+import { Spectator } from './spectator/spectator';
 import { getHeroPowerForHero } from './start-of-combat';
 
 export const simulateAttack = (
@@ -21,6 +22,7 @@ export const simulateAttack = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 	attackingEntityIndex?: number,
 ): void => {
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
@@ -62,6 +64,7 @@ export const simulateAttack = (
 						stringifySimpleCard(defendingEntity),
 					);
 				}
+				spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
 				performAttack(
 					attackingEntity,
 					defendingEntity,
@@ -70,6 +73,7 @@ export const simulateAttack = (
 					allCards,
 					spawns,
 					sharedState,
+					spectator,
 				);
 				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 				// the windfury triggers again? The current behavior attacks after the windfury is over
@@ -94,6 +98,7 @@ export const simulateAttack = (
 	// 	'\n',
 	// 	stringifySimple(defendingBoard),
 	// );
+	// console.log('after simulateAttack', spectator['actionsForCurrentBattle']);
 };
 
 const performAttack = (
@@ -104,10 +109,11 @@ const performAttack = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	// let newAttackingEntity, newDefendingEntity;
-	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState);
-	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState);
+	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState, spectator);
+	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState, spectator);
 	if (sharedState.debug) {
 		console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	}
@@ -117,7 +123,7 @@ const performAttack = (
 		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		// console.log('cleaving', stringifySimple(neighbours));
 		for (const neighbour of defenderNeighbours) {
-			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState);
+			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState, spectator);
 			// updatedDefenders.push(neighbour);
 		}
 		// console.log('after cleave', stringifySimple(neighbours));
@@ -136,7 +142,16 @@ const performAttack = (
 			console.log('dealing arcane cannon damage', stringifySimple(cannonNeighbours));
 		}
 		cannonNeighbours.forEach(cannon =>
-			dealDamageToRandomEnemy(defendingBoard, cannon, 2, attackingBoard, allCards, spawns, sharedState),
+			dealDamageToRandomEnemy(
+				defendingBoard,
+				cannon,
+				2,
+				attackingBoard,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			),
 		);
 	}
 	const cannonNeighboursTB = attackerNeighbours.filter(
@@ -147,23 +162,41 @@ const performAttack = (
 			console.log('dealing golden arcane cannon damage', stringifySimple(cannonNeighboursTB));
 		}
 		cannonNeighboursTB.forEach(cannon => {
-			dealDamageToRandomEnemy(defendingBoard, cannon, 2, attackingBoard, allCards, spawns, sharedState);
-			dealDamageToRandomEnemy(defendingBoard, cannon, 2, attackingBoard, allCards, spawns, sharedState);
+			dealDamageToRandomEnemy(
+				defendingBoard,
+				cannon,
+				2,
+				attackingBoard,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
+			dealDamageToRandomEnemy(
+				defendingBoard,
+				cannon,
+				2,
+				attackingBoard,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
 		});
 	}
 	// Monstrous Macaw
 	if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacaw) {
-		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
 	} else if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacawTavernBrawl) {
-		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState);
-		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
+		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
 	}
 
 	attackingEntity.attackImmediately = false;
 
 	// Approximate the play order
 	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
-	processMinionDeath(attackingBoard, defendingBoard, allCards, spawns, sharedState);
+	processMinionDeath(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
 };
 
 const triggerRandomDeathrattle = (
@@ -172,6 +205,7 @@ const triggerRandomDeathrattle = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	const validDeathrattles = attackingBoard.filter(
 		entity =>
@@ -191,7 +225,16 @@ const triggerRandomDeathrattle = (
 		return;
 	}
 	const targetEntity = validDeathrattles[Math.floor(Math.random() * validDeathrattles.length)];
-	buildBoardAfterDeathrattleSpawns(attackingBoard, targetEntity, -1, defendingBoard, allCards, spawns, sharedState);
+	buildBoardAfterDeathrattleSpawns(
+		attackingBoard,
+		targetEntity,
+		-1,
+		defendingBoard,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId: number): BoardEntity => {
@@ -237,6 +280,7 @@ export const dealDamageToRandomEnemy = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	if (boardToBeDamaged.length === 0) {
 		return;
@@ -254,6 +298,7 @@ export const dealDamageToRandomEnemy = (
 		allCards,
 		cardsData,
 		sharedState,
+		spectator,
 	);
 	// console.log('board after damage', damage, stringifySimple(defendingBoard));
 };
@@ -267,6 +312,7 @@ export const dealDamageToEnemy = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	// console.log('defendingEntity', defendingEntity, defendingBoard);
 	const fakeAttacker = {
@@ -274,11 +320,11 @@ export const dealDamageToEnemy = (
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
-	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, allCards, cardsData, sharedState);
+	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, allCards, cardsData, sharedState, spectator);
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
 	// console.log('newDefendingEntity', newDefendingEntity);
-	processMinionDeath(defendingBoard, boardWithAttackOrigin, allCards, cardsData, sharedState);
+	processMinionDeath(defendingBoard, boardWithAttackOrigin, allCards, cardsData, sharedState, spectator);
 	// console.log('defendingBoard', defendingBoard);
 	// return [defendingBoard, boardWithAttackOrigin];
 };
@@ -313,6 +359,7 @@ export const bumpEntities = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	// No attack has no impact
 	if (bumpInto.attack === 0) {
@@ -350,6 +397,15 @@ export const bumpEntities = (
 		return;
 		// return entity;
 	}
+	entity.health = entity.health - bumpInto.attack;
+	// Do it last, so that other effects are still processed
+	if (bumpInto.poisonous) {
+		entity.health = 0;
+		// return entity;
+	}
+	spectator.registerDamageDealt(bumpInto, entity, bumpInto.attack, entityBoard);
+	entity.lastAffectedByEntity = bumpInto;
+
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
 	// like this for now
@@ -429,14 +485,7 @@ export const bumpEntities = (
 		);
 		entityBoard.splice(index, 0, ...newEntities);
 	}
-	entity.health = entity.health - bumpInto.attack;
-	// Do it last, so that other effects are still processed
-	if (bumpInto.poisonous) {
-		entity.health = 0;
-		// return entity;
-	}
 	// entity.lastAffectedByEntity = { ...bumpInto };
-	entity.lastAffectedByEntity = bumpInto;
 	return;
 	// return entity;
 };
@@ -447,10 +496,12 @@ export const processMinionDeath = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	// console.log('boards before minions die', board1, board2);
 	const [deadMinionIndexes1, deadEntities1] = makeMinionsDie(board1);
 	const [deadMinionIndexes2, deadEntities2] = makeMinionsDie(board2);
+	spectator.registerDeadEntities(deadMinionIndexes1, deadEntities1, deadMinionIndexes2, deadEntities2);
 	// console.log('boards after minions die', board1.length, board2.length);
 	// No death to process, we can return
 	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
@@ -469,13 +520,49 @@ export const processMinionDeath = (
 	// }
 	if (Math.random() > 0.5) {
 		// Now proceed to trigger all deathrattle effects on baord1
-		handleDeathsForFirstBoard(board1, board2, deadMinionIndexes1, deadEntities1, allCards, cardsData, sharedState);
+		handleDeathsForFirstBoard(
+			board1,
+			board2,
+			deadMinionIndexes1,
+			deadEntities1,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 
 		// Now handle the other board's deathrattles
-		handleDeathsForFirstBoard(board2, board1, deadMinionIndexes2, deadEntities2, allCards, cardsData, sharedState);
+		handleDeathsForFirstBoard(
+			board2,
+			board1,
+			deadMinionIndexes2,
+			deadEntities2,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	} else {
-		handleDeathsForFirstBoard(board2, board1, deadMinionIndexes2, deadEntities2, allCards, cardsData, sharedState);
-		handleDeathsForFirstBoard(board1, board2, deadMinionIndexes1, deadEntities1, allCards, cardsData, sharedState);
+		handleDeathsForFirstBoard(
+			board2,
+			board1,
+			deadMinionIndexes2,
+			deadEntities2,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		handleDeathsForFirstBoard(
+			board1,
+			board2,
+			deadMinionIndexes1,
+			deadEntities1,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
 	// console.log('board from processMinionDeath', board1, board2);
 	// Make sure we only return when there are no more deaths to process
@@ -484,7 +571,7 @@ export const processMinionDeath = (
 	// now be the ghoul. Then if the Kaboom kills someone, the killer should again change. You could
 	// also have multiple killers, which is not taken into account here.
 	// The current assumption is that it's a suffienctly fringe case to not matter too much
-	processMinionDeath(board1, board2, allCards, cardsData, sharedState);
+	processMinionDeath(board1, board2, allCards, cardsData, sharedState, spectator);
 	// return [boardWithMaybeDeadMinions, opponentBoard];
 };
 
@@ -496,12 +583,22 @@ const handleDeathsForFirstBoard = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	for (let i = 0; i < deadMinionIndexes.length; i++) {
 		const entity = deadEntities[i];
 		const index = deadMinionIndexes[i];
 		if (entity.health <= 0) {
-			buildBoardAfterDeathrattleSpawns(firstBoard, entity, index, otherBoard, allCards, cardsData, sharedState);
+			buildBoardAfterDeathrattleSpawns(
+				firstBoard,
+				entity,
+				index,
+				otherBoard,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
 			if (sharedState.debug) {
 				console.debug(
 					'boards after deathrattle spawns\n',
@@ -620,6 +717,7 @@ const buildBoardAfterDeathrattleSpawns = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	if (deadMinionIndex >= 0) {
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards);
@@ -641,6 +739,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		allCards,
 		cardsData,
 		sharedState,
+		spectator,
 	);
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
@@ -683,6 +782,7 @@ const buildBoardAfterDeathrattleSpawns = (
 	// Minion has already been removed from the board in the previous step
 	boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards);
+	spectator.registerMinionsSpawn(boardWithKilledMinion, spawnedEntities);
 	// FIXME: here we should probably handle the case of Scallywag and "attack immediately"
 	// It requires a pretty strong refactor of the code though, so for
 	// now the simulator has this known flaw

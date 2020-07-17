@@ -62,3 +62,15 @@ export const stringifySimpleCard = (entity: BoardEntity): string => {
 		  }/${entity.attacksPerformed || 0}`
 		: null;
 };
+
+export const toBase64 = (input: string): string => {
+	const buff = Buffer.from(input, 'utf-8');
+	const base64 = buff.toString('base64');
+	return base64;
+};
+
+export const fromBase64 = (base64: string): string => {
+	const buff = Buffer.from(base64, 'base64');
+	const str = buff.toString('utf-8');
+	return str;
+};

@@ -3,9 +3,11 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { SimulationResult } from './simulation-result';
 import { removeAuras } from './simulation/auras';
 import { removeGlobalModifiers } from './simulation/global-modifiers';
 import { Simulator } from './simulation/simulator';
+import { Spectator } from './simulation/spectator/spectator';
 import { addImpliedMechanics } from './utils';
 
 const cards = new AllCardsService();
@@ -40,13 +42,13 @@ export default async (event): Promise<any> => {
 	}
 };
 
-export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData) => {
+export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): SimulationResult => {
 	const start = Date.now();
 
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 4000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 2500;
 
-	const simulationResult = {
+	const simulationResult: SimulationResult = {
 		won: 0,
 		tied: 0,
 		lost: 0,
@@ -83,6 +85,11 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			player: opponentInfo.player,
 		},
 	});
+	const spectator = new Spectator(
+		battleInput.playerBoard.player.cardId, 
+		battleInput.playerBoard.player.heroPowerId, 
+		battleInput.opponentBoard.player.cardId, 
+		battleInput.opponentBoard.player.heroPowerId);
 	console.time('simulation');
 	for (let i = 0; i < numberOfSimulations; i++) {
 		const simulator = new Simulator(cards, cardsData);
@@ -92,7 +99,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			input.playerBoard.player,
 			input.opponentBoard.board,
 			input.opponentBoard.player,
+			spectator,
 		);
+		// console.log('after simulateSingleBattle', spectator['actionsForCurrentBattle']);
 		if (!battleResult) {
 			continue;
 		}
@@ -113,6 +122,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		} else if (battleResult.result === 'tied') {
 			simulationResult.tied++;
 		}
+		spectator.commitBattleResult(battleResult.result)
 	}
 	const toatlMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
 	simulationResult.wonPercent = Math.round((10 * (100 * simulationResult.won)) / toatlMatches) / 10;
@@ -130,6 +140,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	}
 	console.timeEnd('simulation');
 	console.log('sending back success reponse', simulationResult);
+	spectator.prune();
+	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
+	// spectator.reset();
 	return simulationResult;
 };
 

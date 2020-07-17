@@ -5,10 +5,10 @@ console.error = function(message) {
 };
 
 global.console = {
-	log: jest.fn(), // console.log are ignored in tests
+	// log: jest.fn(), // console.log are ignored in tests
 	// log: console.log,
-	warn: jest.fn(),
-	info: jest.fn(),
+	// warn: jest.fn(),
+	// info: jest.fn(),
 	time: console.time,
 	timeEnd: console.timeEnd,
 

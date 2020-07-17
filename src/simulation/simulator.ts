@@ -6,6 +6,7 @@ import { SingleSimulationResult } from '../single-simulation-result';
 import { stringifySimple } from '../utils';
 import { simulateAttack } from './attack';
 import { SharedState } from './shared-state';
+import { Spectator } from './spectator/spectator';
 import { handleStartOfCombat } from './start-of-combat';
 
 // New simulator should be instantiated for each match
@@ -28,6 +29,7 @@ export class Simulator {
 		playerEntity: BgsPlayerEntity,
 		opponentBoard: BoardEntity[],
 		opponentEntity: BgsPlayerEntity,
+		spectator: Spectator,
 	): SingleSimulationResult {
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
@@ -47,6 +49,7 @@ export class Simulator {
 			this.allCards,
 			this.spawns,
 			this.sharedState,
+			spectator,
 		);
 		if (this.sharedState.debug) {
 			console.debug(
@@ -78,6 +81,7 @@ export class Simulator {
 					this.allCards,
 					this.spawns,
 					this.sharedState,
+					spectator,
 				);
 			} else {
 				simulateAttack(
@@ -89,6 +93,7 @@ export class Simulator {
 					this.allCards,
 					this.spawns,
 					this.sharedState,
+					spectator,
 				);
 			}
 			// If there are "attack immediately" minions, we keep the same player

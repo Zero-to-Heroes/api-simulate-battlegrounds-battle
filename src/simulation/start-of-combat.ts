@@ -6,6 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { dealDamageToRandomEnemy, simulateAttack } from './attack';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
+import { Spectator } from './spectator/spectator';
 
 const handleIllidan = (
 	playerBoard: BoardEntity[],
@@ -15,6 +16,7 @@ const handleIllidan = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	simulateAttack(
 		playerBoard,
@@ -25,6 +27,7 @@ const handleIllidan = (
 		allCards,
 		spawns,
 		sharedState,
+		spectator,
 		0,
 	);
 	if (playerBoard.length > 1) {
@@ -37,6 +40,7 @@ const handleIllidan = (
 			allCards,
 			spawns,
 			sharedState,
+			spectator,
 			playerBoard.length - 1,
 		);
 	}
@@ -48,11 +52,12 @@ const handleNefarian = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	// Theoretically we need to pass the player's board, in case this kills any enemy
 	// minion that can interact with the player board
 	// However, there are no such minions with 1 health
-	dealDamageToAllMinions(opponentBoard, [], null, 1, allCards, spawns, sharedState);
+	dealDamageToAllMinions(opponentBoard, [], null, 1, allCards, spawns, sharedState, spectator);
 };
 
 const handleLichKing = (playerBoard: BoardEntity[]): void => {
@@ -76,6 +81,7 @@ export const handleStartOfCombat = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	let currentAttacker = Math.round(Math.random());
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
@@ -86,13 +92,31 @@ export const handleStartOfCombat = (
 		playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
 		playerBoard.length > 0
 	) {
-		handleIllidan(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState);
+		handleIllidan(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	} else if (
 		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
 		opponentBoard.length > 0
 	) {
-		handleIllidan(opponentBoard, opponentEntity, playerBoard, playerEntity, allCards, spawns, sharedState);
+		handleIllidan(
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 
 	if (
@@ -128,13 +152,13 @@ export const handleStartOfCombat = (
 		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
 		playerBoard.length > 0
 	) {
-		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState);
+		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState, spectator);
 	} else if (
 		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
 		opponentBoard.length > 0
 	) {
-		handleNefarian(opponentBoard, playerBoard, allCards, spawns, sharedState);
+		handleNefarian(opponentBoard, playerBoard, allCards, spawns, sharedState, spectator);
 	}
 
 	// console.log('[start of combat] attacker', currentAttacker);
@@ -145,11 +169,11 @@ export const handleStartOfCombat = (
 		if (currentAttacker === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
 			// console.log('[start of combat] will perform player attack', attacker);
-			performStartOfCombat(attacker, playerBoard, opponentBoard, allCards, spawns, sharedState);
+			performStartOfCombat(attacker, playerBoard, opponentBoard, allCards, spawns, sharedState, spectator);
 		} else if (currentAttacker === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
 			// console.log('[start of combat] will perform opponent attack', attacker);
-			performStartOfCombat(attacker, opponentBoard, playerBoard, allCards, spawns, sharedState);
+			performStartOfCombat(attacker, opponentBoard, playerBoard, allCards, spawns, sharedState, spectator);
 		}
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
@@ -179,6 +203,7 @@ export const performStartOfCombat = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	// For now we're only dealing with the red whelp
 	if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelp) {
@@ -186,7 +211,16 @@ export const performStartOfCombat = (
 			.map(entity => allCards.getCard(entity.cardId).race)
 			.filter(race => race === 'DRAGON').length;
 		// console.log('[start of combat] damage', damage);
-		dealDamageToRandomEnemy(defendingBoard, attacker, damage, attackingBoard, allCards, spawns, sharedState);
+		dealDamageToRandomEnemy(
+			defendingBoard,
+			attacker,
+			damage,
+			attackingBoard,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl) {
 		const damage = attackingBoard
 			.map(entity => allCards.getCard(entity.cardId).race)
@@ -198,8 +232,26 @@ export const performStartOfCombat = (
 		// 	stringifySimple(defendingBoard) + '\n',
 		// 	stringifySimple(attackingBoard),
 		// );
-		dealDamageToRandomEnemy(defendingBoard, attacker, damage, attackingBoard, allCards, spawns, sharedState);
-		dealDamageToRandomEnemy(defendingBoard, attacker, damage, attackingBoard, allCards, spawns, sharedState);
+		dealDamageToRandomEnemy(
+			defendingBoard,
+			attacker,
+			damage,
+			attackingBoard,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+		dealDamageToRandomEnemy(
+			defendingBoard,
+			attacker,
+			damage,
+			attackingBoard,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 		// console.log(q
 		// 	'red whelp after start of combat',
 		// 	stringifySimpleCard(attacker) + '\n',

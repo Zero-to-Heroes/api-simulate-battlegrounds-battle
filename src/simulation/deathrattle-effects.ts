@@ -6,6 +6,7 @@ import { stringifySimple, stringifySimpleCard } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
+import { Spectator } from './spectator/spectator';
 
 export const handleDeathrattleEffects = (
 	boardWithDeadEntity: BoardEntity[],
@@ -15,9 +16,18 @@ export const handleDeathrattleEffects = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	if (deadMinionIndex >= 0) {
-		applyMinionDeathEffect(deadEntity, boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState);
+		applyMinionDeathEffect(
+			deadEntity,
+			boardWithDeadEntity,
+			otherBoard,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
 
 	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
@@ -103,6 +113,7 @@ export const handleDeathrattleEffects = (
 					allCards,
 					cardsData,
 					sharedState,
+					spectator,
 				);
 				if (sharedState.debug) {
 					console.debug(
@@ -125,6 +136,7 @@ export const handleDeathrattleEffects = (
 					allCards,
 					cardsData,
 					sharedState,
+					spectator,
 				);
 				dealDamageToRandomEnemy(
 					otherBoard,
@@ -134,6 +146,7 @@ export const handleDeathrattleEffects = (
 					allCards,
 					cardsData,
 					sharedState,
+					spectator,
 				);
 			}
 			return;
@@ -180,13 +193,14 @@ const applyMinionDeathEffect = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	if (allCards.getCard(deadEntity.cardId).race === 'BEAST') {
 		applyScavengingHyenaEffect(boardWithDeadEntity);
 	}
 	if (allCards.getCard(deadEntity.cardId).race === 'DEMON') {
 		// console.log('will apply juggler effect', deadEntity, boardWithDeadEntity, otherBoard);
-		applySoulJugglerEffect(boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState);
+		applySoulJugglerEffect(boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState, spectator);
 	}
 	if (allCards.getCard(deadEntity.cardId).race === 'MECH') {
 		applyJunkbotEffect(boardWithDeadEntity);
@@ -207,6 +221,7 @@ const applyMinionDeathEffect = (
 					allCards,
 					cardsData,
 					sharedState,
+					spectator,
 				);
 				// console.log('board after overkill handling', boardWithDeadEntity);
 			}
@@ -223,6 +238,7 @@ const applyMinionDeathEffect = (
 					allCards,
 					cardsData,
 					sharedState,
+					spectator,
 				);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
@@ -319,6 +335,7 @@ const applyMinionDeathEffect = (
 			allCards,
 			cardsData,
 			sharedState,
+			spectator,
 		);
 	} else if (deadEntity.cardId === CardIds.NonCollectible.Neutral.UnstableGhoulTavernBrawl) {
 		dealDamageToAllMinions(
@@ -329,6 +346,7 @@ const applyMinionDeathEffect = (
 			allCards,
 			cardsData,
 			sharedState,
+			spectator,
 		);
 	}
 	// return [boardWithDeadEntity, otherBoard];
@@ -342,6 +360,7 @@ export const dealDamageToAllMinions = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	if (board1.length === 0 && board2.length === 0) {
 		return;
@@ -355,15 +374,15 @@ export const dealDamageToAllMinions = (
 		attacking: true,
 	} as BoardEntity;
 	for (let i = 0; i < board1.length; i++) {
-		bumpEntities(board1[i], fakeAttacker, board1, allCards, cardsData, sharedState);
+		bumpEntities(board1[i], fakeAttacker, board1, allCards, cardsData, sharedState, spectator);
 		// board1[i] = entity;
 	}
 	for (let i = 0; i < board2.length; i++) {
-		bumpEntities(board2[i], fakeAttacker, board2, allCards, cardsData, sharedState);
+		bumpEntities(board2[i], fakeAttacker, board2, allCards, cardsData, sharedState, spectator);
 		// updatedBoard2 = [...boardResult];
 		// updatedBoard2[i] = entity;
 	}
-	processMinionDeath(board1, board2, allCards, cardsData, sharedState);
+	processMinionDeath(board1, board2, allCards, cardsData, sharedState, spectator);
 };
 
 const applySoulJugglerEffect = (
@@ -372,6 +391,7 @@ const applySoulJugglerEffect = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	spectator: Spectator,
 ): void => {
 	if (boardWithJugglers.length === 0 && boardToAttack.length === 0) {
 		return;
@@ -380,17 +400,44 @@ const applySoulJugglerEffect = (
 	const jugglers = boardWithJugglers.filter(entity => entity.cardId === CardIds.NonCollectible.Warlock.SoulJuggler);
 	// console.log('jugglers in board', boardWithJugglers);
 	for (const juggler of jugglers) {
-		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
+		dealDamageToRandomEnemy(
+			boardToAttack,
+			juggler,
+			3,
+			boardWithJugglers,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
 	const goldenJugglers = boardWithJugglers.filter(
 		entity => entity.cardId === CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl,
 	);
 	// console.log('golden jugglers in board', boardWithJugglers);
 	for (const juggler of goldenJugglers) {
-		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
-		dealDamageToRandomEnemy(boardToAttack, juggler, 3, boardWithJugglers, allCards, cardsData, sharedState);
+		dealDamageToRandomEnemy(
+			boardToAttack,
+			juggler,
+			3,
+			boardWithJugglers,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		dealDamageToRandomEnemy(
+			boardToAttack,
+			juggler,
+			3,
+			boardWithJugglers,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
-	processMinionDeath(boardWithJugglers, boardToAttack, allCards, cardsData, sharedState);
+	processMinionDeath(boardWithJugglers, boardToAttack, allCards, cardsData, sharedState, spectator);
 };
 
 const applyScavengingHyenaEffect = (board: BoardEntity[]): void => {

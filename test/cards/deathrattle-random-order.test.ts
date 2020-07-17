@@ -5,7 +5,8 @@ import { BoardEntity } from '../../src/board-entity';
 import { CardsData } from '../../src/cards/cards-data';
 import { simulateBattle } from '../../src/simulate-bgs-battle';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildSingleBoardEntity } from '../../src/utils';
+import { GameSample } from '../../src/simulation/spectator/game-sample';
+import { buildSingleBoardEntity, fromBase64, toBase64 } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Deathrattle random order', () => {
@@ -44,7 +45,11 @@ describe('Deathrattle random order', () => {
 				),
 			},
 		];
-		const playerEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
+		const playerEntity: BgsPlayerEntity = {
+			tavernTier: 1,
+			cardId: 'TB_BaconShop_HERO_10',
+			heroPowerId: 'TB_BaconShop_HP_068',
+		} as BgsPlayerEntity;
 		const opponentBoard: BoardEntity[] = [
 			{
 				...buildSingleBoardEntity(
@@ -63,7 +68,11 @@ describe('Deathrattle random order', () => {
 				),
 			},
 		];
-		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
+		const opponentEntity: BgsPlayerEntity = {
+			tavernTier: 1,
+			cardId: 'TB_BaconShop_HERO_10',
+			heroPowerId: 'TB_BaconShop_HP_068',
+		} as BgsPlayerEntity;
 
 		const battleInput: BgsBattleInfo = {
 			playerBoard: {
@@ -75,7 +84,7 @@ describe('Deathrattle random order', () => {
 				player: opponentEntity,
 			},
 			options: {
-				numberOfSimulations: 10000,
+				numberOfSimulations: 10,
 				maxAcceptableDuration: 2000,
 			},
 		};
@@ -83,8 +92,18 @@ describe('Deathrattle random order', () => {
 		const result = simulateBattle(battleInput, cards, spawns);
 
 		expect(result).not.toBeNull();
-		expect(result.wonPercent).toBeGreaterThan(74);
-		expect(result.wonPercent).toBeLessThan(76);
+		// expect(result.wonPercent).toBeGreaterThan(74);
+		// expect(result.wonPercent).toBeLessThan(76);
+
+		expect(result.outcomeSamples.tied).not.toBeNull();
+		expect(result.outcomeSamples.tied.length).toBeGreaterThanOrEqual(1);
+
+		const sample: GameSample = result.outcomeSamples.tied[0];
+		console.log('sample', JSON.stringify(sample));
+		const base64 = toBase64(JSON.stringify(sample));
+		console.log('encoded', base64);
+		const decoded = fromBase64(base64);
+		expect(base64).toEqual(toBase64(decoded));
 	});
 });
 

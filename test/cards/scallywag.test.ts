@@ -5,6 +5,7 @@ import { BoardEntity } from '../../src/board-entity';
 import { CardsData } from '../../src/cards/cards-data';
 import { simulateBattle } from '../../src/simulate-bgs-battle';
 import { Simulator } from '../../src/simulation/simulator';
+import { Spectator } from '../../src/simulation/spectator/spectator';
 import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
@@ -29,7 +30,13 @@ describe('Scallywag', () => {
 		];
 		const opponentEntity: BgsPlayerEntity = { tavernTier: 1 } as BgsPlayerEntity;
 
-		const result = simulator.simulateSingleBattle(playerBoard, playerEntity, opponentBoard, opponentEntity);
+		const result = simulator.simulateSingleBattle(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			new Spectator(null, null, null, null),
+		);
 
 		expect(result).not.toBeNull();
 		expect(result.result).toBe('won');
