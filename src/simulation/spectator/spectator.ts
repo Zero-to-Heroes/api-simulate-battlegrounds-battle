@@ -2,7 +2,7 @@ import { BoardEntity } from '../../board-entity';
 import { GameAction } from './game-action';
 import { GameSample } from './game-sample';
 
-const MAX_SAMPLES = 5;
+const MAX_SAMPLES = 1;
 
 export class Spectator {
 	private actionsForCurrentBattle: GameAction[];

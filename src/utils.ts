@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { ReferenceCard } from '@firestone-hs/reference-data/lib/models/reference-cards/reference-card';
 import { BoardEntity } from './board-entity';
 
 const CLEAVE_IDS = [
@@ -29,19 +30,23 @@ export const buildSingleBoardEntity = (
 		attack: card.attack,
 		attacksPerformed: 0,
 		cardId: cardId,
-		divineShield: card.mechanics && card.mechanics.indexOf('DIVINE_SHIELD') !== -1,
+		divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
 		entityId: entityId,
 		health: card.health,
-		taunt: card.mechanics && card.mechanics.indexOf('TAUNT') !== -1,
-		reborn: card.mechanics && card.mechanics.indexOf('REBORN') !== -1,
-		poisonous: card.mechanics && card.mechanics.indexOf('POISONOUS') !== -1,
-		windfury: !megaWindfury && card.mechanics && card.mechanics.indexOf('WINDFURY') !== -1,
+		taunt: hasMechanic(card, 'TAUNT'),
+		reborn: hasMechanic(card, 'REBORN'),
+		poisonous: hasMechanic(card, 'POISONOUS'),
+		windfury: !megaWindfury && hasMechanic(card, 'WINDFURY'),
 		megaWindfury: megaWindfury,
 		enchantments: [],
 		friendly: friendly,
 		attackImmediately: attackImmediately,
 	} as BoardEntity);
 };
+
+const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
+	return card.mechanics?.includes(mechanic) || card.referencedTags?.includes(mechanic);
+}
 
 export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 	return {
@@ -63,13 +68,14 @@ export const stringifySimpleCard = (entity: BoardEntity): string => {
 		: null;
 };
 
-export const toBase64 = (input: string): string => {
+export const encode = (input: string): string => {
+	// return compressToEncodedURIComponent(input);
 	const buff = Buffer.from(input, 'utf-8');
 	const base64 = buff.toString('base64');
 	return base64;
 };
 
-export const fromBase64 = (base64: string): string => {
+export const decode = (base64: string): string => {
 	const buff = Buffer.from(base64, 'base64');
 	const str = buff.toString('utf-8');
 	return str;

@@ -6,7 +6,7 @@ import { CardsData } from '../../src/cards/cards-data';
 import { simulateBattle } from '../../src/simulate-bgs-battle';
 import { Simulator } from '../../src/simulation/simulator';
 import { GameSample } from '../../src/simulation/spectator/game-sample';
-import { buildSingleBoardEntity, fromBase64, toBase64 } from '../../src/utils';
+import { buildSingleBoardEntity, decode, encode } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Deathrattle random order', () => {
@@ -100,10 +100,10 @@ describe('Deathrattle random order', () => {
 
 		const sample: GameSample = result.outcomeSamples.tied[0];
 		console.log('sample', JSON.stringify(sample));
-		const base64 = toBase64(JSON.stringify(sample));
+		const base64 = encode(JSON.stringify(sample));
 		console.log('encoded', base64);
-		const decoded = fromBase64(base64);
-		expect(base64).toEqual(toBase64(decoded));
+		const decoded = decode(base64);
+		expect(base64).toEqual(encode(decoded));
 	});
 });
 

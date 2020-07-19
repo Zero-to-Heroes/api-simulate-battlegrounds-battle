@@ -41,11 +41,12 @@ export const simulateAttack = (
 	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 	// console.log('boards after auras\n', stringifySimple(attackingBoard), '\n', stringifySimple(defendingBoard));
 
+	// console.log('picking attacking entity', attackingEntityIndex, stringifySimple(attackingBoard));
 	const attackingEntity =
 		attackingEntityIndex != null
 			? attackingBoard[attackingEntityIndex]
 			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
-	// console.log('attackingEntity', stringifySimpleCard(attackingEntity));
+	// console.log('attackingEntity\n', stringifySimpleCard(attackingEntity));
 	if (attackingEntity) {
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
@@ -78,6 +79,7 @@ export const simulateAttack = (
 				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 				// the windfury triggers again? The current behavior attacks after the windfury is over
 				if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
+					// console.log('yoho ogre attacking immediately', defendingEntity);
 					defendingEntity.attackImmediately = true;
 				}
 			}
@@ -111,22 +113,17 @@ const performAttack = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	// let newAttackingEntity, newDefendingEntity;
 	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState, spectator);
 	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState, spectator);
 	if (sharedState.debug) {
 		console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	}
-	// const updatedDefenders = [defendingEntity];
 	// Cleave
 	if (attackingEntity.cleave) {
 		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
-		// console.log('cleaving', stringifySimple(neighbours));
 		for (const neighbour of defenderNeighbours) {
 			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState, spectator);
-			// updatedDefenders.push(neighbour);
 		}
-		// console.log('after cleave', stringifySimple(neighbours));
 	}
 	// After attack hooks
 	// Arcane Cannon
@@ -238,10 +235,15 @@ const triggerRandomDeathrattle = (
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId: number): BoardEntity => {
-	const validAttackers = attackingBoard.filter(entity => entity.attack > 0).filter(entity => !entity.cantAttack);
+	let validAttackers = attackingBoard.filter(entity => entity.attack > 0).filter(entity => !entity.cantAttack);
 	if (validAttackers.length === 0) {
 		return null;
 	}
+
+	if (validAttackers.some(entity => entity.attackImmediately)) {
+		validAttackers = validAttackers.filter(entity => entity.attackImmediately);
+	}
+
 	let attackingEntity = validAttackers[0];
 	let minNumberOfAttacks: number = attackingEntity.attacksPerformed || 0;
 	for (const entity of validAttackers) {
@@ -251,22 +253,21 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 		}
 	}
 
-	attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
+	if (!attackingEntity.attackImmediately) {
+		attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
+	}
 	attackingEntity.attacking = true;
 	return attackingEntity;
 };
 
 const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] => {
 	const index = board.map(e => e.entityId).indexOf(entity.entityId);
-	// console.log('index', index);
 	const neighbours = [];
 	if (index - 1 >= 0) {
-		// console.log('pushing previous', index);
 		neighbours.push(board[index - 1]);
 	}
-	neighbours.push(entity);
+	// neighbours.push(entity);
 	if (index + 1 < board.length) {
-		// console.log('pushing next', index);
 		neighbours.push(board[index + 1]);
 	}
 	return neighbours;
@@ -287,8 +288,6 @@ export const dealDamageToRandomEnemy = (
 		// return [defendingBoard, boardWithAttackOrigin];
 	}
 	const defendingEntity: BoardEntity = getDefendingEntity(boardToBeDamaged, damageSource, true);
-	// console.log('board before damage', damage, stringifySimple(defendingBoard));
-	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity));
 	dealDamageToEnemy(
 		defendingEntity,
 		boardToBeDamaged,
@@ -300,7 +299,6 @@ export const dealDamageToRandomEnemy = (
 		sharedState,
 		spectator,
 	);
-	// console.log('board after damage', damage, stringifySimple(defendingBoard));
 };
 
 export const dealDamageToEnemy = (
@@ -314,7 +312,6 @@ export const dealDamageToEnemy = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	// console.log('defendingEntity', defendingEntity, defendingBoard);
 	const fakeAttacker = {
 		...(damageSource || {}),
 		attack: damage,
@@ -323,10 +320,8 @@ export const dealDamageToEnemy = (
 	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, allCards, cardsData, sharedState, spectator);
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
-	// console.log('newDefendingEntity', newDefendingEntity);
+	// spectator.registerEffectDamage();
 	processMinionDeath(defendingBoard, boardWithAttackOrigin, allCards, cardsData, sharedState, spectator);
-	// console.log('defendingBoard', defendingBoard);
-	// return [defendingBoard, boardWithAttackOrigin];
 };
 
 export const getDefendingEntity = (
@@ -340,11 +335,9 @@ export const getDefendingEntity = (
 		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl
 	) {
 		const minAttack = Math.min(...defendingBoard.map(entity => entity.attack));
-		// console.log('minAttack', minAttack, defendingBoard.filter(entity => entity.attack === minAttack));
 		possibleDefenders = defendingBoard.filter(entity => entity.attack === minAttack);
 	} else if (!ignoreTaunts) {
 		const taunts = defendingBoard.filter(entity => entity.taunt);
-		// console.log('taunts', taunts);
 		possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
 	} else {
 		possibleDefenders = defendingBoard;
@@ -364,12 +357,9 @@ export const bumpEntities = (
 	// No attack has no impact
 	if (bumpInto.attack === 0) {
 		return;
-		// return entity;
 	}
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
-		// const updatedBoard = [...entityBoard];
-		// console.log('handling divine shield loss effect', entityBoard, entity);
 		for (let i = 0; i < entityBoard.length; i++) {
 			if (entityBoard[i].cardId === CardIds.Collectible.Paladin.BolvarFireblood) {
 				entityBoard[i].attack = entityBoard[i].attack + 2;
@@ -410,7 +400,6 @@ export const bumpEntities = (
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
 	// like this for now
 	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss && entityBoard.length < 7) {
-		// console.log('board before IGB spawn', entityBoard);
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
@@ -422,7 +411,7 @@ export const bumpEntities = (
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
-		// console.log('board after IGB spawn', entityBoard);
+		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossTavernBrawl && entityBoard.length < 7) {
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
@@ -435,6 +424,7 @@ export const bumpEntities = (
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
+		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMama && entityBoard.length < 7) {
 		const newEntities = spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
@@ -447,6 +437,7 @@ export const bumpEntities = (
 		).map(entity => ({ ...entity, taunt: true }));
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		entityBoard.splice(index, 0, ...newEntities);
+		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMamaTavernBrawl && entityBoard.length < 7) {
 		const newEntities = spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
@@ -459,6 +450,7 @@ export const bumpEntities = (
 		).map(entity => ({ ...entity, taunt: true }));
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		entityBoard.splice(index, 0, ...newEntities);
+		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover && entityBoard.length < 7) {
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
@@ -471,7 +463,7 @@ export const bumpEntities = (
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
-		// console.log('board after spawning security rover token', entityBoard);
+		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warrior.SecurityRoverTavernBrawl && entityBoard.length < 7) {
 		const index = entityBoard.map(e => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
@@ -484,8 +476,8 @@ export const bumpEntities = (
 			true,
 		);
 		entityBoard.splice(index, 0, ...newEntities);
+		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	}
-	// entity.lastAffectedByEntity = { ...bumpInto };
 	return;
 	// return entity;
 };
@@ -629,15 +621,17 @@ export const applyOnAttackBuffs = (
 	}
 
 	// Ripsnarl Captain
-	const ripsnarls = attackingBoard
-		.filter(e => e.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptain)
-		.filter(e => e.entityId !== attacker.entityId).length;
-	const ripsnarlsTB = attackingBoard
-		.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptainTavernBrawl)
-		.filter(e => e.entityId !== attacker.entityId).length;
-	const ripsnarlBuff = ripsnarls * 2 + ripsnarlsTB * 4;
-	attacker.attack += ripsnarlBuff;
-	attacker.health += ripsnarlBuff;
+	if (allCards.getCard(attacker.cardId).race === 'PIRATE') {
+		const ripsnarls = attackingBoard
+			.filter(e => e.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptain)
+			.filter(e => e.entityId !== attacker.entityId).length;
+		const ripsnarlsTB = attackingBoard
+			.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptainTavernBrawl)
+			.filter(e => e.entityId !== attacker.entityId).length;
+		const ripsnarlBuff = ripsnarls * 2 + ripsnarlsTB * 4;
+		attacker.attack += ripsnarlBuff;
+		attacker.health += ripsnarlBuff;
+	}
 
 	// Dread Admiral Eliza
 	if (allCards.getCard(attacker.cardId).race === 'PIRATE') {

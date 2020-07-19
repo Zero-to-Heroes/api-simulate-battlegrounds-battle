@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import runSimulation from '../../src/simulate-bgs-battle';
+import { encode } from '../../src/utils';
 import jsonEvent1 from './game1.json';
 import jsonEvent2 from './game2.json';
 import jsonEvent3 from './game3.json';
@@ -29,8 +31,18 @@ describe.skip('Full tests for performance and accuracy', () => {
 	});
 
 	test.only('full test 3', async () => {
-		const result = await runSimulation({ 'body': JSON.stringify(jsonEvent3) });
+		const input: BgsBattleInfo = {
+			...jsonEvent3,
+			options: {
+				numberOfSimulations: 10000,
+			},
+		};
+		const result = await runSimulation({ 'body': JSON.stringify(input) });
 		const simulationResult = JSON.parse(result.body);
+
+		const sample = simulationResult.outcomeSamples.won[0];
+		const base64 = encode(JSON.stringify(sample));
+		console.log('encoded', base64);
 	});
 });
 

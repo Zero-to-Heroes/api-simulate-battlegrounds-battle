@@ -35,7 +35,7 @@ describe('Non-reg', () => {
 					true,
 					sharedState.currentEntityId++,
 				),
-				attack: 4,
+				attack: 9,
 				health: 6,
 			},
 			{
@@ -174,17 +174,22 @@ describe('Non-reg', () => {
 				player: opponentEntity,
 			},
 			options: {
-				numberOfSimulations: 1,
-				maxAcceptableDuration: 2000,
+				numberOfSimulations: 10000,
+				maxAcceptableDuration: 20000,
 				validTribes: [],
 			},
 		};
-		SharedState.debugEnabled = true;
+		SharedState.debugEnabled = false;
 		const result = simulateBattle(battleInput, cards, spawns);
+		// console.log(result);
 
-		expect(result).not.toBeNull();
-		expect(result.wonPercent).toBeGreaterThan(74);
-		expect(result.wonPercent).toBeLessThan(76);
+		const sample = result.outcomeSamples.lost[0];
+		// console.log('sample', JSON.stringify(sample));
+
+		// const base64 = encode(JSON.stringify(sample));
+		// console.log('encoded', base64);
+		// const decoded = fromBase64(base64);
+		// expect(base64).toEqual(toBase64(decoded));
 	});
 });
 
