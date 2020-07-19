@@ -3,15 +3,15 @@ export interface BoardEntity {
 	cardId: string;
 	attack: number;
 	health: number;
-	taunt: boolean;
-	divineShield: boolean;
-	poisonous: boolean; // TODO
-	// Because Lich King can give Reborn to a non-reborn minion
-	reborn: boolean;
-	cleave: boolean;
-	windfury: boolean;
-	megaWindfury: boolean;
-	enchantments: { cardId: string; originEntityId: number }[];
+
+	taunt?: boolean;
+	divineShield?: boolean;
+	poisonous?: boolean;
+	reborn?: boolean;
+	cleave?: boolean;
+	windfury?: boolean;
+	megaWindfury?: boolean;
+	enchantments?: { cardId: string; originEntityId: number }[];
 
 	friendly?: boolean;
 	cantAttack?: boolean;
