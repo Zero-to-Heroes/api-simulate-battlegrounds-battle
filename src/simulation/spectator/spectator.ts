@@ -88,19 +88,22 @@ export class Spectator {
 	}
 
 	private collapseActions(actions: readonly GameAction[]): readonly GameAction[] {
+		if (!actions || actions.length === 0) {
+			return [];
+		}
 		const result: GameAction[] = [];
 		for (let i = 0; i < actions.length; i++) {
 			const action = actions[i];
-			const lastAction = result[result.length - 1];
+			const lastAction = result.length > 0 ? result[result.length - 1] : null;
 
-			if (!action.playerBoard) {
+			if (lastAction && !action.playerBoard) {
 				action.playerBoard = lastAction.playerBoard;
 			}
-			if (!action.opponentBoard) {
+			if (lastAction && !action.opponentBoard) {
 				action.opponentBoard = lastAction.opponentBoard;
 			}
 
-			if (action.type === 'damage' && lastAction.type === 'attack') {
+			if (lastAction && action.type === 'damage' && lastAction.type === 'attack') {
 				lastAction.damages = lastAction.damages || [];
 				lastAction.damages.push({
 					damage: action.damages[0].damage,
