@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { stringifySimple, stringifySimpleCard } from '../utils';
+import { getRaceEnum, isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -150,9 +150,7 @@ export const handleDeathrattleEffects = (
 				);
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 	}
-	// return [boardWithDeadEntity, otherBoard];
 };
 
 const addStatsToBoard = (
@@ -163,27 +161,12 @@ const addStatsToBoard = (
 	tribe?: string,
 ): void => {
 	for (const entity of board) {
-		if (!tribe || allCards.getCard(entity.cardId).race === tribe) {
+		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
 			entity.attack += attack;
 			entity.previousAttack += attack;
 			entity.health += health;
-			// return {
-			// 	...entity,
-			// 	attack: entity.attack + attack,
-			// 	health: entity.health + health,
-			// };
 		}
 	}
-	// return board.map(entity => {
-	// 	if (!tribe || allCards.getCard(entity.cardId).race === tribe) {
-	// 		return {
-	// 			...entity,
-	// 			attack: entity.attack + attack,
-	// 			health: entity.health + health,
-	// 		};
-	// 	}
-	// 	return entity;
-	// });
 };
 
 const applyMinionDeathEffect = (
@@ -195,14 +178,14 @@ const applyMinionDeathEffect = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	if (allCards.getCard(deadEntity.cardId).race === 'BEAST') {
+	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.BEAST)) {
 		applyScavengingHyenaEffect(boardWithDeadEntity);
 	}
-	if (allCards.getCard(deadEntity.cardId).race === 'DEMON') {
+	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.DEMON)) {
 		// console.log('will apply juggler effect', deadEntity, boardWithDeadEntity, otherBoard);
 		applySoulJugglerEffect(boardWithDeadEntity, otherBoard, allCards, cardsData, sharedState, spectator);
 	}
-	if (allCards.getCard(deadEntity.cardId).race === 'MECH') {
+	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.MECH)) {
 		applyJunkbotEffect(boardWithDeadEntity);
 	}
 	// Overkill
@@ -276,7 +259,7 @@ const applyMinionDeathEffect = (
 			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBATTLEGROUNDS
 		) {
 			const otherPirates = otherBoard
-				.filter(entity => allCards.getCard(entity.cardId).race === 'PIRATE')
+				.filter(entity => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter(entity => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach(pirate => {
 				pirate.attack += 2;
@@ -286,7 +269,7 @@ const applyMinionDeathEffect = (
 			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathTavernBrawl
 		) {
 			const otherPirates = otherBoard
-				.filter(entity => allCards.getCard(entity.cardId).race === 'PIRATE')
+				.filter(entity => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter(entity => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach(pirate => {
 				pirate.attack += 4;
@@ -484,7 +467,7 @@ const grantRandomDivineShield = (board: BoardEntity[]): void => {
 const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCardsService): void => {
 	const elligibleEntities = board
 		.filter(entity => !entity.divineShield)
-		.filter(entity => cards.getCard(entity.cardId).race === tribe);
+		.filter(entity => isCorrectTribe(cards.getCard(entity.cardId).race, getRaceEnum(tribe)));
 	for (const entity of elligibleEntities) {
 		entity.divineShield = true;
 	}

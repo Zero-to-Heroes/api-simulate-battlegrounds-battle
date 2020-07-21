@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { ReferenceCard } from '@firestone-hs/reference-data/lib/models/reference-cards/reference-card';
 import { BoardEntity } from './board-entity';
 
@@ -46,6 +46,14 @@ export const buildSingleBoardEntity = (
 
 const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
 	return card.mechanics?.includes(mechanic) || card.referencedTags?.includes(mechanic);
+}
+
+export const isCorrectTribe = (cardRace: string, targetTribe: Race): boolean => {
+	return getRaceEnum(cardRace) === Race.ALL || getRaceEnum(cardRace) === targetTribe;
+}
+
+export const getRaceEnum = (race: string): Race => {
+	return Race[race];
 }
 
 export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {

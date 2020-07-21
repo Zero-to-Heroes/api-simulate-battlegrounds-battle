@@ -1,4 +1,5 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { getRaceEnum } from '../utils';
 
 const REMOVED_CARD_IDS = [
 	'GVG_085', // Annoy-o-Tron
@@ -52,9 +53,7 @@ export class CardsData {
 			.filter(card => card.techLevel)
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.cost === 2)
-			.filter(
-				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
-			)
+			.filter(card => this.isValidTribe(validTribes, card.race))
 			.map(card => card.id);
 		this.ghastcoilerSpawns = this.allCards
 			.getCards()
@@ -63,9 +62,7 @@ export class CardsData {
 			.filter(card => card.id !== 'BGS_008')
 			.filter(card => card.mechanics && card.mechanics.indexOf('DEATHRATTLE') !== -1)
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter(
-				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
-			)
+			.filter(card => this.isValidTribe(validTribes, card.race))
 			.map(card => card.id);
 		this.impMamaSpawns = this.allCards
 			.getCards()
@@ -81,9 +78,7 @@ export class CardsData {
 			.filter(card => card.id !== 'GVG_114' && card.id !== 'BGS_006')
 			.filter(card => card.rarity === 'Legendary')
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter(
-				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
-			)
+			.filter(card => this.isValidTribe(validTribes, card.race))
 			.map(card => card.id);
 		this.treasureChestSpawns = this.allCards
 			.getCards()
@@ -91,9 +86,7 @@ export class CardsData {
 			.filter(
 				card => card.id.startsWith('TB_BaconUps') || CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(card.id),
 			) // Only golden
-			.filter(
-				card => !validTribes || validTribes.length === 0 || validTribes.includes(this.getRaceEnum(card.race)),
-			)
+			.filter(card => this.isValidTribe(validTribes, card.race))
 			.map(card => card.id);
 		this.pirateSpawns = this.allCards
 			.getCards()
@@ -150,7 +143,8 @@ export class CardsData {
 		];
 	}
 
-	private getRaceEnum(race: string): Race {
-		return Race[race];
+	private isValidTribe(validTribes: readonly Race[], race: string): boolean {
+		const raceEnum: Race = getRaceEnum(race);
+		return raceEnum === Race.ALL || !validTribes || validTribes.length === 0 || validTribes.includes(raceEnum);
 	}
 }

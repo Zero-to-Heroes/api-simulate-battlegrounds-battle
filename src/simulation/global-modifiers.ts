@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { isCorrectTribe } from '../utils';
 
 export const applyGlobalModifiers = (
 	board1: BoardEntity[],
@@ -11,8 +12,10 @@ export const applyGlobalModifiers = (
 ): void => {
 	// console.log('before applying global modifiers', board1, board2);
 	const totalMurlocs =
-		board1.map(entity => cards.getCard(entity.cardId).race).filter(race => race === 'MURLOC').length +
-		board2.map(entity => cards.getCard(entity.cardId).race).filter(race => race === 'MURLOC').length;
+		board1.map(entity => cards.getCard(entity.cardId).race).filter(race => isCorrectTribe(race, Race.MURLOC))
+			.length +
+		board2.map(entity => cards.getCard(entity.cardId).race).filter(race => isCorrectTribe(race, Race.MURLOC))
+			.length;
 	for (const entity of board1) {
 		mapEntity(entity, totalMurlocs);
 	}
@@ -23,8 +26,10 @@ export const applyGlobalModifiers = (
 
 export const removeGlobalModifiers = (board1: BoardEntity[], board2: BoardEntity[], cards: AllCardsService): void => {
 	const totalMurlocs =
-		board1.map(entity => cards.getCard(entity.cardId).race).filter(race => race === 'MURLOC').length +
-		board2.map(entity => cards.getCard(entity.cardId).race).filter(race => race === 'MURLOC').length;
+		board1.map(entity => cards.getCard(entity.cardId).race).filter(race => isCorrectTribe(race, Race.MURLOC))
+			.length +
+		board2.map(entity => cards.getCard(entity.cardId).race).filter(race => isCorrectTribe(race, Race.MURLOC))
+			.length;
 	for (const entity of board1) {
 		removeGlobalModifiersForEntity(entity, totalMurlocs);
 	}

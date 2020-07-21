@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { isCorrectTribe } from '../utils';
 import { dealDamageToRandomEnemy, simulateAttack } from './attack';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
@@ -209,7 +210,7 @@ export const performStartOfCombat = (
 	if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelp) {
 		const damage = attackingBoard
 			.map(entity => allCards.getCard(entity.cardId).race)
-			.filter(race => race === 'DRAGON').length;
+			.filter(race => isCorrectTribe(race, Race.DRAGON)).length;
 		// console.log('[start of combat] damage', damage);
 		dealDamageToRandomEnemy(
 			defendingBoard,
@@ -224,7 +225,7 @@ export const performStartOfCombat = (
 	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl) {
 		const damage = attackingBoard
 			.map(entity => allCards.getCard(entity.cardId).race)
-			.filter(race => race === 'DRAGON').length;
+			.filter(race => isCorrectTribe(race, Race.DRAGON)).length;
 		// console.log(
 		// 	'red whelp start of combat',
 		// 	stringifySimpleCard(attacker),

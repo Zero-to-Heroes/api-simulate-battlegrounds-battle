@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { stringifySimpleCard } from '../utils';
+import { isCorrectTribe, stringifySimpleCard } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (
@@ -142,7 +142,7 @@ const applySiegebreakerAura = (
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || cards.getCard(entity.cardId).race !== 'DEMON') {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
 			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			// newBoard.push(entity);
 			continue;
@@ -170,7 +170,7 @@ const applyMalGanisAura = (
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || cards.getCard(entity.cardId).race !== 'DEMON') {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
 			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			// newBoard.push(entity);
 			continue;
@@ -246,7 +246,7 @@ const applyMurlocWarleaderAura = (
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || cards.getCard(entity.cardId).race !== 'MURLOC') {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.MURLOC)) {
 			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			// newBoard.push(entity);
 			continue;
@@ -287,7 +287,7 @@ const applySouthseaCaptainAura = (
 	const originEntity = board[index];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || cards.getCard(entity.cardId).race !== 'PIRATE') {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.PIRATE)) {
 			continue;
 		}
 

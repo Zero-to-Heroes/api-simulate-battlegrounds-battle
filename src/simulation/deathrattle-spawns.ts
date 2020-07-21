@@ -1,7 +1,7 @@
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { buildSingleBoardEntity } from '../utils';
+import { buildSingleBoardEntity, isCorrectTribe } from '../utils';
 import { SharedState } from './shared-state';
 
 export const spawnEntities = (
@@ -28,33 +28,27 @@ export const spawnEntities = (
 	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
 		const newMinion = buildSingleBoardEntity(cardId, allCards, friendly, sharedState.currentEntityId++);
-		const attackBuff =
-			allCards.getCard(newMinion.cardId).race === 'BEAST'
-				? 3 *
-						boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader)
-							.length +
-				  6 *
-						boardToSpawnInto.filter(
-							entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
-						).length +
-				  5 *
-						boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear)
-							.length +
-				  10 *
-						boardToSpawnInto.filter(
-							entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
-						).length
-				: 0;
-		const healthBuff =
-			allCards.getCard(newMinion.cardId).race === 'BEAST'
-				? 5 *
-						boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear)
-							.length +
-				  10 *
-						boardToSpawnInto.filter(
-							entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
-						).length
-				: 0;
+		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
+			? 3 *
+					boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader)
+						.length +
+			  6 *
+					boardToSpawnInto.filter(
+						entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
+					).length +
+			  5 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
+			  10 *
+					boardToSpawnInto.filter(
+						entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
+					).length
+			: 0;
+		const healthBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
+			? 5 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
+			  10 *
+					boardToSpawnInto.filter(
+						entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
+					).length
+			: 0;
 		// console.log('buffs', attackBuff, healthBuff, newMinion, boardToSpawnInto);
 		newMinion.attack += attackBuff;
 		newMinion.health += healthBuff;

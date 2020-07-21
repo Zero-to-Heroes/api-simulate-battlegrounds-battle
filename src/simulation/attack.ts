@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { stringifySimple, stringifySimpleCard } from '../utils';
+import { isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -621,7 +621,7 @@ export const applyOnAttackBuffs = (
 	}
 
 	// Ripsnarl Captain
-	if (allCards.getCard(attacker.cardId).race === 'PIRATE') {
+	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
 		const ripsnarls = attackingBoard
 			.filter(e => e.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptain)
 			.filter(e => e.entityId !== attacker.entityId).length;
@@ -634,7 +634,7 @@ export const applyOnAttackBuffs = (
 	}
 
 	// Dread Admiral Eliza
-	if (allCards.getCard(attacker.cardId).race === 'PIRATE') {
+	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
 		const elizas = attackingBoard.filter(e => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralEliza).length;
 		const elizasTB = attackingBoard.filter(
 			e => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralElizaTavernBrawl,
@@ -684,21 +684,18 @@ const handleKillEffects = (
 	deadEntity: BoardEntity,
 	allCards: AllCardsService,
 ): void => {
-	// console.log('handling kill effects', boardWithKilledMinion, killerBoard);
 	if (
-		!deadEntity.lastAffectedByEntity ||
-		allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race !== 'DRAGON'
+		deadEntity.lastAffectedByEntity &&
+		isCorrectTribe(allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race, Race.DRAGON)
 	) {
-		return;
-		// return [boardWithKilledMinion, killerBoard];
-	}
-	for (const entity of killerBoard) {
-		if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggle) {
-			entity.attack = entity.attack + 2;
-			entity.health = entity.health + 2;
-		} else if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggleTavernBrawl) {
-			entity.attack = entity.attack + 4;
-			entity.health = entity.health + 4;
+		for (const entity of killerBoard) {
+			if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggle) {
+				entity.attack = entity.attack + 2;
+				entity.health = entity.health + 2;
+			} else if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggleTavernBrawl) {
+				entity.attack = entity.attack + 4;
+				entity.health = entity.health + 4;
+			}
 		}
 	}
 };

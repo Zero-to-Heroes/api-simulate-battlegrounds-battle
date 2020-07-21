@@ -20,7 +20,7 @@ Resources:
             Handler: simulate-bgs-battle.default
             Runtime: nodejs10.x
             Timeout: 180
-            MemorySize: 192
+            MemorySize: 512
             CodeUri: ./dist/simulate-bgs-battle
             Policies:
                 - AWSLambdaVPCAccessExecutionRole

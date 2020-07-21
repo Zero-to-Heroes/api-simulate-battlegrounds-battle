@@ -24,7 +24,7 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
-		"@firestone-hs/reference-data": "^0.1.37",
+		"@firestone-hs/reference-data": "^0.1.38",
 		"aws-sdk": "^2.524.0",
 		"copy-webpack-plugin": "^5.1.1",
 		"cross-fetch": "^3.0.4",

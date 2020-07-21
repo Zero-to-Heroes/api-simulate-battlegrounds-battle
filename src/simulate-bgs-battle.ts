@@ -45,7 +45,7 @@ export default async (event): Promise<any> => {
 export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): SimulationResult => {
 	const start = Date.now();
 
-	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 4000;
+	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 6000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 2500;
 
 	const simulationResult: SimulationResult = {
