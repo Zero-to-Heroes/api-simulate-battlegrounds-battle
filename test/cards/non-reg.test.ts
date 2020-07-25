@@ -6,7 +6,7 @@ import { CardsData } from '../../src/cards/cards-data';
 import { simulateBattle } from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
 import { Simulator } from '../../src/simulation/simulator';
-import { buildSingleBoardEntity } from '../../src/utils';
+import { buildSingleBoardEntity, decode, encode } from '../../src/utils';
 import cardsJson from '../cards.json';
 
 describe('Non-reg', () => {
@@ -186,10 +186,10 @@ describe('Non-reg', () => {
 		const sample = result.outcomeSamples.lost[0];
 		// console.log('sample', JSON.stringify(sample));
 
-		// const base64 = encode(JSON.stringify(sample));
-		// console.log('encoded', base64);
-		// const decoded = fromBase64(base64);
-		// expect(base64).toEqual(toBase64(decoded));
+		const base64 = encode(JSON.stringify(sample));
+		console.log('encoded', base64);
+		const decoded = decode(base64);
+		expect(base64).toEqual(encode(decoded));
 	});
 });
 

@@ -44,7 +44,7 @@ export const buildSingleBoardEntity = (
 	} as BoardEntity);
 };
 
-const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
+export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
 	return card.mechanics?.includes(mechanic) || card.referencedTags?.includes(mechanic);
 }
 

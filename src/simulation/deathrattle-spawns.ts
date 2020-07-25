@@ -766,6 +766,19 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
+				case CardIds.NonCollectible.Neutral.LivingSporesToken2:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.NonCollectible.Neutral.PlantToken,
+							2,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 			}
 		}
 	}

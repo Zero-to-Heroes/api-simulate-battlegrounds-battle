@@ -9,10 +9,10 @@ sam local start-api
 ```
 npm run build && npm run package && npm run deploy
 
-rm -rf dist && tsc && 'cp' -rf dist/ /g/Source/zerotoheroes/firestone/core/node_modules/\@firestone-hs/simulate-bgs-battle/
-rm -rf dist && tsc && 'cp' -rf dist/ /g/Source/zerotoheroes/coliseum/node_modules/\@firestone-hs/simulate-bgs-battle/
-rm -rf dist && tsc && 'cp' -rf dist/ /g/Source/zerotoheroes/firestone-libs/node_modules/\@firestone-hs/simulate-bgs-battle/
-rm -rf dist && tsc && npm publish
+rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /g/Source/zerotoheroes/firestone/core/node_modules/\@firestone-hs/simulate-bgs-battle/
+rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /g/Source/zerotoheroes/coliseum/node_modules/\@firestone-hs/simulate-bgs-battle/
+rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /g/Source/zerotoheroes/firestone-libs/node_modules/\@firestone-hs/simulate-bgs-battle/
+rm -rf dist && tsc && rm -rf dist/node_modules && npm publish
 ```
 
 # Reference

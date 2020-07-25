@@ -3,7 +3,8 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
+import { validEnchantments } from '../simulate-bgs-battle';
+import { hasMechanic, isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -206,17 +207,11 @@ const triggerRandomDeathrattle = (
 ): void => {
 	const validDeathrattles = attackingBoard.filter(
 		entity =>
-			(allCards.getCard(entity.cardId).mechanics &&
-				allCards.getCard(entity.cardId).mechanics.indexOf('DEATHRATTLE') !== -1) ||
-			((entity.enchantments &&
+			hasMechanic(allCards.getCard(entity.cardId), 'DEATHRATTLE') ||
+			(entity.enchantments &&
 				entity.enchantments
 					.map(enchantment => enchantment.cardId)
-					.indexOf(CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment) !== -1) ||
-				entity.enchantments
-					.map(enchantment => enchantment.cardId)
-					.indexOf(
-						CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl,
-					) !== -1),
+					.some(enchantmentId => validEnchantments.includes(enchantmentId))),
 	);
 	if (validDeathrattles.length === 0) {
 		return;
@@ -320,7 +315,6 @@ export const dealDamageToEnemy = (
 	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, allCards, cardsData, sharedState, spectator);
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
-	// spectator.registerEffectDamage();
 	processMinionDeath(defendingBoard, boardWithAttackOrigin, allCards, cardsData, sharedState, spectator);
 };
 

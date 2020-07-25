@@ -1,5 +1,5 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
-import { getRaceEnum } from '../utils';
+import { getRaceEnum, hasMechanic } from '../utils';
 
 const REMOVED_CARD_IDS = [
 	'GVG_085', // Annoy-o-Tron
@@ -60,7 +60,7 @@ export class CardsData {
 			.filter(card => card.techLevel)
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.id !== 'BGS_008')
-			.filter(card => card.mechanics && card.mechanics.indexOf('DEATHRATTLE') !== -1)
+			.filter(card => hasMechanic(card, 'DEATHRATTLE'))
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter(card => this.isValidTribe(validTribes, card.race))
 			.map(card => card.id);

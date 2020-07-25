@@ -40,7 +40,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 		const result = await runSimulation({ 'body': JSON.stringify(input) });
 		const simulationResult = JSON.parse(result.body);
 
-		const sample = simulationResult.outcomeSamples.won[0];
+		const sample = simulationResult.outcomeSamples.tied[0];
 		const base64 = encode(JSON.stringify(sample));
 		console.log('encoded', base64);
 	});
