@@ -110,6 +110,13 @@ export class Spectator {
 					sourceEntityId: action.damages[0].sourceEntityId,
 					targetEntityId: action.damages[0].targetEntityId,
 				});
+			} else if (lastAction && action.type === 'damage' && lastAction.type === 'damage') {
+				lastAction.damages = lastAction.damages || [];
+				lastAction.damages.push({
+					damage: action.damages[0].damage,
+					sourceEntityId: action.damages[0].sourceEntityId,
+					targetEntityId: action.damages[0].targetEntityId,
+				});
 			} else {
 				result.push(action);
 			}
