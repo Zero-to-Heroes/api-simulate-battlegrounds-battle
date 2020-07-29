@@ -69,6 +69,7 @@ export class CardsData {
 			.filter(card => card.techLevel)
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.race === 'DEMON')
+			.filter(card => card.id !== CardIds.NonCollectible.Warlock.ImpMama)
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map(card => card.id);
 		this.sneedsSpawns = this.allCards
