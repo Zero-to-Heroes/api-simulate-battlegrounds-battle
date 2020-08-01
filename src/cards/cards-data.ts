@@ -13,6 +13,10 @@ const REMOVED_CARD_IDS = [
 	'BGS_024', // Piloted Sky Golem
 	'UNG_010', // Sated Threshadon
 	'OG_300', // Boogeymonster
+	CardIds.Collectible.Neutral.Zoobot,
+	CardIds.NonCollectible.Neutral.ZoobotTavernBrawl,
+	CardIds.Collectible.Neutral.MenagerieMagician,
+	CardIds.NonCollectible.Neutral.MenagerieMagicianTavernBrawl,
 ];
 
 export class CardsData {

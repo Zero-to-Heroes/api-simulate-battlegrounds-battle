@@ -124,10 +124,10 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		}
 		spectator.commitBattleResult(battleResult.result)
 	}
-	const toatlMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
-	simulationResult.wonPercent = Math.round((10 * (100 * simulationResult.won)) / toatlMatches) / 10;
-	simulationResult.tiedPercent = Math.round((10 * (100 * simulationResult.tied)) / toatlMatches) / 10;
-	simulationResult.lostPercent = Math.round((10 * (100 * simulationResult.lost)) / toatlMatches) / 10;
+	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
+	simulationResult.wonPercent = Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10;
+	simulationResult.tiedPercent = Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10;
+	simulationResult.lostPercent = Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10;
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost

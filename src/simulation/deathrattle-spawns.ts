@@ -15,6 +15,9 @@ export const spawnEntities = (
 	limitSpawns: boolean,
 	// limitSpawns = false,
 ): readonly BoardEntity[] => {
+	if (!cardId) {
+		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
+	}
 	const spawnMultiplier =
 		2 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.Collectible.Mage.Khadgar).length || 1;
 	const spawnMultiplierGolden =
@@ -84,16 +87,18 @@ export const spawnPremiumEntities = (
 export const spawnEntitiesFromDeathrattle = (
 	deadEntity: BoardEntity,
 	boardWithDeadEntity: BoardEntity[],
+	otherBoard: BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
-): readonly BoardEntity[] => {
+): [readonly BoardEntity[], readonly BoardEntity[]] => {
 	const rivendare = boardWithDeadEntity.find(entity => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
 		entity => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
 	);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
+	const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
 		switch (deadEntity.cardId) {
 			case CardIds.Collectible.Neutral.Mecharoo:
@@ -313,6 +318,20 @@ export const spawnEntitiesFromDeathrattle = (
 							false,
 						),
 					],
+				);
+				break;
+			case CardIds.Collectible.Neutral.TheBeast:
+			case CardIds.NonCollectible.Neutral.TheBeastTavernBrawl:
+				otherBoardSpawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Neutral.FinkleEinhorn,
+						1,
+						otherBoard,
+						allCards,
+						sharedState,
+						!deadEntity.friendly,
+						false,
+					),
 				);
 				break;
 			case CardIds.Collectible.Neutral.ReplicatingMenace:
@@ -720,7 +739,7 @@ export const spawnEntitiesFromDeathrattle = (
 			// spawnedEntities.push(...[]);
 		}
 	}
-	return spawnedEntities;
+	return [spawnedEntities, otherBoardSpawnedEntities];
 };
 
 export const spawnEntitiesFromEnchantments = (

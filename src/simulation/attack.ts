@@ -726,9 +726,13 @@ const buildBoardAfterDeathrattleSpawns = (
 		sharedState,
 		spectator,
 	);
-	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
+	const [entitiesFromNativeDeathrattle, entitiesFromNativeDeathrattleOnOpponentBoard]: [
+		readonly BoardEntity[],
+		readonly BoardEntity[],
+	] = spawnEntitiesFromDeathrattle(
 		deadEntity,
 		boardWithKilledMinion,
+		opponentBoard,
 		allCards,
 		cardsData,
 		sharedState,
@@ -757,6 +761,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		cardsData,
 		sharedState,
 	);
+
 	const candidateEntities: readonly BoardEntity[] = [
 		...entitiesFromNativeDeathrattle,
 		...entitiesFromReborn,
@@ -768,6 +773,17 @@ const buildBoardAfterDeathrattleSpawns = (
 	boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards);
 	spectator.registerMinionsSpawn(boardWithKilledMinion, spawnedEntities);
+
+	const candidateEntitiesForOpponentBoard: readonly BoardEntity[] = [...entitiesFromNativeDeathrattleOnOpponentBoard];
+	const roomToSpawnForOpponentBoard: number = 7 - opponentBoard.length;
+	const spawnedEntitiesForOpponentBoard: readonly BoardEntity[] = candidateEntitiesForOpponentBoard.slice(
+		0,
+		roomToSpawnForOpponentBoard,
+	);
+	opponentBoard.push(...spawnedEntitiesForOpponentBoard);
+	// If needed might also have to handle more effects here, like we do for the main board
+	spectator.registerMinionsSpawn(opponentBoard, spawnedEntitiesForOpponentBoard);
+
 	// FIXME: here we should probably handle the case of Scallywag and "attack immediately"
 	// It requires a pretty strong refactor of the code though, so for
 	// now the simulator has this known flaw
