@@ -284,9 +284,12 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 			case CardIds.Collectible.Neutral.PilotedShredder:
+			case CardIds.NonCollectible.Neutral.PilotedShredder:
+				const shredderSpawn = spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)];
+				// console.log('shredderSpawn', shredderSpawn, spawns.shredderSpawns.length);
 				spawnedEntities.push(
 					...spawnEntities(
-						spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
+						shredderSpawn,
 						1,
 						boardWithDeadEntity,
 						allCards,
@@ -505,6 +508,7 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 			case CardIds.Collectible.Neutral.SneedsOldShredder:
+			case CardIds.NonCollectible.Neutral.SneedsOldShredder:
 				spawnedEntities.push(
 					...spawnEntities(
 						spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
