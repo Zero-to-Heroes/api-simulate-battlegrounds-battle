@@ -31,6 +31,12 @@ export class Simulator {
 		opponentEntity: BgsPlayerEntity,
 		spectator: Spectator,
 	): SingleSimulationResult {
+		this.currentAttacker =
+			playerBoard.length > opponentBoard.length
+				? 0
+				: opponentBoard.length > playerBoard.length
+				? 1
+				: Math.round(Math.random());
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
 			1;
@@ -58,14 +64,7 @@ export class Simulator {
 				stringifySimple(playerBoard),
 			);
 		}
-		this.currentAttacker =
-			playerBoard.length > opponentBoard.length
-				? 0
-				: opponentBoard.length > playerBoard.length
-				? 1
-				: Math.round(Math.random());
 		// console.log('starting player', this.currentAttacker);
-
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			if (this.sharedState.debug) {
