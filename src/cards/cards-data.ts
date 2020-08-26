@@ -38,7 +38,7 @@ export class CardsData {
 	public ghastcoilerSpawns: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public sneedsSpawns: readonly string[];
-	public treasureChestSpawns: readonly string[];
+	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
 
 	public auraEnchantments: readonly string[][];
@@ -85,14 +85,14 @@ export class CardsData {
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter(card => this.isValidTribe(validTribes, card.race))
 			.map(card => card.id);
-		this.treasureChestSpawns = this.allCards
-			.getCards()
-			.filter(card => card.techLevel)
-			.filter(
-				card => card.id.startsWith('TB_BaconUps') || CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(card.id),
-			) // Only golden
-			.filter(card => this.isValidTribe(validTribes, card.race))
-			.map(card => card.id);
+		// this.treasureChestSpawns = this.allCards
+		// 	.getCards()
+		// 	.filter(card => card.techLevel)
+		// 	.filter(
+		// 		card => card.id.startsWith('TB_BaconUps') || CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(card.id),
+		// 	) // Only golden
+		// 	.filter(card => this.isValidTribe(validTribes, card.race))
+		// 	.map(card => card.id);
 		this.pirateSpawns = this.allCards
 			.getCards()
 			.filter(card => card.techLevel)

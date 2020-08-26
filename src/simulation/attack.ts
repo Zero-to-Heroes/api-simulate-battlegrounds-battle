@@ -128,60 +128,60 @@ const performAttack = (
 	}
 	// After attack hooks
 	// Arcane Cannon
-	const attackerNeighbours: readonly BoardEntity[] = getNeighbours(attackingBoard, attackingEntity);
-	const cannonNeighbours = attackerNeighbours.filter(
-		entity => CardIds.NonCollectible.Neutral.ArcaneCannon === entity.cardId,
-	);
+	// const attackerNeighbours: readonly BoardEntity[] = getNeighbours(attackingBoard, attackingEntity);
+	// const cannonNeighbours = attackerNeighbours.filter(
+	// 	entity => CardIds.NonCollectible.Neutral.ArcaneCannon === entity.cardId,
+	// );
 	if (sharedState.debug) {
 		// console.log('heighbours', stringifySimple(attackerNeighbours), stringifySimple(cannonNeighbours));
 	}
-	if (cannonNeighbours.length > 0) {
-		if (sharedState.debug) {
-			console.log('dealing arcane cannon damage', stringifySimple(cannonNeighbours));
-		}
-		cannonNeighbours.forEach(cannon =>
-			dealDamageToRandomEnemy(
-				defendingBoard,
-				cannon,
-				2,
-				attackingBoard,
-				allCards,
-				spawns,
-				sharedState,
-				spectator,
-			),
-		);
-	}
-	const cannonNeighboursTB = attackerNeighbours.filter(
-		entity => CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl === entity.cardId,
-	);
-	if (cannonNeighboursTB.length > 0) {
-		if (sharedState.debug) {
-			console.log('dealing golden arcane cannon damage', stringifySimple(cannonNeighboursTB));
-		}
-		cannonNeighboursTB.forEach(cannon => {
-			dealDamageToRandomEnemy(
-				defendingBoard,
-				cannon,
-				2,
-				attackingBoard,
-				allCards,
-				spawns,
-				sharedState,
-				spectator,
-			);
-			dealDamageToRandomEnemy(
-				defendingBoard,
-				cannon,
-				2,
-				attackingBoard,
-				allCards,
-				spawns,
-				sharedState,
-				spectator,
-			);
-		});
-	}
+	// if (cannonNeighbours.length > 0) {
+	// 	if (sharedState.debug) {
+	// 		console.log('dealing arcane cannon damage', stringifySimple(cannonNeighbours));
+	// 	}
+	// 	cannonNeighbours.forEach(cannon =>
+	// 		dealDamageToRandomEnemy(
+	// 			defendingBoard,
+	// 			cannon,
+	// 			2,
+	// 			attackingBoard,
+	// 			allCards,
+	// 			spawns,
+	// 			sharedState,
+	// 			spectator,
+	// 		),
+	// 	);
+	// }
+	// const cannonNeighboursTB = attackerNeighbours.filter(
+	// 	entity => CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl === entity.cardId,
+	// );
+	// if (cannonNeighboursTB.length > 0) {
+	// 	if (sharedState.debug) {
+	// 		console.log('dealing golden arcane cannon damage', stringifySimple(cannonNeighboursTB));
+	// 	}
+	// 	cannonNeighboursTB.forEach(cannon => {
+	// 		dealDamageToRandomEnemy(
+	// 			defendingBoard,
+	// 			cannon,
+	// 			2,
+	// 			attackingBoard,
+	// 			allCards,
+	// 			spawns,
+	// 			sharedState,
+	// 			spectator,
+	// 		);
+	// 		dealDamageToRandomEnemy(
+	// 			defendingBoard,
+	// 			cannon,
+	// 			2,
+	// 			attackingBoard,
+	// 			allCards,
+	// 			spawns,
+	// 			sharedState,
+	// 			spectator,
+	// 		);
+	// 	});
+	// }
 	// Monstrous Macaw
 	if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacaw) {
 		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);

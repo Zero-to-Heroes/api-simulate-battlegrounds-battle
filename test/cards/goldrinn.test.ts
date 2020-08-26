@@ -7,6 +7,7 @@ import { Simulator } from '../../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
+// Not updated with +4 -> +5
 describe('Goldrinn', () => {
 	const sharedState = new SharedState();
 

@@ -6,6 +6,7 @@ import { Simulator } from '../../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
+// Not updated for +5 -> +4
 describe('Mama Bear', () => {
 	test('Mama Bear buffs friendly summoned beasts (normal)', async () => {
 		const cards = buildCardsService();

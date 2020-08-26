@@ -39,15 +39,15 @@ export const spawnEntities = (
 					boardToSpawnInto.filter(
 						entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
 					).length +
-			  5 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
-			  10 *
+			  4 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
+			  8 *
 					boardToSpawnInto.filter(
 						entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
 					).length
 			: 0;
 		const healthBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
-			? 5 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
-			  10 *
+			? 4 * boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
+			  8 *
 					boardToSpawnInto.filter(
 						entity => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
 					).length
@@ -609,43 +609,43 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken:
-				spawnedEntities.push(
-					...spawnPremiumEntities(
-						spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
-						1,
-						boardWithDeadEntity,
-						allCards,
-						sharedState,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				break;
-			case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl:
-				spawnedEntities.push(
-					...[
-						...spawnPremiumEntities(
-							spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
-							1,
-							boardWithDeadEntity,
-							allCards,
-							sharedState,
-							deadEntity.friendly,
-							false,
-						),
-						...spawnPremiumEntities(
-							spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
-							1,
-							boardWithDeadEntity,
-							allCards,
-							sharedState,
-							deadEntity.friendly,
-							false,
-						),
-					],
-				);
-				break;
+			// case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken:
+			// 	spawnedEntities.push(
+			// 		...spawnPremiumEntities(
+			// 			spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
+			// 			1,
+			// 			boardWithDeadEntity,
+			// 			allCards,
+			// 			sharedState,
+			// 			deadEntity.friendly,
+			// 			false,
+			// 		),
+			// 	);
+			// 	break;
+			// case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl:
+			// 	spawnedEntities.push(
+			// 		...[
+			// 			...spawnPremiumEntities(
+			// 				spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
+			// 				1,
+			// 				boardWithDeadEntity,
+			// 				allCards,
+			// 				sharedState,
+			// 				deadEntity.friendly,
+			// 				false,
+			// 			),
+			// 			...spawnPremiumEntities(
+			// 				spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
+			// 				1,
+			// 				boardWithDeadEntity,
+			// 				allCards,
+			// 				sharedState,
+			// 				deadEntity.friendly,
+			// 				false,
+			// 			),
+			// 		],
+			// 	);
+			// 	break;
 			case CardIds.NonCollectible.Neutral.TheTideRazor:
 				spawnedEntities.push(
 					...[

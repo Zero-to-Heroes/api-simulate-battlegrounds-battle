@@ -6,7 +6,7 @@ import { Simulator } from '../../src/simulation/simulator';
 import { buildSingleBoardEntity } from '../../src/utils';
 import cardsJson from '../cards.json';
 
-describe('Arcane Cannon', () => {
+describe.skip('Arcane Cannon', () => {
 	test('Arcane Cannon fire on adjacent minion attack', async () => {
 		const cards = buildCardsService();
 		await cards.initializeCardsDb();
