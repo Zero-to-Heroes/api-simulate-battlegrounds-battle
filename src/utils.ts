@@ -7,6 +7,14 @@ const CLEAVE_IDS = [
 	'LOOT_078', // Cave Hydra
 	'GVG_113', // Foe Reaper 4000
 ];
+// Because for some reason, the Taunt keyword is only a referenced tag,
+// so we have to know when a taunt minion is spawned (the taunt tag
+// is passed in input properly, so it's not an issue there)
+const TAUNT_IDS = [
+	CardIds.NonCollectible.Neutral.YoHoOgre,
+	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
+	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenTavernBrawl,
+]
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
@@ -33,10 +41,10 @@ export const buildSingleBoardEntity = (
 		divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
 		entityId: entityId,
 		health: card.health,
-		taunt: hasMechanic(card, 'TAUNT'),
+		taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId),
 		reborn: hasMechanic(card, 'REBORN'),
 		poisonous: hasMechanic(card, 'POISONOUS'),
-		windfury: !megaWindfury && hasMechanic(card, 'WINDFURY'),
+		windfury: !megaWindfury && (hasMechanic(card, 'WINDFURY') || card.referencedTags?.includes('WINDFURY')),
 		megaWindfury: megaWindfury,
 		enchantments: [],
 		friendly: friendly,
@@ -45,7 +53,7 @@ export const buildSingleBoardEntity = (
 };
 
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
-	return card.mechanics?.includes(mechanic) || card.referencedTags?.includes(mechanic);
+	return card.mechanics?.includes(mechanic);
 }
 
 export const isCorrectTribe = (cardRace: string, targetTribe: Race): boolean => {

@@ -213,6 +213,9 @@ const triggerRandomDeathrattle = (
 					.map(enchantment => enchantment.cardId)
 					.some(enchantmentId => validEnchantments.includes(enchantmentId))),
 	);
+	if (sharedState.debug) {
+		console.log('triggering random deathrattle\n', stringifySimple(validDeathrattles));
+	}
 	if (validDeathrattles.length === 0) {
 		return;
 	}

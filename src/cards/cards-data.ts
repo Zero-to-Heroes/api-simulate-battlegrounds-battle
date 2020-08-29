@@ -17,6 +17,11 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Neutral.ZoobotTavernBrawl,
 	CardIds.Collectible.Neutral.MenagerieMagician,
 	CardIds.NonCollectible.Neutral.MenagerieMagicianTavernBrawl,
+	CardIds.Collectible.Paladin.CobaltGuardian,
+	CardIds.NonCollectible.Neutral.GentleMegasaur,
+	CardIds.NonCollectible.Neutral.GentleMegasaurTavernBrawl,
+	CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken,
+	CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl,
 ];
 
 export class CardsData {
