@@ -120,19 +120,20 @@ export const handleStartOfCombat = (
 		);
 	}
 
-	if (
-		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
-		playerBoard.length > 0
-	) {
-		handleLichKing(playerBoard);
-	} else if (
-		opponentEntity.heroPowerUsed &&
-		opponentHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
-		opponentBoard.length > 0
-	) {
-		handleLichKing(opponentBoard);
-	}
+	// Now we pass the "reborn" in input
+	// if (
+	// 	playerEntity.heroPowerUsed &&
+	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
+	// 	playerBoard.length > 0
+	// ) {
+	// 	handleLichKing(playerBoard);
+	// } else if (
+	// 	opponentEntity.heroPowerUsed &&
+	// 	opponentHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
+	// 	opponentBoard.length > 0
+	// ) {
+	// 	handleLichKing(opponentBoard);
+	// }
 
 	if (
 		playerEntity.heroPowerUsed &&
