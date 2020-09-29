@@ -19,7 +19,7 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
 ];
-const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl];
+export const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl];
 const CANT_ATTACK_IDS = [
 	CardIds.NonCollectible.Neutral.ArcaneCannon,
 	CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl,
