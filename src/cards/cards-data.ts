@@ -42,6 +42,7 @@ export class CardsData {
 	public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
 	public impMamaSpawns: readonly string[];
+	public gentleDjinniSpawns: readonly string[];
 	public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
@@ -79,6 +80,14 @@ export class CardsData {
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.race === 'DEMON')
 			.filter(card => card.id !== CardIds.NonCollectible.Warlock.ImpMama)
+			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map(card => card.id);
+		this.gentleDjinniSpawns = this.allCards
+			.getCards()
+			.filter(card => card.techLevel)
+			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter(card => card.race === 'ELEMENTAL')
+			.filter(card => card.id !== CardIds.NonCollectible.Neutral.GentleDjinni)
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map(card => card.id);
 		this.sneedsSpawns = this.allCards

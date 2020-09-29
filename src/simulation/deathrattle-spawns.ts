@@ -465,6 +465,46 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
+			case CardIds.NonCollectible.GentleDjinni:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				break;
+			case CardIds.NonCollectible.GentleDjinni_TavernBrawl:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							allCards,
+							sharedState,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				break;
+
 			case CardIds.NonCollectible.Priest.GhastcoilerTavernBrawl:
 				spawnedEntities.push(
 					...[
