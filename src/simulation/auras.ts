@@ -66,7 +66,7 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.NonCollectible.Neutral.SouthseaCaptainTavernBrawl:
 			applySouthseaCaptainAura(board, i, enchantmentId, cards);
 			return;
-		case CardIds.NonCollectible.Neutral.WhirlwindTempest:
+		case CardIds.Collectible.Neutral.WhirlwindTempest:
 		case CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl:
 			applyWhirlwindTempestAura(board, i, enchantmentId, cards);
 			return;
@@ -98,7 +98,7 @@ const removeAura = (entity: BoardEntity, enchantmentId: string): void => {
 		case CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl:
 			removeDeathwingAura(entity, enchantmentId);
 			return;
-		case CardIds.NonCollectible.Neutral.WhirlwindTempest_Enchantment:
+		case CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment:
 			removeWhirlwindTempestAura(entity, enchantmentId);
 			return;
 	}

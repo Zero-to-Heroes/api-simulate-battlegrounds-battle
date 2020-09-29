@@ -137,7 +137,7 @@ export const handleStartOfCombat = (
 		);
 	}
 
-	if (playerHeroPowerId === CardIds.NonCollectible.SwattingInsects && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl && playerBoard.length > 0) {
 		handleAlakir(
 			playerBoard,
 			playerEntity,
@@ -148,7 +148,10 @@ export const handleStartOfCombat = (
 			sharedState,
 			spectator,
 		);
-	} else if (opponentHeroPowerId === CardIds.NonCollectible.SwattingInsects && opponentBoard.length > 0) {
+	} else if (
+		opponentHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
+		opponentBoard.length > 0
+	) {
 		handleAlakir(
 			opponentBoard,
 			opponentEntity,

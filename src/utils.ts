@@ -14,12 +14,18 @@ const TAUNT_IDS = [
 	CardIds.NonCollectible.Neutral.YoHoOgre,
 	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
 	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenTavernBrawl,
+	CardIds.NonCollectible.Neutral.MoltenRock,
+	CardIds.NonCollectible.Neutral.MoltenRockTavernBrawl,
+	CardIds.NonCollectible.Neutral.LieutenantGarr,
+	CardIds.NonCollectible.Neutral.LieutenantGarrTavernBrawl,
+	CardIds.NonCollectible.Neutral.GentleDjinni,
+	CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl,	
 ]
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
 ];
-export const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl];
+export const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl, CardIds.NonCollectible.Neutral.CracklingCycloneTavernBrawl];
 const CANT_ATTACK_IDS = [
 	CardIds.NonCollectible.Neutral.ArcaneCannon,
 	CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl,

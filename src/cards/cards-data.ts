@@ -155,8 +155,8 @@ export class CardsData {
 				CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentTavernBrawl,
 			],
 			[
-				CardIds.NonCollectible.Neutral.WhirlwindTempest,
-				CardIds.NonCollectible.Neutral.WhirlwindTempest_Enchantment,
+				CardIds.Collectible.Neutral.WhirlwindTempest,
+				CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
 			],
 		];
 		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);

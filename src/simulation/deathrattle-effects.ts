@@ -242,7 +242,7 @@ const applyMinionDeathEffect = (
 				);
 			}
 		} else if (
-			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElemental_TavernBrawl
+			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElementalTavernBrawl
 		) {
 			const excessDamage = -deadEntity.health;
 			const neighbours = getNeighbours(boardWithDeadEntity, deadEntity);

@@ -465,7 +465,7 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			case CardIds.NonCollectible.GentleDjinni:
+			case CardIds.NonCollectible.Neutral.GentleDjinni:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -480,7 +480,7 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			case CardIds.NonCollectible.GentleDjinni_TavernBrawl:
+			case CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
