@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { getRaceEnum, isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
-import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, processMinionDeath } from './attack';
+import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -224,6 +224,41 @@ const applyMinionDeathEffect = (
 					spectator,
 				);
 			}
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElemental) {
+			const excessDamage = -deadEntity.health;
+			const neighbours = getNeighbours(boardWithDeadEntity, deadEntity);
+			if (neighbours.length > 0) {
+				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
+				dealDamageToEnemy(
+					randomTarget,
+					boardWithDeadEntity,
+					null,
+					excessDamage,
+					otherBoard,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+			}
+		} else if (
+			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElemental_TavernBrawl
+		) {
+			const excessDamage = -deadEntity.health;
+			const neighbours = getNeighbours(boardWithDeadEntity, deadEntity);
+			neighbours.forEach(neighbour =>
+				dealDamageToEnemy(
+					neighbour,
+					boardWithDeadEntity,
+					null,
+					excessDamage,
+					otherBoard,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				),
+			);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
 			// console.log('will apply direhorn overkill', deadEntity, otherBoard);
 			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);

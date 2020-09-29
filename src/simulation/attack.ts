@@ -258,7 +258,7 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 	return attackingEntity;
 };
 
-const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] => {
+export const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] => {
 	const index = board.map(e => e.entityId).indexOf(entity.entityId);
 	const neighbours = [];
 	if (index - 1 >= 0) {
