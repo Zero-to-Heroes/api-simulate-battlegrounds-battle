@@ -47,6 +47,28 @@ const handleIllidan = (
 	}
 };
 
+const handleAlakir = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	const firstEntity = playerBoard[0];
+	firstEntity.windfury = true;
+	firstEntity.divineShield = true;
+	firstEntity.taunt = true;
+	if (playerBoard.length > 1) {
+		const lastEntity = playerBoard[playerBoard.length - 1];
+		lastEntity.windfury = true;
+		lastEntity.divineShield = true;
+		lastEntity.taunt = true;
+	}
+};
+
 const handleNefarian = (
 	playerBoard: BoardEntity[],
 	opponentBoard: BoardEntity[],
@@ -88,11 +110,7 @@ export const handleStartOfCombat = (
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
 
-	if (
-		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
-		playerBoard.length > 0
-	) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
 		handleIllidan(
 			playerBoard,
 			playerEntity,
@@ -104,11 +122,34 @@ export const handleStartOfCombat = (
 			spectator,
 		);
 	} else if (
-		opponentEntity.heroPowerUsed &&
 		opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
 		opponentBoard.length > 0
 	) {
 		handleIllidan(
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+	}
+
+	if (playerHeroPowerId === CardIds.NonCollectible.SwattingInsects && playerBoard.length > 0) {
+		handleAlakir(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+	} else if (opponentHeroPowerId === CardIds.NonCollectible.SwattingInsects && opponentBoard.length > 0) {
+		handleAlakir(
 			opponentBoard,
 			opponentEntity,
 			playerBoard,
@@ -135,19 +176,19 @@ export const handleStartOfCombat = (
 	// 	handleLichKing(opponentBoard);
 	// }
 
-	if (
-		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
-		playerBoard.length > 0
-	) {
-		handlePutricide(playerBoard);
-	} else if (
-		opponentEntity.heroPowerUsed &&
-		opponentHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
-		opponentBoard.length > 0
-	) {
-		handlePutricide(opponentBoard);
-	}
+	// if (
+	// 	playerEntity.heroPowerUsed &&
+	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
+	// 	playerBoard.length > 0
+	// ) {
+	// 	handlePutricide(playerBoard);
+	// } else if (
+	// 	opponentEntity.heroPowerUsed &&
+	// 	opponentHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
+	// 	opponentBoard.length > 0
+	// ) {
+	// 	handlePutricide(opponentBoard);
+	// }
 
 	if (
 		playerEntity.heroPowerUsed &&
