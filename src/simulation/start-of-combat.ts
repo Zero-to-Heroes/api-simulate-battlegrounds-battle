@@ -61,12 +61,6 @@ const handleAlakir = (
 	firstEntity.windfury = true;
 	firstEntity.divineShield = true;
 	firstEntity.taunt = true;
-	if (playerBoard.length > 1) {
-		const lastEntity = playerBoard[playerBoard.length - 1];
-		lastEntity.windfury = true;
-		lastEntity.divineShield = true;
-		lastEntity.taunt = true;
-	}
 };
 
 const handleNefarian = (
