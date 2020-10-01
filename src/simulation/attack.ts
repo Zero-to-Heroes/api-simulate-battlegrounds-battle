@@ -312,6 +312,7 @@ export const dealDamageToEnemy = (
 ): void => {
 	const fakeAttacker = {
 		...(damageSource || {}),
+		entityId: -1,
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;

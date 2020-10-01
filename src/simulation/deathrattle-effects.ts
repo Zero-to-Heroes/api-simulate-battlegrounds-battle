@@ -389,6 +389,7 @@ export const dealDamageToAllMinions = (
 	// let updatedBoard2 = [...board2];
 	const fakeAttacker = {
 		...(damageSource || {}),
+		entityId: -1,
 		attack: damageDealt,
 		attacking: true,
 	} as BoardEntity;
