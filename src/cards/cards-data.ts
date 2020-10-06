@@ -158,6 +158,10 @@ export class CardsData {
 				CardIds.Collectible.Neutral.WhirlwindTempest,
 				CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
 			],
+			[
+				CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl,
+				CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
+			],
 		];
 		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
 		this.startOfCombats = [

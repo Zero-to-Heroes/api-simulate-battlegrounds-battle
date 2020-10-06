@@ -11,9 +11,11 @@ export interface SimulationResult {
 	lostPercent: number;
 	averageDamageWon: number;
 	averageDamageLost: number;
-	outcomeSamples?: {
-		won: readonly GameSample[];
-		lost: readonly GameSample[];
-		tied: readonly GameSample[];
-	};
+	outcomeSamples?: OutcomeSamples;
+}
+
+export interface OutcomeSamples {
+	won: readonly GameSample[];
+	lost: readonly GameSample[];
+	tied: readonly GameSample[];
 }

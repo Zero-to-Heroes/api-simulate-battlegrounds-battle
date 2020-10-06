@@ -4,14 +4,17 @@ import { ReferenceCard } from '@firestone-hs/reference-data/lib/models/reference
 import { BoardEntity } from './board-entity';
 
 const CLEAVE_IDS = [
-	'LOOT_078', // Cave Hydra
-	'GVG_113', // Foe Reaper 4000
+	CardIds.Collectible.Hunter.CaveHydra,
+	CardIds.NonCollectible.Hunter.CaveHydraTavernBrawl,
+	CardIds.Collectible.Neutral.FoeReaper4000,
+	CardIds.NonCollectible.Neutral.FoeReaper4000TavernBrawl,
 ];
 // Because for some reason, the Taunt keyword is only a referenced tag,
 // so we have to know when a taunt minion is spawned (the taunt tag
 // is passed in input properly, so it's not an issue there)
 const TAUNT_IDS = [
 	CardIds.NonCollectible.Neutral.YoHoOgre,
+	CardIds.NonCollectible.Neutral.YoHoOgreTavernBrawl,
 	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
 	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenTavernBrawl,
 	CardIds.NonCollectible.Neutral.MoltenRock,
