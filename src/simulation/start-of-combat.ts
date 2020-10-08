@@ -9,7 +9,7 @@ import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
-const handleIllidan = (
+const handleIllidanForPlayer = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
@@ -47,7 +47,7 @@ const handleIllidan = (
 	}
 };
 
-const handleAlakir = (
+const handleAlakirForPlayer = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
@@ -90,6 +90,95 @@ const handlePutricide = (playerBoard: BoardEntity[]): void => {
 	target.attack = target.attack + 10;
 };
 
+const handlePlayerStartOfCombatHeroPowers = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
+	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
+		handleIllidanForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+	} else if (
+		playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
+		playerBoard.length > 0
+	) {
+		handleAlakirForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+	} else if (
+		playerEntity.heroPowerUsed &&
+		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
+		playerBoard.length > 0
+	) {
+		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState, spectator);
+	}
+};
+const handleOpponentStartOfCombatHeroPowers = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
+	if (opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && opponentBoard.length > 0) {
+		handleIllidanForPlayer(
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+	} else if (
+		opponentHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
+		opponentBoard.length > 0
+	) {
+		handleAlakirForPlayer(
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+	} else if (
+		opponentEntity.heroPowerUsed &&
+		opponentHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
+		opponentBoard.length > 0
+	) {
+		handleNefarian(opponentBoard, playerBoard, allCards, spawns, sharedState, spectator);
+	}
+};
+
 export const handleStartOfCombat = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
@@ -100,78 +189,50 @@ export const handleStartOfCombat = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	let currentAttacker = Math.round(Math.random());
-	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
-
-	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
-		handleIllidan(
-			playerBoard,
+	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
+	if (Math.random() < 0.5) {
+		handlePlayerStartOfCombatHeroPowers(
 			playerEntity,
-			opponentBoard,
+			playerBoard,
 			opponentEntity,
+			opponentBoard,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
 		);
-	} else if (
-		opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl &&
-		opponentBoard.length > 0
-	) {
-		handleIllidan(
-			opponentBoard,
-			opponentEntity,
-			playerBoard,
+		handleOpponentStartOfCombatHeroPowers(
 			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
 		);
-	}
-
-	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl && playerBoard.length > 0) {
-		handleAlakir(
-			playerBoard,
+	} else {
+		handleOpponentStartOfCombatHeroPowers(
 			playerEntity,
-			opponentBoard,
+			playerBoard,
 			opponentEntity,
+			opponentBoard,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
 		);
-	} else if (
-		opponentHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
-		opponentBoard.length > 0
-	) {
-		handleAlakir(
-			opponentBoard,
-			opponentEntity,
-			playerBoard,
+		handlePlayerStartOfCombatHeroPowers(
 			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
 		);
 	}
-
-	// Now we pass the "reborn" in input
-	// if (
-	// 	playerEntity.heroPowerUsed &&
-	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
-	// 	playerBoard.length > 0
-	// ) {
-	// 	handleLichKing(playerBoard);
-	// } else if (
-	// 	opponentEntity.heroPowerUsed &&
-	// 	opponentHeroPowerId === CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl &&
-	// 	opponentBoard.length > 0
-	// ) {
-	// 	handleLichKing(opponentBoard);
-	// }
 
 	// if (
 	// 	playerEntity.heroPowerUsed &&
@@ -187,19 +248,7 @@ export const handleStartOfCombat = (
 	// 	handlePutricide(opponentBoard);
 	// }
 
-	if (
-		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
-		playerBoard.length > 0
-	) {
-		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState, spectator);
-	} else if (
-		opponentEntity.heroPowerUsed &&
-		opponentHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
-		opponentBoard.length > 0
-	) {
-		handleNefarian(opponentBoard, playerBoard, allCards, spawns, sharedState, spectator);
-	}
+	let currentAttacker = Math.round(Math.random());
 
 	// console.log('[start of combat] attacker', currentAttacker);
 	const playerAttackers = playerBoard.filter(entity => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
