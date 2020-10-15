@@ -2,7 +2,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { isCorrectTribe, MEGA_WINDFURY_IDS, stringifySimpleCard } from '../utils';
+import { isCorrectTribe, stringifySimpleCard } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (
@@ -66,10 +66,10 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.NonCollectible.Neutral.SouthseaCaptainTavernBrawl:
 			applySouthseaCaptainAura(board, i, enchantmentId, cards);
 			return;
-		case CardIds.Collectible.Neutral.WhirlwindTempest:
-		case CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl:
-			applyWhirlwindTempestAura(board, i, enchantmentId, cards);
-			return;
+		// case CardIds.Collectible.Neutral.WhirlwindTempest:
+		// case CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl:
+		// 	applyWhirlwindTempestAura(board, i, enchantmentId, cards);
+		// 	return;
 	}
 };
 
@@ -98,9 +98,9 @@ const removeAura = (entity: BoardEntity, enchantmentId: string): void => {
 		case CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl:
 			removeDeathwingAura(entity, enchantmentId);
 			return;
-		case CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment:
-			removeWhirlwindTempestAura(entity, enchantmentId);
-			return;
+		// case CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment:
+		// 	removeWhirlwindTempestAura(entity, enchantmentId);
+		// 	return;
 	}
 };
 
@@ -285,18 +285,18 @@ const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): 
 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
 };
 
-const applyWhirlwindTempestAura = (
-	board: BoardEntity[],
-	index: number,
-	enchantmentId: string,
-	cards: AllCardsService,
-): void => {
-	board.forEach(entity => {
-		if (entity.windfury) {
-			entity.megaWindfury = true;
-		}
-	});
-};
+// const applyWhirlwindTempestAura = (
+// 	board: BoardEntity[],
+// 	index: number,
+// 	enchantmentId: string,
+// 	cards: AllCardsService,
+// ): void => {
+// 	board.forEach(entity => {
+// 		if (entity.windfury) {
+// 			entity.megaWindfury = true;
+// 		}
+// 	});
+// };
 
 const applySouthseaCaptainAura = (
 	board: BoardEntity[],
@@ -354,9 +354,9 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string): 
 	}
 };
 
-const removeWhirlwindTempestAura = (entity: BoardEntity, enchantmentId: string): void => {
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
-	if (entity.megaWindfury && entity.windfury && !MEGA_WINDFURY_IDS.includes(entity.cardId)) {
-		entity.megaWindfury = false;
-	}
-};
+// const removeWhirlwindTempestAura = (entity: BoardEntity, enchantmentId: string): void => {
+// 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+// 	if (entity.megaWindfury && entity.windfury && !MEGA_WINDFURY_IDS.includes(entity.cardId)) {
+// 		entity.megaWindfury = false;
+// 	}
+// };

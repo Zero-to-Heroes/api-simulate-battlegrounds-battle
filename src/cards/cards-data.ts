@@ -22,6 +22,10 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Neutral.GentleMegasaurTavernBrawl,
 	CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken,
 	CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl,
+	CardIds.Collectible.Neutral.WhirlwindTempest,
+	CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl,
+	CardIds.Collectible.Rogue.PogoHopper,
+	CardIds.NonCollectible.Rogue.PogoHopperTavernBrawl,
 ];
 
 export class CardsData {
@@ -154,14 +158,14 @@ export class CardsData {
 				CardIds.NonCollectible.Neutral.SouthseaCaptainTavernBrawl,
 				CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentTavernBrawl,
 			],
-			[
-				CardIds.Collectible.Neutral.WhirlwindTempest,
-				CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
-			],
-			[
-				CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl,
-				CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
-			],
+			// [
+			// 	CardIds.Collectible.Neutral.WhirlwindTempest,
+			// 	CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
+			// ],
+			// [
+			// 	CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl,
+			// 	CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
+			// ],
 		];
 		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
 		this.startOfCombats = [

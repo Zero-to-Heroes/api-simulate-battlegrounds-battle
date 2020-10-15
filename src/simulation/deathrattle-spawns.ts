@@ -634,6 +634,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.NonCollectible.Neutral.KangorsApprenticeTavernBrawl:
 				const cardIdsToSpawn2 = sharedState.deaths
 					.filter(entity => entity.friendly === deadEntity.friendly)
+					.filter(entity => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH))
 					.slice(0, 4)
 					.map(entity => entity.cardId);
 				cardIdsToSpawn2.forEach(cardId =>
