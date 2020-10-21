@@ -21,6 +21,7 @@ export const handleDeathrattleEffects = (
 	if (deadMinionIndex >= 0) {
 		applyMinionDeathEffect(
 			deadEntity,
+			deadMinionIndex,
 			boardWithDeadEntity,
 			otherBoard,
 			allCards,
@@ -171,6 +172,7 @@ const addStatsToBoard = (
 
 const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
+	deadEntityIndex: number,
 	boardWithDeadEntity: BoardEntity[],
 	otherBoard: BoardEntity[],
 	allCards: AllCardsService,
@@ -226,7 +228,7 @@ const applyMinionDeathEffect = (
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElemental) {
 			const excessDamage = -deadEntity.health;
-			const neighbours = getNeighbours(boardWithDeadEntity, deadEntity);
+			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
 			if (neighbours.length > 0) {
 				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
 				dealDamageToEnemy(
@@ -245,7 +247,7 @@ const applyMinionDeathEffect = (
 			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElementalTavernBrawl
 		) {
 			const excessDamage = -deadEntity.health;
-			const neighbours = getNeighbours(boardWithDeadEntity, deadEntity);
+			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
 			neighbours.forEach(neighbour =>
 				dealDamageToEnemy(
 					neighbour,
@@ -261,7 +263,7 @@ const applyMinionDeathEffect = (
 			);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.Collectible.Druid.IronhideDirehorn) {
 			// console.log('will apply direhorn overkill', deadEntity, otherBoard);
-			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
+			// const index =  otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
 			const newEntities = spawnEntities(
 				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntToken,
 				1,
@@ -272,12 +274,12 @@ const applyMinionDeathEffect = (
 				true,
 			);
 			// const updatedBoard = [...otherBoard];
-			otherBoard.splice(index, 0, ...newEntities);
+			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
 			// otherBoard = updatedBoard;
 		} else if (
 			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Druid.IronhideDirehornTavernBrawl
 		) {
-			const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
+			// const index = otherBoard.map(e => e.entityId).indexOf(deadEntity.entityId);
 			const newEntities = spawnEntities(
 				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntTokenTavernBrawl,
 				1,
@@ -288,7 +290,7 @@ const applyMinionDeathEffect = (
 				true,
 			);
 			// const updatedBoard = [...otherBoard];
-			otherBoard.splice(index, 0, ...newEntities);
+			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
 			// otherBoard = updatedBoard;
 		} else if (
 			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBATTLEGROUNDS

@@ -258,15 +258,28 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 	return attackingEntity;
 };
 
-export const getNeighbours = (board: BoardEntity[], entity: BoardEntity): readonly BoardEntity[] => {
-	const index = board.map(e => e.entityId).indexOf(entity.entityId);
+export const getNeighbours = (
+	board: BoardEntity[],
+	entity: BoardEntity,
+	deadEntityIndex?: number,
+): readonly BoardEntity[] => {
 	const neighbours = [];
-	if (index - 1 >= 0) {
-		neighbours.push(board[index - 1]);
-	}
-	// neighbours.push(entity);
-	if (index + 1 < board.length) {
-		neighbours.push(board[index + 1]);
+	if (deadEntityIndex != null) {
+		if (deadEntityIndex < board.length - 1) {
+			neighbours.push(board[deadEntityIndex]);
+		}
+		if (deadEntityIndex > 0) {
+			neighbours.push(board[deadEntityIndex - 1]);
+		}
+	} else {
+		const index = board.map(e => e.entityId).indexOf(entity.entityId);
+		if (index - 1 >= 0) {
+			neighbours.push(board[index - 1]);
+		}
+		// neighbours.push(entity);
+		if (index + 1 < board.length) {
+			neighbours.push(board[index + 1]);
+		}
 	}
 	return neighbours;
 };
