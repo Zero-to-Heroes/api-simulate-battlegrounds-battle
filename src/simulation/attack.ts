@@ -299,6 +299,7 @@ export const dealDamageToRandomEnemy = (
 		// return [defendingBoard, boardWithAttackOrigin];
 	}
 	const defendingEntity: BoardEntity = getDefendingEntity(boardToBeDamaged, damageSource, true);
+	spectator.registerPowerTarget(damageSource, defendingEntity, boardToBeDamaged);
 	dealDamageToEnemy(
 		defendingEntity,
 		boardToBeDamaged,

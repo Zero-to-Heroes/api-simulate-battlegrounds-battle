@@ -191,6 +191,23 @@ export class Spectator {
 		this.actionsForCurrentBattle.push(action);
 	}
 
+	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]) {
+		if (!sourceEntity.entityId) {
+			console.error('missing damaging entity id', sourceEntity);
+		}
+		const friendlyBoard = targetBoard.every(entity => entity.friendly) ? targetBoard : null;
+		const opponentBoard = targetBoard.every(entity => !entity.friendly) ? targetBoard : null;
+		// console.log('powerTarget', sourceEntity.entityId);
+		const action: GameAction = {
+			type: 'power-target',
+			sourceEntityId: sourceEntity.entityId,
+			targetEntityId: targetEntity.entityId,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+		};
+		this.actionsForCurrentBattle.push(action);
+	}
+
 	public registerMinionsSpawn(boardOnWhichToSpawn: BoardEntity[], spawnedEntities: readonly BoardEntity[]) {
 		if (!spawnedEntities || spawnedEntities.length === 0) {
 			return;
