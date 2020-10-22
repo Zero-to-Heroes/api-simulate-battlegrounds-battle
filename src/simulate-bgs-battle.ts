@@ -125,9 +125,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		spectator.commitBattleResult(battleResult.result)
 	}
 	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
-	simulationResult.wonPercent = Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10;
-	simulationResult.tiedPercent = Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10;
-	simulationResult.lostPercent = Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10;
+	simulationResult.wonPercent = checkRounding(Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10, simulationResult.won);
+	simulationResult.lostPercent = checkRounding(Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10, simulationResult.lost);
+	simulationResult.tiedPercent = checkRounding(100 - simulationResult.lostPercent - simulationResult.wonPercent, simulationResult.tied);
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost
@@ -145,6 +145,16 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	// spectator.reset();
 	return simulationResult;
 };
+
+const checkRounding = (roundedValue: number, initialValue: number): number => {
+	if (roundedValue === 0 && initialValue !== 0) {
+		return 0.01;
+	}
+	if (roundedValue === 100 && initialValue !== 100) {
+		return 99.9;
+	}
+	return roundedValue;
+}
 
 const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
 	const entityIds = board.map(entity => entity.entityId);
