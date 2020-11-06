@@ -125,9 +125,13 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		spectator.commitBattleResult(battleResult.result)
 	}
 	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
-	simulationResult.wonPercent = checkRounding(Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10, simulationResult.won);
-	simulationResult.lostPercent = checkRounding(Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10, simulationResult.lost);
-	simulationResult.tiedPercent = checkRounding(100 - simulationResult.lostPercent - simulationResult.wonPercent, simulationResult.tied);
+	// console.log('won', simulationResult.won, totalMatches);
+	simulationResult.wonPercent = checkRounding(Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10, simulationResult.won, totalMatches);
+	// console.log('lost', simulationResult.lost, totalMatches);
+	simulationResult.lostPercent = checkRounding(Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10, simulationResult.lost, totalMatches);
+	// console.log('tied', simulationResult.tied, totalMatches);
+	// simulationResult.tiedPercent = checkRounding(Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10, simulationResult.tied, totalMatches);
+	simulationResult.tiedPercent = checkRounding(100 - simulationResult.lostPercent - simulationResult.wonPercent, simulationResult.tied, totalMatches);
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost
@@ -146,11 +150,14 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	return simulationResult;
 };
 
-const checkRounding = (roundedValue: number, initialValue: number): number => {
+const checkRounding = (roundedValue: number, initialValue: number, totalValue: number): number => {
+	// console.log('check rounding', roundedValue, initialValue, roundedValue === 0, initialValue !== 0, roundedValue === 100, initialValue !== totalValue);
 	if (roundedValue === 0 && initialValue !== 0) {
+		console.log('return 0.01');
 		return 0.01;
 	}
-	if (roundedValue === 100 && initialValue !== 100) {
+	if (roundedValue === 100 && initialValue !== totalValue) {
+		console.log('return 99.9');
 		return 99.9;
 	}
 	return roundedValue;

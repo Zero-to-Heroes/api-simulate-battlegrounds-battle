@@ -653,7 +653,7 @@ export const applyOnAttackBuffs = (
 		).length;
 		const elizaBuff = elizas * 1 + elizasTB * 2;
 		attackingBoard.forEach(entity => {
-			entity.attack += elizaBuff;
+			entity.attack += 2 * elizaBuff;
 			entity.health += elizaBuff;
 		});
 	}
