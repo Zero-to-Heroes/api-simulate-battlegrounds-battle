@@ -32,10 +32,10 @@ export const spawnEntities = (
 	for (let i = 0; i < minionsToSpawn; i++) {
 		const newMinion = buildSingleBoardEntity(cardId, allCards, friendly, sharedState.currentEntityId++);
 		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
-			? 3 *
+			? 2 *
 					boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader)
 						.length +
-			  6 *
+			  4 *
 					boardToSpawnInto.filter(
 						entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
 					).length +

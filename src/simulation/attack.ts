@@ -786,8 +786,34 @@ const buildBoardAfterDeathrattleSpawns = (
 		...entitiesFromReborn,
 		...entitiesFromEnchantments,
 	];
+	// TODO: if "attack immediately" entities spawn, they should attack here
+	// It requires a pretty strong refactor of the code though, so for
+	// now the simulator has this known flaw
+	// const attackImmediatelyEntities = candidateEntities.filter(entity => entity.attackImmediately);
+	// for (const attackImmediatelyEntity of attackImmediatelyEntities) {
+	// 	const defendingEntity: BoardEntity = getDefendingEntity(opponentBoard, attackImmediatelyEntity);
+	// 	spectator.registerAttack(attackImmediatelyEntity, defendingEntity, boardWithKilledMinion, opponentBoard);
+	// 	performAttack(
+	// 		attackImmediatelyEntity,
+	// 		defendingEntity,
+	// 		boardWithKilledMinion,
+	// 		opponentBoard,
+	// 		allCards,
+	// 		cardsData,
+	// 		sharedState,
+	// 		spectator,
+	// 	);
+	// 	// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
+	// 	// the windfury triggers again? The current behavior attacks after the windfury is over
+	// 	if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
+	// 		// console.log('yoho ogre attacking immediately', defendingEntity);
+	// 		defendingEntity.attackImmediately = true;
+	// 	}
+	// }
+	const aliveEntites = candidateEntities.filter(entity => entity.health > 0);
+
 	const roomToSpawn: number = 7 - boardWithKilledMinion.length;
-	const spawnedEntities: readonly BoardEntity[] = candidateEntities.slice(0, roomToSpawn);
+	const spawnedEntities: readonly BoardEntity[] = aliveEntites.slice(0, roomToSpawn);
 	// Minion has already been removed from the board in the previous step
 	boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards);
@@ -802,8 +828,4 @@ const buildBoardAfterDeathrattleSpawns = (
 	opponentBoard.push(...spawnedEntitiesForOpponentBoard);
 	// If needed might also have to handle more effects here, like we do for the main board
 	spectator.registerMinionsSpawn(opponentBoard, spawnedEntitiesForOpponentBoard);
-
-	// FIXME: here we should probably handle the case of Scallywag and "attack immediately"
-	// It requires a pretty strong refactor of the code though, so for
-	// now the simulator has this known flaw
 };
