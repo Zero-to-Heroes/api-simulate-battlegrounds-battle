@@ -190,6 +190,9 @@ const applyMinionDeathEffect = (
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.MECH)) {
 		applyJunkbotEffect(boardWithDeadEntity);
 	}
+	if (deadEntity.taunt) {
+		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex);
+	}
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity.attacking) {
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlameBATTLEGROUNDS) {
@@ -487,6 +490,18 @@ const applyJunkbotEffect = (board: BoardEntity[]): void => {
 	}
 };
 
+const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number): void => {
+	const qiraji = board.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbinger);
+	const goldenQiraji = board.filter(
+		entity => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerTavernBrawl,
+	);
+	const neighbours = getNeighbours(board, null, deadEntityIndex);
+	neighbours.forEach(entity => {
+		entity.attack += 2 * qiraji.length + 4 * goldenQiraji.length;
+		entity.health += 2 * qiraji.length + 4 * goldenQiraji.length;
+	});
+};
+
 const grantRandomAttack = (board: BoardEntity[], additionalAttack: number): void => {
 	if (board.length > 0) {
 		const chosen = board[Math.floor(Math.random() * board.length)];
@@ -511,4 +526,30 @@ const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCar
 		entity.divineShield = true;
 	}
 	// return board;
+};
+
+export const rememberDeathrattles = (
+	entity: BoardEntity,
+	deadEntities: readonly BoardEntity[],
+	cardsData: CardsData,
+) => {
+	const validDeathrattles = deadEntities
+		.filter(entity => cardsData.validDeathrattles.includes(entity.cardId))
+		.map(entity => entity.cardId);
+	const validEnchantments = deadEntities
+		// eslint-disable-next-line prettier/prettier
+		.filter(entity => entity.enchantments?.length)
+		.map(entity => entity.enchantments)
+		.reduce((a, b) => a.concat(b), [])
+		.map(enchantment => enchantment.cardId)
+		.filter(enchantmentId => [
+			CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment,
+			CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl,
+			CardIds.NonCollectible.Neutral.LivingSporesToken2
+		].includes(enchantmentId));
+	if (SharedState.debugEnabled) {
+		console.debug('remembering deathrattles', entity.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
+	}
+	// Order is important
+	entity.rememberedDeathrattles = [...validDeathrattles, ...validEnchantments, ...(entity.rememberedDeathrattles || [])];
 };

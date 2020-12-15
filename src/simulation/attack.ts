@@ -6,7 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { validEnchantments } from '../simulate-bgs-battle';
 import { hasMechanic, isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
-import { handleDeathrattleEffects } from './deathrattle-effects';
+import { handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
@@ -66,6 +66,8 @@ export const simulateAttack = (
 						stringifySimpleCard(defendingEntity),
 					);
 				}
+				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards);
+
 				spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
 				performAttack(
 					attackingEntity,
@@ -354,7 +356,18 @@ export const getDefendingEntity = (
 	} else {
 		possibleDefenders = defendingBoard;
 	}
-	return possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
+	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
+	if (chosenDefender.taunt) {
+		const elistras = defendingBoard.filter(
+			entity =>
+				entity.cardId === CardIds.NonCollectible.Neutral.ElistraTheImmortalBATTLEGROUNDS ||
+				entity.cardId === CardIds.NonCollectible.Neutral.ElistraTheImmortalTavernBrawl,
+		);
+		if (elistras.length > 0) {
+			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
+		}
+	}
+	return chosenDefender;
 };
 
 export const bumpEntities = (
@@ -383,13 +396,6 @@ export const bumpEntities = (
 			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.DrakonidEnforcerTavernBrawl) {
 				entityBoard[i].attack = entityBoard[i].attack + 4;
 				entityBoard[i].health = entityBoard[i].health + 4;
-			}
-			// Only "other" friendly minions
-			else if (
-				entityBoard[i].cardId === CardIds.NonCollectible.Paladin.HolyMackerel &&
-				entityBoard[i].entityId !== entity.entityId
-			) {
-				entityBoard[i].divineShield = true;
 			}
 			// So that self-buffs from Bolvar are taken into account
 			if (entityBoard[i].entityId === entity.entityId) {
@@ -514,14 +520,21 @@ export const processMinionDeath = (
 	}
 	sharedState.deaths.push(...deadEntities1);
 	sharedState.deaths.push(...deadEntities2);
-	// board1 = board1WithRemovedMinions;
-	// board2 = board2WithRemovedMinions;
+	board1
+		.filter(
+			entity =>
+				entity.cardId === CardIds.NonCollectible.Neutral.AvatarofNZoth_FishOfNzothTokenTavernBrawl ||
+				entity.cardId === CardIds.NonCollectible.Neutral.FishOfNzothTavernBrawl,
+		)
+		.forEach(entity => rememberDeathrattles(entity, deadEntities1, cardsData));
+	board2
+		.filter(
+			entity =>
+				entity.cardId === CardIds.NonCollectible.Neutral.AvatarofNZoth_FishOfNzothTokenTavernBrawl ||
+				entity.cardId === CardIds.NonCollectible.Neutral.FishOfNzothTavernBrawl,
+		)
+		.forEach(entity => rememberDeathrattles(entity, deadEntities2, cardsData));
 
-	// From what we've seem, it looks like the order of the board who first procs the deathrattle
-	// can be random
-	// if (Math.random() > 0.5) {
-	// [board1, board2] = [board2, board1];
-	// }
 	if (Math.random() > 0.5) {
 		// Now proceed to trigger all deathrattle effects on baord1
 		handleDeathsForFirstBoard(
@@ -659,6 +672,49 @@ export const applyOnAttackBuffs = (
 	}
 };
 
+export const applyOnBeingAttackedBuffs = (
+	attackedEntity: BoardEntity,
+	defendingBoard: BoardEntity[],
+	allCards: AllCardsService,
+): void => {
+	if (attackedEntity.taunt) {
+		const champions = defendingBoard.filter(
+			entity => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarj,
+		);
+		const goldenChampions = defendingBoard.filter(
+			entity => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarjTavernBrawl,
+		);
+		champions.forEach(entity => {
+			entity.attack += 1;
+			entity.health += 1;
+		});
+		goldenChampions.forEach(entity => {
+			entity.attack += 2;
+			entity.health += 2;
+		});
+
+		const arms = defendingBoard.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpire);
+		const goldenArms = defendingBoard.filter(
+			entity => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpireTavernBrawl,
+		);
+		attackedEntity.attack += 3 * arms.length + 6 * goldenArms.length;
+	}
+	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
+		const neighbours = getNeighbours(defendingBoard, attackedEntity);
+		neighbours.forEach(entity => {
+			entity.attack += 1;
+			entity.health += 1;
+		});
+	}
+	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualistTavernBrawl) {
+		const neighbours = getNeighbours(defendingBoard, attackedEntity);
+		neighbours.forEach(entity => {
+			entity.attack += 2;
+			entity.health += 2;
+		});
+	}
+};
+
 const makeMinionsDie = (
 	board: BoardEntity[],
 	// updatedDefenders: readonly BoardEntity[],
@@ -723,6 +779,7 @@ const buildBoardAfterDeathrattleSpawns = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// TODO: don't apply this for FishOfNZoth
 	if (deadMinionIndex >= 0) {
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards);
 	}
@@ -735,6 +792,7 @@ const buildBoardAfterDeathrattleSpawns = (
 			stringifySimple(opponentBoard),
 		);
 	}
+
 	handleDeathrattleEffects(
 		boardWithKilledMinion,
 		deadEntity,
@@ -828,4 +886,22 @@ const buildBoardAfterDeathrattleSpawns = (
 	opponentBoard.push(...spawnedEntitiesForOpponentBoard);
 	// If needed might also have to handle more effects here, like we do for the main board
 	spectator.registerMinionsSpawn(opponentBoard, spawnedEntitiesForOpponentBoard);
+	
+
+	
+	// eslint-disable-next-line prettier/prettier
+	if (deadEntity.rememberedDeathrattles?.length ) {
+		for (const deathrattle of deadEntity.rememberedDeathrattles) {
+			const entityToProcess: BoardEntity = {
+				...deadEntity,
+				rememberedDeathrattles: undefined,
+				cardId: deathrattle,
+				enchantments: [{
+					cardId: deathrattle,
+					originEntityId: deadEntity.entityId
+				}]
+			}
+			buildBoardAfterDeathrattleSpawns(boardWithKilledMinion, entityToProcess, deadMinionIndex, opponentBoard, allCards, cardsData, sharedState, spectator);
+		}
+	}
 };

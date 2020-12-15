@@ -26,6 +26,14 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Neutral.WhirlwindTempestTavernBrawl,
 	CardIds.Collectible.Rogue.PogoHopper,
 	CardIds.NonCollectible.Rogue.PogoHopperTavernBrawl,
+	CardIds.Collectible.Paladin.RighteousProtector,
+	CardIds.NonCollectible.Paladin.RighteousProtectorTavernBrawl,
+	CardIds.Collectible.Neutral.TheBeast,
+	CardIds.NonCollectible.Neutral.TheBeastTavernBrawl,
+	CardIds.Collectible.Neutral.CrowdFavorite,
+	CardIds.NonCollectible.Neutral.CrowdFavoriteTavernBrawl,
+	CardIds.NonCollectible.Neutral.ShifterZerus,
+	CardIds.NonCollectible.Neutral.ShifterZerusTavernBrawl,
 ];
 
 export class CardsData {
@@ -39,12 +47,12 @@ export class CardsData {
 		CardIds.Collectible.Neutral.Toxfin,
 		CardIds.Collectible.Neutral.FoeReaper4000,
 		CardIds.Collectible.Neutral.Maexxna,
-		CardIds.NonCollectible.Paladin.HolyMackerel,
 		CardIds.NonCollectible.Neutral.NadinaTheRed,
 	];
 
 	public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
+	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
 	public sneedsSpawns: readonly string[];
@@ -74,6 +82,14 @@ export class CardsData {
 			.filter(card => card.techLevel)
 			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => card.id !== 'BGS_008')
+			.filter(card => hasMechanic(card, 'DEATHRATTLE'))
+			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter(card => this.isValidTribe(validTribes, card.race))
+			.map(card => card.id);
+		this.validDeathrattles = this.allCards
+			.getCards()
+			.filter(card => card.techLevel)
+			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter(card => hasMechanic(card, 'DEATHRATTLE'))
 			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter(card => this.isValidTribe(validTribes, card.race))
@@ -172,6 +188,16 @@ export class CardsData {
 			CardIds.NonCollectible.Neutral.RedWhelp,
 			CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl,
 		];
+	}
+
+	public forTavernTier(tavernTier: number): string {
+		const options = this.allCards
+			.getCards()
+			.filter(card => card.techLevel === tavernTier)
+			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map(card => card.id);
+		return options[Math.floor(Math.random() * options.length)];
 	}
 
 	private isValidTribe(validTribes: readonly Race[], race: string): boolean {

@@ -59,7 +59,25 @@ export const spawnEntities = (
 			console.warn('Invalid spawn', newMinion, cardId);
 		}
 		result.push(newMinion);
+
+		if (isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.DEMON)) {
+			const bigfernals = boardToSpawnInto.filter(
+				entity => entity.cardId === CardIds.NonCollectible.Neutral.Bigfernal,
+			);
+			const goldenBigfernals = boardToSpawnInto.filter(
+				entity => entity.cardId === CardIds.NonCollectible.Neutral.BigfernalTavernBrawl,
+			);
+			bigfernals.forEach(entity => {
+				entity.attack += 1;
+				entity.health += 1;
+			})
+			goldenBigfernals.forEach(entity => {
+				entity.attack += 2;
+				entity.health += 2;
+			})
+		}
 	}
+
 	return result;
 };
 
@@ -614,6 +632,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.NonCollectible.Neutral.KangorsApprentice:
 				const cardIdsToSpawn = sharedState.deaths
 					.filter(entity => entity.friendly === deadEntity.friendly)
+					// eslint-disable-next-line prettier/prettier
 					.filter(entity => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH))
 					.slice(0, 2)
 					.map(entity => entity.cardId);

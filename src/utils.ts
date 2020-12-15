@@ -23,6 +23,8 @@ const TAUNT_IDS = [
 	CardIds.NonCollectible.Neutral.LieutenantGarrTavernBrawl,
 	CardIds.NonCollectible.Neutral.GentleDjinni,
 	CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl,	
+	CardIds.NonCollectible.Neutral.AcolyteOfCthun,	
+	CardIds.NonCollectible.Neutral.AcolyteOfCthunTavernBrawl,	
 ]
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,

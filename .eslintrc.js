@@ -12,7 +12,6 @@ module.exports = {
 	],
 	rules: {
 		'no-multi-spaces': 2,
-		'prefer-rest-params': 0,
 		'@typescript-eslint/explicit-function-return-type': 0, // Temporary, until code violations are fixed
 		'@typescript-eslint/no-explicit-any': 0, // Temporary, until code violations are fixed
 		'@typescript-eslint/no-parameter-properties': 0,
@@ -44,12 +43,6 @@ module.exports = {
 				'ignoreRestSiblings': true, // For object destructuring
 			},
 		],
-		'@typescript-eslint/no-use-before-define': [
-			2,
-			{
-				'functions': false,
-				'classes': false,
-			},
-		],
+		'@typescript-eslint/no-use-before-define': 0,
 	},
 };
