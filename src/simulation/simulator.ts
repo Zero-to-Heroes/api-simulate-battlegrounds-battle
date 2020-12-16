@@ -70,6 +70,25 @@ export class Simulator {
 			if (this.sharedState.debug) {
 				console.debug('starting round\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 			}
+			// If there are "attack immediately" minions, we keep the same player
+			// We put it here so that it can kick in after the start of combat effects. However here we don't want
+			// to change who attacks first, so we repeat that block again after all the attacks have been resolved
+			// FIXME: This is not strictly correct - if there are multiple attack immediately
+			// minions that spawn on both player sides it might get a bit more complex
+			// but overall it works
+			// Also, this doesn't work when there are several deathrattle competing
+			// to know who triggers first. See the second test case of the scallywag.test.ts
+			// that is not handled properly today (the attack should in some cases happen before
+			// the other deathrattle procs)
+			if (playerBoard.some(entity => entity.attackImmediately)) {
+				// console.log('attack immediately on player board');
+				this.currentSpeedAttacker = 0;
+			} else if (opponentBoard.some(entity => entity.attackImmediately)) {
+				// console.log('attack immediately on opponent board');
+				this.currentSpeedAttacker = 1;
+			} else {
+				this.currentSpeedAttacker = -1;
+			}
 			// console.log('choosing attacker', this.currentSpeedAttacker, this.currentAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
 				// console.log('attacking with player\n', stringifySimple(playerBoard));
@@ -98,14 +117,6 @@ export class Simulator {
 					spectator,
 				);
 			}
-			// If there are "attack immediately" minions, we keep the same player
-			// FIXME: This is not strictly correct - if there are multiple attack immediately
-			// minions that spawn on both player sides it might get a bit more complex
-			// but overall it works
-			// Also, this doesn't work when there are several deathrattle competing
-			// to know who triggers first. See the second test case of the scallywag.test.ts
-			// that is not handled properly today (the attack should in some cases happen before
-			// the other deathrattle procs)
 			if (playerBoard.some(entity => entity.attackImmediately)) {
 				// console.log('attack immediately on player board');
 				this.currentSpeedAttacker = 0;

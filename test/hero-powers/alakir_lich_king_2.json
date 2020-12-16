@@ -33,7 +33,7 @@
 		"board": [
 			{
 				"cardId": "BGS_061",
-				"attack": 1,
+				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
 				"entityId": 337,
@@ -43,7 +43,7 @@
 				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
-				"friendly": true
+				"friendly": false
 			}
 		]
 	}
