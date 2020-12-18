@@ -270,7 +270,8 @@ export const getNeighbours = (
 		if (deadEntityIndex < board.length - 1) {
 			neighbours.push(board[deadEntityIndex]);
 		}
-		if (deadEntityIndex > 0) {
+		// Could happen if a cleave kills several entities at the same time
+		if (deadEntityIndex > 0 && deadEntityIndex < board.length) {
 			neighbours.push(board[deadEntityIndex - 1]);
 		}
 	} else {

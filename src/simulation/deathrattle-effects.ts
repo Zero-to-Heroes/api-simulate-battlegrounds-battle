@@ -495,7 +495,14 @@ const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: numb
 	const goldenQiraji = board.filter(
 		entity => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerTavernBrawl,
 	);
+	if (qiraji.length === 0 && goldenQiraji.length === 0) {
+		return;
+	}
+	
 	const neighbours = getNeighbours(board, null, deadEntityIndex);
+	if (SharedState.debugEnabled) {
+		console.debug('neighbours', stringifySimple(neighbours), stringifySimple(board), deadEntityIndex);
+	}
 	neighbours.forEach(entity => {
 		entity.attack += 2 * qiraji.length + 4 * goldenQiraji.length;
 		entity.health += 2 * qiraji.length + 4 * goldenQiraji.length;
