@@ -9,8 +9,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 		const input: BgsBattleInfo = {
 			...jsonEvent3,
 			options: {
-				numberOfSimulations: 1000,
-				maxAcceptableDuration: 60000,
+				numberOfSimulations: 5000,
 			},
 		};
 		SharedState.debugEnabled = false;
