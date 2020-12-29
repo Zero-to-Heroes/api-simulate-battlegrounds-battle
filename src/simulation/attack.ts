@@ -365,7 +365,7 @@ export const getDefendingEntity = (
 				entity.cardId === CardIds.NonCollectible.Neutral.ElistraTheImmortalTavernBrawl,
 		);
 		if (elistras.length > 0) {
-			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
+			chosenDefender = elistras[0];
 		}
 	}
 	return chosenDefender;
