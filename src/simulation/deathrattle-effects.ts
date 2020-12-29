@@ -536,7 +536,7 @@ const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCar
 };
 
 export const rememberDeathrattles = (
-	entity: BoardEntity,
+	fish: BoardEntity,
 	deadEntities: readonly BoardEntity[],
 	cardsData: CardsData,
 ) => {
@@ -555,8 +555,16 @@ export const rememberDeathrattles = (
 			CardIds.NonCollectible.Neutral.LivingSporesToken2
 		].includes(enchantmentId));
 	if (SharedState.debugEnabled) {
-		console.debug('remembering deathrattles', entity.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
+		console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
 	}
+	const newDeathrattles = [...validDeathrattles, ...validEnchantments];
 	// Order is important
-	entity.rememberedDeathrattles = [...validDeathrattles, ...validEnchantments, ...(entity.rememberedDeathrattles || [])];
+	if (fish.cardId === CardIds.NonCollectible.Neutral.FishOfNzothTavernBrawl) {
+		// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
+		const doubleDr = [...validDeathrattles, ...validEnchantments]
+			.reduce((res, current) => res.concat([current, current]), []);
+		fish.rememberedDeathrattles = [...doubleDr, ...(fish.rememberedDeathrattles || [])];
+	} else {
+		fish.rememberedDeathrattles = [...newDeathrattles, ...(fish.rememberedDeathrattles || [])];
+	}
 };
