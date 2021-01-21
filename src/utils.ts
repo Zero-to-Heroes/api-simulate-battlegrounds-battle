@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { ReferenceCard } from '@firestone-hs/reference-data/lib/models/reference-cards/reference-card';
+import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 
 const CLEAVE_IDS = [
@@ -22,15 +23,20 @@ const TAUNT_IDS = [
 	CardIds.NonCollectible.Neutral.LieutenantGarr,
 	CardIds.NonCollectible.Neutral.LieutenantGarrTavernBrawl,
 	CardIds.NonCollectible.Neutral.GentleDjinni,
-	CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl,	
-	CardIds.NonCollectible.Neutral.AcolyteOfCthun,	
-	CardIds.NonCollectible.Neutral.AcolyteOfCthunTavernBrawl,	
-]
+	CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl,
+	CardIds.NonCollectible.Neutral.AcolyteOfCthun,
+	CardIds.NonCollectible.Neutral.AcolyteOfCthunTavernBrawl,
+	CardIds.Collectible.Warlock.RingMatron,
+	CardIds.NonCollectible.Warlock.RingMatronTavernBrawl,
+];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
 ];
-export const MEGA_WINDFURY_IDS = [CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl, CardIds.NonCollectible.Neutral.CracklingCycloneTavernBrawl];
+export const MEGA_WINDFURY_IDS = [
+	CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl,
+	CardIds.NonCollectible.Neutral.CracklingCycloneTavernBrawl,
+];
 const CANT_ATTACK_IDS = [
 	CardIds.NonCollectible.Neutral.ArcaneCannon,
 	CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl,
@@ -38,6 +44,7 @@ const CANT_ATTACK_IDS = [
 
 export const buildSingleBoardEntity = (
 	cardId: string,
+	controllerHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	friendly: boolean,
 	entityId = 1,
@@ -45,7 +52,7 @@ export const buildSingleBoardEntity = (
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId) !== -1;
-	return addImpliedMechanics({
+	const result = addImpliedMechanics({
 		attack: card.attack,
 		attacksPerformed: 0,
 		cardId: cardId,
@@ -61,19 +68,26 @@ export const buildSingleBoardEntity = (
 		friendly: friendly,
 		attackImmediately: attackImmediately,
 	} as BoardEntity);
+
+	if (controllerHero.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutTavernBrawl) {
+		result.taunt = true;
+		result.attack += 1;
+		result.health += 2;
+	}
+	return result;
 };
 
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
 	return card.mechanics?.includes(mechanic);
-}
+};
 
 export const isCorrectTribe = (cardRace: string, targetTribe: Race): boolean => {
 	return getRaceEnum(cardRace) === Race.ALL || getRaceEnum(cardRace) === targetTribe;
-}
+};
 
 export const getRaceEnum = (race: string): Race => {
 	return Race[race];
-}
+};
 
 export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 	return {
@@ -84,14 +98,14 @@ export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 };
 
 export const stringifySimple = (board: readonly BoardEntity[]): string => {
-	return '[' + board.map(entity => stringifySimpleCard(entity)).join(', ') + ']';
+	return '[' + board.map((entity) => stringifySimpleCard(entity)).join(', ') + ']';
 };
 
 export const stringifySimpleCard = (entity: BoardEntity): string => {
 	return entity
-		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${
-				entity.divineShield
-		  }/${entity.attacksPerformed || 0}`
+		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${
+				entity.attacksPerformed || 0
+		  }`
 		: null;
 };
 

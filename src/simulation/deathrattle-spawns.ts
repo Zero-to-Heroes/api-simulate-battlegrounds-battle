@@ -1,4 +1,5 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { buildSingleBoardEntity, isCorrectTribe } from '../utils';
@@ -8,6 +9,7 @@ export const spawnEntities = (
 	cardId: string,
 	quantity: number,
 	boardToSpawnInto: BoardEntity[],
+	boardToSpawnIntoHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	sharedState: SharedState,
 	friendly: boolean,
@@ -30,7 +32,7 @@ export const spawnEntities = (
 	// console.log('will spawn entities', cardId, minionsToSpawn, boardToSpawnInto);
 	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
-		const newMinion = buildSingleBoardEntity(cardId, allCards, friendly, sharedState.currentEntityId++);
+		const newMinion = buildSingleBoardEntity(cardId, boardToSpawnIntoHero, allCards, friendly, sharedState.currentEntityId++);
 		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
 			? 2 *
 					boardToSpawnInto.filter(entity => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader)
@@ -81,31 +83,12 @@ export const spawnEntities = (
 	return result;
 };
 
-// export const spawnPremiumEntities = (
-// 	cardId: string,
-// 	quantity: number,
-// 	boardToSpawnInto: BoardEntity[],
-// 	allCards: AllCardsService,
-// 	sharedState: SharedState,
-// 	friendly: boolean,
-// 	// In most cases the business of knowing the number of minions to handle is left to the caller
-// 	limitSpawns: boolean,
-// 	// limitSpawns = false,
-// ): readonly BoardEntity[] => {
-// 	const entities = spawnEntities(cardId, quantity, boardToSpawnInto, allCards, sharedState, friendly, limitSpawns);
-// 	entities.forEach(entity => {
-// 		if (CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(cardId)) {
-// 			entity.attack *= 2;
-// 			entity.health *= 2;
-// 		}
-// 	});
-// 	return entities;
-// };
-
 export const spawnEntitiesFromDeathrattle = (
 	deadEntity: BoardEntity,
 	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -124,7 +107,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.Mecharoo_JoEBotToken,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -137,7 +120,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.Mecharoo_JoEBotTokenTavernBrawl,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -150,7 +133,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -163,7 +146,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -176,7 +159,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.DamagedGolemClassic,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -189,7 +172,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.HarvestGolem_DamagedGolemTokenTavernBrawl,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -202,7 +185,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolf,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -215,7 +198,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolfTokenTavernBrawl,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -228,7 +211,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.RatPack_RatToken,
 						deadEntity.attack,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -241,7 +224,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.RatPack_RatTokenTavernBrawl,
 						deadEntity.attack,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -254,7 +237,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -267,7 +250,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -280,7 +263,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.InfestedWolf_Spider,
 						2,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -293,7 +276,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.InfestedWolf_SpiderTokenTavernBrawl,
 						2,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -309,7 +292,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						shredderSpawn,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -323,7 +306,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -332,7 +315,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -348,6 +331,7 @@ export const spawnEntitiesFromDeathrattle = (
 						CardIds.NonCollectible.Neutral.FinkleEinhorn,
 						1,
 						otherBoard,
+						otherBoardHero,
 						allCards,
 						sharedState,
 						!deadEntity.friendly,
@@ -360,7 +344,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
 						3,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -373,7 +357,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
 						3,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -386,7 +370,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Paladin.MechanoEgg_RobosaurToken,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -399,7 +383,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Paladin.MechanoEgg_RobosaurTokenTavernBrawl,
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -412,7 +396,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaToken,
 						2,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -425,7 +409,35 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaTokenTavernBrawl,
 						2,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
+						allCards,
+						sharedState,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.Collectible.Warlock.RingMatron:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Warlock.RingMatron_FieryImpToken, 
+						2,
+						boardWithDeadEntity, 
+						boardWithDeadEntityHero,
+						allCards,
+						sharedState,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.NonCollectible.Warlock.RingMatronTavernBrawl:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Warlock.RingMatron_FieryImpTokenTavernBrawl, 
+						2,
+						boardWithDeadEntity, 
+						boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -438,7 +450,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.PrimalfinTotem_PrimalfinToken,
 						3,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -451,7 +463,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
 						3,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -465,7 +477,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -474,7 +486,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -489,7 +501,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -504,7 +516,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -513,7 +525,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -529,7 +541,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -538,7 +550,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -547,7 +559,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -556,7 +568,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -571,7 +583,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
 						1,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -585,7 +597,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -594,7 +606,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -608,7 +620,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.Collectible.Warlock.Voidwalker,
 						3,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -621,7 +633,7 @@ export const spawnEntitiesFromDeathrattle = (
 					...spawnEntities(
 						CardIds.NonCollectible.Warlock.Voidlord_VoidwalkerTokenTavernBrawl,
 						3,
-						boardWithDeadEntity,
+						boardWithDeadEntity, boardWithDeadEntityHero,
 						allCards,
 						sharedState,
 						deadEntity.friendly,
@@ -641,7 +653,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							cardId,
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -661,7 +673,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							cardId,
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -670,50 +682,13 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			// case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestToken:
-			// 	spawnedEntities.push(
-			// 		...spawnPremiumEntities(
-			// 			spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
-			// 			1,
-			// 			boardWithDeadEntity,
-			// 			allCards,
-			// 			sharedState,
-			// 			deadEntity.friendly,
-			// 			false,
-			// 		),
-			// 	);
-			// 	break;
-			// case CardIds.NonCollectible.Neutral.NatPagleExtremeAngler_TreasureChestTokenTavernBrawl:
-			// 	spawnedEntities.push(
-			// 		...[
-			// 			...spawnPremiumEntities(
-			// 				spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
-			// 				1,
-			// 				boardWithDeadEntity,
-			// 				allCards,
-			// 				sharedState,
-			// 				deadEntity.friendly,
-			// 				false,
-			// 			),
-			// 			...spawnPremiumEntities(
-			// 				spawns.treasureChestSpawns[Math.floor(Math.random() * spawns.treasureChestSpawns.length)],
-			// 				1,
-			// 				boardWithDeadEntity,
-			// 				allCards,
-			// 				sharedState,
-			// 				deadEntity.friendly,
-			// 				false,
-			// 			),
-			// 		],
-			// 	);
-			// 	break;
 			case CardIds.NonCollectible.Neutral.TheTideRazor:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -722,7 +697,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -731,7 +706,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -746,7 +721,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -755,7 +730,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -764,7 +739,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -773,7 +748,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -782,7 +757,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -791,7 +766,7 @@ export const spawnEntitiesFromDeathrattle = (
 						...spawnEntities(
 							spawns.pirateSpawns[Math.floor(Math.random() * spawns.pirateSpawns.length)],
 							1,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -810,6 +785,7 @@ export const spawnEntitiesFromDeathrattle = (
 export const spawnEntitiesFromEnchantments = (
 	deadEntity: BoardEntity,
 	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -829,7 +805,7 @@ export const spawnEntitiesFromEnchantments = (
 						...spawnEntities(
 							CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
 							3,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -842,7 +818,7 @@ export const spawnEntitiesFromEnchantments = (
 						...spawnEntities(
 							CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
 							3,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,
@@ -855,7 +831,7 @@ export const spawnEntitiesFromEnchantments = (
 						...spawnEntities(
 							CardIds.NonCollectible.Neutral.PlantToken,
 							2,
-							boardWithDeadEntity,
+							boardWithDeadEntity, boardWithDeadEntityHero,
 							allCards,
 							sharedState,
 							deadEntity.friendly,

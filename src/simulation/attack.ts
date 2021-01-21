@@ -16,9 +16,9 @@ import { getHeroPowerForHero } from './start-of-combat';
 
 export const simulateAttack = (
 	attackingBoard: BoardEntity[],
-	attackingHero: BgsPlayerEntity,
+	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
-	defendingHero: BgsPlayerEntity,
+	defendingBoardHero: BgsPlayerEntity,
 	lastAttackerEntityId: number,
 	allCards: AllCardsService,
 	spawns: CardsData,
@@ -32,8 +32,8 @@ export const simulateAttack = (
 	// console.log('opponent board before global modifiers', stringifySimple(defendingBoard));
 	applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
 	// console.log('opponent board after global modifiers', stringifySimple(defendingBoard));
-	const attackingHeroPowerId = attackingHero.heroPowerId || getHeroPowerForHero(attackingHero.cardId);
-	const defendingHeroPowerId = defendingHero.heroPowerId || getHeroPowerForHero(defendingHero.cardId);
+	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
+	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0);
@@ -73,7 +73,9 @@ export const simulateAttack = (
 					attackingEntity,
 					defendingEntity,
 					attackingBoard,
+					attackingBoardHero,
 					defendingBoard,
+					defendingBoardHero,
 					allCards,
 					spawns,
 					sharedState,
@@ -110,14 +112,16 @@ const performAttack = (
 	attackingEntity: BoardEntity,
 	defendingEntity: BoardEntity,
 	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
+	defendingBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	bumpEntities(attackingEntity, defendingEntity, attackingBoard, allCards, spawns, sharedState, spectator);
-	bumpEntities(defendingEntity, attackingEntity, defendingBoard, allCards, spawns, sharedState, spectator);
+	bumpEntities(attackingEntity, defendingEntity, attackingBoard, attackingBoardHero, allCards, spawns, sharedState, spectator);
+	bumpEntities(defendingEntity, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 	if (sharedState.debug) {
 		console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	}
@@ -125,83 +129,31 @@ const performAttack = (
 	if (attackingEntity.cleave) {
 		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		for (const neighbour of defenderNeighbours) {
-			bumpEntities(neighbour, attackingEntity, defendingBoard, allCards, spawns, sharedState, spectator);
+			bumpEntities(neighbour, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 		}
 	}
 	// After attack hooks
 	// Arcane Cannon
-	// const attackerNeighbours: readonly BoardEntity[] = getNeighbours(attackingBoard, attackingEntity);
-	// const cannonNeighbours = attackerNeighbours.filter(
-	// 	entity => CardIds.NonCollectible.Neutral.ArcaneCannon === entity.cardId,
-	// );
-	if (sharedState.debug) {
-		// console.log('heighbours', stringifySimple(attackerNeighbours), stringifySimple(cannonNeighbours));
-	}
-	// if (cannonNeighbours.length > 0) {
-	// 	if (sharedState.debug) {
-	// 		console.log('dealing arcane cannon damage', stringifySimple(cannonNeighbours));
-	// 	}
-	// 	cannonNeighbours.forEach(cannon =>
-	// 		dealDamageToRandomEnemy(
-	// 			defendingBoard,
-	// 			cannon,
-	// 			2,
-	// 			attackingBoard,
-	// 			allCards,
-	// 			spawns,
-	// 			sharedState,
-	// 			spectator,
-	// 		),
-	// 	);
-	// }
-	// const cannonNeighboursTB = attackerNeighbours.filter(
-	// 	entity => CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl === entity.cardId,
-	// );
-	// if (cannonNeighboursTB.length > 0) {
-	// 	if (sharedState.debug) {
-	// 		console.log('dealing golden arcane cannon damage', stringifySimple(cannonNeighboursTB));
-	// 	}
-	// 	cannonNeighboursTB.forEach(cannon => {
-	// 		dealDamageToRandomEnemy(
-	// 			defendingBoard,
-	// 			cannon,
-	// 			2,
-	// 			attackingBoard,
-	// 			allCards,
-	// 			spawns,
-	// 			sharedState,
-	// 			spectator,
-	// 		);
-	// 		dealDamageToRandomEnemy(
-	// 			defendingBoard,
-	// 			cannon,
-	// 			2,
-	// 			attackingBoard,
-	// 			allCards,
-	// 			spawns,
-	// 			sharedState,
-	// 			spectator,
-	// 		);
-	// 	});
-	// }
 	// Monstrous Macaw
 	if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacaw) {
-		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
+		triggerRandomDeathrattle(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 	} else if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacawTavernBrawl) {
-		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
-		triggerRandomDeathrattle(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
+		triggerRandomDeathrattle(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
+		triggerRandomDeathrattle(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 	}
 
 	attackingEntity.attackImmediately = false;
 
 	// Approximate the play order
 	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
-	processMinionDeath(attackingBoard, defendingBoard, allCards, spawns, sharedState, spectator);
+	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 };
 
 const triggerRandomDeathrattle = (
 	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
+	defendingBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -224,9 +176,11 @@ const triggerRandomDeathrattle = (
 	const targetEntity = validDeathrattles[Math.floor(Math.random() * validDeathrattles.length)];
 	buildBoardAfterDeathrattleSpawns(
 		attackingBoard,
+		attackingBoardHero,
 		targetEntity,
 		-1,
 		defendingBoard,
+		defendingBoardHero,
 		allCards,
 		spawns,
 		sharedState,
@@ -289,9 +243,11 @@ export const getNeighbours = (
 
 export const dealDamageToRandomEnemy = (
 	boardToBeDamaged: BoardEntity[],
+	boardToBeDamagedHero: BgsPlayerEntity,
 	damageSource: BoardEntity,
 	damage: number,
 	boardWithAttackOrigin: BoardEntity[],
+	boardWithAttackOriginHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -306,9 +262,11 @@ export const dealDamageToRandomEnemy = (
 	dealDamageToEnemy(
 		defendingEntity,
 		boardToBeDamaged,
+		boardToBeDamagedHero,
 		damageSource,
 		damage,
 		boardWithAttackOrigin,
+		boardWithAttackOriginHero,
 		allCards,
 		cardsData,
 		sharedState,
@@ -319,9 +277,11 @@ export const dealDamageToRandomEnemy = (
 export const dealDamageToEnemy = (
 	defendingEntity: BoardEntity,
 	defendingBoard: BoardEntity[],
+	defendingBoardHero: BgsPlayerEntity,
 	damageSource: BoardEntity,
 	damage: number,
 	boardWithAttackOrigin: BoardEntity[],
+	boardWithAttackOriginHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -333,10 +293,18 @@ export const dealDamageToEnemy = (
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
-	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, allCards, cardsData, sharedState, spectator);
+	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, defendingBoardHero, allCards, cardsData, sharedState, spectator);
 	const defendingEntityIndex = defendingBoard.map(entity => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
-	processMinionDeath(defendingBoard, boardWithAttackOrigin, allCards, cardsData, sharedState, spectator);
+	processMinionDeath(
+		defendingBoard, 
+		defendingBoardHero,
+		boardWithAttackOrigin, 
+		boardWithAttackOriginHero,
+		allCards, 
+		cardsData, 
+		sharedState, 
+		spectator);
 };
 
 export const getDefendingEntity = (
@@ -375,6 +343,7 @@ export const bumpEntities = (
 	entity: BoardEntity,
 	bumpInto: BoardEntity,
 	entityBoard: BoardEntity[],
+	entityBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -424,6 +393,7 @@ export const bumpEntities = (
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
 			1,
 			entityBoard,
+			entityBoardHero,
 			allCards,
 			sharedState,
 			entity.friendly,
@@ -437,6 +407,7 @@ export const bumpEntities = (
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
 			1,
 			entityBoard,
+			entityBoardHero,
 			allCards,
 			sharedState,
 			entity.friendly,
@@ -449,6 +420,7 @@ export const bumpEntities = (
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			1,
 			entityBoard,
+			entityBoardHero,
 			allCards,
 			sharedState,
 			entity.friendly,
@@ -462,6 +434,7 @@ export const bumpEntities = (
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			2,
 			entityBoard,
+			entityBoardHero,
 			allCards,
 			sharedState,
 			entity.friendly,
@@ -476,6 +449,7 @@ export const bumpEntities = (
 			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
 			1,
 			entityBoard,
+			entityBoardHero,
 			allCards,
 			sharedState,
 			entity.friendly,
@@ -489,6 +463,7 @@ export const bumpEntities = (
 			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenTavernBrawl,
 			1,
 			entityBoard,
+			entityBoardHero,
 			allCards,
 			sharedState,
 			entity.friendly,
@@ -503,7 +478,9 @@ export const bumpEntities = (
 
 export const processMinionDeath = (
 	board1: BoardEntity[],
+	board1Hero: BgsPlayerEntity,
 	board2: BoardEntity[],
+	board2Hero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -540,7 +517,9 @@ export const processMinionDeath = (
 		// Now proceed to trigger all deathrattle effects on baord1
 		handleDeathsForFirstBoard(
 			board1,
+			board1Hero,
 			board2,
+			board2Hero,
 			deadMinionIndexes1,
 			deadEntities1,
 			allCards,
@@ -552,7 +531,9 @@ export const processMinionDeath = (
 		// Now handle the other board's deathrattles
 		handleDeathsForFirstBoard(
 			board2,
+			board2Hero,
 			board1,
+			board1Hero,
 			deadMinionIndexes2,
 			deadEntities2,
 			allCards,
@@ -563,7 +544,9 @@ export const processMinionDeath = (
 	} else {
 		handleDeathsForFirstBoard(
 			board2,
+			board2Hero,
 			board1,
+			board1Hero,
 			deadMinionIndexes2,
 			deadEntities2,
 			allCards,
@@ -573,7 +556,9 @@ export const processMinionDeath = (
 		);
 		handleDeathsForFirstBoard(
 			board1,
+			board1Hero,
 			board2,
+			board2Hero,
 			deadMinionIndexes1,
 			deadEntities1,
 			allCards,
@@ -589,13 +574,23 @@ export const processMinionDeath = (
 	// now be the ghoul. Then if the Kaboom kills someone, the killer should again change. You could
 	// also have multiple killers, which is not taken into account here.
 	// The current assumption is that it's a suffienctly fringe case to not matter too much
-	processMinionDeath(board1, board2, allCards, cardsData, sharedState, spectator);
+	processMinionDeath(
+		board1, 
+		board1Hero,
+		board2, 
+		board2Hero,
+		allCards, 
+		cardsData, 
+		sharedState, 
+		spectator);
 	// return [boardWithMaybeDeadMinions, opponentBoard];
 };
 
 const handleDeathsForFirstBoard = (
 	firstBoard: BoardEntity[],
+	firstBoardHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
 	deadMinionIndexes: readonly number[],
 	deadEntities: readonly BoardEntity[],
 	allCards: AllCardsService,
@@ -609,9 +604,11 @@ const handleDeathsForFirstBoard = (
 		if (entity.health <= 0) {
 			buildBoardAfterDeathrattleSpawns(
 				firstBoard,
+				firstBoardHero,
 				entity,
 				index,
 				otherBoard,
+				otherBoardHero,
 				allCards,
 				cardsData,
 				sharedState,
@@ -772,9 +769,11 @@ const handleKillEffects = (
 
 const buildBoardAfterDeathrattleSpawns = (
 	boardWithKilledMinion: BoardEntity[],
+	boardWithKilledMinionHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
 	deadMinionIndex: number,
 	opponentBoard: BoardEntity[],
+	opponentBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -796,9 +795,11 @@ const buildBoardAfterDeathrattleSpawns = (
 
 	handleDeathrattleEffects(
 		boardWithKilledMinion,
+		boardWithKilledMinionHero,
 		deadEntity,
 		deadMinionIndex,
 		opponentBoard,
+		opponentBoardHero,
 		allCards,
 		cardsData,
 		sharedState,
@@ -810,7 +811,9 @@ const buildBoardAfterDeathrattleSpawns = (
 	] = spawnEntitiesFromDeathrattle(
 		deadEntity,
 		boardWithKilledMinion,
+		boardWithKilledMinionHero,
 		opponentBoard,
+		opponentBoardHero,
 		allCards,
 		cardsData,
 		sharedState,
@@ -822,6 +825,7 @@ const buildBoardAfterDeathrattleSpawns = (
 					deadEntity.cardId,
 					1,
 					boardWithKilledMinion,
+					boardWithKilledMinionHero,
 					allCards,
 					sharedState,
 					deadEntity.friendly,
@@ -835,6 +839,7 @@ const buildBoardAfterDeathrattleSpawns = (
 	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
 		deadEntity,
 		boardWithKilledMinion,
+		boardWithKilledMinionHero,
 		allCards,
 		cardsData,
 		sharedState,
@@ -902,7 +907,17 @@ const buildBoardAfterDeathrattleSpawns = (
 					originEntityId: deadEntity.entityId
 				}]
 			}
-			buildBoardAfterDeathrattleSpawns(boardWithKilledMinion, entityToProcess, deadMinionIndex, opponentBoard, allCards, cardsData, sharedState, spectator);
+			buildBoardAfterDeathrattleSpawns(
+				boardWithKilledMinion, 
+				boardWithKilledMinionHero,
+				entityToProcess, 
+				deadMinionIndex, 
+				opponentBoard, 
+				opponentBoardHero,
+				allCards, 
+				cardsData, 
+				sharedState, 
+				spectator);
 		}
 	}
 };

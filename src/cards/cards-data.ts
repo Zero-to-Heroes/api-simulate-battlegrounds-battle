@@ -34,6 +34,8 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Neutral.CrowdFavoriteTavernBrawl,
 	CardIds.NonCollectible.Neutral.ShifterZerus,
 	CardIds.NonCollectible.Neutral.ShifterZerusTavernBrawl,
+	CardIds.Collectible.Warlock.FloatingWatcher,
+	CardIds.NonCollectible.Warlock.FloatingWatcherTavernBrawl,
 ];
 
 export class CardsData {

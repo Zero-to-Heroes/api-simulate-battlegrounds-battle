@@ -66,6 +66,7 @@ const handleAlakirForPlayer = (
 
 const handleYShaarj = (
 	playerBoard: BoardEntity[],
+	playerBoardHero: BgsPlayerEntity,
 	tavernTier: number,
 	friendly: boolean,
 	allCards: AllCardsService,
@@ -77,6 +78,7 @@ const handleYShaarj = (
 		spawns.forTavernTier(tavernTier),
 		1,
 		playerBoard,
+		playerBoardHero,
 		allCards,
 		sharedState,
 		friendly,
@@ -88,7 +90,9 @@ const handleYShaarj = (
 
 const handleNefarian = (
 	playerBoard: BoardEntity[],
+	playerBoardHero: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
+	opponentBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -97,7 +101,18 @@ const handleNefarian = (
 	// Theoretically we need to pass the player's board, in case this kills any enemy
 	// minion that can interact with the player board
 	// However, there are no such minions with 1 health
-	dealDamageToAllMinions(opponentBoard, [], null, 1, allCards, spawns, sharedState, spectator);
+	dealDamageToAllMinions(
+		opponentBoard,
+		opponentBoardHero,
+		[],
+		playerBoardHero,
+		null,
+		1,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
 };
 
 const handleLichKing = (playerBoard: BoardEntity[]): void => {
@@ -142,80 +157,39 @@ const handlePlayerStartOfCombatHeroPowers = (
 	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
 	// 	playerBoard.length > 0
 	// ) {
-	// 	// TODO: Al'Akir as well should be handled via the game state, but since it's idempotent it doesn't hurt
-	// 	// if we apply it multiple times
-	// 	handleAlakirForPlayer(
-	// 		playerBoard,
-	// 		playerEntity,
-	// 		opponentBoard,
-	// 		opponentEntity,
-	// 		allCards,
-	// 		spawns,
-	// 		sharedState,
-	// 		spectator,
-	// 	);
 	// }
 	else if (
 		playerEntity.heroPowerUsed &&
 		playerHeroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageTavernBrawl &&
 		playerBoard.length < 7
 	) {
-		handleYShaarj(playerBoard, playerEntity.tavernTier, friendly, allCards, spawns, sharedState, spectator);
+		handleYShaarj(
+			playerBoard,
+			playerEntity,
+			playerEntity.tavernTier,
+			friendly,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	} else if (
 		playerEntity.heroPowerUsed &&
 		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
 		playerBoard.length > 0
 	) {
-		handleNefarian(playerBoard, opponentBoard, allCards, spawns, sharedState, spectator);
+		handleNefarian(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 };
-
-// const handleOpponentStartOfCombatHeroPowers = (
-// 	playerEntity: BgsPlayerEntity,
-// 	playerBoard: BoardEntity[],
-// 	opponentEntity: BgsPlayerEntity,
-// 	opponentBoard: BoardEntity[],
-// 	allCards: AllCardsService,
-// 	spawns: CardsData,
-// 	sharedState: SharedState,
-// 	spectator: Spectator,
-// ): void => {
-// 	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
-// 	if (opponentHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && opponentBoard.length > 0) {
-// 		handleIllidanForPlayer(
-// 			opponentBoard,
-// 			opponentEntity,
-// 			playerBoard,
-// 			playerEntity,
-// 			allCards,
-// 			spawns,
-// 			sharedState,
-// 			spectator,
-// 		);
-// 	}
-// 	// else if (
-// 	// 	opponentHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
-// 	// 	opponentBoard.length > 0
-// 	// ) {
-// 	// 	handleAlakirForPlayer(
-// 	// 		opponentBoard,
-// 	// 		opponentEntity,
-// 	// 		playerBoard,
-// 	// 		playerEntity,
-// 	// 		allCards,
-// 	// 		spawns,
-// 	// 		sharedState,
-// 	// 		spectator,
-// 	// 	);
-// 	// }
-// 	else if (
-// 		opponentEntity.heroPowerUsed &&
-// 		opponentHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
-// 		opponentBoard.length > 0
-// 	) {
-// 		handleNefarian(opponentBoard, playerBoard, allCards, spawns, sharedState, spectator);
-// 	}
-// };
 
 export const handleStartOfCombat = (
 	playerEntity: BgsPlayerEntity,
@@ -276,20 +250,6 @@ export const handleStartOfCombat = (
 		);
 	}
 
-	// if (
-	// 	playerEntity.heroPowerUsed &&
-	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
-	// 	playerBoard.length > 0
-	// ) {
-	// 	handlePutricide(playerBoard);
-	// } else if (
-	// 	opponentEntity.heroPowerUsed &&
-	// 	opponentHeroPowerId === CardIds.NonCollectible.Neutral.RagePotionTavernBrawl &&
-	// 	opponentBoard.length > 0
-	// ) {
-	// 	handlePutricide(opponentBoard);
-	// }
-
 	let currentAttacker = Math.round(Math.random());
 
 	// console.log('[start of combat] attacker', currentAttacker);
@@ -300,11 +260,31 @@ export const handleStartOfCombat = (
 		if (currentAttacker === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
 			// console.log('[start of combat] will perform player attack', attacker);
-			performStartOfCombat(attacker, playerBoard, opponentBoard, allCards, spawns, sharedState, spectator);
+			performStartOfCombat(
+				attacker,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
 		} else if (currentAttacker === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
 			// console.log('[start of combat] will perform opponent attack', attacker);
-			performStartOfCombat(attacker, opponentBoard, playerBoard, allCards, spawns, sharedState, spectator);
+			performStartOfCombat(
+				attacker,
+				opponentBoard,
+				opponentEntity,
+				playerBoard,
+				playerEntity,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
 		}
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
@@ -330,7 +310,9 @@ export const getHeroPowerForHero = (heroCardId: string): string => {
 export const performStartOfCombat = (
 	attacker: BoardEntity,
 	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
+	defendingBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -344,9 +326,11 @@ export const performStartOfCombat = (
 		// console.log('[start of combat] damage', damage);
 		dealDamageToRandomEnemy(
 			defendingBoard,
+			defendingBoardHero,
 			attacker,
 			damage,
 			attackingBoard,
+			attackingBoardHero,
 			allCards,
 			spawns,
 			sharedState,
@@ -365,9 +349,11 @@ export const performStartOfCombat = (
 		// );
 		dealDamageToRandomEnemy(
 			defendingBoard,
+			defendingBoardHero,
 			attacker,
 			damage,
 			attackingBoard,
+			attackingBoardHero,
 			allCards,
 			spawns,
 			sharedState,
@@ -375,9 +361,11 @@ export const performStartOfCombat = (
 		);
 		dealDamageToRandomEnemy(
 			defendingBoard,
+			defendingBoardHero,
 			attacker,
 			damage,
 			attackingBoard,
+			attackingBoardHero,
 			allCards,
 			spawns,
 			sharedState,
