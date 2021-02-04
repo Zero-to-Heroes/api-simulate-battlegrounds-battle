@@ -48,6 +48,7 @@ export const buildSingleBoardEntity = (
 	allCards: AllCardsService,
 	friendly: boolean,
 	entityId = 1,
+	spawnReborn = false,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
@@ -68,6 +69,11 @@ export const buildSingleBoardEntity = (
 		friendly: friendly,
 		attackImmediately: attackImmediately,
 	} as BoardEntity);
+
+	if (spawnReborn) {
+		result.health = 1;
+		result.reborn = false;
+	}
 
 	if (controllerHero.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutTavernBrawl) {
 		result.taunt = true;
