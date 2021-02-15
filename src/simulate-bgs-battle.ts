@@ -42,7 +42,11 @@ export default async (event): Promise<any> => {
 	}
 };
 
-export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): SimulationResult => {
+export const simulateBattle = (
+	battleInput: BgsBattleInfo,
+	cards: AllCardsService,
+	cardsData: CardsData,
+): SimulationResult => {
 	const start = Date.now();
 
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 6000;
@@ -64,8 +68,12 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = playerInfo.board.map(entity => ({...addImpliedMechanics(entity), friendly: true } as BoardEntity));
-	const opponentBoard = opponentInfo.board.map(entity => ({...addImpliedMechanics(entity), friendly: false } as BoardEntity));
+	const playerBoard = playerInfo.board.map(
+		(entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity),
+	);
+	const opponentBoard = opponentInfo.board.map(
+		(entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity),
+	);
 	// console.log('boards before enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
@@ -86,10 +94,11 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		},
 	});
 	const spectator = new Spectator(
-		battleInput.playerBoard.player.cardId, 
-		battleInput.playerBoard.player.heroPowerId, 
-		battleInput.opponentBoard.player.cardId, 
-		battleInput.opponentBoard.player.heroPowerId);
+		battleInput.playerBoard.player.cardId,
+		battleInput.playerBoard.player.heroPowerId,
+		battleInput.opponentBoard.player.cardId,
+		battleInput.opponentBoard.player.heroPowerId,
+	);
 	console.time('simulation');
 	for (let i = 0; i < numberOfSimulations; i++) {
 		const simulator = new Simulator(cards, cardsData);
@@ -122,16 +131,28 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		} else if (battleResult.result === 'tied') {
 			simulationResult.tied++;
 		}
-		spectator.commitBattleResult(battleResult.result)
+		spectator.commitBattleResult(battleResult.result);
 	}
 	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
 	// console.log('won', simulationResult.won, totalMatches);
-	simulationResult.wonPercent = checkRounding(Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10, simulationResult.won, totalMatches);
+	simulationResult.wonPercent = checkRounding(
+		Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10,
+		simulationResult.won,
+		totalMatches,
+	);
 	// console.log('lost', simulationResult.lost, totalMatches);
-	simulationResult.lostPercent = checkRounding(Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10, simulationResult.lost, totalMatches);
+	simulationResult.lostPercent = checkRounding(
+		Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10,
+		simulationResult.lost,
+		totalMatches,
+	);
 	// console.log('tied', simulationResult.tied, totalMatches);
 	// simulationResult.tiedPercent = checkRounding(Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10, simulationResult.tied, totalMatches);
-	simulationResult.tiedPercent = checkRounding(100 - simulationResult.lostPercent - simulationResult.wonPercent, simulationResult.tied, totalMatches);
+	simulationResult.tiedPercent = checkRounding(
+		100 - simulationResult.lostPercent - simulationResult.wonPercent,
+		simulationResult.tied,
+		totalMatches,
+	);
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost
@@ -161,11 +182,11 @@ const checkRounding = (roundedValue: number, initialValue: number, totalValue: n
 		return 99.9;
 	}
 	return roundedValue;
-}
+};
 
 const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
-	const entityIds = board.map(entity => entity.entityId);
-	return board.map(entity => ({
+	const entityIds = board.map((entity) => entity.entityId);
+	return board.map((entity) => ({
 		...entity,
 		enchantments: cleanEnchantmentsForEntity(entity.enchantments, entityIds),
 	}));
@@ -175,7 +196,6 @@ export const validEnchantments = [
 	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment,
 	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl,
 	CardIds.NonCollectible.Neutral.LivingSporesToken2,
-
 ];
 
 const cleanEnchantmentsForEntity = (
@@ -183,6 +203,7 @@ const cleanEnchantmentsForEntity = (
 	entityIds: readonly number[],
 ): { cardId: string; originEntityId: number }[] => {
 	return enchantments.filter(
-		enchant => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
+		(enchant) =>
+			entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
 	);
 };

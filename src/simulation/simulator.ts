@@ -12,7 +12,7 @@ import { handleStartOfCombat } from './start-of-combat';
 // New simulator should be instantiated for each match
 export class Simulator {
 	private currentAttacker: number;
-	private currentSpeedAttacker: number = -1;
+	private currentSpeedAttacker = -1;
 	private lastPlayerAttackerEntityId: number;
 	private lastOpponentAttackerEntityId: number;
 	private sharedState: SharedState;
@@ -32,14 +32,12 @@ export class Simulator {
 		spectator: Spectator,
 	): SingleSimulationResult {
 		this.currentAttacker =
-			playerBoard.length > opponentBoard.length
-				? 0
-				: opponentBoard.length > playerBoard.length
-				? 1
-				: Math.round(Math.random());
+			playerBoard.length > opponentBoard.length ? 0 : opponentBoard.length > playerBoard.length ? 1 : 1; // Math.round(Math.random());
 		this.sharedState.currentEntityId =
-			Math.max(...playerBoard.map(entity => entity.entityId), ...opponentBoard.map(entity => entity.entityId)) +
-			1;
+			Math.max(
+				...playerBoard.map((entity) => entity.entityId),
+				...opponentBoard.map((entity) => entity.entityId),
+			) + 1;
 		if (this.sharedState.debug) {
 			console.debug(
 				'before start of combat\n',
@@ -80,10 +78,10 @@ export class Simulator {
 			// to know who triggers first. See the second test case of the scallywag.test.ts
 			// that is not handled properly today (the attack should in some cases happen before
 			// the other deathrattle procs)
-			if (playerBoard.some(entity => entity.attackImmediately)) {
+			if (playerBoard.some((entity) => entity.attackImmediately)) {
 				// console.log('attack immediately on player board');
 				this.currentSpeedAttacker = 0;
-			} else if (opponentBoard.some(entity => entity.attackImmediately)) {
+			} else if (opponentBoard.some((entity) => entity.attackImmediately)) {
 				// console.log('attack immediately on opponent board');
 				this.currentSpeedAttacker = 1;
 			} else {
@@ -117,10 +115,10 @@ export class Simulator {
 					spectator,
 				);
 			}
-			if (playerBoard.some(entity => entity.attackImmediately)) {
+			if (playerBoard.some((entity) => entity.attackImmediately)) {
 				// console.log('attack immediately on player board');
 				this.currentSpeedAttacker = 0;
-			} else if (opponentBoard.some(entity => entity.attackImmediately)) {
+			} else if (opponentBoard.some((entity) => entity.attackImmediately)) {
 				// console.log('attack immediately on opponent board');
 				this.currentSpeedAttacker = 1;
 			} else {
@@ -160,7 +158,7 @@ export class Simulator {
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]) {
 		return playerBoard
-			.map(entity => this.allCards.getCard(entity.cardId).techLevel || 1)
+			.map((entity) => this.allCards.getCard(entity.cardId).techLevel || 1)
 			.reduce((a, b) => a + b, 0);
 	}
 }

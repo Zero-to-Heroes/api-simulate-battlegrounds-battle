@@ -14,7 +14,7 @@ export const applyAuras = (
 	// console.log('ready to apply auras', board);
 	for (let i = 0; i < board.length; i++) {
 		if (data.auraOrigins.indexOf(board[i].cardId) !== -1) {
-			const enchantmentId = data.auraEnchantments.find(aura => aura[0] === board[i].cardId)[1];
+			const enchantmentId = data.auraEnchantments.find((aura) => aura[0] === board[i].cardId)[1];
 			// console.log('applying aura', enchantmentId, board);
 			applyAura(board, i, enchantmentId, cards);
 			// console.log('applied aura', enchantmentId, board);
@@ -29,16 +29,16 @@ export const applyAuras = (
 
 export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
 	for (const entity of board) {
-		removeAurasFrom(entity, data);
+		removeAurasFrom(entity, board, data);
 	}
 	// return board.map(entity => removeAurasFrom(entity, data));
 };
 
-const removeAurasFrom = (entity: BoardEntity, data: CardsData): void => {
+const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsData): void => {
 	// let newEntity = entity;
 	for (const enchantment of entity.enchantments) {
 		// console.log('removing aura from', enchantment, entity.enchantments, entity);
-		removeAura(entity, enchantment.cardId);
+		removeAura(entity, enchantment.cardId, board);
 		// console.log(' aura removed', enchantment, newEntity.enchantments, newEntity);
 	}
 	// return newEntity;
@@ -73,7 +73,7 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 	}
 };
 
-const removeAura = (entity: BoardEntity, enchantmentId: string): void => {
+const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[]): void => {
 	switch (enchantmentId) {
 		case CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantment:
 		case CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantmentTavernBrawl:
@@ -93,7 +93,7 @@ const removeAura = (entity: BoardEntity, enchantmentId: string): void => {
 			return;
 		case CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment:
 		case CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentTavernBrawl:
-			removeSouthseaCaptainAura(entity, enchantmentId);
+			removeSouthseaCaptainAura(entity, enchantmentId, board);
 			return;
 		case CardIds.NonCollectible.Neutral.ALLWillBurn_AllWillBurnEnchantmentTavernBrawl:
 			removeDeathwingAura(entity, enchantmentId);
@@ -108,7 +108,7 @@ const applyDireWolfAura = (board: BoardEntity[], i: number, enchantmentId: strin
 	if (
 		i > 0 &&
 		!board[i - 1].enchantments.some(
-			aura => aura.cardId === enchantmentId && aura.originEntityId === board[i].entityId,
+			(aura) => aura.cardId === enchantmentId && aura.originEntityId === board[i].entityId,
 		)
 	) {
 		board[i - 1].attack +=
@@ -119,7 +119,7 @@ const applyDireWolfAura = (board: BoardEntity[], i: number, enchantmentId: strin
 	if (
 		i < board.length - 1 &&
 		!board[i + 1].enchantments.some(
-			aura => aura.cardId === enchantmentId && aura.originEntityId === board[i].entityId,
+			(aura) => aura.cardId === enchantmentId && aura.originEntityId === board[i].entityId,
 		)
 	) {
 		board[i + 1].attack +=
@@ -132,7 +132,7 @@ const applyDireWolfAura = (board: BoardEntity[], i: number, enchantmentId: strin
 const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string): void => {
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (!entity.enchantments.some(aura => aura.cardId === enchantmentId)) {
+		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
 			entity.attack += 2;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
 		}
@@ -157,7 +157,7 @@ const applySiegebreakerAura = (
 
 		if (
 			!entity.enchantments.some(
-				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+				(aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
 			)
 		) {
 			entity.attack +=
@@ -185,7 +185,7 @@ const applyMalGanisAura = (
 
 		if (
 			!entity.enchantments.some(
-				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+				(aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
 			)
 		) {
 			entity.attack +=
@@ -199,35 +199,35 @@ const applyMalGanisAura = (
 };
 
 const removeDireWolfAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(
 		0,
 		entity.attack -
 			numberOfBuffs *
 				(enchantmentId === CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantment ? 1 : 2),
 	);
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
 const removeDeathwingAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 2);
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
 const removeSiegebreakerAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(
 		0,
 		entity.attack -
 			numberOfBuffs *
 				(enchantmentId === CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment ? 1 : 2),
 	);
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
 const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter(e => e.cardId === enchantmentId).length;
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(
 		0,
 		entity.attack -
@@ -240,7 +240,7 @@ const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): void =>
 			numberOfBuffs *
 				(enchantmentId === CardIds.NonCollectible.Warlock.MalGanis_GraspOfMalganisEnchantment ? 2 : 4),
 	);
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
 const applyMurlocWarleaderAura = (
@@ -261,7 +261,7 @@ const applyMurlocWarleaderAura = (
 
 		if (
 			!entity.enchantments.some(
-				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+				(aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
 			)
 		) {
 			entity.attack +=
@@ -274,7 +274,7 @@ const applyMurlocWarleaderAura = (
 
 const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter(
-		e => e.cardId === enchantmentId && e.originEntityId !== entity.entityId,
+		(e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId,
 	).length;
 	entity.attack = Math.max(
 		0,
@@ -282,7 +282,7 @@ const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): 
 			numberOfBuffs *
 				(enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment ? 2 : 4),
 	);
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
 // const applyWhirlwindTempestAura = (
@@ -313,7 +313,7 @@ const applySouthseaCaptainAura = (
 
 		if (
 			!entity.enchantments.some(
-				aura => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
+				(aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId,
 			)
 		) {
 			entity.attack += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2;
@@ -324,20 +324,27 @@ const applySouthseaCaptainAura = (
 	// return newBoard;
 };
 
-const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string): void => {
+const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[]): void => {
 	const debug = false && entity.entityId === 3879;
 	if (debug) {
 		console.log('removing aura for', stringifySimpleCard(entity));
 	}
-	const numberOfBuffs = entity.enchantments.filter(
-		e => e.cardId === enchantmentId && e.originEntityId !== entity.entityId,
-	).length;
+	const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId);
+	const numberOfBuffs = buffs.length;
 	if (debug) {
 		console.log(
 			'buffs',
-			entity.enchantments.filter(e => e.cardId === enchantmentId && e.originEntityId !== entity.entityId),
+			entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId),
 		);
 	}
+	// TODO: there is an issue here. If the minion's health at the end of the turn should be 1, removing then reapplying
+	// the aura actually bumps it to 2
+	// If the buffing entity is still alive, we should ignore this max
+	// However, for now there's a bug, as the app originates the enchantment from an entity ID
+	// that isn't on the board
+	// const existingEnchantingEntity = board.filter((e) => buffs.map((b) => b.originEntityId).includes(e.entityId));
+	// const isBuffingEntityAlive = existingEnchantingEntity.length > 0;
+	// console.log('buffing entity alive?', stringifySimple(board), stringifySimpleCard(entity), buffs);
 	entity.attack = Math.max(
 		0,
 		entity.attack -
@@ -348,7 +355,7 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string): 
 		entity.health -
 			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2),
 	);
-	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 	if (debug) {
 		console.log('removed aura for', stringifySimpleCard(entity));
 	}
