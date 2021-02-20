@@ -36,6 +36,8 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Neutral.ShifterZerusTavernBrawl,
 	CardIds.Collectible.Warlock.FloatingWatcher,
 	CardIds.NonCollectible.Warlock.FloatingWatcherTavernBrawl,
+	CardIds.NonCollectible.Neutral.ElistraTheImmortalBATTLEGROUNDS,
+	CardIds.NonCollectible.Neutral.ElistraTheImmortalTavernBrawl,
 ];
 
 export class CardsData {
@@ -74,53 +76,54 @@ export class CardsData {
 	public inititialize(validTribes?: readonly Race[]) {
 		this.shredderSpawns = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.cost === 2)
-			.filter(card => this.isValidTribe(validTribes, card.race))
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => card.cost === 2)
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter((card) => this.isValidTribe(validTribes, card.race))
+			.map((card) => card.id);
 		this.ghastcoilerSpawns = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.id !== 'BGS_008')
-			.filter(card => hasMechanic(card, 'DEATHRATTLE'))
-			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter(card => this.isValidTribe(validTribes, card.race))
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => card.id !== 'BGS_008')
+			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter((card) => this.isValidTribe(validTribes, card.race))
+			.map((card) => card.id);
 		this.validDeathrattles = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => hasMechanic(card, 'DEATHRATTLE'))
-			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter(card => this.isValidTribe(validTribes, card.race))
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter((card) => this.isValidTribe(validTribes, card.race))
+			.map((card) => card.id);
 		this.impMamaSpawns = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.race === 'DEMON')
-			.filter(card => card.id !== CardIds.NonCollectible.Warlock.ImpMama)
-			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => card.race === 'DEMON')
+			.filter((card) => card.id !== CardIds.NonCollectible.Warlock.ImpMama)
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
 		this.gentleDjinniSpawns = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.race === 'ELEMENTAL')
-			.filter(card => card.id !== CardIds.NonCollectible.Neutral.GentleDjinni)
-			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => card.race === 'ELEMENTAL')
+			.filter((card) => card.id !== CardIds.NonCollectible.Neutral.GentleDjinni)
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
 		this.sneedsSpawns = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.id !== 'GVG_114' && card.id !== 'BGS_006')
-			.filter(card => card.rarity === 'Legendary')
-			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter(card => this.isValidTribe(validTribes, card.race))
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => card.id !== 'GVG_114' && card.id !== 'BGS_006')
+			.filter((card) => card.rarity === 'Legendary')
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.filter((card) => this.isValidTribe(validTribes, card.race))
+			.map((card) => card.id);
 		// this.treasureChestSpawns = this.allCards
 		// 	.getCards()
 		// 	.filter(card => card.techLevel)
@@ -131,10 +134,11 @@ export class CardsData {
 		// 	.map(card => card.id);
 		this.pirateSpawns = this.allCards
 			.getCards()
-			.filter(card => card.techLevel)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => card.race === 'PIRATE')
-			.map(card => card.id);
+			.filter((card) => card.techLevel)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => card.race === 'PIRATE')
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
 		// console.log('initialized cards data', this);
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
@@ -185,7 +189,7 @@ export class CardsData {
 			// 	CardIds.NonCollectible.Warrior.WhirlwindTempest_WhirlingEnchantment,
 			// ],
 		];
-		this.auraOrigins = this.auraEnchantments.map(pair => pair[0]);
+		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);
 		this.startOfCombats = [
 			CardIds.NonCollectible.Neutral.RedWhelp,
 			CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl,
@@ -195,10 +199,10 @@ export class CardsData {
 	public forTavernTier(tavernTier: number): string {
 		const options = this.allCards
 			.getCards()
-			.filter(card => card.techLevel === tavernTier)
-			.filter(card => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter(card => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.map(card => card.id);
+			.filter((card) => card.techLevel === tavernTier)
+			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
 		return options[Math.floor(Math.random() * options.length)];
 	}
 

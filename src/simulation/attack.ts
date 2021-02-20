@@ -761,7 +761,7 @@ export const applyOnBeingAttackedBuffs = (
 		const goldenArms = defendingBoard.filter(
 			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpireTavernBrawl,
 		);
-		attackedEntity.attack += 3 * arms.length + 6 * goldenArms.length;
+		attackedEntity.attack += 2 * arms.length + 4 * goldenArms.length;
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
