@@ -32,7 +32,11 @@ export class Simulator {
 		spectator: Spectator,
 	): SingleSimulationResult {
 		this.currentAttacker =
-			playerBoard.length > opponentBoard.length ? 0 : opponentBoard.length > playerBoard.length ? 1 : 1; // Math.round(Math.random());
+			playerBoard.length > opponentBoard.length
+				? 0
+				: opponentBoard.length > playerBoard.length
+				? 1
+				: Math.round(Math.random());
 		this.sharedState.currentEntityId =
 			Math.max(
 				...playerBoard.map((entity) => entity.entityId),
