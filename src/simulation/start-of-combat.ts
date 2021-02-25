@@ -20,18 +20,7 @@ const handleIllidanForPlayer = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	simulateAttack(
-		playerBoard,
-		playerEntity,
-		opponentBoard,
-		opponentEntity,
-		undefined,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-		0,
-	);
+	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 	if (playerBoard.length > 1) {
 		simulateAttack(
 			playerBoard,
@@ -101,22 +90,11 @@ const handleNefarian = (
 	// Theoretically we need to pass the player's board, in case this kills any enemy
 	// minion that can interact with the player board
 	// However, there are no such minions with 1 health
-	dealDamageToAllMinions(
-		opponentBoard,
-		opponentBoardHero,
-		[],
-		playerBoardHero,
-		null,
-		1,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
+	dealDamageToAllMinions(opponentBoard, opponentBoardHero, [], playerBoardHero, null, 1, allCards, spawns, sharedState, spectator);
 };
 
 const handleLichKing = (playerBoard: BoardEntity[]): void => {
-	const nonRebornMinions = playerBoard.filter(minion => !minion.reborn);
+	const nonRebornMinions = playerBoard.filter((minion) => !minion.reborn);
 	if (nonRebornMinions.length > 0) {
 		const targetReborn = nonRebornMinions[Math.floor(Math.random() * nonRebornMinions.length)];
 		targetReborn.reborn = true;
@@ -142,52 +120,27 @@ const handlePlayerStartOfCombatHeroPowers = (
 	// Lich King should be handled in the incoming board state
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
-		handleIllidanForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 	}
 	// else if (
 	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
 	// 	playerBoard.length > 0
 	// ) {
 	// }
+	// Will be sent by the client
+	// else if (
+	// 	playerEntity.heroPowerUsed &&
+	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageTavernBrawl &&
+	// 	playerBoard.length < 7
+	// ) {
+	// 	handleYShaarj(playerBoard, playerEntity, playerEntity.tavernTier, friendly, allCards, spawns, sharedState, spectator);
+	// }
 	else if (
-		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageTavernBrawl &&
-		playerBoard.length < 7
-	) {
-		handleYShaarj(
-			playerBoard,
-			playerEntity,
-			playerEntity.tavernTier,
-			friendly,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
-	} else if (
 		playerEntity.heroPowerUsed &&
 		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
 		playerBoard.length > 0
 	) {
-		handleNefarian(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		handleNefarian(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 	}
 };
 
@@ -253,8 +206,8 @@ export const handleStartOfCombat = (
 	let currentAttacker = Math.round(Math.random());
 
 	// console.log('[start of combat] attacker', currentAttacker);
-	const playerAttackers = playerBoard.filter(entity => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
-	const opponentAttackers = opponentBoard.filter(entity => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
+	const playerAttackers = playerBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
+	const opponentAttackers = opponentBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
 	// console.log('[start of combat] cazndidates', stringifySimple(playerAttackers), stringifySimple(opponentAttackers));
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (currentAttacker === 0 && playerAttackers.length > 0) {
@@ -321,8 +274,8 @@ export const performStartOfCombat = (
 	// For now we're only dealing with the red whelp
 	if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelp) {
 		const damage = attackingBoard
-			.map(entity => allCards.getCard(entity.cardId).race)
-			.filter(race => isCorrectTribe(race, Race.DRAGON)).length;
+			.map((entity) => allCards.getCard(entity.cardId).race)
+			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		// console.log('[start of combat] damage', damage);
 		dealDamageToRandomEnemy(
 			defendingBoard,
@@ -338,8 +291,8 @@ export const performStartOfCombat = (
 		);
 	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl) {
 		const damage = attackingBoard
-			.map(entity => allCards.getCard(entity.cardId).race)
-			.filter(race => isCorrectTribe(race, Race.DRAGON)).length;
+			.map((entity) => allCards.getCard(entity.cardId).race)
+			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		// console.log(
 		// 	'red whelp start of combat',
 		// 	stringifySimpleCard(attacker),
