@@ -1,8 +1,10 @@
 # Test it
 
 ```
-sam local start-api
+npm install
+npm run singleFile 'full-test.test'
 ```
+Then you can just modify the `test/full-game/game3.json` file to change the boards initial compositions.
 
 # Deploy
 
