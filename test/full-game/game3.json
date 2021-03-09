@@ -2,46 +2,23 @@
 	"playerBoard": {
 		"player": {
 			"tavernTier": 2,
-			"cardId": "TB_BaconShop_HERO_76",
-			"heroPowerId": "TB_BaconShop_HP_086",
+			"cardId": "TB_BaconShop_HERO_29",
+			"heroPowerId": "TB_BaconShop_HP_104",
 			"heroPowerUsed": true
 		},
 		"board": [
 			{
-				"cardId": "YOD_026",
-				"attack": 2,
-				"divineShield": true,
-				"enchantments": [],
-				"entityId": 580,
-				"health": 1,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": true,
-				"windfury": true,
-				"megaWindfury": false,
-				"friendly": true
-			},
-			{
-				"cardId": "YOD_026",
-				"attack": 2,
+				"cardId": "CFM_315",
+				"attack": 6,
 				"divineShield": false,
-				"enchantments": [],
-				"entityId": 499,
-				"health": 1,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true
-			},
-			{
-				"cardId": "BGS_055",
-				"attack": 2,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 500,
-				"health": 2,
+				"enchantments": [
+					{
+						"originEntityId": 469,
+						"cardId": "TB_BaconShop_HP_104e"
+					}
+				],
+				"entityId": 468,
+				"health": 6,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -54,32 +31,18 @@
 	"opponentBoard": {
 		"player": {
 			"tavernTier": 2,
-			"cardId": "TB_BaconShop_HERO_74",
-			"heroPowerId": "TB_BaconShop_HP_082",
-			"heroPowerUsed": false
+			"cardId": "TB_BaconShop_HERO_08",
+			"heroPowerId": "TB_BaconShop_HP_069",
+			"heroPowerUsed": true
 		},
 		"board": [
 			{
-				"cardId": "BGS_045",
-				"attack": 2,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 701,
-				"health": 4,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true
-			},
-			{
-				"cardId": "BGS_116",
+				"cardId": "CFM_315",
 				"attack": 1,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 702,
-				"health": 3,
+				"entityId": 634,
+				"health": 1,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -88,15 +51,43 @@
 				"friendly": true
 			},
 			{
-				"cardId": "LOOT_013",
+				"cardId": "CFM_315t",
+				"attack": 1,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 635,
+				"health": 1,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true
+			},
+			{
+				"cardId": "EX1_531",
 				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 703,
-				"health": 4,
+				"entityId": 636,
+				"health": 2,
 				"poisonous": false,
 				"reborn": false,
-				"taunt": true,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true
+			},
+			{
+				"cardId": "CFM_315",
+				"attack": 1,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 637,
+				"health": 1,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
 				"friendly": true

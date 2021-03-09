@@ -32,39 +32,25 @@ export class Simulator {
 		spectator: Spectator,
 	): SingleSimulationResult {
 		this.currentAttacker =
-			playerBoard.length > opponentBoard.length
-				? 0
-				: opponentBoard.length > playerBoard.length
-				? 1
-				: Math.round(Math.random());
+			playerBoard.length > opponentBoard.length ? 0 : opponentBoard.length > playerBoard.length ? 1 : Math.round(Math.random());
 		this.sharedState.currentEntityId =
-			Math.max(
-				...playerBoard.map((entity) => entity.entityId),
-				...opponentBoard.map((entity) => entity.entityId),
-			) + 1;
+			Math.max(...playerBoard.map((entity) => entity.entityId), ...opponentBoard.map((entity) => entity.entityId)) + 1;
 		if (this.sharedState.debug) {
-			console.debug(
-				'before start of combat\n',
-				stringifySimple(opponentBoard) + '\n',
-				stringifySimple(playerBoard),
-			);
+			console.debug('before start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 		}
-		handleStartOfCombat(
+		this.currentAttacker = handleStartOfCombat(
 			playerEntity,
 			playerBoard,
 			opponentEntity,
 			opponentBoard,
+			this.currentAttacker,
 			this.allCards,
 			this.spawns,
 			this.sharedState,
 			spectator,
 		);
 		if (this.sharedState.debug) {
-			console.debug(
-				'after start of combat\n',
-				stringifySimple(opponentBoard) + '\n',
-				stringifySimple(playerBoard),
-			);
+			console.debug('after start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 		}
 		// console.log('starting player', this.currentAttacker);
 		let counter = 0;
@@ -161,8 +147,6 @@ export class Simulator {
 	}
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]) {
-		return playerBoard
-			.map((entity) => this.allCards.getCard(entity.cardId).techLevel || 1)
-			.reduce((a, b) => a + b, 0);
+		return playerBoard.map((entity) => this.allCards.getCard(entity.cardId).techLevel || 1).reduce((a, b) => a + b, 0);
 	}
 }

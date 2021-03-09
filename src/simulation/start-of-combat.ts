@@ -111,16 +111,18 @@ const handlePlayerStartOfCombatHeroPowers = (
 	playerBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
+	currentAttacker: number,
 	friendly: boolean,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): void => {
+): number => {
 	// Lich King should be handled in the incoming board state
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+		currentAttacker = (currentAttacker + 1) % 2;
 	}
 	// else if (
 	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
@@ -142,6 +144,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	) {
 		handleNefarian(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 	}
+	return currentAttacker;
 };
 
 export const handleStartOfCombat = (
@@ -149,29 +152,32 @@ export const handleStartOfCombat = (
 	playerBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
+	currentAttacker: number,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): void => {
+): number => {
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	if (Math.random() < 0.5) {
-		handlePlayerStartOfCombatHeroPowers(
+		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			playerEntity,
 			playerBoard,
 			opponentEntity,
 			opponentBoard,
+			currentAttacker,
 			true,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
 		);
-		handlePlayerStartOfCombatHeroPowers(
+		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			opponentEntity,
 			opponentBoard,
 			playerEntity,
 			playerBoard,
+			currentAttacker,
 			false,
 			allCards,
 			spawns,
@@ -179,22 +185,24 @@ export const handleStartOfCombat = (
 			spectator,
 		);
 	} else {
-		handlePlayerStartOfCombatHeroPowers(
+		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			opponentEntity,
 			opponentBoard,
 			playerEntity,
 			playerBoard,
+			currentAttacker,
 			false,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
 		);
-		handlePlayerStartOfCombatHeroPowers(
+		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			playerEntity,
 			playerBoard,
 			opponentEntity,
 			opponentBoard,
+			currentAttacker,
 			true,
 			allCards,
 			spawns,
@@ -203,14 +211,13 @@ export const handleStartOfCombat = (
 		);
 	}
 
-	let currentAttacker = Math.round(Math.random());
+	let attackerForStart = Math.round(Math.random());
 
-	// console.log('[start of combat] attacker', currentAttacker);
 	const playerAttackers = playerBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
 	const opponentAttackers = opponentBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
 	// console.log('[start of combat] cazndidates', stringifySimple(playerAttackers), stringifySimple(opponentAttackers));
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
-		if (currentAttacker === 0 && playerAttackers.length > 0) {
+		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
 			// console.log('[start of combat] will perform player attack', attacker);
 			performStartOfCombat(
@@ -224,7 +231,7 @@ export const handleStartOfCombat = (
 				sharedState,
 				spectator,
 			);
-		} else if (currentAttacker === 1 && opponentAttackers.length > 0) {
+		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
 			// console.log('[start of combat] will perform opponent attack', attacker);
 			performStartOfCombat(
@@ -239,9 +246,10 @@ export const handleStartOfCombat = (
 				spectator,
 			);
 		}
-		currentAttacker = (currentAttacker + 1) % 2;
+		attackerForStart = (attackerForStart + 1) % 2;
 	}
-	// return [playerBoard, opponentBoard];
+	// TODO: update that in case of Illidan's HP
+	return currentAttacker;
 };
 
 export const getHeroPowerForHero = (heroCardId: string): string => {
