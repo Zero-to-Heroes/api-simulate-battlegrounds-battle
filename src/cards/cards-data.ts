@@ -38,6 +38,8 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Warlock.FloatingWatcherTavernBrawl,
 	CardIds.NonCollectible.Neutral.ElistraTheImmortalBATTLEGROUNDS,
 	CardIds.NonCollectible.Neutral.ElistraTheImmortalTavernBrawl,
+	CardIds.Collectible.Neutral.PilotedShredder,
+	CardIds.NonCollectible.Neutral.PilotedShredderTavernBrawl,
 ];
 
 export class CardsData {
@@ -54,7 +56,7 @@ export class CardsData {
 		CardIds.NonCollectible.Neutral.NadinaTheRed,
 	];
 
-	public shredderSpawns: readonly string[];
+	// public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
@@ -74,14 +76,14 @@ export class CardsData {
 	}
 
 	public inititialize(validTribes?: readonly Race[]) {
-		this.shredderSpawns = this.allCards
-			.getCards()
-			.filter((card) => card.techLevel)
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter((card) => card.cost === 2)
-			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter((card) => this.isValidTribe(validTribes, card.race))
-			.map((card) => card.id);
+		// this.shredderSpawns = this.allCards
+		// 	.getCards()
+		// 	.filter((card) => card.techLevel)
+		// 	.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+		// 	.filter((card) => card.cost === 2)
+		// 	.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+		// 	.filter((card) => this.isValidTribe(validTribes, card.race))
+		// 	.map((card) => card.id);
 		this.ghastcoilerSpawns = this.allCards
 			.getCards()
 			.filter((card) => card.techLevel)
@@ -143,18 +145,12 @@ export class CardsData {
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
 		this.auraEnchantments = [
-			[
-				CardIds.Collectible.Neutral.DireWolfAlpha,
-				CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantment,
-			],
+			[CardIds.Collectible.Neutral.DireWolfAlpha, CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantment],
 			[
 				CardIds.NonCollectible.Neutral.DireWolfAlphaTavernBrawl,
 				CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantmentTavernBrawl,
 			],
-			[
-				CardIds.Collectible.Warlock.Siegebreaker,
-				CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment,
-			],
+			[CardIds.Collectible.Warlock.Siegebreaker, CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment],
 			[
 				CardIds.NonCollectible.Warlock.SiegebreakerTavernBrawl,
 				CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantmentTavernBrawl,
@@ -164,18 +160,12 @@ export class CardsData {
 				CardIds.NonCollectible.Warlock.MalganisTavernBrawl,
 				CardIds.NonCollectible.Warlock.MalGanis_GraspOfMalganisEnchantmentTavernBrawl,
 			],
-			[
-				CardIds.Collectible.Neutral.MurlocWarleader,
-				CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment,
-			],
+			[CardIds.Collectible.Neutral.MurlocWarleader, CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment],
 			[
 				CardIds.NonCollectible.Neutral.MurlocWarleaderTavernBrawl,
 				CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl,
 			],
-			[
-				CardIds.Collectible.Neutral.SouthseaCaptain,
-				CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment,
-			],
+			[CardIds.Collectible.Neutral.SouthseaCaptain, CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment],
 			[
 				CardIds.NonCollectible.Neutral.SouthseaCaptainTavernBrawl,
 				CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentTavernBrawl,
@@ -190,10 +180,7 @@ export class CardsData {
 			// ],
 		];
 		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);
-		this.startOfCombats = [
-			CardIds.NonCollectible.Neutral.RedWhelp,
-			CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl,
-		];
+		this.startOfCombats = [CardIds.NonCollectible.Neutral.RedWhelp, CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl];
 	}
 
 	public forTavernTier(tavernTier: number): string {

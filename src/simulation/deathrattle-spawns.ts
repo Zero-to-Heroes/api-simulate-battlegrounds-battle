@@ -20,12 +20,9 @@ export const spawnEntities = (
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
 	}
-	const spawnMultiplier =
-		2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Collectible.Mage.Khadgar).length || 1;
+	const spawnMultiplier = 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Collectible.Mage.Khadgar).length || 1;
 	const spawnMultiplierGolden =
-		3 *
-			boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Mage.KhadgarTavernBrawl)
-				.length || 1;
+		3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Mage.KhadgarTavernBrawl).length || 1;
 	const minionsToSpawn = limitSpawns
 		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
@@ -41,29 +38,14 @@ export const spawnEntities = (
 			spawnReborn,
 		);
 		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
-			? 2 *
-					boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader)
-						.length +
-			  4 *
-					boardToSpawnInto.filter(
-						(entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl,
-					).length +
-			  4 *
-					boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear)
-						.length +
-			  8 *
-					boardToSpawnInto.filter(
-						(entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
-					).length
+			? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader).length +
+			  4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl).length +
+			  4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
+			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl).length
 			: 0;
 		const healthBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
-			? 4 *
-					boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear)
-						.length +
-			  8 *
-					boardToSpawnInto.filter(
-						(entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl,
-					).length
+			? 4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
+			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl).length
 			: 0;
 		// console.log('buffs', attackBuff, healthBuff, newMinion, boardToSpawnInto);
 		newMinion.attack += attackBuff;
@@ -74,9 +56,7 @@ export const spawnEntities = (
 		result.push(newMinion);
 
 		if (isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.DEMON)) {
-			const bigfernals = boardToSpawnInto.filter(
-				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.Bigfernal,
-			);
+			const bigfernals = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.Bigfernal);
 			const goldenBigfernals = boardToSpawnInto.filter(
 				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BigfernalTavernBrawl,
 			);
@@ -104,9 +84,7 @@ export const spawnEntitiesFromDeathrattle = (
 	spawns: CardsData,
 	sharedState: SharedState,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	const rivendare = boardWithDeadEntity.find(
-		(entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare,
-	);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
 		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
 	);
@@ -174,7 +152,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.Collectible.Neutral.HarvestGolem:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.DamagedGolemClassic,
+						CardIds.NonCollectible.Neutral.DamagedGolemExpert1,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -311,49 +289,49 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.Collectible.Neutral.PilotedShredder:
-			case CardIds.NonCollectible.Neutral.PilotedShredder:
-				const shredderSpawn = spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)];
-				// console.log('shredderSpawn', shredderSpawn, spawns.shredderSpawns.length);
-				spawnedEntities.push(
-					...spawnEntities(
-						shredderSpawn,
-						1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						allCards,
-						sharedState,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				break;
-			case CardIds.NonCollectible.Neutral.PilotedShredderTavernBrawl:
-				spawnedEntities.push(
-					...[
-						...spawnEntities(
-							spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							allCards,
-							sharedState,
-							deadEntity.friendly,
-							false,
-						),
-						...spawnEntities(
-							spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							allCards,
-							sharedState,
-							deadEntity.friendly,
-							false,
-						),
-					],
-				);
-				break;
+			// case CardIds.Collectible.Neutral.PilotedShredder:
+			// case CardIds.NonCollectible.Neutral.PilotedShredder:
+			// 	const shredderSpawn = spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)];
+			// 	// console.log('shredderSpawn', shredderSpawn, spawns.shredderSpawns.length);
+			// 	spawnedEntities.push(
+			// 		...spawnEntities(
+			// 			shredderSpawn,
+			// 			1,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			allCards,
+			// 			sharedState,
+			// 			deadEntity.friendly,
+			// 			false,
+			// 		),
+			// 	);
+			// 	break;
+			// case CardIds.NonCollectible.Neutral.PilotedShredderTavernBrawl:
+			// 	spawnedEntities.push(
+			// 		...[
+			// 			...spawnEntities(
+			// 				spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
+			// 				1,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				allCards,
+			// 				sharedState,
+			// 				deadEntity.friendly,
+			// 				false,
+			// 			),
+			// 			...spawnEntities(
+			// 				spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)],
+			// 				1,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				allCards,
+			// 				sharedState,
+			// 				deadEntity.friendly,
+			// 				false,
+			// 			),
+			// 		],
+			// 	);
+			// 	break;
 			case CardIds.Collectible.Neutral.TheBeast:
 			case CardIds.NonCollectible.Neutral.TheBeastTavernBrawl:
 				otherBoardSpawnedEntities.push(
@@ -853,9 +831,7 @@ export const spawnEntitiesFromEnchantments = (
 	spawns: CardsData,
 	sharedState: SharedState,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find(
-		(entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare,
-	);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
 		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
 	);

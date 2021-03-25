@@ -36,9 +36,7 @@ export const handleDeathrattleEffects = (
 		);
 	}
 
-	const rivendare = boardWithDeadEntity.find(
-		(entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare,
-	);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
 		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
 	);
@@ -107,11 +105,7 @@ export const handleDeathrattleEffects = (
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
 				if (sharedState.debug) {
-					console.debug(
-						'dealing kaboom bot damage\n',
-						stringifySimpleCard(deadEntity) + '\n',
-						stringifySimple(otherBoard),
-					);
+					console.debug('dealing kaboom bot damage\n', stringifySimpleCard(deadEntity) + '\n', stringifySimple(otherBoard));
 				}
 				dealDamageToRandomEnemy(
 					otherBoard,
@@ -126,11 +120,7 @@ export const handleDeathrattleEffects = (
 					spectator,
 				);
 				if (sharedState.debug) {
-					console.debug(
-						'dealt kaboom bot damage\n',
-						stringifySimpleCard(deadEntity) + '\n',
-						stringifySimple(otherBoard),
-					);
+					console.debug('dealt kaboom bot damage\n', stringifySimpleCard(deadEntity) + '\n', stringifySimple(otherBoard));
 				}
 			}
 			return;
@@ -167,13 +157,7 @@ export const handleDeathrattleEffects = (
 	}
 };
 
-const addStatsToBoard = (
-	board: BoardEntity[],
-	attack: number,
-	health: number,
-	allCards: AllCardsService,
-	tribe?: string,
-): void => {
+const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, tribe?: string): void => {
 	for (const entity of board) {
 		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
 			entity.attack += attack;
@@ -274,9 +258,7 @@ const applyMinionDeathEffect = (
 					spectator,
 				);
 			}
-		} else if (
-			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElementalTavernBrawl
-		) {
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElementalTavernBrawl) {
 			const excessDamage = -deadEntity.health;
 			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
 			neighbours.forEach((neighbour) =>
@@ -306,9 +288,7 @@ const applyMinionDeathEffect = (
 				true,
 			);
 			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
-		} else if (
-			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Druid.IronhideDirehornTavernBrawl
-		) {
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Druid.IronhideDirehornTavernBrawl) {
 			const newEntities = spawnEntities(
 				CardIds.NonCollectible.Druid.IronhideDirehorn_IronhideRuntTokenTavernBrawl,
 				1,
@@ -320,9 +300,7 @@ const applyMinionDeathEffect = (
 				true,
 			);
 			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
-		} else if (
-			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBATTLEGROUNDS
-		) {
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBATTLEGROUNDS) {
 			const otherPirates = otherBoard
 				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
@@ -330,9 +308,7 @@ const applyMinionDeathEffect = (
 				pirate.attack += 2;
 				pirate.health += 2;
 			});
-		} else if (
-			deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathTavernBrawl
-		) {
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathTavernBrawl) {
 			const otherPirates = otherBoard
 				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
@@ -345,9 +321,7 @@ const applyMinionDeathEffect = (
 		// }
 	}
 
-	const rivendare = boardWithDeadEntity.find(
-		(entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare,
-	);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
 	const goldenRivendare = boardWithDeadEntity.find(
 		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
 	);
@@ -448,9 +422,7 @@ const applySoulJugglerEffect = (
 			spectator,
 		);
 	}
-	const goldenJugglers = boardWithJugglers.filter(
-		(entity) => entity.cardId === CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl,
-	);
+	const goldenJugglers = boardWithJugglers.filter((entity) => entity.cardId === CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl);
 	// console.log('golden jugglers in board', boardWithJugglers);
 	for (const juggler of goldenJugglers) {
 		dealDamageToRandomEnemy(
@@ -517,9 +489,7 @@ const applyJunkbotEffect = (board: BoardEntity[]): void => {
 
 const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number): void => {
 	const qiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbinger);
-	const goldenQiraji = board.filter(
-		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerTavernBrawl,
-	);
+	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerTavernBrawl);
 	if (qiraji.length === 0 && goldenQiraji.length === 0) {
 		return;
 	}
@@ -578,22 +548,13 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 			].includes(enchantmentId),
 		);
 	if (SharedState.debugEnabled) {
-		console.debug(
-			'remembering deathrattles',
-			fish.cardId,
-			stringifySimple(deadEntities),
-			validDeathrattles,
-			validEnchantments,
-		);
+		console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
 	}
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];
 	// Order is important
 	if (fish.cardId === CardIds.NonCollectible.Neutral.FishOfNzothTavernBrawl) {
 		// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
-		const doubleDr = [...validDeathrattles, ...validEnchantments].reduce(
-			(res, current) => res.concat([current, current]),
-			[],
-		);
+		const doubleDr = [...validDeathrattles, ...validEnchantments].reduce((res, current) => res.concat([current, current]), []);
 		fish.rememberedDeathrattles = [...doubleDr, ...(fish.rememberedDeathrattles || [])];
 	} else {
 		fish.rememberedDeathrattles = [...newDeathrattles, ...(fish.rememberedDeathrattles || [])];

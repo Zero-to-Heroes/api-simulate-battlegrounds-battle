@@ -18,7 +18,7 @@ const cards = new AllCardsService();
 export default async (event): Promise<any> => {
 	try {
 		const battleInput: BgsBattleInfo = JSON.parse(event.body);
-		await cards.initializeCardsDb();
+		await cards.initializeCardsDb('74257');
 		const cardsData = new CardsData(cards, false);
 		cardsData.inititialize(battleInput.options?.validTribes);
 		const simulationResult = simulateBattle(battleInput, cards, cardsData);
@@ -42,11 +42,7 @@ export default async (event): Promise<any> => {
 	}
 };
 
-export const simulateBattle = (
-	battleInput: BgsBattleInfo,
-	cards: AllCardsService,
-	cardsData: CardsData,
-): SimulationResult => {
+export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): SimulationResult => {
 	const start = Date.now();
 
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 6000;
@@ -68,12 +64,8 @@ export const simulateBattle = (
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = playerInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity),
-	);
-	const opponentBoard = opponentInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity),
-	);
+	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
+	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
 	// console.log('boards before enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
@@ -154,9 +146,7 @@ export const simulateBattle = (
 		totalMatches,
 	);
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
-	simulationResult.averageDamageLost = simulationResult.lost
-		? simulationResult.damageLost / simulationResult.lost
-		: 0;
+	simulationResult.averageDamageLost = simulationResult.lost ? simulationResult.damageLost / simulationResult.lost : 0;
 	if (simulationResult.averageDamageWon > 0 && simulationResult.averageDamageWon < playerInfo.player.tavernTier) {
 		console.warn('average damage won issue', simulationResult, playerInfo);
 	}
@@ -203,7 +193,6 @@ const cleanEnchantmentsForEntity = (
 	entityIds: readonly number[],
 ): { cardId: string; originEntityId: number }[] => {
 	return enchantments.filter(
-		(enchant) =>
-			entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
+		(enchant) => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
 	);
 };

@@ -8,6 +8,7 @@ import { hasMechanic, isCorrectTribe, stringifySimple, stringifySimpleCard } fro
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
+import { applyFrenzy } from './frenzy';
 import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
@@ -44,9 +45,7 @@ export const simulateAttack = (
 
 	// console.log('picking attacking entity', attackingEntityIndex, stringifySimple(attackingBoard));
 	const attackingEntity =
-		attackingEntityIndex != null
-			? attackingBoard[attackingEntityIndex]
-			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
+		attackingEntityIndex != null ? attackingBoard[attackingEntityIndex] : getAttackingEntity(attackingBoard, lastAttackerEntityId);
 	// console.log('attackingEntity\n', stringifySimpleCard(attackingEntity));
 	if (attackingEntity) {
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
@@ -60,11 +59,7 @@ export const simulateAttack = (
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				if (sharedState.debug) {
-					console.log(
-						'battling between',
-						stringifySimpleCard(attackingEntity),
-						stringifySimpleCard(defendingEntity),
-					);
+					console.log('battling between', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 				}
 				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards);
 
@@ -120,26 +115,8 @@ const performAttack = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	bumpEntities(
-		attackingEntity,
-		defendingEntity,
-		attackingBoard,
-		attackingBoardHero,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
-	bumpEntities(
-		defendingEntity,
-		attackingEntity,
-		defendingBoard,
-		defendingBoardHero,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
+	bumpEntities(attackingEntity, defendingEntity, attackingBoard, attackingBoardHero, allCards, spawns, sharedState, spectator);
+	bumpEntities(defendingEntity, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 	if (sharedState.debug) {
 		console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	}
@@ -147,16 +124,7 @@ const performAttack = (
 	if (attackingEntity.cleave) {
 		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		for (const neighbour of defenderNeighbours) {
-			bumpEntities(
-				neighbour,
-				attackingEntity,
-				defendingBoard,
-				defendingBoardHero,
-				allCards,
-				spawns,
-				sharedState,
-				spectator,
-			);
+			bumpEntities(neighbour, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 		}
 	}
 	// After attack hooks
@@ -200,16 +168,7 @@ const performAttack = (
 
 	// Approximate the play order
 	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
-	processMinionDeath(
-		attackingBoard,
-		attackingBoardHero,
-		defendingBoard,
-		defendingBoardHero,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
+	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 };
 
 const triggerRandomDeathrattle = (
@@ -277,11 +236,7 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 	return attackingEntity;
 };
 
-export const getNeighbours = (
-	board: BoardEntity[],
-	entity: BoardEntity,
-	deadEntityIndex?: number,
-): readonly BoardEntity[] => {
+export const getNeighbours = (board: BoardEntity[], entity: BoardEntity, deadEntityIndex?: number): readonly BoardEntity[] => {
 	const neighbours = [];
 	if (deadEntityIndex != null) {
 		if (deadEntityIndex < board.length - 1) {
@@ -356,16 +311,7 @@ export const dealDamageToEnemy = (
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
-	bumpEntities(
-		defendingEntity,
-		fakeAttacker,
-		defendingBoard,
-		defendingBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, defendingBoardHero, allCards, cardsData, sharedState, spectator);
 	const defendingEntityIndex = defendingBoard.map((entity) => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
 	processMinionDeath(
@@ -380,11 +326,7 @@ export const dealDamageToEnemy = (
 	);
 };
 
-export const getDefendingEntity = (
-	defendingBoard: BoardEntity[],
-	attackingEntity: BoardEntity,
-	ignoreTaunts = false,
-): BoardEntity => {
+export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntity: BoardEntity, ignoreTaunts = false): BoardEntity => {
 	let possibleDefenders: readonly BoardEntity[];
 	if (
 		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywick ||
@@ -454,8 +396,14 @@ export const bumpEntities = (
 		entity.health = 0;
 		// return entity;
 	}
+	// FIXME: This will likely be incorrect in terms of timings, e.g. if the entity ends up
+	// surviving following a buff like Spawn.
 	spectator.registerDamageDealt(bumpInto, entity, bumpInto.attack, entityBoard);
 	entity.lastAffectedByEntity = bumpInto;
+	if (!entity.frenzyApplied && entity.health > 0) {
+		applyFrenzy(entity, entityBoard, allCards, cardsData, sharedState, spectator);
+		entity.frenzyApplied = true;
+	}
 
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
@@ -680,11 +628,7 @@ const handleDeathsForFirstBoard = (
 				spectator,
 			);
 			if (sharedState.debug) {
-				console.debug(
-					'boards after deathrattle spawns\n',
-					stringifySimple(firstBoard) + '\n',
-					stringifySimple(otherBoard),
-				);
+				console.debug('boards after deathrattle spawns\n', stringifySimple(firstBoard) + '\n', stringifySimple(otherBoard));
 			}
 		} else if (firstBoard.length > 0) {
 			// const newBoardD = [...firstBoard];
@@ -696,11 +640,7 @@ const handleDeathsForFirstBoard = (
 	// return [firstBoard, otherBoard];
 };
 
-export const applyOnAttackBuffs = (
-	attacker: BoardEntity,
-	attackingBoard: BoardEntity[],
-	allCards: AllCardsService,
-): void => {
+export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardEntity[], allCards: AllCardsService): void => {
 	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBATTLEGROUNDS) {
 		attacker.attack *= 2;
 	}
@@ -723,11 +663,8 @@ export const applyOnAttackBuffs = (
 
 	// Dread Admiral Eliza
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
-		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralEliza)
-			.length;
-		const elizasTB = attackingBoard.filter(
-			(e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralElizaTavernBrawl,
-		).length;
+		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralEliza).length;
+		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralElizaTavernBrawl).length;
 		const elizaBuff = elizas * 1 + elizasTB * 2;
 		attackingBoard.forEach((entity) => {
 			entity.attack += 2 * elizaBuff;
@@ -736,15 +673,9 @@ export const applyOnAttackBuffs = (
 	}
 };
 
-export const applyOnBeingAttackedBuffs = (
-	attackedEntity: BoardEntity,
-	defendingBoard: BoardEntity[],
-	allCards: AllCardsService,
-): void => {
+export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defendingBoard: BoardEntity[], allCards: AllCardsService): void => {
 	if (attackedEntity.taunt) {
-		const champions = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarj,
-		);
+		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarj);
 		const goldenChampions = defendingBoard.filter(
 			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarjTavernBrawl,
 		);
@@ -758,9 +689,7 @@ export const applyOnBeingAttackedBuffs = (
 		});
 
 		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpire);
-		const goldenArms = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpireTavernBrawl,
-		);
+		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpireTavernBrawl);
 		attackedEntity.attack += 2 * arms.length + 4 * goldenArms.length;
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
@@ -948,10 +877,7 @@ const buildBoardAfterDeathrattleSpawns = (
 
 	const candidateEntitiesForOpponentBoard: readonly BoardEntity[] = [...entitiesFromNativeDeathrattleOnOpponentBoard];
 	const roomToSpawnForOpponentBoard: number = 7 - opponentBoard.length;
-	const spawnedEntitiesForOpponentBoard: readonly BoardEntity[] = candidateEntitiesForOpponentBoard.slice(
-		0,
-		roomToSpawnForOpponentBoard,
-	);
+	const spawnedEntitiesForOpponentBoard: readonly BoardEntity[] = candidateEntitiesForOpponentBoard.slice(0, roomToSpawnForOpponentBoard);
 	opponentBoard.push(...spawnedEntitiesForOpponentBoard);
 	// If needed might also have to handle more effects here, like we do for the main board
 	spectator.registerMinionsSpawn(opponentBoard, spawnedEntitiesForOpponentBoard);
