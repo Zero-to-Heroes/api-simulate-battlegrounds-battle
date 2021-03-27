@@ -76,67 +76,43 @@ export class CardsData {
 	}
 
 	public inititialize(validTribes?: readonly Race[]) {
-		// this.shredderSpawns = this.allCards
-		// 	.getCards()
-		// 	.filter((card) => card.techLevel)
-		// 	.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-		// 	.filter((card) => card.cost === 2)
-		// 	.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-		// 	.filter((card) => this.isValidTribe(validTribes, card.race))
-		// 	.map((card) => card.id);
-		this.ghastcoilerSpawns = this.allCards
+		const pool = this.allCards
 			.getCards()
 			.filter((card) => card.techLevel)
+			.filter((card) => card.set !== 'Vanilla');
+		this.ghastcoilerSpawns = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => card.id !== 'BGS_008')
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter((card) => this.isValidTribe(validTribes, card.race))
 			.map((card) => card.id);
-		this.validDeathrattles = this.allCards
-			.getCards()
-			.filter((card) => card.techLevel)
+		this.validDeathrattles = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter((card) => this.isValidTribe(validTribes, card.race))
 			.map((card) => card.id);
-		this.impMamaSpawns = this.allCards
-			.getCards()
-			.filter((card) => card.techLevel)
+		this.impMamaSpawns = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => card.race === 'DEMON')
 			.filter((card) => card.id !== CardIds.NonCollectible.Warlock.ImpMama)
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
-		this.gentleDjinniSpawns = this.allCards
-			.getCards()
-			.filter((card) => card.techLevel)
+		this.gentleDjinniSpawns = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => card.race === 'ELEMENTAL')
 			.filter((card) => card.id !== CardIds.NonCollectible.Neutral.GentleDjinni)
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
-		this.sneedsSpawns = this.allCards
-			.getCards()
-			.filter((card) => card.techLevel)
+		this.sneedsSpawns = pool
+			.filter((card) => this.isValidTribe(validTribes, card.race))
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => card.id !== 'GVG_114' && card.id !== 'BGS_006')
 			.filter((card) => card.rarity === 'Legendary')
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter((card) => this.isValidTribe(validTribes, card.race))
 			.map((card) => card.id);
-		// this.treasureChestSpawns = this.allCards
-		// 	.getCards()
-		// 	.filter(card => card.techLevel)
-		// 	.filter(
-		// 		card => card.id.startsWith('TB_BaconUps') || CardsData.CARDS_WITH_NO_BACONUP_VERSION.includes(card.id),
-		// 	) // Only golden
-		// 	.filter(card => this.isValidTribe(validTribes, card.race))
-		// 	.map(card => card.id);
-		this.pirateSpawns = this.allCards
-			.getCards()
-			.filter((card) => card.techLevel)
+		this.pirateSpawns = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => card.race === 'PIRATE')
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
@@ -187,6 +163,7 @@ export class CardsData {
 		const options = this.allCards
 			.getCards()
 			.filter((card) => card.techLevel === tavernTier)
+			.filter((card) => card.set !== 'Vanilla')
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
