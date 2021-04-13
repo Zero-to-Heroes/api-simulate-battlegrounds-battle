@@ -18,7 +18,7 @@ const cards = new AllCardsService();
 export default async (event): Promise<any> => {
 	try {
 		const battleInput: BgsBattleInfo = JSON.parse(event.body);
-		await cards.initializeCardsDb('74257');
+		await cards.initializeCardsDb('79904');
 		const cardsData = new CardsData(cards, false);
 		cardsData.inititialize(battleInput.options?.validTribes);
 		const simulationResult = simulateBattle(battleInput, cards, cardsData);
