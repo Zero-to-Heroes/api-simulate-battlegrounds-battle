@@ -72,11 +72,11 @@ export const handleDeathrattleEffects = (
 			// return [boardWithDeadEntity, otherBoard];
 			return;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 5, multiplier * 4, allCards, 'BEAST');
+			addStatsToBoard(boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, 'BEAST');
 			return;
 		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfTavernBrawl:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 10, multiplier * 8, allCards, 'BEAST');
+			addStatsToBoard(boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, 'BEAST');
 			return;
 		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KingBagurgle:
