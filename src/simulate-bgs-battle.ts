@@ -16,30 +16,19 @@ const cards = new AllCardsService();
 // the more traditional callback-style handler.
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
-	try {
-		const battleInput: BgsBattleInfo = JSON.parse(event.body);
-		await cards.initializeCardsDb('79904');
-		const cardsData = new CardsData(cards, false);
-		cardsData.inititialize(battleInput.options?.validTribes);
-		const simulationResult = simulateBattle(battleInput, cards, cardsData);
+	const battleInput: BgsBattleInfo = JSON.parse(event.body);
+	await cards.initializeCardsDb('79904');
+	const cardsData = new CardsData(cards, false);
+	cardsData.inititialize(battleInput.options?.validTribes);
+	const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
-		const response = {
-			statusCode: 200,
-			isBase64Encoded: false,
-			body: JSON.stringify(simulationResult),
-		};
-		// console.log('sending back success reponse');
-		return response;
-	} catch (e) {
-		console.error('issue retrieving stats', e);
-		const response = {
-			statusCode: 500,
-			isBase64Encoded: false,
-			body: null,
-		};
-		console.log('sending back error reponse', response);
-		return response;
-	}
+	const response = {
+		statusCode: 200,
+		isBase64Encoded: false,
+		body: JSON.stringify(simulationResult),
+	};
+	// console.log('sending back success reponse');
+	return response;
 };
 
 export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): SimulationResult => {
