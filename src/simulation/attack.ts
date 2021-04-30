@@ -30,23 +30,17 @@ export const simulateAttack = (
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
-	// console.log('opponent board before global modifiers', stringifySimple(defendingBoard));
 	applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
-	// console.log('opponent board after global modifiers', stringifySimple(defendingBoard));
 	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
 	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl ? 1 : 0);
-	// console.log('defendingBoard before auras', stringifySimple(defendingBoard), numberOfDeathwingPresents);
 	applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
 	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
-	// console.log('boards after auras\n', stringifySimple(attackingBoard), '\n', stringifySimple(defendingBoard));
 
-	// console.log('picking attacking entity', attackingEntityIndex, stringifySimple(attackingBoard));
 	const attackingEntity =
 		attackingEntityIndex != null ? attackingBoard[attackingEntityIndex] : getAttackingEntity(attackingBoard, lastAttackerEntityId);
-	// console.log('attackingEntity\n', stringifySimpleCard(attackingEntity));
 	if (attackingEntity) {
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
@@ -59,7 +53,6 @@ export const simulateAttack = (
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				if (sharedState.debug) {
-					console.log('battling between', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 				}
 				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards);
 
@@ -79,7 +72,6 @@ export const simulateAttack = (
 				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 				// the windfury triggers again? The current behavior attacks after the windfury is over
 				if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
-					// console.log('yoho ogre attacking immediately', defendingEntity);
 					defendingEntity.attackImmediately = true;
 				}
 			}
@@ -100,7 +92,6 @@ export const simulateAttack = (
 	// 	'\n',
 	// 	stringifySimple(defendingBoard),
 	// );
-	// console.log('after simulateAttack', spectator['actionsForCurrentBattle']);
 };
 
 const performAttack = (
@@ -118,7 +109,6 @@ const performAttack = (
 	bumpEntities(attackingEntity, defendingEntity, attackingBoard, attackingBoardHero, allCards, spawns, sharedState, spectator);
 	bumpEntities(defendingEntity, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 	if (sharedState.debug) {
-		console.log('after damage', stringifySimpleCard(attackingEntity), stringifySimpleCard(defendingEntity));
 	}
 	// Cleave
 	if (attackingEntity.cleave) {
@@ -190,7 +180,6 @@ const triggerRandomDeathrattle = (
 					.some((enchantmentId) => validEnchantments.includes(enchantmentId))),
 	);
 	if (sharedState.debug) {
-		console.log('triggering random deathrattle\n', stringifySimple(validDeathrattles));
 	}
 	if (validDeathrattles.length === 0) {
 		return;
@@ -507,11 +496,9 @@ export const processMinionDeath = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	// console.log('boards before minions die', board1, board2);
 	const [deadMinionIndexes1, deadEntities1] = makeMinionsDie(board1);
 	const [deadMinionIndexes2, deadEntities2] = makeMinionsDie(board2);
 	spectator.registerDeadEntities(deadMinionIndexes1, deadEntities1, deadMinionIndexes2, deadEntities2);
-	// console.log('boards after minions die', board1.length, board2.length);
 	// No death to process, we can return
 	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
 		return;
@@ -588,7 +575,6 @@ export const processMinionDeath = (
 			spectator,
 		);
 	}
-	// console.log('board from processMinionDeath', board1, board2);
 	// Make sure we only return when there are no more deaths to process
 	// FIXME: this will propagate the killer between rounds, which is incorrect. For instance,
 	// if a dragon kills a Ghoul, then the Ghoul's deathrattle kills a Kaboom, the killer should
@@ -634,7 +620,6 @@ const handleDeathsForFirstBoard = (
 			// const newBoardD = [...firstBoard];
 			firstBoard.splice(index, 1, entity);
 			// firstBoard = newBoardD;
-			// console.log('board after minions fight without death', entity, firstBoard, otherBoard);
 		}
 	}
 	// return [firstBoard, otherBoard];
@@ -715,14 +700,12 @@ const makeMinionsDie = (
 	const deadMinionIndexes: number[] = [];
 	const deadEntities: BoardEntity[] = [];
 	// const boardCopy = [...board];
-	// console.log('board before making minion die', board.length, board);
 	for (let i = 0; i < board.length; i++) {
 		const index = board.map((entity) => entity.entityId).indexOf(board[i].entityId);
 		if (board[i].health <= 0) {
 			deadMinionIndexes.push(i);
 			deadEntities.push(board[i]);
 			board.splice(index, 1);
-			// console.log('entity dead', deadEntities, board.length);
 		}
 	}
 	return [deadMinionIndexes, deadEntities];
@@ -862,7 +845,6 @@ const buildBoardAfterDeathrattleSpawns = (
 	// 	// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 	// 	// the windfury triggers again? The current behavior attacks after the windfury is over
 	// 	if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
-	// 		// console.log('yoho ogre attacking immediately', defendingEntity);
 	// 		defendingEntity.attackImmediately = true;
 	// 	}
 	// }

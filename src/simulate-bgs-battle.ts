@@ -27,7 +27,6 @@ export default async (event): Promise<any> => {
 		isBase64Encoded: false,
 		body: JSON.stringify(simulationResult),
 	};
-	// console.log('sending back success reponse');
 	return response;
 };
 
@@ -55,12 +54,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 
 	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
 	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
-	// console.log('boards before enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
-	// console.log('boards after removing auras\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 	removeGlobalModifiers(playerBoard, opponentBoard, cards);
-	// console.log('boards after enchantments clean\n', stringifySimple(opponentBoard), '\n', stringifySimple(playerBoard));
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation
@@ -91,7 +87,6 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			input.opponentBoard.player,
 			spectator,
 		);
-		// console.log('after simulateSingleBattle', spectator['actionsForCurrentBattle']);
 		if (!battleResult) {
 			continue;
 		}
@@ -115,19 +110,16 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		spectator.commitBattleResult(battleResult.result);
 	}
 	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
-	// console.log('won', simulationResult.won, totalMatches);
 	simulationResult.wonPercent = checkRounding(
 		Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10,
 		simulationResult.won,
 		totalMatches,
 	);
-	// console.log('lost', simulationResult.lost, totalMatches);
 	simulationResult.lostPercent = checkRounding(
 		Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10,
 		simulationResult.lost,
 		totalMatches,
 	);
-	// console.log('tied', simulationResult.tied, totalMatches);
 	// simulationResult.tiedPercent = checkRounding(Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10, simulationResult.tied, totalMatches);
 	simulationResult.tiedPercent = checkRounding(
 		100 - simulationResult.lostPercent - simulationResult.wonPercent,
@@ -143,7 +135,6 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		console.warn('average damage lost issue', simulationResult, opponentInfo);
 	}
 	console.timeEnd('simulation');
-	console.log('sending back success reponse', simulationResult);
 	spectator.prune();
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
 	// spectator.reset();
@@ -151,13 +142,10 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 };
 
 const checkRounding = (roundedValue: number, initialValue: number, totalValue: number): number => {
-	// console.log('check rounding', roundedValue, initialValue, roundedValue === 0, initialValue !== 0, roundedValue === 100, initialValue !== totalValue);
 	if (roundedValue === 0 && initialValue !== 0) {
-		console.log('return 0.01');
 		return 0.01;
 	}
 	if (roundedValue === 100 && initialValue !== totalValue) {
-		console.log('return 99.9');
 		return 99.9;
 	}
 	return roundedValue;

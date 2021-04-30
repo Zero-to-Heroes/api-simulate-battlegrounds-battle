@@ -117,7 +117,6 @@ export class CardsData {
 			.filter((card) => card.race === 'PIRATE')
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
-		// console.log('initialized cards data', this);
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
 		this.auraEnchantments = [

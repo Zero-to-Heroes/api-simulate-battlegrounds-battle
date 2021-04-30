@@ -17,7 +17,6 @@ export class Spectator {
 		private readonly opponentHeroPowerCardId?: string,
 	) {
 		this.actionsForCurrentBattle = [];
-		console.log('reset actions in constructor');
 		this.wonBattles = [];
 		this.tiedBattles = [];
 		this.lostBattles = [];
@@ -28,7 +27,6 @@ export class Spectator {
 		this.lostBattles = this.lostBattles.slice(0, MAX_SAMPLES);
 		this.tiedBattles = this.tiedBattles.slice(0, MAX_SAMPLES);
 
-		// console.log('first tied battle', this.tiedBattles[0]);
 	}
 
 	public buildOutcomeSamples(): {
@@ -84,7 +82,6 @@ export class Spectator {
 				});
 				break;
 		}
-		// console.log('reset actions after commit');
 	}
 
 	private collapseActions(actions: readonly GameAction[]): readonly GameAction[] {
@@ -149,7 +146,6 @@ export class Spectator {
 		attackingBoard: readonly BoardEntity[],
 		defendingBoard: readonly BoardEntity[],
 	) {
-		// console.log('registering attack', stringifySimple(attackingBoard), stringifySimple(defendingBoard));
 		const friendlyBoard = attackingBoard.every(entity => entity.friendly) ? attackingBoard : defendingBoard;
 		const opponentBoard = defendingBoard.every(entity => entity.friendly) ? attackingBoard : defendingBoard;
 		const action: GameAction = {
@@ -159,9 +155,7 @@ export class Spectator {
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 		};
-		// console.log('registered attack', attackAction);
 		this.actionsForCurrentBattle.push(action);
-		// console.log('actions after attack', this.actionsForCurrentBattle);
 	}
 
 	public registerDamageDealt(
@@ -187,7 +181,6 @@ export class Spectator {
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 		};
-		// console.log('registered attack', attackAction);
 		this.actionsForCurrentBattle.push(action);
 	}
 
@@ -197,7 +190,6 @@ export class Spectator {
 		}
 		const friendlyBoard = targetBoard.every(entity => entity.friendly) ? targetBoard : null;
 		const opponentBoard = targetBoard.every(entity => !entity.friendly) ? targetBoard : null;
-		// console.log('powerTarget', sourceEntity.entityId);
 		const action: GameAction = {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
@@ -220,7 +212,6 @@ export class Spectator {
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 		};
-		// console.log('registered attack', attackAction);
 		this.actionsForCurrentBattle.push(action);
 	}
 
@@ -241,7 +232,6 @@ export class Spectator {
 			playerBoard: undefined,
 			opponentBoard: undefined,
 		};
-		// console.log('registered attack', attackAction);
 		this.actionsForCurrentBattle.push(action);
 	}
 }

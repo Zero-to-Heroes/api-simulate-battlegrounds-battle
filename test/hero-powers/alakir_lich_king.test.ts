@@ -21,7 +21,6 @@ describe('Test when Alakir and Lich King face each other', () => {
 
 		const sample = simulationResult.outcomeSamples.won[0];
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
 
 		expect(simulationResult.tiedPercent).toBe(100);
 	});
@@ -40,7 +39,6 @@ describe('Test when Alakir and Lich King face each other', () => {
 
 		// const sample = simulationResult.outcomeSamples.tied[0];
 		// const base64 = encode(JSON.stringify(sample));
-		// console.log('encoded', base64);
 
 		expect(simulationResult.lostPercent).toBe(100);
 	});

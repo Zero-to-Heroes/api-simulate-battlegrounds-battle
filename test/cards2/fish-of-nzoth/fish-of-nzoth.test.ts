@@ -20,6 +20,5 @@ describe('Test card data', () => {
 
 		// const sample = simulationResult.outcomeSamples.lost[0];
 		// const base64 = encode(JSON.stringify(sample));
-		// console.log('encoded', base64);
 	});
 });

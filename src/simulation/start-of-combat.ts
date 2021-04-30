@@ -215,11 +215,9 @@ export const handleStartOfCombat = (
 
 	const playerAttackers = playerBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
 	const opponentAttackers = opponentBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
-	// console.log('[start of combat] cazndidates', stringifySimple(playerAttackers), stringifySimple(opponentAttackers));
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
-			// console.log('[start of combat] will perform player attack', attacker);
 			performStartOfCombat(
 				attacker,
 				playerBoard,
@@ -233,7 +231,6 @@ export const handleStartOfCombat = (
 			);
 		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
-			// console.log('[start of combat] will perform opponent attack', attacker);
 			performStartOfCombat(
 				attacker,
 				opponentBoard,
@@ -284,7 +281,6 @@ export const performStartOfCombat = (
 		const damage = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
-		// console.log('[start of combat] damage', damage);
 		dealDamageToRandomEnemy(
 			defendingBoard,
 			defendingBoardHero,

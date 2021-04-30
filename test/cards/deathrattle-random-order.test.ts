@@ -99,9 +99,7 @@ describe('Deathrattle random order', () => {
 		expect(result.outcomeSamples.tied.length).toBeGreaterThanOrEqual(1);
 
 		const sample: GameSample = result.outcomeSamples.tied[0];
-		console.log('sample', JSON.stringify(sample));
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
 		const decoded = decode(base64);
 		expect(base64).toEqual(encode(decoded));
 	});

@@ -6,13 +6,10 @@ import { isCorrectTribe, stringifySimpleCard } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: number, data: CardsData, cards: AllCardsService): void => {
-	// console.log('ready to apply auras', board);
 	for (let i = 0; i < board.length; i++) {
 		if (data.auraOrigins.indexOf(board[i].cardId) !== -1) {
 			const enchantmentId = data.auraEnchantments.find((aura) => aura[0] === board[i].cardId)[1];
-			// console.log('applying aura', enchantmentId, board);
 			applyAura(board, i, enchantmentId, cards);
-			// console.log('applied aura', enchantmentId, board);
 		}
 	}
 
@@ -32,9 +29,7 @@ export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
 const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsData): void => {
 	// let newEntity = entity;
 	for (const enchantment of entity.enchantments) {
-		// console.log('removing aura from', enchantment, entity.enchantments, entity);
 		removeAura(entity, enchantment.cardId, board);
-		// console.log(' aura removed', enchantment, newEntity.enchantments, newEntity);
 	}
 	// return newEntity;
 };
@@ -131,7 +126,6 @@ const applySiegebreakerAura = (board: BoardEntity[], index: number, enchantmentI
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
-			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			// newBoard.push(entity);
 			continue;
 		}
@@ -149,7 +143,6 @@ const applyMalGanisAura = (board: BoardEntity[], index: number, enchantmentId: s
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
-			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			// newBoard.push(entity);
 			continue;
 		}
@@ -207,7 +200,6 @@ const applyMurlocWarleaderAura = (board: BoardEntity[], index: number, enchantme
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.MURLOC)) {
-			// console.log('not applying aura', entity.cardId, cards.getCard(entity.cardId), i, index);
 			// newBoard.push(entity);
 			continue;
 		}
@@ -262,7 +254,6 @@ const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantme
 const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[]): void => {
 	const debug = false && entity.entityId === 3879;
 	if (debug) {
-		console.log('removing aura for', stringifySimpleCard(entity));
 	}
 	const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId);
 	const numberOfBuffs = buffs.length;
@@ -279,7 +270,6 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, b
 	// that isn't on the board
 	// const existingEnchantingEntity = board.filter((e) => buffs.map((b) => b.originEntityId).includes(e.entityId));
 	// const isBuffingEntityAlive = existingEnchantingEntity.length > 0;
-	// console.log('buffing entity alive?', stringifySimple(board), stringifySimpleCard(entity), buffs);
 	entity.attack = Math.max(
 		0,
 		entity.attack - numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantment ? 1 : 2),
@@ -290,7 +280,6 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, b
 	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 	if (debug) {
-		console.log('removed aura for', stringifySimpleCard(entity));
 	}
 };
 

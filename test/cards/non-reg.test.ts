@@ -181,13 +181,10 @@ describe('Non-reg', () => {
 		};
 		SharedState.debugEnabled = false;
 		const result = simulateBattle(battleInput, cards, spawns);
-		// console.log(result);
 
 		const sample = result.outcomeSamples.lost[0];
-		// console.log('sample', JSON.stringify(sample));
 
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
 		const decoded = decode(base64);
 		expect(base64).toEqual(encode(decoded));
 	});

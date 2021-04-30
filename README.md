@@ -20,7 +20,6 @@ Then, at the end of the test (e.g. `full-test.test` mentioned above), add / unco
 ```
 const sample = simulationResult.outcomeSamples.lost[0];
 const base64 = encode(JSON.stringify(sample));
-console.log('encoded', base64);
 ```
 
 (using `won` or `tied` instead of `lost` if that's what you're looking for).

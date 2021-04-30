@@ -10,7 +10,6 @@ export const applyGlobalModifiers = (
 	data: CardsData,
 	cards: AllCardsService,
 ): void => {
-	// console.log('before applying global modifiers', board1, board2);
 	const totalMurlocs =
 		board1.map(entity => cards.getCard(entity.cardId).race).filter(race => isCorrectTribe(race, Race.MURLOC))
 			.length +

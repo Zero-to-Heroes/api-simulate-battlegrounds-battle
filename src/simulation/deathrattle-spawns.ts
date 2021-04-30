@@ -26,7 +26,6 @@ export const spawnEntities = (
 	const minionsToSpawn = limitSpawns
 		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
-	// console.log('will spawn entities', cardId, minionsToSpawn, boardToSpawnInto);
 	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
 		const newMinion = buildSingleBoardEntity(
@@ -47,7 +46,6 @@ export const spawnEntities = (
 			? 4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
 			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl).length
 			: 0;
-		// console.log('buffs', attackBuff, healthBuff, newMinion, boardToSpawnInto);
 		newMinion.attack += attackBuff;
 		newMinion.health += healthBuff;
 		if (!newMinion.cardId) {
@@ -292,7 +290,6 @@ export const spawnEntitiesFromDeathrattle = (
 			// case CardIds.Collectible.Neutral.PilotedShredder:
 			// case CardIds.NonCollectible.Neutral.PilotedShredder:
 			// 	const shredderSpawn = spawns.shredderSpawns[Math.floor(Math.random() * spawns.shredderSpawns.length)];
-			// 	// console.log('shredderSpawn', shredderSpawn, spawns.shredderSpawns.length);
 			// 	spawnedEntities.push(
 			// 		...spawnEntities(
 			// 			shredderSpawn,

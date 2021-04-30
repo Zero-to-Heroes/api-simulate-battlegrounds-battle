@@ -27,7 +27,6 @@ export const handleSpawn = (entity: BoardEntity, spawned: readonly BoardEntity[]
 		case CardIds.Collectible.Paladin.CobaltGuardian:
 		case CardIds.NonCollectible.Neutral.DeflectOBot:
 			if (spawned.filter(spawn => isCorrectTribe(cards.getCard(spawn.cardId).race, Race.MECH)).length > 0) {
-				// console.log('mech spawned, granting DS and +1 attack');
 				entity.attack = entity.attack + 1;
 				entity.divineShield = true;
 			}

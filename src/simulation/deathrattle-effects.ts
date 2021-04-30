@@ -124,7 +124,6 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			return;
-		// console.log('after damage from bot', opponentBoard, board);
 		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KaboomBotTavernBrawl:
 			for (let i = 0; i < multiplier; i++) {
@@ -183,7 +182,6 @@ const applyMinionDeathEffect = (
 		applyScavengingHyenaEffect(boardWithDeadEntity);
 	}
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.DEMON)) {
-		// console.log('will apply juggler effect', deadEntity, boardWithDeadEntity, otherBoard);
 		applySoulJugglerEffect(
 			boardWithDeadEntity,
 			boardWithDeadEntityHero,
@@ -407,7 +405,6 @@ const applySoulJugglerEffect = (
 		// return [boardWithJugglers, boardToAttack];
 	}
 	const jugglers = boardWithJugglers.filter((entity) => entity.cardId === CardIds.NonCollectible.Warlock.SoulJuggler);
-	// console.log('jugglers in board', boardWithJugglers);
 	for (const juggler of jugglers) {
 		dealDamageToRandomEnemy(
 			boardToAttack,
@@ -423,7 +420,6 @@ const applySoulJugglerEffect = (
 		);
 	}
 	const goldenJugglers = boardWithJugglers.filter((entity) => entity.cardId === CardIds.NonCollectible.Warlock.SoulJugglerTavernBrawl);
-	// console.log('golden jugglers in board', boardWithJugglers);
 	for (const juggler of goldenJugglers) {
 		dealDamageToRandomEnemy(
 			boardToAttack,

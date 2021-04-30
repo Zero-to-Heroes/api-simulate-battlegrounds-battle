@@ -52,7 +52,6 @@ export class Simulator {
 		if (this.sharedState.debug) {
 			console.debug('after start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
 		}
-		// console.log('starting player', this.currentAttacker);
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			if (this.sharedState.debug) {
@@ -69,17 +68,13 @@ export class Simulator {
 			// that is not handled properly today (the attack should in some cases happen before
 			// the other deathrattle procs)
 			if (playerBoard.some((entity) => entity.attackImmediately)) {
-				// console.log('attack immediately on player board');
 				this.currentSpeedAttacker = 0;
 			} else if (opponentBoard.some((entity) => entity.attackImmediately)) {
-				// console.log('attack immediately on opponent board');
 				this.currentSpeedAttacker = 1;
 			} else {
 				this.currentSpeedAttacker = -1;
 			}
-			// console.log('choosing attacker', this.currentSpeedAttacker, this.currentAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
-				// console.log('attacking with player\n', stringifySimple(playerBoard));
 				simulateAttack(
 					playerBoard,
 					playerEntity,
@@ -92,7 +87,6 @@ export class Simulator {
 					spectator,
 				);
 			} else {
-				// console.log('attacking with opponent\n', stringifySimple(opponentBoard));
 				simulateAttack(
 					opponentBoard,
 					opponentEntity,
@@ -106,10 +100,8 @@ export class Simulator {
 				);
 			}
 			if (playerBoard.some((entity) => entity.attackImmediately)) {
-				// console.log('attack immediately on player board');
 				this.currentSpeedAttacker = 0;
 			} else if (opponentBoard.some((entity) => entity.attackImmediately)) {
-				// console.log('attack immediately on opponent board');
 				this.currentSpeedAttacker = 1;
 			} else {
 				this.currentSpeedAttacker = -1;
@@ -128,7 +120,6 @@ export class Simulator {
 				return null;
 			}
 		}
-		// console.log('battle over', playerBoard, opponentBoard);
 		if (playerBoard.length === 0 && opponentBoard.length === 0) {
 			return {
 				result: 'tied',
