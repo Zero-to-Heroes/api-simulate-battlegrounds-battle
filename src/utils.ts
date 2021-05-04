@@ -28,6 +28,8 @@ const TAUNT_IDS = [
 	CardIds.NonCollectible.Neutral.AcolyteOfCthunTavernBrawl,
 	CardIds.Collectible.Warlock.RingMatron,
 	CardIds.NonCollectible.Warlock.RingMatronTavernBrawl,
+	CardIds.NonCollectible.Neutral.DynamicDuo,
+	CardIds.NonCollectible.Neutral.DynamicDuo_DynamicDuo,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
@@ -36,11 +38,9 @@ const ATTACK_IMMEDIATELY_IDS = [
 export const MEGA_WINDFURY_IDS = [
 	CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl,
 	CardIds.NonCollectible.Neutral.CracklingCycloneTavernBrawl,
+	CardIds.NonCollectible.Neutral.BristlebackKnight,
 ];
-const CANT_ATTACK_IDS = [
-	CardIds.NonCollectible.Neutral.ArcaneCannon,
-	CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl,
-];
+const CANT_ATTACK_IDS = [CardIds.NonCollectible.Neutral.ArcaneCannon, CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl];
 
 export const buildSingleBoardEntity = (
 	cardId: string,
@@ -109,9 +109,7 @@ export const stringifySimple = (board: readonly BoardEntity[]): string => {
 
 export const stringifySimpleCard = (entity: BoardEntity): string => {
 	return entity
-		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${
-				entity.attacksPerformed || 0
-		  }`
+		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${entity.attacksPerformed || 0}`
 		: null;
 };
 

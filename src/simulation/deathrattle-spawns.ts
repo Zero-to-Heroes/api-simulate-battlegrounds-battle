@@ -643,7 +643,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.Collectible.Warlock.Voidlord:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.Collectible.Warlock.Voidwalker,
+						CardIds.Collectible.Warlock.VoidwalkerLegacy,
 						3,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,

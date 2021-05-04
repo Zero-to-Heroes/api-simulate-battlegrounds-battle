@@ -24,5 +24,10 @@ export const applyFrenzy = (
 				entity.health += buff;
 			}
 		}
+	} else if (
+		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnight ||
+		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnight_BristlebackKnight
+	) {
+		entityWithFrenzy.divineShield = true;
 	}
 };

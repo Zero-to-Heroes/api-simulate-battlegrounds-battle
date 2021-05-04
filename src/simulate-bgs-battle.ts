@@ -17,7 +17,7 @@ const cards = new AllCardsService();
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
-	await cards.initializeCardsDb('79904');
+	await cards.initializeCardsDb('81706');
 	const cardsData = new CardsData(cards, false);
 	cardsData.inititialize(battleInput.options?.validTribes);
 	const simulationResult = simulateBattle(battleInput, cards, cardsData);

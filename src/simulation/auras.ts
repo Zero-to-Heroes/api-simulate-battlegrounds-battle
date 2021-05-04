@@ -2,7 +2,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { isCorrectTribe, stringifySimpleCard } from '../utils';
+import { isCorrectTribe } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: number, data: CardsData, cards: AllCardsService): void => {
@@ -40,7 +40,7 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.NonCollectible.Neutral.DireWolfAlphaTavernBrawl:
 			applyDireWolfAura(board, i, enchantmentId);
 			return;
-		case CardIds.Collectible.Warlock.Siegebreaker:
+		case CardIds.Collectible.Warlock.SiegebreakerLegacy:
 		case CardIds.NonCollectible.Warlock.SiegebreakerTavernBrawl:
 			applySiegebreakerAura(board, i, enchantmentId, cards);
 			return;
@@ -77,7 +77,7 @@ const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEnti
 		case CardIds.NonCollectible.Warlock.MalGanis_GraspOfMalganisEnchantmentTavernBrawl:
 			removeMalGanisAura(entity, enchantmentId);
 			return;
-		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment:
+		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglLegacyEnchantment:
 		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl:
 			removeMurlocWarleaderAura(entity, enchantmentId);
 			return;
@@ -205,7 +205,7 @@ const applyMurlocWarleaderAura = (board: BoardEntity[], index: number, enchantme
 		}
 
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
-			entity.attack += enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment ? 2 : 4;
+			entity.attack += enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglLegacyEnchantment ? 2 : 4;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
 		}
 	}
@@ -216,23 +216,11 @@ const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): 
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId).length;
 	entity.attack = Math.max(
 		0,
-		entity.attack - numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment ? 2 : 4),
+		entity.attack -
+			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglLegacyEnchantment ? 2 : 4),
 	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
-
-// const applyWhirlwindTempestAura = (
-// 	board: BoardEntity[],
-// 	index: number,
-// 	enchantmentId: string,
-// 	cards: AllCardsService,
-// ): void => {
-// 	board.forEach(entity => {
-// 		if (entity.windfury) {
-// 			entity.megaWindfury = true;
-// 		}
-// 	});
-// };
 
 const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
 	const originEntity = board[index];
@@ -282,10 +270,3 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, b
 	if (debug) {
 	}
 };
-
-// const removeWhirlwindTempestAura = (entity: BoardEntity, enchantmentId: string): void => {
-// 	entity.enchantments = entity.enchantments.filter(aura => aura.cardId !== enchantmentId);
-// 	if (entity.megaWindfury && entity.windfury && !MEGA_WINDFURY_IDS.includes(entity.cardId)) {
-// 		entity.megaWindfury = false;
-// 	}
-// };

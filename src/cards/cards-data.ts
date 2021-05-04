@@ -125,7 +125,7 @@ export class CardsData {
 				CardIds.NonCollectible.Neutral.DireWolfAlphaTavernBrawl,
 				CardIds.NonCollectible.Neutral.DireWolfAlpha_StrengthOfThePackEnchantmentTavernBrawl,
 			],
-			[CardIds.Collectible.Warlock.Siegebreaker, CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment],
+			[CardIds.Collectible.Warlock.SiegebreakerLegacy, CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantment],
 			[
 				CardIds.NonCollectible.Warlock.SiegebreakerTavernBrawl,
 				CardIds.NonCollectible.Warlock.Siegebreaker_SiegebreakingEnchantmentTavernBrawl,
@@ -135,7 +135,7 @@ export class CardsData {
 				CardIds.NonCollectible.Warlock.MalganisTavernBrawl,
 				CardIds.NonCollectible.Warlock.MalGanis_GraspOfMalganisEnchantmentTavernBrawl,
 			],
-			[CardIds.Collectible.Neutral.MurlocWarleader, CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantment],
+			[CardIds.Collectible.Neutral.MurlocWarleader, CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglLegacyEnchantment],
 			[
 				CardIds.NonCollectible.Neutral.MurlocWarleaderTavernBrawl,
 				CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglEnchantmentTavernBrawl,
