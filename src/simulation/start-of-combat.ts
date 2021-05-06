@@ -120,7 +120,11 @@ const handlePlayerStartOfCombatHeroPowers = (
 ): number => {
 	// Lich King should be handled in the incoming board state
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl && playerBoard.length > 0) {
+		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
+		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+		// currentAttacker = (currentAttacker + 1) % 2;
+	} else if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
