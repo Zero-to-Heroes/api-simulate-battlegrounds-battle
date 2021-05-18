@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, isBattlegroundsCard, Race } from '@firestone-hs/reference-data';
 import { getRaceEnum, hasMechanic } from '../utils';
 
 const REMOVED_CARD_IDS = [
@@ -40,6 +40,8 @@ const REMOVED_CARD_IDS = [
 	CardIds.NonCollectible.Neutral.ElistraTheImmortalTavernBrawl,
 	CardIds.Collectible.Neutral.PilotedShredder,
 	CardIds.NonCollectible.Neutral.PilotedShredderTavernBrawl,
+	CardIds.Collectible.Neutral.BarrensBlacksmith,
+	CardIds.NonCollectible.Neutral.BarrensBlacksmithTavernBrawl,
 ];
 
 export class CardsData {
@@ -75,10 +77,10 @@ export class CardsData {
 		}
 	}
 
-	public inititialize(validTribes?: readonly Race[]) {
+	public inititialize(validTribes?: readonly Race[]): void {
 		const pool = this.allCards
 			.getCards()
-			.filter((card) => card.techLevel)
+			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => card.set !== 'Vanilla');
 		this.ghastcoilerSpawns = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
@@ -88,7 +90,7 @@ export class CardsData {
 			.filter((card) => this.isValidTribe(validTribes, card.race))
 			.map((card) => card.id);
 		this.validDeathrattles = pool
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			// .filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter((card) => this.isValidTribe(validTribes, card.race))

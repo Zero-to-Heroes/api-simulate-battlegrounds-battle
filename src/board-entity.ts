@@ -3,8 +3,8 @@ export interface BoardEntity {
 	cardId: string;
 	attack: number;
 	health: number;
-	frenzyApplied: boolean;
 
+	frenzyApplied?: boolean;
 	taunt?: boolean;
 	divineShield?: boolean;
 	poisonous?: boolean;

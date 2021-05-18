@@ -2,7 +2,6 @@
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import runSimulation from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
-import { encode } from '../../src/utils';
 import jsonEvent3 from './game3.json';
 
 describe.skip('Full tests for performance and accuracy', () => {
@@ -18,9 +17,9 @@ describe.skip('Full tests for performance and accuracy', () => {
 		const simulationResult = JSON.parse(result.body);
 		console.log('result', simulationResult.won, simulationResult.tied, simulationResult.lost);
 
-		const sample = simulationResult.outcomeSamples.tied[0];
-		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
+		// const sample = simulationResult.outcomeSamples.won[0];
+		// const base64 = encode(JSON.stringify(sample));
+		// console.log('encoded', base64);
 	});
 });
 

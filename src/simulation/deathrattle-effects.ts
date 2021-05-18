@@ -526,12 +526,11 @@ const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCar
 	// return board;
 };
 
-export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly BoardEntity[], cardsData: CardsData) => {
+export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly BoardEntity[], cardsData: CardsData): void => {
 	const validDeathrattles = deadEntities
 		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId))
 		.map((entity) => entity.cardId);
 	const validEnchantments = deadEntities
-		// eslint-disable-next-line prettier/prettier
 		.filter((entity) => entity.enchantments?.length)
 		.map((entity) => entity.enchantments)
 		.reduce((a, b) => a.concat(b), [])
@@ -543,9 +542,7 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 				CardIds.NonCollectible.Neutral.LivingSporesToken2,
 			].includes(enchantmentId),
 		);
-	if (SharedState.debugEnabled) {
-		console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
-	}
+	// console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];
 	// Order is important
 	if (fish.cardId === CardIds.NonCollectible.Neutral.FishOfNzothTavernBrawl) {
@@ -555,4 +552,5 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 	} else {
 		fish.rememberedDeathrattles = [...newDeathrattles, ...(fish.rememberedDeathrattles || [])];
 	}
+	// console.debug('remembered dr', fish.rememberedDeathrattles);
 };

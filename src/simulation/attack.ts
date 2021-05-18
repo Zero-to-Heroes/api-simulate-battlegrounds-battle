@@ -171,14 +171,24 @@ const triggerRandomDeathrattle = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const validDeathrattles = attackingBoard.filter(
-		(entity) =>
-			hasMechanic(allCards.getCard(entity.cardId), 'DEATHRATTLE') ||
-			(entity.enchantments &&
-				entity.enchantments
-					.map((enchantment) => enchantment.cardId)
-					.some((enchantmentId) => validEnchantments.includes(enchantmentId))),
-	);
+	const validDeathrattles = attackingBoard.filter((entity) => {
+		if (hasMechanic(allCards.getCard(entity.cardId), 'DEATHRATTLE')) {
+			return true;
+		}
+		if (entity.rememberedDeathrattles?.length) {
+			return true;
+		}
+		if (
+			entity.enchantments &&
+			entity.enchantments.map((enchantment) => enchantment.cardId).some((enchantmentId) => validEnchantments.includes(enchantmentId))
+		) {
+			return true;
+		}
+		return false;
+	});
+	// console.log('validDeathrattles on board?', validDeathrattles);
+	// console.log('board', stringifySimple(attackingBoard));
+	// console.log('board full', attackingBoard.find((e) => e.cardId === 'TB_BaconShop_HP_105t')?.enchantments);
 	if (sharedState.debug) {
 	}
 	if (validDeathrattles.length === 0) {

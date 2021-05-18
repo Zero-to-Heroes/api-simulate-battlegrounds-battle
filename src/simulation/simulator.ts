@@ -1,4 +1,4 @@
-import { AllCardsService } from '@firestone-hs/reference-data';
+import { AllCardsService, getEffectiveTechLevel } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -137,7 +137,9 @@ export class Simulator {
 		};
 	}
 
-	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]) {
-		return playerBoard.map((entity) => this.allCards.getCard(entity.cardId).techLevel || 1).reduce((a, b) => a + b, 0);
+	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]): number {
+		return playerBoard
+			.map((entity) => getEffectiveTechLevel(this.allCards.getCard(entity.cardId), this.allCards))
+			.reduce((a, b) => a + b, 0);
 	}
 }
