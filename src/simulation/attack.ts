@@ -106,15 +106,48 @@ const performAttack = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	bumpEntities(attackingEntity, defendingEntity, attackingBoard, attackingBoardHero, allCards, spawns, sharedState, spectator);
-	bumpEntities(defendingEntity, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
+	bumpEntities(
+		attackingEntity,
+		defendingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
+	bumpEntities(
+		defendingEntity,
+		attackingEntity,
+		defendingBoard,
+		defendingBoardHero,
+		attackingBoard,
+		attackingBoardHero,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
 	if (sharedState.debug) {
 	}
 	// Cleave
 	if (attackingEntity.cleave) {
 		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		for (const neighbour of defenderNeighbours) {
-			bumpEntities(neighbour, attackingEntity, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
+			bumpEntities(
+				neighbour,
+				attackingEntity,
+				defendingBoard,
+				defendingBoardHero,
+				attackingBoard,
+				attackingBoardHero,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
 		}
 	}
 	// After attack hooks
@@ -310,7 +343,18 @@ export const dealDamageToEnemy = (
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
-	bumpEntities(defendingEntity, fakeAttacker, defendingBoard, defendingBoardHero, allCards, cardsData, sharedState, spectator);
+	bumpEntities(
+		defendingEntity,
+		fakeAttacker,
+		defendingBoard,
+		defendingBoardHero,
+		boardWithAttackOrigin,
+		boardWithAttackOriginHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 	const defendingEntityIndex = defendingBoard.map((entity) => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
 	processMinionDeath(
@@ -358,6 +402,8 @@ export const bumpEntities = (
 	bumpInto: BoardEntity,
 	entityBoard: BoardEntity[],
 	entityBoardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -414,8 +460,12 @@ export const bumpEntities = (
 			1,
 			entityBoard,
 			entityBoardHero,
+			otherBoard,
+			otherHero,
 			allCards,
+			cardsData,
 			sharedState,
+			spectator,
 			entity.friendly,
 			true,
 		);
@@ -428,8 +478,12 @@ export const bumpEntities = (
 			1,
 			entityBoard,
 			entityBoardHero,
+			otherBoard,
+			otherHero,
 			allCards,
+			cardsData,
 			sharedState,
+			spectator,
 			entity.friendly,
 			true,
 		);
@@ -441,8 +495,12 @@ export const bumpEntities = (
 			1,
 			entityBoard,
 			entityBoardHero,
+			otherBoard,
+			otherHero,
 			allCards,
+			cardsData,
 			sharedState,
+			spectator,
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
@@ -455,8 +513,12 @@ export const bumpEntities = (
 			2,
 			entityBoard,
 			entityBoardHero,
+			otherBoard,
+			otherHero,
 			allCards,
+			cardsData,
 			sharedState,
+			spectator,
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
@@ -470,8 +532,12 @@ export const bumpEntities = (
 			1,
 			entityBoard,
 			entityBoardHero,
+			otherBoard,
+			otherHero,
 			allCards,
+			cardsData,
 			sharedState,
+			spectator,
 			entity.friendly,
 			true,
 		);
@@ -484,8 +550,12 @@ export const bumpEntities = (
 			1,
 			entityBoard,
 			entityBoardHero,
+			otherBoard,
+			otherHero,
 			allCards,
+			cardsData,
 			sharedState,
+			spectator,
 			entity.friendly,
 			true,
 		);
@@ -805,6 +875,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		allCards,
 		cardsData,
 		sharedState,
+		spectator,
 	);
 
 	const entitiesFromReborn: readonly BoardEntity[] =
@@ -814,8 +885,12 @@ const buildBoardAfterDeathrattleSpawns = (
 					1,
 					boardWithKilledMinion,
 					boardWithKilledMinionHero,
+					opponentBoard,
+					opponentBoardHero,
 					allCards,
+					cardsData,
 					sharedState,
+					spectator,
 					deadEntity.friendly,
 					false,
 					true,
@@ -825,9 +900,12 @@ const buildBoardAfterDeathrattleSpawns = (
 		deadEntity,
 		boardWithKilledMinion,
 		boardWithKilledMinionHero,
+		opponentBoard,
+		opponentBoardHero,
 		allCards,
 		cardsData,
 		sharedState,
+		spectator,
 	);
 
 	const candidateEntities: readonly BoardEntity[] = [
@@ -835,35 +913,47 @@ const buildBoardAfterDeathrattleSpawns = (
 		...entitiesFromReborn,
 		...entitiesFromEnchantments,
 	];
-	// TODO: if "attack immediately" entities spawn, they should attack here
-	// It requires a pretty strong refactor of the code though, so for
-	// now the simulator has this known flaw
-	// const attackImmediatelyEntities = candidateEntities.filter(entity => entity.attackImmediately);
-	// for (const attackImmediatelyEntity of attackImmediatelyEntities) {
-	// 	const defendingEntity: BoardEntity = getDefendingEntity(opponentBoard, attackImmediatelyEntity);
-	// 	spectator.registerAttack(attackImmediatelyEntity, defendingEntity, boardWithKilledMinion, opponentBoard);
-	// 	performAttack(
-	// 		attackImmediatelyEntity,
-	// 		defendingEntity,
-	// 		boardWithKilledMinion,
-	// 		opponentBoard,
-	// 		allCards,
-	// 		cardsData,
-	// 		sharedState,
-	// 		spectator,
-	// 	);
-	// 	// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
-	// 	// the windfury triggers again? The current behavior attacks after the windfury is over
-	// 	if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
-	// 		defendingEntity.attackImmediately = true;
-	// 	}
-	// }
 	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0);
 
-	const roomToSpawn: number = 7 - boardWithKilledMinion.length;
-	const spawnedEntities: readonly BoardEntity[] = aliveEntites.slice(0, roomToSpawn);
+	// const roomToSpawn: number = 7 - boardWithKilledMinion.length;
+	// const spawnedEntities: readonly BoardEntity[] = aliveEntites.slice(0, roomToSpawn);
+
+	const indexFromRight = boardWithKilledMinion.length - deadMinionIndex;
+	const spawnedEntities = [];
+	for (const newMinion of aliveEntites) {
+		// All entities have been spawned
+		if (boardWithKilledMinion.length >= 7) {
+			break;
+		}
+		// Avoid minions spawning backwards (we don't have this issue if we add all elements at
+		// the same time, but here we want to be able to attack after each spawn, which in turn
+		// means that the minion can die before the other one spawns)
+		// In boardWithKilledMinion, the dead minion has already been removed
+		boardWithKilledMinion.splice(boardWithKilledMinion.length - indexFromRight, 0, newMinion);
+		if (newMinion.attackImmediately) {
+			// Whenever we are already in a combat phase, we need to first clean up the state
+			removeAuras(boardWithKilledMinion, cardsData);
+			removeAuras(opponentBoard, cardsData);
+			removeGlobalModifiers(boardWithKilledMinion, opponentBoard, allCards);
+			simulateAttack(
+				boardWithKilledMinion,
+				boardWithKilledMinionHero,
+				opponentBoard,
+				opponentBoardHero,
+				null,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		}
+		if (newMinion.health > 0) {
+			spawnedEntities.push(newMinion);
+		}
+	}
+
 	// Minion has already been removed from the board in the previous step
-	boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
+	// boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards);
 	spectator.registerMinionsSpawn(boardWithKilledMinion, spawnedEntities);
 

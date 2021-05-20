@@ -6,7 +6,6 @@ import { CardsData } from '../cards/cards-data';
 import { isCorrectTribe } from '../utils';
 import { dealDamageToRandomEnemy, simulateAttack } from './attack';
 import { dealDamageToAllMinions } from './deathrattle-effects';
-import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -53,29 +52,29 @@ const handleAlakirForPlayer = (
 	firstEntity.taunt = true;
 };
 
-const handleYShaarj = (
-	playerBoard: BoardEntity[],
-	playerBoardHero: BgsPlayerEntity,
-	tavernTier: number,
-	friendly: boolean,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
-): void => {
-	const spawnedEntities = spawnEntities(
-		spawns.forTavernTier(tavernTier),
-		1,
-		playerBoard,
-		playerBoardHero,
-		allCards,
-		sharedState,
-		friendly,
-		false,
-	);
-	// Assume it goes last
-	playerBoard.push(...spawnedEntities);
-};
+// const handleYShaarj = (
+// 	playerBoard: BoardEntity[],
+// 	playerBoardHero: BgsPlayerEntity,
+// 	tavernTier: number,
+// 	friendly: boolean,
+// 	allCards: AllCardsService,
+// 	spawns: CardsData,
+// 	sharedState: SharedState,
+// 	spectator: Spectator,
+// ): void => {
+// 	const spawnedEntities = spawnEntities(
+// 		spawns.forTavernTier(tavernTier),
+// 		1,
+// 		playerBoard,
+// 		playerBoardHero,
+// 		allCards,
+// 		sharedState,
+// 		friendly,
+// 		false,
+// 	);
+// 	// Assume it goes last
+// 	playerBoard.push(...spawnedEntities);
+// };
 
 const handleNefarian = (
 	playerBoard: BoardEntity[],
@@ -93,18 +92,18 @@ const handleNefarian = (
 	dealDamageToAllMinions(opponentBoard, opponentBoardHero, [], playerBoardHero, null, 1, allCards, spawns, sharedState, spectator);
 };
 
-const handleLichKing = (playerBoard: BoardEntity[]): void => {
-	const nonRebornMinions = playerBoard.filter((minion) => !minion.reborn);
-	if (nonRebornMinions.length > 0) {
-		const targetReborn = nonRebornMinions[Math.floor(Math.random() * nonRebornMinions.length)];
-		targetReborn.reborn = true;
-	}
-};
+// const handleLichKing = (playerBoard: BoardEntity[]): void => {
+// 	const nonRebornMinions = playerBoard.filter((minion) => !minion.reborn);
+// 	if (nonRebornMinions.length > 0) {
+// 		const targetReborn = nonRebornMinions[Math.floor(Math.random() * nonRebornMinions.length)];
+// 		targetReborn.reborn = true;
+// 	}
+// };
 
-const handlePutricide = (playerBoard: BoardEntity[]): void => {
-	const target = playerBoard[Math.floor(Math.random() * playerBoard.length)];
-	target.attack = target.attack + 10;
-};
+// const handlePutricide = (playerBoard: BoardEntity[]): void => {
+// 	const target = playerBoard[Math.floor(Math.random() * playerBoard.length)];
+// 	target.attack = target.attack + 10;
+// };
 
 const handlePlayerStartOfCombatHeroPowers = (
 	playerEntity: BgsPlayerEntity,

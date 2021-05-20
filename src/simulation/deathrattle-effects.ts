@@ -280,8 +280,12 @@ const applyMinionDeathEffect = (
 				1,
 				otherBoard,
 				otherBoardHero,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
 				allCards,
+				cardsData,
 				sharedState,
+				spectator,
 				!deadEntity.friendly,
 				true,
 			);
@@ -292,8 +296,12 @@ const applyMinionDeathEffect = (
 				1,
 				otherBoard,
 				otherBoardHero,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
 				allCards,
+				cardsData,
 				sharedState,
+				spectator,
 				!deadEntity.friendly,
 				true,
 			);
@@ -379,11 +387,11 @@ export const dealDamageToAllMinions = (
 		attacking: true,
 	} as BoardEntity;
 	for (let i = 0; i < board1.length; i++) {
-		bumpEntities(board1[i], fakeAttacker, board1, board1Hero, allCards, cardsData, sharedState, spectator);
+		bumpEntities(board1[i], fakeAttacker, board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
 		// board1[i] = entity;
 	}
 	for (let i = 0; i < board2.length; i++) {
-		bumpEntities(board2[i], fakeAttacker, board2, board2Hero, allCards, cardsData, sharedState, spectator);
+		bumpEntities(board2[i], fakeAttacker, board2, board2Hero, board1, board1Hero, allCards, cardsData, sharedState, spectator);
 		// updatedBoard2 = [...boardResult];
 		// updatedBoard2[i] = entity;
 	}
