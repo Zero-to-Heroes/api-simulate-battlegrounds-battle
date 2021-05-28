@@ -10,24 +10,24 @@ function partitionArray<T>(array: readonly T[], partitionSize: number): readonly
 }
 
 async function http(request: RequestInfo): Promise<any> {
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		fetch(request)
 			.then(
-				response => {
+				(response) => {
 					return response.text();
 				},
-				error => {
+				(error) => {
 					console.warn('could not retrieve review', error);
 				},
 			)
-			.then(body => {
+			.then((body) => {
 				resolve(body);
 			});
 	});
 }
 
 async function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export { partitionArray, http, sleep };

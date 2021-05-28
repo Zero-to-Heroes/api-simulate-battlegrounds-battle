@@ -34,7 +34,7 @@ const removeGlobalModifiersForEntity = (entity: BoardEntity, totalMurlocs: numbe
 	}
 	// First time the board state is received, the murkeye buff is applied so we have to remove it
 	else if (
-		[CardIds.Collectible.Neutral.OldMurkEyeLegacy, CardIds.NonCollectible.Neutral.OldMurkEyeTavernBrawl].indexOf(entity.cardId) !== -1
+		[CardIds.Collectible.Neutral.OldMurkEyeLegacy, CardIds.NonCollectible.Neutral.OldMurkEyeBattlegrounds].indexOf(entity.cardId) !== -1
 	) {
 		// Only "other" murlocs
 		entity.attack -= (totalMurlocs - 1) * (entity.cardId === CardIds.Collectible.Neutral.OldMurkEyeLegacy ? 1 : 2);
@@ -46,7 +46,7 @@ const removeGlobalModifiersForEntity = (entity: BoardEntity, totalMurlocs: numbe
 
 const mapEntity = (entity: BoardEntity, totalMurlocs: number): void => {
 	if (
-		[CardIds.Collectible.Neutral.OldMurkEyeLegacy, CardIds.NonCollectible.Neutral.OldMurkEyeTavernBrawl].indexOf(entity.cardId) !== -1
+		[CardIds.Collectible.Neutral.OldMurkEyeLegacy, CardIds.NonCollectible.Neutral.OldMurkEyeBattlegrounds].indexOf(entity.cardId) !== -1
 	) {
 		applyMurkeyeBuff(entity, totalMurlocs);
 	}

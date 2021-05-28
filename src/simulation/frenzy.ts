@@ -14,19 +14,8 @@ export const applyFrenzy = (
 	spectator: Spectator,
 ): void => {
 	if (
-		entityWithFrenzy.cardId === CardIds.Collectible.Neutral.BarrensBlacksmith ||
-		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BarrensBlacksmithTavernBrawl
-	) {
-		for (const entity of entityWithFrenzyBoard) {
-			if (entity.entityId !== entityWithFrenzy.entityId) {
-				const buff = entityWithFrenzy.cardId === CardIds.Collectible.Neutral.BarrensBlacksmith ? 2 : 4;
-				entity.attack += buff;
-				entity.health += buff;
-			}
-		}
-	} else if (
 		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnight ||
-		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnight_BristlebackKnight
+		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnightBattlegrounds
 	) {
 		entityWithFrenzy.divineShield = true;
 	}

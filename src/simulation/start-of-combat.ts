@@ -119,30 +119,30 @@ const handlePlayerStartOfCombatHeroPowers = (
 ): number => {
 	// Lich King should be handled in the incoming board state
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
 		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		// currentAttacker = (currentAttacker + 1) % 2;
-	} else if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl && playerBoard.length > 0) {
+	} else if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenBattlegrounds && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
 	// else if (
-	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsTavernBrawl &&
+	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsBattlegrounds &&
 	// 	playerBoard.length > 0
 	// ) {
 	// }
 	// Will be sent by the client
 	// else if (
 	// 	playerEntity.heroPowerUsed &&
-	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageTavernBrawl &&
+	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds &&
 	// 	playerBoard.length < 7
 	// ) {
 	// 	handleYShaarj(playerBoard, playerEntity, playerEntity.tavernTier, friendly, allCards, spawns, sharedState, spectator);
 	// }
 	else if (
 		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl &&
+		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireBattlegrounds &&
 		playerBoard.length > 0
 	) {
 		handleNefarian(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
@@ -254,16 +254,14 @@ export const handleStartOfCombat = (
 
 export const getHeroPowerForHero = (heroCardId: string): string => {
 	switch (heroCardId) {
-		case CardIds.NonCollectible.Neutral.IllidanStormrageTavernBrawl2:
-			return CardIds.NonCollectible.Demonhunter.WingmenTavernBrawl;
-		case CardIds.NonCollectible.Neutral.TheLichKingTavernBrawl2:
-			return CardIds.NonCollectible.Neutral.RebornRitesTavernBrawl;
-		case CardIds.NonCollectible.Neutral.ProfessorPutricideTavernBrawl:
-			return CardIds.NonCollectible.Neutral.RagePotionTavernBrawl;
-		case CardIds.NonCollectible.Neutral.NefarianTavernBrawlBATTLEGROUNDS:
-			return CardIds.NonCollectible.Neutral.NefariousFireTavernBrawl;
-		case CardIds.NonCollectible.Neutral.DeathwingTavernBrawl:
-			return CardIds.NonCollectible.Neutral.AllWillBurnTavernBrawl;
+		case CardIds.NonCollectible.Neutral.IllidanStormrageBattlegrounds:
+			return CardIds.NonCollectible.Demonhunter.WingmenBattlegrounds;
+		case CardIds.NonCollectible.Neutral.TheLichKingBattlegrounds:
+			return CardIds.NonCollectible.Neutral.RebornRitesBattlegrounds;
+		case CardIds.NonCollectible.Neutral.ProfessorPutricideBattlegrounds:
+			return CardIds.NonCollectible.Neutral.RagePotionBattlegrounds;
+		case CardIds.NonCollectible.Neutral.DeathwingBattlegrounds:
+			return CardIds.NonCollectible.Neutral.AllWillBurnBattlegrounds;
 	}
 	return null;
 };
@@ -296,7 +294,7 @@ export const performStartOfCombat = (
 			sharedState,
 			spectator,
 		);
-	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpTavernBrawl) {
+	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpBattlegrounds) {
 		const damage = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;

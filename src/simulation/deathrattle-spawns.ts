@@ -25,9 +25,9 @@ export const spawnEntities = (
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
 	}
-	const spawnMultiplier = 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Collectible.Mage.Khadgar).length || 1;
+	const spawnMultiplier = 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Collectible.Mage.Khadgar1).length || 1;
 	const spawnMultiplierGolden =
-		3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Mage.KhadgarTavernBrawl).length || 1;
+		3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Mage.KhadgarBattlegrounds).length || 1;
 	const minionsToSpawn = limitSpawns
 		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
@@ -43,13 +43,13 @@ export const spawnEntities = (
 		);
 		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
 			? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader).length +
-			  4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderTavernBrawl).length +
+			  4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderBattlegrounds).length +
 			  4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
-			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl).length
+			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearBattlegrounds).length
 			: 0;
 		const healthBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
 			? 4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
-			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearTavernBrawl).length
+			  8 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearBattlegrounds).length
 			: 0;
 		newMinion.attack += attackBuff;
 		newMinion.health += healthBuff;
@@ -61,7 +61,7 @@ export const spawnEntities = (
 		if (isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.DEMON)) {
 			const bigfernals = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.Bigfernal);
 			const goldenBigfernals = boardToSpawnInto.filter(
-				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BigfernalTavernBrawl,
+				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BigfernalBattlegrounds,
 			);
 			bigfernals.forEach((entity) => {
 				entity.attack += 1;
@@ -88,9 +88,9 @@ export const spawnEntitiesFromDeathrattle = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): [readonly BoardEntity[], readonly BoardEntity[]] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare2);
 	const goldenRivendare = boardWithDeadEntity.find(
-		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
+		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareBattlegrounds,
 	);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
@@ -115,10 +115,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.MecharooTavernBrawl:
+			case CardIds.NonCollectible.Neutral.MecharooBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.Mecharoo_JoEBotTokenTavernBrawl,
+						CardIds.NonCollectible.Neutral.Mecharoo_JoEBotTokenBattlegrounds,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -151,28 +151,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.ScallywagTavernBrawl:
+			case CardIds.NonCollectible.Neutral.ScallywagBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
-						1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				break;
-			case CardIds.Collectible.Neutral.HarvestGolem:
-				spawnedEntities.push(
-					...spawnEntities(
-						CardIds.NonCollectible.Neutral.DamagedGolemExpert1,
+						CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenBattlegrounds,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -190,7 +172,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.NonCollectible.Neutral.HarvestGolemTavernBrawl:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.HarvestGolem_DamagedGolemTokenTavernBrawl,
+						CardIds.NonCollectible.Neutral.DamagedGolemLegacy,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -205,7 +187,25 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.Collectible.Hunter.KindlyGrandmother:
+			case CardIds.NonCollectible.Neutral.HarvestGolemBattlegrounds:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Neutral.HarvestGolem_DamagedGolemTokenBattlegrounds,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.Collectible.Hunter.KindlyGrandmother1:
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolf,
@@ -223,10 +223,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Hunter.KindlyGrandmotherTavernBrawl:
+			case CardIds.NonCollectible.Hunter.KindlyGrandmotherBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolfTokenTavernBrawl,
+						CardIds.NonCollectible.Hunter.KindlyGrandmother_BigBadWolfTokenBattlegrounds,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -259,10 +259,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Hunter.RatPackTavernBrawl:
+			case CardIds.NonCollectible.Hunter.RatPackBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Hunter.RatPack_RatTokenTavernBrawl,
+						CardIds.NonCollectible.Hunter.RatPack_RatTokenBattlegrounds,
 						deadEntity.attack,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -295,10 +295,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.ImprisonerTavernBrawl:
+			case CardIds.NonCollectible.Neutral.ImprisonerBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenTavernBrawl,
+						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenBattlegrounds,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -331,10 +331,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Hunter.InfestedWolfTavernBrawl:
+			case CardIds.NonCollectible.Hunter.InfestedWolfBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Hunter.InfestedWolf_SpiderTokenTavernBrawl,
+						CardIds.NonCollectible.Hunter.InfestedWolf_SpiderTokenBattlegrounds,
 						2,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -349,11 +349,11 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.Collectible.Neutral.TheBeast:
-			case CardIds.NonCollectible.Neutral.TheBeastTavernBrawl:
+			case CardIds.Collectible.Neutral.TheBeastLegacy:
+			case CardIds.NonCollectible.Neutral.TheBeastBattlegrounds:
 				otherBoardSpawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.FinkleEinhorn,
+						CardIds.NonCollectible.Neutral.FinkleEinhornLegacy,
 						1,
 						otherBoard,
 						otherBoardHero,
@@ -386,10 +386,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.ReplicatingMenaceTavernBrawl:
+			case CardIds.NonCollectible.Neutral.ReplicatingMenaceBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenBattlegrounds,
 						3,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -422,10 +422,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Paladin.MechanoEggTavernBrawl:
+			case CardIds.NonCollectible.Paladin.MechanoEggBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Paladin.MechanoEgg_RobosaurTokenTavernBrawl,
+						CardIds.NonCollectible.Paladin.MechanoEgg_RobosaurTokenBattlegrounds,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -440,10 +440,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.Collectible.Hunter.SavannahHighmane:
+			case CardIds.Collectible.Hunter.SavannahHighmaneLegacy:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaToken,
+						CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaLegacyToken,
 						2,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -458,10 +458,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Hunter.SavannahHighmaneTavernBrawl:
+			case CardIds.NonCollectible.Hunter.SavannahHighmaneBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaTokenTavernBrawl,
+						CardIds.NonCollectible.Hunter.SavannahHighmane_HyenaTokenBattlegrounds,
 						2,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -494,10 +494,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Warlock.RingMatronTavernBrawl:
+			case CardIds.NonCollectible.Warlock.RingMatronBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Warlock.RingMatron_FieryImpTokenTavernBrawl,
+						CardIds.NonCollectible.Warlock.RingMatron_FieryImpTokenBattlegrounds,
 						2,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -530,10 +530,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.SatedThreshadonTavernBrawl:
+			case CardIds.NonCollectible.Neutral.SatedThreshadonBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenTavernBrawl,
+						CardIds.NonCollectible.Neutral.SatedThreshadon_PrimalfinTokenBattlegrounds,
 						3,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -548,7 +548,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Priest.GhastcoilerBATTLEGROUNDS:
+			case CardIds.NonCollectible.Priest.Ghastcoiler2:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -602,7 +602,7 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl:
+			case CardIds.NonCollectible.Neutral.GentleDjinniBattlegrounds:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -637,7 +637,7 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 
-			case CardIds.NonCollectible.Priest.GhastcoilerTavernBrawl:
+			case CardIds.NonCollectible.Priest.GhastcoilerBattlegrounds:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -699,8 +699,8 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			case CardIds.Collectible.Neutral.SneedsOldShredder:
-			case CardIds.NonCollectible.Neutral.SneedsOldShredder:
+			case CardIds.NonCollectible.Neutral.SneedsOldShredder2:
+			case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
 						spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
@@ -718,7 +718,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.SneedsOldShredderTavernBrawl:
+			case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -770,10 +770,10 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Warlock.VoidlordTavernBrawl:
+			case CardIds.NonCollectible.Warlock.VoidlordBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Warlock.Voidlord_VoidwalkerTokenTavernBrawl,
+						CardIds.NonCollectible.Warlock.Voidlord_VoidwalkerTokenBattlegrounds,
 						3,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -814,7 +814,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.KangorsApprenticeTavernBrawl:
+			case CardIds.NonCollectible.Neutral.KangorsApprenticeBattlegrounds:
 				const cardIdsToSpawn2 = sharedState.deaths
 					.filter((entity) => entity.friendly === deadEntity.friendly)
 					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH))
@@ -887,7 +887,7 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.TheTideRazorTavernBrawl:
+			case CardIds.NonCollectible.Neutral.TheTideRazorBattlegrounds:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -995,9 +995,9 @@ export const spawnEntitiesFromEnchantments = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare2);
 	const goldenRivendare = boardWithDeadEntity.find(
-		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareTavernBrawl,
+		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareBattlegrounds,
 	);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
@@ -1023,10 +1023,10 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl:
+				case CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenTavernBrawl,
+							CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenBattlegrounds,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -1041,10 +1041,10 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.NonCollectible.Neutral.LivingSporesToken2:
+				case CardIds.NonCollectible.Neutral.LivingSpores_LivingSporesEnchantment:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.NonCollectible.Neutral.PlantToken,
+							CardIds.NonCollectible.Neutral.LivingSpores_PlantToken,
 							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

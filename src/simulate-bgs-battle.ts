@@ -161,8 +161,8 @@ const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[
 
 export const validEnchantments = [
 	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment,
-	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentTavernBrawl,
-	CardIds.NonCollectible.Neutral.LivingSporesToken2,
+	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
+	CardIds.NonCollectible.Neutral.LivingSpores_LivingSporesEnchantment,
 ];
 
 const cleanEnchantmentsForEntity = (

@@ -26,7 +26,6 @@ export class Spectator {
 		this.wonBattles = this.wonBattles.slice(0, MAX_SAMPLES);
 		this.lostBattles = this.lostBattles.slice(0, MAX_SAMPLES);
 		this.tiedBattles = this.tiedBattles.slice(0, MAX_SAMPLES);
-
 	}
 
 	public buildOutcomeSamples(): {
@@ -42,11 +41,7 @@ export class Spectator {
 	}
 
 	public commitBattleResult(result: 'won' | 'lost' | 'tied') {
-		if (
-			this.wonBattles.length >= MAX_SAMPLES &&
-			this.lostBattles.length >= MAX_SAMPLES &&
-			this.tiedBattles.length >= MAX_SAMPLES
-		) {
+		if (this.wonBattles.length >= MAX_SAMPLES && this.lostBattles.length >= MAX_SAMPLES && this.tiedBattles.length >= MAX_SAMPLES) {
 			this.actionsForCurrentBattle = [];
 			return;
 		}
@@ -126,7 +121,7 @@ export class Spectator {
 			return undefined;
 		}
 		return board.map(
-			entity =>
+			(entity) =>
 				({
 					...entity,
 					enchantments: undefined,
@@ -146,8 +141,8 @@ export class Spectator {
 		attackingBoard: readonly BoardEntity[],
 		defendingBoard: readonly BoardEntity[],
 	) {
-		const friendlyBoard = attackingBoard.every(entity => entity.friendly) ? attackingBoard : defendingBoard;
-		const opponentBoard = defendingBoard.every(entity => entity.friendly) ? attackingBoard : defendingBoard;
+		const friendlyBoard = attackingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
+		const opponentBoard = defendingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
 		const action: GameAction = {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
@@ -167,8 +162,8 @@ export class Spectator {
 		if (!damagingEntity.entityId) {
 			console.error('missing damaging entity id', damagingEntity);
 		}
-		const friendlyBoard = damagedEntityBoard.every(entity => entity.friendly) ? damagedEntityBoard : null;
-		const opponentBoard = damagedEntityBoard.every(entity => !entity.friendly) ? damagedEntityBoard : null;
+		const friendlyBoard = damagedEntityBoard.every((entity) => entity.friendly) ? damagedEntityBoard : null;
+		const opponentBoard = damagedEntityBoard.every((entity) => !entity.friendly) ? damagedEntityBoard : null;
 		const action: GameAction = {
 			type: 'damage',
 			damages: [
@@ -188,8 +183,8 @@ export class Spectator {
 		if (!sourceEntity.entityId) {
 			console.error('missing damaging entity id', sourceEntity);
 		}
-		const friendlyBoard = targetBoard.every(entity => entity.friendly) ? targetBoard : null;
-		const opponentBoard = targetBoard.every(entity => !entity.friendly) ? targetBoard : null;
+		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
+		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
 		const action: GameAction = {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
@@ -204,8 +199,8 @@ export class Spectator {
 		if (!spawnedEntities || spawnedEntities.length === 0) {
 			return;
 		}
-		const friendlyBoard = boardOnWhichToSpawn.every(entity => entity.friendly) ? boardOnWhichToSpawn : null;
-		const opponentBoard = boardOnWhichToSpawn.every(entity => !entity.friendly) ? boardOnWhichToSpawn : null;
+		const friendlyBoard = boardOnWhichToSpawn.every((entity) => entity.friendly) ? boardOnWhichToSpawn : null;
+		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
 		const action: GameAction = {
 			type: 'spawn',
 			spawns: this.sanitize(spawnedEntities),

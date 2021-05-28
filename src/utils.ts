@@ -5,41 +5,41 @@ import { BoardEntity } from './board-entity';
 
 const CLEAVE_IDS = [
 	CardIds.Collectible.Hunter.CaveHydra,
-	CardIds.NonCollectible.Hunter.CaveHydraTavernBrawl,
+	CardIds.NonCollectible.Hunter.CaveHydraBattlegrounds,
 	CardIds.Collectible.Neutral.FoeReaper4000,
-	CardIds.NonCollectible.Neutral.FoeReaper4000TavernBrawl,
+	CardIds.NonCollectible.Neutral.FoeReaper4000Battlegrounds,
 ];
 // Because for some reason, the Taunt keyword is only a referenced tag,
 // so we have to know when a taunt minion is spawned (the taunt tag
 // is passed in input properly, so it's not an issue there)
 const TAUNT_IDS = [
 	CardIds.NonCollectible.Neutral.YoHoOgre,
-	CardIds.NonCollectible.Neutral.YoHoOgreTavernBrawl,
+	CardIds.NonCollectible.Neutral.YoHoOgreBattlegrounds,
 	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
-	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenTavernBrawl,
+	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenBattlegrounds,
 	CardIds.NonCollectible.Neutral.MoltenRock,
-	CardIds.NonCollectible.Neutral.MoltenRockTavernBrawl,
+	CardIds.NonCollectible.Neutral.MoltenRockBattlegrounds,
 	CardIds.NonCollectible.Neutral.LieutenantGarr,
-	CardIds.NonCollectible.Neutral.LieutenantGarrTavernBrawl,
+	CardIds.NonCollectible.Neutral.LieutenantGarrBattlegrounds,
 	CardIds.NonCollectible.Neutral.GentleDjinni,
-	CardIds.NonCollectible.Neutral.GentleDjinniTavernBrawl,
+	CardIds.NonCollectible.Neutral.GentleDjinniBattlegrounds,
 	CardIds.NonCollectible.Neutral.AcolyteOfCthun,
-	CardIds.NonCollectible.Neutral.AcolyteOfCthunTavernBrawl,
+	CardIds.NonCollectible.Neutral.AcolyteOfCthunBattlegrounds,
 	CardIds.Collectible.Warlock.RingMatron,
-	CardIds.NonCollectible.Warlock.RingMatronTavernBrawl,
+	CardIds.NonCollectible.Warlock.RingMatronBattlegrounds,
 	CardIds.NonCollectible.Neutral.DynamicDuo,
-	CardIds.NonCollectible.Neutral.DynamicDuo_DynamicDuo,
+	CardIds.NonCollectible.Neutral.DynamicDuoBattlegrounds,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
-	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenTavernBrawl,
+	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenBattlegrounds,
 ];
 export const MEGA_WINDFURY_IDS = [
-	CardIds.NonCollectible.Neutral.ZappSlywickTavernBrawl,
-	CardIds.NonCollectible.Neutral.CracklingCycloneTavernBrawl,
+	CardIds.NonCollectible.Neutral.ZappSlywickBattlegrounds,
+	CardIds.NonCollectible.Neutral.CracklingCycloneBattlegrounds,
 	CardIds.NonCollectible.Neutral.BristlebackKnight,
 ];
-const CANT_ATTACK_IDS = [CardIds.NonCollectible.Neutral.ArcaneCannon, CardIds.NonCollectible.Neutral.ArcaneCannonTavernBrawl];
+const CANT_ATTACK_IDS = [CardIds.NonCollectible.Neutral.ArcaneCannon, CardIds.NonCollectible.Neutral.ArcaneCannonBattlegrounds];
 
 export const buildSingleBoardEntity = (
 	cardId: string,
@@ -74,7 +74,7 @@ export const buildSingleBoardEntity = (
 		result.reborn = false;
 	}
 
-	if (controllerHero.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutTavernBrawl) {
+	if (controllerHero.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutBattlegrounds) {
 		result.taunt = true;
 		result.attack += 1;
 		result.health += 2;
