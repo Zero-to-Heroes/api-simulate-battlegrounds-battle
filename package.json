@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.60",
+	"version": "1.1.61",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
@@ -11,7 +11,9 @@
 		"build": "npm audit fix && webpack --env.buildEnv=prod --color",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
-		"clean": "rm -rf -v dist/*"
+		"clean": "rm -rf -v dist/*",
+		"increment-version": "npm --no-git-tag-version version patch && git add . && git commit -m \"increment version\"",
+		"publish-version": "rm -rf dist && tsc && rm -rf dist/node_modules && npm publish --access public"
 	},
 	"repository": {},
 	"author": "",
