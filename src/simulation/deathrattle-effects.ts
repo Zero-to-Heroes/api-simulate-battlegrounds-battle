@@ -200,7 +200,7 @@ const applyMinionDeathEffect = (
 		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex);
 	}
 	// Overkill
-	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity.attacking) {
+	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlame2) {
 			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0);
 			if (targets.length > 0) {

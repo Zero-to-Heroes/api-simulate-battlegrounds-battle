@@ -809,8 +809,7 @@ const handleKillEffects = (
 	allCards: AllCardsService,
 ): void => {
 	if (
-		deadEntity.lastAffectedByEntity &&
-		deadEntity.lastAffectedByEntity.cardId &&
+		deadEntity.lastAffectedByEntity?.cardId &&
 		isCorrectTribe(allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race, Race.DRAGON)
 	) {
 		for (const entity of killerBoard) {
