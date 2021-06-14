@@ -37,14 +37,18 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 2500;
 
 	const simulationResult: SimulationResult = {
+		wonLethal: 0,
 		won: 0,
 		tied: 0,
 		lost: 0,
+		lostLethal: 0,
 		damageWon: 0,
 		damageLost: 0,
+		wonLethalPercent: undefined,
 		wonPercent: undefined,
 		tiedPercent: undefined,
 		lostPercent: undefined,
+		lostLethalPercent: undefined,
 		averageDamageWon: undefined,
 		averageDamageLost: undefined,
 	};
@@ -98,12 +102,15 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		if (battleResult.result === 'won') {
 			simulationResult.won++;
 			simulationResult.damageWon += battleResult.damageDealt;
-			if (!battleResult.damageDealt || battleResult.damageDealt === NaN) {
-				// console.debug('no damage dealt', battleResult);
+			if (battleResult.damageDealt >= battleInput.opponentBoard.player.hpLeft) {
+				simulationResult.wonLethal++;
 			}
 		} else if (battleResult.result === 'lost') {
 			simulationResult.lost++;
 			simulationResult.damageLost += battleResult.damageDealt;
+			if (battleInput.playerBoard.player.hpLeft && battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft) {
+				simulationResult.lostLethal++;
+			}
 		} else if (battleResult.result === 'tied') {
 			simulationResult.tied++;
 		}
@@ -126,6 +133,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		simulationResult.tied,
 		totalMatches,
 	);
+
+	simulationResult.wonLethalPercent = Math.round((10 * (100 * simulationResult.wonLethal)) / totalMatches) / 10;
+	simulationResult.lostLethalPercent = Math.round((10 * (100 * simulationResult.lostLethal)) / totalMatches) / 10;
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost ? simulationResult.damageLost / simulationResult.lost : 0;
 	if (simulationResult.averageDamageWon > 0 && simulationResult.averageDamageWon < playerInfo.player.tavernTier) {
