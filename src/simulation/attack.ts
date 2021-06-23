@@ -453,7 +453,7 @@ export const bumpEntities = (
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
 	// like this for now
-	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss1 && entityBoard.length < 7) {
+	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss && entityBoard.length < 7) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
 		const newEntities = spawnEntities(
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,

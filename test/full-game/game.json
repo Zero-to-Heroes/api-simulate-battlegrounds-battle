@@ -1,302 +1,330 @@
 {
-	"playerBoard": {
-		"player": { "tavernTier": 5, "cardId": "TB_BaconShop_HERO_37", "heroPowerId": "TB_BaconShop_HP_036", "heroPowerUsed": true },
-		"board": [
-			{
-				"cardId": "BGS_014",
-				"attack": 7,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 5641, "cardId": "TB_BaconShop_HP_036e2" },
-					{ "originEntityId": 5642, "cardId": "ICC_807e" },
-					{ "originEntityId": 6313, "cardId": "TB_BaconShop_HP_036e2" }
-				],
-				"entityId": 5640,
-				"health": 7,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BG20_210",
-				"attack": 4,
-				"divineShield": false,
-				"enchantments": [{ "originEntityId": 6316, "cardId": "TB_BaconShop_HP_036e2" }],
-				"entityId": 6099,
-				"health": 6,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_059",
-				"attack": 35,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6241, "cardId": "BGS_059e" },
-					{ "originEntityId": 6317, "cardId": "TB_BaconShop_HP_036e2" }
-				],
-				"entityId": 6056,
-				"health": 31,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_010",
-				"attack": 4,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6267, "cardId": "BGS_010e" },
-					{ "originEntityId": 6318, "cardId": "TB_BaconShop_HP_036e2" }
-				],
-				"entityId": 6096,
-				"health": 27,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_204",
-				"attack": 16,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 5654, "cardId": "BGS_204e" },
-					{ "originEntityId": 5655, "cardId": "TB_BaconShop_HP_036e2" },
-					{ "originEntityId": 5656, "cardId": "BGS_204e" },
-					{ "originEntityId": 5980, "cardId": "BGS_204e" },
-					{ "originEntityId": 6314, "cardId": "TB_BaconShop_HP_036e2" }
-				],
-				"entityId": 5653,
-				"health": 16,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_204",
-				"attack": 14,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 5658, "cardId": "BGS_204e" },
-					{ "originEntityId": 5659, "cardId": "TB_BaconShop_HP_036e2" },
-					{ "originEntityId": 5660, "cardId": "BGS_204e" },
-					{ "originEntityId": 5981, "cardId": "BGS_204e" },
-					{ "originEntityId": 6315, "cardId": "TB_BaconShop_HP_036e2" }
-				],
-				"entityId": 5657,
-				"health": 14,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "TB_BaconUps_079",
-				"attack": 54,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 5662, "cardId": "BGS_004e" },
-					{ "originEntityId": 5663, "cardId": "BGS_004e" },
-					{ "originEntityId": 5664, "cardId": "TB_BaconUps_079e" }
-				],
-				"entityId": 5661,
-				"health": 58,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			}
-		],
-		"secrets": []
-	},
-	"opponentBoard": {
-		"player": { "tavernTier": 5, "cardId": "TB_BaconShop_HERO_67", "heroPowerId": "TB_BaconShop_HP_075", "heroPowerUsed": false },
-		"board": [
-			{
-				"cardId": "TB_BaconUps_141",
-				"attack": 22,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6364, "cardId": "BGS_082e" },
-					{ "originEntityId": 6365, "cardId": "BGS_053e" },
-					{ "originEntityId": 6366, "cardId": "BGS_053e" },
-					{ "originEntityId": 6367, "cardId": "BGS_053e" },
-					{ "originEntityId": 6368, "cardId": "BGS_053e" },
-					{ "originEntityId": 6369, "cardId": "BGS_053e" },
-					{ "originEntityId": 6370, "cardId": "BGS_083e" }
-				],
-				"entityId": 6363,
-				"health": 5,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_081",
-				"attack": 37,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6372, "cardId": "BGS_081e" },
-					{ "originEntityId": 6373, "cardId": "BGS_048e" },
-					{ "originEntityId": 6374, "cardId": "BGS_081e" },
-					{ "originEntityId": 6375, "cardId": "BGS_081e" },
-					{ "originEntityId": 6376, "cardId": "BGS_081e" },
-					{ "originEntityId": 6377, "cardId": "BGS_081e" },
-					{ "originEntityId": 6378, "cardId": "BGS_053e" },
-					{ "originEntityId": 6379, "cardId": "BGS_081e" },
-					{ "originEntityId": 6380, "cardId": "BGS_081e" },
-					{ "originEntityId": 6381, "cardId": "BGS_081e" },
-					{ "originEntityId": 6382, "cardId": "BGS_053e" },
-					{ "originEntityId": 6383, "cardId": "BGS_053e" },
-					{ "originEntityId": 6384, "cardId": "BGS_081e" },
-					{ "originEntityId": 6385, "cardId": "BGS_081e" },
-					{ "originEntityId": 6386, "cardId": "BGS_081e" },
-					{ "originEntityId": 6387, "cardId": "BGS_053e" },
-					{ "originEntityId": 6388, "cardId": "BGS_053e" },
-					{ "originEntityId": 6389, "cardId": "BGS_081e" },
-					{ "originEntityId": 6390, "cardId": "BGS_083e" },
-					{ "originEntityId": 6391, "cardId": "BGS_081e" },
-					{ "originEntityId": 6392, "cardId": "BGS_081e" }
-				],
-				"entityId": 6371,
-				"health": 22,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "TB_BaconUps_130",
-				"attack": 38,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6394, "cardId": "BGS_053e" },
-					{ "originEntityId": 6395, "cardId": "BGS_053e" },
-					{ "originEntityId": 6396, "cardId": "TB_BaconUps_130e" },
-					{ "originEntityId": 6397, "cardId": "BGS_053e" },
-					{ "originEntityId": 6398, "cardId": "BGS_053e" },
-					{ "originEntityId": 6399, "cardId": "BGS_083e" }
-				],
-				"entityId": 6393,
-				"health": 26,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_048",
-				"attack": 22,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6401, "cardId": "BGS_053e" },
-					{ "originEntityId": 6402, "cardId": "BGS_082e" },
-					{ "originEntityId": 6403, "cardId": "BGS_053e" },
-					{ "originEntityId": 6404, "cardId": "BGS_053e" },
-					{ "originEntityId": 6405, "cardId": "BGS_053e" },
-					{ "originEntityId": 6406, "cardId": "BGS_053e" },
-					{ "originEntityId": 6407, "cardId": "BGS_083e" }
-				],
-				"entityId": 6400,
-				"health": 6,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_008",
-				"attack": 7,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 6408,
-				"health": 7,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "LOE_077",
-				"attack": 2,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 6409,
-				"health": 4,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_056",
-				"attack": 19,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 6412, "cardId": "BGS_053e" },
-					{ "originEntityId": 6413, "cardId": "BGS_053e" },
-					{ "originEntityId": 6414, "cardId": "BGS_053e" },
-					{ "originEntityId": 6415, "cardId": "BGS_053e" },
-					{ "originEntityId": 6416, "cardId": "BGS_053e" }
-				],
-				"entityId": 6411,
-				"health": 5,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			}
-		],
-		"secrets": []
-	},
-	"options": null
+    "playerBoard": {
+        "player": {
+            "tavernTier": 5,
+            "hpLeft": 11,
+            "cardId": "TB_BaconShop_HERO_64",
+            "heroPowerId": "TB_BaconShop_HP_074",
+            "heroPowerUsed": true
+        },
+        "board": [
+            {
+                "cardId": "TB_BaconUps_143",
+                "attack": 27,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 3644,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 3645,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 3646,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 3647,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 3648,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 3649,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 3650,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 4136,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 4227,
+                        "cardId": "TB_BaconUps_143e"
+                    },
+                    {
+                        "originEntityId": 4228,
+                        "cardId": "BGS_048e"
+                    }
+                ],
+                "entityId": 3643,
+                "health": 27,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BGS_046",
+                "attack": 10,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4324,
+                        "cardId": "BGS_009e"
+                    }
+                ],
+                "entityId": 3651,
+                "health": 7,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "EX1_534",
+                "attack": 10,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4319,
+                        "cardId": "BGS_009e"
+                    },
+                    {
+                        "originEntityId": 4322,
+                        "cardId": "BGS_009e"
+                    }
+                ],
+                "entityId": 3652,
+                "health": 9,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BGS_072",
+                "attack": 8,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4321,
+                        "cardId": "BGS_009e"
+                    }
+                ],
+                "entityId": 3653,
+                "health": 8,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "ICC_029",
+                "attack": 9,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4320,
+                        "cardId": "BGS_009e"
+                    },
+                    {
+                        "originEntityId": 4323,
+                        "cardId": "BGS_009e"
+                    }
+                ],
+                "entityId": 3972,
+                "health": 9,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BGS_009",
+                "attack": 5,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4325,
+                        "cardId": "ICC_029e"
+                    }
+                ],
+                "entityId": 3862,
+                "health": 2,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BGS_009",
+                "attack": 2,
+                "divineShield": false,
+                "enchantments": [],
+                "entityId": 4169,
+                "health": 2,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            }
+        ],
+        "secrets": []
+    },
+    "opponentBoard": {
+        "player": {
+            "tavernTier": 6,
+            "hpLeft": 17,
+            "cardId": "TB_BaconShop_HERO_74",
+            "heroPowerId": "TB_BaconShop_HP_082",
+            "heroPowerUsed": false
+        },
+        "board": [
+            {
+                "cardId": "BGS_078",
+                "attack": 5,
+                "divineShield": false,
+                "enchantments": [],
+                "entityId": 4668,
+                "health": 3,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BGS_078",
+                "attack": 5,
+                "divineShield": false,
+                "enchantments": [],
+                "entityId": 4669,
+                "health": 3,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "TRL_232",
+                "attack": 7,
+                "divineShield": false,
+                "enchantments": [],
+                "entityId": 4670,
+                "health": 7,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "FP1_010",
+                "attack": 4,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4672,
+                        "cardId": "BGS_037e"
+                    }
+                ],
+                "entityId": 4671,
+                "health": 9,
+                "poisonous": true,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "FP1_031",
+                "attack": 3,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4674,
+                        "cardId": "BG20_GEMe"
+                    },
+                    {
+                        "originEntityId": 4675,
+                        "cardId": "BG20_GEMe2"
+                    }
+                ],
+                "entityId": 4673,
+                "health": 9,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BGS_018",
+                "attack": 4,
+                "divineShield": false,
+                "enchantments": [],
+                "entityId": 4677,
+                "health": 4,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            },
+            {
+                "cardId": "BG20_205",
+                "attack": 7,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 4679,
+                        "cardId": "EX1_093e"
+                    }
+                ],
+                "entityId": 4678,
+                "health": 7,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": true,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false
+            }
+        ],
+        "secrets": []
+    },
+    "options": null
 }
