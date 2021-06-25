@@ -169,7 +169,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.HarvestGolemTavernBrawl:
+			case CardIds.Collectible.Neutral.HarvestGolemLegacy:
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.NonCollectible.Neutral.DamagedGolemLegacy,
