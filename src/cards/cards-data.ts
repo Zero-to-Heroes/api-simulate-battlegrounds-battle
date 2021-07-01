@@ -4,7 +4,6 @@ import { getRaceEnum, hasMechanic } from '../utils';
 export class CardsData {
 	public static CARDS_WITH_NO_BACONUP_VERSION = [
 		CardIds.Collectible.Paladin.RighteousProtector,
-		CardIds.Collectible.Warlock.VulgarHomunculus,
 		CardIds.NonCollectible.Neutral.DragonspawnLieutenant,
 		CardIds.NonCollectible.Neutral.BronzeWarden,
 		CardIds.NonCollectible.Neutral.YoHoOgre,
