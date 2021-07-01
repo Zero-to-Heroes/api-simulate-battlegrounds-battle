@@ -20,13 +20,13 @@ export const handleSpawn = (entity: BoardEntity, spawned: readonly BoardEntity[]
 		case CardIds.Collectible.Paladin.CobaltGuardian:
 		case CardIds.NonCollectible.Neutral.DeflectOBot:
 			if (spawned.filter((spawn) => isCorrectTribe(cards.getCard(spawn.cardId).race, Race.MECH)).length > 0) {
-				entity.attack = entity.attack + 1;
+				entity.attack = entity.attack + 2;
 				entity.divineShield = true;
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.DeflectOBotBattlegrounds:
 			if (spawned.filter((spawn) => isCorrectTribe(cards.getCard(spawn.cardId).race, Race.MECH)).length > 0) {
-				entity.attack = entity.attack + 2;
+				entity.attack = entity.attack + 4;
 				entity.divineShield = true;
 			}
 			return;

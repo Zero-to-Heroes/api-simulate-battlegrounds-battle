@@ -19,8 +19,10 @@ const handleIllidanForPlayer = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	playerBoard[0].attack += 2;
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 	if (playerBoard.length > 1) {
+		playerBoard[playerBoard.length - 1].attack += 2;
 		simulateAttack(
 			playerBoard,
 			playerEntity,
