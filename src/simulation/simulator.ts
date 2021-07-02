@@ -1,4 +1,4 @@
-import { AllCardsService, getEffectiveTechLevel } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, getEffectiveTechLevel } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -31,8 +31,22 @@ export class Simulator {
 		opponentEntity: BgsPlayerEntity,
 		spectator: Spectator,
 	): SingleSimulationResult {
+		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
+		// is sent tothe simulator
+		const effectivePlayerBoardLength =
+			playerEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && playerEntity.heroPowerUsed
+				? playerBoard.length - 1
+				: playerBoard.length;
+		const effectiveOpponentBoardLength =
+			opponentEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && opponentEntity.heroPowerUsed
+				? opponentBoard.length - 1
+				: opponentBoard.length;
 		this.currentAttacker =
-			playerBoard.length > opponentBoard.length ? 0 : opponentBoard.length > playerBoard.length ? 1 : Math.round(Math.random());
+			effectivePlayerBoardLength > effectiveOpponentBoardLength
+				? 0
+				: effectiveOpponentBoardLength > effectivePlayerBoardLength
+				? 1
+				: Math.round(Math.random());
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map((entity) => entity.entityId), ...opponentBoard.map((entity) => entity.entityId)) + 1;
 		if (this.sharedState.debug) {

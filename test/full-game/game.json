@@ -2,20 +2,35 @@
 	"playerBoard": {
 		"player": {
 			"tavernTier": 2,
-			"hpLeft": 40,
-			"cardId": "TB_BaconShop_HERO_08",
-			"nonGhostCardId": "TB_BaconShop_HERO_08",
-			"heroPowerId": "TB_BaconShop_HP_069",
+			"hpLeft": 38,
+			"cardId": "TB_BaconShop_HERO_92",
+			"nonGhostCardId": "TB_BaconShop_HERO_92",
+			"heroPowerId": "TB_BaconShop_HP_103",
 			"heroPowerUsed": true
 		},
 		"board": [
 			{
-				"cardId": "EX1_506",
+				"cardId": "BGS_106",
 				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 353,
-				"health": 1,
+				"entityId": 505,
+				"health": 2,
+				"poisonous": false,
+				"reborn": true,
+				"taunt": true,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false
+			},
+			{
+				"cardId": "BOT_606",
+				"attack": 2,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 609,
+				"health": 2,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -25,12 +40,12 @@
 				"frenzyApplied": false
 			},
 			{
-				"cardId": "EX1_506a",
-				"attack": 1,
+				"cardId": "EX1_507",
+				"attack": 3,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 354,
-				"health": 1,
+				"entityId": 813,
+				"health": 3,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -44,21 +59,21 @@
 	},
 	"opponentBoard": {
 		"player": {
-			"tavernTier": 1,
-			"hpLeft": 40,
-			"cardId": "TB_BaconShop_HERO_11",
-			"nonGhostCardId": "TB_BaconShop_HERO_11",
-			"heroPowerId": "TB_BaconShop_HP_087",
+			"tavernTier": 2,
+			"hpLeft": 37,
+			"cardId": "TB_BaconShop_HERO_94",
+			"nonGhostCardId": "TB_BaconShop_HERO_94",
+			"heroPowerId": "TB_BaconShop_HP_106",
 			"heroPowerUsed": false
 		},
 		"board": [
 			{
-				"cardId": "BGS_055",
+				"cardId": "OG_221",
 				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 522,
-				"health": 2,
+				"entityId": 749,
+				"health": 1,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -68,12 +83,15 @@
 				"frenzyApplied": false
 			},
 			{
-				"cardId": "BGS_027",
-				"attack": 1,
+				"cardId": "EX1_556",
+				"attack": 3,
 				"divineShield": false,
-				"enchantments": [],
-				"entityId": 523,
-				"health": 2,
+				"enchantments": [
+					{ "originEntityId": 751, "cardId": "BG20_GEMe" },
+					{ "originEntityId": 752, "cardId": "BG20_GEMe2" }
+				],
+				"entityId": 750,
+				"health": 4,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
