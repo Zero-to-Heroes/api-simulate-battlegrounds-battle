@@ -1,70 +1,20 @@
 {
 	"playerBoard": {
-		"player": { "tavernTier": 2, "hpLeft": 40, "cardId": "BG20_HERO_301", "heroPowerId": "BG20_HERO_301p", "heroPowerUsed": false },
-		"board": [
-			{
-				"cardId": "EX1_556",
-				"attack": 2,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 694,
-				"health": 3,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "BGS_106",
-				"attack": 2,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 555,
-				"health": 2,
-				"poisonous": false,
-				"reborn": true,
-				"taunt": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			}
-		],
-		"secrets": []
-	},
-	"opponentBoard": {
 		"player": {
 			"tavernTier": 2,
-			"hpLeft": 37,
-			"cardId": "TB_BaconShop_HERO_11",
-			"heroPowerId": "TB_BaconShop_HP_087",
-			"heroPowerUsed": false
+			"hpLeft": 40,
+			"cardId": "TB_BaconShop_HERO_08",
+			"nonGhostCardId": "TB_BaconShop_HERO_08",
+			"heroPowerId": "TB_BaconShop_HP_069",
+			"heroPowerUsed": true
 		},
 		"board": [
 			{
-				"cardId": "BG20_102",
-				"attack": 4,
+				"cardId": "EX1_506",
+				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 822,
-				"health": 3,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false
-			},
-			{
-				"cardId": "CFM_315",
-				"attack": 1,
-				"divineShield": false,
-				"enchantments": [],
-				"entityId": 823,
+				"entityId": 353,
 				"health": 1,
 				"poisonous": false,
 				"reborn": false,
@@ -75,15 +25,58 @@
 				"frenzyApplied": false
 			},
 			{
-				"cardId": "BGS_106",
+				"cardId": "EX1_506a",
+				"attack": 1,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 354,
+				"health": 1,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false
+			}
+		],
+		"secrets": []
+	},
+	"opponentBoard": {
+		"player": {
+			"tavernTier": 1,
+			"hpLeft": 40,
+			"cardId": "TB_BaconShop_HERO_11",
+			"nonGhostCardId": "TB_BaconShop_HERO_11",
+			"heroPowerId": "TB_BaconShop_HP_087",
+			"heroPowerUsed": false
+		},
+		"board": [
+			{
+				"cardId": "BGS_055",
 				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 824,
+				"entityId": 522,
 				"health": 2,
 				"poisonous": false,
-				"reborn": true,
-				"taunt": true,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false
+			},
+			{
+				"cardId": "BGS_027",
+				"attack": 1,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 523,
+				"health": 2,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
 				"friendly": true,

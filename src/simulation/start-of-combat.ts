@@ -19,9 +19,12 @@ const handleIllidanForPlayer = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
+	// miss the second one
+	const minionsAtStart = playerBoard.length;
 	playerBoard[0].attack += 2;
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
-	if (playerBoard.length > 1) {
+	if (minionsAtStart > 1) {
 		playerBoard[playerBoard.length - 1].attack += 2;
 		simulateAttack(
 			playerBoard,
