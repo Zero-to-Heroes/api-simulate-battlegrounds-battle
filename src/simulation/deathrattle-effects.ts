@@ -58,6 +58,7 @@ export const handleDeathrattleEffects = (
 			return;
 		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.NadinaTheRed:
+		case CardIds.NonCollectible.Neutral.NadinaTheRedBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
 			}

@@ -11,7 +11,6 @@ export class CardsData {
 		CardIds.Collectible.Neutral.Toxfin,
 		CardIds.Collectible.Neutral.FoeReaper4000,
 		CardIds.Collectible.Neutral.Maexxna1,
-		CardIds.NonCollectible.Neutral.NadinaTheRed,
 	];
 
 	// public shredderSpawns: readonly string[];

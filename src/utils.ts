@@ -74,7 +74,7 @@ export const buildSingleBoardEntity = (
 		result.reborn = false;
 	}
 
-	if (controllerHero.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutBattlegrounds) {
+	if (controllerHero?.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutBattlegrounds) {
 		result.taunt = true;
 		result.attack += 1;
 		result.health += 2;
