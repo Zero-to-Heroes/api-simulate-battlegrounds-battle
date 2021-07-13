@@ -78,7 +78,11 @@ export const buildSingleBoardEntity = (
 		result.taunt = true;
 		result.attack += 1;
 		result.health += 2;
+	} else if (controllerHero?.heroPowerId === CardIds.NonCollectible.Demonhunter.KurtrusAshfallen_CloseThePortal) {
+		result.attack += 2;
+		result.health += 2;
 	}
+
 	return result;
 };
 
