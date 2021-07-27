@@ -16,7 +16,10 @@ describe.skip('Full tests for performance and accuracy', () => {
 		SharedState.debugEnabled = false;
 		const result = await runSimulation({ 'body': JSON.stringify(input) });
 		const simulationResult = JSON.parse(result.body);
-		console.log('result', simulationResult.won, simulationResult.tied, simulationResult.lost);
+		console.log('result', {
+			...simulationResult,
+			outcomeSamples: undefined,
+		});
 
 		const sample = simulationResult.outcomeSamples.won[0];
 		const base64 = encode(JSON.stringify(sample));
