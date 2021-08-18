@@ -71,7 +71,11 @@ export const simulateAttack = (
 				);
 				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 				// the windfury triggers again? The current behavior attacks after the windfury is over
-				if (defendingEntity.health > 0 && defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre) {
+				if (
+					defendingEntity.health > 0 &&
+					!defendingEntity.definitelyDead &&
+					defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre
+				) {
 					defendingEntity.attackImmediately = true;
 				}
 			}
@@ -438,14 +442,16 @@ export const bumpEntities = (
 	entity.health = entity.health - bumpInto.attack;
 	// Do it last, so that other effects are still processed
 	if (bumpInto.poisonous) {
-		entity.health = 0;
+		// So that further buffs don't revive it
+		// And we don't just set the health to avoid applying overkill effects
+		entity.definitelyDead = true;
 		// return entity;
 	}
 	// FIXME: This will likely be incorrect in terms of timings, e.g. if the entity ends up
 	// surviving following a buff like Spawn.
 	spectator.registerDamageDealt(bumpInto, entity, bumpInto.attack, entityBoard);
 	entity.lastAffectedByEntity = bumpInto;
-	if (!entity.frenzyApplied && entity.health > 0) {
+	if (!entity.frenzyApplied && entity.health > 0 && !entity.definitelyDead) {
 		applyFrenzy(entity, entityBoard, allCards, cardsData, sharedState, spectator);
 		entity.frenzyApplied = true;
 	}
@@ -680,7 +686,7 @@ const handleDeathsForFirstBoard = (
 	for (let i = 0; i < deadMinionIndexes.length; i++) {
 		const entity = deadEntities[i];
 		const index = deadMinionIndexes[i];
-		if (entity.health <= 0) {
+		if (entity.health <= 0 || entity.definitelyDead) {
 			buildBoardAfterDeathrattleSpawns(
 				firstBoard,
 				firstBoardHero,
@@ -782,7 +788,7 @@ const makeMinionsDie = (
 	// const boardCopy = [...board];
 	for (let i = 0; i < board.length; i++) {
 		const index = board.map((entity) => entity.entityId).indexOf(board[i].entityId);
-		if (board[i].health <= 0) {
+		if (board[i].health <= 0 || board[i].definitelyDead) {
 			deadMinionIndexes.push(i);
 			deadEntities.push(board[i]);
 			board.splice(index, 1);
@@ -912,7 +918,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		...entitiesFromReborn,
 		...entitiesFromEnchantments,
 	];
-	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0);
+	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 
 	// const roomToSpawn: number = 7 - boardWithKilledMinion.length;
 	// const spawnedEntities: readonly BoardEntity[] = aliveEntites.slice(0, roomToSpawn);
@@ -946,7 +952,7 @@ const buildBoardAfterDeathrattleSpawns = (
 				spectator,
 			);
 		}
-		if (newMinion.health > 0) {
+		if (newMinion.health > 0 && !newMinion.definitelyDead) {
 			spawnedEntities.push(newMinion);
 		}
 	}

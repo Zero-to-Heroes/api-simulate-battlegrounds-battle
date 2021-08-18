@@ -203,7 +203,7 @@ const applyMinionDeathEffect = (
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlame2) {
-			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0);
+			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 			if (targets.length > 0) {
 				const target = targets[0];
 				dealDamageToEnemy(
@@ -221,7 +221,7 @@ const applyMinionDeathEffect = (
 				);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Warrior.HeraldOfFlameBattlegrounds) {
-			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0);
+			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 			if (targets.length > 0) {
 				const target = targets[0];
 				dealDamageToEnemy(
