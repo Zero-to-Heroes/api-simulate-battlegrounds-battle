@@ -26,6 +26,7 @@ export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): voi
 		if (avengeValue > 0) {
 			entity.avengeCurrent = avengeValue;
 			entity.avengeDefault = avengeValue;
+		}
 	}
 };
 
@@ -53,6 +54,10 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.NonCollectible.Warlock.MalganisBattlegrounds:
 			applyMalGanisAura(board, i, enchantmentId, cards);
 			return;
+		case CardIds.NonCollectible.Neutral.Kathranatir2:
+		case CardIds.NonCollectible.Neutral.KathranatirBattlegrounds:
+			applyKathranatirAura(board, i, enchantmentId, cards);
+			return;
 		case CardIds.Collectible.Neutral.MurlocWarleaderLegacy:
 		case CardIds.Collectible.Neutral.MurlocWarleaderVanilla:
 		case CardIds.NonCollectible.Neutral.MurlocWarleaderBattlegrounds:
@@ -76,6 +81,10 @@ const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEnti
 		case CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantment:
 		case CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantmentBattlegrounds:
 			removeMalGanisAura(entity, enchantmentId);
+			return;
+		case CardIds.NonCollectible.Neutral.Kathranatir_GraspOfKathranatirEnchantment1:
+		case CardIds.NonCollectible.Neutral.Kathranatir_GraspOfKathranatirEnchantment2:
+			removeKathranatirAura(entity, enchantmentId);
 			return;
 		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglLegacyEnchantment:
 		case CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglVanillaEnchantment:
@@ -143,6 +152,24 @@ const applyMalGanisAura = (board: BoardEntity[], index: number, enchantmentId: s
 	// return newBoard;
 };
 
+const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
+	const originEntity = board[index];
+	// const newBoard = [];
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
+			// newBoard.push(entity);
+			continue;
+		}
+
+		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
+			entity.attack += enchantmentId === CardIds.NonCollectible.Neutral.Kathranatir_GraspOfKathranatirEnchantment2 ? 4 : 2;
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+		}
+	}
+	// return newBoard;
+};
+
 const removeDeathwingAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 2);
@@ -170,6 +197,16 @@ const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): void =>
 		1,
 		entity.health -
 			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2),
+	);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+};
+
+const removeKathranatirAura = (entity: BoardEntity, enchantmentId: string): void => {
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
+	entity.attack = Math.max(
+		0,
+		entity.attack -
+			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.Kathranatir_GraspOfKathranatirEnchantment2 ? 4 : 2),
 	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
@@ -250,6 +287,4 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, b
 			numberOfBuffs * (enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
 	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
-	if (debug) {
-	}
 };

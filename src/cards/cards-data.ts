@@ -84,6 +84,11 @@ export class CardsData {
 				CardIds.NonCollectible.Warlock.MalganisBattlegrounds,
 				CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantmentBattlegrounds,
 			],
+			[CardIds.NonCollectible.Neutral.Kathranatir2, CardIds.NonCollectible.Neutral.Kathranatir_GraspOfKathranatirEnchantment1],
+			[
+				CardIds.NonCollectible.Neutral.KathranatirBattlegrounds,
+				CardIds.NonCollectible.Neutral.Kathranatir_GraspOfKathranatirEnchantment2,
+			],
 			[CardIds.Collectible.Neutral.MurlocWarleaderLegacy, CardIds.NonCollectible.Neutral.MurlocWarleader_MrgglaarglLegacyEnchantment],
 			[
 				CardIds.NonCollectible.Neutral.MurlocWarleaderBattlegrounds,
@@ -104,9 +109,12 @@ export class CardsData {
 			case CardIds.NonCollectible.Neutral.BirdBuddy:
 			case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
 				return 1;
-			case CardIds.NonCollectible.Neutral.PalescaleCrocolist:
-			case CardIds.NonCollectible.Neutral.PalescaleCrocolistBattlegrounds:
+			case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
+			case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
 				return 2;
+			case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
+			case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
+				return 3;
 		}
 		return 0;
 	}

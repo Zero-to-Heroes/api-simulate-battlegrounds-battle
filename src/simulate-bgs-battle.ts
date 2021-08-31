@@ -4,7 +4,7 @@ import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
-import { removeAuras } from './simulation/auras';
+import { removeAuras, setImplicitData } from './simulation/auras';
 import { removeGlobalModifiers } from './simulation/global-modifiers';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';

@@ -172,6 +172,42 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
+			case CardIds.NonCollectible.Neutral.IckyImp2:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.NonCollectible.Neutral.IckyImpBattlegrounds:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenBattlegrounds,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
 			case CardIds.Collectible.Neutral.HarvestGolemLegacy:
 				spawnedEntities.push(
 					...spawnEntities(
@@ -211,7 +247,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.NonCollectible.Neutral.SewerRat:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.SewerRat_Turtle,
+						CardIds.NonCollectible.Neutral.SewerRat_HalfShellToken,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -229,7 +265,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.NonCollectible.Neutral.SewerRatBattlegrounds:
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.SewerRat_TurtleBattlegrounds,
+						CardIds.NonCollectible.Neutral.SewerRat_HalfShellTokenBattlegrounds,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,

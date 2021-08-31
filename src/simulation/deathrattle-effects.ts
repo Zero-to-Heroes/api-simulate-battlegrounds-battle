@@ -90,12 +90,12 @@ export const handleDeathrattleEffects = (
 				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 			}
 			return;
-		case CardIds.NonCollectible.Warlock.ImpulsiveTrickster:
+		case CardIds.NonCollectible.Neutral.ImpulsiveTrickster:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
 			}
 			return;
-		case CardIds.NonCollectible.Warlock.ImpulsiveTricksterBattlegrounds:
+		case CardIds.NonCollectible.Neutral.ImpulsiveTricksterBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
 				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
@@ -177,11 +177,11 @@ export const handleDeathrattleEffects = (
 
 	for (const enchantment of deadEntity.enchantments ?? []) {
 		switch (enchantment.cardId) {
-			case CardIds.NonCollectible.Neutral.Leapfrogger_Enchantment:
+			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards);
 				}
-			case CardIds.NonCollectible.Neutral.Leapfrogger_EnchantmentBattlegrounds:
+			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
 				}
@@ -200,8 +200,8 @@ const applyLeapFroggerEffect = (
 		buffed.enchantments = buffed.enchantments ?? [];
 		buffed.enchantments.push({
 			cardId: isPremium
-				? CardIds.NonCollectible.Neutral.LeapfroggerEnchantmentBattlegrounds
-				: CardIds.NonCollectible.Neutral.LeapfroggerEnchantment,
+				? CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2
+				: CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
 			originEntityId: deadEntity.entityId,
 		});
 	}
@@ -426,11 +426,25 @@ const applyMinionDeathEffect = (
 	updateAvengeCounters(boardWithDeadEntity);
 	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0);
 	for (const avenger of avengers) {
-		handleAvenge(boardWithDeadEntity, avenger, allCards);
+		handleAvenge(boardWithDeadEntity, boardWithDeadEntityHero, avenger, allCards);
 	}
 };
 
-const handleAvenge = (boardWithDeadEntity: BoardEntity[], avenger: BoardEntity, allCards: AllCardsService) => {
+const updateAvengeCounters = (board: readonly BoardEntity[]) => {
+	for (const entity of board) {
+		if (entity.avengeDefault) {
+			entity.avengeCurrent -= 1;
+		}
+	}
+};
+
+const handleAvenge = (
+	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
+	avenger: BoardEntity,
+	allCards: AllCardsService,
+) => {
+	// Don't forget to update the avenge data in cards-data
 	switch (avenger.cardId) {
 		case CardIds.NonCollectible.Neutral.BirdBuddy:
 			addStatsToBoard(boardWithDeadEntity, 1, 1, allCards, 'BEAST');
@@ -440,6 +454,10 @@ const handleAvenge = (boardWithDeadEntity: BoardEntity[], avenger: BoardEntity, 
 			grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
 			grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+		case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
+			addCardsInHand(boardWithDeadEntityHero, 1);
+		case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
+			addCardsInHand(boardWithDeadEntityHero, 2);
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;
 };
@@ -621,6 +639,10 @@ const grantRandomStats = (board: BoardEntity[], attack: number, health: number, 
 		}
 	}
 	return null;
+};
+
+const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number) => {
+	playerEntity.cardsInHand = Math.min(10, playerEntity.cardsInHand + cards);
 };
 
 const grantRandomDivineShield = (board: BoardEntity[]): void => {
