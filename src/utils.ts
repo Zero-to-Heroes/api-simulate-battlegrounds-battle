@@ -101,6 +101,25 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	}
 };
 
+export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
+	if (hasCorrectTribe(entity, Race.ELEMENTAL, allCards)) {
+		const masterOfRealities = friendlyBoard.filter(
+			(e) =>
+				e.cardId === CardIds.NonCollectible.Neutral.MasterOfRealities2 ||
+				e.cardId === CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds,
+		);
+		masterOfRealities.forEach((master) => {
+			modifyAttack(
+				entity,
+				master.cardId === CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds ? 2 : 1,
+				friendlyBoard,
+				allCards,
+			);
+			modifyHealth(entity, master.cardId === CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds ? 2 : 1);
+		});
+	}
+};
+
 export const modifyHealth = (entity: BoardEntity, amount: number): void => {
 	entity.health += amount;
 	if (amount > 0) {

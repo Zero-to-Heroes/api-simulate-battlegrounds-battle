@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { isCorrectTribe, modifyAttack } from '../utils';
+import { afterStatsUpdate, isCorrectTribe, modifyAttack } from '../utils';
 export const handleSpawnEffects = (board: BoardEntity[], spawned: readonly BoardEntity[], cards: AllCardsService): void => {
 	for (const entity of board) {
 		handleSpawn(entity, board, spawned, cards);
@@ -23,6 +23,7 @@ export const handleSpawn = (
 				friendlyBoard,
 				cards,
 			);
+			afterStatsUpdate(entity, friendlyBoard, cards);
 			return;
 		case CardIds.NonCollectible.Neutral.MurlocTidecallerBattlegrounds:
 			modifyAttack(
@@ -31,6 +32,7 @@ export const handleSpawn = (
 				friendlyBoard,
 				cards,
 			);
+			afterStatsUpdate(entity, friendlyBoard, cards);
 			return;
 		case CardIds.Collectible.Paladin.CobaltGuardian:
 		case CardIds.NonCollectible.Neutral.DeflectOBot:

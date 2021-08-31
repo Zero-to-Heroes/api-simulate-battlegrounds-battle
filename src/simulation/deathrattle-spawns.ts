@@ -2,7 +2,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { buildSingleBoardEntity, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { afterStatsUpdate, buildSingleBoardEntity, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { addStatsToBoard } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -55,6 +55,7 @@ export const spawnEntities = (
 			: 0;
 		modifyAttack(newMinion, attackBuff, boardToSpawnInto, allCards);
 		modifyHealth(newMinion, healthBuff);
+		afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
 		if (!newMinion.cardId) {
 			console.warn('Invalid spawn', newMinion, cardId);
 		}
@@ -68,10 +69,12 @@ export const spawnEntities = (
 			bigfernals.forEach((entity) => {
 				modifyAttack(entity, 1, boardToSpawnInto, allCards);
 				modifyHealth(entity, 1);
+				afterStatsUpdate(entity, boardToSpawnInto, allCards);
 			});
 			goldenBigfernals.forEach((entity) => {
 				modifyAttack(entity, 2, boardToSpawnInto, allCards);
 				modifyHealth(entity, 2);
+				afterStatsUpdate(entity, boardToSpawnInto, allCards);
 			});
 		}
 	}

@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { dealDamageToRandomEnemy, getNeighbours, simulateAttack } from './attack';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
@@ -23,9 +23,11 @@ const handleIllidanForPlayer = (
 	// miss the second one
 	const minionsAtStart = playerBoard.length;
 	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
+	afterStatsUpdate(playerBoard[0], playerBoard, allCards);
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 	if (minionsAtStart > 1) {
 		modifyAttack(playerBoard[playerBoard.length - 1], 2, playerBoard, allCards);
+		afterStatsUpdate(playerBoard[0], playerBoard, allCards);
 		simulateAttack(
 			playerBoard,
 			playerEntity,
@@ -335,6 +337,7 @@ export const performStartOfCombat = (
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, dragons, attackingBoard, allCards);
 			modifyHealth(entity, dragons);
+			afterStatsUpdate(entity, attackingBoard, allCards);
 		});
 	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.PrizedPromoDrakeBattlegrounds) {
 		const dragons = attackingBoard
@@ -344,6 +347,7 @@ export const performStartOfCombat = (
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2 * dragons, attackingBoard, allCards);
 			modifyHealth(entity, 2 * dragons);
+			afterStatsUpdate(entity, attackingBoard, allCards);
 		});
 	}
 };

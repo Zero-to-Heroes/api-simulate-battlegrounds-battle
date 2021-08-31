@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { getRaceEnum, isCorrectTribe, modifyAttack, modifyHealth, stringifySimple, stringifySimpleCard } from '../utils';
+import { afterStatsUpdate, getRaceEnum, isCorrectTribe, modifyAttack, modifyHealth, stringifySimple, stringifySimpleCard } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -231,6 +231,7 @@ export const addStatsToBoard = (board: BoardEntity[], attack: number, health: nu
 			modifyAttack(entity, attack, board, allCards);
 			entity.previousAttack += attack;
 			modifyHealth(entity, health);
+			afterStatsUpdate(entity, board, allCards);
 		}
 	}
 };
@@ -382,6 +383,7 @@ const applyMinionDeathEffect = (
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 2, boardWithDeadEntity, allCards);
 				modifyHealth(pirate, 2);
+				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBattlegrounds) {
 			const otherPirates = otherBoard
@@ -390,6 +392,7 @@ const applyMinionDeathEffect = (
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 4, boardWithDeadEntity, allCards);
 				modifyHealth(pirate, 4);
+				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 			});
 		}
 		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.NatPagleExtremeAngler) {
@@ -670,9 +673,11 @@ const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsServ
 		if (board[i].cardId === CardIds.Collectible.Hunter.ScavengingHyenaLegacy) {
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 1);
+			afterStatsUpdate(board[i], board, allCards);
 		} else if (board[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 2);
+			afterStatsUpdate(board[i], board, allCards);
 		}
 	}
 };
@@ -682,9 +687,11 @@ const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService): vo
 		if (board[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 2);
+			afterStatsUpdate(board[i], board, allCards);
 		} else if (board[i].cardId === CardIds.NonCollectible.Neutral.JunkbotBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 4);
+			afterStatsUpdate(board[i], board, allCards);
 		}
 	}
 };
@@ -703,6 +710,7 @@ const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: numb
 	neighbours.forEach((entity) => {
 		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
 		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length);
+		afterStatsUpdate(entity, board, allCards);
 	});
 };
 
@@ -710,13 +718,15 @@ const grantRandomAttack = (board: BoardEntity[], additionalAttack: number, allCa
 	if (board.length > 0) {
 		const chosen = board[Math.floor(Math.random() * board.length)];
 		modifyAttack(chosen, additionalAttack, board, allCards);
+		afterStatsUpdate(chosen, board, allCards);
 	}
 };
 
-const grantRandomHealth = (board: BoardEntity[], health: number): void => {
+const grantRandomHealth = (board: BoardEntity[], health: number, allCards: AllCardsService): void => {
 	if (board.length > 0) {
 		const chosen = board[Math.floor(Math.random() * board.length)];
 		modifyHealth(chosen, health);
+		afterStatsUpdate(chosen, board, allCards);
 	}
 };
 
@@ -726,6 +736,7 @@ const grantRandomStats = (board: BoardEntity[], attack: number, health: number, 
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
 			modifyHealth(validBeast, health);
+			afterStatsUpdate(validBeast, board, allCards);
 			return validBeast;
 		}
 	}
@@ -749,6 +760,7 @@ const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, board: Boa
 		if (pirate) {
 			modifyAttack(pirate, peggy.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
 			modifyHealth(pirate, peggy.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds ? 2 : 1);
+			afterStatsUpdate(pirate, board, allCards);
 		}
 	});
 };
