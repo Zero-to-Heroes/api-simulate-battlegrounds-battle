@@ -481,10 +481,10 @@ const handleAvenge = (
 			grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
 			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
-			addCardsInHand(boardWithDeadEntityHero, 1);
+			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards);
 			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2);
+			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards);
 			break;
 		case CardIds.NonCollectible.Neutral.Sisefin:
 			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
@@ -530,6 +530,30 @@ const handleAvenge = (
 					sharedState,
 					spectator,
 				);
+			}
+			break;
+		case CardIds.NonCollectible.Neutral.TonyTwoTusk:
+			const nonGoldenMinions = boardWithDeadEntity.filter((e) => {
+				const ref = allCards.getCard(e.cardId);
+				return !!ref.battlegroundsPremiumDbfId;
+			});
+			const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
+			if (pirate) {
+				const refCard = allCards.getCard(pirate.cardId);
+				pirate.cardId = refCard.id;
+			}
+			break;
+		case CardIds.NonCollectible.Neutral.TonyTwoTuskBattlegrounds:
+			for (let i = 0; i < 2; i++) {
+				const nonGoldenMinions = boardWithDeadEntity.filter((e) => {
+					const ref = allCards.getCard(e.cardId);
+					return !!ref.battlegroundsPremiumDbfId;
+				});
+				const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
+				if (pirate) {
+					const refCard = allCards.getCard(pirate.cardId);
+					pirate.cardId = refCard.id;
+				}
 			}
 			break;
 	}
@@ -708,8 +732,25 @@ const grantRandomStats = (board: BoardEntity[], attack: number, health: number, 
 	return null;
 };
 
-const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number) => {
+const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, board: BoardEntity[], allCards: AllCardsService) => {
 	playerEntity.cardsInHand = Math.min(10, playerEntity.cardsInHand + cards);
+
+	const peggys = board.filter(
+		(e) =>
+			e.cardId === CardIds.NonCollectible.Neutral.PeggyBrittlebone ||
+			e.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds,
+	);
+	peggys.forEach((peggy) => {
+		const pirate = getRandomMinion(
+			board.filter((e) => e.entityId !== peggy.entityId),
+			Race.PIRATE,
+			allCards,
+		);
+		if (pirate) {
+			modifyAttack(pirate, peggy.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
+			modifyHealth(pirate, peggy.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds ? 2 : 1);
+		}
+	});
 };
 
 const grantRandomDivineShield = (board: BoardEntity[]): void => {

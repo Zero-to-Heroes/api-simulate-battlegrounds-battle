@@ -22,11 +22,10 @@ const handleIllidanForPlayer = (
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
 	const minionsAtStart = playerBoard.length;
-	// TODO: should apply Whelp Smuggler's effect here?
-	playerBoard[0].attack += 2;
+	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 	if (minionsAtStart > 1) {
-		playerBoard[playerBoard.length - 1].attack += 2;
+		modifyAttack(playerBoard[playerBoard.length - 1], 2, playerBoard, allCards);
 		simulateAttack(
 			playerBoard,
 			playerEntity,

@@ -124,6 +124,9 @@ export class CardsData {
 			case CardIds.NonCollectible.Neutral.Sisefin:
 			case CardIds.NonCollectible.Neutral.SisefinBattlegrounds:
 				return 3;
+			case CardIds.NonCollectible.Neutral.TonyTwoTusk:
+			case CardIds.NonCollectible.Neutral.TonyTwoTuskBattlegrounds:
+				return 5;
 		}
 		return 0;
 	}
