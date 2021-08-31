@@ -473,17 +473,36 @@ const handleAvenge = (
 	switch (avenger.cardId) {
 		case CardIds.NonCollectible.Neutral.BirdBuddy:
 			addStatsToBoard(boardWithDeadEntity, 1, 1, allCards, 'BEAST');
+			break;
 		case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
 			addStatsToBoard(boardWithDeadEntity, 2, 2, allCards, 'BEAST');
+			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
 			grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
 			grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
 			addCardsInHand(boardWithDeadEntityHero, 1);
+			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2);
-
+			break;
+		case CardIds.NonCollectible.Neutral.Sisefin:
+			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
+			if (murloc) {
+				murloc.poisonous = true;
+			}
+			break;
+		case CardIds.NonCollectible.Neutral.SisefinBattlegrounds:
+			for (let i = 0; i < 2; i++) {
+				const murloc2 = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
+				if (murloc2) {
+					murloc2.poisonous = true;
+				}
+			}
+			break;
 		case CardIds.NonCollectible.Neutral.MechanoTank:
 			dealDamageToEnemy(
 				getRandomMinionWithHighestHealth(otherBoard),
@@ -498,6 +517,7 @@ const handleAvenge = (
 				sharedState,
 				spectator,
 			);
+			break;
 		case CardIds.NonCollectible.Neutral.MechanoTankBattlegrounds:
 			for (let i = 0; i < 2; i++) {
 				dealDamageToEnemy(
@@ -514,6 +534,7 @@ const handleAvenge = (
 					spectator,
 				);
 			}
+			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;
 };

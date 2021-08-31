@@ -116,6 +116,8 @@ export class CardsData {
 				return 2;
 			case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
 			case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
+			case CardIds.NonCollectible.Neutral.Sisefin:
+			case CardIds.NonCollectible.Neutral.SisefinBattlegrounds:
 				return 3;
 		}
 		return 0;
