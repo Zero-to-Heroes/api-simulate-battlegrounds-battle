@@ -6,7 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { validEnchantments } from '../simulate-bgs-battle';
 import { hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth, stringifySimple, stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
-import { handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
+import { addCardsInHand, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
@@ -460,7 +460,12 @@ export const bumpEntities = (
 					entityBoard[i].cardId === CardIds.NonCollectible.Neutral.HolyMecherelBattlegrounds)
 			) {
 				entityBoard[i].divineShield = true;
+			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.Gemsplitter) {
+				addCardsInHand(entityBoardHero, 1, entityBoard, allCards);
+			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.GemsplitterBattlegrounds) {
+				addCardsInHand(entityBoardHero, 2, entityBoard, allCards);
 			}
+
 			// So that self-buffs from Bolvar are taken into account
 			if (entityBoard[i].entityId === entity.entityId) {
 				entity.divineShield = false;

@@ -123,7 +123,12 @@ export class CardsData {
 			case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
 			case CardIds.NonCollectible.Neutral.Sisefin:
 			case CardIds.NonCollectible.Neutral.SisefinBattlegrounds:
+			case CardIds.NonCollectible.Neutral.BuddingGreenthumb:
+			case CardIds.NonCollectible.Neutral.BuddingGreenthumbBattlegrounds:
 				return 3;
+			case CardIds.NonCollectible.Neutral.WitchwingNestmatron:
+			case CardIds.NonCollectible.Neutral.WitchwingNestmatronBattlegrounds:
+				return 4;
 			case CardIds.NonCollectible.Neutral.TonyTwoTusk:
 			case CardIds.NonCollectible.Neutral.TonyTwoTuskBattlegrounds:
 				return 5;

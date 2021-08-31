@@ -85,7 +85,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	console.time('simulation');
 	for (let i = 0; i < numberOfSimulations; i++) {
 		const simulator = new Simulator(cards, cardsData);
-		const input = JSON.parse(inputReady);
+		const input: BgsBattleInfo = JSON.parse(inputReady);
 		const battleResult = simulator.simulateSingleBattle(
 			input.playerBoard.board,
 			input.playerBoard.player,

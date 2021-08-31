@@ -92,13 +92,13 @@ export const handleDeathrattleEffects = (
 			return;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTrickster:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
+				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth, allCards);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTricksterBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
-				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
+				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth, allCards);
+				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth, allCards);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.Leapfrogger:
@@ -477,6 +477,22 @@ const handleAvenge = (
 		case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
 			addStatsToBoard(boardWithDeadEntity, 2, 2, allCards, 'BEAST');
 			break;
+
+		case CardIds.NonCollectible.Neutral.BuddingGreenthumb:
+		case CardIds.NonCollectible.Neutral.BuddingGreenthumbBattlegrounds:
+			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
+			neighbours.forEach((entity) => {
+				modifyAttack(
+					entity,
+					avenger.cardId === CardIds.NonCollectible.Neutral.BuddingGreenthumbBattlegrounds ? 4 : 2,
+					boardWithDeadEntity,
+					allCards,
+				);
+				modifyHealth(entity, avenger.cardId === CardIds.NonCollectible.Neutral.BuddingGreenthumbBattlegrounds ? 2 : 1);
+				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
+			});
+			break;
+
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
 			grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
 			break;
@@ -487,6 +503,12 @@ const handleAvenge = (
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards);
 			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
+			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards);
+			break;
+		case CardIds.NonCollectible.Neutral.WitchwingNestmatron:
+			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards);
+			break;
+		case CardIds.NonCollectible.Neutral.WitchwingNestmatronBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards);
 			break;
 		case CardIds.NonCollectible.Neutral.Sisefin:
@@ -743,7 +765,7 @@ const grantRandomStats = (board: BoardEntity[], attack: number, health: number, 
 	return null;
 };
 
-const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, board: BoardEntity[], allCards: AllCardsService) => {
+export const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, board: BoardEntity[], allCards: AllCardsService): void => {
 	playerEntity.cardsInHand = Math.min(10, playerEntity.cardsInHand + cards);
 
 	const peggys = board.filter(
