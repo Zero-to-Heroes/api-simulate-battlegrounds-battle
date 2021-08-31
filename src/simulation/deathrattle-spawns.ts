@@ -53,6 +53,7 @@ export const spawnEntities = (
 			: 0;
 		newMinion.attack += attackBuff;
 		newMinion.health += healthBuff;
+		newMinion.maxHealth += healthBuff;
 		if (!newMinion.cardId) {
 			console.warn('Invalid spawn', newMinion, cardId);
 		}
@@ -66,10 +67,12 @@ export const spawnEntities = (
 			bigfernals.forEach((entity) => {
 				entity.attack += 1;
 				entity.health += 1;
+				entity.maxHealth += 1;
 			});
 			goldenBigfernals.forEach((entity) => {
 				entity.attack += 2;
 				entity.health += 2;
+				entity.maxHealth += 2;
 			});
 		}
 	}

@@ -90,9 +90,32 @@ export const handleDeathrattleEffects = (
 				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 			}
 			return;
+		case CardIds.NonCollectible.Warlock.ImpulsiveTrickster:
+			for (let i = 0; i < multiplier; i++) {
+				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
+			}
+			return;
+		case CardIds.NonCollectible.Warlock.ImpulsiveTricksterBattlegrounds:
+			for (let i = 0; i < multiplier; i++) {
+				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
+				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth);
+			}
+			return;
 		case CardIds.NonCollectible.Neutral.Leapfrogger:
 			for (let i = 0; i < multiplier; i++) {
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards);
+			}
+		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
+			for (let i = 0; i < multiplier; i++) {
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
+			}
+		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
+			for (let i = 0; i < multiplier; i++) {
+				grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+			}
+		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
+			for (let i = 0; i < multiplier; i++) {
+				grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
 			}
 		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
@@ -172,7 +195,7 @@ const applyLeapFroggerEffect = (
 	isPremium: boolean,
 	allCards: AllCardsService,
 ): void => {
-	const buffed = grantRandomStats(boardWithDeadEntity, isPremium ? 4 : 2, Race.BEAST, allCards);
+	const buffed = grantRandomStats(boardWithDeadEntity, isPremium ? 4 : 2, isPremium ? 4 : 2, allCards, Race.BEAST);
 	if (buffed) {
 		buffed.enchantments = buffed.enchantments ?? [];
 		buffed.enchantments.push({
@@ -198,6 +221,7 @@ const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, a
 			entity.attack += attack;
 			entity.previousAttack += attack;
 			entity.health += health;
+			entity.maxHealth += health;
 		}
 	}
 };
@@ -349,6 +373,7 @@ const applyMinionDeathEffect = (
 			otherPirates.forEach((pirate) => {
 				pirate.attack += 2;
 				pirate.health += 2;
+				pirate.maxHealth += 2;
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBattlegrounds) {
 			const otherPirates = otherBoard
@@ -357,6 +382,7 @@ const applyMinionDeathEffect = (
 			otherPirates.forEach((pirate) => {
 				pirate.attack += 4;
 				pirate.health += 4;
+				pirate.maxHealth += 4;
 			});
 		}
 		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.NatPagleExtremeAngler) {
@@ -398,7 +424,7 @@ const applyMinionDeathEffect = (
 
 	// Avenge
 	updateAvengeCounters(boardWithDeadEntity);
-	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.currentAvenge === 0);
+	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0);
 	for (const avenger of avengers) {
 		handleAvenge(boardWithDeadEntity, avenger, allCards);
 	}
@@ -411,9 +437,11 @@ const handleAvenge = (boardWithDeadEntity: BoardEntity[], avenger: BoardEntity, 
 		case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
 			addStatsToBoard(boardWithDeadEntity, 2, 2, allCards, 'BEAST');
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
-			addStatsToBoard(boardWithDeadEntity, 1, 1, allCards, 'BEAST');
+			grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
+			grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
 	}
-	avenger.currentAvenge = avenger.avengeDefault;
+	avenger.avengeCurrent = avenger.avengeDefault;
 };
 
 export const dealDamageToAllMinions = (
@@ -526,9 +554,11 @@ const applyScavengingHyenaEffect = (board: BoardEntity[]): void => {
 		if (board[i].cardId === CardIds.Collectible.Hunter.ScavengingHyenaLegacy) {
 			board[i].attack += 2;
 			board[i].health += 1;
+			board[i].maxHealth += 1;
 		} else if (board[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaBattlegrounds) {
 			board[i].attack += 4;
 			board[i].health += 2;
+			board[i].maxHealth += 2;
 		}
 	}
 };
@@ -538,9 +568,11 @@ const applyJunkbotEffect = (board: BoardEntity[]): void => {
 		if (board[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
 			board[i].attack += 2;
 			board[i].health += 2;
+			board[i].maxHealth += 2;
 		} else if (board[i].cardId === CardIds.NonCollectible.Neutral.JunkbotBattlegrounds) {
 			board[i].attack += 4;
 			board[i].health += 4;
+			board[i].maxHealth += 4;
 		}
 	}
 };
@@ -559,6 +591,7 @@ const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: numb
 	neighbours.forEach((entity) => {
 		entity.attack += 2 * qiraji.length + 4 * goldenQiraji.length;
 		entity.health += 2 * qiraji.length + 4 * goldenQiraji.length;
+		entity.maxHealth += 2 * qiraji.length + 4 * goldenQiraji.length;
 	});
 };
 
@@ -569,12 +602,21 @@ const grantRandomAttack = (board: BoardEntity[], additionalAttack: number): void
 	}
 };
 
-const grantRandomStats = (board: BoardEntity[], stats: number, race: Race, allCards: AllCardsService): BoardEntity => {
+const grantRandomHealth = (board: BoardEntity[], health: number): void => {
+	if (board.length > 0) {
+		const chosen = board[Math.floor(Math.random() * board.length)];
+		chosen.health += health;
+		chosen.maxHealth += health;
+	}
+};
+
+const grantRandomStats = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, race: Race): BoardEntity => {
 	if (board.length > 0) {
 		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
 		if (validBeast) {
-			validBeast.attack += stats;
-			validBeast.health += stats;
+			validBeast.attack += attack;
+			validBeast.health += health;
+			validBeast.maxHealth += health;
 			return validBeast;
 		}
 	}

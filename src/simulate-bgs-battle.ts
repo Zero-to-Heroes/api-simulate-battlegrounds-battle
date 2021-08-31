@@ -58,6 +58,8 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 
 	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
 	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
+	setImplicitData(playerBoard, cardsData); // Avenge, maxHealth, etc.
+	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
 	removeGlobalModifiers(playerBoard, opponentBoard, cards);

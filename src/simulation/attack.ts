@@ -730,6 +730,7 @@ export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardE
 		const ripsnarlBuff = ripsnarls * 2 + ripsnarlsTB * 4;
 		attacker.attack += ripsnarlBuff;
 		attacker.health += ripsnarlBuff;
+		attacker.maxHealth += ripsnarlBuff;
 	}
 
 	// Dread Admiral Eliza
@@ -740,6 +741,7 @@ export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardE
 		attackingBoard.forEach((entity) => {
 			entity.attack += 2 * elizaBuff;
 			entity.health += elizaBuff;
+			entity.maxHealth += elizaBuff;
 		});
 	}
 };
@@ -753,10 +755,12 @@ export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defending
 		champions.forEach((entity) => {
 			entity.attack += 1;
 			entity.health += 1;
+			entity.maxHealth += 1;
 		});
 		goldenChampions.forEach((entity) => {
 			entity.attack += 2;
 			entity.health += 2;
+			entity.maxHealth += 2;
 		});
 
 		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpire);
@@ -768,6 +772,7 @@ export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defending
 		neighbours.forEach((entity) => {
 			entity.attack += 1;
 			entity.health += 1;
+			entity.maxHealth += 1;
 		});
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualistBattlegrounds) {
@@ -775,6 +780,7 @@ export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defending
 		neighbours.forEach((entity) => {
 			entity.attack += 2;
 			entity.health += 2;
+			entity.maxHealth += 2;
 		});
 	}
 };

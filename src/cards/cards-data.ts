@@ -99,6 +99,18 @@ export class CardsData {
 		this.startOfCombats = [CardIds.NonCollectible.Neutral.RedWhelp, CardIds.NonCollectible.Neutral.RedWhelpBattlegrounds];
 	}
 
+	public avengeValue(cardId: string): number {
+		switch (cardId) {
+			case CardIds.NonCollectible.Neutral.BirdBuddy:
+			case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
+				return 1;
+			case CardIds.NonCollectible.Neutral.PalescaleCrocolist:
+			case CardIds.NonCollectible.Neutral.PalescaleCrocolistBattlegrounds:
+				return 2;
+		}
+		return 0;
+	}
+
 	private isValidTribe(validTribes: readonly Race[], race: string): boolean {
 		const raceEnum: Race = getRaceEnum(race);
 		return raceEnum === Race.ALL || !validTribes || validTribes.length === 0 || validTribes.includes(raceEnum);
