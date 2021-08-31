@@ -111,6 +111,8 @@ export class CardsData {
 				return 1;
 			case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
 			case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
+			case CardIds.NonCollectible.Neutral.MechanoTank:
+			case CardIds.NonCollectible.Neutral.MechanoTankBattlegrounds:
 				return 2;
 			case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
 			case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:

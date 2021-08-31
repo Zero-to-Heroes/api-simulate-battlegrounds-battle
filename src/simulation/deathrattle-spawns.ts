@@ -3,6 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { buildSingleBoardEntity, isCorrectTribe } from '../utils';
+import { addStatsToBoard } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -40,6 +41,7 @@ export const spawnEntities = (
 			friendly,
 			sharedState.currentEntityId++,
 			spawnReborn,
+			cardsData,
 		);
 		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
 			? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader).length +
@@ -862,6 +864,48 @@ export const spawnEntitiesFromDeathrattle = (
 						false,
 					),
 				);
+				break;
+			case CardIds.NonCollectible.Neutral.OmegaBuster:
+				const entitiesToSpawn = Math.min(6, 7 - boardWithDeadEntity.length);
+				const buffAmount = 6 - entitiesToSpawn;
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+						entitiesToSpawn,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				addStatsToBoard(boardWithDeadEntity, 1 * buffAmount, 1 * buffAmount, allCards);
+				break;
+			case CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds:
+				const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
+				const buffAmount2 = 6 - entitiesToSpawn2;
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenBattlegrounds,
+						entitiesToSpawn2,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				addStatsToBoard(boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards);
 				break;
 			case CardIds.NonCollectible.Neutral.KangorsApprentice:
 				const cardIdsToSpawn = sharedState.deaths

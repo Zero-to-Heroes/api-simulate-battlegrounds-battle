@@ -215,7 +215,17 @@ const getRandomMinion = (board: BoardEntity[], race: Race, allCards: AllCardsSer
 	return validTribes[Math.floor(Math.random() * validTribes.length)];
 };
 
-const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, tribe?: string): void => {
+const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => {
+	if (!!board.length) {
+		return null;
+	}
+
+	const highestHealth = Math.max(...board.map((e) => e.health));
+	const validMinions = board.filter((e) => e.health === highestHealth);
+	return validMinions[Math.floor(Math.random() * validMinions.length)];
+};
+
+export const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, tribe?: string): void => {
 	for (const entity of board) {
 		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
 			entity.attack += attack;
@@ -426,7 +436,17 @@ const applyMinionDeathEffect = (
 	updateAvengeCounters(boardWithDeadEntity);
 	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0);
 	for (const avenger of avengers) {
-		handleAvenge(boardWithDeadEntity, boardWithDeadEntityHero, avenger, allCards);
+		handleAvenge(
+			boardWithDeadEntity,
+			boardWithDeadEntityHero,
+			avenger,
+			otherBoard,
+			otherBoardHero,
+			cardsData,
+			sharedState,
+			spectator,
+			allCards,
+		);
 	}
 };
 
@@ -442,6 +462,11 @@ const handleAvenge = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	avenger: BoardEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
 	allCards: AllCardsService,
 ) => {
 	// Don't forget to update the avenge data in cards-data
@@ -458,6 +483,37 @@ const handleAvenge = (
 			addCardsInHand(boardWithDeadEntityHero, 1);
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2);
+
+		case CardIds.NonCollectible.Neutral.MechanoTank:
+			dealDamageToEnemy(
+				getRandomMinionWithHighestHealth(otherBoard),
+				otherBoard,
+				otherBoardHero,
+				avenger,
+				6,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		case CardIds.NonCollectible.Neutral.MechanoTankBattlegrounds:
+			for (let i = 0; i < 2; i++) {
+				dealDamageToEnemy(
+					getRandomMinionWithHighestHealth(otherBoard),
+					otherBoard,
+					otherBoardHero,
+					avenger,
+					6,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+			}
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;
 };

@@ -430,12 +430,25 @@ export const bumpEntities = (
 			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.DrakonidEnforcerBattlegrounds) {
 				entityBoard[i].attack = entityBoard[i].attack + 4;
 				entityBoard[i].health = entityBoard[i].health + 4;
+			} else if (
+				entityBoard[i].entityId !== entity.entityId &&
+				(entityBoard[i].cardId === CardIds.NonCollectible.Neutral.HolyMecherel ||
+					entityBoard[i].cardId === CardIds.NonCollectible.Neutral.HolyMecherelBattlegrounds)
+			) {
+				entityBoard[i].divineShield = true;
 			}
 			// So that self-buffs from Bolvar are taken into account
 			if (entityBoard[i].entityId === entity.entityId) {
 				entity.divineShield = false;
 			}
 		}
+		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.GreaseBot);
+		const greaseBotBattlegrounds = entityBoard.filter(
+			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.GreaseBotBattlegrounds,
+		);
+		entity.attack += greaseBots.length * 2 + greaseBotBattlegrounds.length * 4;
+		entity.health += greaseBots.length * 1 + greaseBotBattlegrounds.length * 2;
+		entity.maxHealth += greaseBots.length * 1 + greaseBotBattlegrounds.length * 2;
 		return;
 		// return entity;
 	}

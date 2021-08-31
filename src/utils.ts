@@ -2,6 +2,7 @@
 import { AllCardsService, CardIds, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
+import { CardsData } from './cards/cards-data';
 
 const CLEAVE_IDS = [
 	CardIds.Collectible.Hunter.CaveHydra,
@@ -48,6 +49,7 @@ export const buildSingleBoardEntity = (
 	friendly: boolean,
 	entityId = 1,
 	spawnReborn = false,
+	cardsData: CardsData,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
@@ -67,6 +69,8 @@ export const buildSingleBoardEntity = (
 		enchantments: [],
 		friendly: friendly,
 		attackImmediately: attackImmediately,
+		avengeCurrent: cardsData.avengeValue(cardId),
+		avengeDefault: cardsData.avengeValue(cardId),
 	} as BoardEntity);
 
 	if (spawnReborn) {
