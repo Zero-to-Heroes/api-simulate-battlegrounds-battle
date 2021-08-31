@@ -3,12 +3,9 @@ import { getRaceEnum, hasMechanic } from '../utils';
 
 export class CardsData {
 	public static CARDS_WITH_NO_BACONUP_VERSION = [
-		CardIds.Collectible.Paladin.RighteousProtector,
-		CardIds.NonCollectible.Neutral.DragonspawnLieutenant,
 		CardIds.NonCollectible.Neutral.BronzeWarden,
 		CardIds.NonCollectible.Neutral.YoHoOgre,
 		CardIds.Collectible.Hunter.CaveHydra,
-		CardIds.Collectible.Neutral.Toxfin,
 		CardIds.Collectible.Neutral.FoeReaper4000,
 		CardIds.Collectible.Neutral.Maexxna1,
 	];
@@ -18,7 +15,7 @@ export class CardsData {
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
-	public sneedsSpawns: readonly string[];
+	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
 
@@ -62,13 +59,13 @@ export class CardsData {
 			.filter((card) => card.id !== CardIds.NonCollectible.Neutral.GentleDjinni)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
-		this.sneedsSpawns = pool
-			.filter((card) => this.isValidTribe(validTribes, card.race))
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-			.filter((card) => card.id !== 'GVG_114' && card.id !== 'BGS_006')
-			.filter((card) => card.rarity === 'Legendary')
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.map((card) => card.id);
+		// this.sneedsSpawns = pool
+		// 	.filter((card) => this.isValidTribe(validTribes, card.race))
+		// 	.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+		// 	.filter((card) => card.id !== 'GVG_114' && card.id !== 'BGS_006')
+		// 	.filter((card) => card.rarity === 'Legendary')
+		// 	// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+		// 	.map((card) => card.id);
 		this.pirateSpawns = pool
 			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => card.race === 'PIRATE')

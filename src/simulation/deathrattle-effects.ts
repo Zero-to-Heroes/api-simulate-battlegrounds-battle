@@ -49,58 +49,55 @@ export const handleDeathrattleEffects = (
 				grantRandomDivineShield(boardWithDeadEntity);
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Paladin.SelflessHeroBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomDivineShield(boardWithDeadEntity);
 				grantRandomDivineShield(boardWithDeadEntity);
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.NadinaTheRed:
 		case CardIds.NonCollectible.Neutral.NadinaTheRedBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
 			addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards);
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.SpawnOfNzothBattlegrounds:
 			addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards);
-			// return [boardWithDeadEntity, otherBoard];
 			return;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf:
 			addStatsToBoard(boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, 'BEAST');
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfBattlegrounds:
 			addStatsToBoard(boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, 'BEAST');
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KingBagurgle:
 			addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, 'MURLOC');
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KingBagurgleBattlegrounds:
 			addStatsToBoard(boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, 'MURLOC');
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Warlock.FiendishServantBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
+		case CardIds.NonCollectible.Neutral.Leapfrogger:
+			for (let i = 0; i < multiplier; i++) {
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards);
+			}
+		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
+			for (let i = 0; i < multiplier; i++) {
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
+			}
 		case CardIds.Collectible.Neutral.KaboomBot:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
@@ -125,7 +122,6 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			return;
-		// return [boardWithDeadEntity, otherBoard];
 		case CardIds.NonCollectible.Neutral.KaboomBotBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				dealDamageToRandomEnemy(
@@ -155,6 +151,45 @@ export const handleDeathrattleEffects = (
 			}
 			return;
 	}
+
+	for (const enchantment of deadEntity.enchantments ?? []) {
+		switch (enchantment.cardId) {
+			case CardIds.NonCollectible.Neutral.Leapfrogger_Enchantment:
+				for (let i = 0; i < multiplier; i++) {
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards);
+				}
+			case CardIds.NonCollectible.Neutral.Leapfrogger_EnchantmentBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
+				}
+		}
+	}
+};
+
+const applyLeapFroggerEffect = (
+	boardWithDeadEntity: BoardEntity[],
+	deadEntity: BoardEntity,
+	isPremium: boolean,
+	allCards: AllCardsService,
+): void => {
+	const buffed = grantRandomStats(boardWithDeadEntity, isPremium ? 4 : 2, Race.BEAST, allCards);
+	if (buffed) {
+		buffed.enchantments = buffed.enchantments ?? [];
+		buffed.enchantments.push({
+			cardId: isPremium
+				? CardIds.NonCollectible.Neutral.LeapfroggerEnchantmentBattlegrounds
+				: CardIds.NonCollectible.Neutral.LeapfroggerEnchantment,
+			originEntityId: deadEntity.entityId,
+		});
+	}
+};
+
+const getRandomMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
+	const validTribes = board.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).race, race));
+	if (!validTribes.length) {
+		return null;
+	}
+	return validTribes[Math.floor(Math.random() * validTribes.length)];
 };
 
 const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, tribe?: string): void => {
@@ -360,7 +395,25 @@ const applyMinionDeathEffect = (
 			spectator,
 		);
 	}
-	// return [boardWithDeadEntity, otherBoard];
+
+	// Avenge
+	updateAvengeCounters(boardWithDeadEntity);
+	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.currentAvenge === 0);
+	for (const avenger of avengers) {
+		handleAvenge(boardWithDeadEntity, avenger, allCards);
+	}
+};
+
+const handleAvenge = (boardWithDeadEntity: BoardEntity[], avenger: BoardEntity, allCards: AllCardsService) => {
+	switch (avenger.cardId) {
+		case CardIds.NonCollectible.Neutral.BirdBuddy:
+			addStatsToBoard(boardWithDeadEntity, 1, 1, allCards, 'BEAST');
+		case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
+			addStatsToBoard(boardWithDeadEntity, 2, 2, allCards, 'BEAST');
+		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
+			addStatsToBoard(boardWithDeadEntity, 1, 1, allCards, 'BEAST');
+	}
+	avenger.currentAvenge = avenger.avengeDefault;
 };
 
 export const dealDamageToAllMinions = (
@@ -514,6 +567,18 @@ const grantRandomAttack = (board: BoardEntity[], additionalAttack: number): void
 		const chosen = board[Math.floor(Math.random() * board.length)];
 		chosen.attack += additionalAttack;
 	}
+};
+
+const grantRandomStats = (board: BoardEntity[], stats: number, race: Race, allCards: AllCardsService): BoardEntity => {
+	if (board.length > 0) {
+		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
+		if (validBeast) {
+			validBeast.attack += stats;
+			validBeast.health += stats;
+			return validBeast;
+		}
+	}
+	return null;
 };
 
 const grantRandomDivineShield = (board: BoardEntity[]): void => {

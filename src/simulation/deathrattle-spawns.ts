@@ -205,6 +205,42 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
+			case CardIds.NonCollectible.Neutral.SewerRat:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Neutral.SewerRat_Turtle,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.NonCollectible.Neutral.SewerRatBattlegrounds:
+				spawnedEntities.push(
+					...spawnEntities(
+						CardIds.NonCollectible.Neutral.SewerRat_TurtleBattlegrounds,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
 			case CardIds.Collectible.Hunter.KindlyGrandmother1:
 				spawnedEntities.push(
 					...spawnEntities(
@@ -699,59 +735,59 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			case CardIds.NonCollectible.Neutral.SneedsOldShredder2:
-			case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
-				spawnedEntities.push(
-					...spawnEntities(
-						spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-						1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				break;
-			case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
-				spawnedEntities.push(
-					...[
-						...spawnEntities(
-							spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
-							deadEntity.friendly,
-							false,
-						),
-						...spawnEntities(
-							spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
-							deadEntity.friendly,
-							false,
-						),
-					],
-				);
-				break;
+			// case CardIds.NonCollectible.Neutral.SneedsOldShredder2:
+			// case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
+			// 	spawnedEntities.push(
+			// 		...spawnEntities(
+			// 			spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
+			// 			1,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			otherBoard,
+			// 			otherBoardHero,
+			// 			allCards,
+			// 			spawns,
+			// 			sharedState,
+			// 			spectator,
+			// 			deadEntity.friendly,
+			// 			false,
+			// 		),
+			// 	);
+			// 	break;
+			// case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
+			// 	spawnedEntities.push(
+			// 		...[
+			// 			...spawnEntities(
+			// 				spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
+			// 				1,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				otherBoard,
+			// 				otherBoardHero,
+			// 				allCards,
+			// 				spawns,
+			// 				sharedState,
+			// 				spectator,
+			// 				deadEntity.friendly,
+			// 				false,
+			// 			),
+			// 			...spawnEntities(
+			// 				spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
+			// 				1,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				otherBoard,
+			// 				otherBoardHero,
+			// 				allCards,
+			// 				spawns,
+			// 				sharedState,
+			// 				spectator,
+			// 				deadEntity.friendly,
+			// 				false,
+			// 			),
+			// 		],
+			// 	);
+			// 	break;
 			case CardIds.Collectible.Warlock.Voidlord:
 				spawnedEntities.push(
 					...spawnEntities(

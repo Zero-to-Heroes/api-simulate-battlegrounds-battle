@@ -4,8 +4,8 @@ export interface BoardEntity {
 	attack: number;
 	health: number;
 
-	definitelyDead: boolean;
 	frenzyApplied?: boolean;
+	definitelyDead: boolean;
 	taunt?: boolean;
 	divineShield?: boolean;
 	poisonous?: boolean;
