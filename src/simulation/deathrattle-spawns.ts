@@ -3,7 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { afterStatsUpdate, buildSingleBoardEntity, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
-import { addStatsToBoard } from './deathrattle-effects';
+import { addCardsInHand, addStatsToBoard } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -678,6 +678,9 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					],
 				);
+				// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
+				// but close enough for now
+				addCardsInHand(boardWithDeadEntityHero, Math.min(1, 7 - boardWithDeadEntity.length), boardWithDeadEntity, allCards);
 				break;
 			case CardIds.NonCollectible.Neutral.GentleDjinniBattlegrounds:
 				spawnedEntities.push(
@@ -712,6 +715,7 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					],
 				);
+				addCardsInHand(boardWithDeadEntityHero, Math.min(2, 7 - boardWithDeadEntity.length), boardWithDeadEntity, allCards);
 				break;
 
 			case CardIds.NonCollectible.Priest.GhastcoilerBattlegrounds:

@@ -70,6 +70,7 @@ export const simulateAttack = (
 					sharedState,
 					spectator,
 				);
+				applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards);
 				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 				// the windfury triggers again? The current behavior attacks after the windfury is over
 				if (
@@ -97,6 +98,20 @@ export const simulateAttack = (
 	// 	'\n',
 	// 	stringifySimple(defendingBoard),
 	// );
+};
+
+const applyAfterAttackEffects = (
+	attackingEntity: BoardEntity,
+	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+): void => {
+	if (
+		attackingEntity.cardId === CardIds.NonCollectible.Neutral.Bonker ||
+		attackingEntity.cardId === CardIds.NonCollectible.Neutral.BonkerBattlegrounds
+	) {
+		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards);
+	}
 };
 
 const performAttack = (
@@ -493,7 +508,7 @@ export const bumpEntities = (
 	spectator.registerDamageDealt(bumpInto, entity, bumpInto.attack, entityBoard);
 	entity.lastAffectedByEntity = bumpInto;
 	if (!entity.frenzyApplied && entity.health > 0 && !entity.definitelyDead) {
-		applyFrenzy(entity, entityBoard, allCards, cardsData, sharedState, spectator);
+		applyFrenzy(entity, entityBoard, entityBoardHero, allCards, cardsData, sharedState, spectator);
 		entity.frenzyApplied = true;
 	}
 

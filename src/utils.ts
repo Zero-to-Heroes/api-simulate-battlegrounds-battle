@@ -39,6 +39,7 @@ export const MEGA_WINDFURY_IDS = [
 	CardIds.NonCollectible.Neutral.ZappSlywickBattlegrounds,
 	CardIds.NonCollectible.Neutral.CracklingCycloneBattlegrounds,
 	CardIds.NonCollectible.Neutral.BristlebackKnight,
+	CardIds.NonCollectible.Neutral.BonkerBattlegrounds,
 ];
 const CANT_ATTACK_IDS = [CardIds.NonCollectible.Neutral.ArcaneCannon, CardIds.NonCollectible.Neutral.ArcaneCannonBattlegrounds];
 
