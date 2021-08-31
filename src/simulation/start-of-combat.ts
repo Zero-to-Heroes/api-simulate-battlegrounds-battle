@@ -3,8 +3,8 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { isCorrectTribe } from '../utils';
-import { dealDamageToRandomEnemy, simulateAttack } from './attack';
+import { isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { dealDamageToRandomEnemy, getNeighbours, simulateAttack } from './attack';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -22,6 +22,7 @@ const handleIllidanForPlayer = (
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
 	const minionsAtStart = playerBoard.length;
+	// TODO: should apply Whelp Smuggler's effect here?
 	playerBoard[0].attack += 2;
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 	if (minionsAtStart > 1) {
@@ -303,13 +304,6 @@ export const performStartOfCombat = (
 		const damage = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
-		// console.log(
-		// 	'red whelp start of combat',
-		// 	stringifySimpleCard(attacker),
-		// 	damage + '\n',
-		// 	stringifySimple(defendingBoard) + '\n',
-		// 	stringifySimple(attackingBoard),
-		// );
 		dealDamageToRandomEnemy(
 			defendingBoard,
 			defendingBoardHero,
@@ -334,12 +328,23 @@ export const performStartOfCombat = (
 			sharedState,
 			spectator,
 		);
-		// console.log(q
-		// 	'red whelp after start of combat',
-		// 	stringifySimpleCard(attacker) + '\n',
-		// 	stringifySimple(defendingBoard) + '\n',
-		// 	stringifySimple(attackingBoard),
-		// );
+	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.PrizedPromoDrake) {
+		const dragons = attackingBoard
+			.map((entity) => allCards.getCard(entity.cardId).race)
+			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
+		const neighbours = getNeighbours(attackingBoard, attacker);
+		neighbours.forEach((entity) => {
+			modifyAttack(entity, dragons, attackingBoard, allCards);
+			modifyHealth(entity, dragons);
+		});
+	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.PrizedPromoDrakeBattlegrounds) {
+		const dragons = attackingBoard
+			.map((entity) => allCards.getCard(entity.cardId).race)
+			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
+		const neighbours = getNeighbours(attackingBoard, attacker);
+		neighbours.forEach((entity) => {
+			modifyAttack(entity, 2 * dragons, attackingBoard, allCards);
+			modifyHealth(entity, 2 * dragons);
+		});
 	}
-	// return [attackingBoard, defendingBoard];
 };

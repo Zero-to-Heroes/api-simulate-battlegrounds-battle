@@ -145,7 +145,6 @@ const applyMalGanisAura = (board: BoardEntity[], index: number, enchantmentId: s
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
 			entity.attack += enchantmentId === CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
 			entity.health += enchantmentId === CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
-			entity.maxHealth += enchantmentId === CardIds.NonCollectible.Warlock.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
 		}
 	}
@@ -250,7 +249,7 @@ const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantme
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
 			entity.attack += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
 			entity.health += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
-			entity.maxHealth += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
+			// entity.maxHealth += enchantmentId === CardIds.NonCollectible.Neutral.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
 		}
 	}

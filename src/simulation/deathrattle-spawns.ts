@@ -2,7 +2,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { buildSingleBoardEntity, isCorrectTribe } from '../utils';
+import { buildSingleBoardEntity, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { addStatsToBoard } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -53,9 +53,8 @@ export const spawnEntities = (
 			? 5 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
 			  10 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearBattlegrounds).length
 			: 0;
-		newMinion.attack += attackBuff;
-		newMinion.health += healthBuff;
-		newMinion.maxHealth += healthBuff;
+		modifyAttack(newMinion, attackBuff, boardToSpawnInto, allCards);
+		modifyHealth(newMinion, healthBuff);
 		if (!newMinion.cardId) {
 			console.warn('Invalid spawn', newMinion, cardId);
 		}
@@ -67,14 +66,12 @@ export const spawnEntities = (
 				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BigfernalBattlegrounds,
 			);
 			bigfernals.forEach((entity) => {
-				entity.attack += 1;
-				entity.health += 1;
-				entity.maxHealth += 1;
+				modifyAttack(entity, 1, boardToSpawnInto, allCards);
+				modifyHealth(entity, 1);
 			});
 			goldenBigfernals.forEach((entity) => {
-				entity.attack += 2;
-				entity.health += 2;
-				entity.maxHealth += 2;
+				modifyAttack(entity, 2, boardToSpawnInto, allCards);
+				modifyHealth(entity, 2);
 			});
 		}
 	}

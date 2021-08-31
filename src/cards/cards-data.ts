@@ -101,7 +101,12 @@ export class CardsData {
 			],
 		];
 		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);
-		this.startOfCombats = [CardIds.NonCollectible.Neutral.RedWhelp, CardIds.NonCollectible.Neutral.RedWhelpBattlegrounds];
+		this.startOfCombats = [
+			CardIds.NonCollectible.Neutral.RedWhelp,
+			CardIds.NonCollectible.Neutral.RedWhelpBattlegrounds,
+			CardIds.NonCollectible.Neutral.PrizedPromoDrake,
+			CardIds.NonCollectible.Neutral.PrizedPromoDrakeBattlegrounds,
+		];
 	}
 
 	public avengeValue(cardId: string): number {

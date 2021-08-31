@@ -4,7 +4,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { validEnchantments } from '../simulate-bgs-battle';
-import { hasMechanic, isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
+import { hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth, stringifySimple, stringifySimpleCard } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -15,6 +15,7 @@ import { handleSpawnEffects } from './spawn-effect';
 import { Spectator } from './spectator/spectator';
 import { getHeroPowerForHero } from './start-of-combat';
 
+// Only use it to simulate actual attack. To simulate damage, or something similar, use bumpInto
 export const simulateAttack = (
 	attackingBoard: BoardEntity[],
 	attackingBoardHero: BgsPlayerEntity,
@@ -110,6 +111,29 @@ const performAttack = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	if (hasCorrectTribe(attackingEntity, Race.DRAGON, allCards)) {
+		const prestors = attackingBoard.filter(
+			(e) =>
+				e.cardId === CardIds.NonCollectible.Neutral.PrestorsPyrospawn ||
+				e.cardId === CardIds.NonCollectible.Neutral.PrestorsPyrospawnBattlegrounds,
+		);
+		prestors.forEach((prestor) => {
+			dealDamageToEnemy(
+				defendingEntity,
+				defendingBoard,
+				defendingBoardHero,
+				prestor,
+				prestor.cardId === CardIds.NonCollectible.Neutral.PrestorsPyrospawnBattlegrounds ? 6 : 3,
+				attackingBoard,
+				attackingBoardHero,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
+		});
+	}
+
 	bumpEntities(
 		attackingEntity,
 		defendingEntity,
@@ -446,9 +470,8 @@ export const bumpEntities = (
 		const greaseBotBattlegrounds = entityBoard.filter(
 			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.GreaseBotBattlegrounds,
 		);
-		entity.attack += greaseBots.length * 2 + greaseBotBattlegrounds.length * 4;
-		entity.health += greaseBots.length * 1 + greaseBotBattlegrounds.length * 2;
-		entity.maxHealth += greaseBots.length * 1 + greaseBotBattlegrounds.length * 2;
+		modifyAttack(entity, greaseBots.length * 2 + greaseBotBattlegrounds.length * 4, entityBoard, allCards);
+		modifyHealth(entity, greaseBots.length * 1 + greaseBotBattlegrounds.length * 2);
 		return;
 		// return entity;
 	}
@@ -741,9 +764,8 @@ export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardE
 			.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptainBattlegrounds)
 			.filter((e) => e.entityId !== attacker.entityId).length;
 		const ripsnarlBuff = ripsnarls * 2 + ripsnarlsTB * 4;
-		attacker.attack += ripsnarlBuff;
-		attacker.health += ripsnarlBuff;
-		attacker.maxHealth += ripsnarlBuff;
+		modifyAttack(attacker, ripsnarlBuff, attackingBoard, allCards);
+		modifyHealth(attacker, ripsnarlBuff);
 	}
 
 	// Dread Admiral Eliza
@@ -752,9 +774,8 @@ export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardE
 		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralElizaBattlegrounds).length;
 		const elizaBuff = elizas * 1 + elizasTB * 2;
 		attackingBoard.forEach((entity) => {
-			entity.attack += 2 * elizaBuff;
-			entity.health += elizaBuff;
-			entity.maxHealth += elizaBuff;
+			modifyAttack(entity, 2 * elizaBuff, attackingBoard, allCards);
+			modifyHealth(entity, elizaBuff);
 		});
 	}
 };
@@ -766,34 +787,30 @@ export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defending
 			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarjBattlegrounds,
 		);
 		champions.forEach((entity) => {
-			entity.attack += 1;
-			entity.health += 1;
-			entity.maxHealth += 1;
+			modifyAttack(entity, 1, defendingBoard, allCards);
+			modifyHealth(entity, 1);
 		});
 		goldenChampions.forEach((entity) => {
-			entity.attack += 2;
-			entity.health += 2;
-			entity.maxHealth += 2;
+			modifyAttack(entity, 2, defendingBoard, allCards);
+			modifyHealth(entity, 2);
 		});
 
 		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpire);
 		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpireBattlegrounds);
-		attackedEntity.attack += 2 * arms.length + 4 * goldenArms.length;
+		modifyAttack(attackedEntity, 2 * arms.length + 4 * goldenArms.length, defendingBoard, allCards);
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
-			entity.attack += 1;
-			entity.health += 1;
-			entity.maxHealth += 1;
+			modifyAttack(entity, 1, defendingBoard, allCards);
+			modifyHealth(entity, 1);
 		});
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualistBattlegrounds) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
-			entity.attack += 2;
-			entity.health += 2;
-			entity.maxHealth += 2;
+			modifyAttack(entity, 2, defendingBoard, allCards);
+			modifyHealth(entity, 2);
 		});
 	}
 };

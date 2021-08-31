@@ -81,19 +81,39 @@ export const buildSingleBoardEntity = (
 	if (controllerHero?.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutBattlegrounds) {
 		result.taunt = true;
 		result.attack += 1;
-		result.health += 2;
-		result.maxHealth += 2;
+		modifyHealth(result, 2);
 	} else if (controllerHero?.heroPowerId === CardIds.NonCollectible.Demonhunter.KurtrusAshfallen_CloseThePortal) {
 		result.attack += 2;
-		result.health += 2;
-		result.maxHealth += 2;
+		modifyHealth(result, 2);
 	}
 
 	return result;
 };
 
+export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
+	entity.attack += amount;
+	if (isCorrectTribe(allCards.getCard(entity.cardId).race, Race.DRAGON)) {
+		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmuggler).length;
+		const whelpSmugglersBattlegrounds = friendlyBoard.filter(
+			(e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmugglerBattlegrounds,
+		).length;
+		modifyHealth(entity, whelpSmugglers * 2 + whelpSmugglersBattlegrounds * 4);
+	}
+};
+
+export const modifyHealth = (entity: BoardEntity, amount: number): void => {
+	entity.health += amount;
+	if (amount > 0) {
+		entity.maxHealth += amount;
+	}
+};
+
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
 	return card.mechanics?.includes(mechanic);
+};
+
+export const hasCorrectTribe = (entity: BoardEntity, targetTribe: Race, allCards: AllCardsService): boolean => {
+	return isCorrectTribe(allCards.getCard(entity.cardId).race, targetTribe);
 };
 
 export const isCorrectTribe = (cardRace: string, targetTribe: Race): boolean => {

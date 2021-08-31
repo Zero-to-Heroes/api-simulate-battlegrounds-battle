@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { getRaceEnum, isCorrectTribe, stringifySimple, stringifySimpleCard } from '../utils';
+import { getRaceEnum, isCorrectTribe, modifyAttack, modifyHealth, stringifySimple, stringifySimpleCard } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -81,13 +81,13 @@ export const handleDeathrattleEffects = (
 			return;
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+				grantRandomAttack(boardWithDeadEntity, deadEntity.attack, allCards);
 			}
 			return;
 		case CardIds.NonCollectible.Warlock.FiendishServantBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
-				grantRandomAttack(boardWithDeadEntity, deadEntity.attack);
+				grantRandomAttack(boardWithDeadEntity, deadEntity.attack, allCards);
+				grantRandomAttack(boardWithDeadEntity, deadEntity.attack, allCards);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTrickster:
@@ -228,10 +228,9 @@ const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => 
 export const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, tribe?: string): void => {
 	for (const entity of board) {
 		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
-			entity.attack += attack;
+			modifyAttack(entity, attack, board, allCards);
 			entity.previousAttack += attack;
-			entity.health += health;
-			entity.maxHealth += health;
+			modifyHealth(entity, health);
 		}
 	}
 };
@@ -249,7 +248,7 @@ const applyMinionDeathEffect = (
 	spectator: Spectator,
 ): void => {
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.BEAST)) {
-		applyScavengingHyenaEffect(boardWithDeadEntity);
+		applyScavengingHyenaEffect(boardWithDeadEntity, allCards);
 	}
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.DEMON)) {
 		applySoulJugglerEffect(
@@ -264,10 +263,10 @@ const applyMinionDeathEffect = (
 		);
 	}
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.MECH)) {
-		applyJunkbotEffect(boardWithDeadEntity);
+		applyJunkbotEffect(boardWithDeadEntity, allCards);
 	}
 	if (deadEntity.taunt) {
-		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex);
+		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex, allCards);
 	}
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
@@ -381,18 +380,16 @@ const applyMinionDeathEffect = (
 				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
-				pirate.attack += 2;
-				pirate.health += 2;
-				pirate.maxHealth += 2;
+				modifyAttack(pirate, 2, boardWithDeadEntity, allCards);
+				modifyHealth(pirate, 2);
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBattlegrounds) {
 			const otherPirates = otherBoard
 				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
-				pirate.attack += 4;
-				pirate.health += 4;
-				pirate.maxHealth += 4;
+				modifyAttack(pirate, 4, boardWithDeadEntity, allCards);
+				modifyHealth(pirate, 4);
 			});
 		}
 		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.NatPagleExtremeAngler) {
@@ -643,36 +640,32 @@ const applySoulJugglerEffect = (
 	);
 };
 
-const applyScavengingHyenaEffect = (board: BoardEntity[]): void => {
+const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsService): void => {
 	// const copy = [...board];
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.Collectible.Hunter.ScavengingHyenaLegacy) {
-			board[i].attack += 2;
-			board[i].health += 1;
-			board[i].maxHealth += 1;
+			modifyAttack(board[i], 2, board, allCards);
+			modifyHealth(board[i], 1);
 		} else if (board[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaBattlegrounds) {
-			board[i].attack += 4;
-			board[i].health += 2;
-			board[i].maxHealth += 2;
+			modifyAttack(board[i], 4, board, allCards);
+			modifyHealth(board[i], 2);
 		}
 	}
 };
 
-const applyJunkbotEffect = (board: BoardEntity[]): void => {
+const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService): void => {
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
-			board[i].attack += 2;
-			board[i].health += 2;
-			board[i].maxHealth += 2;
+			modifyAttack(board[i], 2, board, allCards);
+			modifyHealth(board[i], 2);
 		} else if (board[i].cardId === CardIds.NonCollectible.Neutral.JunkbotBattlegrounds) {
-			board[i].attack += 4;
-			board[i].health += 4;
-			board[i].maxHealth += 4;
+			modifyAttack(board[i], 4, board, allCards);
+			modifyHealth(board[i], 4);
 		}
 	}
 };
 
-const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number): void => {
+const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number, allCards: AllCardsService): void => {
 	const qiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbinger);
 	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerBattlegrounds);
 	if (qiraji.length === 0 && goldenQiraji.length === 0) {
@@ -684,24 +677,22 @@ const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: numb
 		console.debug('neighbours', stringifySimple(neighbours), stringifySimple(board), deadEntityIndex);
 	}
 	neighbours.forEach((entity) => {
-		entity.attack += 2 * qiraji.length + 4 * goldenQiraji.length;
-		entity.health += 2 * qiraji.length + 4 * goldenQiraji.length;
-		entity.maxHealth += 2 * qiraji.length + 4 * goldenQiraji.length;
+		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
+		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length);
 	});
 };
 
-const grantRandomAttack = (board: BoardEntity[], additionalAttack: number): void => {
+const grantRandomAttack = (board: BoardEntity[], additionalAttack: number, allCards: AllCardsService): void => {
 	if (board.length > 0) {
 		const chosen = board[Math.floor(Math.random() * board.length)];
-		chosen.attack += additionalAttack;
+		modifyAttack(chosen, additionalAttack, board, allCards);
 	}
 };
 
 const grantRandomHealth = (board: BoardEntity[], health: number): void => {
 	if (board.length > 0) {
 		const chosen = board[Math.floor(Math.random() * board.length)];
-		chosen.health += health;
-		chosen.maxHealth += health;
+		modifyHealth(chosen, health);
 	}
 };
 
@@ -709,9 +700,8 @@ const grantRandomStats = (board: BoardEntity[], attack: number, health: number, 
 	if (board.length > 0) {
 		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
 		if (validBeast) {
-			validBeast.attack += attack;
-			validBeast.health += health;
-			validBeast.maxHealth += health;
+			modifyAttack(validBeast, attack, board, allCards);
+			modifyHealth(validBeast, health);
 			return validBeast;
 		}
 	}
