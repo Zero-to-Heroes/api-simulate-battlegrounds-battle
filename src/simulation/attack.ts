@@ -79,21 +79,8 @@ export const simulateAttack = (
 			}
 		}
 	}
-	// console.log(
-	// 	'boards before removing auras\n',
-	// 	stringifySimple(attackingBoard),
-	// 	'\n',
-	// 	stringifySimple(defendingBoard),
-	// );
 	removeAuras(attackingBoard, spawns);
 	removeAuras(defendingBoard, spawns);
-	// removeGlobalModifiers(attackingBoard, defendingBoard, allCards);
-	// console.log(
-	// 	'boards after removing auras\n',
-	// 	stringifySimple(attackingBoard),
-	// 	'\n',
-	// 	stringifySimple(defendingBoard),
-	// );
 };
 
 const applyAfterAttackEffects = (
@@ -505,12 +492,47 @@ export const bumpEntities = (
 		entity.frenzyApplied = true;
 	}
 
+	// We spawn them here, because it says "whenever", and so happens right away
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
 	// like this for now
-	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss && entityBoard.length < 7) {
+	const entitySpawns = getWheneverEntitySpawns(
+		entity,
+		entityBoard,
+		entityBoardHero,
+		otherBoard,
+		otherHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+	if (!!entitySpawns?.length) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		const newEntities = spawnEntities(
+		entityBoard.splice(index + 1, 0, ...entitySpawns);
+		spectator.registerMinionsSpawn(entityBoard, entitySpawns);
+		handleSpawnEffects(entityBoard, entitySpawns, allCards);
+	}
+	return;
+};
+
+const getWheneverEntitySpawns = (
+	entity: BoardEntity,
+	entityBoard: BoardEntity[],
+	entityBoardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): readonly BoardEntity[] => {
+	if (entityBoard.length === 7) {
+		return null;
+	}
+
+	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss) {
+		return spawnEntities(
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
 			1,
 			entityBoard,
@@ -524,11 +546,8 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index + 1, 0, ...newEntities);
-		spectator.registerMinionsSpawn(entityBoard, newEntities);
-	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossBattlegrounds && entityBoard.length < 7) {
-		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		const newEntities = spawnEntities(
+	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossBattlegrounds) {
+		return spawnEntities(
 			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenBattlegrounds,
 			1,
 			entityBoard,
@@ -542,10 +561,8 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index + 1, 0, ...newEntities);
-		spectator.registerMinionsSpawn(entityBoard, newEntities);
-	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMama && entityBoard.length < 7) {
-		const newEntities = spawnEntities(
+	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMama) {
+		return spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			1,
 			entityBoard,
@@ -559,11 +576,8 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
-		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		entityBoard.splice(index + 1, 0, ...newEntities);
-		spectator.registerMinionsSpawn(entityBoard, newEntities);
-	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMamaBattlegrounds && entityBoard.length < 7) {
-		const newEntities = spawnEntities(
+	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMamaBattlegrounds) {
+		return spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			2,
 			entityBoard,
@@ -577,12 +591,8 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
-		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		entityBoard.splice(index + 1, 0, ...newEntities);
-		spectator.registerMinionsSpawn(entityBoard, newEntities);
-	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover && entityBoard.length < 7) {
-		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		const newEntities = spawnEntities(
+	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover) {
+		return spawnEntities(
 			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
 			1,
 			entityBoard,
@@ -596,11 +606,8 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index + 1, 0, ...newEntities);
-		spectator.registerMinionsSpawn(entityBoard, newEntities);
-	} else if (entity.cardId === CardIds.NonCollectible.Warrior.SecurityRoverBattlegrounds && entityBoard.length < 7) {
-		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		const newEntities = spawnEntities(
+	} else if (entity.cardId === CardIds.NonCollectible.Warrior.SecurityRoverBattlegrounds) {
+		return spawnEntities(
 			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenBattlegrounds,
 			1,
 			entityBoard,
@@ -614,11 +621,8 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index + 1, 0, ...newEntities);
-		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	}
-	return;
-	// return entity;
+	return null;
 };
 
 export const processMinionDeath = (
@@ -819,13 +823,11 @@ export const applyOnBeingAttackedBuffs = (
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
-		// console.log('neighbours', neighbours);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
 			modifyHealth(entity, 1);
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
-		// console.log('neighbours after', neighbours);
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualistBattlegrounds) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
