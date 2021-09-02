@@ -23,7 +23,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 
 		const sample = simulationResult.outcomeSamples.tied[0];
 		const base64 = encode(JSON.stringify(sample));
-		// console.log('encoded', base64);
+		console.log('encoded', base64);
 	});
 });
 

@@ -524,7 +524,7 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index, 0, ...newEntities);
+		entityBoard.splice(index + 1, 0, ...newEntities);
 		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossBattlegrounds && entityBoard.length < 7) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
@@ -542,7 +542,7 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index, 0, ...newEntities);
+		entityBoard.splice(index + 1, 0, ...newEntities);
 		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMama && entityBoard.length < 7) {
 		const newEntities = spawnEntities(
@@ -560,7 +560,7 @@ export const bumpEntities = (
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		entityBoard.splice(index, 0, ...newEntities);
+		entityBoard.splice(index + 1, 0, ...newEntities);
 		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMamaBattlegrounds && entityBoard.length < 7) {
 		const newEntities = spawnEntities(
@@ -578,7 +578,7 @@ export const bumpEntities = (
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		entityBoard.splice(index, 0, ...newEntities);
+		entityBoard.splice(index + 1, 0, ...newEntities);
 		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover && entityBoard.length < 7) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
@@ -596,7 +596,7 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index, 0, ...newEntities);
+		entityBoard.splice(index + 1, 0, ...newEntities);
 		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	} else if (entity.cardId === CardIds.NonCollectible.Warrior.SecurityRoverBattlegrounds && entityBoard.length < 7) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
@@ -614,7 +614,7 @@ export const bumpEntities = (
 			entity.friendly,
 			true,
 		);
-		entityBoard.splice(index, 0, ...newEntities);
+		entityBoard.splice(index + 1, 0, ...newEntities);
 		spectator.registerMinionsSpawn(entityBoard, newEntities);
 	}
 	return;
