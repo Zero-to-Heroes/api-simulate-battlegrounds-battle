@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, getEffectiveTechLevel } from '@firestone-hs/reference-data';
+import { AllCardsService, getEffectiveTechLevel } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -33,20 +33,27 @@ export class Simulator {
 	): SingleSimulationResult {
 		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
 		// is sent tothe simulator
-		const effectivePlayerBoardLength =
-			playerEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && playerEntity.heroPowerUsed
-				? playerBoard.length - 1
-				: playerBoard.length;
-		const effectiveOpponentBoardLength =
-			opponentEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && opponentEntity.heroPowerUsed
-				? opponentBoard.length - 1
-				: opponentBoard.length;
+		// But in fact, the first player decision takes into account that additional minion. See
+		// https://replays.firestoneapp.com/?reviewId=ddbbbe93-464b-4400-8e8d-4abca8680a2e
+		// const effectivePlayerBoardLength =
+		// 	playerEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && playerEntity.heroPowerUsed
+		// 		? playerBoard.length - 1
+		// 		: playerBoard.length;
+		// const effectiveOpponentBoardLength =
+		// 	opponentEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && opponentEntity.heroPowerUsed
+		// 		? opponentBoard.length - 1
+		// 		: opponentBoard.length;
+		const effectivePlayerBoardLength = playerBoard.length;
+		const effectiveOpponentBoardLength = opponentBoard.length;
 		this.currentAttacker =
 			effectivePlayerBoardLength > effectiveOpponentBoardLength
 				? 0
 				: effectiveOpponentBoardLength > effectivePlayerBoardLength
 				? 1
 				: Math.round(Math.random());
+		if (this.currentAttacker === 1) {
+			console.log('opp starts');
+		}
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map((entity) => entity.entityId), ...opponentBoard.map((entity) => entity.entityId)) + 1;
 		if (this.sharedState.debug) {
