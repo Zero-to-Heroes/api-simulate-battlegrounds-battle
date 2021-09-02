@@ -181,6 +181,7 @@ const performAttack = (
 	// Monstrous Macaw
 	if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacaw) {
 		triggerRandomDeathrattle(
+			attackingEntity,
 			attackingBoard,
 			attackingBoardHero,
 			defendingBoard,
@@ -192,6 +193,7 @@ const performAttack = (
 		);
 	} else if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacawBattlegrounds) {
 		triggerRandomDeathrattle(
+			attackingEntity,
 			attackingBoard,
 			attackingBoardHero,
 			defendingBoard,
@@ -202,6 +204,7 @@ const performAttack = (
 			spectator,
 		);
 		triggerRandomDeathrattle(
+			attackingEntity,
 			attackingBoard,
 			attackingBoardHero,
 			defendingBoard,
@@ -221,6 +224,7 @@ const performAttack = (
 };
 
 const triggerRandomDeathrattle = (
+	sourceEntity: BoardEntity,
 	attackingBoard: BoardEntity[],
 	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
@@ -245,12 +249,11 @@ const triggerRandomDeathrattle = (
 		}
 		return false;
 	});
-	if (sharedState.debug) {
-	}
 	if (validDeathrattles.length === 0) {
 		return;
 	}
 	const targetEntity = validDeathrattles[Math.floor(Math.random() * validDeathrattles.length)];
+	spectator.registerPowerTarget(sourceEntity, targetEntity, attackingBoard);
 	buildBoardAfterDeathrattleSpawns(
 		attackingBoard,
 		attackingBoardHero,
@@ -419,7 +422,6 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 	}
 	return chosenDefender;
 };
-
 export const bumpEntities = (
 	entity: BoardEntity,
 	bumpInto: BoardEntity,

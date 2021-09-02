@@ -51,9 +51,6 @@ export class Simulator {
 				: effectiveOpponentBoardLength > effectivePlayerBoardLength
 				? 1
 				: Math.round(Math.random());
-		if (this.currentAttacker === 1) {
-			console.log('opp starts');
-		}
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map((entity) => entity.entityId), ...opponentBoard.map((entity) => entity.entityId)) + 1;
 		if (this.sharedState.debug) {

@@ -112,24 +112,35 @@ export const handleDeathrattleEffects = (
 			return;
 		case CardIds.NonCollectible.Neutral.Leapfrogger:
 			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards);
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
 			}
+			return;
 		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
+			return;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+				const target = grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+				if (!!target) {
+					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				}
 			}
+			return;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+				const target = grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+				if (!!target) {
+					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				}
 			}
+			return;
 		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
+			return;
 		case CardIds.Collectible.Neutral.KaboomBot:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
@@ -188,12 +199,14 @@ export const handleDeathrattleEffects = (
 		switch (enchantment.cardId) {
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
 				for (let i = 0; i < multiplier; i++) {
-					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards);
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
 				}
+				return;
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2:
 				for (let i = 0; i < multiplier; i++) {
-					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards);
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 				}
+				return;
 		}
 	}
 };
@@ -203,6 +216,7 @@ const applyLeapFroggerEffect = (
 	deadEntity: BoardEntity,
 	isPremium: boolean,
 	allCards: AllCardsService,
+	spectator: Spectator,
 ): void => {
 	const buffed = grantRandomStats(boardWithDeadEntity, isPremium ? 4 : 2, isPremium ? 4 : 2, allCards, Race.BEAST);
 	if (buffed) {
@@ -213,6 +227,7 @@ const applyLeapFroggerEffect = (
 				: CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
 			originEntityId: deadEntity.entityId,
 		});
+		spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
 	}
 };
 
@@ -500,7 +515,6 @@ const handleAvenge = (
 		case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
 			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
 			break;
-
 		case CardIds.NonCollectible.Neutral.BuddingGreenthumb:
 		case CardIds.NonCollectible.Neutral.BuddingGreenthumbBattlegrounds:
 			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
@@ -513,14 +527,20 @@ const handleAvenge = (
 				);
 				modifyHealth(entity, avenger.cardId === CardIds.NonCollectible.Neutral.BuddingGreenthumbBattlegrounds ? 2 : 1);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
+				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
 			});
 			break;
-
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
-			grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+			const target1 = grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+			if (!!target1) {
+				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
+			}
 			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
-			grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+			const target2 = grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+			if (!!target2) {
+				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
+			}
 			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards);
@@ -538,6 +558,7 @@ const handleAvenge = (
 			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
 			if (murloc) {
 				murloc.poisonous = true;
+				spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
 			}
 			break;
 		case CardIds.NonCollectible.Neutral.SisefinBattlegrounds:
@@ -545,6 +566,7 @@ const handleAvenge = (
 				const murloc2 = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
 				if (murloc2) {
 					murloc2.poisonous = true;
+					spectator.registerPowerTarget(avenger, murloc2, boardWithDeadEntity);
 				}
 			}
 			break;
@@ -589,6 +611,7 @@ const handleAvenge = (
 			if (pirate) {
 				const refCard = allCards.getCard(pirate.cardId);
 				pirate.cardId = refCard.id;
+				spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 			}
 			break;
 		case CardIds.NonCollectible.Neutral.TonyTwoTuskBattlegrounds:
@@ -601,6 +624,7 @@ const handleAvenge = (
 				if (pirate) {
 					const refCard = allCards.getCard(pirate.cardId);
 					pirate.cardId = refCard.id;
+					spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 				}
 			}
 			break;
