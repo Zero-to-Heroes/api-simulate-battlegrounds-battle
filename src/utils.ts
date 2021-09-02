@@ -96,7 +96,8 @@ export const buildSingleBoardEntity = (
 };
 
 export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
-	entity.attack += amount;
+	entity.attack = Math.max(0, entity.attack + amount);
+	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).race, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmuggler).length;
 		const whelpSmugglersBattlegrounds = friendlyBoard.filter(
@@ -162,7 +163,7 @@ export const stringifySimple = (board: readonly BoardEntity[]): string => {
 
 export const stringifySimpleCard = (entity: BoardEntity): string => {
 	return entity
-		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${entity.attacksPerformed || 0}`
+		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${entity.previousAttack ?? null}`
 		: null;
 };
 

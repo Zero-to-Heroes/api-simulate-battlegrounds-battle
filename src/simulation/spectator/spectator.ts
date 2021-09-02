@@ -22,7 +22,7 @@ export class Spectator {
 		this.lostBattles = [];
 	}
 
-	public prune() {
+	public prune(): void {
 		this.wonBattles = this.wonBattles.slice(0, MAX_SAMPLES);
 		this.lostBattles = this.lostBattles.slice(0, MAX_SAMPLES);
 		this.tiedBattles = this.tiedBattles.slice(0, MAX_SAMPLES);
@@ -40,7 +40,7 @@ export class Spectator {
 		};
 	}
 
-	public commitBattleResult(result: 'won' | 'lost' | 'tied') {
+	public commitBattleResult(result: 'won' | 'lost' | 'tied'): void {
 		if (this.wonBattles.length >= MAX_SAMPLES && this.lostBattles.length >= MAX_SAMPLES && this.tiedBattles.length >= MAX_SAMPLES) {
 			this.actionsForCurrentBattle = [];
 			return;
@@ -102,6 +102,8 @@ export class Spectator {
 					sourceEntityId: action.damages[0].sourceEntityId,
 					targetEntityId: action.damages[0].targetEntityId,
 				});
+				lastAction.playerBoard = action.playerBoard;
+				lastAction.opponentBoard = action.opponentBoard;
 			} else if (lastAction && action.type === 'damage' && lastAction.type === 'damage') {
 				lastAction.damages = lastAction.damages || [];
 				lastAction.damages.push({
@@ -109,6 +111,19 @@ export class Spectator {
 					sourceEntityId: action.damages[0].sourceEntityId,
 					targetEntityId: action.damages[0].targetEntityId,
 				});
+				lastAction.playerBoard = action.playerBoard;
+				lastAction.opponentBoard = action.opponentBoard;
+			} else if (
+				lastAction &&
+				action.type === 'power-target' &&
+				lastAction.type === 'power-target' &&
+				action.sourceEntityId === lastAction.sourceEntityId
+			) {
+				lastAction.targetEntityIds = lastAction.targetEntityIds ?? (lastAction.targetEntityId ? [lastAction.targetEntityId] : []);
+				action.targetEntityIds = action.targetEntityIds ?? (action.targetEntityId ? [action.targetEntityId] : []);
+				lastAction.targetEntityIds.push(...action.targetEntityIds);
+				lastAction.playerBoard = action.playerBoard;
+				lastAction.opponentBoard = action.opponentBoard;
 			} else {
 				result.push(action);
 			}
@@ -140,7 +155,7 @@ export class Spectator {
 		defendingEntity: BoardEntity,
 		attackingBoard: readonly BoardEntity[],
 		defendingBoard: readonly BoardEntity[],
-	) {
+	): void {
 		const friendlyBoard = attackingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
 		const opponentBoard = defendingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
 		const action: GameAction = {
@@ -158,7 +173,7 @@ export class Spectator {
 		damagedEntity: BoardEntity,
 		damageTaken: number,
 		damagedEntityBoard: BoardEntity[],
-	) {
+	): void {
 		if (!damagingEntity.entityId) {
 			console.error('missing damaging entity id', damagingEntity);
 		}
@@ -179,7 +194,7 @@ export class Spectator {
 		this.actionsForCurrentBattle.push(action);
 	}
 
-	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]) {
+	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
 		if (!sourceEntity.entityId) {
 			console.error('missing damaging entity id', sourceEntity);
 		}
@@ -195,7 +210,7 @@ export class Spectator {
 		this.actionsForCurrentBattle.push(action);
 	}
 
-	public registerMinionsSpawn(boardOnWhichToSpawn: BoardEntity[], spawnedEntities: readonly BoardEntity[]) {
+	public registerMinionsSpawn(boardOnWhichToSpawn: BoardEntity[], spawnedEntities: readonly BoardEntity[]): void {
 		if (!spawnedEntities || spawnedEntities.length === 0) {
 			return;
 		}
@@ -215,7 +230,7 @@ export class Spectator {
 		deadEntities1: BoardEntity[],
 		deadMinionIndexes2: number[],
 		deadEntities2: BoardEntity[],
-	) {
+	): void {
 		const deaths = [...(deadEntities1 || []), ...(deadEntities2 || [])];
 		if (!deaths || deaths.length === 0) {
 			return;

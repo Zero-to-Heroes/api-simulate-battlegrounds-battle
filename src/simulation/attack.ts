@@ -9,7 +9,6 @@ import { applyAuras, removeAuras } from './auras';
 import { addCardsInHand, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
-import { applyGlobalModifiers, removeGlobalModifiers } from './global-modifiers';
 import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
 import { Spectator } from './spectator/spectator';
@@ -31,7 +30,7 @@ export const simulateAttack = (
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
-	applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
+	// applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
 	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
 	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
 	const numberOfDeathwingPresents =
@@ -53,11 +52,8 @@ export const simulateAttack = (
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
-				if (sharedState.debug) {
-				}
-				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards);
-
 				spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
+				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards, spectator);
 				performAttack(
 					attackingEntity,
 					defendingEntity,
@@ -91,7 +87,7 @@ export const simulateAttack = (
 	// );
 	removeAuras(attackingBoard, spawns);
 	removeAuras(defendingBoard, spawns);
-	removeGlobalModifiers(attackingBoard, defendingBoard, allCards);
+	// removeGlobalModifiers(attackingBoard, defendingBoard, allCards);
 	// console.log(
 	// 	'boards after removing auras\n',
 	// 	stringifySimple(attackingBoard),
@@ -262,9 +258,6 @@ const triggerRandomDeathrattle = (
 		}
 		return false;
 	});
-	// console.log('validDeathrattles on board?', validDeathrattles);
-	// console.log('board', stringifySimple(attackingBoard));
-	// console.log('board full', attackingBoard.find((e) => e.cardId === 'TB_BaconShop_HP_105t')?.enchantments);
 	if (sharedState.debug) {
 	}
 	if (validDeathrattles.length === 0) {
@@ -800,7 +793,12 @@ export const applyOnAttackBuffs = (attacker: BoardEntity, attackingBoard: BoardE
 	}
 };
 
-export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defendingBoard: BoardEntity[], allCards: AllCardsService): void => {
+export const applyOnBeingAttackedBuffs = (
+	attackedEntity: BoardEntity,
+	defendingBoard: BoardEntity[],
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	if (attackedEntity.taunt) {
 		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarj);
 		const goldenChampions = defendingBoard.filter(
@@ -821,16 +819,20 @@ export const applyOnBeingAttackedBuffs = (attackedEntity: BoardEntity, defending
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
+		// console.log('neighbours', neighbours);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
 			modifyHealth(entity, 1);
+			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
+		// console.log('neighbours after', neighbours);
 	}
 	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualistBattlegrounds) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
 			modifyHealth(entity, 2);
+			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
 	}
 };
@@ -995,7 +997,7 @@ const buildBoardAfterDeathrattleSpawns = (
 			// Whenever we are already in a combat phase, we need to first clean up the state
 			removeAuras(boardWithKilledMinion, cardsData);
 			removeAuras(opponentBoard, cardsData);
-			removeGlobalModifiers(boardWithKilledMinion, opponentBoard, allCards);
+			// removeGlobalModifiers(boardWithKilledMinion, opponentBoard, allCards);
 			simulateAttack(
 				boardWithKilledMinion,
 				boardWithKilledMinionHero,

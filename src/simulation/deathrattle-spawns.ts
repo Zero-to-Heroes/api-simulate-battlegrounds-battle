@@ -2,7 +2,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { afterStatsUpdate, buildSingleBoardEntity, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { afterStatsUpdate, buildSingleBoardEntity, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { addCardsInHand, addStatsToBoard } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -77,9 +77,30 @@ export const spawnEntities = (
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
 			});
 		}
+		if (hasCorrectTribe(newMinion, Race.DEMON, allCards)) {
+			addOldMurkeyeAttack(boardToSpawnInto, allCards);
+			addOldMurkeyeAttack(otherBoard, allCards);
+		}
 	}
 
 	return result;
+};
+
+const addOldMurkeyeAttack = (board: BoardEntity[], allCards: AllCardsService) => {
+	const murkeyes = board.filter(
+		(entity) =>
+			entity.cardId === CardIds.Collectible.Neutral.OldMurkEyeLegacy ||
+			entity.cardId === CardIds.Collectible.Neutral.OldMurkEyeVanilla,
+	);
+	const goldenMurkeyes = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.OldMurkEyeBattlegrounds);
+	murkeyes.forEach((entity) => {
+		modifyAttack(entity, 1, board, allCards);
+		afterStatsUpdate(entity, board, allCards);
+	});
+	goldenMurkeyes.forEach((entity) => {
+		modifyAttack(entity, 2, board, allCards);
+		afterStatsUpdate(entity, board, allCards);
+	});
 };
 
 export const spawnEntitiesFromDeathrattle = (
@@ -888,7 +909,7 @@ export const spawnEntitiesFromDeathrattle = (
 						false,
 					),
 				);
-				addStatsToBoard(boardWithDeadEntity, 1 * buffAmount, 1 * buffAmount, allCards);
+				addStatsToBoard(deadEntity, boardWithDeadEntity, 1 * buffAmount, 1 * buffAmount, allCards, spectator);
 				break;
 			case CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds:
 				const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
@@ -909,7 +930,7 @@ export const spawnEntitiesFromDeathrattle = (
 						false,
 					),
 				);
-				addStatsToBoard(boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards);
+				addStatsToBoard(deadEntity, boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator);
 				break;
 			case CardIds.NonCollectible.Neutral.KangorsApprentice:
 				const cardIdsToSpawn = sharedState.deaths

@@ -5,7 +5,9 @@ export interface GameAction {
 	playerBoard: readonly BoardEntity[];
 	opponentBoard: readonly BoardEntity[];
 	sourceEntityId?: number;
+	/** @deprecated */
 	targetEntityId?: number;
+	targetEntityIds?: number[];
 
 	damages?: Damage[];
 	spawns?: readonly BoardEntity[];

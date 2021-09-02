@@ -5,7 +5,6 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
 import { removeAuras, setImplicitData } from './simulation/auras';
-import { removeGlobalModifiers } from './simulation/global-modifiers';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
 import { addImpliedMechanics } from './utils';
@@ -62,7 +61,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
 	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
 	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
-	removeGlobalModifiers(playerBoard, opponentBoard, cards);
+	// removeGlobalModifiers(playerBoard, opponentBoard, cards);
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation

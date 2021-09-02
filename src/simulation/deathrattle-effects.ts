@@ -3,7 +3,16 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { afterStatsUpdate, getRaceEnum, isCorrectTribe, modifyAttack, modifyHealth, stringifySimple, stringifySimpleCard } from '../utils';
+import {
+	afterStatsUpdate,
+	getRaceEnum,
+	hasCorrectTribe,
+	isCorrectTribe,
+	modifyAttack,
+	modifyHealth,
+	stringifySimple,
+	stringifySimpleCard,
+} from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -62,22 +71,22 @@ export const handleDeathrattleEffects = (
 			}
 			return;
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards);
+			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards, spectator);
 			return;
 		case CardIds.NonCollectible.Neutral.SpawnOfNzothBattlegrounds:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards);
+			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator);
 			return;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, 'BEAST');
+			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, spectator, 'BEAST');
 			return;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfBattlegrounds:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, 'BEAST');
+			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, spectator, 'BEAST');
 			return;
 		case CardIds.NonCollectible.Neutral.KingBagurgle:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, 'MURLOC');
+			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator, 'MURLOC');
 			return;
 		case CardIds.NonCollectible.Neutral.KingBagurgleBattlegrounds:
-			addStatsToBoard(boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, 'MURLOC');
+			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, spectator, 'MURLOC');
 			return;
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
@@ -225,13 +234,21 @@ const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => 
 	return validMinions[Math.floor(Math.random() * validMinions.length)];
 };
 
-export const addStatsToBoard = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, tribe?: string): void => {
+export const addStatsToBoard = (
+	sourceEntity: BoardEntity,
+	board: BoardEntity[],
+	attack: number,
+	health: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+	tribe?: string,
+): void => {
 	for (const entity of board) {
 		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
 			modifyAttack(entity, attack, board, allCards);
-			entity.previousAttack += attack;
 			modifyHealth(entity, health);
 			afterStatsUpdate(entity, board, allCards);
+			spectator.registerPowerTarget(sourceEntity, entity, board);
 		}
 	}
 };
@@ -266,6 +283,12 @@ const applyMinionDeathEffect = (
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.MECH)) {
 		applyJunkbotEffect(boardWithDeadEntity, allCards);
 	}
+	if (hasCorrectTribe(deadEntity, Race.MURLOC, allCards)) {
+		// console.log('murloc died', stringifySimpleCard(deadEntity));
+		removeOldMurkEyeAttack(boardWithDeadEntity, allCards);
+		removeOldMurkEyeAttack(otherBoard, allCards);
+	}
+
 	if (deadEntity.taunt) {
 		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex, allCards);
 	}
@@ -472,10 +495,10 @@ const handleAvenge = (
 	// Don't forget to update the avenge data in cards-data
 	switch (avenger.cardId) {
 		case CardIds.NonCollectible.Neutral.BirdBuddy:
-			addStatsToBoard(boardWithDeadEntity, 1, 1, allCards, 'BEAST');
+			addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, allCards, spectator, 'BEAST');
 			break;
 		case CardIds.NonCollectible.Neutral.BirdBuddyBattlegrounds:
-			addStatsToBoard(boardWithDeadEntity, 2, 2, allCards, 'BEAST');
+			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
 			break;
 
 		case CardIds.NonCollectible.Neutral.BuddingGreenthumb:
@@ -833,4 +856,25 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 		fish.rememberedDeathrattles = [...newDeathrattles, ...(fish.rememberedDeathrattles || [])];
 	}
 	// console.debug('remembered dr', fish.rememberedDeathrattles);
+};
+
+const removeOldMurkEyeAttack = (boardWithDeadEntity: BoardEntity[], allCards: AllCardsService) => {
+	const murkeyes = boardWithDeadEntity.filter(
+		(entity) =>
+			entity.cardId === CardIds.Collectible.Neutral.OldMurkEyeLegacy ||
+			entity.cardId === CardIds.Collectible.Neutral.OldMurkEyeVanilla,
+	);
+	const goldenMurkeyes = boardWithDeadEntity.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.OldMurkEyeBattlegrounds);
+	murkeyes.forEach((entity) => {
+		// console.log('before murkeye attack remove', entity);
+		modifyAttack(entity, -1, boardWithDeadEntity, allCards);
+		afterStatsUpdate(entity, boardWithDeadEntity, allCards);
+		// console.log('after murkeye attack remove', entity);
+	});
+	goldenMurkeyes.forEach((entity) => {
+		// console.log('before golden murkeye attack remove', entity);
+		modifyAttack(entity, -2, boardWithDeadEntity, allCards);
+		afterStatsUpdate(entity, boardWithDeadEntity, allCards);
+		// console.log('after golden murkeye attack remove', entity);
+	});
 };

@@ -8,7 +8,7 @@ export interface BoardEntity {
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	frenzyApplied?: boolean;
-	definitelyDead: boolean;
+	definitelyDead?: boolean;
 	taunt?: boolean;
 	divineShield?: boolean;
 	poisonous?: boolean;
@@ -25,6 +25,7 @@ export interface BoardEntity {
 	cantAttack?: boolean;
 	attacksPerformed?: number;
 	attackImmediately?: boolean;
+	// Used only to handle murkeye aura?
 	previousAttack?: number;
 	lastAffectedByEntity?: BoardEntity;
 	attacking?: boolean;
