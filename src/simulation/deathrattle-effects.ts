@@ -216,7 +216,7 @@ const getRandomMinion = (board: BoardEntity[], race: Race, allCards: AllCardsSer
 };
 
 const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => {
-	if (!!board.length) {
+	if (!board.length) {
 		return null;
 	}
 
@@ -766,7 +766,7 @@ const grantRandomStats = (board: BoardEntity[], attack: number, health: number, 
 };
 
 export const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, board: BoardEntity[], allCards: AllCardsService): void => {
-	playerEntity.cardsInHand = Math.min(10, playerEntity.cardsInHand + cards);
+	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + cards);
 
 	const peggys = board.filter(
 		(e) =>

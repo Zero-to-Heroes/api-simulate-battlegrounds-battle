@@ -5,5 +5,5 @@ export interface BgsBattleInfo {
 	readonly playerBoard: BgsBoardInfo;
 	readonly opponentBoard: BgsBoardInfo;
 	readonly options: BgsBattleOptions;
-	readonly heroHasDied: boolean;
+	readonly heroHasDied?: boolean;
 }

@@ -30,6 +30,10 @@ const TAUNT_IDS = [
 	CardIds.NonCollectible.Warlock.RingMatronBattlegrounds,
 	CardIds.NonCollectible.Neutral.DynamicDuo,
 	CardIds.NonCollectible.Neutral.DynamicDuoBattlegrounds,
+	CardIds.NonCollectible.Neutral.InsatiableUrzul,
+	CardIds.NonCollectible.Neutral.InsatiableUrzulBattlegrounds,
+	CardIds.NonCollectible.Neutral.MasterOfRealities2,
+	CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,

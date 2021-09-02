@@ -5,5 +5,5 @@ export interface BgsPlayerEntity {
 	readonly tavernTier: number;
 	readonly heroPowerId: string;
 	readonly heroPowerUsed: boolean;
-	cardsInHand: number;
+	cardsInHand?: number;
 }

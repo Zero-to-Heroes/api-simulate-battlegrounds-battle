@@ -178,7 +178,7 @@ export const spawnEntitiesFromDeathrattle = (
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
-						1,
+						2,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						otherBoard,
@@ -196,7 +196,7 @@ export const spawnEntitiesFromDeathrattle = (
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenBattlegrounds,
-						1,
+						2,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						otherBoard,
