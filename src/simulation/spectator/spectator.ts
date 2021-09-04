@@ -122,6 +122,7 @@ export class Spectator {
 				lastAction.targetEntityIds = lastAction.targetEntityIds ?? (lastAction.targetEntityId ? [lastAction.targetEntityId] : []);
 				action.targetEntityIds = action.targetEntityIds ?? (action.targetEntityId ? [action.targetEntityId] : []);
 				lastAction.targetEntityIds.push(...action.targetEntityIds);
+				lastAction.targetEntityIds = [...new Set(lastAction.targetEntityIds)];
 				lastAction.playerBoard = action.playerBoard;
 				lastAction.opponentBoard = action.opponentBoard;
 			} else {
