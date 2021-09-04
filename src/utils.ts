@@ -3,6 +3,7 @@ import { AllCardsService, CardIds, Race, ReferenceCard } from '@firestone-hs/ref
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [
 	CardIds.Collectible.Hunter.CaveHydra,
@@ -50,11 +51,13 @@ const CANT_ATTACK_IDS = [CardIds.NonCollectible.Neutral.ArcaneCannon, CardIds.No
 export const buildSingleBoardEntity = (
 	cardId: string,
 	controllerHero: BgsPlayerEntity,
+	friendlyBoard: BoardEntity[],
 	allCards: AllCardsService,
 	friendly: boolean,
 	entityId = 1,
 	spawnReborn = false,
 	cardsData: CardsData,
+	spectator: Spectator,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
@@ -85,11 +88,15 @@ export const buildSingleBoardEntity = (
 
 	if (controllerHero?.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutBattlegrounds) {
 		result.taunt = true;
-		result.attack += 1;
+		modifyAttack(result, 1, friendlyBoard, allCards);
 		modifyHealth(result, 2);
+		afterStatsUpdate(result, friendlyBoard, allCards);
+		spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
 	} else if (controllerHero?.heroPowerId === CardIds.NonCollectible.Demonhunter.KurtrusAshfallen_CloseThePortal) {
-		result.attack += 2;
+		modifyAttack(result, 2, friendlyBoard, allCards);
 		modifyHealth(result, 2);
+		afterStatsUpdate(result, friendlyBoard, allCards);
+		spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
 	}
 
 	return result;
@@ -99,11 +106,16 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	entity.attack = Math.max(0, entity.attack + amount);
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).race, Race.DRAGON)) {
-		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmuggler).length;
+		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmuggler);
 		const whelpSmugglersBattlegrounds = friendlyBoard.filter(
 			(e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmugglerBattlegrounds,
-		).length;
-		modifyHealth(entity, whelpSmugglers * 2 + whelpSmugglersBattlegrounds * 4);
+		);
+		whelpSmugglers.forEach((smuggler) => {
+			modifyHealth(entity, 2);
+		});
+		whelpSmugglersBattlegrounds.forEach((smuggler) => {
+			modifyHealth(entity, 4);
+		});
 	}
 };
 

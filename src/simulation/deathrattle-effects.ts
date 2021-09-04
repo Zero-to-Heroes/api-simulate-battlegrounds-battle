@@ -90,24 +90,24 @@ export const handleDeathrattleEffects = (
 			return;
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomAttack(boardWithDeadEntity, deadEntity.attack, allCards);
+				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
 			}
 			return;
 		case CardIds.NonCollectible.Warlock.FiendishServantBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomAttack(boardWithDeadEntity, deadEntity.attack, allCards);
-				grantRandomAttack(boardWithDeadEntity, deadEntity.attack, allCards);
+				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
+				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTrickster:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth, allCards);
+				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTricksterBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth, allCards);
-				grantRandomHealth(boardWithDeadEntity, deadEntity.maxHealth, allCards);
+				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
+				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.Leapfrogger:
@@ -122,7 +122,7 @@ export const handleDeathrattleEffects = (
 			return;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
 			for (let i = 0; i < multiplier; i++) {
-				const target = grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+				const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
 				if (!!target) {
 					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 				}
@@ -130,7 +130,7 @@ export const handleDeathrattleEffects = (
 			return;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				const target = grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+				const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
 				if (!!target) {
 					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 				}
@@ -218,7 +218,7 @@ const applyLeapFroggerEffect = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	const buffed = grantRandomStats(boardWithDeadEntity, isPremium ? 4 : 2, isPremium ? 4 : 2, allCards, Race.BEAST);
+	const buffed = grantRandomStats(deadEntity, boardWithDeadEntity, isPremium ? 4 : 2, isPremium ? 4 : 2, Race.BEAST, allCards, spectator);
 	if (buffed) {
 		buffed.enchantments = buffed.enchantments ?? [];
 		buffed.enchantments.push({
@@ -281,7 +281,7 @@ const applyMinionDeathEffect = (
 	spectator: Spectator,
 ): void => {
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.BEAST)) {
-		applyScavengingHyenaEffect(boardWithDeadEntity, allCards);
+		applyScavengingHyenaEffect(boardWithDeadEntity, allCards, spectator);
 	}
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.DEMON)) {
 		applySoulJugglerEffect(
@@ -296,7 +296,7 @@ const applyMinionDeathEffect = (
 		);
 	}
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.MECH)) {
-		applyJunkbotEffect(boardWithDeadEntity, allCards);
+		applyJunkbotEffect(boardWithDeadEntity, allCards, spectator);
 	}
 	if (hasCorrectTribe(deadEntity, Race.MURLOC, allCards)) {
 		// console.log('murloc died', stringifySimpleCard(deadEntity));
@@ -305,7 +305,7 @@ const applyMinionDeathEffect = (
 	}
 
 	if (deadEntity.taunt) {
-		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex, allCards);
+		// applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex, allCards);
 	}
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
@@ -422,6 +422,7 @@ const applyMinionDeathEffect = (
 				modifyAttack(pirate, 2, boardWithDeadEntity, allCards);
 				modifyHealth(pirate, 2);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
+				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.SeabreakerGoliathBattlegrounds) {
 			const otherPirates = otherBoard
@@ -431,6 +432,7 @@ const applyMinionDeathEffect = (
 				modifyAttack(pirate, 4, boardWithDeadEntity, allCards);
 				modifyHealth(pirate, 4);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
+				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
 			});
 		}
 		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.NatPagleExtremeAngler) {
@@ -531,28 +533,28 @@ const handleAvenge = (
 			});
 			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
-			const target1 = grantRandomStats(boardWithDeadEntity, 6, 6, allCards, Race.BEAST);
+			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
 			if (!!target1) {
 				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
 			}
 			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
-			const target2 = grantRandomStats(boardWithDeadEntity, 12, 12, allCards, Race.BEAST);
+			const target2 = grantRandomStats(avenger, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
 			if (!!target2) {
 				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
 			}
 			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayer:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards);
+			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.NonCollectible.Neutral.ImpatientDoomsayerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards);
+			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.NonCollectible.Neutral.WitchwingNestmatron:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards);
+			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.NonCollectible.Neutral.WitchwingNestmatronBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards);
+			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.NonCollectible.Neutral.Sisefin:
 			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
@@ -572,6 +574,7 @@ const handleAvenge = (
 			break;
 		case CardIds.NonCollectible.Neutral.MechanoTank:
 			dealDamageToEnemy(
+				// This can be null if the avenge triggers when the last enemy minion dies as well
 				getRandomMinionWithHighestHealth(otherBoard),
 				otherBoard,
 				otherBoardHero,
@@ -736,83 +739,112 @@ const applySoulJugglerEffect = (
 	);
 };
 
-const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsService): void => {
+const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): void => {
 	// const copy = [...board];
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.Collectible.Hunter.ScavengingHyenaLegacy) {
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 1);
 			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
 		} else if (board[i].cardId === CardIds.NonCollectible.Hunter.ScavengingHyenaBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 2);
 			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
 		}
 	}
 };
 
-const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService): void => {
+const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): void => {
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.Collectible.Neutral.Junkbot) {
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 2);
 			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
 		} else if (board[i].cardId === CardIds.NonCollectible.Neutral.JunkbotBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 4);
 			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
 		}
 	}
 };
 
-const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number, allCards: AllCardsService): void => {
-	const qiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbinger);
-	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerBattlegrounds);
-	if (qiraji.length === 0 && goldenQiraji.length === 0) {
-		return;
-	}
+// const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number, allCards: AllCardsService): void => {
+// 	const qiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbinger);
+// 	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.QirajiHarbingerBattlegrounds);
+// 	const neighbours = getNeighbours(board, null, deadEntityIndex);
 
-	const neighbours = getNeighbours(board, null, deadEntityIndex);
-	if (SharedState.debugEnabled) {
-		console.debug('neighbours', stringifySimple(neighbours), stringifySimple(board), deadEntityIndex);
-	}
-	neighbours.forEach((entity) => {
-		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
-		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length);
-		afterStatsUpdate(entity, board, allCards);
-	});
-};
+// 	// TODO: if reactivated, properly apply buffs one by one, instead of all together
 
-const grantRandomAttack = (board: BoardEntity[], additionalAttack: number, allCards: AllCardsService): void => {
+// 	neighbours.forEach((entity) => {
+// 		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
+// 		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length);
+// 		afterStatsUpdate(entity, board, allCards);
+// 	});
+// };
+
+const grantRandomAttack = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	additionalAttack: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	if (board.length > 0) {
-		const chosen = board[Math.floor(Math.random() * board.length)];
-		modifyAttack(chosen, additionalAttack, board, allCards);
-		afterStatsUpdate(chosen, board, allCards);
+		const target = board[Math.floor(Math.random() * board.length)];
+		modifyAttack(target, additionalAttack, board, allCards);
+		afterStatsUpdate(target, board, allCards);
+		spectator.registerPowerTarget(source, target, board);
 	}
 };
 
-const grantRandomHealth = (board: BoardEntity[], health: number, allCards: AllCardsService): void => {
+const grantRandomHealth = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	health: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	if (board.length > 0) {
-		const chosen = board[Math.floor(Math.random() * board.length)];
-		modifyHealth(chosen, health);
-		afterStatsUpdate(chosen, board, allCards);
+		const target = board[Math.floor(Math.random() * board.length)];
+		modifyHealth(target, health);
+		afterStatsUpdate(target, board, allCards);
+		spectator.registerPowerTarget(source, target, board);
 	}
 };
 
-const grantRandomStats = (board: BoardEntity[], attack: number, health: number, allCards: AllCardsService, race: Race): BoardEntity => {
+const grantRandomStats = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	attack: number,
+	health: number,
+	race: Race,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): BoardEntity => {
 	if (board.length > 0) {
 		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
 			modifyHealth(validBeast, health);
 			afterStatsUpdate(validBeast, board, allCards);
+			spectator.registerPowerTarget(source, validBeast, board);
 			return validBeast;
 		}
 	}
 	return null;
 };
 
-export const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, board: BoardEntity[], allCards: AllCardsService): void => {
+export const addCardsInHand = (
+	playerEntity: BgsPlayerEntity,
+	cards: number,
+	board: BoardEntity[],
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + cards);
 
 	const peggys = board.filter(
@@ -830,6 +862,7 @@ export const addCardsInHand = (playerEntity: BgsPlayerEntity, cards: number, boa
 			modifyAttack(pirate, peggy.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
 			modifyHealth(pirate, peggy.cardId === CardIds.NonCollectible.Neutral.PeggyBrittleboneBattlegrounds ? 2 : 1);
 			afterStatsUpdate(pirate, board, allCards);
+			spectator.registerPowerTarget(peggy, pirate, board);
 		}
 	});
 };
@@ -890,15 +923,11 @@ const removeOldMurkEyeAttack = (boardWithDeadEntity: BoardEntity[], allCards: Al
 	);
 	const goldenMurkeyes = boardWithDeadEntity.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.OldMurkEyeBattlegrounds);
 	murkeyes.forEach((entity) => {
-		// console.log('before murkeye attack remove', entity);
 		modifyAttack(entity, -1, boardWithDeadEntity, allCards);
 		afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-		// console.log('after murkeye attack remove', entity);
 	});
 	goldenMurkeyes.forEach((entity) => {
-		// console.log('before golden murkeye attack remove', entity);
 		modifyAttack(entity, -2, boardWithDeadEntity, allCards);
 		afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-		// console.log('after golden murkeye attack remove', entity);
 	});
 };

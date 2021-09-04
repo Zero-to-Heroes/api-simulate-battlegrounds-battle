@@ -24,10 +24,13 @@ const handleIllidanForPlayer = (
 	const minionsAtStart = playerBoard.length;
 	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
 	afterStatsUpdate(playerBoard[0], playerBoard, allCards);
+	spectator.registerPowerTarget(playerBoard[0], playerBoard[0], playerBoard);
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
+
 	if (minionsAtStart > 1) {
 		modifyAttack(playerBoard[playerBoard.length - 1], 2, playerBoard, allCards);
-		afterStatsUpdate(playerBoard[0], playerBoard, allCards);
+		afterStatsUpdate(playerBoard[playerBoard.length - 1], playerBoard, allCards);
+		spectator.registerPowerTarget(playerBoard[playerBoard.length - 1], playerBoard[playerBoard.length - 1], playerBoard);
 		simulateAttack(
 			playerBoard,
 			playerEntity,
@@ -338,6 +341,7 @@ export const performStartOfCombat = (
 			modifyAttack(entity, dragons, attackingBoard, allCards);
 			modifyHealth(entity, dragons);
 			afterStatsUpdate(entity, attackingBoard, allCards);
+			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.PrizedPromoDrakeBattlegrounds) {
 		const dragons = attackingBoard
@@ -348,6 +352,7 @@ export const performStartOfCombat = (
 			modifyAttack(entity, 2 * dragons, attackingBoard, allCards);
 			modifyHealth(entity, 2 * dragons);
 			afterStatsUpdate(entity, attackingBoard, allCards);
+			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	}
 };

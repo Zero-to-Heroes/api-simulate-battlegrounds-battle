@@ -30,6 +30,7 @@ export const applyFrenzy = (
 			entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.RoadboarBattlegrounds ? 2 : 1,
 			entityWithFrenzyBoard,
 			allCards,
+			spectator,
 		);
 	}
 };

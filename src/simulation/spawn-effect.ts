@@ -2,10 +2,16 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { afterStatsUpdate, hasCorrectTribe, isCorrectTribe, modifyAttack } from '../utils';
+import { Spectator } from './spectator/spectator';
 
-export const handleSpawnEffects = (board: BoardEntity[], spawned: readonly BoardEntity[], cards: AllCardsService): void => {
+export const handleSpawnEffects = (
+	board: BoardEntity[],
+	spawned: readonly BoardEntity[],
+	cards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	for (const entity of board) {
-		handleSpawn(entity, board, spawned, cards);
+		handleSpawn(entity, board, spawned, cards, spectator);
 	}
 };
 
@@ -14,6 +20,7 @@ export const handleSpawn = (
 	friendlyBoard: BoardEntity[],
 	spawned: readonly BoardEntity[],
 	allCards: AllCardsService,
+	spectator: Spectator,
 ): void => {
 	switch (entity.cardId) {
 		case CardIds.Collectible.Neutral.MurlocTidecallerLegacy:
@@ -24,6 +31,7 @@ export const handleSpawn = (
 				allCards,
 			);
 			afterStatsUpdate(entity, friendlyBoard, allCards);
+			spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			return;
 		case CardIds.NonCollectible.Neutral.MurlocTidecallerBattlegrounds:
 			modifyAttack(
@@ -33,18 +41,23 @@ export const handleSpawn = (
 				allCards,
 			);
 			afterStatsUpdate(entity, friendlyBoard, allCards);
+			spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			return;
 		case CardIds.Collectible.Paladin.CobaltGuardian:
 		case CardIds.NonCollectible.Neutral.DeflectOBot:
 			if (spawned.filter((spawn) => hasCorrectTribe(spawn, Race.MECH, allCards)).length > 0) {
-				entity.attack = entity.attack + 2;
 				entity.divineShield = true;
+				modifyAttack(entity, 2, friendlyBoard, allCards);
+				afterStatsUpdate(entity, friendlyBoard, allCards);
+				spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.DeflectOBotBattlegrounds:
 			if (spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MECH)).length > 0) {
-				entity.attack = entity.attack + 4;
 				entity.divineShield = true;
+				modifyAttack(entity, 4, friendlyBoard, allCards);
+				afterStatsUpdate(entity, friendlyBoard, allCards);
+				spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			}
 			return;
 	}

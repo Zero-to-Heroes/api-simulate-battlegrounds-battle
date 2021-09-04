@@ -37,25 +37,51 @@ export const spawnEntities = (
 		const newMinion = buildSingleBoardEntity(
 			cardId,
 			boardToSpawnIntoHero,
+			boardToSpawnInto,
 			allCards,
 			friendly,
 			sharedState.currentEntityId++,
 			spawnReborn,
 			cardsData,
+			spectator,
 		);
-		const attackBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
-			? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader).length +
-			  4 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderBattlegrounds).length +
-			  5 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
-			  10 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearBattlegrounds).length
-			: 0;
-		const healthBuff = isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.BEAST)
-			? 5 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear).length +
-			  10 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearBattlegrounds).length
-			: 0;
-		modifyAttack(newMinion, attackBuff, boardToSpawnInto, allCards);
-		modifyHealth(newMinion, healthBuff);
-		afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
+
+		if (hasCorrectTribe(newMinion, Race.BEAST, allCards)) {
+			const packLeaders = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeader);
+			packLeaders.forEach((buffer) => {
+				modifyAttack(newMinion, 2, boardToSpawnInto, allCards);
+				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
+				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+			});
+
+			const packLeaderBattlegrounds = boardToSpawnInto.filter(
+				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.PackLeaderBattlegrounds,
+			);
+			packLeaderBattlegrounds.forEach((buffer) => {
+				modifyAttack(newMinion, 4, boardToSpawnInto, allCards);
+				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
+				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+			});
+
+			const mamaBears = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear);
+			mamaBears.forEach((buffer) => {
+				modifyAttack(newMinion, 5, boardToSpawnInto, allCards);
+				modifyHealth(newMinion, 5);
+				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
+				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+			});
+
+			const mamaBearBattlegrounds = boardToSpawnInto.filter(
+				(entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBearBattlegrounds,
+			);
+			mamaBearBattlegrounds.forEach((buffer) => {
+				modifyAttack(newMinion, 10, boardToSpawnInto, allCards);
+				modifyHealth(newMinion, 10);
+				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
+				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+			});
+		}
+
 		if (!newMinion.cardId) {
 			console.warn('Invalid spawn', newMinion, cardId);
 		}
@@ -70,11 +96,13 @@ export const spawnEntities = (
 				modifyAttack(entity, 1, boardToSpawnInto, allCards);
 				modifyHealth(entity, 1);
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
+				spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
 			goldenBigfernals.forEach((entity) => {
 				modifyAttack(entity, 2, boardToSpawnInto, allCards);
 				modifyHealth(entity, 2);
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
+				spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
 		}
 		if (hasCorrectTribe(newMinion, Race.DEMON, allCards)) {
@@ -701,7 +729,13 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
 				// but close enough for now
-				addCardsInHand(boardWithDeadEntityHero, Math.min(1, 7 - boardWithDeadEntity.length), boardWithDeadEntity, allCards);
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					Math.min(1, 7 - boardWithDeadEntity.length),
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+				);
 				break;
 			case CardIds.NonCollectible.Neutral.GentleDjinniBattlegrounds:
 				spawnedEntities.push(
@@ -736,7 +770,13 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					],
 				);
-				addCardsInHand(boardWithDeadEntityHero, Math.min(2, 7 - boardWithDeadEntity.length), boardWithDeadEntity, allCards);
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					Math.min(2, 7 - boardWithDeadEntity.length),
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+				);
 				break;
 
 			case CardIds.NonCollectible.Priest.GhastcoilerBattlegrounds:
