@@ -174,6 +174,8 @@ export const validEnchantments = [
 	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment,
 	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 	CardIds.NonCollectible.Neutral.LivingSpores_LivingSporesEnchantment,
+	CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
+	CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2,
 ];
 
 const cleanEnchantmentsForEntity = (
