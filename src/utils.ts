@@ -169,14 +169,12 @@ export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 	} as BoardEntity;
 };
 
-export const stringifySimple = (board: readonly BoardEntity[]): string => {
-	return '[' + board.map((entity) => stringifySimpleCard(entity)).join(', ') + ']';
+export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCardsService): string => {
+	return '[' + board.map((entity) => stringifySimpleCard(entity, allCards)).join(', ') + ']';
 };
 
-export const stringifySimpleCard = (entity: BoardEntity): string => {
-	return entity
-		? `${entity.cardId}/${entity.attack}/${entity.health}/${entity.entityId}/${entity.divineShield}/${entity.previousAttack ?? null}`
-		: null;
+export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService): string => {
+	return entity ? `${entity.cardId}/${allCards.getCard(entity.cardId)?.name}/${entity.attack}/${entity.health}/${entity.entityId}` : null;
 };
 
 export const encode = (input: string): string => {

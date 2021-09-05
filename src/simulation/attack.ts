@@ -4,16 +4,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { validEnchantments } from '../simulate-bgs-battle';
-import {
-	afterStatsUpdate,
-	hasCorrectTribe,
-	hasMechanic,
-	isCorrectTribe,
-	modifyAttack,
-	modifyHealth,
-	stringifySimple,
-	stringifySimpleCard,
-} from '../utils';
+import { afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { addCardsInHand, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
@@ -667,8 +658,8 @@ export const processMinionDeath = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const [deadMinionIndexes1, deadEntities1] = makeMinionsDie(board1);
-	const [deadMinionIndexes2, deadEntities2] = makeMinionsDie(board2);
+	const [deadMinionIndexes1, deadEntities1] = makeMinionsDie(board1, allCards);
+	const [deadMinionIndexes2, deadEntities2] = makeMinionsDie(board2, allCards);
 	spectator.registerDeadEntities(deadMinionIndexes1, deadEntities1, deadMinionIndexes2, deadEntities2);
 	// No death to process, we can return
 	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
@@ -784,9 +775,6 @@ const handleDeathsForFirstBoard = (
 				sharedState,
 				spectator,
 			);
-			if (sharedState.debug) {
-				console.debug('boards after deathrattle spawns\n', stringifySimple(firstBoard) + '\n', stringifySimple(otherBoard));
-			}
 		} else if (firstBoard.length > 0) {
 			// const newBoardD = [...firstBoard];
 			firstBoard.splice(index, 1, entity);
@@ -902,33 +890,20 @@ export const applyOnBeingAttackedBuffs = (
 	}
 };
 
-const makeMinionsDie = (
-	board: BoardEntity[],
-	// updatedDefenders: readonly BoardEntity[],
-): [number[], BoardEntity[]] => {
+const makeMinionsDie = (board: BoardEntity[], allCards: AllCardsService): [number[], BoardEntity[]] => {
 	const deadMinionIndexes: number[] = [];
 	const deadEntities: BoardEntity[] = [];
-	// const boardCopy = [...board];
 	for (let i = 0; i < board.length; i++) {
 		const index = board.map((entity) => entity.entityId).indexOf(board[i].entityId);
 		if (board[i].health <= 0 || board[i].definitelyDead) {
 			deadMinionIndexes.push(i);
 			deadEntities.push(board[i]);
 			board.splice(index, 1);
+			// We modify the original array, so we need to update teh current index accordingly
+			i--;
 		}
 	}
 	return [deadMinionIndexes, deadEntities];
-
-	// const indexes = [];
-	// const boardCopy = [...board];
-	// for (const defender of updatedDefenders) {
-	// 	const index = boardCopy.map(entity => entity.entityId).indexOf(defender.entityId);
-	// 	indexes.push(index);
-	// 	if (defender.health <= 0) {
-	// 		boardCopy.splice(index, 1);
-	// 	}
-	// }
-	// return [boardCopy, indexes];
 };
 
 const handleKillEffects = (
@@ -973,15 +948,6 @@ const buildBoardAfterDeathrattleSpawns = (
 	// TODO: don't apply this for FishOfNZoth
 	if (deadMinionIndex >= 0) {
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards, spectator);
-	}
-
-	if (sharedState.debug) {
-		console.debug(
-			'wilml handle deathrattle effect\n',
-			stringifySimple(boardWithKilledMinion) + '\n',
-			stringifySimpleCard(deadEntity) + '\n',
-			stringifySimple(opponentBoard),
-		);
 	}
 
 	handleDeathrattleEffects(

@@ -3,16 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import {
-	afterStatsUpdate,
-	getRaceEnum,
-	hasCorrectTribe,
-	isCorrectTribe,
-	modifyAttack,
-	modifyHealth,
-	stringifySimple,
-	stringifySimpleCard,
-} from '../utils';
+import { afterStatsUpdate, getRaceEnum, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -145,9 +136,6 @@ export const handleDeathrattleEffects = (
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
-				if (sharedState.debug) {
-					console.debug('dealing kaboom bot damage\n', stringifySimpleCard(deadEntity) + '\n', stringifySimple(otherBoard));
-				}
 				dealDamageToRandomEnemy(
 					otherBoard,
 					otherBoardHero,
@@ -160,9 +148,6 @@ export const handleDeathrattleEffects = (
 					sharedState,
 					spectator,
 				);
-				if (sharedState.debug) {
-					console.debug('dealt kaboom bot damage\n', stringifySimpleCard(deadEntity) + '\n', stringifySimple(otherBoard));
-				}
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.KaboomBotBattlegrounds:
