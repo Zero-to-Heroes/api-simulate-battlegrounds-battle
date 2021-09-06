@@ -3,10 +3,85 @@
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
 		"board": [
 			{
+				"entityId": 1,
+				"cardId": "TB_BaconUps_135",
+				"attack": 10,
+				"health": 6,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false
+			},
+			{
 				"entityId": 2,
-				"cardId": "BG21_000",
-				"attack": 3,
-				"health": 3,
+				"cardId": "TB_BaconUps_135",
+				"attack": 10,
+				"health": 6,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false
+			},
+			{
+				"entityId": 4,
+				"cardId": "TB_BaconUps_135",
+				"attack": 10,
+				"health": 6,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false
+			},
+			{
+				"entityId": 5,
+				"cardId": "TB_BaconUps_135",
+				"attack": 10,
+				"health": 6,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false
+			},
+			{
+				"entityId": 6,
+				"cardId": "TB_BaconUps_135",
+				"attack": 10,
+				"health": 6,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false
+			},
+			{
+				"entityId": 3,
+				"cardId": "BG21_000_G",
+				"attack": 6,
+				"health": 6,
 				"divineShield": false,
 				"friendly": true,
 				"megaWindfury": false,
@@ -19,9 +94,9 @@
 			},
 			{
 				"entityId": 7,
-				"cardId": "BGS_078",
-				"attack": 5,
-				"health": 20,
+				"cardId": "TB_BaconUps_055",
+				"attack": 2,
+				"health": 14,
 				"divineShield": false,
 				"poisonous": false,
 				"taunt": false,
@@ -34,21 +109,7 @@
 	},
 	"opponentBoard": {
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
-		"board": [
-			{
-				"entityId": 8,
-				"cardId": "CFM_315",
-				"attack": 3,
-				"health": 200,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			}
-		]
+		"board": [{ "entityId": 8, "cardId": "TB_BaconShop_HP_033t", "attack": 0, "health": 9999999, "enchantments": [] }]
 	},
 	"options": { "numberOfSimulations": 5000, "maxAcceptableDuration": 6000 }
 }

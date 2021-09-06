@@ -45,7 +45,8 @@ export class Spectator {
 			this.actionsForCurrentBattle = [];
 			return;
 		}
-		const actionsForBattle = this.collapseActions(this.actionsForCurrentBattle);
+		// const actionsForBattle = this.collapseActions(this.actionsForCurrentBattle);
+		const actionsForBattle = this.actionsForCurrentBattle;
 		this.actionsForCurrentBattle = [];
 
 		switch (result) {
@@ -77,6 +78,120 @@ export class Spectator {
 				});
 				break;
 		}
+	}
+
+	public registerAttack(
+		attackingEntity: BoardEntity,
+		defendingEntity: BoardEntity,
+		attackingBoard: readonly BoardEntity[],
+		defendingBoard: readonly BoardEntity[],
+	): void {
+		const friendlyBoard = attackingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
+		const opponentBoard = defendingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
+		const action: GameAction = {
+			type: 'attack',
+			sourceEntityId: attackingEntity.entityId,
+			targetEntityId: defendingEntity.entityId,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+		};
+		this.addAction(action);
+	}
+
+	public registerDamageDealt(
+		damagingEntity: BoardEntity,
+		damagedEntity: BoardEntity,
+		damageTaken: number,
+		damagedEntityBoard: BoardEntity[],
+	): void {
+		if (!damagingEntity.entityId) {
+			console.error('missing damaging entity id', damagingEntity);
+		}
+		const friendlyBoard = damagedEntityBoard.every((entity) => entity.friendly) ? damagedEntityBoard : null;
+		const opponentBoard = damagedEntityBoard.every((entity) => !entity.friendly) ? damagedEntityBoard : null;
+		const action: GameAction = {
+			type: 'damage',
+			damages: [
+				{
+					sourceEntityId: damagingEntity.entityId,
+					targetEntityId: damagedEntity.entityId,
+					damage: damageTaken,
+				},
+			],
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+		};
+		this.addAction(action);
+	}
+
+	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
+		if (!sourceEntity.entityId) {
+			console.error('missing damaging entity id', sourceEntity);
+		}
+		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
+		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
+		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
+		const action: GameAction = {
+			type: 'power-target',
+			sourceEntityId: sourceEntity.entityId,
+			targetEntityId: targetEntity.entityId,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+		};
+		this.addAction(action);
+	}
+
+	public registerMinionsSpawn(
+		sourceEntity: BoardEntity,
+		boardOnWhichToSpawn: BoardEntity[],
+		spawnedEntities: readonly BoardEntity[],
+	): void {
+		if (!spawnedEntities || spawnedEntities.length === 0) {
+			return;
+		}
+
+		if (!sourceEntity.entityId) {
+			console.error('missing spawn source entity id', sourceEntity);
+		}
+		const friendlyBoard = boardOnWhichToSpawn.every((entity) => entity.friendly) ? boardOnWhichToSpawn : null;
+		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
+		const action: GameAction = {
+			type: 'spawn',
+			spawns: this.sanitize(spawnedEntities),
+			sourceEntityId: sourceEntity?.entityId,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+		};
+		this.addAction(action);
+	}
+
+	public registerDeadEntities(
+		deadMinionIndexes1: number[],
+		deadEntities1: BoardEntity[],
+		deadMinionIndexes2: number[],
+		deadEntities2: BoardEntity[],
+	): void {
+		const deaths = [...(deadEntities1 || []), ...(deadEntities2 || [])];
+		if (!deaths || deaths.length === 0) {
+			return;
+		}
+		const action: GameAction = {
+			type: 'minion-death',
+			deaths: this.sanitize(deaths),
+			deadMinionsPositionsOnBoard: [...(deadMinionIndexes1 || []), ...(deadMinionIndexes2 || [])],
+			playerBoard: undefined,
+			opponentBoard: undefined,
+		};
+		this.addAction(action);
+	}
+
+	private addAction(action: GameAction) {
+		if (!this.actionsForCurrentBattle.length) {
+			this.actionsForCurrentBattle.push(action);
+			return;
+		}
+		const collapsed = this.collapseActions([this.actionsForCurrentBattle[this.actionsForCurrentBattle.length - 1], action]);
+		this.actionsForCurrentBattle.splice(this.actionsForCurrentBattle.length - 1, 1, ...collapsed);
 	}
 
 	private collapseActions(actions: readonly GameAction[]): readonly GameAction[] {
@@ -151,110 +266,5 @@ export class Spectator {
 					attacking: undefined,
 				} as BoardEntity),
 		);
-	}
-
-	public registerAttack(
-		attackingEntity: BoardEntity,
-		defendingEntity: BoardEntity,
-		attackingBoard: readonly BoardEntity[],
-		defendingBoard: readonly BoardEntity[],
-	): void {
-		const friendlyBoard = attackingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
-		const opponentBoard = defendingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
-		const action: GameAction = {
-			type: 'attack',
-			sourceEntityId: attackingEntity.entityId,
-			targetEntityId: defendingEntity.entityId,
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
-		};
-		this.actionsForCurrentBattle.push(action);
-	}
-
-	public registerDamageDealt(
-		damagingEntity: BoardEntity,
-		damagedEntity: BoardEntity,
-		damageTaken: number,
-		damagedEntityBoard: BoardEntity[],
-	): void {
-		if (!damagingEntity.entityId) {
-			console.error('missing damaging entity id', damagingEntity);
-		}
-		const friendlyBoard = damagedEntityBoard.every((entity) => entity.friendly) ? damagedEntityBoard : null;
-		const opponentBoard = damagedEntityBoard.every((entity) => !entity.friendly) ? damagedEntityBoard : null;
-		const action: GameAction = {
-			type: 'damage',
-			damages: [
-				{
-					sourceEntityId: damagingEntity.entityId,
-					targetEntityId: damagedEntity.entityId,
-					damage: damageTaken,
-				},
-			],
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
-		};
-		this.actionsForCurrentBattle.push(action);
-	}
-
-	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
-		if (!sourceEntity.entityId) {
-			console.error('missing damaging entity id', sourceEntity);
-		}
-		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
-		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
-		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
-		const action: GameAction = {
-			type: 'power-target',
-			sourceEntityId: sourceEntity.entityId,
-			targetEntityId: targetEntity.entityId,
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
-		};
-		this.actionsForCurrentBattle.push(action);
-	}
-
-	public registerMinionsSpawn(
-		sourceEntity: BoardEntity,
-		boardOnWhichToSpawn: BoardEntity[],
-		spawnedEntities: readonly BoardEntity[],
-	): void {
-		if (!spawnedEntities || spawnedEntities.length === 0) {
-			return;
-		}
-
-		if (!sourceEntity.entityId) {
-			console.error('missing spawn source entity id', sourceEntity);
-		}
-		const friendlyBoard = boardOnWhichToSpawn.every((entity) => entity.friendly) ? boardOnWhichToSpawn : null;
-		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
-		const action: GameAction = {
-			type: 'spawn',
-			spawns: this.sanitize(spawnedEntities),
-			sourceEntityId: sourceEntity?.entityId,
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
-		};
-		this.actionsForCurrentBattle.push(action);
-	}
-
-	public registerDeadEntities(
-		deadMinionIndexes1: number[],
-		deadEntities1: BoardEntity[],
-		deadMinionIndexes2: number[],
-		deadEntities2: BoardEntity[],
-	): void {
-		const deaths = [...(deadEntities1 || []), ...(deadEntities2 || [])];
-		if (!deaths || deaths.length === 0) {
-			return;
-		}
-		const action: GameAction = {
-			type: 'minion-death',
-			deaths: this.sanitize(deaths),
-			deadMinionsPositionsOnBoard: [...(deadMinionIndexes1 || []), ...(deadMinionIndexes2 || [])],
-			playerBoard: undefined,
-			opponentBoard: undefined,
-		};
-		this.actionsForCurrentBattle.push(action);
 	}
 }

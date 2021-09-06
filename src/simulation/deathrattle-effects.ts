@@ -183,7 +183,12 @@ export const handleDeathrattleEffects = (
 
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
-	const enchantments = [...(deadEntity.enchantments ?? [])];
+	let enchantments = [...(deadEntity.enchantments ?? [])];
+	const threshold = 500;
+	if (enchantments.length > threshold) {
+		// console.warn('too many enchtments, truncating');
+		enchantments = enchantments.slice(0, threshold);
+	}
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
