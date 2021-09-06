@@ -194,28 +194,19 @@ const performAttack = (
 			spectator,
 		);
 	} else if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacawBattlegrounds) {
-		triggerRandomDeathrattle(
-			attackingEntity,
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoard,
-			defendingBoardHero,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
-		triggerRandomDeathrattle(
-			attackingEntity,
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoard,
-			defendingBoardHero,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		for (let i = 0; i < 2; i++) {
+			triggerRandomDeathrattle(
+				attackingEntity,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoard,
+				defendingBoardHero,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
+		}
 	}
 
 	attackingEntity.attackImmediately = false;

@@ -10,7 +10,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 		const input: BgsBattleInfo = {
 			...jsonEvent3,
 			options: {
-				numberOfSimulations: 10000,
+				numberOfSimulations: 1,
 			},
 		};
 		SharedState.debugEnabled = false;

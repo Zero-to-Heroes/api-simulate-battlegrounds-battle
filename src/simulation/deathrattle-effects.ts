@@ -49,69 +49,69 @@ export const handleDeathrattleEffects = (
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Paladin.SelflessHeroBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.NadinaTheRed:
 		case CardIds.NonCollectible.Neutral.NadinaTheRedBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
 			}
-			return;
+			break;
 		case CardIds.Collectible.Neutral.SpawnOfNzoth:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards, spectator);
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.SpawnOfNzothBattlegrounds:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator);
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolf:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, spectator, 'BEAST');
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.GoldrinnTheGreatWolfBattlegrounds:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, spectator, 'BEAST');
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.KingBagurgle:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator, 'MURLOC');
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.KingBagurgleBattlegrounds:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, spectator, 'MURLOC');
-			return;
+			break;
 		case CardIds.Collectible.Warlock.FiendishServant:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Warlock.FiendishServantBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
 				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTrickster:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.ImpulsiveTricksterBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
 				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.Leapfrogger:
 			for (let i = 0; i < multiplier; i++) {
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocolisk:
 			for (let i = 0; i < multiplier; i++) {
 				const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
@@ -119,7 +119,7 @@ export const handleDeathrattleEffects = (
 					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 				}
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.PalescaleCrocoliskBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
@@ -127,12 +127,12 @@ export const handleDeathrattleEffects = (
 					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 				}
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.LeapfroggerBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
-			return;
+			break;
 		case CardIds.Collectible.Neutral.KaboomBot:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
@@ -150,7 +150,7 @@ export const handleDeathrattleEffects = (
 					spectator,
 				);
 			}
-			return;
+			break;
 		case CardIds.NonCollectible.Neutral.KaboomBotBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
 				dealDamageToRandomEnemy(
@@ -178,29 +178,25 @@ export const handleDeathrattleEffects = (
 					spectator,
 				);
 			}
-			return;
+			break;
 	}
 
-	let done = false;
-	for (const enchantment of deadEntity.enchantments ?? []) {
-		// TODO? Check that it is applied multiple times
+	// It's important to first copy the enchantments, otherwise you could end up
+	// in an infinite loop - since new enchants are added after each step
+	const enchantments = [...(deadEntity.enchantments ?? [])];
+	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
-					done = true;
 				}
-				return;
+				break;
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
-					done = true;
 				}
-				return;
+				break;
 		}
-	}
-	if (done) {
-		// throw new Error('aborting');
 	}
 };
 
