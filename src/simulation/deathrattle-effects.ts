@@ -599,14 +599,17 @@ const handleAvenge = (
 			}
 			break;
 		case CardIds.NonCollectible.Neutral.TonyTwoTusk:
-			const nonGoldenMinions = boardWithDeadEntity.filter((e) => {
-				const ref = allCards.getCard(e.cardId);
-				return !!ref.battlegroundsPremiumDbfId;
-			});
+			const nonGoldenMinions = boardWithDeadEntity
+				.filter((e) => e.entityId !== avenger.entityId)
+				.filter((e) => {
+					const ref = allCards.getCard(e.cardId);
+					return !!ref.battlegroundsPremiumDbfId && !!allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id;
+				});
 			const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
 			if (pirate) {
 				const refCard = allCards.getCard(pirate.cardId);
-				pirate.cardId = refCard.id;
+				const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+				pirate.cardId = goldenCard.id;
 				spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 			}
 			break;
