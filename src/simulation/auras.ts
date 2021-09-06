@@ -262,12 +262,7 @@ const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, b
 	}
 	const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId);
 	const numberOfBuffs = buffs.length;
-	if (debug) {
-		console.log(
-			'buffs',
-			entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId),
-		);
-	}
+
 	// TODO: there is an issue here. If the minion's health at the end of the turn should be 1, removing then reapplying
 	// the aura actually bumps it to 2
 	// If the buffing entity is still alive, we should ignore this max

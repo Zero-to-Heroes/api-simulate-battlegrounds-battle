@@ -53,10 +53,7 @@ export class Simulator {
 				: Math.round(Math.random());
 		this.sharedState.currentEntityId =
 			Math.max(...playerBoard.map((entity) => entity.entityId), ...opponentBoard.map((entity) => entity.entityId)) + 1;
-		if (this.sharedState.debug) {
-			console.debug('before start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
-		}
-		this.currentAttacker = handleStartOfCombat(
+		const suggestedNewCurrentAttacker = handleStartOfCombat(
 			playerEntity,
 			playerBoard,
 			opponentEntity,
@@ -67,14 +64,16 @@ export class Simulator {
 			this.sharedState,
 			spectator,
 		);
-		if (this.sharedState.debug) {
-			console.debug('after start of combat\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
+		// When both players have the same amount of minions, it's possible that Illidan's Start of Combat
+		// ability causes the same player to attack twice in a row, which is not the case in real life
+		// So when Illidan attacks first, we then look at the expected first attacker. If it was Illidan
+		// once more, we switch. Otherwise, we just keep the attacker as planned
+		// FIXME: this is probably bogus when both players have Illidan's hero power?
+		if (effectivePlayerBoardLength === effectiveOpponentBoardLength) {
+			this.currentAttacker = suggestedNewCurrentAttacker;
 		}
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
-			if (this.sharedState.debug) {
-				console.debug('starting round\n', stringifySimple(opponentBoard) + '\n', stringifySimple(playerBoard));
-			}
 			// If there are "attack immediately" minions, we keep the same player
 			// We put it here so that it can kick in after the start of combat effects. However here we don't want
 			// to change who attacks first, so we repeat that block again after all the attacks have been resolved
@@ -131,9 +130,9 @@ export class Simulator {
 					'short-circuiting simulation, too many iterations',
 					counter,
 					'\n',
-					stringifySimple(playerBoard),
+					stringifySimple(playerBoard, this.allCards),
 					'\n',
-					stringifySimple(opponentBoard),
+					stringifySimple(opponentBoard, this.allCards),
 				);
 				return null;
 			}

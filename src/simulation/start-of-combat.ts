@@ -132,7 +132,6 @@ const handlePlayerStartOfCombatHeroPowers = (
 	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
 		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
-		// currentAttacker = (currentAttacker + 1) % 2;
 	} else if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenBattlegrounds && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		currentAttacker = (currentAttacker + 1) % 2;

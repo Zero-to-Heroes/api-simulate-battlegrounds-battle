@@ -4,7 +4,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { afterStatsUpdate, getRaceEnum, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
-import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath } from './attack';
+import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -21,6 +21,7 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// console.log('handleDeathrattleEffects', stringifySimpleCard(deadEntity, allCards));
 	if (deadMinionIndex >= 0) {
 		applyMinionDeathEffect(
 			deadEntity,
@@ -46,13 +47,13 @@ export const handleDeathrattleEffects = (
 	switch (deadEntity.cardId) {
 		case CardIds.Collectible.Paladin.SelflessHero:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomDivineShield(boardWithDeadEntity);
+				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
 			return;
 		case CardIds.NonCollectible.Paladin.SelflessHeroBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomDivineShield(boardWithDeadEntity);
-				grantRandomDivineShield(boardWithDeadEntity);
+				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
+				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
 			return;
 		case CardIds.NonCollectible.Neutral.NadinaTheRed:
@@ -180,19 +181,26 @@ export const handleDeathrattleEffects = (
 			return;
 	}
 
+	let done = false;
 	for (const enchantment of deadEntity.enchantments ?? []) {
+		// TODO? Check that it is applied multiple times
 		switch (enchantment.cardId) {
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
+					done = true;
 				}
 				return;
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
+					done = true;
 				}
 				return;
 		}
+	}
+	if (done) {
+		// throw new Error('aborting');
 	}
 };
 
@@ -212,7 +220,9 @@ const applyLeapFroggerEffect = (
 				: CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
 			originEntityId: deadEntity.entityId,
 		});
-		spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
+		// Don't register power effect here, since it's already done in the random stats
+		// spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
+		// console.log('applyLeapFroggerEffect', stringifySimpleCard(deadEntity), stringifySimpleCard(buffed));
 	}
 };
 
@@ -265,6 +275,7 @@ const applyMinionDeathEffect = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// console.log('applying minion death effect', stringifySimpleCard(deadEntity, allCards));
 	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.BEAST)) {
 		applyScavengingHyenaEffect(boardWithDeadEntity, allCards, spectator);
 	}
@@ -284,7 +295,6 @@ const applyMinionDeathEffect = (
 		applyJunkbotEffect(boardWithDeadEntity, allCards, spectator);
 	}
 	if (hasCorrectTribe(deadEntity, Race.MURLOC, allCards)) {
-		// console.log('murloc died', stringifySimpleCard(deadEntity));
 		removeOldMurkEyeAttack(boardWithDeadEntity, allCards);
 		removeOldMurkEyeAttack(otherBoard, allCards);
 	}
@@ -331,8 +341,10 @@ const applyMinionDeathEffect = (
 				);
 			}
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NonCollectible.Neutral.WildfireElemental) {
+			// console.log('applying WildfireElemental effect', stringifySimple(boardWithDeadEntity, allCards));
 			const excessDamage = -deadEntity.health;
 			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
+			// console.log('neighbours', stringifySimple(neighbours, allCards));
 			if (neighbours.length > 0) {
 				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
 				dealDamageToEnemy(
@@ -653,7 +665,7 @@ export const dealDamageToAllMinions = (
 		// updatedBoard2 = [...boardResult];
 		// updatedBoard2[i] = entity;
 	}
-	processMinionDeath(board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
+	// processMinionDeath(board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
 };
 
 const applySoulJugglerEffect = (
@@ -712,16 +724,16 @@ const applySoulJugglerEffect = (
 			spectator,
 		);
 	}
-	processMinionDeath(
-		boardWithJugglers,
-		boardWithJugglersHero,
-		boardToAttack,
-		boardToAttackHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	// processMinionDeath(
+	// 	boardWithJugglers,
+	// 	boardWithJugglersHero,
+	// 	boardToAttack,
+	// 	boardToAttackHero,
+	// 	allCards,
+	// 	cardsData,
+	// 	sharedState,
+	// 	spectator,
+	// );
 };
 
 const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): void => {
@@ -852,11 +864,12 @@ export const addCardsInHand = (
 	});
 };
 
-const grantRandomDivineShield = (board: BoardEntity[]): void => {
+const grantRandomDivineShield = (source: BoardEntity, board: BoardEntity[], spectator: Spectator): void => {
 	const elligibleEntities = board.filter((entity) => !entity.divineShield);
 	if (elligibleEntities.length > 0) {
 		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
 		chosen.divineShield = true;
+		spectator.registerPowerTarget(source, chosen, board);
 	}
 	// return board;
 };

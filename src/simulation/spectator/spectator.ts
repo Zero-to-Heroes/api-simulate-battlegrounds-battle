@@ -122,7 +122,9 @@ export class Spectator {
 				lastAction.targetEntityIds = lastAction.targetEntityIds ?? (lastAction.targetEntityId ? [lastAction.targetEntityId] : []);
 				action.targetEntityIds = action.targetEntityIds ?? (action.targetEntityId ? [action.targetEntityId] : []);
 				lastAction.targetEntityIds.push(...action.targetEntityIds);
-				lastAction.targetEntityIds = [...new Set(lastAction.targetEntityIds)];
+				// So that when multiple Leapfroggers enchantments target the same minion,
+				// we can count them in the replay viewer's text
+				// lastAction.targetEntityIds = [...new Set(lastAction.targetEntityIds)];
 				lastAction.playerBoard = action.playerBoard;
 				lastAction.opponentBoard = action.opponentBoard;
 			} else {
@@ -199,6 +201,7 @@ export class Spectator {
 		if (!sourceEntity.entityId) {
 			console.error('missing damaging entity id', sourceEntity);
 		}
+		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
 		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
 		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
 		const action: GameAction = {
@@ -211,15 +214,24 @@ export class Spectator {
 		this.actionsForCurrentBattle.push(action);
 	}
 
-	public registerMinionsSpawn(boardOnWhichToSpawn: BoardEntity[], spawnedEntities: readonly BoardEntity[]): void {
+	public registerMinionsSpawn(
+		sourceEntity: BoardEntity,
+		boardOnWhichToSpawn: BoardEntity[],
+		spawnedEntities: readonly BoardEntity[],
+	): void {
 		if (!spawnedEntities || spawnedEntities.length === 0) {
 			return;
+		}
+
+		if (!sourceEntity.entityId) {
+			console.error('missing spawn source entity id', sourceEntity);
 		}
 		const friendlyBoard = boardOnWhichToSpawn.every((entity) => entity.friendly) ? boardOnWhichToSpawn : null;
 		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
 		const action: GameAction = {
 			type: 'spawn',
 			spawns: this.sanitize(spawnedEntities),
+			sourceEntityId: sourceEntity?.entityId,
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 		};

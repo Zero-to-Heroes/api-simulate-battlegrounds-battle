@@ -30,7 +30,6 @@ export const simulateAttack = (
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
-	// applyGlobalModifiers(attackingBoard, defendingBoard, spawns, allCards);
 	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
 	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
 	const numberOfDeathwingPresents =
@@ -42,6 +41,8 @@ export const simulateAttack = (
 	const attackingEntity =
 		attackingEntityIndex != null ? attackingBoard[attackingEntityIndex] : getAttackingEntity(attackingBoard, lastAttackerEntityId);
 	if (attackingEntity) {
+		attackingEntity.attacking = true;
+		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury
@@ -218,9 +219,6 @@ const performAttack = (
 	}
 
 	attackingEntity.attackImmediately = false;
-
-	// Approximate the play order
-	// updatedDefenders.sort((a, b) => a.entityId - b.entityId);
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
 };
 
@@ -291,7 +289,6 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 	if (!attackingEntity.attackImmediately) {
 		attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
 	}
-	attackingEntity.attacking = true;
 	return attackingEntity;
 };
 
@@ -364,6 +361,7 @@ export const dealDamageToEnemy = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity, allCards));
 	if (!defendingEntity) {
 		return;
 	}
@@ -388,16 +386,16 @@ export const dealDamageToEnemy = (
 	);
 	const defendingEntityIndex = defendingBoard.map((entity) => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
-	processMinionDeath(
-		defendingBoard,
-		defendingBoardHero,
-		boardWithAttackOrigin,
-		boardWithAttackOriginHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	// processMinionDeath(
+	// 	defendingBoard,
+	// 	defendingBoardHero,
+	// 	boardWithAttackOrigin,
+	// 	boardWithAttackOriginHero,
+	// 	allCards,
+	// 	cardsData,
+	// 	sharedState,
+	// 	spectator,
+	// );
 };
 
 export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntity: BoardEntity, ignoreTaunts = false): BoardEntity => {
@@ -533,7 +531,7 @@ export const bumpEntities = (
 	if (!!entitySpawns?.length) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
 		entityBoard.splice(index + 1, 0, ...entitySpawns);
-		spectator.registerMinionsSpawn(entityBoard, entitySpawns);
+		spectator.registerMinionsSpawn(entity, entityBoard, entitySpawns);
 		handleSpawnEffects(entityBoard, entitySpawns, allCards, spectator);
 	}
 	return;
@@ -653,6 +651,7 @@ export const processMinionDeath = (
 	board1Hero: BgsPlayerEntity,
 	board2: BoardEntity[],
 	board2Hero: BgsPlayerEntity,
+
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -945,6 +944,7 @@ const buildBoardAfterDeathrattleSpawns = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// console.log('buildBoardAfterDeathrattleSpawns', deadMinionIndex, stringifySimple(boardWithKilledMinion, allCards));
 	// TODO: don't apply this for FishOfNZoth
 	if (deadMinionIndex >= 0) {
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards, spectator);
@@ -1033,7 +1033,6 @@ const buildBoardAfterDeathrattleSpawns = (
 			// Whenever we are already in a combat phase, we need to first clean up the state
 			removeAuras(boardWithKilledMinion, cardsData);
 			removeAuras(opponentBoard, cardsData);
-			// removeGlobalModifiers(boardWithKilledMinion, opponentBoard, allCards);
 			simulateAttack(
 				boardWithKilledMinion,
 				boardWithKilledMinionHero,
@@ -1052,16 +1051,15 @@ const buildBoardAfterDeathrattleSpawns = (
 	}
 
 	// Minion has already been removed from the board in the previous step
-	// boardWithKilledMinion.splice(deadMinionIndex, 0, ...spawnedEntities);
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards, spectator);
-	spectator.registerMinionsSpawn(boardWithKilledMinion, spawnedEntities);
+	spectator.registerMinionsSpawn(deadEntity, boardWithKilledMinion, spawnedEntities);
 
 	const candidateEntitiesForOpponentBoard: readonly BoardEntity[] = [...entitiesFromNativeDeathrattleOnOpponentBoard];
 	const roomToSpawnForOpponentBoard: number = 7 - opponentBoard.length;
 	const spawnedEntitiesForOpponentBoard: readonly BoardEntity[] = candidateEntitiesForOpponentBoard.slice(0, roomToSpawnForOpponentBoard);
 	opponentBoard.push(...spawnedEntitiesForOpponentBoard);
 	// If needed might also have to handle more effects here, like we do for the main board
-	spectator.registerMinionsSpawn(opponentBoard, spawnedEntitiesForOpponentBoard);
+	spectator.registerMinionsSpawn(deadEntity, opponentBoard, spawnedEntitiesForOpponentBoard);
 
 	// eslint-disable-next-line prettier/prettier
 	if (deadEntity.rememberedDeathrattles?.length) {
