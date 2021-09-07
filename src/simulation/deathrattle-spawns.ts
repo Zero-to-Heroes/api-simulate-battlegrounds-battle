@@ -51,7 +51,7 @@ export const spawnEntities = (
 			packLeaders.forEach((buffer) => {
 				modifyAttack(newMinion, 2, boardToSpawnInto, allCards);
 				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
-				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+				// spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
 			});
 
 			const packLeaderBattlegrounds = boardToSpawnInto.filter(
@@ -60,7 +60,7 @@ export const spawnEntities = (
 			packLeaderBattlegrounds.forEach((buffer) => {
 				modifyAttack(newMinion, 4, boardToSpawnInto, allCards);
 				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
-				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+				// spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
 			});
 
 			const mamaBears = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.MamaBear);
@@ -68,7 +68,7 @@ export const spawnEntities = (
 				modifyAttack(newMinion, 5, boardToSpawnInto, allCards);
 				modifyHealth(newMinion, 5);
 				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
-				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+				// spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
 			});
 
 			const mamaBearBattlegrounds = boardToSpawnInto.filter(
@@ -78,7 +78,7 @@ export const spawnEntities = (
 				modifyAttack(newMinion, 10, boardToSpawnInto, allCards);
 				modifyHealth(newMinion, 10);
 				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
-				spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
+				// spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
 			});
 		}
 
@@ -96,13 +96,13 @@ export const spawnEntities = (
 				modifyAttack(entity, 1, boardToSpawnInto, allCards);
 				modifyHealth(entity, 1);
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
-				spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
+				// spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
 			goldenBigfernals.forEach((entity) => {
 				modifyAttack(entity, 2, boardToSpawnInto, allCards);
 				modifyHealth(entity, 2);
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
-				spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
+				// spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
 		}
 		if (hasCorrectTribe(newMinion, Race.DEMON, allCards)) {

@@ -91,12 +91,12 @@ export const buildSingleBoardEntity = (
 		modifyAttack(result, 1, friendlyBoard, allCards);
 		modifyHealth(result, 2);
 		afterStatsUpdate(result, friendlyBoard, allCards);
-		spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
+		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
 	} else if (controllerHero?.heroPowerId === CardIds.NonCollectible.Demonhunter.KurtrusAshfallen_CloseThePortal) {
 		modifyAttack(result, 2, friendlyBoard, allCards);
 		modifyHealth(result, 2);
 		afterStatsUpdate(result, friendlyBoard, allCards);
-		spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
+		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
 	}
 
 	return result;
