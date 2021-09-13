@@ -92,13 +92,13 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			input.opponentBoard.player,
 			spectator,
 		);
-		if (!battleResult) {
-			continue;
-		}
 		if (Date.now() - start > maxAcceptableDuration) {
 			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
 			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
 			break;
+		}
+		if (!battleResult) {
+			continue;
 		}
 		if (battleResult.result === 'won') {
 			simulationResult.won++;
