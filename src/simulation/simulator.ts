@@ -144,14 +144,18 @@ export class Simulator {
 			} as SingleSimulationResult;
 		}
 		if (playerBoard.length === 0) {
+			const damage = this.buildBoardTotalDamage(opponentBoard) + opponentEntity.tavernTier;
+			spectator.registerOpponentAttack(playerBoard, opponentBoard, damage);
 			return {
 				result: 'lost',
-				damageDealt: this.buildBoardTotalDamage(opponentBoard) + opponentEntity.tavernTier,
+				damageDealt: damage,
 			};
 		}
+		const damage = this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier;
+		spectator.registerPlayerAttack(playerBoard, opponentBoard, damage);
 		return {
 			result: 'won',
-			damageDealt: this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier,
+			damageDealt: damage,
 		};
 	}
 

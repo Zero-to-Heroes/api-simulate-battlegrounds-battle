@@ -107,6 +107,34 @@ export class Spectator {
 		this.addAction(action);
 	}
 
+	public registerPlayerAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
+		const action: GameAction = {
+			type: 'player-attack',
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+			damages: [
+				{
+					damage: damage,
+				},
+			],
+		};
+		this.addAction(action);
+	}
+
+	public registerOpponentAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
+		const action: GameAction = {
+			type: 'opponent-attack',
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+			damages: [
+				{
+					damage: damage,
+				},
+			],
+		};
+		this.addAction(action);
+	}
+
 	public registerDamageDealt(
 		damagingEntity: BoardEntity,
 		damagedEntity: BoardEntity,
@@ -259,7 +287,7 @@ export class Spectator {
 	}
 
 	private sanitize(board: readonly BoardEntity[]): readonly BoardEntity[] {
-		if (!board || board.length === 0) {
+		if (!board) {
 			return undefined;
 		}
 		return board.map(
