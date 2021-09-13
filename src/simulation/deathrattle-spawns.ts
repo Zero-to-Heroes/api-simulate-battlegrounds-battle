@@ -841,59 +841,6 @@ export const spawnEntitiesFromDeathrattle = (
 					],
 				);
 				break;
-			// case CardIds.NonCollectible.Neutral.SneedsOldShredder2:
-			// case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
-			// 	spawnedEntities.push(
-			// 		...spawnEntities(
-			// 			spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-			// 			1,
-			// 			boardWithDeadEntity,
-			// 			boardWithDeadEntityHero,
-			// 			otherBoard,
-			// 			otherBoardHero,
-			// 			allCards,
-			// 			spawns,
-			// 			sharedState,
-			// 			spectator,
-			// 			deadEntity.friendly,
-			// 			false,
-			// 		),
-			// 	);
-			// 	break;
-			// case CardIds.NonCollectible.Neutral.SneedsOldShredderBattlegrounds:
-			// 	spawnedEntities.push(
-			// 		...[
-			// 			...spawnEntities(
-			// 				spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-			// 				1,
-			// 				boardWithDeadEntity,
-			// 				boardWithDeadEntityHero,
-			// 				otherBoard,
-			// 				otherBoardHero,
-			// 				allCards,
-			// 				spawns,
-			// 				sharedState,
-			// 				spectator,
-			// 				deadEntity.friendly,
-			// 				false,
-			// 			),
-			// 			...spawnEntities(
-			// 				spawns.sneedsSpawns[Math.floor(Math.random() * spawns.sneedsSpawns.length)],
-			// 				1,
-			// 				boardWithDeadEntity,
-			// 				boardWithDeadEntityHero,
-			// 				otherBoard,
-			// 				otherBoardHero,
-			// 				allCards,
-			// 				spawns,
-			// 				sharedState,
-			// 				spectator,
-			// 				deadEntity.friendly,
-			// 				false,
-			// 			),
-			// 		],
-			// 	);
-			// 	break;
 			case CardIds.Collectible.Warlock.Voidlord:
 				spawnedEntities.push(
 					...spawnEntities(
@@ -931,11 +878,20 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 			case CardIds.NonCollectible.Neutral.OmegaBuster:
-				const entitiesToSpawn = Math.min(6, 7 - boardWithDeadEntity.length);
-				const buffAmount = 6 - entitiesToSpawn;
+			case CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds:
+				// Here we have to truncate the spawned entities instead of letting the caller handle it,
+				// because we need to know how many minions couldn't spawn so that we can apply the buff.
+				// HOWEVER, this can cause an issue, if for instance a Scallywag token spawns, attacks right away,
+				// and then Omega Buster spawns. In this case, it will not have yet processed the token's attack,
+				// and will limit the spawns
+				const entitiesToSpawn = Math.max(0, Math.min(6, 7 - boardWithDeadEntity.length - spawnedEntities.length));
+				const buffAmount =
+					(deadEntity.cardId === CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds ? 2 : 1) * (6 - entitiesToSpawn);
 				spawnedEntities.push(
 					...spawnEntities(
-						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
+						deadEntity.cardId === CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds
+							? CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenBattlegrounds
+							: CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotToken,
 						entitiesToSpawn,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -949,29 +905,33 @@ export const spawnEntitiesFromDeathrattle = (
 						false,
 					),
 				);
-				addStatsToBoard(deadEntity, boardWithDeadEntity, 1 * buffAmount, 1 * buffAmount, allCards, spectator);
+				addStatsToBoard(deadEntity, boardWithDeadEntity, buffAmount, buffAmount, allCards, spectator, Race[Race.MECH]);
+				// when the buster triggers multiple times because of Baron for instance
+				addStatsToBoard(deadEntity, spawnedEntities, buffAmount, buffAmount, allCards, spectator, Race[Race.MECH]);
 				break;
-			case CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds:
-				const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
-				const buffAmount2 = 6 - entitiesToSpawn2;
-				spawnedEntities.push(
-					...spawnEntities(
-						CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenBattlegrounds,
-						entitiesToSpawn2,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
-						deadEntity.friendly,
-						false,
-					),
-				);
-				addStatsToBoard(deadEntity, boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator);
-				break;
+			// case CardIds.NonCollectible.Neutral.OmegaBusterBattlegrounds:
+			// 	const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
+			// 	const buffAmount2 = 6 - entitiesToSpawn2;
+			// 	spawnedEntities.push(
+			// 		...spawnEntities(
+			// 			CardIds.NonCollectible.Neutral.ReplicatingMenace_MicrobotTokenBattlegrounds,
+			// 			entitiesToSpawn2,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			otherBoard,
+			// 			otherBoardHero,
+			// 			allCards,
+			// 			spawns,
+			// 			sharedState,
+			// 			spectator,
+			// 			deadEntity.friendly,
+			// 			false,
+			// 		),
+			// 	);
+			// 	addStatsToBoard(deadEntity, boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
+			// 	// when the buster triggers multiple times because of Baron for instance
+			// 	addStatsToBoard(deadEntity, spawnedEntities, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
+			// 	break;
 			case CardIds.NonCollectible.Neutral.KangorsApprentice:
 				const cardIdsToSpawn = sharedState.deaths
 					.filter((entity) => entity.friendly === deadEntity.friendly)

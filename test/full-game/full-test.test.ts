@@ -10,7 +10,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 		const input: BgsBattleInfo = {
 			...jsonEvent3,
 			options: {
-				numberOfSimulations: 10000,
+				numberOfSimulations: 1,
 			},
 		};
 		SharedState.debugEnabled = false;
@@ -23,7 +23,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 
 		const sample = simulationResult.outcomeSamples.won[0];
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
+		// console.log('encoded', base64);
 	});
 });
 
