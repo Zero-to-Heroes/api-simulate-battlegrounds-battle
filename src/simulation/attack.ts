@@ -782,10 +782,11 @@ export const applyOnAttackBuffs = (
 	spectator: Spectator,
 ): void => {
 	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardian2) {
-		attacker.attack *= 2;
+		// For now the utility method only works additively, so we hack around it
+		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
 	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBattlegrounds) {
-		attacker.attack *= 3;
+		modifyAttack(attacker, 3 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
 
 	// Ripsnarl Captain
