@@ -3,6 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { groupByFunction } from '../services/utils';
 import { afterStatsUpdate, getRaceEnum, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
@@ -183,22 +184,37 @@ export const handleDeathrattleEffects = (
 
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
-	let enchantments = [...(deadEntity.enchantments ?? [])];
-	const threshold = 500;
-	if (enchantments.length > threshold) {
+	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [...(deadEntity.enchantments ?? [])];
+	const threshold = 20;
+	if (enchantments.length > threshold || enchantments.some((e) => e.repeats && e.repeats > 1)) {
 		// console.warn('too many enchtments, truncating');
-		enchantments = enchantments.slice(0, threshold);
+		// In some cases it's possible that there are way too many enchantments because of the frog
+		// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
+		// often as we should, so that we can have the stats themselves correct
+		const enchantmentGroups = groupByFunction((enchantment) => enchantment.cardId)(enchantments);
+		enchantments = Object.keys(enchantmentGroups).map((cardId) => ({
+			cardId: cardId,
+			repeats: enchantmentGroups[cardId].length,
+		}));
 	}
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
-				for (let i = 0; i < multiplier; i++) {
-					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
+				if (enchantment.repeats) {
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, multiplier * enchantment.repeats);
+				} else {
+					for (let i = 0; i < multiplier; i++) {
+						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
+					}
 				}
 				break;
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2:
-				for (let i = 0; i < multiplier; i++) {
-					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
+				if (enchantment.repeats) {
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, multiplier * enchantment.repeats);
+				} else {
+					for (let i = 0; i < multiplier; i++) {
+						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
+					}
 				}
 				break;
 		}
@@ -211,8 +227,18 @@ const applyLeapFroggerEffect = (
 	isPremium: boolean,
 	allCards: AllCardsService,
 	spectator: Spectator,
+	multiplier = 1,
 ): void => {
-	const buffed = grantRandomStats(deadEntity, boardWithDeadEntity, isPremium ? 4 : 2, isPremium ? 4 : 2, Race.BEAST, allCards, spectator);
+	multiplier = multiplier || 1;
+	const buffed = grantRandomStats(
+		deadEntity,
+		boardWithDeadEntity,
+		multiplier * (isPremium ? 4 : 2),
+		multiplier * (isPremium ? 4 : 2),
+		Race.BEAST,
+		allCards,
+		spectator,
+	);
 	if (buffed) {
 		buffed.enchantments = buffed.enchantments ?? [];
 		buffed.enchantments.push({
@@ -220,6 +246,7 @@ const applyLeapFroggerEffect = (
 				? CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2
 				: CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
 			originEntityId: deadEntity.entityId,
+			repeats: multiplier,
 		});
 		// Don't register power effect here, since it's already done in the random stats
 		// spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
