@@ -6,7 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { validEnchantments } from '../simulate-bgs-battle';
 import { afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { applyAuras, removeAuras } from './auras';
-import { addCardsInHand, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
+import { addCardsInHand, applyMinionDeathEffect, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { SharedState } from './shared-state';
@@ -943,18 +943,21 @@ const buildBoardAfterDeathrattleSpawns = (
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards, spectator);
 	}
 
-	handleDeathrattleEffects(
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndex,
-		opponentBoard,
-		opponentBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	// But Wildfire Element is applied first, before the DR spawns
+	if (deadMinionIndex >= 0) {
+		applyMinionDeathEffect(
+			deadEntity,
+			deadMinionIndex,
+			boardWithKilledMinion,
+			boardWithKilledMinionHero,
+			opponentBoard,
+			opponentBoardHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
 	const [entitiesFromNativeDeathrattle, entitiesFromNativeDeathrattleOnOpponentBoard]: [
 		readonly BoardEntity[],
 		readonly BoardEntity[],
@@ -1046,6 +1049,19 @@ const buildBoardAfterDeathrattleSpawns = (
 	// Minion has already been removed from the board in the previous step
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards, spectator);
 	spectator.registerMinionsSpawn(deadEntity, boardWithKilledMinion, spawnedEntities);
+
+	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
+	handleDeathrattleEffects(
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 
 	const candidateEntitiesForOpponentBoard: readonly BoardEntity[] = [...entitiesFromNativeDeathrattleOnOpponentBoard];
 	const roomToSpawnForOpponentBoard: number = 7 - opponentBoard.length;

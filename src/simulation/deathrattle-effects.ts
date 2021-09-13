@@ -14,7 +14,6 @@ export const handleDeathrattleEffects = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
-	deadMinionIndex: number,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
@@ -22,22 +21,6 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	// console.log('handleDeathrattleEffects', stringifySimpleCard(deadEntity, allCards));
-	if (deadMinionIndex >= 0) {
-		applyMinionDeathEffect(
-			deadEntity,
-			deadMinionIndex,
-			boardWithDeadEntity,
-			boardWithDeadEntityHero,
-			otherBoard,
-			otherBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
-	}
-
 	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.Collectible.Neutral.BaronRivendare2);
 	const goldenRivendare = boardWithDeadEntity.find(
 		(entity) => entity.cardId === CardIds.NonCollectible.Neutral.BaronRivendareBattlegrounds,
@@ -291,7 +274,7 @@ export const addStatsToBoard = (
 	}
 };
 
-const applyMinionDeathEffect = (
+export const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
 	deadEntityIndex: number,
 	boardWithDeadEntity: BoardEntity[],
