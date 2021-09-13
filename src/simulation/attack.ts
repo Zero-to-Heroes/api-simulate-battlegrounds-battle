@@ -131,6 +131,7 @@ const performAttack = (
 				sharedState,
 				spectator,
 			);
+			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
 		});
 	}
 
