@@ -69,6 +69,7 @@ export const buildSingleBoardEntity = (
 		divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
 		entityId: entityId,
 		health: card.health,
+		maxHealth: card.health,
 		taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId),
 		reborn: hasMechanic(card, 'REBORN'),
 		poisonous: hasMechanic(card, 'POISONOUS'),

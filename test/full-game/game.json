@@ -3,23 +3,10 @@
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
 		"board": [
 			{
-				"entityId": 1,
-				"cardId": "BG21_025",
+				"entityId": 5,
+				"cardId": "BGS_044",
 				"attack": 6,
-				"health": 6,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 3,
-				"cardId": "TB_BaconUps_055",
-				"attack": 2,
-				"health": 14,
+				"health": 10,
 				"divineShield": false,
 				"poisonous": false,
 				"taunt": false,
@@ -34,14 +21,14 @@
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
 		"board": [
 			{
-				"entityId": 2,
-				"cardId": "BGS_106",
-				"attack": 2000,
-				"health": 2000,
+				"entityId": 4,
+				"cardId": "TB_Baconups_202",
+				"attack": 4,
+				"health": 25,
 				"divineShield": false,
 				"poisonous": false,
 				"taunt": true,
-				"reborn": true,
+				"reborn": false,
 				"windfury": false,
 				"megaWindfury": false,
 				"enchantments": []
