@@ -125,7 +125,7 @@ export class Simulator {
 				this.currentAttacker = (this.currentAttacker + 1) % 2;
 			}
 			counter++;
-			if (counter > 200) {
+			if (counter > 400) {
 				console.warn(
 					'short-circuiting simulation, too many iterations',
 					counter,
