@@ -31,6 +31,7 @@ export class Simulator {
 		opponentEntity: BgsPlayerEntity,
 		spectator: Spectator,
 	): SingleSimulationResult {
+		spectator.registerStartOfCombat(playerBoard, opponentBoard);
 		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
 		// is sent tothe simulator
 		// But in fact, the first player decision takes into account that additional minion. See

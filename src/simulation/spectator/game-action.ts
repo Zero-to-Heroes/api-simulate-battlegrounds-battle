@@ -1,7 +1,7 @@
 import { BoardEntity } from '../../board-entity';
 
 export interface GameAction {
-	type: 'damage' | 'attack' | 'spawn' | 'minion-death' | 'power-target';
+	type: 'damage' | 'attack' | 'spawn' | 'minion-death' | 'power-target' | 'start-of-combat';
 	playerBoard: readonly BoardEntity[];
 	opponentBoard: readonly BoardEntity[];
 	sourceEntityId?: number;

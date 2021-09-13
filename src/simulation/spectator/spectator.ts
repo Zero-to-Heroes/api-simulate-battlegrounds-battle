@@ -98,6 +98,15 @@ export class Spectator {
 		this.addAction(action);
 	}
 
+	public registerStartOfCombat(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[]): void {
+		const action: GameAction = {
+			type: 'start-of-combat',
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+		};
+		this.addAction(action);
+	}
+
 	public registerDamageDealt(
 		damagingEntity: BoardEntity,
 		damagedEntity: BoardEntity,
