@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, isBattlegroundsCard, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, isBattlegroundsCard, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { getRaceEnum, hasMechanic } from '../utils';
 
 export class CardsData {
@@ -35,7 +35,7 @@ export class CardsData {
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => card.set !== 'Vanilla');
 		this.ghastcoilerSpawns = pool
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.id !== 'BGS_008')
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
@@ -48,26 +48,19 @@ export class CardsData {
 			.filter((card) => this.isValidTribe(validTribes, card.race))
 			.map((card) => card.id);
 		this.impMamaSpawns = pool
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.race === 'DEMON')
 			.filter((card) => card.id !== CardIds.NonCollectible.Warlock.ImpMama)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.gentleDjinniSpawns = pool
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.race === 'ELEMENTAL')
 			.filter((card) => card.id !== CardIds.NonCollectible.Neutral.GentleDjinni)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
-		// this.sneedsSpawns = pool
-		// 	.filter((card) => this.isValidTribe(validTribes, card.race))
-		// 	.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
-		// 	.filter((card) => card.id !== 'GVG_114' && card.id !== 'BGS_006')
-		// 	.filter((card) => card.rarity === 'Legendary')
-		// 	// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-		// 	.map((card) => card.id);
 		this.pirateSpawns = pool
-			.filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.race === 'PIRATE')
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
@@ -134,6 +127,10 @@ export class CardsData {
 				return 5;
 		}
 		return 0;
+	}
+
+	private isGolden(card: ReferenceCard): boolean {
+		return !!card.battlegroundsNormalDbfId;
 	}
 
 	private isValidTribe(validTribes: readonly Race[], race: string): boolean {
