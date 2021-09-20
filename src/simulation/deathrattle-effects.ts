@@ -170,7 +170,12 @@ export const handleDeathrattleEffects = (
 	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [...(deadEntity.enchantments ?? [])];
 	const threshold = 20;
 	if (enchantments.length > threshold || enchantments.some((e) => e.repeats && e.repeats > 1)) {
-		// console.warn('too many enchtments, truncating');
+		// console.warn(
+		// 	'too many enchtments, truncating',
+		// 	stringifySimpleCard(deadEntity),
+		// 	deadEntity.enchantments.length,
+		// 	deadEntity.enchantments,
+		// );
 		// In some cases it's possible that there are way too many enchantments because of the frog
 		// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
 		// often as we should, so that we can have the stats themselves correct
@@ -183,7 +188,7 @@ export const handleDeathrattleEffects = (
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1:
-				if (enchantment.repeats) {
+				if (!!enchantment.repeats && enchantment.repeats > 1) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, multiplier * enchantment.repeats);
 				} else {
 					for (let i = 0; i < multiplier; i++) {
@@ -192,7 +197,7 @@ export const handleDeathrattleEffects = (
 				}
 				break;
 			case CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2:
-				if (enchantment.repeats) {
+				if (!!enchantment.repeats && enchantment.repeats > 1) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, multiplier * enchantment.repeats);
 				} else {
 					for (let i = 0; i < multiplier; i++) {
@@ -229,7 +234,7 @@ const applyLeapFroggerEffect = (
 				? CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2
 				: CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
 			originEntityId: deadEntity.entityId,
-			repeats: multiplier,
+			repeats: multiplier > 1 ? multiplier : undefined,
 		});
 		// Don't register power effect here, since it's already done in the random stats
 		// spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
