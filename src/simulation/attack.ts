@@ -126,31 +126,33 @@ const performAttack = (
 		});
 	}
 
-	bumpEntities(
-		attackingEntity,
-		defendingEntity,
-		attackingBoard,
-		attackingBoardHero,
-		defendingBoard,
-		defendingBoardHero,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
-	bumpEntities(
-		defendingEntity,
-		attackingEntity,
-		defendingBoard,
-		defendingBoardHero,
-		attackingBoard,
-		attackingBoardHero,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
-	if (sharedState.debug) {
+	// For Prestor
+	const defenderAliveBeforeAttack = defendingEntity.health > 0 && !defendingEntity.definitelyDead;
+	if (defenderAliveBeforeAttack) {
+		bumpEntities(
+			attackingEntity,
+			defendingEntity,
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoard,
+			defendingBoardHero,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+		bumpEntities(
+			defendingEntity,
+			attackingEntity,
+			defendingBoard,
+			defendingBoardHero,
+			attackingBoard,
+			attackingBoardHero,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 	// Cleave
 	if (attackingEntity.cleave) {
@@ -423,13 +425,7 @@ export const bumpEntities = (
 	spectator: Spectator,
 ): void => {
 	// No attack has no impact
-	// If the target is already dead (eg after being hit by Prestor), it doesn't fight back
-	if (bumpInto.attack === 0 || bumpInto.health <= 0 || bumpInto.definitelyDead) {
-		return;
-	}
-
-	// If the target is already dead (eg after being hit by Prestor), we don't deal damage
-	if (entity.health <= 0 || entity.definitelyDead) {
+	if (bumpInto.attack) {
 		return;
 	}
 
