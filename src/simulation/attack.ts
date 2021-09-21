@@ -184,6 +184,7 @@ const performAttack = (
 			spawns,
 			sharedState,
 			spectator,
+			true,
 		);
 	} else if (attackingEntity.cardId === CardIds.MonstrousMacawBattlegrounds) {
 		for (let i = 0; i < 2; i++) {
@@ -197,6 +198,7 @@ const performAttack = (
 				spawns,
 				sharedState,
 				spectator,
+				true,
 			);
 		}
 	}
@@ -215,24 +217,27 @@ const triggerRandomDeathrattle = (
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
+	excludeSource = false,
 ): void => {
-	const validDeathrattles = attackingBoard.filter((entity) => {
-		if (hasMechanic(allCards.getCard(entity.cardId), 'DEATHRATTLE')) {
-			return true;
-		}
-		if (entity.rememberedDeathrattles?.length) {
-			return true;
-		}
-		if (
-			entity.enchantments &&
-			entity.enchantments
-				.map((enchantment) => enchantment.cardId)
-				.some((enchantmentId) => validEnchantments.includes(enchantmentId as CardIds))
-		) {
-			return true;
-		}
-		return false;
-	});
+	const validDeathrattles = attackingBoard
+		.filter((entity) => !excludeSource || entity.entityId !== sourceEntity.entityId)
+		.filter((entity) => {
+			if (hasMechanic(allCards.getCard(entity.cardId), 'DEATHRATTLE')) {
+				return true;
+			}
+			if (entity.rememberedDeathrattles?.length) {
+				return true;
+			}
+			if (
+				entity.enchantments &&
+				entity.enchantments
+					.map((enchantment) => enchantment.cardId)
+					.some((enchantmentId) => validEnchantments.includes(enchantmentId as CardIds))
+			) {
+				return true;
+			}
+			return false;
+		});
 	if (validDeathrattles.length === 0) {
 		return;
 	}

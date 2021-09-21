@@ -97,13 +97,13 @@ export class CardsData {
 			case CardIds.MechanoTank:
 			case CardIds.MechanoTankBattlegrounds:
 				return 2;
-			case CardIds.ImpatientDoomsayer:
-			case CardIds.ImpatientDoomsayerBattlegrounds:
 			case CardIds.Sisefin:
 			case CardIds.SisefinBattlegrounds:
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:
 				return 3;
+			case CardIds.ImpatientDoomsayer:
+			case CardIds.ImpatientDoomsayerBattlegrounds:
 			case CardIds.WitchwingNestmatron:
 			case CardIds.WitchwingNestmatronBattlegrounds:
 				return 4;

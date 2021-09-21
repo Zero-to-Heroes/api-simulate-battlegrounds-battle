@@ -75,13 +75,13 @@ export const handleDeathrattleEffects = (
 			break;
 		case CardIds.ImpulsiveTrickster:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
+				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
 			}
 			break;
 		case CardIds.ImpulsiveTricksterBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
-				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator);
+				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
+				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
 			}
 			break;
 		case CardIds.Leapfrogger:
@@ -219,8 +219,8 @@ const applyLeapFroggerEffect = (
 	const buffed = grantRandomStats(
 		deadEntity,
 		boardWithDeadEntity,
-		multiplier * (isPremium ? 4 : 2),
-		multiplier * (isPremium ? 4 : 2),
+		multiplier * (isPremium ? 2 : 1),
+		multiplier * (isPremium ? 2 : 1),
 		Race.BEAST,
 		allCards,
 		spectator,
@@ -812,9 +812,11 @@ const grantRandomHealth = (
 	health: number,
 	allCards: AllCardsService,
 	spectator: Spectator,
+	excludeSource = false,
 ): void => {
-	if (board.length > 0) {
-		const target = board[Math.floor(Math.random() * board.length)];
+	const candidateBoard = board.filter((e) => !excludeSource || e.entityId !== source.entityId);
+	if (candidateBoard.length > 0) {
+		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
 		modifyHealth(target, health);
 		afterStatsUpdate(target, board, allCards);
 		spectator.registerPowerTarget(source, target, board);

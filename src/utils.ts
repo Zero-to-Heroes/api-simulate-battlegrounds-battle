@@ -104,10 +104,10 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
 		const whelpSmugglersBattlegrounds = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds);
 		whelpSmugglers.forEach((smuggler) => {
-			modifyHealth(entity, 2);
+			modifyHealth(entity, 1);
 		});
 		whelpSmugglersBattlegrounds.forEach((smuggler) => {
-			modifyHealth(entity, 4);
+			modifyHealth(entity, 2);
 		});
 	}
 };
