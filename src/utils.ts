@@ -5,48 +5,40 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { Spectator } from './simulation/spectator/spectator';
 
-const CLEAVE_IDS = [
-	CardIds.Collectible.Hunter.CaveHydra,
-	CardIds.NonCollectible.Hunter.CaveHydraBattlegrounds,
-	CardIds.Collectible.Neutral.FoeReaper4000,
-	CardIds.NonCollectible.Neutral.FoeReaper4000Battlegrounds,
-];
+const CLEAVE_IDS = [CardIds.CaveHydra, CardIds.CaveHydraBattlegrounds, CardIds.FoeReaper4000, CardIds.FoeReaper4000Battlegrounds];
 // Because for some reason, the Taunt keyword is only a referenced tag,
 // so we have to know when a taunt minion is spawned (the taunt tag
 // is passed in input properly, so it's not an issue there)
 const TAUNT_IDS = [
-	CardIds.NonCollectible.Neutral.YoHoOgre,
-	CardIds.NonCollectible.Neutral.YoHoOgreBattlegrounds,
-	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
-	CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenBattlegrounds,
-	CardIds.NonCollectible.Neutral.MoltenRock,
-	CardIds.NonCollectible.Neutral.MoltenRockBattlegrounds,
-	CardIds.NonCollectible.Neutral.LieutenantGarr,
-	CardIds.NonCollectible.Neutral.LieutenantGarrBattlegrounds,
-	CardIds.NonCollectible.Neutral.GentleDjinni,
-	CardIds.NonCollectible.Neutral.GentleDjinniBattlegrounds,
-	CardIds.NonCollectible.Neutral.AcolyteOfCthun,
-	CardIds.NonCollectible.Neutral.AcolyteOfCthunBattlegrounds,
-	CardIds.Collectible.Warlock.RingMatron,
-	CardIds.NonCollectible.Warlock.RingMatronBattlegrounds,
-	CardIds.NonCollectible.Neutral.DynamicDuo,
-	CardIds.NonCollectible.Neutral.DynamicDuoBattlegrounds,
-	CardIds.NonCollectible.Neutral.InsatiableUrzul,
-	CardIds.NonCollectible.Neutral.InsatiableUrzulBattlegrounds,
-	CardIds.NonCollectible.Neutral.MasterOfRealities2,
-	CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds,
+	CardIds.YoHoOgre,
+	CardIds.YoHoOgreBattlegrounds,
+	CardIds.SecurityRover_GuardBotToken,
+	CardIds.SecurityRover_GuardBotTokenBattlegrounds,
+	CardIds.MoltenRock,
+	CardIds.MoltenRockBattlegrounds,
+	CardIds.LieutenantGarr,
+	CardIds.LieutenantGarrBattlegrounds,
+	CardIds.GentleDjinni,
+	CardIds.GentleDjinniBattlegrounds,
+	CardIds.AcolyteOfCthun,
+	CardIds.AcolyteOfCthunBattlegrounds,
+	CardIds.RingMatron,
+	CardIds.RingMatronBattlegrounds,
+	CardIds.DynamicDuo,
+	CardIds.DynamicDuoBattlegrounds,
+	CardIds.InsatiableUrzul,
+	CardIds.InsatiableUrzulBattlegrounds,
+	CardIds.MasterOfRealities2,
+	CardIds.MasterOfRealitiesBattlegrounds,
 ];
-const ATTACK_IMMEDIATELY_IDS = [
-	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateToken,
-	CardIds.NonCollectible.Rogue.Scallywag_SkyPirateTokenBattlegrounds,
-];
+const ATTACK_IMMEDIATELY_IDS = [CardIds.Scallywag_SkyPirateToken, CardIds.Scallywag_SkyPirateTokenBattlegrounds];
 export const MEGA_WINDFURY_IDS = [
-	CardIds.NonCollectible.Neutral.ZappSlywickBattlegrounds,
-	CardIds.NonCollectible.Neutral.CracklingCycloneBattlegrounds,
-	CardIds.NonCollectible.Neutral.BristlebackKnight,
-	CardIds.NonCollectible.Neutral.BonkerBattlegrounds,
+	CardIds.ZappSlywickBattlegrounds,
+	CardIds.CracklingCycloneBattlegrounds,
+	CardIds.BristlebackKnight,
+	CardIds.BonkerBattlegrounds,
 ];
-const CANT_ATTACK_IDS = [CardIds.NonCollectible.Neutral.ArcaneCannon, CardIds.NonCollectible.Neutral.ArcaneCannonBattlegrounds];
+const CANT_ATTACK_IDS = [CardIds.ArcaneCannonBattlegrounds];
 
 export const buildSingleBoardEntity = (
 	cardId: string,
@@ -60,8 +52,8 @@ export const buildSingleBoardEntity = (
 	spectator: Spectator,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
-	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId) !== -1;
-	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId) !== -1;
+	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId as CardIds) !== -1;
+	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId as CardIds) !== -1;
 	const result = addImpliedMechanics({
 		attack: card.attack,
 		attacksPerformed: 0,
@@ -70,7 +62,7 @@ export const buildSingleBoardEntity = (
 		entityId: entityId,
 		health: card.health,
 		maxHealth: card.health,
-		taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId),
+		taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId as CardIds),
 		reborn: hasMechanic(card, 'REBORN'),
 		poisonous: hasMechanic(card, 'POISONOUS'),
 		windfury: !megaWindfury && (hasMechanic(card, 'WINDFURY') || card.referencedTags?.includes('WINDFURY')),
@@ -87,13 +79,13 @@ export const buildSingleBoardEntity = (
 		result.reborn = false;
 	}
 
-	if (controllerHero?.heroPowerId === CardIds.NonCollectible.Neutral.SproutItOutBattlegrounds) {
+	if (controllerHero?.heroPowerId === CardIds.SproutItOutBattlegrounds) {
 		result.taunt = true;
 		modifyAttack(result, 1, friendlyBoard, allCards);
 		modifyHealth(result, 2);
 		afterStatsUpdate(result, friendlyBoard, allCards);
 		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
-	} else if (controllerHero?.heroPowerId === CardIds.NonCollectible.Demonhunter.KurtrusAshfallen_CloseThePortal) {
+	} else if (controllerHero?.heroPowerId === CardIds.KurtrusAshfallen_CloseThePortal) {
 		modifyAttack(result, 2, friendlyBoard, allCards);
 		modifyHealth(result, 2);
 		afterStatsUpdate(result, friendlyBoard, allCards);
@@ -109,10 +101,8 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	// console.log('modified attack', amount, stringifySimpleCard(entity, allCards), entity.attack);
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).race, Race.DRAGON)) {
-		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmuggler);
-		const whelpSmugglersBattlegrounds = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.NonCollectible.Neutral.WhelpSmugglerBattlegrounds,
-		);
+		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
+		const whelpSmugglersBattlegrounds = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds);
 		whelpSmugglers.forEach((smuggler) => {
 			modifyHealth(entity, 2);
 		});
@@ -125,18 +115,11 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
 	if (hasCorrectTribe(entity, Race.ELEMENTAL, allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
-			(e) =>
-				e.cardId === CardIds.NonCollectible.Neutral.MasterOfRealities2 ||
-				e.cardId === CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds,
+			(e) => e.cardId === CardIds.MasterOfRealities2 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
 		);
 		masterOfRealities.forEach((master) => {
-			modifyAttack(
-				entity,
-				master.cardId === CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds ? 2 : 1,
-				friendlyBoard,
-				allCards,
-			);
-			modifyHealth(entity, master.cardId === CardIds.NonCollectible.Neutral.MasterOfRealitiesBattlegrounds ? 2 : 1);
+			modifyAttack(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+			modifyHealth(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1);
 		});
 	}
 };
@@ -165,10 +148,16 @@ export const getRaceEnum = (race: string): Race => {
 };
 
 export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
+	const cleave = CLEAVE_IDS.indexOf(entity.cardId as CardIds) !== -1;
+	const cantAttack = CANT_ATTACK_IDS.indexOf(entity.cardId as CardIds) !== -1;
+	// Avoid creating a new object if not necessary
+	if (!cleave && !cantAttack) {
+		return entity;
+	}
 	return {
 		...entity,
-		cleave: CLEAVE_IDS.indexOf(entity.cardId) !== -1,
-		cantAttack: CANT_ATTACK_IDS.indexOf(entity.cardId) !== -1,
+		cleave: cleave,
+		cantAttack: cantAttack,
 	} as BoardEntity;
 };
 

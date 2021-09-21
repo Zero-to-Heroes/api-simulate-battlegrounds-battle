@@ -23,7 +23,7 @@ export const handleSpawn = (
 	spectator: Spectator,
 ): void => {
 	switch (entity.cardId) {
-		case CardIds.Collectible.Neutral.MurlocTidecallerLegacy:
+		case CardIds.MurlocTidecallerLegacy:
 			modifyAttack(
 				entity,
 				spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
@@ -33,7 +33,7 @@ export const handleSpawn = (
 			afterStatsUpdate(entity, friendlyBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			return;
-		case CardIds.NonCollectible.Neutral.MurlocTidecallerBattlegrounds:
+		case CardIds.MurlocTidecallerBattlegrounds:
 			modifyAttack(
 				entity,
 				2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
@@ -43,8 +43,8 @@ export const handleSpawn = (
 			afterStatsUpdate(entity, friendlyBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			return;
-		case CardIds.Collectible.Paladin.CobaltGuardian:
-		case CardIds.NonCollectible.Neutral.DeflectOBot:
+		case CardIds.CobaltGuardian:
+		case CardIds.DeflectOBot:
 			if (spawned.filter((spawn) => hasCorrectTribe(spawn, Race.MECH, allCards)).length > 0) {
 				entity.divineShield = true;
 				modifyAttack(entity, 2, friendlyBoard, allCards);
@@ -52,7 +52,7 @@ export const handleSpawn = (
 				spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			}
 			return;
-		case CardIds.NonCollectible.Neutral.DeflectOBotBattlegrounds:
+		case CardIds.DeflectOBotBattlegrounds:
 			if (spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MECH)).length > 0) {
 				entity.divineShield = true;
 				modifyAttack(entity, 4, friendlyBoard, allCards);

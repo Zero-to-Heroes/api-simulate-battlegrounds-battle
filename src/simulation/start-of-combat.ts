@@ -129,31 +129,27 @@ const handlePlayerStartOfCombatHeroPowers = (
 ): number => {
 	// Lich King should be handled in the incoming board state
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
 		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
-	} else if (playerHeroPowerId === CardIds.NonCollectible.Demonhunter.WingmenBattlegrounds && playerBoard.length > 0) {
+	} else if (playerHeroPowerId === CardIds.WingmenBattlegrounds && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
 	// else if (
-	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.SwattingInsectsBattlegrounds &&
+	// 	playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds &&
 	// 	playerBoard.length > 0
 	// ) {
 	// }
 	// Will be sent by the client
 	// else if (
 	// 	playerEntity.heroPowerUsed &&
-	// 	playerHeroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds &&
+	// 	playerHeroPowerId === CardIds.EmbraceYourRageBattlegrounds &&
 	// 	playerBoard.length < 7
 	// ) {
 	// 	handleYShaarj(playerBoard, playerEntity, playerEntity.tavernTier, friendly, allCards, spawns, sharedState, spectator);
 	// }
-	else if (
-		playerEntity.heroPowerUsed &&
-		playerHeroPowerId === CardIds.NonCollectible.Neutral.NefariousFireBattlegrounds &&
-		playerBoard.length > 0
-	) {
+	else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.NefariousFireBattlegrounds && playerBoard.length > 0) {
 		handleNefarian(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 	}
 	return currentAttacker;
@@ -263,14 +259,14 @@ export const handleStartOfCombat = (
 
 export const getHeroPowerForHero = (heroCardId: string): string => {
 	switch (heroCardId) {
-		case CardIds.NonCollectible.Neutral.IllidanStormrageBattlegrounds:
-			return CardIds.NonCollectible.Demonhunter.WingmenBattlegrounds;
-		case CardIds.NonCollectible.Neutral.TheLichKingBattlegrounds:
-			return CardIds.NonCollectible.Neutral.RebornRitesBattlegrounds;
-		case CardIds.NonCollectible.Neutral.ProfessorPutricideBattlegrounds:
-			return CardIds.NonCollectible.Neutral.RagePotionBattlegrounds;
-		case CardIds.NonCollectible.Neutral.DeathwingBattlegrounds:
-			return CardIds.NonCollectible.Neutral.AllWillBurnBattlegrounds;
+		case CardIds.IllidanStormrageBattlegrounds:
+			return CardIds.WingmenBattlegrounds;
+		case CardIds.TheLichKingBattlegrounds:
+			return CardIds.RebornRitesBattlegrounds;
+		case CardIds.ProfessorPutricideBattlegrounds:
+			return CardIds.RagePotionBattlegrounds;
+		case CardIds.DeathwingBattlegrounds:
+			return CardIds.AllWillBurnBattlegrounds;
 	}
 	return null;
 };
@@ -287,7 +283,7 @@ export const performStartOfCombat = (
 	spectator: Spectator,
 ): void => {
 	// For now we're only dealing with the red whelp
-	if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelp) {
+	if (attacker.cardId === CardIds.RedWhelp) {
 		const damage = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
@@ -303,7 +299,7 @@ export const performStartOfCombat = (
 			sharedState,
 			spectator,
 		);
-	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.RedWhelpBattlegrounds) {
+	} else if (attacker.cardId === CardIds.RedWhelpBattlegrounds) {
 		const damage = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
@@ -331,7 +327,7 @@ export const performStartOfCombat = (
 			sharedState,
 			spectator,
 		);
-	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.PrizedPromoDrake) {
+	} else if (attacker.cardId === CardIds.PrizedPromoDrake) {
 		const dragons = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
@@ -342,7 +338,7 @@ export const performStartOfCombat = (
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.NonCollectible.Neutral.PrizedPromoDrakeBattlegrounds) {
+	} else if (attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds) {
 		const dragons = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;

@@ -37,11 +37,11 @@ export class Simulator {
 		// But in fact, the first player decision takes into account that additional minion. See
 		// https://replays.firestoneapp.com/?reviewId=ddbbbe93-464b-4400-8e8d-4abca8680a2e
 		// const effectivePlayerBoardLength =
-		// 	playerEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && playerEntity.heroPowerUsed
+		// 	playerEntity.heroPowerId === CardIds.heroPowerUsed
 		// 		? playerBoard.length - 1
 		// 		: playerBoard.length;
 		// const effectiveOpponentBoardLength =
-		// 	opponentEntity.heroPowerId === CardIds.NonCollectible.Neutral.EmbraceYourRageBattlegrounds && opponentEntity.heroPowerUsed
+		// 	opponentEntity.heroPowerId === CardIds.heroPowerUsed
 		// 		? opponentBoard.length - 1
 		// 		: opponentBoard.length;
 		const effectivePlayerBoardLength = playerBoard.length;

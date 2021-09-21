@@ -16,18 +16,12 @@ export const applyFrenzy = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	if (
-		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnight ||
-		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.BristlebackKnightBattlegrounds
-	) {
+	if (entityWithFrenzy.cardId === CardIds.BristlebackKnight || entityWithFrenzy.cardId === CardIds.BristlebackKnightBattlegrounds) {
 		entityWithFrenzy.divineShield = true;
-	} else if (
-		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.Roadboar ||
-		entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.RoadboarBattlegrounds
-	) {
+	} else if (entityWithFrenzy.cardId === CardIds.Roadboar || entityWithFrenzy.cardId === CardIds.RoadboarBattlegrounds) {
 		addCardsInHand(
 			entityWithFrenzyBoardHero,
-			entityWithFrenzy.cardId === CardIds.NonCollectible.Neutral.RoadboarBattlegrounds ? 2 : 1,
+			entityWithFrenzy.cardId === CardIds.RoadboarBattlegrounds ? 2 : 1,
 			entityWithFrenzyBoard,
 			allCards,
 			spectator,

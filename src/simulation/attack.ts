@@ -33,8 +33,8 @@ export const simulateAttack = (
 	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
 	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
 	const numberOfDeathwingPresents =
-		(attackingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnBattlegrounds ? 1 : 0) +
-		(defendingHeroPowerId === CardIds.NonCollectible.Neutral.AllWillBurnBattlegrounds ? 1 : 0);
+		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
+		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
 	applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
 	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 
@@ -70,11 +70,7 @@ export const simulateAttack = (
 				applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
 				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
 				// the windfury triggers again? The current behavior attacks after the windfury is over
-				if (
-					defendingEntity.health > 0 &&
-					!defendingEntity.definitelyDead &&
-					defendingEntity.cardId === CardIds.NonCollectible.Neutral.YoHoOgre
-				) {
+				if (defendingEntity.health > 0 && !defendingEntity.definitelyDead && defendingEntity.cardId === CardIds.YoHoOgre) {
 					defendingEntity.attackImmediately = true;
 				}
 			}
@@ -91,10 +87,7 @@ const applyAfterAttackEffects = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	if (
-		attackingEntity.cardId === CardIds.NonCollectible.Neutral.Bonker ||
-		attackingEntity.cardId === CardIds.NonCollectible.Neutral.BonkerBattlegrounds
-	) {
+	if (attackingEntity.cardId === CardIds.Bonker || attackingEntity.cardId === CardIds.BonkerBattlegrounds) {
 		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator);
 	}
 };
@@ -113,9 +106,7 @@ const performAttack = (
 ): void => {
 	if (hasCorrectTribe(attackingEntity, Race.DRAGON, allCards)) {
 		const prestors = attackingBoard.filter(
-			(e) =>
-				e.cardId === CardIds.NonCollectible.Neutral.PrestorsPyrospawn ||
-				e.cardId === CardIds.NonCollectible.Neutral.PrestorsPyrospawnBattlegrounds,
+			(e) => e.cardId === CardIds.PrestorsPyrospawn || e.cardId === CardIds.PrestorsPyrospawnBattlegrounds,
 		);
 		prestors.forEach((prestor) => {
 			dealDamageToEnemy(
@@ -123,7 +114,7 @@ const performAttack = (
 				defendingBoard,
 				defendingBoardHero,
 				prestor,
-				prestor.cardId === CardIds.NonCollectible.Neutral.PrestorsPyrospawnBattlegrounds ? 6 : 3,
+				prestor.cardId === CardIds.PrestorsPyrospawnBattlegrounds ? 6 : 3,
 				attackingBoard,
 				attackingBoardHero,
 				allCards,
@@ -182,7 +173,7 @@ const performAttack = (
 	// After attack hooks
 	// Arcane Cannon
 	// Monstrous Macaw
-	if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacaw) {
+	if (attackingEntity.cardId === CardIds.MonstrousMacaw) {
 		triggerRandomDeathrattle(
 			attackingEntity,
 			attackingBoard,
@@ -194,7 +185,7 @@ const performAttack = (
 			sharedState,
 			spectator,
 		);
-	} else if (attackingEntity.cardId === CardIds.NonCollectible.Neutral.MonstrousMacawBattlegrounds) {
+	} else if (attackingEntity.cardId === CardIds.MonstrousMacawBattlegrounds) {
 		for (let i = 0; i < 2; i++) {
 			triggerRandomDeathrattle(
 				attackingEntity,
@@ -234,7 +225,9 @@ const triggerRandomDeathrattle = (
 		}
 		if (
 			entity.enchantments &&
-			entity.enchantments.map((enchantment) => enchantment.cardId).some((enchantmentId) => validEnchantments.includes(enchantmentId))
+			entity.enchantments
+				.map((enchantment) => enchantment.cardId)
+				.some((enchantmentId) => validEnchantments.includes(enchantmentId as CardIds))
 		) {
 			return true;
 		}
@@ -392,10 +385,7 @@ export const dealDamageToEnemy = (
 
 export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntity: BoardEntity, ignoreTaunts = false): BoardEntity => {
 	let possibleDefenders: readonly BoardEntity[];
-	if (
-		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywick ||
-		attackingEntity.cardId === CardIds.NonCollectible.Neutral.ZappSlywickBattlegrounds
-	) {
+	if (attackingEntity.cardId === CardIds.ZappSlywick || attackingEntity.cardId === CardIds.ZappSlywickBattlegrounds) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);
 	} else if (!ignoreTaunts) {
@@ -407,9 +397,7 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 	if (chosenDefender.taunt) {
 		const elistras = defendingBoard.filter(
-			(entity) =>
-				entity.cardId === CardIds.NonCollectible.Neutral.ElistraTheImmortal2 ||
-				entity.cardId === CardIds.NonCollectible.Neutral.ElistraTheImmortalBattlegrounds,
+			(entity) => entity.cardId === CardIds.ElistraTheImmortal2 || entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
 		);
 		if (elistras.length > 0) {
 			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
@@ -436,33 +424,32 @@ export const bumpEntities = (
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
 		for (let i = 0; i < entityBoard.length; i++) {
-			if (entityBoard[i].cardId === CardIds.Collectible.Paladin.BolvarFireblood) {
+			if (entityBoard[i].cardId === CardIds.BolvarFireblood) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
-			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Paladin.BolvarFirebloodBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.BolvarFirebloodBattlegrounds) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
-			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.DrakonidEnforcer) {
+			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				modifyHealth(entityBoard[i], 2);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
-			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.DrakonidEnforcerBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcerBattlegrounds) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
 				modifyHealth(entityBoard[i], 4);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
 			} else if (
 				entityBoard[i].entityId !== entity.entityId &&
-				(entityBoard[i].cardId === CardIds.NonCollectible.Neutral.HolyMecherel ||
-					entityBoard[i].cardId === CardIds.NonCollectible.Neutral.HolyMecherelBattlegrounds)
+				(entityBoard[i].cardId === CardIds.HolyMecherel || entityBoard[i].cardId === CardIds.HolyMecherelBattlegrounds)
 			) {
 				entityBoard[i].divineShield = true;
-			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.Gemsplitter) {
+			} else if (entityBoard[i].cardId === CardIds.Gemsplitter) {
 				addCardsInHand(entityBoardHero, 1, entityBoard, allCards, spectator);
-			} else if (entityBoard[i].cardId === CardIds.NonCollectible.Neutral.GemsplitterBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.GemsplitterBattlegrounds) {
 				addCardsInHand(entityBoardHero, 2, entityBoard, allCards, spectator);
 			}
 
@@ -471,10 +458,8 @@ export const bumpEntities = (
 				entity.divineShield = false;
 			}
 		}
-		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.GreaseBot);
-		const greaseBotBattlegrounds = entityBoard.filter(
-			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.GreaseBotBattlegrounds,
-		);
+		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
+		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
 		greaseBots.forEach((bot) => {
 			modifyAttack(entity, 2, entityBoard, allCards);
 			modifyHealth(entity, 1);
@@ -544,9 +529,9 @@ const getWheneverEntitySpawns = (
 		return null;
 	}
 
-	if (entity.cardId === CardIds.Collectible.Warlock.ImpGangBoss) {
+	if (entity.cardId === CardIds.ImpGangBoss) {
 		return spawnEntities(
-			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpToken,
+			CardIds.ImpGangBoss_ImpToken,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -559,9 +544,9 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		);
-	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpGangBossBattlegrounds) {
+	} else if (entity.cardId === CardIds.ImpGangBossBattlegrounds) {
 		return spawnEntities(
-			CardIds.NonCollectible.Warlock.ImpGangBoss_ImpTokenBattlegrounds,
+			CardIds.ImpGangBoss_ImpTokenBattlegrounds,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -574,7 +559,7 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		);
-	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMama) {
+	} else if (entity.cardId === CardIds.ImpMama) {
 		return spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			1,
@@ -589,7 +574,7 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
-	} else if (entity.cardId === CardIds.NonCollectible.Warlock.ImpMamaBattlegrounds) {
+	} else if (entity.cardId === CardIds.ImpMamaBattlegrounds) {
 		return spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			2,
@@ -604,9 +589,9 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
-	} else if (entity.cardId === CardIds.Collectible.Warrior.SecurityRover) {
+	} else if (entity.cardId === CardIds.SecurityRover) {
 		return spawnEntities(
-			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotToken,
+			CardIds.SecurityRover_GuardBotToken,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -619,9 +604,9 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		);
-	} else if (entity.cardId === CardIds.NonCollectible.Warrior.SecurityRoverBattlegrounds) {
+	} else if (entity.cardId === CardIds.SecurityRoverBattlegrounds) {
 		return spawnEntities(
-			CardIds.NonCollectible.Warrior.SecurityRover_GuardBotTokenBattlegrounds,
+			CardIds.SecurityRover_GuardBotTokenBattlegrounds,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -662,15 +647,13 @@ export const processMinionDeath = (
 	board1
 		.filter(
 			(entity) =>
-				entity.cardId === CardIds.NonCollectible.Neutral.AvatarOfNzoth_FishOfNzothTokenBattlegrounds ||
-				entity.cardId === CardIds.NonCollectible.Neutral.FishOfNzothBattlegrounds,
+				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData));
 	board2
 		.filter(
 			(entity) =>
-				entity.cardId === CardIds.NonCollectible.Neutral.AvatarOfNzoth_FishOfNzothTokenBattlegrounds ||
-				entity.cardId === CardIds.NonCollectible.Neutral.FishOfNzothBattlegrounds,
+				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData));
 
@@ -781,21 +764,21 @@ export const applyOnAttackBuffs = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardian2) {
+	if (attacker.cardId === CardIds.GlyphGuardian2) {
 		// For now the utility method only works additively, so we hack around it
 		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
-	if (attacker.cardId === CardIds.NonCollectible.Mage.GlyphGuardianBattlegrounds) {
+	if (attacker.cardId === CardIds.GlyphGuardianBattlegrounds) {
 		modifyAttack(attacker, 3 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
 
 	// Ripsnarl Captain
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
 		const ripsnarls = attackingBoard
-			.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptain)
+			.filter((e) => e.cardId === CardIds.RipsnarlCaptain)
 			.filter((e) => e.entityId !== attacker.entityId);
 		const ripsnarlsTB = attackingBoard
-			.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.RipsnarlCaptainBattlegrounds)
+			.filter((entity) => entity.cardId === CardIds.RipsnarlCaptainBattlegrounds)
 			.filter((e) => e.entityId !== attacker.entityId);
 		ripsnarls.forEach((captain) => {
 			modifyAttack(attacker, 2, attackingBoard, allCards);
@@ -811,8 +794,8 @@ export const applyOnAttackBuffs = (
 
 	// Dread Admiral Eliza
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
-		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralEliza);
-		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.NonCollectible.Neutral.DreadAdmiralElizaBattlegrounds);
+		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza);
+		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralElizaBattlegrounds);
 
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
@@ -838,10 +821,8 @@ export const applyOnBeingAttackedBuffs = (
 	spectator: Spectator,
 ): void => {
 	if (attackedEntity.taunt) {
-		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarj);
-		const goldenChampions = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.NonCollectible.Neutral.ChampionOfYshaarjBattlegrounds,
-		);
+		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj);
+		const goldenChampions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarjBattlegrounds);
 		champions.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
 			modifyHealth(entity, 1);
@@ -853,8 +834,8 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(entity, entity, defendingBoard);
 		});
 
-		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpire);
-		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.NonCollectible.Neutral.ArmOfTheEmpireBattlegrounds);
+		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire);
+		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpireBattlegrounds);
 		arms.forEach((arm) => {
 			modifyAttack(attackedEntity, 2, defendingBoard, allCards);
 			spectator.registerPowerTarget(arm, attackedEntity, defendingBoard);
@@ -864,7 +845,7 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(arm, attackedEntity, defendingBoard);
 		});
 	}
-	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualist) {
+	if (attackedEntity.cardId === CardIds.TormentedRitualist) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
@@ -872,7 +853,7 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
 	}
-	if (attackedEntity.cardId === CardIds.NonCollectible.Neutral.TormentedRitualistBattlegrounds) {
+	if (attackedEntity.cardId === CardIds.TormentedRitualistBattlegrounds) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
@@ -910,12 +891,12 @@ const handleKillEffects = (
 		isCorrectTribe(allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race, Race.DRAGON)
 	) {
 		for (const entity of killerBoard) {
-			if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggle2) {
+			if (entity.cardId === CardIds.WaxriderTogwaggle2) {
 				modifyAttack(entity, 2, killerBoard, allCards);
 				modifyHealth(entity, 2);
 				afterStatsUpdate(entity, killerBoard, allCards);
 				spectator.registerPowerTarget(entity, entity, killerBoard);
-			} else if (entity.cardId === CardIds.NonCollectible.Neutral.WaxriderTogwaggleBattlegrounds) {
+			} else if (entity.cardId === CardIds.WaxriderTogwaggleBattlegrounds) {
 				modifyAttack(entity, 4, killerBoard, allCards);
 				modifyHealth(entity, 4);
 				afterStatsUpdate(entity, killerBoard, allCards);

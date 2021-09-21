@@ -33,7 +33,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const start = Date.now();
 
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
-	const numberOfSimulations = battleInput.options?.numberOfSimulations || 2500;
+	const numberOfSimulations = battleInput.options?.numberOfSimulations || 5000;
 
 	const simulationResult: SimulationResult = {
 		wonLethal: 0,
@@ -65,7 +65,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation
-	const inputReady = JSON.stringify({
+	const inputReady: BgsBattleInfo = {
 		playerBoard: {
 			board: playerBoard,
 			player: playerInfo.player,
@@ -74,7 +74,8 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			board: opponentBoard,
 			player: opponentInfo.player,
 		},
-	});
+	} as BgsBattleInfo;
+	const inputStr = JSON.stringify(inputReady);
 	const spectator = new Spectator(
 		battleInput.playerBoard.player.cardId,
 		battleInput.playerBoard.player.heroPowerId,
@@ -83,8 +84,10 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	);
 	console.time('simulation');
 	for (let i = 0; i < numberOfSimulations; i++) {
+		// global.gc();
+		// continue;
 		const simulator = new Simulator(cards, cardsData);
-		const input: BgsBattleInfo = JSON.parse(inputReady);
+		const input: BgsBattleInfo = JSON.parse(inputStr);
 		const battleResult = simulator.simulateSingleBattle(
 			input.playerBoard.board,
 			input.playerBoard.player,
@@ -171,11 +174,11 @@ const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[
 };
 
 export const validEnchantments = [
-	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantment,
-	CardIds.NonCollectible.Neutral.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
-	CardIds.NonCollectible.Neutral.LivingSpores_LivingSporesEnchantment,
-	CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment1,
-	CardIds.NonCollectible.Neutral.Leapfrogger_LeapfrogginEnchantment2,
+	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment,
+	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
+	CardIds.LivingSpores_LivingSporesEnchantment,
+	CardIds.Leapfrogger_LeapfrogginEnchantment1,
+	CardIds.Leapfrogger_LeapfrogginEnchantment2,
 ];
 
 const cleanEnchantmentsForEntity = (
@@ -183,6 +186,6 @@ const cleanEnchantmentsForEntity = (
 	entityIds: readonly number[],
 ): { cardId: string; originEntityId: number }[] => {
 	return enchantments.filter(
-		(enchant) => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId) !== -1,
+		(enchant) => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId as CardIds) !== -1,
 	);
 };

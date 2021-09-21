@@ -46,7 +46,7 @@ export class Spectator {
 			return;
 		}
 		// const actionsForBattle = this.collapseActions(this.actionsForCurrentBattle);
-		const actionsForBattle = this.actionsForCurrentBattle;
+		const actionsForBattle = this.sanitizeActions(this.actionsForCurrentBattle);
 		this.actionsForCurrentBattle = [];
 
 		switch (result) {
@@ -92,8 +92,8 @@ export class Spectator {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
 			targetEntityId: defendingEntity.entityId,
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 		};
 		this.addAction(action);
 	}
@@ -101,8 +101,8 @@ export class Spectator {
 	public registerStartOfCombat(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[]): void {
 		const action: GameAction = {
 			type: 'start-of-combat',
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 		};
 		this.addAction(action);
 	}
@@ -110,8 +110,8 @@ export class Spectator {
 	public registerPlayerAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
 		const action: GameAction = {
 			type: 'player-attack',
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 			damages: [
 				{
 					damage: damage,
@@ -124,8 +124,8 @@ export class Spectator {
 	public registerOpponentAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
 		const action: GameAction = {
 			type: 'opponent-attack',
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 			damages: [
 				{
 					damage: damage,
@@ -155,8 +155,8 @@ export class Spectator {
 					damage: damageTaken,
 				},
 			],
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 		};
 		this.addAction(action);
 	}
@@ -172,8 +172,8 @@ export class Spectator {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
 			targetEntityId: targetEntity.entityId,
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 		};
 		this.addAction(action);
 	}
@@ -194,10 +194,10 @@ export class Spectator {
 		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
 		const action: GameAction = {
 			type: 'spawn',
-			spawns: this.sanitize(spawnedEntities),
+			spawns: spawnedEntities,
 			sourceEntityId: sourceEntity?.entityId,
-			playerBoard: this.sanitize(friendlyBoard),
-			opponentBoard: this.sanitize(opponentBoard),
+			playerBoard: friendlyBoard,
+			opponentBoard: opponentBoard,
 		};
 		this.addAction(action);
 	}
@@ -214,7 +214,7 @@ export class Spectator {
 		}
 		const action: GameAction = {
 			type: 'minion-death',
-			deaths: this.sanitize(deaths),
+			deaths: deaths,
 			deadMinionsPositionsOnBoard: [...(deadMinionIndexes1 || []), ...(deadMinionIndexes2 || [])],
 			playerBoard: undefined,
 			opponentBoard: undefined,
@@ -284,6 +284,16 @@ export class Spectator {
 			}
 		}
 		return result;
+	}
+
+	private sanitizeActions(actions: GameAction[]): GameAction[] {
+		return actions.map((action) => ({
+			...action,
+			playerBoard: this.sanitize(action.playerBoard),
+			opponentBoard: this.sanitize(action.opponentBoard),
+			deaths: action.deaths?.length ? this.sanitize(action.deaths) : undefined,
+			spawns: action.spawns?.length ? this.sanitize(action.spawns) : undefined,
+		}));
 	}
 
 	private sanitize(board: readonly BoardEntity[]): readonly BoardEntity[] {
