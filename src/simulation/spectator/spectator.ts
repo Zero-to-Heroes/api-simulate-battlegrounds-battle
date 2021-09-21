@@ -46,7 +46,7 @@ export class Spectator {
 			return;
 		}
 		// const actionsForBattle = this.collapseActions(this.actionsForCurrentBattle);
-		const actionsForBattle = this.sanitizeActions(this.actionsForCurrentBattle);
+		const actionsForBattle = this.actionsForCurrentBattle;
 		this.actionsForCurrentBattle = [];
 
 		switch (result) {
@@ -92,8 +92,8 @@ export class Spectator {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
 			targetEntityId: defendingEntity.entityId,
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 		};
 		this.addAction(action);
 	}
@@ -101,8 +101,8 @@ export class Spectator {
 	public registerStartOfCombat(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[]): void {
 		const action: GameAction = {
 			type: 'start-of-combat',
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 		};
 		this.addAction(action);
 	}
@@ -110,8 +110,8 @@ export class Spectator {
 	public registerPlayerAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
 		const action: GameAction = {
 			type: 'player-attack',
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 			damages: [
 				{
 					damage: damage,
@@ -124,8 +124,8 @@ export class Spectator {
 	public registerOpponentAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
 		const action: GameAction = {
 			type: 'opponent-attack',
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 			damages: [
 				{
 					damage: damage,
@@ -155,8 +155,8 @@ export class Spectator {
 					damage: damageTaken,
 				},
 			],
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 		};
 		this.addAction(action);
 	}
@@ -172,8 +172,8 @@ export class Spectator {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
 			targetEntityId: targetEntity.entityId,
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 		};
 		this.addAction(action);
 	}
@@ -194,10 +194,10 @@ export class Spectator {
 		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
 		const action: GameAction = {
 			type: 'spawn',
-			spawns: spawnedEntities,
+			spawns: this.sanitize(spawnedEntities),
 			sourceEntityId: sourceEntity?.entityId,
-			playerBoard: friendlyBoard,
-			opponentBoard: opponentBoard,
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
 		};
 		this.addAction(action);
 	}
@@ -214,7 +214,7 @@ export class Spectator {
 		}
 		const action: GameAction = {
 			type: 'minion-death',
-			deaths: deaths,
+			deaths: this.sanitize(deaths),
 			deadMinionsPositionsOnBoard: [...(deadMinionIndexes1 || []), ...(deadMinionIndexes2 || [])],
 			playerBoard: undefined,
 			opponentBoard: undefined,
@@ -286,16 +286,8 @@ export class Spectator {
 		return result;
 	}
 
-	private sanitizeActions(actions: GameAction[]): GameAction[] {
-		return actions.map((action) => ({
-			...action,
-			playerBoard: this.sanitize(action.playerBoard),
-			opponentBoard: this.sanitize(action.opponentBoard),
-			deaths: action.deaths?.length ? this.sanitize(action.deaths) : undefined,
-			spawns: action.spawns?.length ? this.sanitize(action.spawns) : undefined,
-		}));
-	}
-
+	// Calling sanitize every time before we add an action to the list is mandatory, since
+	// the entities and boards are mutable
 	private sanitize(board: readonly BoardEntity[]): readonly BoardEntity[] {
 		if (!board) {
 			return undefined;
