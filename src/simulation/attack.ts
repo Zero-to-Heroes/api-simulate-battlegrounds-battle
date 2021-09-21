@@ -109,6 +109,7 @@ const performAttack = (
 			(e) => e.cardId === CardIds.PrestorsPyrospawn || e.cardId === CardIds.PrestorsPyrospawnBattlegrounds,
 		);
 		prestors.forEach((prestor) => {
+			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
 			dealDamageToEnemy(
 				defendingEntity,
 				defendingBoard,
@@ -122,7 +123,6 @@ const performAttack = (
 				sharedState,
 				spectator,
 			);
-			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
 		});
 	}
 
@@ -418,9 +418,16 @@ export const bumpEntities = (
 	spectator: Spectator,
 ): void => {
 	// No attack has no impact
-	if (bumpInto.attack === 0) {
+	// If the target is already dead (eg after being hit by Prestor), it doesn't fight back
+	if (bumpInto.attack === 0 || bumpInto.health <= 0 || bumpInto.definitelyDead) {
 		return;
 	}
+
+	// If the target is already dead (eg after being hit by Prestor), we don't deal damage
+	if (entity.health <= 0 || entity.definitelyDead) {
+		return;
+	}
+
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
 		for (let i = 0; i < entityBoard.length; i++) {
