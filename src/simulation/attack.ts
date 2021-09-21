@@ -105,9 +105,9 @@ const performAttack = (
 	spectator: Spectator,
 ): void => {
 	if (hasCorrectTribe(attackingEntity, Race.DRAGON, allCards)) {
-		const prestors = attackingBoard.filter(
-			(e) => e.cardId === CardIds.PrestorsPyrospawn || e.cardId === CardIds.PrestorsPyrospawnBattlegrounds,
-		);
+		const prestors = attackingBoard
+			.filter((e) => e.entityId !== attackingEntity.entityId)
+			.filter((e) => e.cardId === CardIds.PrestorsPyrospawn || e.cardId === CardIds.PrestorsPyrospawnBattlegrounds);
 		prestors.forEach((prestor) => {
 			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
 			dealDamageToEnemy(
@@ -425,7 +425,7 @@ export const bumpEntities = (
 	spectator: Spectator,
 ): void => {
 	// No attack has no impact
-	if (bumpInto.attack) {
+	if (bumpInto.attack === 0) {
 		return;
 	}
 
