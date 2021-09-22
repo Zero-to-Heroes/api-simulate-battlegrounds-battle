@@ -16,7 +16,7 @@ const cards = new AllCardsService();
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
-	await cards.initializeCardsDb('91456-2');
+	await cards.initializeCardsDb('93849-2');
 	const cardsData = new CardsData(cards, false);
 	cardsData.inititialize(battleInput.options?.validTribes);
 	const simulationResult = simulateBattle(battleInput, cards, cardsData);
@@ -57,11 +57,10 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 
 	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
 	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
+	removeAuras(playerBoard, cardsData);
+	removeAuras(opponentBoard, cardsData);
 	setImplicitData(playerBoard, cardsData); // Avenge, maxHealth, etc.
 	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
-	removeAuras(playerBoard, cardsData); // cleanEnchantments(playerInfo.board);
-	removeAuras(opponentBoard, cardsData); // cleanEnchantments(opponentInfo.board);
-	// removeGlobalModifiers(playerBoard, opponentBoard, cards);
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation

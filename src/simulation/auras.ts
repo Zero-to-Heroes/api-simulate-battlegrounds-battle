@@ -36,6 +36,18 @@ export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
 	}
 };
 
+export const removeAurasAfterAuraSourceDeath = (board: BoardEntity[], auraSource: BoardEntity, data: CardsData): void => {
+	const auraPair = data.auraEnchantments.find((pair) => pair[0] === auraSource.cardId);
+	const auraEnchantmentId = !!auraPair ? auraPair[1] : null;
+	if (!auraEnchantmentId) {
+		return;
+	}
+
+	for (const entity of board) {
+		removeAura(entity, auraEnchantmentId, board, auraSource);
+	}
+};
+
 const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsData): void => {
 	// let newEntity = entity;
 	for (const enchantment of entity.enchantments) {
@@ -46,14 +58,14 @@ const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsD
 
 const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards: AllCardsService): void => {
 	switch (board[i].cardId) {
-		case CardIds.SiegebreakerLegacy:
-		case CardIds.SiegebreakerBattlegrounds:
-			applySiegebreakerAura(board, i, enchantmentId, cards);
-			return;
-		case CardIds.Malganis1:
-		case CardIds.MalganisBattlegrounds:
-			applyMalGanisAura(board, i, enchantmentId, cards);
-			return;
+		// case CardIds.SiegebreakerLegacy:
+		// case CardIds.SiegebreakerBattlegrounds:
+		// 	applySiegebreakerAura(board, i, enchantmentId, cards);
+		// 	return;
+		// case CardIds.Malganis1:
+		// case CardIds.MalganisBattlegrounds:
+		// 	applyMalGanisAura(board, i, enchantmentId, cards);
+		// 	return;
 		case CardIds.Kathranatir2:
 		case CardIds.KathranatirBattlegrounds:
 			applyKathranatirAura(board, i, enchantmentId, cards);
@@ -72,16 +84,16 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 	}
 };
 
-const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[]): void => {
+const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[], deadAuraSource: BoardEntity = null): void => {
 	switch (enchantmentId) {
-		case CardIds.Siegebreaker_SiegebreakingLegacyEnchantment:
-		case CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds:
-			removeSiegebreakerAura(entity, enchantmentId);
-			return;
-		case CardIds.Malganis_GraspOfMalganisEnchantment:
-		case CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds:
-			removeMalGanisAura(entity, enchantmentId);
-			return;
+		// case CardIds.Siegebreaker_SiegebreakingLegacyEnchantment:
+		// case CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds:
+		// 	removeSiegebreakerAura(entity, enchantmentId);
+		// 	return;
+		// case CardIds.Malganis_GraspOfMalganisEnchantment:
+		// case CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds:
+		// 	removeMalGanisAura(entity, enchantmentId);
+		// 	return;
 		case CardIds.Kathranatir_GraspOfKathranatirEnchantment1:
 		case CardIds.Kathranatir_GraspOfKathranatirEnchantment2:
 			removeKathranatirAura(entity, enchantmentId);
@@ -94,7 +106,7 @@ const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEnti
 		case CardIds.SouthseaCaptain_YarrrLegacyEnchantment:
 		case CardIds.SouthseaCaptain_YarrrVanillaEnchantment:
 		case CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds:
-			removeSouthseaCaptainAura(entity, enchantmentId, board);
+			removeSouthseaCaptainAura(entity, enchantmentId, board, deadAuraSource);
 			return;
 		case CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds:
 			removeDeathwingAura(entity, enchantmentId);
@@ -115,41 +127,41 @@ const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string): void =
 	}
 };
 
-const applySiegebreakerAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
-	const originEntity = board[index];
-	// const newBoard = [];
-	for (let i = 0; i < board.length; i++) {
-		const entity = board[i];
-		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
-			// newBoard.push(entity);
-			continue;
-		}
+// const applySiegebreakerAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
+// 	const originEntity = board[index];
+// 	// const newBoard = [];
+// 	for (let i = 0; i < board.length; i++) {
+// 		const entity = board[i];
+// 		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
+// 			// newBoard.push(entity);
+// 			continue;
+// 		}
 
-		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
-			entity.attack += enchantmentId === CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds ? 2 : 1;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
-		}
-	}
-};
+// 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
+// 			entity.attack += enchantmentId === CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds ? 2 : 1;
+// 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+// 		}
+// 	}
+// };
 
-const applyMalGanisAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
-	const originEntity = board[index];
-	// const newBoard = [];
-	for (let i = 0; i < board.length; i++) {
-		const entity = board[i];
-		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
-			// newBoard.push(entity);
-			continue;
-		}
+// const applyMalGanisAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
+// 	const originEntity = board[index];
+// 	// const newBoard = [];
+// 	for (let i = 0; i < board.length; i++) {
+// 		const entity = board[i];
+// 		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
+// 			// newBoard.push(entity);
+// 			continue;
+// 		}
 
-		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
-			entity.attack += enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
-			entity.health += enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
-		}
-	}
-	// return newBoard;
-};
+// 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
+// 			entity.attack += enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
+// 			entity.health += enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2;
+// 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+// 		}
+// 	}
+// 	// return newBoard;
+// };
 
 const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
 	const originEntity = board[index];
@@ -175,27 +187,27 @@ const removeDeathwingAura = (entity: BoardEntity, enchantmentId: string): void =
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
-const removeSiegebreakerAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
-	entity.attack = Math.max(
-		0,
-		entity.attack - numberOfBuffs * (enchantmentId === CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds ? 2 : 1),
-	);
-	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
-};
+// const removeSiegebreakerAura = (entity: BoardEntity, enchantmentId: string): void => {
+// 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
+// 	entity.attack = Math.max(
+// 		0,
+// 		entity.attack - numberOfBuffs * (enchantmentId === CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds ? 2 : 1),
+// 	);
+// 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+// };
 
-const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): void => {
-	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
-	entity.attack = Math.max(
-		0,
-		entity.attack - numberOfBuffs * (enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2),
-	);
-	entity.health = Math.max(
-		1,
-		entity.health - numberOfBuffs * (enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2),
-	);
-	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
-};
+// const removeMalGanisAura = (entity: BoardEntity, enchantmentId: string): void => {
+// 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
+// 	entity.attack = Math.max(
+// 		0,
+// 		entity.attack - numberOfBuffs * (enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2),
+// 	);
+// 	entity.health = Math.max(
+// 		1,
+// 		entity.health - numberOfBuffs * (enchantmentId === CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds ? 4 : 2),
+// 	);
+// 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+// };
 
 const removeKathranatirAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
@@ -251,27 +263,49 @@ const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantme
 	// return newBoard;
 };
 
-const removeSouthseaCaptainAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[]): void => {
-	const debug = false && entity.entityId === 3879;
-	if (debug) {
-	}
-	const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId);
-	const numberOfBuffs = buffs.length;
+const removeSouthseaCaptainAura = (
+	entity: BoardEntity,
+	enchantmentId: string,
+	board: BoardEntity[],
+	deadAuraSource: BoardEntity = null,
+): void => {
+	if (!deadAuraSource) {
+		// console.log('removing aura', stringifySimpleCard(entity), entity.maxHealth);
+		const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId !== entity.entityId);
+		const numberOfBuffs = buffs.length;
 
-	// TODO: there is an issue here. If the minion's health at the end of the turn should be 1, removing then reapplying
-	// the aura actually bumps it to 2
-	// If the buffing entity is still alive, we should ignore this max
-	// However, for now there's a bug, as the app originates the enchantment from an entity ID
-	// that isn't on the board
-	// const existingEnchantingEntity = board.filter((e) => buffs.map((b) => b.originEntityId).includes(e.entityId));
-	// const isBuffingEntityAlive = existingEnchantingEntity.length > 0;
-	entity.attack = Math.max(
-		0,
-		entity.attack - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
-	);
-	entity.health = Math.max(
-		1,
-		entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
-	);
-	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+		entity.attack = Math.max(
+			0,
+			entity.attack - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
+		);
+
+		// entity.health = entity.maxHealth
+		// 	? Math.min(entity.health, entity.maxHealth)
+		// 	: Math.max(1, entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1));
+		entity.health = Math.max(
+			1,
+			entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
+		);
+		entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+		// console.log('removed aura', stringifySimpleCard(entity), entity.maxHealth);
+	}
+	// Special case where the source dies, health is treated differently
+	else {
+		// console.log('removing aura after source death', stringifySimpleCard(entity), entity.maxHealth);
+		const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId === deadAuraSource.entityId);
+		const numberOfBuffs = buffs.length;
+
+		entity.attack = Math.max(
+			0,
+			entity.attack - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
+		);
+		entity.health = entity.maxHealth
+			? Math.min(entity.health, entity.maxHealth)
+			: Math.max(
+					1,
+					entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
+			  );
+		entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+		// console.log('removed aura after source death', stringifySimpleCard(entity), entity.maxHealth);
+	}
 };

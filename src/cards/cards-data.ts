@@ -67,15 +67,11 @@ export class CardsData {
 		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 		// and that stop once the origin entity leaves play (so it doesn't include buffs)
 		this.auraEnchantments = [
-			[CardIds.Siegebreaker_SiegebreakingLegacyEnchantment],
-			[CardIds.SiegebreakerBattlegrounds, CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds],
-			[CardIds.Malganis_GraspOfMalganisEnchantment],
-			[CardIds.MalganisBattlegrounds, CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds],
-			[CardIds.Kathranatir_GraspOfKathranatirEnchantment1],
+			[CardIds.Kathranatir2, CardIds.Kathranatir_GraspOfKathranatirEnchantment1],
 			[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment2],
-			[CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
+			[CardIds.MurlocWarleaderLegacy, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
 			[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
-			[CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
+			[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
 			[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
 		];
 		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);

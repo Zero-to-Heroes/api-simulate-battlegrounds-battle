@@ -6,6 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { groupByFunction } from '../services/utils';
 import { afterStatsUpdate, getRaceEnum, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
+import { removeAurasAfterAuraSourceDeath } from './auras';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -309,6 +310,10 @@ export const applyMinionDeathEffect = (
 	if (hasCorrectTribe(deadEntity, Race.MURLOC, allCards)) {
 		removeOldMurkEyeAttack(boardWithDeadEntity, allCards);
 		removeOldMurkEyeAttack(otherBoard, allCards);
+	}
+
+	if (cardsData.auraOrigins.includes(deadEntity.cardId)) {
+		removeAurasAfterAuraSourceDeath(boardWithDeadEntity, deadEntity, cardsData);
 	}
 
 	if (deadEntity.taunt) {
