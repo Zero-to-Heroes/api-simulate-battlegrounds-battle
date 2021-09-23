@@ -652,18 +652,6 @@ export const processMinionDeath = (
 	}
 	sharedState.deaths.push(...deadEntities1);
 	sharedState.deaths.push(...deadEntities2);
-	board1
-		.filter(
-			(entity) =>
-				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
-		)
-		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData));
-	board2
-		.filter(
-			(entity) =>
-				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
-		)
-		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData));
 
 	if (Math.random() > 0.5) {
 		// Now proceed to trigger all deathrattle effects on baord1
@@ -726,7 +714,20 @@ export const processMinionDeath = (
 	// also have multiple killers, which is not taken into account here.
 	// The current assumption is that it's a suffienctly fringe case to not matter too much
 	processMinionDeath(board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
-	// return [boardWithMaybeDeadMinions, opponentBoard];
+
+	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
+	board1
+		.filter(
+			(entity) =>
+				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
+		)
+		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData));
+	board2
+		.filter(
+			(entity) =>
+				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
+		)
+		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData));
 };
 
 const handleDeathsForFirstBoard = (
