@@ -3,6 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
 import { afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { applyAuras, removeAuras } from './auras';
@@ -323,7 +324,8 @@ export const dealDamageToRandomEnemy = (
 		return;
 		// return [defendingBoard, boardWithAttackOrigin];
 	}
-	const defendingEntity: BoardEntity = getDefendingEntity(boardToBeDamaged, damageSource, true);
+	const validTargets = boardToBeDamaged.filter((e) => e.health > 0 && !e.definitelyDead);
+	const defendingEntity: BoardEntity = pickRandom(validTargets);
 	spectator.registerPowerTarget(damageSource, defendingEntity, boardToBeDamaged);
 	dealDamageToEnemy(
 		defendingEntity,
