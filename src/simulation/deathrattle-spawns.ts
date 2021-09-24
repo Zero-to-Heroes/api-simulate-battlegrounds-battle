@@ -130,12 +130,12 @@ export const spawnEntitiesFromDeathrattle = (
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): [readonly BoardEntity[], readonly BoardEntity[]] => {
+): readonly BoardEntity[] => {
 	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare2);
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
-	const otherBoardSpawnedEntities: BoardEntity[] = [];
+	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
 		switch (deadEntity.cardId) {
 			case CardIds.Mecharoo:
@@ -462,25 +462,25 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.TheBeastLegacy:
-			case CardIds.TheBeastBattlegrounds:
-				otherBoardSpawnedEntities.push(
-					...spawnEntities(
-						CardIds.FinkleEinhornLegacy,
-						1,
-						otherBoard,
-						otherBoardHero,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
-						!deadEntity.friendly,
-						false,
-					),
-				);
-				break;
+			// case CardIds.TheBeastLegacy:
+			// case CardIds.TheBeastBattlegrounds:
+			// 	otherBoardSpawnedEntities.push(
+			// 		...spawnEntities(
+			// 			CardIds.FinkleEinhornLegacy,
+			// 			1,
+			// 			otherBoard,
+			// 			otherBoardHero,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			allCards,
+			// 			spawns,
+			// 			sharedState,
+			// 			spectator,
+			// 			!deadEntity.friendly,
+			// 			false,
+			// 		),
+			// 	);
+			// 	break;
 			case CardIds.ReplicatingMenace:
 				spawnedEntities.push(
 					...spawnEntities(
@@ -1111,7 +1111,7 @@ export const spawnEntitiesFromDeathrattle = (
 			// spawnedEntities.push(...[]);
 		}
 	}
-	return [spawnedEntities, otherBoardSpawnedEntities];
+	return spawnedEntities;
 };
 
 export const spawnEntitiesFromEnchantments = (

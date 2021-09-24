@@ -669,7 +669,6 @@ export const processMinionDeath = (
 			sharedState,
 			spectator,
 		);
-
 		// Now handle the other board's deathrattles
 		handleDeathsForFirstBoard(
 			board2,
@@ -950,10 +949,7 @@ const buildBoardAfterDeathrattleSpawns = (
 			spectator,
 		);
 	}
-	const [entitiesFromNativeDeathrattle, entitiesFromNativeDeathrattleOnOpponentBoard]: [
-		readonly BoardEntity[],
-		readonly BoardEntity[],
-	] = spawnEntitiesFromDeathrattle(
+	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
 		boardWithKilledMinion,
 		boardWithKilledMinionHero,
@@ -965,6 +961,76 @@ const buildBoardAfterDeathrattleSpawns = (
 		spectator,
 	);
 
+	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
+		deadEntity,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
+	performEntitySpawns(
+		candidateEntities,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndex,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
+	handleDeathrattleEffects(
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	// eslint-disable-next-line prettier/prettier
+	if (deadEntity.rememberedDeathrattles?.length) {
+		for (const deathrattle of deadEntity.rememberedDeathrattles) {
+			const entityToProcess: BoardEntity = {
+				...deadEntity,
+				rememberedDeathrattles: undefined,
+				cardId: deathrattle,
+				enchantments: [
+					{
+						cardId: deathrattle,
+						originEntityId: deadEntity.entityId,
+					},
+				],
+			};
+			buildBoardAfterDeathrattleSpawns(
+				boardWithKilledMinion,
+				boardWithKilledMinionHero,
+				entityToProcess,
+				deadMinionIndex,
+				opponentBoard,
+				opponentBoardHero,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		}
+	}
+
+	// Reborn happens after deathrattles
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndex >= 0
 			? spawnEntities(
@@ -983,10 +1049,12 @@ const buildBoardAfterDeathrattleSpawns = (
 					true,
 			  )
 			: [];
-	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
-		deadEntity,
+	performEntitySpawns(
+		entitiesFromReborn,
 		boardWithKilledMinion,
 		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndex,
 		opponentBoard,
 		opponentBoardHero,
 		allCards,
@@ -994,12 +1062,21 @@ const buildBoardAfterDeathrattleSpawns = (
 		sharedState,
 		spectator,
 	);
+};
 
-	const candidateEntities: readonly BoardEntity[] = [
-		...entitiesFromNativeDeathrattle,
-		...entitiesFromReborn,
-		...entitiesFromEnchantments,
-	];
+const performEntitySpawns = (
+	candidateEntities: readonly BoardEntity[],
+	boardWithKilledMinion: BoardEntity[],
+	boardWithKilledMinionHero: BgsPlayerEntity,
+	deadEntity: BoardEntity,
+	deadMinionIndex: number,
+	opponentBoard: BoardEntity[],
+	opponentBoardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
 	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 
 	// const roomToSpawn: number = 7 - boardWithKilledMinion.length;
@@ -1041,53 +1118,4 @@ const buildBoardAfterDeathrattleSpawns = (
 	// Minion has already been removed from the board in the previous step
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards, spectator);
 	spectator.registerMinionsSpawn(deadEntity, boardWithKilledMinion, spawnedEntities);
-
-	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
-	handleDeathrattleEffects(
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		opponentBoard,
-		opponentBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
-
-	const candidateEntitiesForOpponentBoard: readonly BoardEntity[] = [...entitiesFromNativeDeathrattleOnOpponentBoard];
-	const roomToSpawnForOpponentBoard: number = 7 - opponentBoard.length;
-	const spawnedEntitiesForOpponentBoard: readonly BoardEntity[] = candidateEntitiesForOpponentBoard.slice(0, roomToSpawnForOpponentBoard);
-	opponentBoard.push(...spawnedEntitiesForOpponentBoard);
-	// If needed might also have to handle more effects here, like we do for the main board
-	spectator.registerMinionsSpawn(deadEntity, opponentBoard, spawnedEntitiesForOpponentBoard);
-
-	// eslint-disable-next-line prettier/prettier
-	if (deadEntity.rememberedDeathrattles?.length) {
-		for (const deathrattle of deadEntity.rememberedDeathrattles) {
-			const entityToProcess: BoardEntity = {
-				...deadEntity,
-				rememberedDeathrattles: undefined,
-				cardId: deathrattle,
-				enchantments: [
-					{
-						cardId: deathrattle,
-						originEntityId: deadEntity.entityId,
-					},
-				],
-			};
-			buildBoardAfterDeathrattleSpawns(
-				boardWithKilledMinion,
-				boardWithKilledMinionHero,
-				entityToProcess,
-				deadMinionIndex,
-				opponentBoard,
-				opponentBoardHero,
-				allCards,
-				cardsData,
-				sharedState,
-				spectator,
-			);
-		}
-	}
 };
