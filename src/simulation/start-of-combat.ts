@@ -4,7 +4,8 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
-import { dealDamageToRandomEnemy, getNeighbours, simulateAttack } from './attack';
+import { dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
+import { applyAuras, removeAuras } from './auras';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -149,9 +150,9 @@ const handlePlayerStartOfCombatHeroPowers = (
 	// ) {
 	// 	handleYShaarj(playerBoard, playerEntity, playerEntity.tavernTier, friendly, allCards, spawns, sharedState, spectator);
 	// }
-	else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.NefariousFireBattlegrounds && playerBoard.length > 0) {
-		handleNefarian(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
-	}
+	// else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.NefariousFireBattlegrounds && playerBoard.length > 0) {
+	// 	handleNefarian(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+	// }
 	return currentAttacker;
 };
 
@@ -167,6 +168,7 @@ export const handleStartOfCombat = (
 	spectator: Spectator,
 ): number => {
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
+	// Auras are only relevant for Illidan, and already applied there
 	if (Math.random() < 0.5) {
 		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			playerEntity,
@@ -278,10 +280,18 @@ export const performStartOfCombat = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
-	spawns: CardsData,
+	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
+	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
+	const numberOfDeathwingPresents =
+		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
+		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
+	applyAuras(attackingBoard, numberOfDeathwingPresents, cardsData, allCards);
+	applyAuras(defendingBoard, numberOfDeathwingPresents, cardsData, allCards);
+
 	// For now we're only dealing with the red whelp
 	if (attacker.cardId === CardIds.RedWhelp) {
 		const damage = attackingBoard
@@ -295,7 +305,17 @@ export const performStartOfCombat = (
 			attackingBoard,
 			attackingBoardHero,
 			allCards,
-			spawns,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		processMinionDeath(
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoard,
+			defendingBoardHero,
+			allCards,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -311,7 +331,7 @@ export const performStartOfCombat = (
 			attackingBoard,
 			attackingBoardHero,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -323,7 +343,17 @@ export const performStartOfCombat = (
 			attackingBoard,
 			attackingBoardHero,
 			allCards,
-			spawns,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		processMinionDeath(
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoard,
+			defendingBoardHero,
+			allCards,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -350,4 +380,6 @@ export const performStartOfCombat = (
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	}
+	removeAuras(attackingBoard, cardsData);
+	removeAuras(defendingBoard, cardsData);
 };
