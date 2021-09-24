@@ -888,7 +888,7 @@ export const spawnEntitiesFromDeathrattle = (
 						sharedState,
 						spectator,
 						deadEntity.friendly,
-						false,
+						true,
 					),
 				);
 				addStatsToBoard(deadEntity, boardWithDeadEntity, buffAmount, buffAmount, allCards, spectator, Race[Race.MECH]);
