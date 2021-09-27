@@ -322,24 +322,25 @@ export const dealDamageToRandomEnemy = (
 ): void => {
 	if (boardToBeDamaged.length === 0) {
 		return;
-		// return [defendingBoard, boardWithAttackOrigin];
 	}
 	const validTargets = boardToBeDamaged.filter((e) => e.health > 0 && !e.definitelyDead);
 	const defendingEntity: BoardEntity = pickRandom(validTargets);
-	spectator.registerPowerTarget(damageSource, defendingEntity, boardToBeDamaged);
-	dealDamageToEnemy(
-		defendingEntity,
-		boardToBeDamaged,
-		boardToBeDamagedHero,
-		damageSource,
-		damage,
-		boardWithAttackOrigin,
-		boardWithAttackOriginHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	if (defendingEntity) {
+		spectator.registerPowerTarget(damageSource, defendingEntity, boardToBeDamaged);
+		dealDamageToEnemy(
+			defendingEntity,
+			boardToBeDamaged,
+			boardToBeDamagedHero,
+			damageSource,
+			damage,
+			boardWithAttackOrigin,
+			boardWithAttackOriginHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
 };
 
 export const dealDamageToEnemy = (

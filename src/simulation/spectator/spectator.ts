@@ -162,6 +162,9 @@ export class Spectator {
 	}
 
 	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
+		if (!targetEntity) {
+			return;
+		}
 		if (!sourceEntity.entityId) {
 			console.error('missing damaging entity id', sourceEntity);
 		}

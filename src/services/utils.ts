@@ -40,5 +40,8 @@ export const groupByFunction = (keyExtractor: (obj: any | string) => string) => 
 export { partitionArray, http, sleep };
 
 export const pickRandom = <T>(array: readonly T[]): T => {
+	if (!array?.length) {
+		return null;
+	}
 	return array[Math.floor(Math.random() * array.length)];
 };
