@@ -2,14 +2,6 @@ import { AllCardsService, CardIds, isBattlegroundsCard, Race, ReferenceCard } fr
 import { getRaceEnum, hasMechanic } from '../utils';
 
 export class CardsData {
-	public static CARDS_WITH_NO_BACONUP_VERSION = [
-		CardIds.BronzeWarden,
-		CardIds.YoHoOgre,
-		CardIds.CaveHydra,
-		CardIds.FoeReaper4000,
-		CardIds.Maexxna1,
-	];
-
 	// public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
 	public validDeathrattles: readonly string[];
