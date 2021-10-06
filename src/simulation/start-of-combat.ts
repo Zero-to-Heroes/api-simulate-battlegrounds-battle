@@ -358,13 +358,13 @@ export const performStartOfCombat = (
 			spectator,
 		);
 	} else if (attacker.cardId === CardIds.PrizedPromoDrake) {
-		const dragons = attackingBoard
+		const numberOfDragons = attackingBoard
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, dragons, attackingBoard, allCards);
-			modifyHealth(entity, dragons);
+			modifyAttack(entity, numberOfDragons, attackingBoard, allCards);
+			modifyHealth(entity, numberOfDragons);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
