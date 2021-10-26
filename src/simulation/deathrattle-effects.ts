@@ -580,9 +580,12 @@ const handleAvenge = (
 			}
 			break;
 		case CardIds.MechanoTank:
+			console.log('dealing damage by mechano tank');
+			// This can be null if the avenge triggers when the last enemy minion dies as well
+			const target = getRandomMinionWithHighestHealth(otherBoard);
+			spectator.registerPowerTarget(avenger, target, otherBoard);
 			dealDamageToEnemy(
-				// This can be null if the avenge triggers when the last enemy minion dies as well
-				getRandomMinionWithHighestHealth(otherBoard),
+				target,
 				otherBoard,
 				otherBoardHero,
 				avenger,
@@ -597,8 +600,10 @@ const handleAvenge = (
 			break;
 		case CardIds.MechanoTankBattlegrounds:
 			for (let i = 0; i < 2; i++) {
+				const target = getRandomMinionWithHighestHealth(otherBoard);
+				spectator.registerPowerTarget(avenger, target, otherBoard);
 				dealDamageToEnemy(
-					getRandomMinionWithHighestHealth(otherBoard),
+					target,
 					otherBoard,
 					otherBoardHero,
 					avenger,
@@ -624,6 +629,9 @@ const handleAvenge = (
 				const refCard = allCards.getCard(pirate.cardId);
 				const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 				pirate.cardId = goldenCard.id;
+				modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
+				modifyHealth(pirate, refCard.health);
+				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 			}
 			break;
@@ -637,6 +645,9 @@ const handleAvenge = (
 				if (pirate) {
 					const refCard = allCards.getCard(pirate.cardId);
 					pirate.cardId = refCard.id;
+					modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
+					modifyHealth(pirate, refCard.health);
+					afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 					spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 				}
 			}
