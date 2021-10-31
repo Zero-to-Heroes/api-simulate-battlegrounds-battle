@@ -580,7 +580,6 @@ const handleAvenge = (
 			}
 			break;
 		case CardIds.MechanoTank:
-			console.log('dealing damage by mechano tank');
 			// This can be null if the avenge triggers when the last enemy minion dies as well
 			const target = getRandomMinionWithHighestHealth(otherBoard);
 			spectator.registerPowerTarget(avenger, target, otherBoard);
