@@ -178,7 +178,7 @@ export const handleDeathrattleEffects = (
 		// In some cases it's possible that there are way too many enchantments because of the frog
 		// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
 		// often as we should, so that we can have the stats themselves correct
-		const enchantmentGroups = groupByFunction((enchantment) => enchantment.cardId)(enchantments);
+		const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
 		enchantments = Object.keys(enchantmentGroups).map((cardId) => ({
 			cardId: cardId,
 			repeats: enchantmentGroups[cardId].length,
@@ -919,7 +919,7 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment,
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 				CardIds.LivingSpores_LivingSporesEnchantment,
-				CardIds.SneedsReplicator_SneedsReplicatorEnchantment,
+				CardIds.SneedsReplicator_ReplicateEnchantment,
 			].includes(enchantmentId as CardIds),
 		);
 	// console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
