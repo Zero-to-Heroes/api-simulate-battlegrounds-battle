@@ -28,6 +28,7 @@ export class CardsData {
 		const pool = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
+			.filter((card) => !!card.techLevel)
 			.filter((card) => card.set !== 'Vanilla');
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(pool.filter((card) => !this.isGolden(card)));
 		this.ghastcoilerSpawns = pool
@@ -111,7 +112,10 @@ export class CardsData {
 	}
 
 	public getRandomMinionForTavernTier(tavernTier: number): string {
-		return pickRandom(this.minionsForTier[tavernTier]).id;
+		// Tzvern tier can be undefined for hero-power specific tokens, like the Amalgam, or when
+		// for some reason tokens end up in the shop. For now, defaulting to 1 for tavern
+		// level seems to work in all cases
+		return pickRandom(this.minionsForTier[tavernTier ?? 1]).id;
 	}
 
 	private isGolden(card: ReferenceCard): boolean {

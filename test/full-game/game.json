@@ -3,81 +3,15 @@
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
 		"board": [
 			{
-				"entityId": 9,
-				"cardId": "BGS_119",
-				"attack": 38,
-				"health": 32,
-				"divineShield": true,
+				"entityId": 2,
+				"cardId": "BGS_106",
+				"attack": 2,
+				"health": 2,
+				"divineShield": false,
 				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": true,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 10,
-				"cardId": "BGS_034",
-				"attack": 29,
-				"health": 28,
-				"divineShield": true,
-				"poisonous": false,
-				"taunt": false,
+				"taunt": true,
 				"reborn": true,
 				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{ "entityId": 11, "cardId": "GVG_113", "attack": 28, "health": 31, "enchantments": [] },
-			{
-				"entityId": 12,
-				"cardId": "BG20_303",
-				"attack": 29,
-				"health": 29,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 13,
-				"cardId": "BG20_302",
-				"attack": 26,
-				"health": 29,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 14,
-				"cardId": "BG20_205",
-				"attack": 28,
-				"health": 28,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 15,
-				"cardId": "BGS_069",
-				"attack": 17,
-				"health": 17,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": true,
 				"megaWindfury": false,
 				"enchantments": []
 			}
@@ -88,84 +22,12 @@
 		"board": [
 			{
 				"entityId": 1,
-				"cardId": "BGS_071",
-				"attack": 18,
-				"health": 9,
-				"divineShield": true,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 2,
-				"cardId": "BG20_401",
-				"attack": 16,
-				"health": 8,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 4,
-				"cardId": "BGS_071",
-				"attack": 3,
+				"cardId": "TB_BaconShop_HP_033t",
+				"attack": 2,
 				"health": 2,
-				"divineShield": true,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{ "entityId": 5, "cardId": "BG20_101", "attack": 11, "health": 12, "enchantments": [] },
-			{
-				"entityId": 6,
-				"cardId": "ULD_217",
-				"attack": 10,
-				"health": 3,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 7,
-				"cardId": "ULD_217",
-				"attack": 8,
-				"health": 4,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 8,
-				"cardId": "BG21_023",
-				"attack": 12,
-				"health": 3,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
+				"enchantments": [{ "cardId": "BG21_HERO_030pe" }, { "cardId": "BG21_HERO_030pe" }]
 			}
 		]
 	},
-	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 }
+	"options": { "numberOfSimulations": 5000, "maxAcceptableDuration": 6000 }
 }

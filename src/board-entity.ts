@@ -16,7 +16,7 @@ export interface BoardEntity {
 	cleave?: boolean;
 	windfury?: boolean;
 	megaWindfury?: boolean;
-	enchantments?: { cardId: string; originEntityId: number; repeats?: number }[];
+	enchantments?: { cardId: string; originEntityId?: number; repeats?: number }[];
 	// We only store the card id, because we want all the attack and other data to be computed at runtime, based on the
 	// current stats of the Fish
 	rememberedDeathrattles?: string[];
