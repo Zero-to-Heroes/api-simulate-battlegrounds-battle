@@ -1187,6 +1187,24 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
+				case CardIds.SneedsReplicator_SneedsReplicatorEnchantment:
+					spawnedEntities.push(
+						...spawnEntities(
+							spawns.getRandomMinionForTavernTier(spawns.getTavernLevel(deadEntity.cardId)),
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 			}
 		}
 	}

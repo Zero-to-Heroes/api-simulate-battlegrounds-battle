@@ -178,6 +178,8 @@ export const validEnchantments = [
 	CardIds.LivingSpores_LivingSporesEnchantment,
 	CardIds.Leapfrogger_LeapfrogginEnchantment1,
 	CardIds.Leapfrogger_LeapfrogginEnchantment2,
+	CardIds.SneedsReplicator,
+	CardIds.SneedsReplicator_SneedsReplicatorEnchantment,
 ];
 
 const cleanEnchantmentsForEntity = (

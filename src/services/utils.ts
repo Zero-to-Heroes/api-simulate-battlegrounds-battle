@@ -30,12 +30,13 @@ async function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const groupByFunction = (keyExtractor: (obj: any | string) => string) => (array) =>
-	array.reduce((objectsByKeyValue, obj) => {
+export const groupByFunction = <T>(keyExtractor: (obj: T) => string | number) => (array: readonly T[]): { [key: string]: readonly T[] } => {
+	return array.reduce((objectsByKeyValue, obj) => {
 		const value = keyExtractor(obj);
 		objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
 		return objectsByKeyValue;
 	}, {});
+};
 
 export { partitionArray, http, sleep };
 

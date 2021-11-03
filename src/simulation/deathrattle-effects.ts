@@ -919,6 +919,7 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment,
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 				CardIds.LivingSpores_LivingSporesEnchantment,
+				CardIds.SneedsReplicator_SneedsReplicatorEnchantment,
 			].includes(enchantmentId as CardIds),
 		);
 	// console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);

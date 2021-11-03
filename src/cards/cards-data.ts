@@ -1,4 +1,5 @@
 import { AllCardsService, CardIds, isBattlegroundsCard, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic } from '../utils';
 
 export class CardsData {
@@ -15,6 +16,8 @@ export class CardsData {
 	public auraOrigins: readonly string[];
 	public startOfCombats: readonly string[];
 
+	private minionsForTier: { [key: string]: readonly ReferenceCard[] };
+
 	constructor(private readonly allCards: AllCardsService, init = true) {
 		if (init) {
 			this.inititialize();
@@ -26,6 +29,7 @@ export class CardsData {
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => card.set !== 'Vanilla');
+		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(pool.filter((card) => !this.isGolden(card)));
 		this.ghastcoilerSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.id !== 'BGS_008')
@@ -100,6 +104,14 @@ export class CardsData {
 				return 5;
 		}
 		return 0;
+	}
+
+	public getTavernLevel(cardId: string): number {
+		return this.allCards.getCard(cardId).techLevel;
+	}
+
+	public getRandomMinionForTavernTier(tavernTier: number): string {
+		return pickRandom(this.minionsForTier[tavernTier]).id;
 	}
 
 	private isGolden(card: ReferenceCard): boolean {
