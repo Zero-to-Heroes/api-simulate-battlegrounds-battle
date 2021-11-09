@@ -13,8 +13,8 @@ import { handleStartOfCombat } from './start-of-combat';
 export class Simulator {
 	private currentAttacker: number;
 	private currentSpeedAttacker = -1;
-	private lastPlayerAttackerEntityId: number;
-	private lastOpponentAttackerEntityId: number;
+	private lastPlayerAttackerEntityIndex: number;
+	private lastOpponentAttackerEntityIndex: number;
 	private sharedState: SharedState;
 
 	// It should come already initialized
@@ -93,24 +93,24 @@ export class Simulator {
 				this.currentSpeedAttacker = -1;
 			}
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
-				simulateAttack(
+				this.lastPlayerAttackerEntityIndex = simulateAttack(
 					playerBoard,
 					playerEntity,
 					opponentBoard,
 					opponentEntity,
-					this.lastPlayerAttackerEntityId,
+					this.lastPlayerAttackerEntityIndex,
 					this.allCards,
 					this.spawns,
 					this.sharedState,
 					spectator,
 				);
 			} else {
-				simulateAttack(
+				this.lastOpponentAttackerEntityIndex = simulateAttack(
 					opponentBoard,
 					opponentEntity,
 					playerBoard,
 					playerEntity,
-					this.lastOpponentAttackerEntityId,
+					this.lastOpponentAttackerEntityIndex,
 					this.allCards,
 					this.spawns,
 					this.sharedState,

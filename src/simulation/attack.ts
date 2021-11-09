@@ -26,8 +26,8 @@ export const simulateAttack = (
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-	attackingEntityIndex?: number,
-): void => {
+	forceAttackingEntityIndex?: number,
+): number => {
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
@@ -40,7 +40,10 @@ export const simulateAttack = (
 	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 
 	const attackingEntity =
-		attackingEntityIndex != null ? attackingBoard[attackingEntityIndex] : getAttackingEntity(attackingBoard, lastAttackerEntityId);
+		forceAttackingEntityIndex != null
+			? attackingBoard[forceAttackingEntityIndex]
+			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
+	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
 		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
@@ -80,9 +83,11 @@ export const simulateAttack = (
 				}
 			}
 		}
+		attackingEntity.attacking = false;
 	}
 	removeAuras(attackingBoard, spawns);
 	removeAuras(defendingBoard, spawns);
+	return attackingEntityIndex;
 };
 
 const applyAfterAttackEffects = (
@@ -264,7 +269,7 @@ const triggerRandomDeathrattle = (
 	);
 };
 
-const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId: number): BoardEntity => {
+const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: number): BoardEntity => {
 	let validAttackers = attackingBoard.filter((entity) => entity.attack > 0).filter((entity) => !entity.cantAttack);
 	if (validAttackers.length === 0) {
 		return null;
@@ -272,6 +277,15 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerEntityId:
 
 	if (validAttackers.some((entity) => entity.attackImmediately)) {
 		validAttackers = validAttackers.filter((entity) => entity.attackImmediately);
+	}
+
+	// Once an entity has attacked, no entity to the left of it can attack until all entities
+	// on the board have attacked
+	if (lastAttackerIndex != null) {
+		const candidates = validAttackers.slice(lastAttackerIndex);
+		if (candidates.length > 0) {
+			validAttackers = candidates;
+		}
 	}
 
 	let attackingEntity = validAttackers[0];

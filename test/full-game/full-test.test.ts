@@ -21,7 +21,7 @@ describe.skip('Full tests for performance and accuracy', () => {
 			outcomeSamples: undefined,
 		});
 
-		const sample = simulationResult.outcomeSamples.lost[0];
+		const sample = simulationResult.outcomeSamples.tied[0];
 		const base64 = encode(JSON.stringify(sample));
 		console.log('encoded', base64);
 	});
