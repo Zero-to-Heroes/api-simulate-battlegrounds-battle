@@ -99,10 +99,9 @@ export class CardsData {
 			case CardIds.ImpatientDoomsayerBattlegrounds:
 			case CardIds.WitchwingNestmatron:
 			case CardIds.WitchwingNestmatronBattlegrounds:
-				return 4;
 			case CardIds.TonyTwoTusk:
 			case CardIds.TonyTwoTuskBattlegrounds:
-				return 5;
+				return 4;
 		}
 		return 0;
 	}

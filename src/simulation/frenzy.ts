@@ -16,7 +16,7 @@ export const applyFrenzy = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	if (entityWithFrenzy.cardId === CardIds.BristlebackKnight || entityWithFrenzy.cardId === CardIds.BristlebackKnightBattlegrounds) {
+	if (entityWithFrenzy.cardId === CardIds.BristlebackKnight1 || entityWithFrenzy.cardId === CardIds.BristlebackKnight2) {
 		entityWithFrenzy.divineShield = true;
 	} else if (entityWithFrenzy.cardId === CardIds.Roadboar || entityWithFrenzy.cardId === CardIds.RoadboarBattlegrounds) {
 		addCardsInHand(

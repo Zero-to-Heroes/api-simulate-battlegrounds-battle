@@ -35,7 +35,7 @@ const ATTACK_IMMEDIATELY_IDS = [CardIds.Scallywag_SkyPirateToken, CardIds.Scally
 export const MEGA_WINDFURY_IDS = [
 	CardIds.ZappSlywickBattlegrounds,
 	CardIds.CracklingCycloneBattlegrounds,
-	CardIds.BristlebackKnight,
+	CardIds.BristlebackKnight2,
 	CardIds.BonkerBattlegrounds,
 ];
 const CANT_ATTACK_IDS = [CardIds.ArcaneCannonBattlegrounds];

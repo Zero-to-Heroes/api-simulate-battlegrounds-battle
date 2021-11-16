@@ -563,6 +563,12 @@ const handleAvenge = (
 		case CardIds.WitchwingNestmatronBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
+		case CardIds.Thorncaller:
+			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
+			break;
+		case CardIds.ThorncallerBattlegrounds:
+			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
+			break;
 		case CardIds.Sisefin:
 			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
 			if (murloc) {
@@ -588,7 +594,7 @@ const handleAvenge = (
 				otherBoard,
 				otherBoardHero,
 				avenger,
-				6,
+				5,
 				boardWithDeadEntity,
 				boardWithDeadEntityHero,
 				allCards,
@@ -606,7 +612,7 @@ const handleAvenge = (
 					otherBoard,
 					otherBoardHero,
 					avenger,
-					6,
+					5,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
 					allCards,

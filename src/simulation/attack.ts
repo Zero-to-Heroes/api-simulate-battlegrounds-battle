@@ -490,12 +490,12 @@ export const bumpEntities = (
 		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
 		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
 		greaseBots.forEach((bot) => {
-			modifyAttack(entity, 2, entityBoard, allCards);
+			modifyAttack(entity, 1, entityBoard, allCards);
 			modifyHealth(entity, 1);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
-			modifyAttack(entity, 4, entityBoard, allCards);
+			modifyAttack(entity, 2, entityBoard, allCards);
 			modifyHealth(entity, 2);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
