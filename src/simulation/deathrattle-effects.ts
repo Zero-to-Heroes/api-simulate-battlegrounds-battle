@@ -457,31 +457,35 @@ export const applyMinionDeathEffect = (
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	if (deadEntity.cardId === CardIds.UnstableGhoul) {
-		dealDamageToAllMinions(
-			boardWithDeadEntity,
-			boardWithDeadEntityHero,
-			otherBoard,
-			otherBoardHero,
-			deadEntity,
-			multiplier * 1,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		for (let i = 0; i < multiplier; i++) {
+			dealDamageToAllMinions(
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				otherBoard,
+				otherBoardHero,
+				deadEntity,
+				1,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		}
 	} else if (deadEntity.cardId === CardIds.UnstableGhoulBattlegrounds) {
-		dealDamageToAllMinions(
-			boardWithDeadEntity,
-			boardWithDeadEntityHero,
-			otherBoard,
-			otherBoardHero,
-			deadEntity,
-			multiplier * 2,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		for (let i = 0; i < multiplier; i++) {
+			dealDamageToAllMinions(
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				otherBoard,
+				otherBoardHero,
+				deadEntity,
+				2,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		}
 	}
 
 	// Avenge
