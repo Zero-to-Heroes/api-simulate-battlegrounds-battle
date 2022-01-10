@@ -3,11 +3,11 @@
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
 		"board": [
 			{
-				"entityId": 4,
-				"cardId": "CFM_315",
-				"attack": 4,
-				"health": 6,
-				"divineShield": false,
+				"entityId": 1,
+				"cardId": "BG21_022",
+				"attack": 2,
+				"health": 1,
+				"divineShield": true,
 				"poisonous": false,
 				"taunt": false,
 				"reborn": false,
@@ -16,63 +16,33 @@
 				"enchantments": []
 			},
 			{
-				"entityId": 5,
-				"cardId": "CFM_315",
-				"attack": 1,
-				"health": 3,
-				"divineShield": false,
+				"entityId": 13,
+				"cardId": "EX1_534",
+				"attack": 6,
+				"health": 101,
+				"divineShield": true,
 				"poisonous": false,
-				"taunt": false,
+				"taunt": true,
 				"reborn": false,
 				"windfury": false,
 				"megaWindfury": false,
+				"enchantments": []
+			},
+			{
+				"entityId": 14,
+				"cardId": "TB_BaconShop_HP_033t",
+				"attack": 2,
+				"health": 2,
+				"divineShield": false,
+				"poisonous": true,
+				"taunt": false,
 				"enchantments": []
 			}
 		]
 	},
 	"opponentBoard": {
 		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
-		"board": [
-			{
-				"entityId": 1,
-				"cardId": "BGS_106",
-				"attack": 2,
-				"health": 2,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": true,
-				"reborn": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 2,
-				"cardId": "BGS_106",
-				"attack": 2,
-				"health": 2,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": true,
-				"reborn": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 3,
-				"cardId": "BGS_004",
-				"attack": 1,
-				"health": 3,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			}
-		]
+		"board": [{ "entityId": 5, "cardId": "TB_BaconShop_HP_033t", "attack": 100, "health": 100, "taunt": true, "enchantments": [] }]
 	},
 	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 }
 }

@@ -267,6 +267,18 @@ const triggerRandomDeathrattle = (
 		sharedState,
 		spectator,
 	);
+	buildBoardAfterRebornSpawns(
+		attackingBoard,
+		attackingBoardHero,
+		targetEntity,
+		-1,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: number): BoardEntity => {
@@ -674,9 +686,10 @@ export const processMinionDeath = (
 	sharedState.deaths.push(...deadEntities1);
 	sharedState.deaths.push(...deadEntities2);
 
+	// First process all DRs, then process the reborn
 	if (Math.random() > 0.5) {
 		// Now proceed to trigger all deathrattle effects on baord1
-		handleDeathsForFirstBoard(
+		handleDeathrattlesForFirstBoard(
 			board1,
 			board1Hero,
 			board2,
@@ -689,7 +702,7 @@ export const processMinionDeath = (
 			spectator,
 		);
 		// Now handle the other board's deathrattles
-		handleDeathsForFirstBoard(
+		handleDeathrattlesForFirstBoard(
 			board2,
 			board2Hero,
 			board1,
@@ -702,7 +715,7 @@ export const processMinionDeath = (
 			spectator,
 		);
 	} else {
-		handleDeathsForFirstBoard(
+		handleDeathrattlesForFirstBoard(
 			board2,
 			board2Hero,
 			board1,
@@ -714,7 +727,62 @@ export const processMinionDeath = (
 			sharedState,
 			spectator,
 		);
-		handleDeathsForFirstBoard(
+		handleDeathrattlesForFirstBoard(
+			board1,
+			board1Hero,
+			board2,
+			board2Hero,
+			deadMinionIndexes1,
+			deadEntities1,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
+
+	// Now the reborn
+	if (Math.random() > 0.5) {
+		// Now proceed to trigger all deathrattle effects on baord1
+		handleRebornForFirstBoard(
+			board1,
+			board1Hero,
+			board2,
+			board2Hero,
+			deadMinionIndexes1,
+			deadEntities1,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		// Now handle the other board's deathrattles
+		handleRebornForFirstBoard(
+			board2,
+			board2Hero,
+			board1,
+			board1Hero,
+			deadMinionIndexes2,
+			deadEntities2,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	} else {
+		handleRebornForFirstBoard(
+			board2,
+			board2Hero,
+			board1,
+			board1Hero,
+			deadMinionIndexes2,
+			deadEntities2,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		handleRebornForFirstBoard(
 			board1,
 			board1Hero,
 			board2,
@@ -750,7 +818,7 @@ export const processMinionDeath = (
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData));
 };
 
-const handleDeathsForFirstBoard = (
+const handleDeathrattlesForFirstBoard = (
 	firstBoard: BoardEntity[],
 	firstBoardHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
@@ -767,6 +835,43 @@ const handleDeathsForFirstBoard = (
 		const index = deadMinionIndexes[i];
 		if (entity.health <= 0 || entity.definitelyDead) {
 			buildBoardAfterDeathrattleSpawns(
+				firstBoard,
+				firstBoardHero,
+				entity,
+				index,
+				otherBoard,
+				otherBoardHero,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		} else if (firstBoard.length > 0) {
+			// const newBoardD = [...firstBoard];
+			firstBoard.splice(index, 1, entity);
+			// firstBoard = newBoardD;
+		}
+	}
+	// return [firstBoard, otherBoard];
+};
+
+const handleRebornForFirstBoard = (
+	firstBoard: BoardEntity[],
+	firstBoardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	deadMinionIndexes: readonly number[],
+	deadEntities: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	for (let i = 0; i < deadMinionIndexes.length; i++) {
+		const entity = deadEntities[i];
+		const index = deadMinionIndexes[i];
+		if (entity.health <= 0 || entity.definitelyDead) {
+			buildBoardAfterRebornSpawns(
 				firstBoard,
 				firstBoardHero,
 				entity,
@@ -947,7 +1052,6 @@ const buildBoardAfterDeathrattleSpawns = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	// console.log('buildBoardAfterDeathrattleSpawns', deadMinionIndex, stringifySimple(boardWithKilledMinion, allCards));
 	// TODO: don't apply this for FishOfNZoth
 	if (deadMinionIndex >= 0) {
 		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards, spectator);
@@ -1048,7 +1152,20 @@ const buildBoardAfterDeathrattleSpawns = (
 			);
 		}
 	}
+};
 
+const buildBoardAfterRebornSpawns = (
+	boardWithKilledMinion: BoardEntity[],
+	boardWithKilledMinionHero: BgsPlayerEntity,
+	deadEntity: BoardEntity,
+	deadMinionIndex: number,
+	opponentBoard: BoardEntity[],
+	opponentBoardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
 	// Reborn happens after deathrattles
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndex >= 0
