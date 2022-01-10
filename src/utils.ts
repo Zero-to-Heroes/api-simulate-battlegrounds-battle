@@ -161,7 +161,7 @@ export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 	} as BoardEntity;
 };
 
-export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCardsService): string => {
+export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCardsService = null): string => {
 	return '[' + board.map((entity) => stringifySimpleCard(entity, allCards)).join(', ') + ']';
 };
 

@@ -932,7 +932,6 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 				CardIds.SneedsReplicator_ReplicateEnchantment,
 			].includes(enchantmentId as CardIds),
 		);
-	// console.debug('remembering deathrattles', fish.cardId, stringifySimple(deadEntities), validDeathrattles, validEnchantments);
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];
 	// Order is important
 	if (fish.cardId === CardIds.FishOfNzothBattlegrounds) {
@@ -942,7 +941,6 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 	} else {
 		fish.rememberedDeathrattles = [...newDeathrattles, ...(fish.rememberedDeathrattles || [])];
 	}
-	// console.debug('remembered dr', fish.rememberedDeathrattles);
 };
 
 const removeOldMurkEyeAttack = (boardWithDeadEntity: BoardEntity[], allCards: AllCardsService) => {

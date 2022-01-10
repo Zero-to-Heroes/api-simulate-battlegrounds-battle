@@ -87,6 +87,7 @@ export const simulateAttack = (
 	}
 	removeAuras(attackingBoard, spawns);
 	removeAuras(defendingBoard, spawns);
+	// If entities that were before the attacker died, we need to update the attacker index
 	return attackingEntityIndex;
 };
 
@@ -294,6 +295,7 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: nu
 	// Once an entity has attacked, no entity to the left of it can attack until all entities
 	// on the board have attacked
 	if (lastAttackerIndex != null) {
+		// This doesn't work if any entity that appears before the attacked index died in-between
 		const candidates = validAttackers.slice(lastAttackerIndex);
 		if (candidates.length > 0) {
 			validAttackers = candidates;

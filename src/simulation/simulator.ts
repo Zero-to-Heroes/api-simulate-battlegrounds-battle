@@ -93,6 +93,7 @@ export class Simulator {
 				this.currentSpeedAttacker = -1;
 			}
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
+				const opponentEntitiesBeforeAttack = opponentBoard.map((e) => e.entityId).slice(0, this.lastOpponentAttackerEntityIndex);
 				this.lastPlayerAttackerEntityIndex = simulateAttack(
 					playerBoard,
 					playerEntity,
@@ -104,7 +105,11 @@ export class Simulator {
 					this.sharedState,
 					spectator,
 				);
+				const opponentEntitiesAfterAttack = opponentBoard.map((e) => e.entityId);
+				const opponentEntitiesThatDied = opponentEntitiesBeforeAttack.filter((e) => !opponentEntitiesAfterAttack.includes(e));
+				this.lastOpponentAttackerEntityIndex -= opponentEntitiesThatDied.length;
 			} else {
+				const playerEntitiesBeforeAttack = playerBoard.map((e) => e.entityId).slice(0, this.lastPlayerAttackerEntityIndex);
 				this.lastOpponentAttackerEntityIndex = simulateAttack(
 					opponentBoard,
 					opponentEntity,
@@ -116,7 +121,13 @@ export class Simulator {
 					this.sharedState,
 					spectator,
 				);
+				const playerEntitiesAfterAttack = playerBoard.map((e) => e.entityId);
+				const playerEntitiesThatDied = playerEntitiesBeforeAttack.filter((e) => !playerEntitiesAfterAttack.includes(e));
+				this.lastPlayerAttackerEntityIndex -= playerEntitiesThatDied.length;
 			}
+
+			// Update the attacker indices in case there were some deaths
+
 			if (playerBoard.some((entity) => entity.attackImmediately)) {
 				this.currentSpeedAttacker = 0;
 			} else if (opponentBoard.some((entity) => entity.attackImmediately)) {
