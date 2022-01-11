@@ -81,7 +81,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		battleInput.opponentBoard.player.cardId,
 		battleInput.opponentBoard.player.heroPowerId,
 	);
-	console.time('simulation');
+	!battleInput.options?.skipInfoLogs && console.time('simulation');
 	for (let i = 0; i < numberOfSimulations; i++) {
 		// global.gc();
 		// continue;
@@ -147,7 +147,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	if (simulationResult.averageDamageLost > 0 && simulationResult.averageDamageLost < opponentInfo.player.tavernTier) {
 		console.warn('average damage lost issue', simulationResult, opponentInfo);
 	}
-	console.timeEnd('simulation');
+	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
 	spectator.prune();
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
 	// spectator.reset();
