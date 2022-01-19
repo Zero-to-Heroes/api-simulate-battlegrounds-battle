@@ -7,7 +7,13 @@ import { pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
 import { afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { applyAuras, removeAuras } from './auras';
-import { addCardsInHand, applyMinionDeathEffect, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
+import {
+	addCardsInHand,
+	applyMinionDeathEffect,
+	applyMonstrosity,
+	handleDeathrattleEffects,
+	rememberDeathrattles,
+} from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { SharedState } from './shared-state';
@@ -99,7 +105,7 @@ const applyAfterAttackEffects = (
 	spectator: Spectator,
 ): void => {
 	if (attackingEntity.cardId === CardIds.Bonker || attackingEntity.cardId === CardIds.BonkerBattlegrounds) {
-		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator);
+		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator, CardIds.BloodGem);
 	}
 };
 
@@ -152,18 +158,20 @@ const performAttack = (
 			sharedState,
 			spectator,
 		);
-		bumpEntities(
-			defendingEntity,
-			attackingEntity,
-			defendingBoard,
-			defendingBoardHero,
-			attackingBoard,
-			attackingBoardHero,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		if (attackingEntity.immuneWhenAttackCharges <= 0) {
+			bumpEntities(
+				defendingEntity,
+				attackingEntity,
+				defendingBoard,
+				defendingBoardHero,
+				attackingBoard,
+				attackingBoardHero,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
+		}
 	}
 	// Cleave
 	if (attackingEntity.cleave) {
@@ -218,6 +226,7 @@ const performAttack = (
 
 	attackingEntity.attackImmediately = false;
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
+	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 };
 
 const triggerRandomDeathrattle = (
@@ -477,12 +486,12 @@ export const bumpEntities = (
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
-				modifyHealth(entityBoard[i], 2);
+				modifyHealth(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcerBattlegrounds) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
-				modifyHealth(entityBoard[i], 4);
+				modifyHealth(entityBoard[i], 4, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
 			} else if (
@@ -491,9 +500,9 @@ export const bumpEntities = (
 			) {
 				entityBoard[i].divineShield = true;
 			} else if (entityBoard[i].cardId === CardIds.Gemsplitter) {
-				addCardsInHand(entityBoardHero, 1, entityBoard, allCards, spectator);
+				addCardsInHand(entityBoardHero, 1, entityBoard, allCards, spectator, CardIds.BloodGem);
 			} else if (entityBoard[i].cardId === CardIds.GemsplitterBattlegrounds) {
-				addCardsInHand(entityBoardHero, 2, entityBoard, allCards, spectator);
+				addCardsInHand(entityBoardHero, 2, entityBoard, allCards, spectator, CardIds.BloodGem);
 			}
 
 			// So that self-buffs from Bolvar are taken into account
@@ -505,12 +514,12 @@ export const bumpEntities = (
 		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
 		greaseBots.forEach((bot) => {
 			modifyAttack(entity, 1, entityBoard, allCards);
-			modifyHealth(entity, 1);
+			modifyHealth(entity, 1, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
 			modifyAttack(entity, 2, entityBoard, allCards);
-			modifyHealth(entity, 2);
+			modifyHealth(entity, 2, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		return;
@@ -671,7 +680,6 @@ export const processMinionDeath = (
 	board1Hero: BgsPlayerEntity,
 	board2: BoardEntity[],
 	board2Hero: BgsPlayerEntity,
-
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -685,6 +693,7 @@ export const processMinionDeath = (
 		return;
 		// return [board1, board2];
 	}
+
 	sharedState.deaths.push(...deadEntities1);
 	sharedState.deaths.push(...deadEntities2);
 
@@ -818,6 +827,13 @@ export const processMinionDeath = (
 				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData));
+
+	board1
+		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
+		.forEach((entity) => applyMonstrosity(entity, deadEntities1, board1, allCards));
+	board2
+		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
+		.forEach((entity) => applyMonstrosity(entity, deadEntities2, board2, allCards));
 };
 
 const handleDeathrattlesForFirstBoard = (
@@ -918,12 +934,12 @@ export const applyOnAttackBuffs = (
 			.filter((e) => e.entityId !== attacker.entityId);
 		ripsnarls.forEach((captain) => {
 			modifyAttack(attacker, 2, attackingBoard, allCards);
-			modifyHealth(attacker, 2);
+			modifyHealth(attacker, 2, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
 		});
 		ripsnarlsTB.forEach((captain) => {
 			modifyAttack(attacker, 4, attackingBoard, allCards);
-			modifyHealth(attacker, 4);
+			modifyHealth(attacker, 4, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
 		});
 	}
@@ -936,14 +952,14 @@ export const applyOnAttackBuffs = (
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
 				modifyAttack(entity, 2, attackingBoard, allCards);
-				modifyHealth(entity, 1);
+				modifyHealth(entity, 1, attackingBoard, allCards);
 				spectator.registerPowerTarget(eliza, entity, attackingBoard);
 			});
 		});
 		elizasTB.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
 				modifyAttack(entity, 4, attackingBoard, allCards);
-				modifyHealth(entity, 2);
+				modifyHealth(entity, 2, attackingBoard, allCards);
 				spectator.registerPowerTarget(eliza, entity, attackingBoard);
 			});
 		});
@@ -961,12 +977,12 @@ export const applyOnBeingAttackedBuffs = (
 		const goldenChampions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarjBattlegrounds);
 		champions.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
-			modifyHealth(entity, 1);
+			modifyHealth(entity, 1, defendingBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, defendingBoard);
 		});
 		goldenChampions.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
-			modifyHealth(entity, 2);
+			modifyHealth(entity, 2, defendingBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, defendingBoard);
 		});
 
@@ -985,7 +1001,7 @@ export const applyOnBeingAttackedBuffs = (
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
-			modifyHealth(entity, 1);
+			modifyHealth(entity, 1, defendingBoard, allCards);
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
 	}
@@ -993,7 +1009,7 @@ export const applyOnBeingAttackedBuffs = (
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
-			modifyHealth(entity, 2);
+			modifyHealth(entity, 2, defendingBoard, allCards);
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
 	}
@@ -1029,12 +1045,12 @@ const handleKillEffects = (
 		for (const entity of killerBoard) {
 			if (entity.cardId === CardIds.WaxriderTogwaggle2) {
 				modifyAttack(entity, 2, killerBoard, allCards);
-				modifyHealth(entity, 2);
+				modifyHealth(entity, 2, killerBoard, allCards);
 				afterStatsUpdate(entity, killerBoard, allCards);
 				spectator.registerPowerTarget(entity, entity, killerBoard);
 			} else if (entity.cardId === CardIds.WaxriderTogwaggleBattlegrounds) {
 				modifyAttack(entity, 4, killerBoard, allCards);
-				modifyHealth(entity, 4);
+				modifyHealth(entity, 4, killerBoard, allCards);
 				afterStatsUpdate(entity, killerBoard, allCards);
 				spectator.registerPowerTarget(entity, entity, killerBoard);
 			}
@@ -1168,12 +1184,17 @@ const buildBoardAfterRebornSpawns = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	const otherEntityCardIds = boardWithKilledMinion.filter((e) => e.entityId !== deadEntity.entityId).map((e) => e.cardId);
+	const numberOfReborns =
+		1 +
+		1 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds1).length +
+		2 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds2).length;
 	// Reborn happens after deathrattles
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndex >= 0
 			? spawnEntities(
 					deadEntity.cardId,
-					1,
+					numberOfReborns,
 					boardWithKilledMinion,
 					boardWithKilledMinionHero,
 					opponentBoard,

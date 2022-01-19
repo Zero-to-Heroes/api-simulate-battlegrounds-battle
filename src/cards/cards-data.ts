@@ -8,6 +8,8 @@ export class CardsData {
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
+	public kilrekSpawns: readonly string[];
+	public brannEpicEggSpawns: readonly string[];
 	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
@@ -56,6 +58,16 @@ export class CardsData {
 			.filter((card) => card.id !== CardIds.GentleDjinni)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
+		this.kilrekSpawns = pool
+			.filter((card) => !this.isGolden(card))
+			.filter((card) => card.race === Race[Race.DEMON])
+			.filter((card) => card.id !== CardIds.KilrekBattlegrounds1)
+			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
+		this.brannEpicEggSpawns = pool
+			.filter((card) => !this.isGolden(card))
+			.filter((card) => hasMechanic(card, 'BATTLECRY'))
+			.map((card) => card.id);
 		this.pirateSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.race === 'PIRATE')
@@ -70,6 +82,8 @@ export class CardsData {
 			[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
 			[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
 			[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
+			[CardIds.LadySinestra, CardIds.LadySinestra_Enchantment],
+			[CardIds.LadySinestraBattlegrounds, CardIds.LadySinestra_EnchantmentBattlegrounds],
 		];
 		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);
 		this.startOfCombats = [
@@ -77,6 +91,8 @@ export class CardsData {
 			CardIds.RedWhelpBattlegrounds,
 			CardIds.PrizedPromoDrake,
 			CardIds.PrizedPromoDrakeBattlegrounds,
+			CardIds.CrabbyBattlegrounds1,
+			CardIds.CrabbyBattlegrounds2,
 		];
 	}
 
@@ -85,15 +101,19 @@ export class CardsData {
 			case CardIds.BirdBuddy:
 			case CardIds.BirdBuddyBattlegrounds:
 				return 1;
-			case CardIds.PalescaleCrocolisk:
-			case CardIds.PalescaleCrocoliskBattlegrounds:
+			case CardIds.FrostwolfLieutenant:
+			case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.MechanoTank:
 			case CardIds.MechanoTankBattlegrounds:
+			case CardIds.PalescaleCrocolisk:
+			case CardIds.PalescaleCrocoliskBattlegrounds:
+			case CardIds.StormpileLieutenant:
+			case CardIds.StormpileLieutenantBattlegrounds:
 				return 2;
-			case CardIds.Sisefin:
-			case CardIds.SisefinBattlegrounds:
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:
+			case CardIds.Sisefin:
+			case CardIds.SisefinBattlegrounds:
 				return 3;
 			case CardIds.ImpatientDoomsayer:
 			case CardIds.ImpatientDoomsayerBattlegrounds:

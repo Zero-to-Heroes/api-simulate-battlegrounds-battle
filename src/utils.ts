@@ -30,6 +30,10 @@ const TAUNT_IDS = [
 	CardIds.InsatiableUrzulBattlegrounds,
 	CardIds.MasterOfRealities2,
 	CardIds.MasterOfRealitiesBattlegrounds,
+	CardIds.BrannsEpicEggBattlegrounds,
+	CardIds.BrannsEpicEggBattlegrounds2,
+	CardIds.KilrekBattlegrounds1,
+	CardIds.KilrekBattlegrounds2,
 ];
 const ATTACK_IMMEDIATELY_IDS = [CardIds.Scallywag_SkyPirateToken, CardIds.Scallywag_SkyPirateTokenBattlegrounds];
 export const MEGA_WINDFURY_IDS = [
@@ -54,7 +58,7 @@ export const buildSingleBoardEntity = (
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId as CardIds) !== -1;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId as CardIds) !== -1;
-	const result = addImpliedMechanics({
+	const newEntity = addImpliedMechanics({
 		attack: card.attack,
 		attacksPerformed: 0,
 		cardId: cardId,
@@ -75,24 +79,42 @@ export const buildSingleBoardEntity = (
 	} as BoardEntity);
 
 	if (spawnReborn) {
-		result.health = 1;
-		result.reborn = false;
+		newEntity.health = 1;
+		newEntity.reborn = false;
 	}
 
 	if (controllerHero?.heroPowerId === CardIds.SproutItOutBattlegrounds) {
-		result.taunt = true;
-		modifyAttack(result, 1, friendlyBoard, allCards);
-		modifyHealth(result, 2);
-		afterStatsUpdate(result, friendlyBoard, allCards);
+		newEntity.taunt = true;
+		modifyAttack(newEntity, 1, friendlyBoard, allCards);
+		modifyHealth(newEntity, 2, friendlyBoard, allCards);
+		afterStatsUpdate(newEntity, friendlyBoard, allCards);
 		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
 	} else if (controllerHero?.heroPowerId === CardIds.KurtrusAshfallen_CloseThePortal) {
-		modifyAttack(result, 2, friendlyBoard, allCards);
-		modifyHealth(result, 2);
-		afterStatsUpdate(result, friendlyBoard, allCards);
+		modifyAttack(newEntity, 2, friendlyBoard, allCards);
+		modifyHealth(newEntity, 2, friendlyBoard, allCards);
+		afterStatsUpdate(newEntity, friendlyBoard, allCards);
 		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
 	}
 
-	return result;
+	if (allCards.getCard(cardId).techLevel === controllerHero.tavernTier) {
+		const statsBonus =
+			4 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarj).length +
+			8 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds).length;
+		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
+		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
+		afterStatsUpdate(newEntity, friendlyBoard, allCards);
+	}
+
+	if (newEntity.taunt) {
+		const statsBonus =
+			2 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreant).length +
+			4 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds).length;
+		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
+		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
+		afterStatsUpdate(newEntity, friendlyBoard, allCards);
+	}
+
+	return newEntity;
 };
 
 export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
@@ -104,12 +126,38 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
 		const whelpSmugglersBattlegrounds = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds);
 		whelpSmugglers.forEach((smuggler) => {
-			modifyHealth(entity, 1);
+			modifyHealth(entity, 1, friendlyBoard, allCards);
 		});
 		whelpSmugglersBattlegrounds.forEach((smuggler) => {
-			modifyHealth(entity, 2);
+			modifyHealth(entity, 2, friendlyBoard, allCards);
 		});
 	}
+	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
+		const mishmashes = friendlyBoard.filter((e) => e.cardId === CardIds.Mishmash || e.cardId === CardIds.MishmashBattlegrounds);
+		mishmashes.forEach((mishmash) => {
+			modifyAttack(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds ? 2 : 1) * amount, friendlyBoard, allCards);
+		});
+	}
+};
+
+export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
+	entity.health += amount;
+	if (amount > 0) {
+		entity.maxHealth += amount;
+	}
+	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
+		const mishmashes = friendlyBoard.filter((e) => e.cardId === CardIds.Mishmash || e.cardId === CardIds.MishmashBattlegrounds);
+		mishmashes.forEach((mishmash) => {
+			modifyHealth(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds ? 2 : 1) * amount, friendlyBoard, allCards);
+		});
+	}
+
+	const titanicGuardians = friendlyBoard
+		.filter((e) => e.entityId !== entity.entityId)
+		.filter((e) => e.cardId === CardIds.TitanicGuardian || e.cardId === CardIds.TitanicGuardianBattlegrounds);
+	titanicGuardians.forEach((tentacle) => {
+		modifyHealth(entity, (tentacle.cardId === CardIds.TitanicGuardianBattlegrounds ? 2 : 1) * amount, friendlyBoard, allCards);
+	});
 };
 
 export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
@@ -119,16 +167,16 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 		);
 		masterOfRealities.forEach((master) => {
 			modifyAttack(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
-			modifyHealth(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1);
+			modifyHealth(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
 		});
 	}
-};
-
-export const modifyHealth = (entity: BoardEntity, amount: number): void => {
-	entity.health += amount;
-	if (amount > 0) {
-		entity.maxHealth += amount;
-	}
+	const tentaclesOfCthun = friendlyBoard
+		.filter((e) => e.entityId !== entity.entityId)
+		.filter((e) => e.cardId === CardIds.TentaclesOfCthun || e.cardId === CardIds.TentaclesOfCthunBattlegrounds);
+	tentaclesOfCthun.forEach((tentacle) => {
+		modifyAttack(entity, tentacle.cardId === CardIds.TentaclesOfCthunBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+		modifyHealth(entity, tentacle.cardId === CardIds.TentaclesOfCthunBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+	});
 };
 
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {

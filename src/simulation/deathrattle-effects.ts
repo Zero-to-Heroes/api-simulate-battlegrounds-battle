@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { groupByFunction } from '../services/utils';
+import { groupByFunction, pickRandom } from '../services/utils';
 import { afterStatsUpdate, getRaceEnum, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -37,6 +37,36 @@ export const handleDeathrattleEffects = (
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
+			}
+			break;
+		case CardIds.SpiritOfAir:
+			for (let i = 0; i < multiplier; i++) {
+				const target = pickRandom(boardWithDeadEntity);
+				if (target) {
+					target.divineShield = true;
+					target.taunt = true;
+					target.windfury = true;
+					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				}
+			}
+			break;
+		case CardIds.SpiritOfAirBattlegrounds:
+			for (let i = 0; i < multiplier; i++) {
+				const target = pickRandom(boardWithDeadEntity);
+				if (target) {
+					target.divineShield = true;
+					target.taunt = true;
+					target.windfury = true;
+					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+
+					const target2 = pickRandom(boardWithDeadEntity.filter((e) => e.entityId !== target.entityId));
+					if (target2) {
+						target2.divineShield = true;
+						target2.taunt = true;
+						target2.windfury = true;
+						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+					}
+				}
 			}
 			break;
 		case CardIds.NadinaTheRed:
@@ -116,6 +146,54 @@ export const handleDeathrattleEffects = (
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
 			break;
+		case CardIds.ElementiumSquirrelBomb:
+			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+			// could be spawned between the shots firing), but let's say it's good enough for now
+			for (let i = 0; i < multiplier; i++) {
+				const numberOfDeadMechsThisCombat = sharedState.deaths
+					.filter((entity) => entity.friendly === deadEntity.friendly)
+					// eslint-disable-next-line prettier/prettier
+					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH)).length;
+				for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+					dealDamageToRandomEnemy(
+						otherBoard,
+						otherBoardHero,
+						deadEntity,
+						4,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+					);
+				}
+			}
+			break;
+		case CardIds.ElementiumSquirrelBombBattlegrounds:
+			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+			// could be spawned between the shots firing), but let's say it's good enough for now
+			for (let i = 0; i < multiplier; i++) {
+				const numberOfDeadMechsThisCombat = sharedState.deaths
+					.filter((entity) => entity.friendly === deadEntity.friendly)
+					// eslint-disable-next-line prettier/prettier
+					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH)).length;
+				for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+					dealDamageToRandomEnemy(
+						otherBoard,
+						otherBoardHero,
+						deadEntity,
+						8,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+					);
+				}
+			}
+			break;
 		case CardIds.KaboomBot:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
@@ -162,6 +240,35 @@ export const handleDeathrattleEffects = (
 				);
 			}
 			break;
+
+		case CardIds.SrTombDiver:
+			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
+				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - i];
+				if (rightMostMinion) {
+					const refCard = allCards.getCard(rightMostMinion.cardId);
+					const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+					rightMostMinion.cardId = goldenCard.id;
+					modifyAttack(rightMostMinion, refCard.attack, boardWithDeadEntity, allCards);
+					modifyHealth(rightMostMinion, refCard.health, boardWithDeadEntity, allCards);
+					afterStatsUpdate(rightMostMinion, boardWithDeadEntity, allCards);
+					spectator.registerPowerTarget(deadEntity, rightMostMinion, boardWithDeadEntity);
+				}
+				break;
+			}
+		case CardIds.SrTombDiverBattlegrounds:
+			for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
+				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - i];
+				if (rightMostMinion) {
+					const refCard = allCards.getCard(rightMostMinion.cardId);
+					const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+					rightMostMinion.cardId = goldenCard.id;
+					modifyAttack(rightMostMinion, refCard.attack, boardWithDeadEntity, allCards);
+					modifyHealth(rightMostMinion, refCard.health, boardWithDeadEntity, allCards);
+					afterStatsUpdate(rightMostMinion, boardWithDeadEntity, allCards);
+					spectator.registerPowerTarget(deadEntity, rightMostMinion, boardWithDeadEntity);
+				}
+				break;
+			}
 	}
 
 	// It's important to first copy the enchantments, otherwise you could end up
@@ -204,7 +311,116 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
+			case CardIds.SpiritRaptor_EarthInvocationEnchantment:
+				applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				break;
+			case CardIds.SpiritRaptor_FireInvocationEnchantment:
+				applyFireInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				break;
+			case CardIds.SpiritRaptor_WaterInvocationEnchantment:
+				applyWaterInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				break;
+			case CardIds.SpiritRaptor_LightningInvocationEnchantment:
+				applyLightningInvocationEnchantment(
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					deadEntity,
+					otherBoard,
+					otherBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+				break;
 		}
+	}
+};
+
+const applyLightningInvocationEnchantment = (
+	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
+	deadEntity: BoardEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	for (let i = 0; i < multiplier; i++) {
+		for (let j = 0; j < 5; j++) {
+			dealDamageToRandomEnemy(
+				otherBoard,
+				otherBoardHero,
+				deadEntity,
+				1,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		}
+		const target: BoardEntity = boardWithDeadEntity[boardWithDeadEntity.length - 1];
+		if (!!target) {
+			modifyHealth(target, 3, boardWithDeadEntity, allCards);
+			target.taunt = true;
+			afterStatsUpdate(target, boardWithDeadEntity, allCards);
+		}
+	}
+};
+
+const applyWaterInvocationEnchantment = (
+	boardWithDeadEntity: BoardEntity[],
+	deadEntity: BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	for (let i = 0; i < multiplier; i++) {
+		const target: BoardEntity = boardWithDeadEntity[boardWithDeadEntity.length - 1];
+		if (!!target) {
+			modifyHealth(target, 3, boardWithDeadEntity, allCards);
+			target.taunt = true;
+			afterStatsUpdate(target, boardWithDeadEntity, allCards);
+		}
+	}
+};
+
+const applyFireInvocationEnchantment = (
+	boardWithDeadEntity: BoardEntity[],
+	deadEntity: BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	for (let i = 0; i < multiplier; i++) {
+		const target: BoardEntity = boardWithDeadEntity[0];
+		if (!!target) {
+			modifyAttack(target, target.attack, boardWithDeadEntity, allCards);
+			afterStatsUpdate(target, boardWithDeadEntity, allCards);
+		}
+	}
+};
+
+const applyEarthInvocationEnchantment = (
+	boardWithDeadEntity: BoardEntity[],
+	deadEntity: BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	for (let i = 0; i < multiplier; i++) {
+		const minionsGrantedDeathrattle: BoardEntity[] = pickMultipleRandomDifferent(boardWithDeadEntity, 4);
+		minionsGrantedDeathrattle.forEach((minion) => {
+			minion.enchantments.push({
+				cardId: CardIds.EarthInvocation_InvokedEnchantment,
+				originEntityId: deadEntity.entityId,
+			});
+		});
 	}
 };
 
@@ -269,7 +485,7 @@ export const addStatsToBoard = (
 	for (const entity of board) {
 		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
 			modifyAttack(entity, attack, board, allCards);
-			modifyHealth(entity, health);
+			modifyHealth(entity, health, board, allCards);
 			afterStatsUpdate(entity, board, allCards);
 			spectator.registerPowerTarget(sourceEntity, entity, board);
 		}
@@ -434,7 +650,7 @@ export const applyMinionDeathEffect = (
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 2, boardWithDeadEntity, allCards);
-				modifyHealth(pirate, 2);
+				modifyHealth(pirate, 2, boardWithDeadEntity, allCards);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
 			});
@@ -444,7 +660,7 @@ export const applyMinionDeathEffect = (
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 4, boardWithDeadEntity, allCards);
-				modifyHealth(pirate, 4);
+				modifyHealth(pirate, 4, boardWithDeadEntity, allCards);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
 			});
@@ -538,10 +754,32 @@ const handleAvenge = (
 			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
 			neighbours.forEach((entity) => {
 				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2, boardWithDeadEntity, allCards);
-				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1);
+				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1, boardWithDeadEntity, allCards);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
 			});
+			break;
+		case CardIds.FrostwolfLieutenant:
+		case CardIds.FrostwolfLieutenantBattlegrounds:
+			addStatsToBoard(
+				avenger,
+				boardWithDeadEntity,
+				avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
+				0,
+				allCards,
+				spectator,
+			);
+			break;
+		case CardIds.StormpikeLieutenant:
+		case CardIds.StormpikeLieutenantBattlegrounds:
+			addStatsToBoard(
+				avenger,
+				boardWithDeadEntity,
+				0,
+				avenger.cardId === CardIds.StormpikeLieutenantBattlegrounds ? 2 : 1,
+				allCards,
+				spectator,
+			);
 			break;
 		case CardIds.PalescaleCrocolisk:
 			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
@@ -571,7 +809,7 @@ const handleAvenge = (
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.ThorncallerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
+			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator, CardIds.BloodGem);
 			break;
 		case CardIds.Sisefin:
 			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
@@ -639,7 +877,7 @@ const handleAvenge = (
 				const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 				pirate.cardId = goldenCard.id;
 				modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
-				modifyHealth(pirate, refCard.health);
+				modifyHealth(pirate, refCard.health, boardWithDeadEntity, allCards);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 			}
@@ -655,7 +893,7 @@ const handleAvenge = (
 					const refCard = allCards.getCard(pirate.cardId);
 					pirate.cardId = refCard.id;
 					modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
-					modifyHealth(pirate, refCard.health);
+					modifyHealth(pirate, refCard.health, boardWithDeadEntity, allCards);
 					afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
 					spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
 				}
@@ -774,12 +1012,12 @@ const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsServ
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.ScavengingHyenaLegacy) {
 			modifyAttack(board[i], 2, board, allCards);
-			modifyHealth(board[i], 1);
+			modifyHealth(board[i], 1, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
 			spectator.registerPowerTarget(board[i], board[i], board);
 		} else if (board[i].cardId === CardIds.ScavengingHyenaBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
-			modifyHealth(board[i], 2);
+			modifyHealth(board[i], 2, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
 			spectator.registerPowerTarget(board[i], board[i], board);
 		}
@@ -790,12 +1028,12 @@ const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService, spe
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.Junkbot) {
 			modifyAttack(board[i], 2, board, allCards);
-			modifyHealth(board[i], 2);
+			modifyHealth(board[i], 2, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
 			spectator.registerPowerTarget(board[i], board[i], board);
 		} else if (board[i].cardId === CardIds.JunkbotBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
-			modifyHealth(board[i], 4);
+			modifyHealth(board[i], 4, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
 			spectator.registerPowerTarget(board[i], board[i], board);
 		}
@@ -842,7 +1080,7 @@ const grantRandomHealth = (
 	const candidateBoard = board.filter((e) => !excludeSource || e.entityId !== source.entityId);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyHealth(target, health);
+		modifyHealth(target, health, board, allCards);
 		afterStatsUpdate(target, board, allCards);
 		spectator.registerPowerTarget(source, target, board);
 	}
@@ -861,7 +1099,7 @@ const grantRandomStats = (
 		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
-			modifyHealth(validBeast, health);
+			modifyHealth(validBeast, health, board, allCards);
 			afterStatsUpdate(validBeast, board, allCards);
 			spectator.registerPowerTarget(source, validBeast, board);
 			return validBeast;
@@ -876,8 +1114,12 @@ export const addCardsInHand = (
 	board: BoardEntity[],
 	allCards: AllCardsService,
 	spectator: Spectator,
+	cardAdded: CardIds = null,
 ): void => {
-	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + cards);
+	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
+	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
+	const multiplier = 1 + (cardAdded === CardIds.BloodGem ? sages.length + 2 * sagesGolden.length : 0);
+	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + multiplier * cards);
 
 	const peggys = board.filter((e) => e.cardId === CardIds.PeggyBrittlebone || e.cardId === CardIds.PeggyBrittleboneBattlegrounds);
 	peggys.forEach((peggy) => {
@@ -888,7 +1130,7 @@ export const addCardsInHand = (
 		);
 		if (pirate) {
 			modifyAttack(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
-			modifyHealth(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1);
+			modifyHealth(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
 			afterStatsUpdate(pirate, board, allCards);
 			spectator.registerPowerTarget(peggy, pirate, board);
 		}
@@ -915,6 +1157,20 @@ const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCar
 	// return board;
 };
 
+export const applyMonstrosity = (
+	monstrosity: BoardEntity,
+	deadEntities: readonly BoardEntity[],
+	boardWithDeadEntities: BoardEntity[],
+	allCards: AllCardsService,
+): void => {
+	for (const deadEntity of deadEntities) {
+		modifyAttack(monstrosity, deadEntity.attack, boardWithDeadEntities, allCards);
+		if (monstrosity.cardId === CardIds.MonstrosityBattlegrounds) {
+			modifyAttack(monstrosity, deadEntity.attack, boardWithDeadEntities, allCards);
+		}
+	}
+};
+
 export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly BoardEntity[], cardsData: CardsData): void => {
 	const validDeathrattles = deadEntities
 		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId))
@@ -930,6 +1186,10 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 				CardIds.LivingSpores_LivingSporesEnchantment,
 				CardIds.SneedsReplicator_ReplicateEnchantment,
+				CardIds.SpiritRaptor_EarthInvocationEnchantment,
+				CardIds.SpiritRaptor_FireInvocationEnchantment,
+				CardIds.SpiritRaptor_WaterInvocationEnchantment,
+				CardIds.SpiritRaptor_LightningInvocationEnchantment,
 			].includes(enchantmentId as CardIds),
 		);
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];

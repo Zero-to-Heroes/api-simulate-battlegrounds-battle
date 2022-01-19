@@ -1,4 +1,5 @@
 import { AllCardsService, getEffectiveTechLevel } from '@firestone-hs/reference-data';
+import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -29,6 +30,7 @@ export class Simulator {
 		playerEntity: BgsPlayerEntity,
 		opponentBoard: BoardEntity[],
 		opponentEntity: BgsPlayerEntity,
+		gameState: BgsGameState,
 		spectator: Spectator,
 	): SingleSimulationResult {
 		spectator.registerStartOfCombat(playerBoard, opponentBoard);
@@ -63,6 +65,7 @@ export class Simulator {
 			this.allCards,
 			this.spawns,
 			this.sharedState,
+			gameState,
 			spectator,
 		);
 		// When both players have the same amount of minions, it's possible that Illidan's Start of Combat

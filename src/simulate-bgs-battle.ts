@@ -18,7 +18,7 @@ export default async (event): Promise<any> => {
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
 	await cards.initializeCardsDb('121569');
 	const cardsData = new CardsData(cards, false);
-	cardsData.inititialize(battleInput.options?.validTribes);
+	cardsData.inititialize(battleInput.gameState?.validTribes ?? battleInput.options?.validTribes);
 	const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
 	const response = {
@@ -92,6 +92,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			input.playerBoard.player,
 			input.opponentBoard.board,
 			input.opponentBoard.player,
+			input.gameState,
 			spectator,
 		);
 		if (Date.now() - start > maxAcceptableDuration) {
@@ -180,6 +181,10 @@ export const validEnchantments = [
 	CardIds.Leapfrogger_LeapfrogginEnchantment2,
 	CardIds.Sneed_SneedsReplicator,
 	CardIds.SneedsReplicator_ReplicateEnchantment,
+	CardIds.SpiritRaptor_EarthInvocationEnchantment,
+	CardIds.SpiritRaptor_FireInvocationEnchantment,
+	CardIds.SpiritRaptor_WaterInvocationEnchantment,
+	CardIds.SpiritRaptor_LightningInvocationEnchantment,
 ];
 
 const cleanEnchantmentsForEntity = (

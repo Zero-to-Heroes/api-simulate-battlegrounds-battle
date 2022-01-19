@@ -63,7 +63,7 @@ export const spawnEntities = (
 			const mamaBears = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.MamaBear);
 			mamaBears.forEach((buffer) => {
 				modifyAttack(newMinion, 5, boardToSpawnInto, allCards);
-				modifyHealth(newMinion, 5);
+				modifyHealth(newMinion, 5, boardToSpawnInto, allCards);
 				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
 				// spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
 			});
@@ -71,7 +71,7 @@ export const spawnEntities = (
 			const mamaBearBattlegrounds = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.MamaBearBattlegrounds);
 			mamaBearBattlegrounds.forEach((buffer) => {
 				modifyAttack(newMinion, 10, boardToSpawnInto, allCards);
-				modifyHealth(newMinion, 10);
+				modifyHealth(newMinion, 10, boardToSpawnInto, allCards);
 				afterStatsUpdate(newMinion, boardToSpawnInto, allCards);
 				// spectator.registerPowerTarget(buffer, newMinion, boardToSpawnInto);
 			});
@@ -87,13 +87,13 @@ export const spawnEntities = (
 			const goldenBigfernals = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.BigfernalBattlegrounds);
 			bigfernals.forEach((entity) => {
 				modifyAttack(entity, 1, boardToSpawnInto, allCards);
-				modifyHealth(entity, 1);
+				modifyHealth(entity, 1, boardToSpawnInto, allCards);
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
 				// spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
 			goldenBigfernals.forEach((entity) => {
 				modifyAttack(entity, 2, boardToSpawnInto, allCards);
-				modifyHealth(entity, 2);
+				modifyHealth(entity, 2, boardToSpawnInto, allCards);
 				afterStatsUpdate(entity, boardToSpawnInto, allCards);
 				// spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
@@ -766,6 +766,98 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 
+			case CardIds.KilrekBattlegrounds1:
+				// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
+				// but close enough for now
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					Math.min(1, 7 - boardWithDeadEntity.length),
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+				);
+				break;
+			case CardIds.KilrekBattlegrounds2:
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					Math.min(2, 7 - boardWithDeadEntity.length),
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+				);
+				break;
+
+			case CardIds.BrannsEpicEggBattlegrounds:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.brannEpicEggSpawns[Math.floor(Math.random() * spawns.brannEpicEggSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
+				// but close enough for now
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					Math.min(1, 7 - boardWithDeadEntity.length),
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+				);
+				break;
+			case CardIds.BrannsEpicEggBattlegrounds2:
+				spawnedEntities.push(
+					...[
+						...spawnEntities(
+							spawns.brannEpicEggSpawns[Math.floor(Math.random() * spawns.brannEpicEggSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+						...spawnEntities(
+							spawns.brannEpicEggSpawns[Math.floor(Math.random() * spawns.brannEpicEggSpawns.length)],
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					],
+				);
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					Math.min(2, 7 - boardWithDeadEntity.length),
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+				);
+				break;
+
 			case CardIds.GhastcoilerBattlegrounds:
 				spawnedEntities.push(
 					...[
@@ -1174,6 +1266,24 @@ export const spawnEntitiesFromEnchantments = (
 						...spawnEntities(
 							CardIds.LivingSpores_PlantToken,
 							2,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.EarthInvocation_InvokedEnchantment:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.EarthInvocation_ElementalToken,
+							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,

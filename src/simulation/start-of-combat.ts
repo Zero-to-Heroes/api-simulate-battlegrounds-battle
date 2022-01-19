@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -26,12 +27,22 @@ const handleIllidanForPlayer = (
 	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
 	afterStatsUpdate(playerBoard[0], playerBoard, allCards);
 	spectator.registerPowerTarget(playerBoard[0], playerBoard[0], playerBoard);
+	if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds)) {
+		playerBoard[0].immuneWhenAttackingChargesLeft = 2;
+	} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari)) {
+		playerBoard[0].immuneWhenAttackingChargesLeft = 1;
+	}
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 
 	if (minionsAtStart > 1) {
 		modifyAttack(playerBoard[playerBoard.length - 1], 2, playerBoard, allCards);
 		afterStatsUpdate(playerBoard[playerBoard.length - 1], playerBoard, allCards);
 		spectator.registerPowerTarget(playerBoard[playerBoard.length - 1], playerBoard[playerBoard.length - 1], playerBoard);
+		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds)) {
+			playerBoard[playerBoard.length - 1].immuneWhenAttackingChargesLeft = 2;
+		} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari)) {
+			playerBoard[playerBoard.length - 1].immuneWhenAttackingChargesLeft = 1;
+		}
 		simulateAttack(
 			playerBoard,
 			playerEntity,
@@ -165,6 +176,7 @@ export const handleStartOfCombat = (
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
+	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
@@ -237,6 +249,7 @@ export const handleStartOfCombat = (
 				allCards,
 				spawns,
 				sharedState,
+				gameState,
 				spectator,
 			);
 		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
@@ -250,6 +263,7 @@ export const handleStartOfCombat = (
 				allCards,
 				spawns,
 				sharedState,
+				gameState,
 				spectator,
 			);
 		}
@@ -282,6 +296,7 @@ export const performStartOfCombat = (
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
+	gameState: BgsGameState,
 	spectator: Spectator,
 ): void => {
 	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
@@ -364,7 +379,7 @@ export const performStartOfCombat = (
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, numberOfDragons, attackingBoard, allCards);
-			modifyHealth(entity, numberOfDragons);
+			modifyHealth(entity, numberOfDragons, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
@@ -375,7 +390,17 @@ export const performStartOfCombat = (
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2 * dragons, attackingBoard, allCards);
-			modifyHealth(entity, 2 * dragons);
+			modifyHealth(entity, 2 * dragons, attackingBoard, allCards);
+			afterStatsUpdate(entity, attackingBoard, allCards);
+			spectator.registerPowerTarget(attacker, entity, attackingBoard);
+		});
+	} else if (attacker.cardId === CardIds.CrabbyBattlegrounds1 || attacker.cardId === CardIds.CrabbyBattlegrounds2) {
+		const currentTurn = gameState.currentTurn;
+		const neighbours = getNeighbours(attackingBoard, attacker);
+		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds2 ? 2 : 1;
+		neighbours.forEach((entity) => {
+			modifyAttack(entity, multiplier * currentTurn, attackingBoard, allCards);
+			modifyHealth(entity, multiplier * currentTurn, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});

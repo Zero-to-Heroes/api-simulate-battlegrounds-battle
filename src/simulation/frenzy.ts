@@ -25,6 +25,7 @@ export const applyFrenzy = (
 			entityWithFrenzyBoard,
 			allCards,
 			spectator,
+			CardIds.BloodGem,
 		);
 	}
 };
