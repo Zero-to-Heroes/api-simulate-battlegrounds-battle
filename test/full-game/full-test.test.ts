@@ -5,12 +5,16 @@ import { SharedState } from '../../src/simulation/shared-state';
 import { encode } from '../../src/utils';
 import jsonEvent3 from './game.json';
 
-describe.skip('Full tests for performance and accuracy', () => {
+describe('Full tests for performance and accuracy', () => {
 	test.only('full test 3', async () => {
 		const input: BgsBattleInfo = {
 			...jsonEvent3,
 			options: {
 				numberOfSimulations: 10000,
+				skipInfoLogs: false,
+			},
+			gameState: {
+				currentTurn: 0,
 			},
 		};
 		SharedState.debugEnabled = false;
@@ -21,9 +25,9 @@ describe.skip('Full tests for performance and accuracy', () => {
 			outcomeSamples: undefined,
 		});
 
-		const sample = simulationResult.outcomeSamples.tied[0];
+		const sample = simulationResult.outcomeSamples.won[0];
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
+		// console.log('encoded', base64);
 	});
 });
 

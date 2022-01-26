@@ -1,48 +1,68 @@
 {
 	"playerBoard": {
-		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
+		"player": {
+			"cardId": "TB_BaconShop_HERO_KelThuzad",
+			"hpLeft": 40,
+			"tavernTier": 6,
+			"heroPowerId": null,
+			"heroPowerUsed": true,
+			"heroPowerInfo": 0
+		},
 		"board": [
 			{
-				"entityId": 1,
-				"cardId": "BG21_022",
-				"attack": 2,
-				"health": 1,
-				"divineShield": true,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 13,
-				"cardId": "EX1_534",
-				"attack": 6,
-				"health": 101,
-				"divineShield": true,
-				"poisonous": false,
-				"taunt": true,
-				"reborn": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			},
-			{
-				"entityId": 14,
-				"cardId": "TB_BaconShop_HP_033t",
+				"entityId": 3,
+				"cardId": "BGS_106",
 				"attack": 2,
 				"health": 2,
 				"divineShield": false,
-				"poisonous": true,
+				"poisonous": false,
+				"taunt": true,
+				"reborn": true,
+				"windfury": false,
+				"megaWindfury": false,
+				"enchantments": []
+			},
+			{ "entityId": 4, "cardId": "BGS_115", "attack": 2, "health": 2, "enchantments": [] }
+		]
+	},
+	"opponentBoard": {
+		"player": {
+			"cardId": "TB_BaconShop_HERO_KelThuzad",
+			"hpLeft": 40,
+			"tavernTier": 6,
+			"heroPowerId": null,
+			"heroPowerUsed": true,
+			"heroPowerInfo": 0
+		},
+		"board": [
+			{
+				"entityId": 1,
+				"cardId": "BGS_106",
+				"attack": 2,
+				"health": 2,
+				"divineShield": false,
+				"poisonous": false,
+				"taunt": true,
+				"reborn": true,
+				"windfury": false,
+				"megaWindfury": false,
+				"enchantments": []
+			},
+			{
+				"entityId": 2,
+				"cardId": "ULD_217",
+				"attack": 1,
+				"health": 2,
+				"divineShield": false,
+				"poisonous": false,
 				"taunt": false,
+				"reborn": true,
+				"windfury": false,
+				"megaWindfury": false,
 				"enchantments": []
 			}
 		]
 	},
-	"opponentBoard": {
-		"player": { "cardId": "TB_BaconShop_HERO_KelThuzad", "hpLeft": 40, "tavernTier": 6, "heroPowerId": null, "heroPowerUsed": true },
-		"board": [{ "entityId": 5, "cardId": "TB_BaconShop_HP_033t", "attack": 100, "health": 100, "taunt": true, "enchantments": [] }]
-	},
-	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 }
+	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 },
+	"gameState": { "currentTurn": 0 }
 }

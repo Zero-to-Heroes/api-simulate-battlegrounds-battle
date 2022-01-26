@@ -158,7 +158,7 @@ const performAttack = (
 			sharedState,
 			spectator,
 		);
-		if (attackingEntity.immuneWhenAttackCharges <= 0) {
+		if (!attackingEntity.immuneWhenAttackCharges || attackingEntity.immuneWhenAttackCharges <= 0) {
 			bumpEntities(
 				defendingEntity,
 				attackingEntity,
@@ -171,6 +171,8 @@ const performAttack = (
 				sharedState,
 				spectator,
 			);
+		} else {
+			// console.log('immune when attack', attackingEntity);
 		}
 	}
 	// Cleave
