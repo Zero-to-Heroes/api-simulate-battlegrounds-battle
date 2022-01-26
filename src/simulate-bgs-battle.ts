@@ -181,10 +181,14 @@ export const validEnchantments = [
 	CardIds.Leapfrogger_LeapfrogginEnchantment2,
 	CardIds.Sneed_SneedsReplicator,
 	CardIds.SneedsReplicator_ReplicateEnchantment,
-	CardIds.SpiritRaptor_EarthInvocationEnchantment,
-	CardIds.SpiritRaptor_FireInvocationEnchantment,
-	CardIds.SpiritRaptor_WaterInvocationEnchantment,
-	CardIds.SpiritRaptor_LightningInvocationEnchantment,
+	CardIds.EarthRecollectionEnchantment, // Spirit Raptor
+	CardIds.FireRecollectionEnchantment,
+	CardIds.LightningRecollectionEnchantment,
+	CardIds.WaterRecollectionEnchantment,
+	CardIds.EarthInvocation_ElementEarthEnchantment, // Summon a 1/1
+	// CardIds.FireInvocation_ElementFireEnchantment, // Attack is doubled, probably no use to keep it
+	// CardIds.WaterInvocation_ElementWaterEnchantment, // +3 health and taunt, same
+	CardIds.LightningInvocation, // Deal 1 damage to 5 enemy minions
 ];
 
 const cleanEnchantmentsForEntity = (

@@ -5,9 +5,15 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
-import { dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
+import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
 import { applyAuras, removeAuras } from './auras';
-import { dealDamageToAllMinions } from './deathrattle-effects';
+import {
+	applyEarthInvocationEnchantment,
+	applyFireInvocationEnchantment,
+	applyLightningInvocationEnchantment,
+	applyWaterInvocationEnchantment,
+	dealDamageToAllMinions,
+} from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -27,10 +33,10 @@ const handleIllidanForPlayer = (
 	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
 	afterStatsUpdate(playerBoard[0], playerBoard, allCards);
 	spectator.registerPowerTarget(playerBoard[0], playerBoard[0], playerBoard);
-	if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds)) {
-		playerBoard[0].immuneWhenAttackingChargesLeft = 2;
-	} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari)) {
-		playerBoard[0].immuneWhenAttackingChargesLeft = 1;
+	if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2)) {
+		playerBoard[0].immuneWhenAttackCharges = 2;
+	} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)) {
+		playerBoard[0].immuneWhenAttackCharges = 1;
 	}
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 
@@ -38,10 +44,10 @@ const handleIllidanForPlayer = (
 		modifyAttack(playerBoard[playerBoard.length - 1], 2, playerBoard, allCards);
 		afterStatsUpdate(playerBoard[playerBoard.length - 1], playerBoard, allCards);
 		spectator.registerPowerTarget(playerBoard[playerBoard.length - 1], playerBoard[playerBoard.length - 1], playerBoard);
-		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds)) {
-			playerBoard[playerBoard.length - 1].immuneWhenAttackingChargesLeft = 2;
-		} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari)) {
-			playerBoard[playerBoard.length - 1].immuneWhenAttackingChargesLeft = 1;
+		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2)) {
+			playerBoard[playerBoard.length - 1].immuneWhenAttackCharges = 2;
+		} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)) {
+			playerBoard[playerBoard.length - 1].immuneWhenAttackCharges = 1;
 		}
 		simulateAttack(
 			playerBoard,
@@ -147,6 +153,88 @@ const handlePlayerStartOfCombatHeroPowers = (
 	} else if (playerHeroPowerId === CardIds.WingmenBattlegrounds && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		currentAttacker = (currentAttacker + 1) % 2;
+	} else if (playerHeroPowerId === CardIds.AimLeftToken) {
+		const target = opponentBoard[0];
+		const damageDone = dealDamageToEnemy(
+			target,
+			opponentBoard,
+			opponentEntity,
+			null,
+			playerEntity.heroPowerInfo ?? 0,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+		playerEntity.deadEyeDamageDone = damageDone;
+	} else if (playerHeroPowerId === CardIds.AimRightToken) {
+		const target = opponentBoard[opponentBoard.length - 1];
+		const damageDone = dealDamageToEnemy(
+			target,
+			opponentBoard,
+			opponentEntity,
+			null,
+			playerEntity.heroPowerInfo ?? 0,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+		playerEntity.deadEyeDamageDone = damageDone;
+	} else if (playerHeroPowerId === CardIds.AimLowToken) {
+		const target = [...opponentBoard].sort((a, b) => a.health - b.health)[0];
+		const damageDone = dealDamageToEnemy(
+			target,
+			opponentBoard,
+			opponentEntity,
+			null,
+			playerEntity.heroPowerInfo ?? 0,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+		playerEntity.deadEyeDamageDone = damageDone;
+	} else if (playerHeroPowerId === CardIds.AimHighToken) {
+		const target = [...opponentBoard].sort((a, b) => b.health - a.health)[0];
+		const damageDone = dealDamageToEnemy(
+			target,
+			opponentBoard,
+			opponentEntity,
+			null,
+			playerEntity.heroPowerInfo ?? 0,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
+		playerEntity.deadEyeDamageDone = damageDone;
+	} else if (playerHeroPowerId === CardIds.EarthInvocationToken) {
+		applyEarthInvocationEnchantment(playerBoard, null, allCards, spectator);
+	} else if (playerHeroPowerId === CardIds.WaterInvocationToken) {
+		applyWaterInvocationEnchantment(playerBoard, null, allCards, spectator);
+	} else if (playerHeroPowerId === CardIds.FireInvocationToken) {
+		applyFireInvocationEnchantment(playerBoard, null, allCards, spectator);
+	} else if (playerHeroPowerId === CardIds.LightningInvocationToken) {
+		applyLightningInvocationEnchantment(
+			playerBoard,
+			playerEntity,
+			null,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 	// else if (
 	// 	playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds &&
@@ -394,13 +482,12 @@ export const performStartOfCombat = (
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.CrabbyBattlegrounds1 || attacker.cardId === CardIds.CrabbyBattlegrounds2) {
-		const currentTurn = gameState.currentTurn;
+	} else if (attacker.cardId === CardIds.Crabby1 || attacker.cardId === CardIds.CrabbyBattlegrounds) {
 		const neighbours = getNeighbours(attackingBoard, attacker);
-		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds2 ? 2 : 1;
+		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds ? 2 : 1;
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, multiplier * currentTurn, attackingBoard, allCards);
-			modifyHealth(entity, multiplier * currentTurn, attackingBoard, allCards);
+			modifyAttack(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
+			modifyHealth(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});

@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.138",
+	"version": "1.1.141",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
@@ -28,10 +28,10 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
-		"@firestone-hs/reference-data": "^0.1.187",
-		"cross-fetch": "^3.0.6",
+		"@firestone-hs/reference-data": "^0.1.189",
+		"cross-fetch": "^3.1.5",
 		"lodash.clonedeep": "^4.5.0",
-		"node-fetch": "^2.6.1"
+		"node-fetch": "^2.6.7"
 	},
 	"devDependencies": {
 		"@types/jest": "^25.2.3",

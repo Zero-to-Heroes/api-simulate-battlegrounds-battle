@@ -787,7 +787,7 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 
-			case CardIds.BrannsEpicEggBattlegrounds:
+			case CardIds.BrannsEpicEggBattlegrounds1:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -1279,10 +1279,10 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.EarthInvocation_InvokedEnchantment:
+				case CardIds.EarthInvocation_ElementEarthEnchantment:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.EarthInvocation_ElementalToken,
+							CardIds.ElementEarth_StoneElementalToken,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

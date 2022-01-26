@@ -82,8 +82,8 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.SouthseaCaptainBattlegrounds:
 			applySouthseaCaptainAura(board, i, enchantmentId, cards);
 			return;
-		case CardIds.LadySinestra:
-		case CardIds.LadySinestraBattlegrounds:
+		case CardIds.LadySinestraBattlegrounds1:
+		case CardIds.LadySinestraBattlegrounds2:
 			applyLadySinestraAura(board, i, enchantmentId);
 			return;
 	}
@@ -113,8 +113,9 @@ const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEnti
 		case CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds:
 			removeSouthseaCaptainAura(entity, enchantmentId, board, deadAuraSource);
 			return;
-		case CardIds.LadySinestra_Enchantment:
-		case CardIds.LadySinestra_EnchantmentBattlegrounds:
+		// TODO find proper enchantment
+		case CardIds.DraconicBlessingEnchantmentBattlegrounds1:
+		case CardIds.DraconicBlessingEnchantmentBattlegrounds2:
 			removeLadySinestraAura(entity, enchantmentId);
 			return;
 		case CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds:
@@ -276,7 +277,8 @@ const applyLadySinestraAura = (board: BoardEntity[], index: number, enchantmentI
 	const originEntity = board[index];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		entity.attack += enchantmentId === CardIds.LadySinestra_EnchantmentBattlegrounds ? 6 : 3;
+		// TODO find proper enchantment
+		entity.attack += enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds2 ? 6 : 3;
 		entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
 	}
 };
@@ -330,6 +332,10 @@ const removeSouthseaCaptainAura = (
 
 const removeLadySinestraAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
-	entity.attack = Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === CardIds.LadySinestra_EnchantmentBattlegrounds ? 6 : 3));
+	// TODO: find proper enchantment
+	entity.attack = Math.max(
+		0,
+		entity.attack - numberOfBuffs * (enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds2 ? 6 : 3),
+	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };

@@ -4,7 +4,15 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { afterStatsUpdate, getRaceEnum, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import {
+	afterStatsUpdate,
+	getRaceEnum,
+	hasCorrectTribe,
+	isCorrectTribe,
+	modifyAttack,
+	modifyHealth,
+	pickMultipleRandomDifferent,
+} from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
 import { spawnEntities } from './deathrattle-spawns';
@@ -39,7 +47,7 @@ export const handleDeathrattleEffects = (
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
 			break;
-		case CardIds.SpiritOfAir:
+		case CardIds.SpiritOfAirBattlegrounds1:
 			for (let i = 0; i < multiplier; i++) {
 				const target = pickRandom(boardWithDeadEntity);
 				if (target) {
@@ -50,7 +58,7 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
-		case CardIds.SpiritOfAirBattlegrounds:
+		case CardIds.SpiritOfAirBattlegrounds2:
 			for (let i = 0; i < multiplier; i++) {
 				const target = pickRandom(boardWithDeadEntity);
 				if (target) {
@@ -146,7 +154,7 @@ export const handleDeathrattleEffects = (
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
 			break;
-		case CardIds.ElementiumSquirrelBomb:
+		case CardIds.ElementiumSquirrelBombBattlegrounds1:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
@@ -170,7 +178,7 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
-		case CardIds.ElementiumSquirrelBombBattlegrounds:
+		case CardIds.ElementiumSquirrelBombBattlegrounds2:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
@@ -241,7 +249,7 @@ export const handleDeathrattleEffects = (
 			}
 			break;
 
-		case CardIds.SrTombDiver:
+		case CardIds.SrTombDiverBattlegrounds1:
 			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - i];
 				if (rightMostMinion) {
@@ -255,7 +263,7 @@ export const handleDeathrattleEffects = (
 				}
 				break;
 			}
-		case CardIds.SrTombDiverBattlegrounds:
+		case CardIds.SrTombDiverBattlegrounds2:
 			for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - i];
 				if (rightMostMinion) {
@@ -311,16 +319,16 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
-			case CardIds.SpiritRaptor_EarthInvocationEnchantment:
+			case CardIds.EarthRecollectionEnchantment:
 				applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
 				break;
-			case CardIds.SpiritRaptor_FireInvocationEnchantment:
+			case CardIds.FireRecollectionEnchantment:
 				applyFireInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
 				break;
-			case CardIds.SpiritRaptor_WaterInvocationEnchantment:
+			case CardIds.WaterRecollectionEnchantment:
 				applyWaterInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
 				break;
-			case CardIds.SpiritRaptor_LightningInvocationEnchantment:
+			case CardIds.LightningRecollectionEnchantment:
 				applyLightningInvocationEnchantment(
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
@@ -337,7 +345,7 @@ export const handleDeathrattleEffects = (
 	}
 };
 
-const applyLightningInvocationEnchantment = (
+export const applyLightningInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
@@ -348,10 +356,13 @@ const applyLightningInvocationEnchantment = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	// Because the golden version doubles all the remembered effects
+	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptorBattlegrounds ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
-		for (let j = 0; j < 5; j++) {
-			dealDamageToRandomEnemy(
+		const targets = pickMultipleRandomDifferent(otherBoard, 5);
+		for (const target of targets) {
+			dealDamageToEnemy(
+				target,
 				otherBoard,
 				otherBoardHero,
 				deadEntity,
@@ -364,22 +375,16 @@ const applyLightningInvocationEnchantment = (
 				spectator,
 			);
 		}
-		const target: BoardEntity = boardWithDeadEntity[boardWithDeadEntity.length - 1];
-		if (!!target) {
-			modifyHealth(target, 3, boardWithDeadEntity, allCards);
-			target.taunt = true;
-			afterStatsUpdate(target, boardWithDeadEntity, allCards);
-		}
 	}
 };
 
-const applyWaterInvocationEnchantment = (
+export const applyWaterInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptorBattlegrounds ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
 		const target: BoardEntity = boardWithDeadEntity[boardWithDeadEntity.length - 1];
 		if (!!target) {
@@ -390,13 +395,13 @@ const applyWaterInvocationEnchantment = (
 	}
 };
 
-const applyFireInvocationEnchantment = (
+export const applyFireInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptorBattlegrounds ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
 		const target: BoardEntity = boardWithDeadEntity[0];
 		if (!!target) {
@@ -406,19 +411,19 @@ const applyFireInvocationEnchantment = (
 	}
 };
 
-const applyEarthInvocationEnchantment = (
+export const applyEarthInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	const multiplier = deadEntity.cardId === CardIds.Brukan_SpiritRaptorTokenGolden ? 2 : 1;
+	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptorBattlegrounds ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
 		const minionsGrantedDeathrattle: BoardEntity[] = pickMultipleRandomDifferent(boardWithDeadEntity, 4);
 		minionsGrantedDeathrattle.forEach((minion) => {
 			minion.enchantments.push({
-				cardId: CardIds.EarthInvocation_InvokedEnchantment,
-				originEntityId: deadEntity.entityId,
+				cardId: CardIds.EarthInvocation_ElementEarthEnchantment,
+				originEntityId: deadEntity?.entityId,
 			});
 		});
 	}
@@ -1186,10 +1191,10 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 				CardIds.LivingSpores_LivingSporesEnchantment,
 				CardIds.SneedsReplicator_ReplicateEnchantment,
-				CardIds.SpiritRaptor_EarthInvocationEnchantment,
-				CardIds.SpiritRaptor_FireInvocationEnchantment,
-				CardIds.SpiritRaptor_WaterInvocationEnchantment,
-				CardIds.SpiritRaptor_LightningInvocationEnchantment,
+				CardIds.EarthInvocation_ElementEarthEnchantment,
+				CardIds.FireInvocation_ElementFireEnchantment,
+				CardIds.WaterInvocation_ElementWaterEnchantment,
+				CardIds.LightningInvocation,
 			].includes(enchantmentId as CardIds),
 		);
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];

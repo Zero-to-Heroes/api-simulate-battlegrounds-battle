@@ -30,7 +30,7 @@ const TAUNT_IDS = [
 	CardIds.InsatiableUrzulBattlegrounds,
 	CardIds.MasterOfRealities2,
 	CardIds.MasterOfRealitiesBattlegrounds,
-	CardIds.BrannsEpicEggBattlegrounds,
+	CardIds.BrannsEpicEggBattlegrounds1,
 	CardIds.BrannsEpicEggBattlegrounds2,
 	CardIds.KilrekBattlegrounds1,
 	CardIds.KilrekBattlegrounds2,
@@ -98,8 +98,8 @@ export const buildSingleBoardEntity = (
 
 	if (allCards.getCard(cardId).techLevel === controllerHero.tavernTier) {
 		const statsBonus =
-			4 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarj).length +
-			8 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds).length;
+			4 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds1).length +
+			8 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds2).length;
 		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
 		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
 		afterStatsUpdate(newEntity, friendlyBoard, allCards);
@@ -107,8 +107,8 @@ export const buildSingleBoardEntity = (
 
 	if (newEntity.taunt) {
 		const statsBonus =
-			2 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreant).length +
-			4 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds).length;
+			2 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds1).length +
+			4 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds2).length;
 		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
 		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
 		afterStatsUpdate(newEntity, friendlyBoard, allCards);
@@ -133,9 +133,11 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 		});
 	}
 	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
-		const mishmashes = friendlyBoard.filter((e) => e.cardId === CardIds.Mishmash || e.cardId === CardIds.MishmashBattlegrounds);
+		const mishmashes = friendlyBoard.filter(
+			(e) => e.cardId === CardIds.MishmashBattlegrounds1 || e.cardId === CardIds.MishmashBattlegrounds2,
+		);
 		mishmashes.forEach((mishmash) => {
-			modifyAttack(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds ? 2 : 1) * amount, friendlyBoard, allCards);
+			modifyAttack(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
 		});
 	}
 };
@@ -146,17 +148,19 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 		entity.maxHealth += amount;
 	}
 	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
-		const mishmashes = friendlyBoard.filter((e) => e.cardId === CardIds.Mishmash || e.cardId === CardIds.MishmashBattlegrounds);
+		const mishmashes = friendlyBoard.filter(
+			(e) => e.cardId === CardIds.MishmashBattlegrounds1 || e.cardId === CardIds.MishmashBattlegrounds2,
+		);
 		mishmashes.forEach((mishmash) => {
-			modifyHealth(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds ? 2 : 1) * amount, friendlyBoard, allCards);
+			modifyHealth(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
 		});
 	}
 
 	const titanicGuardians = friendlyBoard
 		.filter((e) => e.entityId !== entity.entityId)
-		.filter((e) => e.cardId === CardIds.TitanicGuardian || e.cardId === CardIds.TitanicGuardianBattlegrounds);
+		.filter((e) => e.cardId === CardIds.TitanicGuardianBattlegrounds1 || e.cardId === CardIds.TitanicGuardianBattlegrounds2);
 	titanicGuardians.forEach((tentacle) => {
-		modifyHealth(entity, (tentacle.cardId === CardIds.TitanicGuardianBattlegrounds ? 2 : 1) * amount, friendlyBoard, allCards);
+		modifyHealth(entity, (tentacle.cardId === CardIds.TitanicGuardianBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
 	});
 };
 
@@ -172,10 +176,10 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 	}
 	const tentaclesOfCthun = friendlyBoard
 		.filter((e) => e.entityId !== entity.entityId)
-		.filter((e) => e.cardId === CardIds.TentaclesOfCthun || e.cardId === CardIds.TentaclesOfCthunBattlegrounds);
+		.filter((e) => e.cardId === CardIds.TentacleOfCthunBattlegrounds1 || e.cardId === CardIds.TentacleOfCthunBattlegrounds2);
 	tentaclesOfCthun.forEach((tentacle) => {
-		modifyAttack(entity, tentacle.cardId === CardIds.TentaclesOfCthunBattlegrounds ? 2 : 1, friendlyBoard, allCards);
-		modifyHealth(entity, tentacle.cardId === CardIds.TentaclesOfCthunBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+		modifyAttack(entity, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
+		modifyHealth(entity, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
 	});
 };
 
@@ -232,4 +236,27 @@ export const decode = (base64: string): string => {
 	const buff = Buffer.from(base64, 'base64');
 	const str = buff.toString('utf-8');
 	return str;
+};
+
+export const pickMultipleRandomDifferent = <T>(list: T[], n: number): T[] => {
+	const shuffled = shuffleArray([...list]);
+	return shuffled.slice(0, n);
+};
+
+// https://stackoverflow.com/a/2450976/548701
+export const shuffleArray = <T>(array: T[]): T[] => {
+	let currentIndex = array.length;
+	let randomIndex = 0;
+
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+	}
+
+	return array;
 };

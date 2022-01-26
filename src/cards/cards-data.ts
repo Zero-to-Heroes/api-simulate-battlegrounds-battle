@@ -82,8 +82,9 @@ export class CardsData {
 			[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
 			[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
 			[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
-			[CardIds.LadySinestra, CardIds.LadySinestra_Enchantment],
-			[CardIds.LadySinestraBattlegrounds, CardIds.LadySinestra_EnchantmentBattlegrounds],
+			// TODO find proper enchantment
+			[CardIds.LadySinestraBattlegrounds1, CardIds.DraconicBlessingEnchantmentBattlegrounds1],
+			[CardIds.LadySinestraBattlegrounds2, CardIds.DraconicBlessingEnchantmentBattlegrounds2],
 		];
 		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);
 		this.startOfCombats = [
@@ -91,8 +92,8 @@ export class CardsData {
 			CardIds.RedWhelpBattlegrounds,
 			CardIds.PrizedPromoDrake,
 			CardIds.PrizedPromoDrakeBattlegrounds,
-			CardIds.CrabbyBattlegrounds1,
-			CardIds.CrabbyBattlegrounds2,
+			CardIds.Crabby1,
+			CardIds.CrabbyBattlegrounds,
 		];
 	}
 
@@ -107,8 +108,8 @@ export class CardsData {
 			case CardIds.MechanoTankBattlegrounds:
 			case CardIds.PalescaleCrocolisk:
 			case CardIds.PalescaleCrocoliskBattlegrounds:
-			case CardIds.StormpileLieutenant:
-			case CardIds.StormpileLieutenantBattlegrounds:
+			case CardIds.StormpikeLieutenant:
+			case CardIds.StormpikeLieutenantBattlegrounds:
 				return 2;
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:

@@ -396,10 +396,10 @@ export const dealDamageToEnemy = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): void => {
+): number => {
 	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity, allCards));
 	if (!defendingEntity) {
-		return;
+		return 0;
 	}
 
 	const fakeAttacker = {
@@ -408,7 +408,7 @@ export const dealDamageToEnemy = (
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
-	bumpEntities(
+	const actualDamageDone = bumpEntities(
 		defendingEntity,
 		fakeAttacker,
 		defendingBoard,
@@ -422,16 +422,7 @@ export const dealDamageToEnemy = (
 	);
 	const defendingEntityIndex = defendingBoard.map((entity) => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
-	// processMinionDeath(
-	// 	defendingBoard,
-	// 	defendingBoardHero,
-	// 	boardWithAttackOrigin,
-	// 	boardWithAttackOriginHero,
-	// 	allCards,
-	// 	cardsData,
-	// 	sharedState,
-	// 	spectator,
-	// );
+	return actualDamageDone;
 };
 
 export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntity: BoardEntity, ignoreTaunts = false): BoardEntity => {
@@ -467,10 +458,10 @@ export const bumpEntities = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): void => {
+): number => {
 	// No attack has no impact
 	if (bumpInto.attack === 0) {
-		return;
+		return 0;
 	}
 
 	if (entity.divineShield) {
@@ -522,7 +513,7 @@ export const bumpEntities = (
 			modifyHealth(entity, 2, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
-		return;
+		return 0;
 		// return entity;
 	}
 	entity.health = entity.health - bumpInto.attack;
@@ -563,7 +554,7 @@ export const bumpEntities = (
 		spectator.registerMinionsSpawn(entity, entityBoard, entitySpawns);
 		handleSpawnEffects(entityBoard, entitySpawns, allCards, spectator);
 	}
-	return;
+	return bumpInto.attack;
 };
 
 const getWheneverEntitySpawns = (
