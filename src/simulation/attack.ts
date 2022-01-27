@@ -146,34 +146,34 @@ const performAttack = (
 	// For Prestor
 	const defenderAliveBeforeAttack = defendingEntity.health > 0 && !defendingEntity.definitelyDead;
 	if (defenderAliveBeforeAttack) {
-		bumpEntities(
-			attackingEntity,
-			defendingEntity,
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoard,
-			defendingBoardHero,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
 		if (!attackingEntity.immuneWhenAttackCharges || attackingEntity.immuneWhenAttackCharges <= 0) {
 			bumpEntities(
-				defendingEntity,
 				attackingEntity,
-				defendingBoard,
-				defendingBoardHero,
+				defendingEntity,
 				attackingBoard,
 				attackingBoardHero,
+				defendingBoard,
+				defendingBoardHero,
 				allCards,
 				spawns,
 				sharedState,
 				spectator,
 			);
 		} else {
-			// console.log('immune when attack', attackingEntity);
+			console.log('immune when attack', attackingEntity);
 		}
+		bumpEntities(
+			defendingEntity,
+			attackingEntity,
+			defendingBoard,
+			defendingBoardHero,
+			attackingBoard,
+			attackingBoardHero,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 	// Cleave
 	if (attackingEntity.cleave) {

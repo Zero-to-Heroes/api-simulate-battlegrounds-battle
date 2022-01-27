@@ -170,8 +170,8 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 			(e) => e.cardId === CardIds.MasterOfRealities2 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
 		);
 		masterOfRealities.forEach((master) => {
-			modifyAttack(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
-			modifyHealth(entity, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+			modifyAttack(master, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+			modifyHealth(master, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
 		});
 	}
 	const tentaclesOfCthun = friendlyBoard
