@@ -160,7 +160,7 @@ const performAttack = (
 				spectator,
 			);
 		} else {
-			console.log('immune when attack', attackingEntity);
+			// console.log('immune when attack', attackingEntity);
 		}
 		bumpEntities(
 			defendingEntity,
