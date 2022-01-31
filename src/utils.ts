@@ -137,7 +137,7 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 			(e) => e.cardId === CardIds.MishmashBattlegrounds1 || e.cardId === CardIds.MishmashBattlegrounds2,
 		);
 		mishmashes.forEach((mishmash) => {
-			modifyAttack(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
+			modifyAttack(mishmash, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
 		});
 	}
 };
@@ -152,15 +152,15 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 			(e) => e.cardId === CardIds.MishmashBattlegrounds1 || e.cardId === CardIds.MishmashBattlegrounds2,
 		);
 		mishmashes.forEach((mishmash) => {
-			modifyHealth(entity, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
+			modifyHealth(mishmash, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
 		});
 	}
 
 	const titanicGuardians = friendlyBoard
 		.filter((e) => e.entityId !== entity.entityId)
 		.filter((e) => e.cardId === CardIds.TitanicGuardianBattlegrounds1 || e.cardId === CardIds.TitanicGuardianBattlegrounds2);
-	titanicGuardians.forEach((tentacle) => {
-		modifyHealth(entity, (tentacle.cardId === CardIds.TitanicGuardianBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
+	titanicGuardians.forEach((guardian) => {
+		modifyHealth(guardian, (guardian.cardId === CardIds.TitanicGuardianBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
 	});
 };
 
@@ -178,8 +178,8 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 		.filter((e) => e.entityId !== entity.entityId)
 		.filter((e) => e.cardId === CardIds.TentacleOfCthunBattlegrounds1 || e.cardId === CardIds.TentacleOfCthunBattlegrounds2);
 	tentaclesOfCthun.forEach((tentacle) => {
-		modifyAttack(entity, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
-		modifyHealth(entity, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
+		modifyAttack(tentacle, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
+		modifyHealth(tentacle, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
 	});
 };
 
