@@ -4,10 +4,12 @@ import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { pickRandom } from '../services/utils';
 import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
 import { applyAuras, removeAuras } from './auras';
 import {
+	addStatsToBoard,
 	applyEarthInvocationEnchantment,
 	applyFireInvocationEnchantment,
 	applyLightningInvocationEnchantment,
@@ -78,6 +80,31 @@ const handleAlakirForPlayer = (
 	firstEntity.windfury = true;
 	firstEntity.divineShield = true;
 	firstEntity.taunt = true;
+};
+
+const handleTamsinForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	const lowestHealth = Math.min(...playerBoard.map((e) => e.health));
+	const entitiesWithLowestHealth = playerBoard.filter((e) => e.health === lowestHealth);
+	const chosenEntity = pickRandom(entitiesWithLowestHealth);
+	addStatsToBoard(
+		chosenEntity,
+		playerBoard.filter((e) => e.entityId !== chosenEntity.entityId),
+		chosenEntity.attack,
+		chosenEntity.health,
+		allCards,
+		spectator,
+	);
+	// How to mark the minion as dead
+	chosenEntity.definitelyDead = true;
 };
 
 // const handleYShaarj = (
@@ -153,6 +180,8 @@ const handlePlayerStartOfCombatHeroPowers = (
 	} else if (playerHeroPowerId === CardIds.WingmenBattlegrounds && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 		currentAttacker = (currentAttacker + 1) % 2;
+	} else if (playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
+		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 	} else if (playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
 		const damageDone = dealDamageToEnemy(
