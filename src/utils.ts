@@ -220,8 +220,8 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
 	return entity
 		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/${entity.attack}/${entity.health}/${entity.entityId}/${
-				entity.enchantments?.length ?? 0
-		  }`
+				entity.divineShield
+		  }/${entity.taunt}/${entity.enchantments?.length ?? 0}`
 		: null;
 };
 

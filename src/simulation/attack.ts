@@ -515,6 +515,7 @@ export const bumpEntities = (
 			modifyHealth(entity, 2, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
+		spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);
 		return 0;
 		// return entity;
 	}
