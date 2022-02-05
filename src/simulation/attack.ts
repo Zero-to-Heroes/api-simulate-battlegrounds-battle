@@ -42,8 +42,6 @@ export const simulateAttack = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
-	applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 
 	const attackingEntity =
 		forceAttackingEntityIndex != null
@@ -55,6 +53,10 @@ export const simulateAttack = (
 		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
+			// The auras need to be handled on a per-attack basis, as otherwise minions that spawn
+			// in-between attacks don't get aura buffs
+			applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
+			applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 			// We refresh the entity in case of windfury
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 				return;
@@ -88,11 +90,11 @@ export const simulateAttack = (
 					defendingEntity.attackImmediately = true;
 				}
 			}
+			removeAuras(attackingBoard, spawns);
+			removeAuras(defendingBoard, spawns);
 		}
 		attackingEntity.attacking = false;
 	}
-	removeAuras(attackingBoard, spawns);
-	removeAuras(defendingBoard, spawns);
 	// If entities that were before the attacker died, we need to update the attacker index
 	return attackingEntityIndex;
 };
