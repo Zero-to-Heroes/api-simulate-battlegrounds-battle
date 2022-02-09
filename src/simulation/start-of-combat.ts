@@ -431,9 +431,9 @@ const handlePlayerStartOfCombatHeroPowers = (
 	spectator: Spectator,
 ): number => {
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
+	if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
 		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
-	} else if (playerHeroPowerId === CardIds.AimLeftToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
 		const damageDone = dealDamageToEnemy(
 			target,
@@ -450,7 +450,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
-	} else if (playerHeroPowerId === CardIds.AimRightToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimRightToken) {
 		const target = opponentBoard[opponentBoard.length - 1];
 		const damageDone = dealDamageToEnemy(
 			target,
@@ -467,7 +467,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
-	} else if (playerHeroPowerId === CardIds.AimLowToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLowToken) {
 		const target = [...opponentBoard].sort((a, b) => a.health - b.health)[0];
 		const damageDone = dealDamageToEnemy(
 			target,
@@ -484,7 +484,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
-	} else if (playerHeroPowerId === CardIds.AimHighToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimHighToken) {
 		const target = [...opponentBoard].sort((a, b) => b.health - a.health)[0];
 		const damageDone = dealDamageToEnemy(
 			target,
@@ -501,13 +501,13 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
-	} else if (playerHeroPowerId === CardIds.EarthInvocationToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EarthInvocationToken) {
 		applyEarthInvocationEnchantment(playerBoard, null, allCards, spectator);
-	} else if (playerHeroPowerId === CardIds.WaterInvocationToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaterInvocationToken) {
 		applyWaterInvocationEnchantment(playerBoard, null, allCards, spectator);
-	} else if (playerHeroPowerId === CardIds.FireInvocationToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
 		applyFireInvocationEnchantment(playerBoard, null, allCards, spectator);
-	} else if (playerHeroPowerId === CardIds.LightningInvocationToken) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.LightningInvocationToken) {
 		applyLightningInvocationEnchantment(
 			playerBoard,
 			playerEntity,
