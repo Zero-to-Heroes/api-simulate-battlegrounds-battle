@@ -1067,9 +1067,9 @@ const buildBoardAfterDeathrattleSpawns = (
 	spectator: Spectator,
 ): void => {
 	// TODO: don't apply this for FishOfNZoth
-	if (deadMinionIndex >= 0) {
-		handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards, spectator);
-	}
+	// if (deadMinionIndex >= 0) {
+	// 	handleKillEffects(boardWithKilledMinion, opponentBoard, deadEntity, allCards, spectator);
+	// }
 
 	// But Wildfire Element is applied first, before the DR spawns
 	if (deadMinionIndex >= 0) {
