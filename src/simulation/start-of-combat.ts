@@ -468,7 +468,8 @@ const handlePlayerStartOfCombatHeroPowers = (
 		processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLowToken) {
-		const target = [...opponentBoard].sort((a, b) => a.health - b.health)[0];
+		const smallestHealthMinion = [...opponentBoard].sort((a, b) => a.health - b.health)[0];
+		const target = pickRandom(opponentBoard.filter((e) => e.health === smallestHealthMinion.health));
 		const damageDone = dealDamageToEnemy(
 			target,
 			opponentBoard,
@@ -485,7 +486,8 @@ const handlePlayerStartOfCombatHeroPowers = (
 		processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimHighToken) {
-		const target = [...opponentBoard].sort((a, b) => b.health - a.health)[0];
+		const highestHealthMinion = [...opponentBoard].sort((a, b) => b.health - a.health)[0];
+		const target = pickRandom(opponentBoard.filter((e) => e.health === highestHealthMinion.health));
 		const damageDone = dealDamageToEnemy(
 			target,
 			opponentBoard,
