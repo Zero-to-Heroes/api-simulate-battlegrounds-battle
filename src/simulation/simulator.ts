@@ -97,7 +97,7 @@ export class Simulator {
 			}
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
 				const opponentEntitiesBeforeAttack = opponentBoard.map((e) => e.entityId).slice(0, this.lastOpponentAttackerEntityIndex);
-				this.lastPlayerAttackerEntityIndex = simulateAttack(
+				const outputAttacker = simulateAttack(
 					playerBoard,
 					playerEntity,
 					opponentBoard,
@@ -108,12 +108,14 @@ export class Simulator {
 					this.sharedState,
 					spectator,
 				);
+				// The "attack immediately" doesn't change the next attacker
+				this.lastPlayerAttackerEntityIndex = this.currentSpeedAttacker === -1 ? outputAttacker : this.lastPlayerAttackerEntityIndex;
 				const opponentEntitiesAfterAttack = opponentBoard.map((e) => e.entityId);
 				const opponentEntitiesThatDied = opponentEntitiesBeforeAttack.filter((e) => !opponentEntitiesAfterAttack.includes(e));
 				this.lastOpponentAttackerEntityIndex -= opponentEntitiesThatDied.length;
 			} else {
 				const playerEntitiesBeforeAttack = playerBoard.map((e) => e.entityId).slice(0, this.lastPlayerAttackerEntityIndex);
-				this.lastOpponentAttackerEntityIndex = simulateAttack(
+				const outputAttacker = simulateAttack(
 					opponentBoard,
 					opponentEntity,
 					playerBoard,
@@ -124,6 +126,8 @@ export class Simulator {
 					this.sharedState,
 					spectator,
 				);
+				this.lastOpponentAttackerEntityIndex =
+					this.currentSpeedAttacker === -1 ? outputAttacker : this.lastOpponentAttackerEntityIndex;
 				const playerEntitiesAfterAttack = playerBoard.map((e) => e.entityId);
 				const playerEntitiesThatDied = playerEntitiesBeforeAttack.filter((e) => !playerEntitiesAfterAttack.includes(e));
 				this.lastPlayerAttackerEntityIndex -= playerEntitiesThatDied.length;

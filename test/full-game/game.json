@@ -1,21 +1,38 @@
 {
 	"playerBoard": {
 		"player": {
-			"tavernTier": 1,
+			"tavernTier": 2,
 			"hpLeft": 40,
-			"cardId": "BG22_HERO_000",
-			"nonGhostCardId": "BG22_HERO_000",
-			"heroPowerId": "BG22_HERO_000p_t3",
+			"cardId": "TB_BaconShop_HERO_76",
+			"nonGhostCardId": "TB_BaconShop_HERO_76",
+			"heroPowerId": "TB_BaconShop_HP_086",
 			"heroPowerUsed": true,
-			"heroPowerInfo": 2
+			"heroPowerInfo": 3
 		},
 		"board": [
 			{
-				"cardId": "BGS_115",
+				"cardId": "BG20_101",
+				"attack": 2,
+				"divineShield": true,
+				"enchantments": [],
+				"entityId": 715,
+				"health": 4,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": true,
+				"windfury": true,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_115t",
 				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 648,
+				"entityId": 778,
 				"health": 2,
 				"poisonous": false,
 				"reborn": false,
@@ -28,14 +45,14 @@
 				"immuneWhenAttackCharges": 0
 			},
 			{
-				"cardId": "BGS_106",
-				"attack": 2,
+				"cardId": "BGS_060",
+				"attack": 3,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 458,
-				"health": 2,
+				"entityId": 714,
+				"health": 5,
 				"poisonous": false,
-				"reborn": true,
+				"reborn": false,
 				"taunt": true,
 				"windfury": false,
 				"megaWindfury": false,
@@ -51,40 +68,36 @@
 		"player": {
 			"tavernTier": 1,
 			"hpLeft": 40,
-			"cardId": "BG20_HERO_101",
-			"nonGhostCardId": "BG20_HERO_101",
-			"heroPowerId": "BG20_HERO_101p",
-			"heroPowerUsed": false,
-			"heroPowerInfo": -1
+			"cardId": "BG22_HERO_000",
+			"nonGhostCardId": "BG22_HERO_000",
+			"heroPowerId": "BG22_HERO_000p_t2",
+			"heroPowerUsed": true,
+			"heroPowerInfo": 3
 		},
 		"board": [
 			{
-				"cardId": "CFM_315",
-				"attack": 3,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 739, "cardId": "BG20_HERO_201e3" },
-					{ "originEntityId": 740, "cardId": "BG20_HERO_101pe2" },
-					{ "originEntityId": 741, "cardId": "ULD_217e" }
-				],
-				"entityId": 738,
-				"health": 2,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0
-			},
-			{
-				"cardId": "EX1_531",
+				"cardId": "BGS_106",
 				"attack": 2,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 742,
+				"entityId": 973,
+				"health": 2,
+				"poisonous": false,
+				"reborn": true,
+				"taunt": true,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_115t",
+				"attack": 2,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 974,
 				"health": 2,
 				"poisonous": false,
 				"reborn": false,
@@ -97,17 +110,31 @@
 				"immuneWhenAttackCharges": 0
 			},
 			{
-				"cardId": "ULD_217",
-				"attack": 2,
+				"cardId": "BGS_116",
+				"attack": 1,
 				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 744, "cardId": "BG20_HERO_201e3" },
-					{ "originEntityId": 745, "cardId": "BG20_HERO_101pe2" }
-				],
-				"entityId": 743,
-				"health": 2,
+				"enchantments": [],
+				"entityId": 975,
+				"health": 4,
 				"poisonous": false,
-				"reborn": true,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_116",
+				"attack": 1,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 976,
+				"health": 4,
+				"poisonous": false,
+				"reborn": false,
 				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
@@ -120,5 +147,5 @@
 		"secrets": []
 	},
 	"options": null,
-	"gameState": { "currentTurn": 2, "validTribes": [20, 15, 24, 17, 18] }
+	"gameState": { "currentTurn": 3, "validTribes": [24, 14, 23, 18, 43] }
 }
