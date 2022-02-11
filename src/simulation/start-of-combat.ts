@@ -328,6 +328,7 @@ const handlePlayerIllidanHeroPowers = (
 	return currentAttacker;
 };
 
+// TODO: not exactly correct, because of "attack immediately", but it's close enough
 const handleIllidanForPlayer = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
@@ -344,9 +345,10 @@ const handleIllidanForPlayer = (
 	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
 	afterStatsUpdate(playerBoard[0], playerBoard, allCards);
 	spectator.registerPowerTarget(playerBoard[0], playerBoard[0], playerBoard);
-	if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2)) {
-		playerBoard[0].immuneWhenAttackCharges = 2;
-	} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)) {
+	if (
+		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2) ||
+		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)
+	) {
 		playerBoard[0].immuneWhenAttackCharges = 1;
 	}
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
@@ -356,8 +358,6 @@ const handleIllidanForPlayer = (
 		afterStatsUpdate(playerBoard[playerBoard.length - 1], playerBoard, allCards);
 		spectator.registerPowerTarget(playerBoard[playerBoard.length - 1], playerBoard[playerBoard.length - 1], playerBoard);
 		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2)) {
-			playerBoard[playerBoard.length - 1].immuneWhenAttackCharges = 2;
-		} else if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)) {
 			playerBoard[playerBoard.length - 1].immuneWhenAttackCharges = 1;
 		}
 		simulateAttack(
