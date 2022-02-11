@@ -112,6 +112,7 @@ export const spawnEntities = (
 			addOldMurkeyeAttack(otherBoard, allCards);
 		}
 
+		// https://twitter.com/LoewenMitchell/status/1491879869457879040
 		if (WHELP_CARD_IDS.includes(newMinion.cardId as string)) {
 			const manyWhelps = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.ManyWhelps);
 			const goldenManyWhelps = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.ManyWhelpsBattlegrounds);

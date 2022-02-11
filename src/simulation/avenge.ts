@@ -272,7 +272,8 @@ const handleHeroAvenge = (
 	spectator: Spectator,
 	allCards: AllCardsService,
 ) => {
-	// Don't forget to update the avenge data in cards-data
+	// https://twitter.com/LoewenMitchell/status/1491879869457879040
+	// Not affected by Khadgar
 	switch (boardWithDeadEntityHero?.heroPowerId) {
 		case CardIds.Broodmother:
 			candidatesEntitiesSpawnedFromAvenge.push(
