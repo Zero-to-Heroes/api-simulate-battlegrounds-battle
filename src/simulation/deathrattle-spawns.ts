@@ -1,7 +1,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
+import { CardsData, WHELP_CARD_IDS } from '../cards/cards-data';
 import {
 	addCardsInHand,
 	addStatsToBoard,
@@ -106,9 +106,25 @@ export const spawnEntities = (
 				// spectator.registerPowerTarget(entity, entity, boardToSpawnInto);
 			});
 		}
+
 		if (hasCorrectTribe(newMinion, Race.DEMON, allCards)) {
 			addOldMurkeyeAttack(boardToSpawnInto, allCards);
 			addOldMurkeyeAttack(otherBoard, allCards);
+		}
+
+		if (WHELP_CARD_IDS.includes(newMinion.cardId as string)) {
+			const manyWhelps = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.ManyWhelps);
+			const goldenManyWhelps = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.ManyWhelpsBattlegrounds);
+			manyWhelps.forEach((entity) => {
+				modifyAttack(entity, 2, boardToSpawnInto, allCards);
+				modifyHealth(entity, 2, boardToSpawnInto, allCards);
+				afterStatsUpdate(entity, boardToSpawnInto, allCards);
+			});
+			goldenManyWhelps.forEach((entity) => {
+				modifyAttack(entity, 4, boardToSpawnInto, allCards);
+				modifyHealth(entity, 4, boardToSpawnInto, allCards);
+				afterStatsUpdate(entity, boardToSpawnInto, allCards);
+			});
 		}
 	}
 

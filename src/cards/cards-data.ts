@@ -2,6 +2,29 @@ import { AllCardsService, CardIds, isBattlegroundsCard, Race, ReferenceCard } fr
 import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic } from '../utils';
 
+export const AURA_ENCHANTMENTS: readonly string[][] = [
+	[CardIds.Kathranatir2, CardIds.Kathranatir_GraspOfKathranatirEnchantment1],
+	[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment2],
+	[CardIds.MurlocWarleaderLegacy, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
+	[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
+	[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
+	[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
+	[CardIds.LadySinestraBattlegrounds1, CardIds.DraconicBlessingEnchantmentBattlegrounds1],
+	[CardIds.LadySinestraBattlegrounds2, CardIds.DraconicBlessingEnchantmentBattlegrounds2],
+];
+// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
+// and that stop once the origin entity leaves play (so it doesn't include buffs)
+export const AURA_ORIGINS: readonly string[] = AURA_ENCHANTMENTS.map((pair) => pair[0]);
+export const START_OF_COMBAT_CARD_IDS = [
+	CardIds.RedWhelp,
+	CardIds.RedWhelpBattlegrounds,
+	CardIds.PrizedPromoDrake,
+	CardIds.PrizedPromoDrakeBattlegrounds,
+	CardIds.Crabby1,
+	CardIds.CrabbyBattlegrounds,
+];
+export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Broodmother_WhelpToken];
+
 export class CardsData {
 	// public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
@@ -13,10 +36,7 @@ export class CardsData {
 	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
-
-	public auraEnchantments: readonly string[][];
 	public auraOrigins: readonly string[];
-	public startOfCombats: readonly string[];
 
 	private minionsForTier: { [key: string]: readonly ReferenceCard[] };
 
@@ -73,28 +93,6 @@ export class CardsData {
 			.filter((card) => card.race === 'PIRATE')
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
-		// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
-		// and that stop once the origin entity leaves play (so it doesn't include buffs)
-		this.auraEnchantments = [
-			[CardIds.Kathranatir2, CardIds.Kathranatir_GraspOfKathranatirEnchantment1],
-			[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment2],
-			[CardIds.MurlocWarleaderLegacy, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
-			[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
-			[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
-			[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
-			// TODO find proper enchantment
-			[CardIds.LadySinestraBattlegrounds1, CardIds.DraconicBlessingEnchantmentBattlegrounds1],
-			[CardIds.LadySinestraBattlegrounds2, CardIds.DraconicBlessingEnchantmentBattlegrounds2],
-		];
-		this.auraOrigins = this.auraEnchantments.map((pair) => pair[0]);
-		this.startOfCombats = [
-			CardIds.RedWhelp,
-			CardIds.RedWhelpBattlegrounds,
-			CardIds.PrizedPromoDrake,
-			CardIds.PrizedPromoDrakeBattlegrounds,
-			CardIds.Crabby1,
-			CardIds.CrabbyBattlegrounds,
-		];
 	}
 
 	public avengeValue(cardId: string): number {

@@ -3,8 +3,8 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { applyAvengeEffects } from 'src/simulation/avenge';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
-import { groupByFunction, pickRandom } from '../services/utils';
+import { AURA_ORIGINS, CardsData } from '../cards/cards-data';
+import { groupByFunction, pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import {
 	addStatsToBoard,
 	afterStatsUpdate,
@@ -17,7 +17,6 @@ import {
 	isCorrectTribe,
 	modifyAttack,
 	modifyHealth,
-	pickMultipleRandomDifferent,
 } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -502,7 +501,7 @@ export const applyMinionDeathEffect = (
 		removeOldMurkEyeAttack(otherBoard, allCards);
 	}
 
-	if (cardsData.auraOrigins.includes(deadEntity.cardId)) {
+	if (AURA_ORIGINS.includes(deadEntity.cardId)) {
 		removeAurasAfterAuraSourceDeath(boardWithDeadEntity, deadEntity, cardsData);
 	}
 

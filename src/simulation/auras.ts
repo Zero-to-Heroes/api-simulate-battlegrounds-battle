@@ -2,14 +2,14 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
+import { AURA_ENCHANTMENTS, AURA_ORIGINS, CardsData } from '../cards/cards-data';
 import { isCorrectTribe } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: number, data: CardsData, cards: AllCardsService): void => {
 	for (let i = 0; i < board.length; i++) {
-		if (data.auraOrigins.indexOf(board[i].cardId) !== -1) {
-			const enchantmentId = data.auraEnchantments.find((aura) => aura[0] === board[i].cardId)[1];
+		if (AURA_ORIGINS.indexOf(board[i].cardId) !== -1) {
+			const enchantmentId = AURA_ENCHANTMENTS.find((aura) => aura[0] === board[i].cardId)[1];
 			applyAura(board, i, enchantmentId, cards);
 		}
 	}
@@ -47,7 +47,7 @@ export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
 };
 
 export const removeAurasAfterAuraSourceDeath = (board: BoardEntity[], auraSource: BoardEntity, data: CardsData): void => {
-	const auraPair = data.auraEnchantments.find((pair) => pair[0] === auraSource.cardId);
+	const auraPair = AURA_ENCHANTMENTS.find((pair) => pair[0] === auraSource.cardId);
 	const auraEnchantmentId = !!auraPair ? auraPair[1] : null;
 	if (!auraEnchantmentId) {
 		return;

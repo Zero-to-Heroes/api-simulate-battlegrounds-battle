@@ -368,39 +368,3 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 		  }/${entity.taunt}/${entity.enchantments?.length ?? 0}`
 		: null;
 };
-
-export const encode = (input: string): string => {
-	// return compressToEncodedURIComponent(input);
-	const buff = Buffer.from(input, 'utf-8');
-	const base64 = buff.toString('base64');
-	return base64;
-};
-
-export const decode = (base64: string): string => {
-	const buff = Buffer.from(base64, 'base64');
-	const str = buff.toString('utf-8');
-	return str;
-};
-
-export const pickMultipleRandomDifferent = <T>(list: T[], n: number): T[] => {
-	const shuffled = shuffleArray([...list]);
-	return shuffled.slice(0, n);
-};
-
-// https://stackoverflow.com/a/2450976/548701
-export const shuffleArray = <T>(array: T[]): T[] => {
-	let currentIndex = array.length;
-	let randomIndex = 0;
-
-	// While there remain elements to shuffle...
-	while (currentIndex != 0) {
-		// Pick a remaining element...
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex--;
-
-		// And swap it with the current element.
-		[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-	}
-
-	return array;
-};

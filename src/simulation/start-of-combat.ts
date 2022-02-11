@@ -3,13 +3,12 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
+import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickRandom } from '../services/utils';
-import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { addStatsToBoard, afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
 import { applyAuras, removeAuras } from './auras';
 import {
-	addStatsToBoard,
 	applyEarthInvocationEnchantment,
 	applyFireInvocationEnchantment,
 	applyLightningInvocationEnchantment,
@@ -194,8 +193,8 @@ const handleStartOfCombatMinions = (
 	spectator: Spectator,
 ): number => {
 	let attackerForStart = Math.round(Math.random());
-	const playerAttackers = playerBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
-	const opponentAttackers = opponentBoard.filter((entity) => spawns.startOfCombats.indexOf(entity.cardId) !== -1);
+	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.indexOf(entity.cardId as CardIds) !== -1);
+	const opponentAttackers = opponentBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.indexOf(entity.cardId as CardIds) !== -1);
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
