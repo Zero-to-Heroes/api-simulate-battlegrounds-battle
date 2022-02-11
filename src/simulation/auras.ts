@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { isCorrectTribe } from '../utils';
@@ -28,6 +29,14 @@ export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): voi
 			entity.avengeDefault = avengeValue;
 		}
 		entity.immuneWhenAttackCharges = 0;
+	}
+};
+
+export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData): void => {
+	const avengeValue = cardsData.avengeValue(hero.heroPowerId);
+	if (avengeValue > 0) {
+		hero.avengeCurrent = avengeValue;
+		hero.avengeDefault = avengeValue;
 	}
 };
 

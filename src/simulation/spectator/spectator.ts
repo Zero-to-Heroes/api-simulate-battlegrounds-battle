@@ -1,3 +1,4 @@
+import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { GameAction } from './game-action';
 import { GameSample } from './game-sample';
@@ -161,7 +162,7 @@ export class Spectator {
 		this.addAction(action);
 	}
 
-	public registerPowerTarget(sourceEntity: BoardEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
+	public registerPowerTarget(sourceEntity: BoardEntity | BgsPlayerEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
 		if (!targetEntity) {
 			return;
 		}

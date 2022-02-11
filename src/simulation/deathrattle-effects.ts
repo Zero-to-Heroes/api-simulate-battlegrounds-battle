@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { applyAvengeEffects } from 'src/simulation/avenge';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { groupByFunction, pickRandom } from '../services/utils';
 import {
+	addStatsToBoard,
 	afterStatsUpdate,
-	getRaceEnum,
+	grantAllDivineShield,
+	grantRandomAttack,
+	grantRandomDivineShield,
+	grantRandomHealth,
+	grantRandomStats,
 	hasCorrectTribe,
 	isCorrectTribe,
 	modifyAttack,
@@ -460,43 +466,6 @@ const applyLeapFroggerEffect = (
 	}
 };
 
-const getRandomMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
-	const validTribes = board.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).race, race));
-	if (!validTribes.length) {
-		return null;
-	}
-	return validTribes[Math.floor(Math.random() * validTribes.length)];
-};
-
-const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => {
-	if (!board.length) {
-		return null;
-	}
-
-	const highestHealth = Math.max(...board.map((e) => e.health));
-	const validMinions = board.filter((e) => e.health === highestHealth);
-	return validMinions[Math.floor(Math.random() * validMinions.length)];
-};
-
-export const addStatsToBoard = (
-	sourceEntity: BoardEntity,
-	board: BoardEntity[],
-	attack: number,
-	health: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
-	tribe?: string,
-): void => {
-	for (const entity of board) {
-		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
-			modifyAttack(entity, attack, board, allCards);
-			modifyHealth(entity, health, board, allCards);
-			afterStatsUpdate(entity, board, allCards);
-			spectator.registerPowerTarget(sourceEntity, entity, board);
-		}
-	}
-};
-
 export const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
 	deadEntityIndex: number,
@@ -709,203 +678,18 @@ export const applyMinionDeathEffect = (
 		}
 	}
 
-	// Avenge
-	updateAvengeCounters(boardWithDeadEntity);
-	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0);
-	for (const avenger of avengers) {
-		handleAvenge(
-			boardWithDeadEntity,
-			boardWithDeadEntityHero,
-			avenger,
-			otherBoard,
-			otherBoardHero,
-			cardsData,
-			sharedState,
-			spectator,
-			allCards,
-		);
-	}
-};
-
-const updateAvengeCounters = (board: readonly BoardEntity[]) => {
-	for (const entity of board) {
-		if (entity.avengeDefault) {
-			entity.avengeCurrent -= 1;
-		}
-	}
-};
-
-const handleAvenge = (
-	boardWithDeadEntity: BoardEntity[],
-	boardWithDeadEntityHero: BgsPlayerEntity,
-	avenger: BoardEntity,
-	otherBoard: BoardEntity[],
-	otherBoardHero: BgsPlayerEntity,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
-	allCards: AllCardsService,
-) => {
-	// Don't forget to update the avenge data in cards-data
-	switch (avenger.cardId) {
-		case CardIds.BirdBuddy:
-			addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, allCards, spectator, 'BEAST');
-			break;
-		case CardIds.BirdBuddyBattlegrounds:
-			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
-			break;
-		case CardIds.BuddingGreenthumb:
-		case CardIds.BuddingGreenthumbBattlegrounds:
-			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
-			neighbours.forEach((entity) => {
-				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2, boardWithDeadEntity, allCards);
-				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1, boardWithDeadEntity, allCards);
-				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
-			});
-			break;
-		case CardIds.FrostwolfLieutenant:
-		case CardIds.FrostwolfLieutenantBattlegrounds:
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
-				0,
-				allCards,
-				spectator,
-			);
-			break;
-		case CardIds.StormpikeLieutenant:
-		case CardIds.StormpikeLieutenantBattlegrounds:
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				0,
-				avenger.cardId === CardIds.StormpikeLieutenantBattlegrounds ? 2 : 1,
-				allCards,
-				spectator,
-			);
-			break;
-		case CardIds.PalescaleCrocolisk:
-			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
-			if (!!target1) {
-				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
-			}
-			break;
-		case CardIds.PalescaleCrocoliskBattlegrounds:
-			const target2 = grantRandomStats(avenger, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
-			if (!!target2) {
-				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
-			}
-			break;
-		case CardIds.ImpatientDoomsayer:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-			break;
-		case CardIds.ImpatientDoomsayerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
-			break;
-		case CardIds.WitchwingNestmatron:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-			break;
-		case CardIds.WitchwingNestmatronBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
-			break;
-		case CardIds.Thorncaller:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-			break;
-		case CardIds.ThorncallerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator, CardIds.BloodGem);
-			break;
-		case CardIds.Sisefin:
-			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
-			if (murloc) {
-				murloc.poisonous = true;
-				spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
-			}
-			break;
-		case CardIds.SisefinBattlegrounds:
-			for (let i = 0; i < 2; i++) {
-				const murloc2 = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
-				if (murloc2) {
-					murloc2.poisonous = true;
-					spectator.registerPowerTarget(avenger, murloc2, boardWithDeadEntity);
-				}
-			}
-			break;
-		case CardIds.MechanoTank:
-			// This can be null if the avenge triggers when the last enemy minion dies as well
-			const target = getRandomMinionWithHighestHealth(otherBoard);
-			spectator.registerPowerTarget(avenger, target, otherBoard);
-			dealDamageToEnemy(
-				target,
-				otherBoard,
-				otherBoardHero,
-				avenger,
-				5,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				allCards,
-				cardsData,
-				sharedState,
-				spectator,
-			);
-			break;
-		case CardIds.MechanoTankBattlegrounds:
-			for (let i = 0; i < 2; i++) {
-				const target = getRandomMinionWithHighestHealth(otherBoard);
-				spectator.registerPowerTarget(avenger, target, otherBoard);
-				dealDamageToEnemy(
-					target,
-					otherBoard,
-					otherBoardHero,
-					avenger,
-					5,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
-			}
-			break;
-		case CardIds.TonyTwoTusk:
-			const nonGoldenMinions = boardWithDeadEntity
-				.filter((e) => e.entityId !== avenger.entityId)
-				.filter((e) => {
-					const ref = allCards.getCard(e.cardId);
-					return !!ref.battlegroundsPremiumDbfId && !!allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id;
-				});
-			const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
-			if (pirate) {
-				const refCard = allCards.getCard(pirate.cardId);
-				const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
-				pirate.cardId = goldenCard.id;
-				modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
-				modifyHealth(pirate, refCard.health, boardWithDeadEntity, allCards);
-				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
-			}
-			break;
-		case CardIds.TonyTwoTuskBattlegrounds:
-			for (let i = 0; i < 2; i++) {
-				const nonGoldenMinions = boardWithDeadEntity.filter((e) => {
-					const ref = allCards.getCard(e.cardId);
-					return !!ref.battlegroundsPremiumDbfId;
-				});
-				const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
-				if (pirate) {
-					const refCard = allCards.getCard(pirate.cardId);
-					pirate.cardId = refCard.id;
-					modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
-					modifyHealth(pirate, refCard.health, boardWithDeadEntity, allCards);
-					afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
-					spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
-				}
-			}
-			break;
-	}
-	avenger.avengeCurrent = avenger.avengeDefault;
+	applyAvengeEffects(
+		deadEntity,
+		deadEntityIndex,
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		otherBoard,
+		otherBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 };
 
 export const dealDamageToAllMinions = (
@@ -1058,109 +842,6 @@ const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService, spe
 // 		afterStatsUpdate(entity, board, allCards);
 // 	});
 // };
-
-const grantRandomAttack = (
-	source: BoardEntity,
-	board: BoardEntity[],
-	additionalAttack: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
-): void => {
-	if (board.length > 0) {
-		const target = board[Math.floor(Math.random() * board.length)];
-		modifyAttack(target, additionalAttack, board, allCards);
-		afterStatsUpdate(target, board, allCards);
-		spectator.registerPowerTarget(source, target, board);
-	}
-};
-
-const grantRandomHealth = (
-	source: BoardEntity,
-	board: BoardEntity[],
-	health: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
-	excludeSource = false,
-): void => {
-	const candidateBoard = board.filter((e) => !excludeSource || e.entityId !== source.entityId);
-	if (candidateBoard.length > 0) {
-		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyHealth(target, health, board, allCards);
-		afterStatsUpdate(target, board, allCards);
-		spectator.registerPowerTarget(source, target, board);
-	}
-};
-
-const grantRandomStats = (
-	source: BoardEntity,
-	board: BoardEntity[],
-	attack: number,
-	health: number,
-	race: Race,
-	allCards: AllCardsService,
-	spectator: Spectator,
-): BoardEntity => {
-	if (board.length > 0) {
-		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
-		if (validBeast) {
-			modifyAttack(validBeast, attack, board, allCards);
-			modifyHealth(validBeast, health, board, allCards);
-			afterStatsUpdate(validBeast, board, allCards);
-			spectator.registerPowerTarget(source, validBeast, board);
-			return validBeast;
-		}
-	}
-	return null;
-};
-
-export const addCardsInHand = (
-	playerEntity: BgsPlayerEntity,
-	cards: number,
-	board: BoardEntity[],
-	allCards: AllCardsService,
-	spectator: Spectator,
-	cardAdded: CardIds = null,
-): void => {
-	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
-	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
-	const multiplier = 1 + (cardAdded === CardIds.BloodGem ? sages.length + 2 * sagesGolden.length : 0);
-	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + multiplier * cards);
-
-	const peggys = board.filter((e) => e.cardId === CardIds.PeggyBrittlebone || e.cardId === CardIds.PeggyBrittleboneBattlegrounds);
-	peggys.forEach((peggy) => {
-		const pirate = getRandomMinion(
-			board.filter((e) => e.entityId !== peggy.entityId),
-			Race.PIRATE,
-			allCards,
-		);
-		if (pirate) {
-			modifyAttack(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
-			modifyHealth(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
-			afterStatsUpdate(pirate, board, allCards);
-			spectator.registerPowerTarget(peggy, pirate, board);
-		}
-	});
-};
-
-const grantRandomDivineShield = (source: BoardEntity, board: BoardEntity[], spectator: Spectator): void => {
-	const elligibleEntities = board.filter((entity) => !entity.divineShield);
-	if (elligibleEntities.length > 0) {
-		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
-		chosen.divineShield = true;
-		spectator.registerPowerTarget(source, chosen, board);
-	}
-	// return board;
-};
-
-const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCardsService): void => {
-	const elligibleEntities = board
-		.filter((entity) => !entity.divineShield)
-		.filter((entity) => isCorrectTribe(cards.getCard(entity.cardId).race, getRaceEnum(tribe)));
-	for (const entity of elligibleEntities) {
-		entity.divineShield = true;
-	}
-	// return board;
-};
 
 export const applyMonstrosity = (
 	monstrosity: BoardEntity,

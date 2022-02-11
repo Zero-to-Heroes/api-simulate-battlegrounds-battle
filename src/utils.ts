@@ -35,7 +35,11 @@ const TAUNT_IDS = [
 	CardIds.KilrekBattlegrounds1,
 	CardIds.KilrekBattlegrounds2,
 ];
-const ATTACK_IMMEDIATELY_IDS = [CardIds.Scallywag_SkyPirateToken, CardIds.Scallywag_SkyPirateTokenBattlegrounds];
+const ATTACK_IMMEDIATELY_IDS = [
+	CardIds.Scallywag_SkyPirateToken,
+	CardIds.Scallywag_SkyPirateTokenBattlegrounds,
+	CardIds.Broodmother_WhelpToken,
+];
 export const MEGA_WINDFURY_IDS = [
 	CardIds.ZappSlywickBattlegrounds,
 	CardIds.CracklingCycloneBattlegrounds,
@@ -181,6 +185,146 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 		modifyAttack(tentacle, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
 		modifyHealth(tentacle, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
 	});
+};
+
+export const grantRandomAttack = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	additionalAttack: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	if (board.length > 0) {
+		const target = board[Math.floor(Math.random() * board.length)];
+		modifyAttack(target, additionalAttack, board, allCards);
+		afterStatsUpdate(target, board, allCards);
+		spectator.registerPowerTarget(source, target, board);
+	}
+};
+
+export const grantRandomHealth = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	health: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+	excludeSource = false,
+): void => {
+	const candidateBoard = board.filter((e) => !excludeSource || e.entityId !== source.entityId);
+	if (candidateBoard.length > 0) {
+		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
+		modifyHealth(target, health, board, allCards);
+		afterStatsUpdate(target, board, allCards);
+		spectator.registerPowerTarget(source, target, board);
+	}
+};
+
+export const grantRandomStats = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	attack: number,
+	health: number,
+	race: Race,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): BoardEntity => {
+	if (board.length > 0) {
+		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
+		if (validBeast) {
+			modifyAttack(validBeast, attack, board, allCards);
+			modifyHealth(validBeast, health, board, allCards);
+			afterStatsUpdate(validBeast, board, allCards);
+			spectator.registerPowerTarget(source, validBeast, board);
+			return validBeast;
+		}
+	}
+	return null;
+};
+
+export const addCardsInHand = (
+	playerEntity: BgsPlayerEntity,
+	cards: number,
+	board: BoardEntity[],
+	allCards: AllCardsService,
+	spectator: Spectator,
+	cardAdded: CardIds = null,
+): void => {
+	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
+	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
+	const multiplier = 1 + (cardAdded === CardIds.BloodGem ? sages.length + 2 * sagesGolden.length : 0);
+	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + multiplier * cards);
+
+	const peggys = board.filter((e) => e.cardId === CardIds.PeggyBrittlebone || e.cardId === CardIds.PeggyBrittleboneBattlegrounds);
+	peggys.forEach((peggy) => {
+		const pirate = getRandomMinion(
+			board.filter((e) => e.entityId !== peggy.entityId),
+			Race.PIRATE,
+			allCards,
+		);
+		if (pirate) {
+			modifyAttack(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
+			modifyHealth(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
+			afterStatsUpdate(pirate, board, allCards);
+			spectator.registerPowerTarget(peggy, pirate, board);
+		}
+	});
+};
+
+export const grantRandomDivineShield = (source: BoardEntity, board: BoardEntity[], spectator: Spectator): void => {
+	const elligibleEntities = board.filter((entity) => !entity.divineShield);
+	if (elligibleEntities.length > 0) {
+		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
+		chosen.divineShield = true;
+		spectator.registerPowerTarget(source, chosen, board);
+	}
+	// return board;
+};
+
+export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCardsService): void => {
+	const elligibleEntities = board
+		.filter((entity) => !entity.divineShield)
+		.filter((entity) => isCorrectTribe(cards.getCard(entity.cardId).race, getRaceEnum(tribe)));
+	for (const entity of elligibleEntities) {
+		entity.divineShield = true;
+	}
+	// return board;
+};
+
+export const getRandomMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
+	const validTribes = board.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).race, race));
+	if (!validTribes.length) {
+		return null;
+	}
+	return validTribes[Math.floor(Math.random() * validTribes.length)];
+};
+
+export const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => {
+	if (!board.length) {
+		return null;
+	}
+
+	const highestHealth = Math.max(...board.map((e) => e.health));
+	const validMinions = board.filter((e) => e.health === highestHealth);
+	return validMinions[Math.floor(Math.random() * validMinions.length)];
+};
+
+export const addStatsToBoard = (
+	sourceEntity: BoardEntity | BgsPlayerEntity,
+	board: BoardEntity[],
+	attack: number,
+	health: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+	tribe?: string,
+): void => {
+	for (const entity of board) {
+		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
+			modifyAttack(entity, attack, board, allCards);
+			modifyHealth(entity, health, board, allCards);
+			afterStatsUpdate(entity, board, allCards);
+			spectator.registerPowerTarget(sourceEntity, entity, board);
+		}
+	}
 };
 
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {

@@ -2,8 +2,16 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { afterStatsUpdate, buildSingleBoardEntity, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
-import { addCardsInHand, addStatsToBoard } from './deathrattle-effects';
+import {
+	addCardsInHand,
+	addStatsToBoard,
+	afterStatsUpdate,
+	buildSingleBoardEntity,
+	hasCorrectTribe,
+	isCorrectTribe,
+	modifyAttack,
+	modifyHealth,
+} from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 

@@ -122,6 +122,7 @@ export class CardsData {
 			case CardIds.WitchwingNestmatronBattlegrounds:
 			case CardIds.TonyTwoTusk:
 			case CardIds.TonyTwoTuskBattlegrounds:
+			case CardIds.Broodmother:
 				return 4;
 		}
 		return 0;

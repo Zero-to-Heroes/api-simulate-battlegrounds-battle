@@ -4,7 +4,7 @@ import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
-import { removeAuras, setImplicitData } from './simulation/auras';
+import { removeAuras, setImplicitData, setImplicitDataHero } from './simulation/auras';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
 import { addImpliedMechanics } from './utils';
@@ -61,6 +61,8 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	removeAuras(opponentBoard, cardsData);
 	setImplicitData(playerBoard, cardsData); // Avenge, maxHealth, etc.
 	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
+	setImplicitDataHero(playerInfo.player, cardsData);
+	setImplicitDataHero(opponentInfo.player, cardsData);
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation

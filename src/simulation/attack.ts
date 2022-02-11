@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { applyAvengeEffects } from 'src/simulation/avenge';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
-import { afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { addCardsInHand, afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { applyAuras, removeAuras } from './auras';
-import {
-	addCardsInHand,
-	applyMinionDeathEffect,
-	applyMonstrosity,
-	handleDeathrattleEffects,
-	rememberDeathrattles,
-} from './deathrattle-effects';
+import { applyMinionDeathEffect, applyMonstrosity, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { SharedState } from './shared-state';
@@ -830,6 +825,90 @@ export const processMinionDeath = (
 	board2
 		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
 		.forEach((entity) => applyMonstrosity(entity, deadEntities2, board2, allCards));
+
+	// Apply "after minion death" effects
+	handleAfterMinionsDeaths(
+		board1,
+		deadEntities1,
+		board1Hero,
+		board2,
+		deadEntities2,
+		board2Hero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+};
+
+const handleAfterMinionsDeaths = (
+	board1: BoardEntity[],
+	deadEntities1: BoardEntity[],
+	heroEntity1: BgsPlayerEntity,
+	board2: BoardEntity[],
+	deadEntities2: BoardEntity[],
+	heroEntity2: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	const random = Math.random() > 0.5;
+	handleAfterMinionsDeathsForBoard(
+		random ? board1 : board2,
+		random ? deadEntities1 : deadEntities2,
+		random ? heroEntity1 : heroEntity2,
+		random ? board2 : board1,
+		random ? deadEntities2 : deadEntities1,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+	handleAfterMinionsDeathsForBoard(
+		!random ? board1 : board2,
+		!random ? deadEntities1 : deadEntities2,
+		!random ? heroEntity1 : heroEntity2,
+		!random ? board2 : board1,
+		!random ? deadEntities2 : deadEntities1,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+};
+
+const handleAfterMinionsDeathsForBoard = (
+	friendlyBoard: BoardEntity[],
+	friendlyDeadEntities: BoardEntity[],
+	friendlyHeroEntity: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherDeadEntities: BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	for (const deadEntity of friendlyDeadEntities) {
+		const killer = deadEntity.lastAffectedByEntity;
+		if (!killer) {
+			continue;
+		}
+		// Killed an enemy minion
+		if (killer.friendly !== deadEntity.friendly) {
+			if (friendlyHeroEntity.heroPowerId === CardIds.GloryOfCombat) {
+				modifyAttack(killer, 1, friendlyBoard, allCards);
+				afterStatsUpdate(killer, friendlyBoard, allCards);
+				// Icesnarl the Mighty
+				friendlyBoard
+					.filter((e) => e.cardId === CardIds.IcesnarlTheMight || e.cardId === CardIds.IcesnarlTheMigthBattlegrounds)
+					.forEach((icesnarl) => {
+						modifyHealth(icesnarl, icesnarl.cardId === CardIds.IcesnarlTheMigthBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+						afterStatsUpdate(icesnarl, friendlyBoard, allCards);
+					});
+			}
+		}
+	}
 };
 
 const handleDeathrattlesForFirstBoard = (
@@ -1027,32 +1106,32 @@ const makeMinionsDie = (board: BoardEntity[], allCards: AllCardsService): [numbe
 	return [deadMinionIndexes, deadEntities];
 };
 
-const handleKillEffects = (
-	boardWithKilledMinion: BoardEntity[],
-	killerBoard: BoardEntity[],
-	deadEntity: BoardEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
-): void => {
-	if (
-		deadEntity.lastAffectedByEntity?.cardId &&
-		isCorrectTribe(allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race, Race.DRAGON)
-	) {
-		for (const entity of killerBoard) {
-			if (entity.cardId === CardIds.WaxriderTogwaggle2) {
-				modifyAttack(entity, 2, killerBoard, allCards);
-				modifyHealth(entity, 2, killerBoard, allCards);
-				afterStatsUpdate(entity, killerBoard, allCards);
-				spectator.registerPowerTarget(entity, entity, killerBoard);
-			} else if (entity.cardId === CardIds.WaxriderTogwaggleBattlegrounds) {
-				modifyAttack(entity, 4, killerBoard, allCards);
-				modifyHealth(entity, 4, killerBoard, allCards);
-				afterStatsUpdate(entity, killerBoard, allCards);
-				spectator.registerPowerTarget(entity, entity, killerBoard);
-			}
-		}
-	}
-};
+// const handleKillEffects = (
+// 	boardWithKilledMinion: BoardEntity[],
+// 	killerBoard: BoardEntity[],
+// 	deadEntity: BoardEntity,
+// 	allCards: AllCardsService,
+// 	spectator: Spectator,
+// ): void => {
+// 	if (
+// 		deadEntity.lastAffectedByEntity?.cardId &&
+// 		isCorrectTribe(allCards.getCard(deadEntity.lastAffectedByEntity.cardId).race, Race.DRAGON)
+// 	) {
+// 		for (const entity of killerBoard) {
+// 			if (entity.cardId === CardIds.WaxriderTogwaggle2) {
+// 				modifyAttack(entity, 2, killerBoard, allCards);
+// 				modifyHealth(entity, 2, killerBoard, allCards);
+// 				afterStatsUpdate(entity, killerBoard, allCards);
+// 				spectator.registerPowerTarget(entity, entity, killerBoard);
+// 			} else if (entity.cardId === CardIds.WaxriderTogwaggleBattlegrounds) {
+// 				modifyAttack(entity, 4, killerBoard, allCards);
+// 				modifyHealth(entity, 4, killerBoard, allCards);
+// 				afterStatsUpdate(entity, killerBoard, allCards);
+// 				spectator.registerPowerTarget(entity, entity, killerBoard);
+// 			}
+// 		}
+// 	}
+// };
 
 const buildBoardAfterDeathrattleSpawns = (
 	boardWithKilledMinion: BoardEntity[],
@@ -1166,6 +1245,21 @@ const buildBoardAfterDeathrattleSpawns = (
 			);
 		}
 	}
+
+	// TODO: check if Avenge effects should proc after deathrattles instead
+	// They most certainly do, since the rat pack + avenge beast buffer works
+	applyAvengeEffects(
+		deadEntity,
+		deadMinionIndex,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 };
 
 const buildBoardAfterRebornSpawns = (
@@ -1219,7 +1313,7 @@ const buildBoardAfterRebornSpawns = (
 	);
 };
 
-const performEntitySpawns = (
+export const performEntitySpawns = (
 	candidateEntities: readonly BoardEntity[],
 	boardWithKilledMinion: BoardEntity[],
 	boardWithKilledMinionHero: BgsPlayerEntity,
