@@ -23,7 +23,7 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.Crabby1,
 	CardIds.CrabbyBattlegrounds,
 ];
-export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Broodmother_WhelpToken];
+export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
 export class CardsData {
 	// public shredderSpawns: readonly string[];
@@ -120,7 +120,7 @@ export class CardsData {
 			case CardIds.WitchwingNestmatronBattlegrounds:
 			case CardIds.TonyTwoTusk:
 			case CardIds.TonyTwoTuskBattlegrounds:
-			case CardIds.Broodmother:
+			case CardIds.Onyxia_Broodmother:
 				return 4;
 		}
 		return 0;

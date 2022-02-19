@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
-import { applyAvengeEffects } from 'src/simulation/avenge';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -8,6 +7,7 @@ import { pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
 import { addCardsInHand, afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { applyAuras, removeAuras } from './auras';
+import { applyAvengeEffects } from './avenge';
 import { applyMinionDeathEffect, applyMonstrosity, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
@@ -896,14 +896,14 @@ const handleAfterMinionsDeathsForBoard = (
 		}
 		// Killed an enemy minion
 		if (killer.friendly !== deadEntity.friendly) {
-			if (friendlyHeroEntity.heroPowerId === CardIds.GloryOfCombat) {
+			if (friendlyHeroEntity.heroPowerId === CardIds.Rokara_GloryOfCombat) {
 				modifyAttack(killer, 1, friendlyBoard, allCards);
 				afterStatsUpdate(killer, friendlyBoard, allCards);
 				// Icesnarl the Mighty
 				friendlyBoard
-					.filter((e) => e.cardId === CardIds.IcesnarlTheMight || e.cardId === CardIds.IcesnarlTheMigthBattlegrounds)
+					.filter((e) => e.cardId === CardIds.IcesnarlTheMighty || e.cardId === CardIds.IcesnarlTheMightyBattlegrounds)
 					.forEach((icesnarl) => {
-						modifyHealth(icesnarl, icesnarl.cardId === CardIds.IcesnarlTheMigthBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+						modifyHealth(icesnarl, icesnarl.cardId === CardIds.IcesnarlTheMightyBattlegrounds ? 2 : 1, friendlyBoard, allCards);
 						afterStatsUpdate(icesnarl, friendlyBoard, allCards);
 					});
 			}

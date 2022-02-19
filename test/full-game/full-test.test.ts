@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
+import { encode } from '../../src/services/utils';
 import runSimulation from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
-import { encode } from '../../src/utils';
 import jsonEvent3 from './game.json';
 
 describe('Full tests for performance and accuracy', () => {
@@ -16,7 +16,7 @@ describe('Full tests for performance and accuracy', () => {
 			gameState: {
 				currentTurn: 0,
 			},
-		};
+		} as any;
 		SharedState.debugEnabled = false;
 		const result = await runSimulation({ 'body': JSON.stringify(input) });
 		const simulationResult = JSON.parse(result.body);

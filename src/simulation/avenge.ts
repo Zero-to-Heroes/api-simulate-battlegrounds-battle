@@ -1,11 +1,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from 'src/bgs-player-entity';
-import { BoardEntity } from 'src/board-entity';
-import { CardsData } from 'src/cards/cards-data';
-import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from 'src/simulation/attack';
-import { spawnEntities } from 'src/simulation/deathrattle-spawns';
-import { SharedState } from 'src/simulation/shared-state';
-import { Spectator } from 'src/simulation/spectator/spectator';
+import { BgsPlayerEntity } from '../bgs-player-entity';
+import { BoardEntity } from '../board-entity';
+import { CardsData } from '../cards/cards-data';
 import {
 	addCardsInHand,
 	addStatsToBoard,
@@ -14,8 +10,12 @@ import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	modifyAttack,
-	modifyHealth,
-} from 'src/utils';
+	modifyHealth
+} from '../utils';
+import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
+import { spawnEntities } from './deathrattle-spawns';
+import { SharedState } from './shared-state';
+import { Spectator } from './spectator/spectator';
 
 export const applyAvengeEffects = (
 	deadEntity: BoardEntity,
@@ -45,8 +45,15 @@ export const applyAvengeEffects = (
 			allCards,
 		);
 	}
+	// console.log('updating dead entity avenge counter', boardWithDeadEntityHero.avengeCurrent, stringifySimpleCard(deadEntity, allCards));
 	const heroAvenger = !!boardWithDeadEntityHero.avengeDefault && boardWithDeadEntityHero.avengeCurrent === 0;
 	if (heroAvenger) {
+		// console.log(
+		// 	'Hero is an avenger',
+		// 	boardWithDeadEntityHero.avengeCurrent,
+		// 	boardWithDeadEntityHero.avengeDefault,
+		// 	boardWithDeadEntityHero.heroPowerId,
+		// );
 		handleHeroAvenge(
 			deadEntity,
 			boardWithDeadEntity,
@@ -78,11 +85,11 @@ export const applyAvengeEffects = (
 
 const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDeadEntityHero: BgsPlayerEntity) => {
 	for (const entity of board) {
-		if (entity.avengeDefault) {
+		if (!!entity.avengeDefault) {
 			entity.avengeCurrent -= 1;
 		}
 	}
-	if (boardWithDeadEntityHero.avengeDefault) {
+	if (!!boardWithDeadEntityHero.avengeDefault) {
 		boardWithDeadEntityHero.avengeCurrent -= 1;
 	}
 };
@@ -275,10 +282,10 @@ const handleHeroAvenge = (
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
 	// Not affected by Khadgar
 	switch (boardWithDeadEntityHero?.heroPowerId) {
-		case CardIds.Broodmother:
+		case CardIds.Onyxia_Broodmother:
 			candidatesEntitiesSpawnedFromAvenge.push(
 				...spawnEntities(
-					CardIds.Broodmother_WhelpToken,
+					CardIds.Onyxia_OnyxianWhelpToken,
 					1,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,

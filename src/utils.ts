@@ -38,7 +38,7 @@ const TAUNT_IDS = [
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken,
 	CardIds.Scallywag_SkyPirateTokenBattlegrounds,
-	CardIds.Broodmother_WhelpToken,
+	CardIds.Onyxia_OnyxianWhelpToken,
 ];
 export const MEGA_WINDFURY_IDS = [
 	CardIds.ZappSlywickBattlegrounds,

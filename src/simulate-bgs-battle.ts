@@ -62,6 +62,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	setImplicitData(playerBoard, cardsData); // Avenge, maxHealth, etc.
 	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
 	setImplicitDataHero(playerInfo.player, cardsData);
+	// console.log('after implicit data', playerInfo.player.avengeCurrent, playerInfo.player.avengeDefault);
 	setImplicitDataHero(opponentInfo.player, cardsData);
 
 	// We do this so that we can have mutated objects inside the simulation and still

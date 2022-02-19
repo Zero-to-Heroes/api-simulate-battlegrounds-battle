@@ -3,7 +3,7 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { addCardsInHand } from './deathrattle-effects';
+import { addCardsInHand } from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 

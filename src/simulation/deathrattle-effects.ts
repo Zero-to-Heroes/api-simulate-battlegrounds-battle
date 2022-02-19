@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
-import { applyAvengeEffects } from 'src/simulation/avenge';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { AURA_ORIGINS, CardsData } from '../cards/cards-data';
@@ -16,7 +15,7 @@ import {
 	hasCorrectTribe,
 	isCorrectTribe,
 	modifyAttack,
-	modifyHealth,
+	modifyHealth
 } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -677,18 +676,18 @@ export const applyMinionDeathEffect = (
 		}
 	}
 
-	applyAvengeEffects(
-		deadEntity,
-		deadEntityIndex,
-		boardWithDeadEntity,
-		boardWithDeadEntityHero,
-		otherBoard,
-		otherBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	// applyAvengeEffects(
+	// 	deadEntity,
+	// 	deadEntityIndex,
+	// 	boardWithDeadEntity,
+	// 	boardWithDeadEntityHero,
+	// 	otherBoard,
+	// 	otherBoardHero,
+	// 	allCards,
+	// 	cardsData,
+	// 	sharedState,
+	// 	spectator,
+	// );
 };
 
 export const dealDamageToAllMinions = (
