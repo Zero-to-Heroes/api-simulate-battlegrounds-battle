@@ -195,7 +195,7 @@ export const handleDeathrattleEffects = (
 						otherBoard,
 						otherBoardHero,
 						deadEntity,
-						8,
+						6,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						allCards,
