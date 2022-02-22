@@ -302,7 +302,8 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: nu
 
 	// Once an entity has attacked, no entity to the left of it can attack until all entities
 	// on the board have attacked
-	if (lastAttackerIndex != null) {
+	// Once the last attacker index is the last entity on the board, we cycle back to the start
+	if (lastAttackerIndex != null && lastAttackerIndex < validAttackers.length - 1) {
 		// This doesn't work if any entity that appears before the attacked index died in-between
 		const candidates = validAttackers.slice(lastAttackerIndex);
 		if (candidates.length > 0) {

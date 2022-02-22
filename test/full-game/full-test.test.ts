@@ -16,7 +16,7 @@ describe('Full tests for performance and accuracy', () => {
 			gameState: {
 				currentTurn: 0,
 			},
-		} as any;
+		};
 		SharedState.debugEnabled = false;
 		const result = await runSimulation({ 'body': JSON.stringify(input) });
 		const simulationResult = JSON.parse(result.body);
@@ -27,7 +27,11 @@ describe('Full tests for performance and accuracy', () => {
 
 		const sample = simulationResult.outcomeSamples.tied[0];
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
+		// console.log('encoded', base64);
+		// console.log('result', {
+		// 	...simulationResult,
+		// 	outcomeSamples: undefined,
+		// });
 	});
 });
 
