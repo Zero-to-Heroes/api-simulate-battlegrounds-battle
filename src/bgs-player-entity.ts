@@ -1,5 +1,4 @@
 export interface BgsPlayerEntity {
-	readonly entityId: number;
 	readonly cardId: string;
 	readonly nonGhostCardId?: string;
 	readonly hpLeft: number;
@@ -7,6 +6,7 @@ export interface BgsPlayerEntity {
 	readonly heroPowerId: string;
 	readonly heroPowerUsed: boolean;
 	readonly heroPowerInfo?: number;
+	readonly entityId?: number;
 	cardsInHand?: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
