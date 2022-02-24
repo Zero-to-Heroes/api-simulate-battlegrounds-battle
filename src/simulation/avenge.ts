@@ -10,7 +10,7 @@ import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	modifyAttack,
-	modifyHealth
+	modifyHealth,
 } from '../utils';
 import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
@@ -296,6 +296,8 @@ const handleHeroAvenge = (
 					sharedState,
 					spectator,
 					deadEntity.friendly,
+					false,
+					false,
 					false,
 				),
 			);

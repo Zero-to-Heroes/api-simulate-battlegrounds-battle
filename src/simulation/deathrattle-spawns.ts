@@ -10,7 +10,7 @@ import {
 	hasCorrectTribe,
 	isCorrectTribe,
 	modifyAttack,
-	modifyHealth
+	modifyHealth,
 } from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -30,12 +30,15 @@ export const spawnEntities = (
 	// In most cases the business of knowing the number of minions to handle is left to the caller
 	limitSpawns: boolean,
 	spawnReborn = false,
+	useKhadgar = true,
 ): readonly BoardEntity[] => {
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
 	}
-	const spawnMultiplier = 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar1).length || 1;
-	const spawnMultiplierGolden = 3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.KhadgarBattlegrounds).length || 1;
+	const spawnMultiplier = useKhadgar ? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar1).length || 1 : 1;
+	const spawnMultiplierGolden = useKhadgar
+		? 3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.KhadgarBattlegrounds).length || 1
+		: 1;
 	const minionsToSpawn = limitSpawns
 		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
