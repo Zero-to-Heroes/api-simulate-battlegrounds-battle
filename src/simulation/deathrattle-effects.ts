@@ -15,7 +15,7 @@ import {
 	hasCorrectTribe,
 	isCorrectTribe,
 	modifyAttack,
-	modifyHealth
+	modifyHealth,
 } from '../utils';
 import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -324,26 +324,34 @@ export const handleDeathrattleEffects = (
 				}
 				break;
 			case CardIds.EarthRecollectionEnchantment:
-				applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				for (let i = 0; i < multiplier; i++) {
+					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				}
 				break;
 			case CardIds.FireRecollectionEnchantment:
-				applyFireInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				for (let i = 0; i < multiplier; i++) {
+					applyFireInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				}
 				break;
 			case CardIds.WaterRecollectionEnchantment:
-				applyWaterInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				for (let i = 0; i < multiplier; i++) {
+					applyWaterInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+				}
 				break;
 			case CardIds.LightningRecollectionEnchantment:
-				applyLightningInvocationEnchantment(
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity,
-					otherBoard,
-					otherBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
+				for (let i = 0; i < multiplier; i++) {
+					applyLightningInvocationEnchantment(
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						deadEntity,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+					);
+				}
 				break;
 		}
 	}
