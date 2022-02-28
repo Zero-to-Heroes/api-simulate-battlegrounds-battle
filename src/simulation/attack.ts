@@ -861,6 +861,7 @@ const handleAfterMinionsDeaths = (
 		random ? heroEntity1 : heroEntity2,
 		random ? board2 : board1,
 		random ? deadEntities2 : deadEntities1,
+		random ? heroEntity2 : heroEntity1,
 		allCards,
 		cardsData,
 		sharedState,
@@ -872,6 +873,7 @@ const handleAfterMinionsDeaths = (
 		!random ? heroEntity1 : heroEntity2,
 		!random ? board2 : board1,
 		!random ? deadEntities2 : deadEntities1,
+		!random ? heroEntity2 : heroEntity1,
 		allCards,
 		cardsData,
 		sharedState,
@@ -885,6 +887,7 @@ const handleAfterMinionsDeathsForBoard = (
 	friendlyHeroEntity: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherDeadEntities: BoardEntity[],
+	otherHeroEntity: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -897,11 +900,11 @@ const handleAfterMinionsDeathsForBoard = (
 		}
 		// Killed an enemy minion
 		if (killer.friendly !== deadEntity.friendly) {
-			if (friendlyHeroEntity.heroPowerId === CardIds.Rokara_GloryOfCombat) {
-				modifyAttack(killer, 1, friendlyBoard, allCards);
-				afterStatsUpdate(killer, friendlyBoard, allCards);
+			if (otherHeroEntity.heroPowerId === CardIds.Rokara_GloryOfCombat) {
+				modifyAttack(killer, 1, otherBoard, allCards);
+				afterStatsUpdate(killer, otherBoard, allCards);
 				// Icesnarl the Mighty
-				friendlyBoard
+				otherBoard
 					.filter((e) => e.cardId === CardIds.IcesnarlTheMighty || e.cardId === CardIds.IcesnarlTheMightyBattlegrounds)
 					.forEach((icesnarl) => {
 						modifyHealth(icesnarl, icesnarl.cardId === CardIds.IcesnarlTheMightyBattlegrounds ? 2 : 1, friendlyBoard, allCards);
