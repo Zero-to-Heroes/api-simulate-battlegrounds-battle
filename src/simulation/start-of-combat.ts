@@ -4,8 +4,8 @@ import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
-import { pickRandom } from '../services/utils';
-import { addStatsToBoard, afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
+import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
 import { applyAuras, removeAuras } from './auras';
 import {
@@ -405,16 +405,16 @@ const handleTamsinForPlayer = (
 	const lowestHealth = Math.min(...playerBoard.map((e) => e.health));
 	const entitiesWithLowestHealth = playerBoard.filter((e) => e.health === lowestHealth);
 	const chosenEntity = pickRandom(entitiesWithLowestHealth);
-	addStatsToBoard(
-		chosenEntity,
-		playerBoard.filter((e) => e.entityId !== chosenEntity.entityId),
-		chosenEntity.attack,
-		chosenEntity.health,
-		allCards,
-		spectator,
-	);
+	const newBoard = playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);
+	const buffedEntities = pickMultipleRandomDifferent(newBoard, 4);
 	// How to mark the minion as dead
 	chosenEntity.definitelyDead = true;
+	buffedEntities.forEach((e) => {
+		modifyAttack(e, chosenEntity.attack, newBoard, allCards);
+		modifyHealth(e, chosenEntity.health, newBoard, allCards);
+		afterStatsUpdate(e, newBoard, allCards);
+		spectator.registerPowerTarget(chosenEntity, e, newBoard);
+	});
 };
 
 const handlePlayerStartOfCombatHeroPowers = (
