@@ -255,7 +255,7 @@ export const handleDeathrattleEffects = (
 
 		case CardIds.SrTombDiverBattlegrounds1:
 			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
-				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - i];
+				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 				if (rightMostMinion) {
 					const refCard = allCards.getCard(rightMostMinion.cardId);
 					const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
@@ -265,11 +265,11 @@ export const handleDeathrattleEffects = (
 					afterStatsUpdate(rightMostMinion, boardWithDeadEntity, allCards);
 					spectator.registerPowerTarget(deadEntity, rightMostMinion, boardWithDeadEntity);
 				}
-				break;
 			}
+			break;
 		case CardIds.SrTombDiverBattlegrounds2:
 			for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
-				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - i];
+				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 				if (rightMostMinion) {
 					const refCard = allCards.getCard(rightMostMinion.cardId);
 					const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
@@ -279,8 +279,8 @@ export const handleDeathrattleEffects = (
 					afterStatsUpdate(rightMostMinion, boardWithDeadEntity, allCards);
 					spectator.registerPowerTarget(deadEntity, rightMostMinion, boardWithDeadEntity);
 				}
-				break;
 			}
+			break;
 	}
 
 	// It's important to first copy the enchantments, otherwise you could end up
