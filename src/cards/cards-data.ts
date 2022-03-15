@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, isBattlegroundsCard, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, GameTag, isBattlegroundsCard, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic } from '../utils';
 
@@ -51,6 +51,7 @@ export class CardsData {
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => !!card.techLevel)
+			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla');
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(pool.filter((card) => !this.isGolden(card)));
 		this.ghastcoilerSpawns = pool
