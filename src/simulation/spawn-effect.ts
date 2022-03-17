@@ -43,6 +43,26 @@ export const handleSpawn = (
 			afterStatsUpdate(entity, friendlyBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, friendlyBoard);
 			return;
+		case CardIds.Swampstriker:
+			modifyAttack(
+				entity,
+				spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
+				friendlyBoard,
+				allCards,
+			);
+			afterStatsUpdate(entity, friendlyBoard, allCards);
+			spectator.registerPowerTarget(entity, entity, friendlyBoard);
+			return;
+		case CardIds.SwampstrikerBattlegrounds:
+			modifyAttack(
+				entity,
+				2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
+				friendlyBoard,
+				allCards,
+			);
+			afterStatsUpdate(entity, friendlyBoard, allCards);
+			spectator.registerPowerTarget(entity, entity, friendlyBoard);
+			return;
 		case CardIds.CobaltGuardian:
 		case CardIds.DeflectOBot:
 			if (spawned.filter((spawn) => hasCorrectTribe(spawn, Race.MECH, allCards)).length > 0) {

@@ -114,7 +114,7 @@ const performAttack = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
-	spawns: CardsData,
+	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
@@ -133,11 +133,60 @@ const performAttack = (
 				attackingBoard,
 				attackingBoardHero,
 				allCards,
-				spawns,
+				cardsData,
 				sharedState,
 				spectator,
 			);
 		});
+	}
+
+	if ([CardIds.BabyKrush, CardIds.BabyKrushBattlegrounds].includes(attackingEntity.cardId as CardIds)) {
+		const spawns = spawnEntities(
+			attackingEntity.cardId === CardIds.BabyKrushBattlegrounds ? CardIds.DevilsaurBattlegrounds : CardIds.BabyKrush_DevilsaurToken,
+			1,
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoard,
+			defendingBoardHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+			true,
+			true,
+		);
+		if (spawns.length > 0) {
+			const sourceIndex = attackingBoard.indexOf(attackingEntity);
+			const actualSpawns = performEntitySpawns(
+				spawns,
+				attackingBoard,
+				attackingBoardHero,
+				attackingEntity,
+				sourceIndex,
+				defendingBoard,
+				defendingBoardHero,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+			for (const actualSpawn of actualSpawns) {
+				if (defendingEntity.health > 0 && !defendingEntity.definitelyDead) {
+					performAttack(
+						actualSpawn,
+						defendingEntity,
+						attackingBoard,
+						attackingBoardHero,
+						defendingBoard,
+						defendingBoardHero,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+					);
+				}
+			}
+		}
 	}
 
 	// For Prestor
@@ -152,7 +201,7 @@ const performAttack = (
 				defendingBoard,
 				defendingBoardHero,
 				allCards,
-				spawns,
+				cardsData,
 				sharedState,
 				spectator,
 			);
@@ -167,7 +216,7 @@ const performAttack = (
 			attackingBoard,
 			attackingBoardHero,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -184,7 +233,7 @@ const performAttack = (
 				attackingBoard,
 				attackingBoardHero,
 				allCards,
-				spawns,
+				cardsData,
 				sharedState,
 				spectator,
 			);
@@ -201,7 +250,7 @@ const performAttack = (
 			defendingBoard,
 			defendingBoardHero,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 			true,
@@ -215,7 +264,7 @@ const performAttack = (
 				defendingBoard,
 				defendingBoardHero,
 				allCards,
-				spawns,
+				cardsData,
 				sharedState,
 				spectator,
 				true,
@@ -224,7 +273,7 @@ const performAttack = (
 	}
 
 	attackingEntity.attackImmediately = false;
-	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, spawns, sharedState, spectator);
+	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, cardsData, sharedState, spectator);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 };
 
@@ -1321,21 +1370,21 @@ export const performEntitySpawns = (
 	candidateEntities: readonly BoardEntity[],
 	boardWithKilledMinion: BoardEntity[],
 	boardWithKilledMinionHero: BgsPlayerEntity,
-	deadEntity: BoardEntity,
-	deadMinionIndex: number,
+	spawnSourceEntity: BoardEntity,
+	spawnSourceEntityIndex: number,
 	opponentBoard: BoardEntity[],
 	opponentBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): void => {
+): readonly BoardEntity[] => {
 	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 
 	// const roomToSpawn: number = 7 - boardWithKilledMinion.length;
 	// const spawnedEntities: readonly BoardEntity[] = aliveEntites.slice(0, roomToSpawn);
 
-	const indexFromRight = boardWithKilledMinion.length - deadMinionIndex;
+	const indexFromRight = boardWithKilledMinion.length - spawnSourceEntityIndex;
 	const spawnedEntities = [];
 	for (const newMinion of aliveEntites) {
 		// All entities have been spawned
@@ -1370,5 +1419,6 @@ export const performEntitySpawns = (
 
 	// Minion has already been removed from the board in the previous step
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards, spectator);
-	spectator.registerMinionsSpawn(deadEntity, boardWithKilledMinion, spawnedEntities);
+	spectator.registerMinionsSpawn(spawnSourceEntity, boardWithKilledMinion, spawnedEntities);
+	return spawnedEntities;
 };

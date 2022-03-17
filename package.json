@@ -28,7 +28,7 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
-		"@firestone-hs/reference-data": "^0.1.207",
+		"@firestone-hs/reference-data": "^0.1.208",
 		"cross-fetch": "^3.1.5",
 		"lodash.clonedeep": "^4.5.0",
 		"node-fetch": "^2.6.7"
