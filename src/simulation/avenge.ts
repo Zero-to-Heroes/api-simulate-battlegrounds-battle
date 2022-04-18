@@ -10,7 +10,7 @@ import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	modifyAttack,
-	modifyHealth,
+	modifyHealth
 } from '../utils';
 import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
@@ -176,7 +176,8 @@ const handleAvenge = (
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator, CardIds.BloodGem);
 			break;
 		case CardIds.Sisefin:
-			const murloc = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
+			const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
+			const murloc = getRandomMinion(validTargets, Race.MURLOC, allCards);
 			if (murloc) {
 				murloc.poisonous = true;
 				spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
@@ -184,7 +185,8 @@ const handleAvenge = (
 			break;
 		case CardIds.SisefinBattlegrounds:
 			for (let i = 0; i < 2; i++) {
-				const murloc2 = getRandomMinion(boardWithDeadEntity, Race.MURLOC, allCards);
+				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
+				const murloc2 = getRandomMinion(validTargets, Race.MURLOC, allCards);
 				if (murloc2) {
 					murloc2.poisonous = true;
 					spectator.registerPowerTarget(avenger, murloc2, boardWithDeadEntity);
