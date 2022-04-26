@@ -53,30 +53,22 @@ export const handleDeathrattleEffects = (
 			}
 			break;
 		case CardIds.SpiritOfAirBattlegrounds1:
-			for (let i = 0; i < multiplier; i++) {
-				const target = pickRandom(boardWithDeadEntity);
-				if (target) {
-					target.divineShield = true;
-					target.taunt = true;
-					target.windfury = true;
-					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
-				}
-			}
-			break;
 		case CardIds.SpiritOfAirBattlegrounds2:
+			const iterations = deadEntity.cardId === CardIds.SpiritOfAirBattlegrounds2 ? 2 : 1;
 			for (let i = 0; i < multiplier; i++) {
-				const target = pickRandom(boardWithDeadEntity);
-				if (target) {
-					target.divineShield = true;
-					target.taunt = true;
-					target.windfury = true;
-					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
-
-					const target2 = pickRandom(boardWithDeadEntity.filter((e) => e.entityId !== target.entityId));
-					if (target2) {
-						target2.divineShield = true;
-						target2.taunt = true;
-						target2.windfury = true;
+				for (let j = 0; j < iterations; j++) {
+					let validTargets = boardWithDeadEntity.filter((entity) => !entity.divineShield);
+					if (!validTargets?.length) {
+						validTargets = boardWithDeadEntity.filter((entity) => !entity.taunt);
+						if (!validTargets?.length) {
+							validTargets = boardWithDeadEntity.filter((entity) => !entity.windfury);
+						}
+					}
+					const target = pickRandom(validTargets);
+					if (target) {
+						target.divineShield = true;
+						target.taunt = true;
+						target.windfury = true;
 						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 					}
 				}
