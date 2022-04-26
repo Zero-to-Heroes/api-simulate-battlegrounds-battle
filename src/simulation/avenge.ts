@@ -9,8 +9,9 @@ import {
 	getRandomMinion,
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
+	makeMinionGolden,
 	modifyAttack,
-	modifyHealth
+	modifyHealth,
 } from '../utils';
 import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
@@ -239,13 +240,7 @@ const handleAvenge = (
 				});
 			const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
 			if (pirate) {
-				const refCard = allCards.getCard(pirate.cardId);
-				const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
-				pirate.cardId = goldenCard.id;
-				modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
-				modifyHealth(pirate, refCard.health, boardWithDeadEntity, allCards);
-				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
+				makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
 			}
 			break;
 		case CardIds.TonyTwoTuskBattlegrounds:
@@ -256,12 +251,7 @@ const handleAvenge = (
 				});
 				const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
 				if (pirate) {
-					const refCard = allCards.getCard(pirate.cardId);
-					pirate.cardId = refCard.id;
-					modifyAttack(pirate, refCard.attack, boardWithDeadEntity, allCards);
-					modifyHealth(pirate, refCard.health, boardWithDeadEntity, allCards);
-					afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
-					spectator.registerPowerTarget(avenger, pirate, boardWithDeadEntity);
+					makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
 				}
 			}
 			break;

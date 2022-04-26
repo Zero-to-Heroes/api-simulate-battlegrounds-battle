@@ -14,6 +14,7 @@ import {
 	grantRandomStats,
 	hasCorrectTribe,
 	isCorrectTribe,
+	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
@@ -257,13 +258,7 @@ export const handleDeathrattleEffects = (
 			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 				if (rightMostMinion) {
-					const refCard = allCards.getCard(rightMostMinion.cardId);
-					const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
-					rightMostMinion.cardId = goldenCard.id;
-					modifyAttack(rightMostMinion, refCard.attack, boardWithDeadEntity, allCards);
-					modifyHealth(rightMostMinion, refCard.health, boardWithDeadEntity, allCards);
-					afterStatsUpdate(rightMostMinion, boardWithDeadEntity, allCards);
-					spectator.registerPowerTarget(deadEntity, rightMostMinion, boardWithDeadEntity);
+					makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
 				}
 			}
 			break;
@@ -271,13 +266,7 @@ export const handleDeathrattleEffects = (
 			for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 				if (rightMostMinion) {
-					const refCard = allCards.getCard(rightMostMinion.cardId);
-					const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
-					rightMostMinion.cardId = goldenCard.id;
-					modifyAttack(rightMostMinion, refCard.attack, boardWithDeadEntity, allCards);
-					modifyHealth(rightMostMinion, refCard.health, boardWithDeadEntity, allCards);
-					afterStatsUpdate(rightMostMinion, boardWithDeadEntity, allCards);
-					spectator.registerPowerTarget(deadEntity, rightMostMinion, boardWithDeadEntity);
+					makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
 				}
 			}
 			break;

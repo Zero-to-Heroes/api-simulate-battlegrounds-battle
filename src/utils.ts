@@ -187,6 +187,23 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 	});
 };
 
+export const makeMinionGolden = (
+	target: BoardEntity,
+	source: BoardEntity,
+	sourceBoard: BoardEntity[],
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	const refCard = allCards.getCard(target.cardId);
+	const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+	target.cardId = goldenCard.id;
+	target.avengeCurrent = 0;
+	modifyAttack(target, refCard.attack, sourceBoard, allCards);
+	modifyHealth(target, refCard.health, sourceBoard, allCards);
+	afterStatsUpdate(target, sourceBoard, allCards);
+	spectator.registerPowerTarget(source, target, sourceBoard);
+};
+
 export const grantRandomAttack = (
 	source: BoardEntity,
 	board: BoardEntity[],
