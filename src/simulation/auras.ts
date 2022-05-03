@@ -40,9 +40,12 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData)
 	}
 };
 
-export const removeAuras = (board: BoardEntity[], data: CardsData): void => {
+// When removing and applying auras without any action in-between (like for attackImmediately minions),
+// we use this hack to avoid granting additional health to minions that would end at 0 HP
+// once the aura is removed (eg two Southsea Captains)
+export const removeAuras = (board: BoardEntity[], data: CardsData, allowNegativeHealth = false): void => {
 	for (const entity of board) {
-		removeAurasFrom(entity, board, data);
+		removeAurasFrom(entity, board, data, allowNegativeHealth);
 	}
 };
 
@@ -54,14 +57,14 @@ export const removeAurasAfterAuraSourceDeath = (board: BoardEntity[], auraSource
 	}
 
 	for (const entity of board) {
-		removeAura(entity, auraEnchantmentId, board, auraSource);
+		removeAura(entity, auraEnchantmentId, board, false, auraSource);
 	}
 };
 
-const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsData): void => {
+const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsData, allowNegativeHealth: boolean): void => {
 	// let newEntity = entity;
 	for (const enchantment of entity.enchantments) {
-		removeAura(entity, enchantment.cardId, board);
+		removeAura(entity, enchantment.cardId, board, allowNegativeHealth);
 	}
 	// return newEntity;
 };
@@ -98,7 +101,13 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 	}
 };
 
-const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEntity[], deadAuraSource: BoardEntity = null): void => {
+const removeAura = (
+	entity: BoardEntity,
+	enchantmentId: string,
+	board: BoardEntity[],
+	allowNegativeHealth: boolean,
+	deadAuraSource: BoardEntity = null,
+): void => {
 	switch (enchantmentId) {
 		// case CardIds.Siegebreaker_SiegebreakingLegacyEnchantment:
 		// case CardIds.Siegebreaker_SiegebreakingEnchantmentBattlegrounds:
@@ -120,7 +129,7 @@ const removeAura = (entity: BoardEntity, enchantmentId: string, board: BoardEnti
 		case CardIds.SouthseaCaptain_YarrrLegacyEnchantment:
 		case CardIds.SouthseaCaptain_YarrrVanillaEnchantment:
 		case CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds:
-			removeSouthseaCaptainAura(entity, enchantmentId, board, deadAuraSource);
+			removeSouthseaCaptainAura(entity, enchantmentId, board, allowNegativeHealth, deadAuraSource);
 			return;
 		// TODO find proper enchantment
 		case CardIds.DraconicBlessingEnchantmentBattlegrounds1:
@@ -272,6 +281,7 @@ const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantme
 			continue;
 		}
 
+		// console.log('applying aura', stringifySimpleCard(entity), entity.maxHealth);
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
 			entity.attack += enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
 			entity.health += enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
@@ -296,6 +306,7 @@ const removeSouthseaCaptainAura = (
 	entity: BoardEntity,
 	enchantmentId: string,
 	board: BoardEntity[],
+	allowNegativeHealth: boolean,
 	deadAuraSource: BoardEntity = null,
 ): void => {
 	if (!deadAuraSource) {
@@ -308,11 +319,8 @@ const removeSouthseaCaptainAura = (
 			entity.attack - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
 		);
 
-		// entity.health = entity.maxHealth
-		// 	? Math.min(entity.health, entity.maxHealth)
-		// 	: Math.max(1, entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1));
 		entity.health = Math.max(
-			1,
+			allowNegativeHealth ? -999 : 1,
 			entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
 		);
 		entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
@@ -320,7 +328,7 @@ const removeSouthseaCaptainAura = (
 	}
 	// Special case where the source dies, health is treated differently
 	else {
-		// console.log('removing aura after source death', stringifySimpleCard(entity), entity.maxHealth);
+		// console.log('removing aura after source death', stringifySimpleCard(entity), stringifySimpleCard(deadAuraSource), entity.maxHealth);
 		const buffs = entity.enchantments.filter((e) => e.cardId === enchantmentId && e.originEntityId === deadAuraSource.entityId);
 		const numberOfBuffs = buffs.length;
 
@@ -331,7 +339,7 @@ const removeSouthseaCaptainAura = (
 		entity.health = entity.maxHealth
 			? Math.min(entity.health, entity.maxHealth)
 			: Math.max(
-					1,
+					allowNegativeHealth ? -999 : 1,
 					entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
 			  );
 		entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);

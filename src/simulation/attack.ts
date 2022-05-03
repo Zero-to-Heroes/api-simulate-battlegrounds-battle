@@ -45,17 +45,17 @@ export const simulateAttack = (
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
-		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
+		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking, new Error().stack);
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
-			// The auras need to be handled on a per-attack basis, as otherwise minions that spawn
-			// in-between attacks don't get aura buffs
-			applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
-			applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 			// We refresh the entity in case of windfury
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 				return;
 			}
+			// The auras need to be handled on a per-attack basis, as otherwise minions that spawn
+			// in-between attacks don't get aura buffs
+			applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
+			applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
@@ -84,6 +84,11 @@ export const simulateAttack = (
 				) {
 					defendingEntity.attackImmediately = true;
 				}
+				// console.log(
+				// 	'after attack by',
+				// 	stringifySimpleCard(attackingEntity, allCards),
+				// 	stringifySimpleCard(defendingEntity, allCards),
+				// );
 			}
 			removeAuras(attackingBoard, spawns);
 			removeAuras(defendingBoard, spawns);
@@ -1398,8 +1403,8 @@ export const performEntitySpawns = (
 		boardWithKilledMinion.splice(boardWithKilledMinion.length - indexFromRight, 0, newMinion);
 		if (newMinion.attackImmediately) {
 			// Whenever we are already in a combat phase, we need to first clean up the state
-			removeAuras(boardWithKilledMinion, cardsData);
-			removeAuras(opponentBoard, cardsData);
+			removeAuras(boardWithKilledMinion, cardsData, true);
+			removeAuras(opponentBoard, cardsData, true);
 			simulateAttack(
 				boardWithKilledMinion,
 				boardWithKilledMinionHero,

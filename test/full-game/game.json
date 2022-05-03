@@ -1,83 +1,21 @@
 {
 	"playerBoard": {
 		"player": {
-			"tavernTier": 3,
-			"hpLeft": 41,
-			"cardId": "TB_BaconShop_HERO_74",
-			"nonGhostCardId": "TB_BaconShop_HERO_74",
-			"heroPowerId": "TB_BaconShop_HP_082",
+			"tavernTier": 2,
+			"hpLeft": 37,
+			"cardId": "BG22_HERO_004",
+			"nonGhostCardId": "BG22_HERO_004",
+			"heroPowerId": "BG22_HERO_004p",
 			"heroPowerUsed": false,
-			"heroPowerInfo": 2
+			"heroPowerInfo": -1
 		},
 		"board": [
 			{
-				"cardId": "OG_221",
-				"attack": 2,
+				"cardId": "NEW1_027",
+				"attack": 4,
 				"divineShield": false,
-				"enchantments": [],
-				"entityId": 1964,
-				"health": 1,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0
-			},
-			{
-				"cardId": "BG22_202",
-				"attack": 6,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 1714, "cardId": "BG21_008e" },
-					{ "originEntityId": 1875, "cardId": "EX1_507e" },
-					{ "originEntityId": 1878, "cardId": "EX1_507e" }
-				],
-				"entityId": 1713,
-				"health": 5,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0
-			},
-			{
-				"cardId": "BG21_008",
-				"attack": 8,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 1876, "cardId": "EX1_507e" },
-					{ "originEntityId": 1879, "cardId": "EX1_507e" },
-					{ "originEntityId": 2122, "cardId": "EX1_014te" }
-				],
-				"entityId": 1715,
-				"health": 3,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0
-			},
-			{
-				"cardId": "EX1_507",
-				"attack": 6,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 1717, "cardId": "EX1_014te" },
-					{ "originEntityId": 1880, "cardId": "EX1_507e" }
-				],
-				"entityId": 1716,
+				"enchantments": [{ "originEntityId": 974, "cardId": "VAN_NEW1_027e" }],
+				"entityId": 841,
 				"health": 4,
 				"poisonous": false,
 				"reborn": false,
@@ -90,16 +28,12 @@
 				"immuneWhenAttackCharges": 0
 			},
 			{
-				"cardId": "EX1_507",
-				"attack": 6,
+				"cardId": "NEW1_027",
+				"attack": 4,
 				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 1719, "cardId": "BG21_008e" },
-					{ "originEntityId": 1720, "cardId": "EX1_014te" },
-					{ "originEntityId": 1877, "cardId": "EX1_507e" }
-				],
-				"entityId": 1718,
-				"health": 5,
+				"enchantments": [{ "originEntityId": 973, "cardId": "VAN_NEW1_027e" }],
+				"entityId": 842,
+				"health": 4,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -115,52 +49,22 @@
 	},
 	"opponentBoard": {
 		"player": {
-			"tavernTier": 3,
-			"hpLeft": 45,
-			"cardId": "BG22_HERO_003",
-			"nonGhostCardId": "BG22_HERO_003",
-			"heroPowerId": "BG22_HERO_003p",
+			"tavernTier": 1,
+			"hpLeft": 43,
+			"cardId": "TB_BaconShop_HERO_02",
+			"nonGhostCardId": "TB_BaconShop_HERO_02",
+			"heroPowerId": "TB_BaconShop_HP_011",
 			"heroPowerUsed": false,
 			"heroPowerInfo": -1
 		},
 		"board": [
 			{
-				"cardId": "BGS_060",
-				"attack": 10,
+				"cardId": "BGS_061",
+				"attack": 3,
 				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 2326, "cardId": "BG20_GEMe" },
-					{ "originEntityId": 2327, "cardId": "BG20_GEMe" },
-					{ "originEntityId": 2328, "cardId": "BG20_GEMe" },
-					{ "originEntityId": 2329, "cardId": "BG20_GEMe" },
-					{ "originEntityId": 2330, "cardId": "EX1_014te" },
-					{ "originEntityId": 2331, "cardId": "EX1_014te" },
-					{ "originEntityId": 2332, "cardId": "BG20_GEMe2" },
-					{ "originEntityId": 2338, "cardId": "VAN_NEW1_027e" }
-				],
-				"entityId": 2325,
-				"health": 12,
-				"poisonous": false,
-				"reborn": false,
-				"taunt": true,
-				"windfury": false,
-				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0
-			},
-			{
-				"cardId": "BGS_049",
-				"attack": 4,
-				"divineShield": false,
-				"enchantments": [
-					{ "originEntityId": 2334, "cardId": "BG22_HERO_003pe2" },
-					{ "originEntityId": 2335, "cardId": "BG22_HERO_003pe" },
-					{ "originEntityId": 2339, "cardId": "VAN_NEW1_027e" }
-				],
-				"entityId": 2333,
-				"health": 13,
+				"enchantments": [],
+				"entityId": 1236,
+				"health": 1,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -172,12 +76,29 @@
 				"immuneWhenAttackCharges": 0
 			},
 			{
-				"cardId": "NEW1_027",
-				"attack": 4,
+				"cardId": "UNG_073",
+				"attack": 2,
 				"divineShield": false,
-				"enchantments": [{ "originEntityId": 2337, "cardId": "EX1_014te" }],
-				"entityId": 2336,
-				"health": 4,
+				"enchantments": [],
+				"entityId": 1237,
+				"health": 3,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "CFM_315t",
+				"attack": 1,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 1238,
+				"health": 1,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -192,5 +113,5 @@
 		"secrets": []
 	},
 	"options": null,
-	"gameState": { "currentTurn": 5, "validTribes": [20, 17, 14, 23, 43] }
+	"gameState": { "currentTurn": 3, "validTribes": [20, 24, 14, 23, 18] }
 }
