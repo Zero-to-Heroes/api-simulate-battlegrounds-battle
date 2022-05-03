@@ -32,7 +32,19 @@ export const applyAvengeEffects = (
 ): void => {
 	const candidatesEntitiesSpawnedFromAvenge: BoardEntity[] = [];
 	updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
-	const avengers = boardWithDeadEntity.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0);
+	const avengers = boardWithDeadEntity
+		.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0)
+		// Get Tony to be processed first, because of the "when turned golden, the minion ignores the death for the avenge counter"
+		// behavior
+		.sort((a, b) => {
+			if (a.cardId === CardIds.TonyTwoTusk || a.cardId === CardIds.TonyTwoTuskBattlegrounds) {
+				return -1;
+			}
+			if (b.cardId === CardIds.TonyTwoTusk || b.cardId === CardIds.TonyTwoTuskBattlegrounds) {
+				return 1;
+			}
+			return 0;
+		});
 	for (const avenger of avengers) {
 		handleAvenge(
 			boardWithDeadEntity,
