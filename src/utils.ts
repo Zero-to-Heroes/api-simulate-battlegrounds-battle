@@ -377,6 +377,14 @@ export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 	} as BoardEntity;
 };
 
+export const normalizeCardIdForSkin = (cardId: string): string => {
+	const skinMatch = cardId.match(/(.*)_SKIN_.*/);
+	if (skinMatch) {
+		return skinMatch[1];
+	}
+	return cardId;
+};
+
 export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCardsService = null): string => {
 	return '[' + board.map((entity) => stringifySimpleCard(entity, allCards)).join(', ') + ']';
 };

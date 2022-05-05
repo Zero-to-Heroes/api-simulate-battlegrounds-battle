@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { AURA_ENCHANTMENTS, AURA_ORIGINS, CardsData } from '../cards/cards-data';
-import { isCorrectTribe } from '../utils';
+import { isCorrectTribe, normalizeCardIdForSkin } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: number, data: CardsData, cards: AllCardsService): void => {
@@ -22,6 +22,7 @@ export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: numb
 
 export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): void => {
 	for (const entity of board) {
+		entity.cardId = normalizeCardIdForSkin(entity.cardId);
 		entity.maxHealth = entity.health;
 		const avengeValue = cardsData.avengeValue(entity.cardId);
 		if (avengeValue > 0) {
