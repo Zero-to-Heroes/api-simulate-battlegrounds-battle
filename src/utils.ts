@@ -200,7 +200,7 @@ export const makeMinionGolden = (
 	// A minion becoming golden ignore the current death.
 	// This way of handling it is not ideal, since it will still trigger if both avenges trigger at the same time, but
 	// should solve the other cases
-	target.avengeCurrent = Math.max(0, target.avengeCurrent - 1);
+	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
 	modifyAttack(target, refCard.attack, sourceBoard, allCards);
 	modifyHealth(target, refCard.health, sourceBoard, allCards);
 	afterStatsUpdate(target, sourceBoard, allCards);
