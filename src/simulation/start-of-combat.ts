@@ -192,7 +192,7 @@ const handleStartOfCombatMinions = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
-	let attackerForStart = Math.round(Math.random());
+	let attackerForStart = currentAttacker;
 	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.indexOf(entity.cardId as CardIds) !== -1);
 	const opponentAttackers = opponentBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.indexOf(entity.cardId as CardIds) !== -1);
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
