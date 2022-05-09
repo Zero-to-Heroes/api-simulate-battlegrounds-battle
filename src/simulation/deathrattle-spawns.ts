@@ -991,8 +991,9 @@ export const spawnEntitiesFromDeathrattle = (
 				// HOWEVER, this can cause an issue, if for instance a Scallywag token spawns, attacks right away,
 				// and then Omega Buster spawns. In this case, it will not have yet processed the token's attack,
 				// and will limit the spawns
-				const entitiesToSpawn = Math.max(0, Math.min(5, 7 - boardWithDeadEntity.length - spawnedEntities.length));
-				const buffAmount = (deadEntity.cardId === CardIds.OmegaBusterBattlegrounds ? 2 : 1) * (6 - entitiesToSpawn);
+				const cardParam = 5;
+				const entitiesToSpawn = Math.max(0, Math.min(cardParam, 7 - boardWithDeadEntity.length - spawnedEntities.length));
+				const buffAmount = (deadEntity.cardId === CardIds.OmegaBusterBattlegrounds ? 2 : 1) * (cardParam - entitiesToSpawn);
 				spawnedEntities.push(
 					...spawnEntities(
 						deadEntity.cardId === CardIds.OmegaBusterBattlegrounds
