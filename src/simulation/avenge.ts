@@ -176,6 +176,10 @@ const handleAvenge = (
 		case CardIds.ImpatientDoomsayerBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
+		case CardIds.PashmarTheVengeful:
+		case CardIds.PashmarTheVengefulBattlegrounds:
+			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
+			break;
 		case CardIds.WitchwingNestmatron:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;

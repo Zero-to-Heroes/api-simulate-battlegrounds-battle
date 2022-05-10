@@ -16,12 +16,16 @@ export const AURA_ENCHANTMENTS: readonly string[][] = [
 // and that stop once the origin entity leaves play (so it doesn't include buffs)
 export const AURA_ORIGINS: readonly string[] = AURA_ENCHANTMENTS.map((pair) => pair[0]);
 export const START_OF_COMBAT_CARD_IDS = [
-	CardIds.RedWhelp,
-	CardIds.RedWhelpBattlegrounds,
-	CardIds.PrizedPromoDrake,
-	CardIds.PrizedPromoDrakeBattlegrounds,
+	CardIds.CorruptedMyrmidon,
+	CardIds.CorruptedMyrmidonBattlegrounds,
 	CardIds.Crabby1,
 	CardIds.CrabbyBattlegrounds,
+	CardIds.MantidQueen,
+	CardIds.MantidQueenBattlegrounds,
+	CardIds.PrizedPromoDrake,
+	CardIds.PrizedPromoDrakeBattlegrounds,
+	CardIds.RedWhelp,
+	CardIds.RedWhelpBattlegrounds,
 ];
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
@@ -112,6 +116,8 @@ export class CardsData {
 				return 2;
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:
+			case CardIds.PashmarTheVengeful:
+			case CardIds.PashmarTheVengefulBattlegrounds:
 			case CardIds.WitchwingNestmatron:
 			case CardIds.WitchwingNestmatronBattlegrounds:
 				return 3;

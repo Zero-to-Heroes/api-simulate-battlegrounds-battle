@@ -655,7 +655,62 @@ export const performStartOfCombatMinionsForPlayer = (
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
+	} else if (attacker.cardId === CardIds.CorruptedMyrmidon || attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds) {
+		const multiplier = attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds ? 2 : 1;
+		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
+		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
+		afterStatsUpdate(attacker, attackingBoard, allCards);
+		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
+	} else if (attacker.cardId === CardIds.MantidQueen || attacker.cardId === CardIds.MantidQueenBattlegrounds) {
+		const multiplier = attacker.cardId === CardIds.MantidQueenBattlegrounds ? 2 : 1;
+		const allRaces = attackingBoard
+			.map((entity) => entity.cardId)
+			.map((cardId) => allCards.getCard(cardId).race)
+			.filter((race) => !!race && race !== Race[Race.BLANK]);
+		const totalRaces =
+			[...new Set(allRaces.filter((race) => race !== Race[Race.ALL]))].length +
+			allRaces.filter((race) => race === Race[Race.ALL]).length;
+		for (let i = 0; i < multiplier; i++) {
+			for (let j = 0; j < totalRaces; j++) {
+				const buffType = getRandomMantidQueenBuffType(attacker);
+				switch (buffType) {
+					case 'stats':
+						modifyAttack(attacker, 5, attackingBoard, allCards);
+						modifyHealth(attacker, 5, attackingBoard, allCards);
+						afterStatsUpdate(attacker, attackingBoard, allCards);
+						break;
+					case 'divine-shield':
+						attacker.divineShield = true;
+						break;
+					case 'taunt':
+						attacker.taunt = true;
+						break;
+					case 'windfury':
+						attacker.windfury = true;
+						break;
+				}
+				spectator.registerPowerTarget(attacker, attacker, attackingBoard);
+			}
+		}
+		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
+		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
+		afterStatsUpdate(attacker, attackingBoard, allCards);
+		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 	}
 	removeAuras(attackingBoard, cardsData);
 	removeAuras(defendingBoard, cardsData);
+};
+
+const getRandomMantidQueenBuffType = (entity: BoardEntity): 'stats' | 'divine-shield' | 'windfury' | 'taunt' => {
+	const possibilities: ('stats' | 'divine-shield' | 'windfury' | 'taunt')[] = ['stats'];
+	if (!entity.divineShield) {
+		possibilities.push('divine-shield');
+	}
+	if (!entity.windfury) {
+		possibilities.push('windfury');
+	}
+	if (!entity.taunt) {
+		possibilities.push('taunt');
+	}
+	return pickRandom(possibilities);
 };

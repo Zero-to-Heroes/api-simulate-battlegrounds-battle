@@ -245,7 +245,12 @@ export const handleDeathrattleEffects = (
 				);
 			}
 			break;
-
+		case CardIds.LeeroyTheReckless:
+		case CardIds.LeeroyTheRecklessBattlegrounds:
+			if (deadEntity.lastAffectedByEntity) {
+				deadEntity.lastAffectedByEntity.definitelyDead = true;
+			}
+			break;
 		case CardIds.SrTombDiverBattlegrounds1:
 			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];

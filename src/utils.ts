@@ -34,6 +34,8 @@ const TAUNT_IDS = [
 	CardIds.BrannsEpicEggBattlegrounds2,
 	CardIds.KilrekBattlegrounds1,
 	CardIds.KilrekBattlegrounds2,
+	CardIds.Glowscale,
+	CardIds.GlowscaleBattlegrounds,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken,
@@ -43,7 +45,7 @@ const ATTACK_IMMEDIATELY_IDS = [
 export const MEGA_WINDFURY_IDS = [
 	CardIds.ZappSlywickBattlegrounds,
 	CardIds.CracklingCycloneBattlegrounds,
-	CardIds.BristlebackKnight2,
+	CardIds.BristlebackKnightBattlegrounds,
 	CardIds.BonkerBattlegrounds,
 ];
 const CANT_ATTACK_IDS = [CardIds.ArcaneCannonBattlegrounds];
