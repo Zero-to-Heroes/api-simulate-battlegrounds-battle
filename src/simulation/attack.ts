@@ -456,6 +456,10 @@ export const dealDamageToEnemy = (
 		return 0;
 	}
 
+	const isDeadBeforeDamage = defendingEntity.definitelyDead || defendingEntity.health <= 0;
+	// Why do we use a fakeAttacker? Is that for the "attacking" prop?
+	// That prop is only used for Overkill, and even in that case it looks like it would work
+	// without it
 	const fakeAttacker = {
 		...(damageSource || {}),
 		entityId: -1,
@@ -474,6 +478,9 @@ export const dealDamageToEnemy = (
 		sharedState,
 		spectator,
 	);
+	if (!isDeadBeforeDamage && actualDamageDone > 0) {
+		defendingEntity.lastAffectedByEntity = damageSource;
+	}
 	const defendingEntityIndex = defendingBoard.map((entity) => entity.entityId).indexOf(defendingEntity.entityId);
 	defendingBoard[defendingEntityIndex] = defendingEntity;
 	return actualDamageDone;
