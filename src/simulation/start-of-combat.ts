@@ -667,12 +667,15 @@ export const performStartOfCombatMinionsForPlayer = (
 			.map((entity) => entity.cardId)
 			.map((cardId) => allCards.getCard(cardId).race)
 			.filter((race) => !!race && race !== Race[Race.BLANK]);
+		// console.log('all races', allRaces, multiplier);
 		const totalRaces =
 			[...new Set(allRaces.filter((race) => race !== Race[Race.ALL]))].length +
 			allRaces.filter((race) => race === Race[Race.ALL]).length;
+		// console.log('totalRaces', totalRaces);
 		for (let i = 0; i < multiplier; i++) {
 			for (let j = 0; j < totalRaces; j++) {
 				const buffType = getRandomMantidQueenBuffType(attacker);
+				// console.log('applying buff', i, j, buffType);
 				switch (buffType) {
 					case 'stats':
 						modifyAttack(attacker, 5, attackingBoard, allCards);
@@ -692,10 +695,6 @@ export const performStartOfCombatMinionsForPlayer = (
 				spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 			}
 		}
-		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
-		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
-		afterStatsUpdate(attacker, attackingBoard, allCards);
-		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 	}
 	removeAuras(attackingBoard, cardsData);
 	removeAuras(defendingBoard, cardsData);
