@@ -18,7 +18,7 @@ import {
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
-import { bumpEntities, dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
+import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -238,6 +238,24 @@ export const handleDeathrattleEffects = (
 					4,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+			}
+			break;
+		case CardIds.UnstableGhoul:
+		case CardIds.UnstableGhoulBattlegrounds:
+			const damage = deadEntity.cardId === CardIds.UnstableGhoulBattlegrounds ? 2 : 1;
+			for (let i = 0; i < multiplier; i++) {
+				dealDamageToAllMinions(
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoard,
+					otherBoardHero,
+					deadEntity,
+					damage,
 					allCards,
 					cardsData,
 					sharedState,
@@ -631,57 +649,7 @@ export const applyMinionDeathEffect = (
 				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
 			});
 		}
-		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.NatPagleExtremeAngler) {
-		// }
 	}
-
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare2);
-	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
-	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
-	if (deadEntity.cardId === CardIds.UnstableGhoul) {
-		for (let i = 0; i < multiplier; i++) {
-			dealDamageToAllMinions(
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				otherBoard,
-				otherBoardHero,
-				deadEntity,
-				1,
-				allCards,
-				cardsData,
-				sharedState,
-				spectator,
-			);
-		}
-	} else if (deadEntity.cardId === CardIds.UnstableGhoulBattlegrounds) {
-		for (let i = 0; i < multiplier; i++) {
-			dealDamageToAllMinions(
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				otherBoard,
-				otherBoardHero,
-				deadEntity,
-				2,
-				allCards,
-				cardsData,
-				sharedState,
-				spectator,
-			);
-		}
-	}
-
-	// applyAvengeEffects(
-	// 	deadEntity,
-	// 	deadEntityIndex,
-	// 	boardWithDeadEntity,
-	// 	boardWithDeadEntityHero,
-	// 	otherBoard,
-	// 	otherBoardHero,
-	// 	allCards,
-	// 	cardsData,
-	// 	sharedState,
-	// 	spectator,
-	// );
 };
 
 export const dealDamageToAllMinions = (
@@ -698,26 +666,37 @@ export const dealDamageToAllMinions = (
 ): void => {
 	if (board1.length === 0 && board2.length === 0) {
 		return;
-		// return [board1, board2];
 	}
-	// let updatedBoard1 = [...board1];
-	// let updatedBoard2 = [...board2];
-	const fakeAttacker = {
-		...(damageSource || {}),
-		entityId: -1,
-		attack: damageDealt,
-		attacking: true,
-	} as BoardEntity;
 	for (let i = 0; i < board1.length; i++) {
-		bumpEntities(board1[i], fakeAttacker, board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
-		// board1[i] = entity;
+		dealDamageToEnemy(
+			board1[i],
+			board1,
+			board1Hero,
+			damageSource,
+			damageDealt,
+			board2,
+			board2Hero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
 	for (let i = 0; i < board2.length; i++) {
-		bumpEntities(board2[i], fakeAttacker, board2, board2Hero, board1, board1Hero, allCards, cardsData, sharedState, spectator);
-		// updatedBoard2 = [...boardResult];
-		// updatedBoard2[i] = entity;
+		dealDamageToEnemy(
+			board2[i],
+			board2,
+			board2Hero,
+			damageSource,
+			damageDealt,
+			board1,
+			board1Hero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
-	// processMinionDeath(board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
 };
 
 const applySoulJugglerEffect = (

@@ -9,8 +9,9 @@
 			"heroPowerInfo": 0
 		},
 		"board": [
+			{ "entityId": 14, "cardId": "TB_BaconShop_HP_033t", "attack": 1, "health": 7, "taunt": true, "enchantments": [] },
 			{
-				"entityId": 1,
+				"entityId": 6,
 				"cardId": "BG23_318",
 				"attack": 6,
 				"health": 2,
@@ -34,12 +35,11 @@
 			"heroPowerInfo": 0
 		},
 		"board": [
-			{ "entityId": 2, "cardId": "TB_BaconShop_HP_033t", "attack": 1, "health": 1, "enchantments": [] },
 			{
-				"entityId": 3,
-				"cardId": "BGS_002",
-				"attack": 3,
-				"health": 5,
+				"entityId": 1,
+				"cardId": "BGS_078",
+				"attack": 5,
+				"health": 3,
 				"divineShield": false,
 				"poisonous": false,
 				"taunt": false,
@@ -47,7 +47,21 @@
 				"windfury": false,
 				"megaWindfury": false,
 				"enchantments": []
-			}
+			},
+			{
+				"entityId": 13,
+				"cardId": "TB_BaconUps_118",
+				"attack": 1,
+				"health": 6,
+				"divineShield": false,
+				"poisonous": false,
+				"taunt": false,
+				"reborn": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"enchantments": []
+			},
+			{ "entityId": 11, "cardId": "TB_BaconShop_HP_033t", "attack": 0, "health": 1, "enchantments": [] }
 		]
 	},
 	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 },
