@@ -557,9 +557,12 @@ export const applyMinionDeathEffect = (
 					spectator,
 				);
 			}
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental) {
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental && deadEntity.lastAffectedByEntity.attacking) {
+			// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental) {
 			// console.log('applying WildfireElemental effect', stringifySimple(boardWithDeadEntity, allCards));
 			const excessDamage = -deadEntity.health;
+			// Prevent propagation of the effect
+			deadEntity.lastAffectedByEntity.attacking = false;
 			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
 			// console.log('neighbours', stringifySimple(neighbours, allCards));
 			if (neighbours.length > 0) {
@@ -578,8 +581,12 @@ export const applyMinionDeathEffect = (
 					spectator,
 				);
 			}
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElementalBattlegrounds) {
+		} else if (
+			deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElementalBattlegrounds &&
+			deadEntity.lastAffectedByEntity.attacking
+		) {
 			const excessDamage = -deadEntity.health;
+			deadEntity.lastAffectedByEntity.attacking = false;
 			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
 			neighbours.forEach((neighbour) =>
 				dealDamageToEnemy(
