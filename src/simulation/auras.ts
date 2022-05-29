@@ -337,12 +337,18 @@ const removeSouthseaCaptainAura = (
 			0,
 			entity.attack - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
 		);
-		entity.health = entity.maxHealth
-			? Math.min(entity.health, entity.maxHealth)
-			: Math.max(
-					allowNegativeHealth ? -999 : 1,
-					entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
-			  );
+		// This doesn't work, as if you have a buffed pirate that is 4/2 (after aura) and the aura source dies, it just stays where it is
+		// instead of losing the health buff
+		// entity.health = entity.maxHealth
+		// 	? Math.min(entity.health, entity.maxHealth)
+		// 	: Math.max(
+		// 			allowNegativeHealth ? -999 : 1,
+		// 			entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
+		// 	  );
+		entity.health = Math.max(
+			allowNegativeHealth ? -999 : 1,
+			entity.health - numberOfBuffs * (enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1),
+		);
 		entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 		// console.log('removed aura after source death', stringifySimpleCard(entity), entity.maxHealth);
 	}
