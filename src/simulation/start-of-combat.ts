@@ -129,6 +129,7 @@ export const handleIllidanHeroPowers = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
+	// console.log('current attacker before', currentAttacker);
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
 	if (Math.random() < 0.5) {
@@ -183,6 +184,7 @@ export const handleIllidanHeroPowers = (
 		);
 	}
 	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+	// console.log('current attacker after', currentAttacker);
 	return currentAttacker;
 };
 

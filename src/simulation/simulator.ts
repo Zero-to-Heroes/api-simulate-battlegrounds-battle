@@ -68,16 +68,21 @@ export class Simulator {
 			gameState,
 			spectator,
 		);
+		// console.log('suggestedNewCurrentAttacker', suggestedNewCurrentAttacker);
 		// When both players have the same amount of minions, it's possible that Illidan's Start of Combat
 		// ability causes the same player to attack twice in a row, which is not the case in real life
 		// So when Illidan attacks first, we then look at the expected first attacker. If it was Illidan
 		// once more, we switch. Otherwise, we just keep the attacker as planned
 		// FIXME: this is probably bogus when both players have Illidan's hero power?
-		if (effectivePlayerBoardLength === effectiveOpponentBoardLength) {
-			this.currentAttacker = suggestedNewCurrentAttacker;
-		}
+		// if (effectivePlayerBoardLength === effectiveOpponentBoardLength) {
+		// Looking at some recent data (2022/05/29), there was one board with 5 entities + Illidan, and another with 3
+		// The 5 entities attacked (because of Illidan), and then the other board attacked
+		// So this means that Illidan made the attack turn pass over to the other player
+		this.currentAttacker = suggestedNewCurrentAttacker;
+		// }
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
+			// console.log('this.currentSpeedAttacker', this.currentAttacker);
 			// If there are "attack immediately" minions, we keep the same player
 			// We put it here so that it can kick in after the start of combat effects. However here we don't want
 			// to change who attacks first, so we repeat that block again after all the attacks have been resolved
@@ -95,6 +100,7 @@ export class Simulator {
 			} else {
 				this.currentSpeedAttacker = -1;
 			}
+			// console.log('this.currentSpeedAttacker 2', this.currentAttacker, this.currentSpeedAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
 				const opponentEntitiesBeforeAttack = opponentBoard.map((e) => e.entityId).slice(0, this.lastOpponentAttackerEntityIndex);
 				const outputAttacker = simulateAttack(
