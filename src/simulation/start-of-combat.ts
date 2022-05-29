@@ -124,7 +124,7 @@ export const handleIllidanHeroPowers = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	allCards: AllCardsService,
-	spawns: CardsData,
+	cardsData: CardsData,
 	sharedState: SharedState,
 	gameState: BgsGameState,
 	spectator: Spectator,
@@ -140,7 +140,7 @@ export const handleIllidanHeroPowers = (
 			currentAttacker,
 			true,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -152,7 +152,7 @@ export const handleIllidanHeroPowers = (
 			currentAttacker,
 			false,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -165,7 +165,7 @@ export const handleIllidanHeroPowers = (
 			currentAttacker,
 			false,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -177,11 +177,12 @@ export const handleIllidanHeroPowers = (
 			currentAttacker,
 			true,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
 	}
+	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 	return currentAttacker;
 };
 
@@ -227,8 +228,8 @@ const handleStartOfCombatMinions = (
 				opponentEntity,
 				playerBoard,
 				playerEntity,
-				playerBoardBefore,
 				opponentBoardBefore,
+				playerBoardBefore,
 				allCards,
 				spawns,
 				sharedState,
@@ -685,15 +686,12 @@ export const performStartOfCombatMinionsForPlayer = (
 			.map((entity) => entity.cardId)
 			.map((cardId) => allCards.getCard(cardId).race)
 			.filter((race) => !!race && race !== Race[Race.BLANK]);
-		// console.log('all races', allRaces, multiplier);
 		const totalRaces =
 			[...new Set(allRaces.filter((race) => race !== Race[Race.ALL]))].length +
 			allRaces.filter((race) => race === Race[Race.ALL]).length;
-		// console.log('totalRaces', totalRaces);
 		for (let i = 0; i < multiplier; i++) {
 			for (let j = 0; j < totalRaces; j++) {
 				const buffType = getRandomMantidQueenBuffType(attacker);
-				// console.log('applying buff', i, j, buffType);
 				switch (buffType) {
 					case 'stats':
 						modifyAttack(attacker, 5, attackingBoard, allCards);
