@@ -45,6 +45,9 @@ export const handleStartOfCombat = (
 		gameState,
 		spectator,
 	);
+	// Because start of combat powers like Red Whelp's use the board composition before Illidan's strike to know the amount of damage
+	const playerBoardBefore = playerBoard.map((e) => ({ ...e }));
+	const opponentBoardBefore = opponentBoard.map((e) => ({ ...e }));
 	currentAttacker = handleIllidanHeroPowers(
 		playerEntity,
 		playerBoard,
@@ -75,6 +78,8 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
+		playerBoardBefore,
+		opponentBoardBefore,
 		allCards,
 		spawns,
 		sharedState,
@@ -186,6 +191,8 @@ const handleStartOfCombatMinions = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
+	playerBoardBefore: BoardEntity[],
+	opponentBoardBefore: BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -204,6 +211,8 @@ const handleStartOfCombatMinions = (
 				playerEntity,
 				opponentBoard,
 				opponentEntity,
+				playerBoardBefore,
+				opponentBoardBefore,
 				allCards,
 				spawns,
 				sharedState,
@@ -218,6 +227,8 @@ const handleStartOfCombatMinions = (
 				opponentEntity,
 				playerBoard,
 				playerEntity,
+				playerBoardBefore,
+				opponentBoardBefore,
 				allCards,
 				spawns,
 				sharedState,
@@ -546,6 +557,12 @@ export const performStartOfCombatMinionsForPlayer = (
 	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
+	// Apparently, the board composition used for start of combat minion effects (like Red Whelp, and I assume it works the
+	// same way for others like Prized Promo Drake or Mantid Queen) is the one that is used before Illidan's effect is handled.
+	// Since this also runs before HP start of combat, we probably also use the state as it was before HP were triggered, like
+	// Tamsin's Phylactery.
+	attackingBoardBefore: BoardEntity[],
+	defendingBoardBefore: BoardEntity[],
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -562,7 +579,7 @@ export const performStartOfCombatMinionsForPlayer = (
 
 	// For now we're only dealing with the red whelp
 	if (attacker.cardId === CardIds.RedWhelp) {
-		const damage = attackingBoard
+		const damage = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		dealDamageToRandomEnemy(
@@ -588,7 +605,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator,
 		);
 	} else if (attacker.cardId === CardIds.RedWhelpBattlegrounds) {
-		const damage = attackingBoard
+		const damage = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		dealDamageToRandomEnemy(
@@ -626,7 +643,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator,
 		);
 	} else if (attacker.cardId === CardIds.PrizedPromoDrake) {
-		const numberOfDragons = attackingBoard
+		const numberOfDragons = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
@@ -637,7 +654,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	} else if (attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds) {
-		const dragons = attackingBoard
+		const dragons = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).race)
 			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
@@ -664,7 +681,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 	} else if (attacker.cardId === CardIds.MantidQueen || attacker.cardId === CardIds.MantidQueenBattlegrounds) {
 		const multiplier = attacker.cardId === CardIds.MantidQueenBattlegrounds ? 2 : 1;
-		const allRaces = attackingBoard
+		const allRaces = attackingBoardBefore
 			.map((entity) => entity.cardId)
 			.map((cardId) => allCards.getCard(cardId).race)
 			.filter((race) => !!race && race !== Race[Race.BLANK]);

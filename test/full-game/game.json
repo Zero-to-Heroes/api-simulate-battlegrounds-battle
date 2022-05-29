@@ -2,20 +2,20 @@
 	"playerBoard": {
 		"player": {
 			"tavernTier": 1,
-			"hpLeft": 46,
-			"cardId": "BG20_HERO_282",
-			"nonGhostCardId": "BG20_HERO_282",
-			"heroPowerId": "BG20_HERO_282p",
-			"heroPowerUsed": true,
-			"heroPowerInfo": 1
+			"hpLeft": 40,
+			"cardId": "TB_BaconShop_HERO_53_SKIN_C",
+			"nonGhostCardId": "TB_BaconShop_HERO_53",
+			"heroPowerId": "TB_BaconShop_HP_062",
+			"heroPowerUsed": false,
+			"heroPowerInfo": -1
 		},
 		"board": [
 			{
-				"cardId": "BG21_006",
-				"attack": 2,
+				"cardId": "BGS_019",
+				"attack": 1,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 422,
+				"entityId": 440,
 				"health": 2,
 				"poisonous": false,
 				"reborn": false,
@@ -28,12 +28,12 @@
 				"immuneWhenAttackCharges": 0
 			},
 			{
-				"cardId": "BG21_027",
+				"cardId": "BGS_019",
 				"attack": 1,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 564,
-				"health": 3,
+				"entityId": 497,
+				"health": 2,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -50,21 +50,21 @@
 	"opponentBoard": {
 		"player": {
 			"tavernTier": 2,
-			"hpLeft": 43,
-			"cardId": "BG22_HERO_001",
-			"nonGhostCardId": "BG22_HERO_001",
-			"heroPowerId": "BG22_HERO_001p_t2",
+			"hpLeft": 45,
+			"cardId": "TB_BaconShop_HERO_08",
+			"nonGhostCardId": "TB_BaconShop_HERO_08",
+			"heroPowerId": "TB_BaconShop_HP_069",
 			"heroPowerUsed": true,
-			"heroPowerInfo": -1
+			"heroPowerInfo": 1
 		},
 		"board": [
 			{
-				"cardId": "BGS_061",
-				"attack": 3,
+				"cardId": "BGS_116",
+				"attack": 1,
 				"divineShield": false,
 				"enchantments": [],
-				"entityId": 683,
-				"health": 1,
+				"entityId": 664,
+				"health": 4,
 				"poisonous": false,
 				"reborn": false,
 				"taunt": false,
@@ -79,5 +79,5 @@
 		"secrets": []
 	},
 	"options": null,
-	"gameState": { "currentTurn": 2, "validTribes": [20, 15, 24, 17, 23] }
+	"gameState": { "currentTurn": 2, "validTribes": [20, 24, 23, 18, 43] }
 }
