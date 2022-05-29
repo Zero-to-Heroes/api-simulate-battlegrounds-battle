@@ -1,69 +1,178 @@
 {
 	"playerBoard": {
 		"player": {
-			"cardId": "TB_BaconShop_HERO_KelThuzad",
+			"tavernTier": 2,
 			"hpLeft": 40,
-			"tavernTier": 6,
-			"heroPowerId": null,
+			"cardId": "TB_BaconShop_HERO_76",
+			"nonGhostCardId": "TB_BaconShop_HERO_76",
+			"heroPowerId": "TB_BaconShop_HP_086",
 			"heroPowerUsed": true,
-			"heroPowerInfo": 0
+			"heroPowerInfo": 4
 		},
 		"board": [
-			{ "entityId": 14, "cardId": "TB_BaconShop_HP_033t", "attack": 1, "health": 7, "taunt": true, "enchantments": [] },
 			{
-				"entityId": 6,
-				"cardId": "BG23_318",
-				"attack": 6,
-				"health": 2,
-				"divineShield": false,
+				"cardId": "BGS_061",
+				"attack": 5,
+				"divineShield": true,
+				"enchantments": [
+					{ "originEntityId": 1039, "cardId": "BG20_GEMe" },
+					{ "originEntityId": 1040, "cardId": "BG20_GEMe" },
+					{ "originEntityId": 1041, "cardId": "BG20_GEMe2" }
+				],
+				"entityId": 1038,
+				"health": 3,
 				"poisonous": false,
-				"taunt": false,
 				"reborn": false,
+				"taunt": true,
+				"windfury": true,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_115",
+				"attack": 3,
+				"divineShield": false,
+				"enchantments": [{ "originEntityId": 1429, "cardId": "BGS_120e" }],
+				"entityId": 1181,
+				"health": 3,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
-				"enchantments": []
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_120",
+				"attack": 3,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 1042,
+				"health": 2,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_106",
+				"attack": 2,
+				"divineShield": false,
+				"enchantments": [],
+				"entityId": 1177,
+				"health": 3,
+				"poisonous": false,
+				"reborn": true,
+				"taunt": true,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
 			}
-		]
+		],
+		"secrets": []
 	},
 	"opponentBoard": {
 		"player": {
-			"cardId": "TB_BaconShop_HERO_KelThuzad",
-			"hpLeft": 40,
-			"tavernTier": 6,
-			"heroPowerId": null,
-			"heroPowerUsed": true,
-			"heroPowerInfo": 0
+			"tavernTier": 2,
+			"hpLeft": 39,
+			"cardId": "TB_BaconShop_HERO_10",
+			"nonGhostCardId": "TB_BaconShop_HERO_10",
+			"heroPowerId": "TB_BaconShop_HP_008",
+			"heroPowerUsed": false,
+			"heroPowerInfo": -1
 		},
 		"board": [
 			{
-				"entityId": 1,
-				"cardId": "BGS_078",
-				"attack": 5,
-				"health": 3,
+				"cardId": "BGS_055",
+				"attack": 4,
 				"divineShield": false,
+				"enchantments": [
+					{ "originEntityId": 1473, "cardId": "VAN_NEW1_027e" },
+					{ "originEntityId": 1476, "cardId": "VAN_NEW1_027e" }
+				],
+				"entityId": 1471,
+				"health": 4,
 				"poisonous": false,
-				"taunt": false,
 				"reborn": false,
+				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
-				"enchantments": []
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
 			},
 			{
-				"entityId": 13,
-				"cardId": "TB_BaconUps_118",
-				"attack": 1,
-				"health": 6,
+				"cardId": "NEW1_027",
+				"attack": 4,
 				"divineShield": false,
+				"enchantments": [{ "originEntityId": 1477, "cardId": "VAN_NEW1_027e" }],
+				"entityId": 1472,
+				"health": 4,
 				"poisonous": false,
-				"taunt": false,
 				"reborn": false,
+				"taunt": false,
 				"windfury": false,
 				"megaWindfury": false,
-				"enchantments": []
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
 			},
-			{ "entityId": 11, "cardId": "TB_BaconShop_HP_033t", "attack": 0, "health": 1, "enchantments": [] }
-		]
+			{
+				"cardId": "NEW1_027",
+				"attack": 4,
+				"divineShield": false,
+				"enchantments": [{ "originEntityId": 1475, "cardId": "VAN_NEW1_027e" }],
+				"entityId": 1474,
+				"health": 4,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"cardId": "BGS_060",
+				"attack": 5,
+				"divineShield": false,
+				"enchantments": [
+					{ "originEntityId": 1479, "cardId": "VAN_NEW1_027e" },
+					{ "originEntityId": 1480, "cardId": "VAN_NEW1_027e" }
+				],
+				"entityId": 1478,
+				"health": 7,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": true,
+				"windfury": false,
+				"megaWindfury": false,
+				"friendly": true,
+				"frenzyApplied": false,
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			}
+		],
+		"secrets": []
 	},
-	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 },
-	"gameState": { "currentTurn": 0 }
+	"options": null,
+	"gameState": { "currentTurn": 4, "validTribes": [15, 24, 23, 18, 43] }
 }

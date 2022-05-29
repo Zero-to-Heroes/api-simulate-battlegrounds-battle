@@ -75,14 +75,28 @@ export const simulateAttack = (
 					spectator,
 				);
 				applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
-				// FIXME: I don't know the behavior with Windfury. Should the attack be done right away, before
-				// the windfury triggers again? The current behavior attacks after the windfury is over
 				if (
 					defendingEntity.health > 0 &&
 					!defendingEntity.definitelyDead &&
 					(defendingEntity.cardId === CardIds.YoHoOgre || defendingEntity.cardId === CardIds.YoHoOgreBattlegrounds)
 				) {
 					defendingEntity.attackImmediately = true;
+					if (defendingEntity.attackImmediately) {
+						// Whenever we are already in a combat phase, we need to first clean up the state
+						removeAuras(attackingBoard, spawns, true);
+						removeAuras(defendingBoard, spawns, true);
+						simulateAttack(
+							defendingBoard,
+							defendingBoardHero,
+							attackingBoard,
+							attackingBoardHero,
+							null,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+						);
+					}
 				}
 				// console.log(
 				// 	'after attack by',
