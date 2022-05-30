@@ -356,23 +356,26 @@ const handleIllidanForPlayer = (
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
 	const minionsAtStart = playerBoard.length;
-	modifyAttack(playerBoard[0], 2, playerBoard, allCards);
-	afterStatsUpdate(playerBoard[0], playerBoard, allCards);
-	spectator.registerPowerTarget(playerBoard[0], playerBoard[0], playerBoard);
+	const firstAttacker = playerBoard[0];
+	const secondAttacker = minionsAtStart > 1 ? playerBoard[playerBoard.length - 1] : null;
+
+	modifyAttack(firstAttacker, 2, playerBoard, allCards);
+	afterStatsUpdate(firstAttacker, playerBoard, allCards);
+	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard);
 	if (
 		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2) ||
 		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)
 	) {
-		playerBoard[0].immuneWhenAttackCharges = 1;
+		firstAttacker.immuneWhenAttackCharges = 1;
 	}
 	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
 
-	if (minionsAtStart > 1) {
-		modifyAttack(playerBoard[playerBoard.length - 1], 2, playerBoard, allCards);
-		afterStatsUpdate(playerBoard[playerBoard.length - 1], playerBoard, allCards);
-		spectator.registerPowerTarget(playerBoard[playerBoard.length - 1], playerBoard[playerBoard.length - 1], playerBoard);
+	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
+		modifyAttack(secondAttacker, 2, playerBoard, allCards);
+		afterStatsUpdate(secondAttacker, playerBoard, allCards);
+		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
 		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2)) {
-			playerBoard[playerBoard.length - 1].immuneWhenAttackCharges = 1;
+			secondAttacker.immuneWhenAttackCharges = 1;
 		}
 		simulateAttack(
 			playerBoard,
