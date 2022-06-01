@@ -293,7 +293,9 @@ export const addCardsInHand = (
 };
 
 export const grantRandomDivineShield = (source: BoardEntity, board: BoardEntity[], spectator: Spectator): void => {
-	const elligibleEntities = board.filter((entity) => !entity.divineShield);
+	const elligibleEntities = board
+		.filter((entity) => !entity.divineShield)
+		.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 	if (elligibleEntities.length > 0) {
 		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
 		chosen.divineShield = true;
