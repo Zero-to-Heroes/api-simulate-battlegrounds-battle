@@ -101,7 +101,7 @@ const handlePreCombatHeroPowers = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
-	// Some are part of the incoming board: Y'Shaarj, Lich King
+	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
 	// Since the order is not important here, we just always do the player first
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
