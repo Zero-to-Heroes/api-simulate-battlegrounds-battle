@@ -593,6 +593,13 @@ export const bumpEntities = (
 		// return entity;
 	}
 	entity.health = entity.health - bumpInto.attack;
+
+	if (entity.cardId === CardIds.Bubblette && bumpInto.attack === 1) {
+		entity.definitelyDead = true;
+	} else if (entity.cardId === CardIds.BubbletteBattlegrounds && bumpInto.attack === 2) {
+		entity.definitelyDead = true;
+	}
+
 	// Do it last, so that other effects are still processed
 	if (bumpInto.poisonous) {
 		// So that further buffs don't revive it
