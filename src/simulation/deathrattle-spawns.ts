@@ -35,7 +35,7 @@ export const spawnEntities = (
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
 	}
-	const spawnMultiplier = useKhadgar ? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar1).length || 1 : 1;
+	const spawnMultiplier = useKhadgar ? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_DAL_575).length || 1 : 1;
 	const spawnMultiplierGolden = useKhadgar
 		? 3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.KhadgarBattlegrounds).length || 1
 		: 1;
@@ -159,7 +159,7 @@ export const spawnEntitiesFromDeathrattle = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare2);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_FP1_031);
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
@@ -238,7 +238,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.IckyImp2:
+			case CardIds.IckyImp_BG21_029:
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.ImpGangBoss_ImpToken,
@@ -346,7 +346,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.KindlyGrandmother1:
+			case CardIds.KindlyGrandmother_KAR_005:
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.KindlyGrandmother_BigBadWolf,
@@ -689,7 +689,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.Ghastcoiler2:
+			case CardIds.Ghastcoiler_BGS_008:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -794,7 +794,7 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 
-			case CardIds.KilrekBattlegrounds1:
+			case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy:
 				// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
 				// but close enough for now
 				addCardsInHand(
@@ -805,7 +805,7 @@ export const spawnEntitiesFromDeathrattle = (
 					spectator,
 				);
 				break;
-			case CardIds.KilrekBattlegrounds2:
+			case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G:
 				addCardsInHand(
 					boardWithDeadEntityHero,
 					Math.min(2, 7 - boardWithDeadEntity.length),
@@ -815,7 +815,7 @@ export const spawnEntitiesFromDeathrattle = (
 				);
 				break;
 
-			case CardIds.BrannsEpicEggBattlegrounds1:
+			case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -844,7 +844,7 @@ export const spawnEntitiesFromDeathrattle = (
 					spectator,
 				);
 				break;
-			case CardIds.BrannsEpicEggBattlegrounds2:
+			case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G:
 				spawnedEntities.push(
 					...[
 						...spawnEntities(
@@ -1246,7 +1246,7 @@ export const spawnEntitiesFromEnchantments = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare2);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_FP1_031);
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];

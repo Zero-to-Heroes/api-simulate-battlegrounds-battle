@@ -35,7 +35,7 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare2);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_FP1_031);
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
@@ -52,9 +52,9 @@ export const handleDeathrattleEffects = (
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
 			break;
-		case CardIds.SpiritOfAirBattlegrounds1:
-		case CardIds.SpiritOfAirBattlegrounds2:
-			const iterations = deadEntity.cardId === CardIds.SpiritOfAirBattlegrounds2 ? 2 : 1;
+		case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy:
+		case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G:
+			const iterations = deadEntity.cardId === CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
 			for (let i = 0; i < multiplier; i++) {
 				for (let j = 0; j < iterations; j++) {
 					let validTargets = boardWithDeadEntity.filter((entity) => !entity.divineShield);
@@ -151,7 +151,7 @@ export const handleDeathrattleEffects = (
 				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
 			}
 			break;
-		case CardIds.ElementiumSquirrelBombBattlegrounds1:
+		case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
@@ -175,7 +175,7 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
-		case CardIds.ElementiumSquirrelBombBattlegrounds2:
+		case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
@@ -269,7 +269,7 @@ export const handleDeathrattleEffects = (
 				deadEntity.lastAffectedByEntity.definitelyDead = true;
 			}
 			break;
-		case CardIds.SrTombDiverBattlegrounds1:
+		case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy:
 			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 				if (rightMostMinion) {
@@ -277,7 +277,7 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
-		case CardIds.SrTombDiverBattlegrounds2:
+		case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy_G:
 			for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
 				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 				if (rightMostMinion) {
@@ -309,7 +309,7 @@ export const handleDeathrattleEffects = (
 	}
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
-			case CardIds.Leapfrogger_LeapfrogginEnchantment1:
+			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
 				if (!!enchantment.repeats && enchantment.repeats > 1) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, multiplier * enchantment.repeats);
 				} else {
@@ -318,7 +318,7 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
-			case CardIds.Leapfrogger_LeapfrogginEnchantment2:
+			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
 				if (!!enchantment.repeats && enchantment.repeats > 1) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, multiplier * enchantment.repeats);
 				} else {
@@ -466,7 +466,9 @@ const applyLeapFroggerEffect = (
 	if (buffed) {
 		buffed.enchantments = buffed.enchantments ?? [];
 		buffed.enchantments.push({
-			cardId: isPremium ? CardIds.Leapfrogger_LeapfrogginEnchantment2 : CardIds.Leapfrogger_LeapfrogginEnchantment1,
+			cardId: isPremium
+				? CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge
+				: CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
 			originEntityId: deadEntity.entityId,
 			repeats: multiplier > 1 ? multiplier : undefined,
 		});
@@ -521,7 +523,7 @@ export const applyMinionDeathEffect = (
 	}
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
-		if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame2) {
+		if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_BGS_032) {
 			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 			if (targets.length > 0) {
 				const target = targets[0];
@@ -635,7 +637,7 @@ export const applyMinionDeathEffect = (
 				true,
 			);
 			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath2) {
+		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {
 			const otherPirates = otherBoard
 				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);

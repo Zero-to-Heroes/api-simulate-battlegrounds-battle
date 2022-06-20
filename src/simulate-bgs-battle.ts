@@ -180,8 +180,8 @@ export const validEnchantments = [
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment,
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 	CardIds.LivingSpores_LivingSporesEnchantment,
-	CardIds.Leapfrogger_LeapfrogginEnchantment1,
-	CardIds.Leapfrogger_LeapfrogginEnchantment2,
+	CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
+	CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
 	CardIds.Sneed_SneedsReplicator,
 	CardIds.SneedsReplicator_ReplicateEnchantment,
 	CardIds.EarthRecollectionEnchantment, // Spirit Raptor

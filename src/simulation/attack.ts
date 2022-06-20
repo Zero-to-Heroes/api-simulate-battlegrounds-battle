@@ -514,7 +514,7 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 	if (chosenDefender.taunt) {
 		const elistras = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.ElistraTheImmortal2 || entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
+			(entity) => entity.cardId === CardIds.ElistraTheImmortal_BGS_205 || entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
 		);
 		if (elistras.length > 0) {
 			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
@@ -1077,7 +1077,7 @@ export const applyOnAttackBuffs = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	if (attacker.cardId === CardIds.GlyphGuardian2) {
+	if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
 		// For now the utility method only works additively, so we hack around it
 		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
@@ -1363,8 +1363,8 @@ const buildBoardAfterRebornSpawns = (
 	const otherEntityCardIds = boardWithKilledMinion.filter((e) => e.entityId !== deadEntity.entityId).map((e) => e.cardId);
 	const numberOfReborns =
 		1 +
-		1 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds1).length +
-		2 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds2).length;
+		1 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy).length +
+		2 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy_G).length;
 	// Reborn happens after deathrattles
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndex >= 0

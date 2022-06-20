@@ -28,12 +28,12 @@ const TAUNT_IDS = [
 	CardIds.DynamicDuoBattlegrounds,
 	CardIds.InsatiableUrzul,
 	CardIds.InsatiableUrzulBattlegrounds,
-	CardIds.MasterOfRealities2,
+	CardIds.MasterOfRealities_BG21_036,
 	CardIds.MasterOfRealitiesBattlegrounds,
-	CardIds.BrannsEpicEggBattlegrounds1,
-	CardIds.BrannsEpicEggBattlegrounds2,
-	CardIds.KilrekBattlegrounds1,
-	CardIds.KilrekBattlegrounds2,
+	CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy,
+	CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G,
+	CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy,
+	CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G,
 	CardIds.Glowscale,
 	CardIds.GlowscaleBattlegrounds,
 ];
@@ -104,8 +104,8 @@ export const buildSingleBoardEntity = (
 
 	if (allCards.getCard(cardId).techLevel === controllerHero.tavernTier) {
 		const statsBonus =
-			4 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds1).length +
-			8 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds2).length;
+			4 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy).length +
+			8 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G).length;
 		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
 		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
 		afterStatsUpdate(newEntity, friendlyBoard, allCards);
@@ -113,8 +113,8 @@ export const buildSingleBoardEntity = (
 
 	if (newEntity.taunt) {
 		const statsBonus =
-			2 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds1).length +
-			4 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds2).length;
+			2 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy).length +
+			4 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G).length;
 		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
 		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
 		afterStatsUpdate(newEntity, friendlyBoard, allCards);
@@ -140,10 +140,17 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	}
 	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
 		const mishmashes = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.MishmashBattlegrounds1 || e.cardId === CardIds.MishmashBattlegrounds2,
+			(e) =>
+				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy ||
+				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G,
 		);
 		mishmashes.forEach((mishmash) => {
-			modifyAttack(mishmash, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
+			modifyAttack(
+				mishmash,
+				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * amount,
+				friendlyBoard,
+				allCards,
+			);
 		});
 	}
 };
@@ -155,25 +162,41 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 	}
 	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
 		const mishmashes = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.MishmashBattlegrounds1 || e.cardId === CardIds.MishmashBattlegrounds2,
+			(e) =>
+				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy ||
+				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G,
 		);
 		mishmashes.forEach((mishmash) => {
-			modifyHealth(mishmash, (mishmash.cardId === CardIds.MishmashBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
+			modifyHealth(
+				mishmash,
+				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * amount,
+				friendlyBoard,
+				allCards,
+			);
 		});
 	}
 
 	const titanicGuardians = friendlyBoard
 		.filter((e) => e.entityId !== entity.entityId)
-		.filter((e) => e.cardId === CardIds.TitanicGuardianBattlegrounds1 || e.cardId === CardIds.TitanicGuardianBattlegrounds2);
+		.filter(
+			(e) =>
+				e.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy ||
+				e.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G,
+		);
 	titanicGuardians.forEach((guardian) => {
-		modifyHealth(guardian, (guardian.cardId === CardIds.TitanicGuardianBattlegrounds2 ? 2 : 1) * amount, friendlyBoard, allCards);
+		modifyHealth(
+			guardian,
+			(guardian.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * amount,
+			friendlyBoard,
+			allCards,
+		);
 	});
 };
 
 export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
 	if (hasCorrectTribe(entity, Race.ELEMENTAL, allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.MasterOfRealities2 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
+			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
 		);
 		masterOfRealities.forEach((master) => {
 			modifyAttack(master, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
@@ -182,10 +205,24 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 	}
 	const tentaclesOfCthun = friendlyBoard
 		.filter((e) => e.entityId !== entity.entityId)
-		.filter((e) => e.cardId === CardIds.TentacleOfCthunBattlegrounds1 || e.cardId === CardIds.TentacleOfCthunBattlegrounds2);
+		.filter(
+			(e) =>
+				e.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy ||
+				e.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy_G,
+		);
 	tentaclesOfCthun.forEach((tentacle) => {
-		modifyAttack(tentacle, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
-		modifyHealth(tentacle, tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds2 ? 2 : 1, friendlyBoard, allCards);
+		modifyAttack(
+			tentacle,
+			tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
+			friendlyBoard,
+			allCards,
+		);
+		modifyHealth(
+			tentacle,
+			tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
+			friendlyBoard,
+			allCards,
+		);
 	});
 };
 

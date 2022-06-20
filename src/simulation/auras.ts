@@ -80,7 +80,7 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		// case CardIds.MalganisBattlegrounds:
 		// 	applyMalGanisAura(board, i, enchantmentId, cards);
 		// 	return;
-		case CardIds.Kathranatir2:
+		case CardIds.Kathranatir_BG21_039:
 		case CardIds.KathranatirBattlegrounds:
 			applyKathranatirAura(board, i, enchantmentId, cards);
 			return;
@@ -95,8 +95,8 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.SouthseaCaptainBattlegrounds:
 			applySouthseaCaptainAura(board, i, enchantmentId, cards);
 			return;
-		case CardIds.LadySinestraBattlegrounds1:
-		case CardIds.LadySinestraBattlegrounds2:
+		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
+		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
 			applyLadySinestraAura(board, i, enchantmentId);
 			return;
 	}
@@ -118,8 +118,8 @@ const removeAura = (
 		// case CardIds.Malganis_GraspOfMalganisEnchantmentBattlegrounds:
 		// 	removeMalGanisAura(entity, enchantmentId);
 		// 	return;
-		case CardIds.Kathranatir_GraspOfKathranatirEnchantment1:
-		case CardIds.Kathranatir_GraspOfKathranatirEnchantment2:
+		case CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e:
+		case CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge:
 			removeKathranatirAura(entity, enchantmentId);
 			return;
 		case CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment:
@@ -133,8 +133,8 @@ const removeAura = (
 			removeSouthseaCaptainAura(entity, enchantmentId, board, allowNegativeHealth, deadAuraSource);
 			return;
 		// TODO find proper enchantment
-		case CardIds.DraconicBlessingEnchantmentBattlegrounds1:
-		case CardIds.DraconicBlessingEnchantmentBattlegrounds2:
+		case CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_e:
+		case CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e:
 			removeLadySinestraAura(entity, enchantmentId);
 			return;
 		case CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds:
@@ -203,7 +203,7 @@ const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId
 		}
 
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
-			entity.attack += enchantmentId === CardIds.Kathranatir_GraspOfKathranatirEnchantment2 ? 4 : 2;
+			entity.attack += enchantmentId === CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge ? 4 : 2;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
 		}
 	}
@@ -242,7 +242,7 @@ const removeKathranatirAura = (entity: BoardEntity, enchantmentId: string): void
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(
 		0,
-		entity.attack - numberOfBuffs * (enchantmentId === CardIds.Kathranatir_GraspOfKathranatirEnchantment2 ? 4 : 2),
+		entity.attack - numberOfBuffs * (enchantmentId === CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge ? 4 : 2),
 	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
@@ -298,7 +298,7 @@ const applyLadySinestraAura = (board: BoardEntity[], index: number, enchantmentI
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		// TODO find proper enchantment
-		entity.attack += enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds2 ? 6 : 3;
+		entity.attack += enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e ? 6 : 3;
 		entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
 	}
 };
@@ -359,7 +359,8 @@ const removeLadySinestraAura = (entity: BoardEntity, enchantmentId: string): voi
 	// TODO: find proper enchantment
 	entity.attack = Math.max(
 		0,
-		entity.attack - numberOfBuffs * (enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds2 ? 6 : 3),
+		entity.attack -
+			numberOfBuffs * (enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e ? 6 : 3),
 	);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };

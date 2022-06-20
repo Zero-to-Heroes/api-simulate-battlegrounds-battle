@@ -363,8 +363,8 @@ const handleIllidanForPlayer = (
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
 	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard);
 	if (
-		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2) ||
-		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds1)
+		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy) ||
+		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy_G)
 	) {
 		firstAttacker.immuneWhenAttackCharges = 1;
 	}
@@ -374,7 +374,7 @@ const handleIllidanForPlayer = (
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
-		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds2)) {
+		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy_G)) {
 			secondAttacker.immuneWhenAttackCharges = 1;
 		}
 		simulateAttack(
@@ -670,7 +670,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.Crabby1 || attacker.cardId === CardIds.CrabbyBattlegrounds) {
+	} else if (attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy || attacker.cardId === CardIds.CrabbyBattlegrounds) {
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds ? 2 : 1;
 		neighbours.forEach((entity) => {

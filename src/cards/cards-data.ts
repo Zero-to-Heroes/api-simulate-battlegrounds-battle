@@ -3,14 +3,20 @@ import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic } from '../utils';
 
 export const AURA_ENCHANTMENTS: readonly string[][] = [
-	[CardIds.Kathranatir2, CardIds.Kathranatir_GraspOfKathranatirEnchantment1],
-	[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment2],
+	[CardIds.Kathranatir_BG21_039, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e],
+	[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge],
 	[CardIds.MurlocWarleaderLegacy, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
 	[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
 	[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
 	[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
-	[CardIds.LadySinestraBattlegrounds1, CardIds.DraconicBlessingEnchantmentBattlegrounds1],
-	[CardIds.LadySinestraBattlegrounds2, CardIds.DraconicBlessingEnchantmentBattlegrounds2],
+	[
+		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy,
+		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_e,
+	],
+	[
+		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G,
+		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e,
+	],
 ];
 // Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 // and that stop once the origin entity leaves play (so it doesn't include buffs)
@@ -18,7 +24,7 @@ export const AURA_ORIGINS: readonly string[] = AURA_ENCHANTMENTS.map((pair) => p
 export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.CorruptedMyrmidon,
 	CardIds.CorruptedMyrmidonBattlegrounds,
-	CardIds.Crabby1,
+	CardIds.Crabby_BG22_HERO_000_Buddy,
 	CardIds.CrabbyBattlegrounds,
 	CardIds.MantidQueen,
 	CardIds.MantidQueenBattlegrounds,
@@ -86,7 +92,7 @@ export class CardsData {
 		this.kilrekSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.race === Race[Race.DEMON])
-			.filter((card) => card.id !== CardIds.KilrekBattlegrounds1)
+			.filter((card) => card.id !== CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.brannEpicEggSpawns = pool
