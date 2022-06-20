@@ -423,7 +423,7 @@ const handleTamsinForPlayer = (
 	const entitiesWithLowestHealth = playerBoard.filter((e) => e.health === lowestHealth);
 	const chosenEntity = pickRandom(entitiesWithLowestHealth);
 	const newBoard = playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);
-	const buffedEntities = pickMultipleRandomDifferent(newBoard, 4);
+	const buffedEntities = pickMultipleRandomDifferent(newBoard, 5);
 	// How to mark the minion as dead
 	chosenEntity.definitelyDead = true;
 	buffedEntities.forEach((e) => {
