@@ -18,7 +18,7 @@ import {
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
-import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours } from './attack';
+import { dealDamageToEnemy, dealDamageToRandomEnemy } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -480,7 +480,7 @@ const applyLeapFroggerEffect = (
 
 export const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
-	deadEntityIndex: number,
+	deadEntityIndexFromRight: number,
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
@@ -559,53 +559,55 @@ export const applyMinionDeathEffect = (
 					spectator,
 				);
 			}
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental && deadEntity.lastAffectedByEntity.attacking) {
-			// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental) {
-			// console.log('applying WildfireElemental effect', stringifySimple(boardWithDeadEntity, allCards));
-			const excessDamage = -deadEntity.health;
-			// Prevent propagation of the effect
-			deadEntity.lastAffectedByEntity.attacking = false;
-			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
-			// console.log('neighbours', stringifySimple(neighbours, allCards));
-			if (neighbours.length > 0) {
-				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
-				dealDamageToEnemy(
-					randomTarget,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity.lastAffectedByEntity,
-					excessDamage,
-					otherBoard,
-					otherBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
-			}
-		} else if (
-			deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElementalBattlegrounds &&
-			deadEntity.lastAffectedByEntity.attacking
-		) {
-			const excessDamage = -deadEntity.health;
-			deadEntity.lastAffectedByEntity.attacking = false;
-			const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndex);
-			neighbours.forEach((neighbour) =>
-				dealDamageToEnemy(
-					neighbour,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity.lastAffectedByEntity,
-					excessDamage,
-					otherBoard,
-					otherBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				),
-			);
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn) {
+		}
+		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental && deadEntity.lastAffectedByEntity.attacking) {
+		// 	// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental) {
+		// 	// console.log('applying WildfireElemental effect', stringifySimple(boardWithDeadEntity, allCards));
+		// 	const excessDamage = -deadEntity.health;
+		// 	// Prevent propagation of the effect
+		// 	deadEntity.lastAffectedByEntity.attacking = false;
+		// 	const neighbours = getNeighbours(boardWithDeadEntity, null, boardWithDeadEntity.length - deadEntityIndexFromRight);
+		// 	// console.log('neighbours', stringifySimple(neighbours, allCards));
+		// 	if (neighbours.length > 0) {
+		// 		const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
+		// 		dealDamageToEnemy(
+		// 			randomTarget,
+		// 			boardWithDeadEntity,
+		// 			boardWithDeadEntityHero,
+		// 			deadEntity.lastAffectedByEntity,
+		// 			excessDamage,
+		// 			otherBoard,
+		// 			otherBoardHero,
+		// 			allCards,
+		// 			cardsData,
+		// 			sharedState,
+		// 			spectator,
+		// 		);
+		// 	}
+		// } else if (
+		// 	deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElementalBattlegrounds &&
+		// 	deadEntity.lastAffectedByEntity.attacking
+		// ) {
+		// 	const excessDamage = -deadEntity.health;
+		// 	deadEntity.lastAffectedByEntity.attacking = false;
+		// 	const neighbours = getNeighbours(boardWithDeadEntity, null, boardWithDeadEntity.length - deadEntityIndexFromRight);
+		// 	neighbours.forEach((neighbour) =>
+		// 		dealDamageToEnemy(
+		// 			neighbour,
+		// 			boardWithDeadEntity,
+		// 			boardWithDeadEntityHero,
+		// 			deadEntity.lastAffectedByEntity,
+		// 			excessDamage,
+		// 			otherBoard,
+		// 			otherBoardHero,
+		// 			allCards,
+		// 			cardsData,
+		// 			sharedState,
+		// 			spectator,
+		// 		),
+		// 	);
+		// }
+		else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn) {
 			const newEntities = spawnEntities(
 				CardIds.IronhideDirehorn_IronhideRuntToken,
 				1,
@@ -620,7 +622,7 @@ export const applyMinionDeathEffect = (
 				!deadEntity.friendly,
 				true,
 			);
-			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
+			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehornBattlegrounds) {
 			const newEntities = spawnEntities(
 				CardIds.IronhideDirehorn_IronhideRuntTokenBattlegrounds,
@@ -636,7 +638,7 @@ export const applyMinionDeathEffect = (
 				!deadEntity.friendly,
 				true,
 			);
-			otherBoard.splice(deadEntityIndex, 0, ...newEntities);
+			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {
 			const otherPirates = otherBoard
 				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))

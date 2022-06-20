@@ -209,8 +209,10 @@ export class Spectator {
 	public registerDeadEntities(
 		deadMinionIndexes1: number[],
 		deadEntities1: BoardEntity[],
+		board1: BoardEntity[],
 		deadMinionIndexes2: number[],
 		deadEntities2: BoardEntity[],
+		board2: BoardEntity[],
 	): void {
 		const deaths = [...(deadEntities1 || []), ...(deadEntities2 || [])];
 		if (!deaths || deaths.length === 0) {
@@ -219,7 +221,10 @@ export class Spectator {
 		const action: GameAction = {
 			type: 'minion-death',
 			deaths: this.sanitize(deaths),
-			deadMinionsPositionsOnBoard: [...(deadMinionIndexes1 || []), ...(deadMinionIndexes2 || [])],
+			deadMinionsPositionsOnBoard: [
+				...(deadMinionIndexes1 || []).map((i) => board1.length - i),
+				...(deadMinionIndexes2 || []).map((i) => board2.length - i),
+			],
 			playerBoard: undefined,
 			opponentBoard: undefined,
 		};

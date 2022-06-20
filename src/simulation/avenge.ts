@@ -20,7 +20,7 @@ import { Spectator } from './spectator/spectator';
 
 export const applyAvengeEffects = (
 	deadEntity: BoardEntity,
-	deadEntityIndex: number,
+	deadEntityIndexFromRight: number,
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
@@ -86,7 +86,7 @@ export const applyAvengeEffects = (
 		boardWithDeadEntity,
 		boardWithDeadEntityHero,
 		deadEntity,
-		deadEntityIndex,
+		deadEntityIndexFromRight,
 		otherBoard,
 		otherBoardHero,
 		allCards,

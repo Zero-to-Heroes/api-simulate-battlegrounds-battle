@@ -100,6 +100,7 @@ export class Simulator {
 			} else {
 				this.currentSpeedAttacker = -1;
 			}
+			this.currentAttacker = 0;
 			// console.log('this.currentSpeedAttacker 2', this.currentAttacker, this.currentSpeedAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
 				const opponentEntitiesBeforeAttack = opponentBoard.map((e) => e.entityId).slice(0, this.lastOpponentAttackerEntityIndex);
