@@ -252,11 +252,15 @@ export const grantRandomAttack = (
 	additionalAttack: number,
 	allCards: AllCardsService,
 	spectator: Spectator,
+	excludeSource = false,
 ): void => {
-	if (board.length > 0) {
-		const target = board[Math.floor(Math.random() * board.length)];
-		modifyAttack(target, additionalAttack, board, allCards);
-		afterStatsUpdate(target, board, allCards);
+	const candidateBoard = board
+		.filter((e) => !excludeSource || e.entityId !== source.entityId)
+		.filter((e) => e.health > 0 && !e.definitelyDead);
+	if (candidateBoard.length > 0) {
+		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
+		modifyAttack(target, additionalAttack, candidateBoard, allCards);
+		afterStatsUpdate(target, candidateBoard, allCards);
 		spectator.registerPowerTarget(source, target, board);
 	}
 };
@@ -269,7 +273,9 @@ export const grantRandomHealth = (
 	spectator: Spectator,
 	excludeSource = false,
 ): void => {
-	const candidateBoard = board.filter((e) => !excludeSource || e.entityId !== source.entityId);
+	const candidateBoard = board
+		.filter((e) => !excludeSource || e.entityId !== source.entityId)
+		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
 		modifyHealth(target, health, board, allCards);
@@ -288,7 +294,7 @@ export const grantRandomStats = (
 	spectator: Spectator,
 ): BoardEntity => {
 	if (board.length > 0) {
-		const validBeast: BoardEntity = getRandomMinion(board, race, allCards);
+		const validBeast: BoardEntity = getRandomAliveMinion(board, race, allCards);
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
 			modifyHealth(validBeast, health, board, allCards);
@@ -315,7 +321,7 @@ export const addCardsInHand = (
 
 	const peggys = board.filter((e) => e.cardId === CardIds.PeggyBrittlebone || e.cardId === CardIds.PeggyBrittleboneBattlegrounds);
 	peggys.forEach((peggy) => {
-		const pirate = getRandomMinion(
+		const pirate = getRandomAliveMinion(
 			board.filter((e) => e.entityId !== peggy.entityId),
 			Race.PIRATE,
 			allCards,
@@ -351,8 +357,10 @@ export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards:
 	// return board;
 };
 
-export const getRandomMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
-	const validTribes = board.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).race, race));
+export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
+	const validTribes = board
+		.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).race, race))
+		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (!validTribes.length) {
 		return null;
 	}

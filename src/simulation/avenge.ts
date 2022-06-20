@@ -6,7 +6,7 @@ import {
 	addCardsInHand,
 	addStatsToBoard,
 	afterStatsUpdate,
-	getRandomMinion,
+	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	makeMinionGolden,
@@ -194,7 +194,7 @@ const handleAvenge = (
 			break;
 		case CardIds.Sisefin:
 			const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
-			const murloc = getRandomMinion(validTargets, Race.MURLOC, allCards);
+			const murloc = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
 			if (murloc) {
 				murloc.poisonous = true;
 				spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
@@ -203,7 +203,7 @@ const handleAvenge = (
 		case CardIds.SisefinBattlegrounds:
 			for (let i = 0; i < 2; i++) {
 				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
-				const murloc2 = getRandomMinion(validTargets, Race.MURLOC, allCards);
+				const murloc2 = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
 				if (murloc2) {
 					murloc2.poisonous = true;
 					spectator.registerPowerTarget(avenger, murloc2, boardWithDeadEntity);
@@ -254,7 +254,7 @@ const handleAvenge = (
 					const ref = allCards.getCard(e.cardId);
 					return !!ref.battlegroundsPremiumDbfId && !!allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id;
 				});
-			const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
+			const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, allCards);
 			if (pirate) {
 				makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
 			}
@@ -265,7 +265,7 @@ const handleAvenge = (
 					const ref = allCards.getCard(e.cardId);
 					return !!ref.battlegroundsPremiumDbfId;
 				});
-				const pirate = getRandomMinion(nonGoldenMinions, Race.PIRATE, allCards);
+				const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, allCards);
 				if (pirate) {
 					makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
 				}
