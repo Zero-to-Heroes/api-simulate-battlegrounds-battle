@@ -5,7 +5,16 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
-import { addCardsInHand, afterStatsUpdate, hasCorrectTribe, hasMechanic, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import {
+	addCardsInHand,
+	afterStatsUpdate,
+	applyEffectToMinionTypes,
+	hasCorrectTribe,
+	hasMechanic,
+	isCorrectTribe,
+	modifyAttack,
+	modifyHealth,
+} from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { applyAvengeEffects } from './avenge';
 import { applyMinionDeathEffect, applyMonstrosity, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
@@ -122,6 +131,14 @@ const applyAfterAttackEffects = (
 ): void => {
 	if (attackingEntity.cardId === CardIds.Bonker || attackingEntity.cardId === CardIds.BonkerBattlegrounds) {
 		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator, CardIds.BloodGem);
+	} else if (attackingEntity.cardId === CardIds.Yrel || attackingEntity.cardId === CardIds.YrelBattlegrounds) {
+		applyEffectToMinionTypes(attackingBoard, attackingBoardHero, allCards, (entity: BoardEntity) => {
+			const modifier = attackingEntity.cardId === CardIds.YrelBattlegrounds ? 2 : 1;
+			modifyAttack(entity, modifier * 1, attackingBoard, allCards);
+			modifyHealth(entity, modifier * 1, attackingBoard, allCards);
+			afterStatsUpdate(entity, attackingBoard, allCards);
+			spectator.registerPowerTarget(attackingEntity, entity, attackingBoard);
+		});
 	}
 };
 
@@ -157,6 +174,29 @@ const performAttack = (
 				spectator,
 			);
 		});
+	}
+	if (attackingEntity.cardId === CardIds.Atramedes_BG23_362 || attackingEntity.cardId === CardIds.AtramedesBattlegrounds) {
+		const targets = [defendingEntity, ...getNeighbours(defendingBoard, defendingEntity)];
+		const multiplier = attackingEntity.cardId === CardIds.AtramedesBattlegrounds ? 2 : 1;
+
+		for (let i = 0; i < multiplier; i++) {
+			targets.forEach((target) => {
+				spectator.registerPowerTarget(attackingEntity, target, defendingBoard);
+				dealDamageToEnemy(
+					target,
+					defendingBoard,
+					defendingBoardHero,
+					attackingEntity,
+					3,
+					attackingBoard,
+					attackingBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+			});
+		}
 	}
 
 	if ([CardIds.BabyKrush, CardIds.BabyKrushBattlegrounds].includes(attackingEntity.cardId as CardIds)) {
@@ -622,13 +662,13 @@ export const bumpEntities = (
 		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
 		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
 		greaseBots.forEach((bot) => {
-			modifyAttack(entity, 1, entityBoard, allCards);
-			modifyHealth(entity, 1, entityBoard, allCards);
+			modifyAttack(entity, 3, entityBoard, allCards);
+			modifyHealth(entity, 2, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
-			modifyAttack(entity, 2, entityBoard, allCards);
-			modifyHealth(entity, 2, entityBoard, allCards);
+			modifyAttack(entity, 6, entityBoard, allCards);
+			modifyHealth(entity, 4, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);

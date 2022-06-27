@@ -263,6 +263,26 @@ export const handleDeathrattleEffects = (
 				);
 			}
 			break;
+		case CardIds.TunnelBlaster_BG_DAL_775:
+		case CardIds.TunnelBlasterBattlegrounds:
+			const loops = deadEntity.cardId === CardIds.TunnelBlasterBattlegrounds ? 2 : 1;
+			for (let i = 0; i < multiplier; i++) {
+				for (let j = 0; j < loops; j++) {
+					dealDamageToAllMinions(
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						deadEntity,
+						3,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+					);
+				}
+			}
+			break;
 		case CardIds.LeeroyTheReckless:
 		case CardIds.LeeroyTheRecklessBattlegrounds:
 			if (deadEntity.lastAffectedByEntity) {

@@ -1329,7 +1329,7 @@ export const spawnEntitiesFromEnchantments = (
 				case CardIds.SneedsReplicator_ReplicateEnchantment:
 					spawnedEntities.push(
 						...spawnEntities(
-							spawns.getRandomMinionForTavernTier(spawns.getTavernLevel(deadEntity.cardId)),
+							spawns.getRandomMinionForTavernTier(Math.max(1, spawns.getTavernLevel(deadEntity.cardId) - 1)),
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

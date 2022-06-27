@@ -3,6 +3,7 @@ import { AllCardsService, CardIds, Race, ReferenceCard } from '@firestone-hs/ref
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { groupByFunction, pickRandom } from './services/utils';
 import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [CardIds.CaveHydra, CardIds.CaveHydraBattlegrounds, CardIds.FoeReaper4000, CardIds.FoeReaper4000Battlegrounds];
@@ -36,6 +37,12 @@ const TAUNT_IDS = [
 	CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G,
 	CardIds.Glowscale,
 	CardIds.GlowscaleBattlegrounds,
+	CardIds.SilverbackPatriarch_BG_CS2_127,
+	CardIds.SilverbackPatriarchBattlegrounds,
+	CardIds.SparringPartner_BG_AT_069,
+	CardIds.SparringPartnerBattlegrounds,
+	CardIds.TunnelBlaster_BG_DAL_775,
+	CardIds.TunnelBlasterBattlegrounds,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken,
@@ -394,6 +401,23 @@ export const addStatsToBoard = (
 			spectator.registerPowerTarget(sourceEntity, entity, board);
 		}
 	}
+};
+
+export const applyEffectToMinionTypes = (
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	effect: (entity: BoardEntity) => void,
+): void => {
+	const groupedByRace = groupByFunction((e: BoardEntity) => allCards.getCard(e.cardId).race)(
+		board.filter((e) => !!allCards.getCard(e.cardId).race),
+	);
+	Object.values(groupedByRace)
+		.filter((minions) => !!minions?.length)
+		.forEach((minions) => {
+			const target = pickRandom(minions);
+			effect(target);
+		});
 };
 
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
