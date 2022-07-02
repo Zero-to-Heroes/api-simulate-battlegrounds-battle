@@ -140,14 +140,18 @@ export class CardsData {
 	}
 
 	public getTavernLevel(cardId: string): number {
-		return this.allCards.getCard(cardId).techLevel;
+		return this.allCards.getCard(cardId).techLevel ?? 1;
 	}
 
 	public getRandomMinionForTavernTier(tavernTier: number): string {
 		// Tzvern tier can be undefined for hero-power specific tokens, like the Amalgam, or when
 		// for some reason tokens end up in the shop. For now, defaulting to 1 for tavern
 		// level seems to work in all cases
-		return pickRandom(this.minionsForTier[tavernTier ?? 1]).id;
+		const minionsForTier = this.minionsForTier[tavernTier ?? 1];
+		if (!minionsForTier?.length) {
+			console.error('incorrect minions for tier', tavernTier, this.minionsForTier, minionsForTier);
+		}
+		return pickRandom(this.minionsForTier[tavernTier ?? 1])?.id;
 	}
 
 	private isGolden(card: ReferenceCard): boolean {
