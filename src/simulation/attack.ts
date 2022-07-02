@@ -135,7 +135,7 @@ const applyAfterAttackEffects = (
 		applyEffectToMinionTypes(attackingBoard, attackingBoardHero, allCards, (entity: BoardEntity) => {
 			const modifier = attackingEntity.cardId === CardIds.YrelBattlegrounds ? 2 : 1;
 			modifyAttack(entity, modifier * 1, attackingBoard, allCards);
-			modifyHealth(entity, modifier * 1, attackingBoard, allCards);
+			modifyHealth(entity, modifier * 2, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attackingEntity, entity, attackingBoard);
 		});
