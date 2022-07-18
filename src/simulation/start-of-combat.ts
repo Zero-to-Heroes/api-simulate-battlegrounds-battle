@@ -446,10 +446,13 @@ const handlePlayerStartOfCombatHeroPowers = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): number => {
+	let shouldRecomputeCurrentAttacker = false;
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
 		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
-		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		// Tamsin's hero power somehow happens before the current attacker is chosen.
+		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
+		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
 		const damageDone = dealDamageToEnemy(
@@ -540,6 +543,9 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 	}
 	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+	if (shouldRecomputeCurrentAttacker) {
+		currentAttacker = playerBoard.length > opponentBoard.length ? 0 : opponentBoard.length > playerBoard.length ? 1 : currentAttacker;
+	}
 	return currentAttacker;
 };
 
