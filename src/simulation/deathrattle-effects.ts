@@ -16,7 +16,7 @@ import {
 	isCorrectTribe,
 	makeMinionGolden,
 	modifyAttack,
-	modifyHealth,
+	modifyHealth
 } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -881,13 +881,13 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 			].includes(enchantmentId as CardIds),
 		);
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];
-	// Order is important
+	// Order is important - the DR are triggered in the ordered the minions have died
 	if (fish.cardId === CardIds.FishOfNzothBattlegrounds) {
 		// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
 		const doubleDr = [...validDeathrattles, ...validEnchantments].reduce((res, current) => res.concat([current, current]), []);
-		fish.rememberedDeathrattles = [...doubleDr, ...(fish.rememberedDeathrattles || [])];
+		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...doubleDr];
 	} else {
-		fish.rememberedDeathrattles = [...newDeathrattles, ...(fish.rememberedDeathrattles || [])];
+		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 	}
 };
 
