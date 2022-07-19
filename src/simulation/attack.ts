@@ -13,7 +13,7 @@ import {
 	hasMechanic,
 	isCorrectTribe,
 	modifyAttack,
-	modifyHealth,
+	modifyHealth
 } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { applyAvengeEffects } from './avenge';
@@ -422,6 +422,7 @@ const triggerRandomDeathrattle = (
 		-1,
 		defendingBoard,
 		defendingBoardHero,
+		[],
 		allCards,
 		spawns,
 		sharedState,
@@ -1110,6 +1111,7 @@ const handleDeathrattlesForFirstBoard = (
 				indexFromRight,
 				otherBoard,
 				otherBoardHero,
+				deadEntities,
 				allCards,
 				cardsData,
 				sharedState,
@@ -1317,6 +1319,7 @@ const buildBoardAfterDeathrattleSpawns = (
 	deadMinionIndexFromRight2: number,
 	opponentBoard: BoardEntity[],
 	opponentBoardHero: BgsPlayerEntity,
+	entitiesDeadThisAttack: readonly BoardEntity[],
 	allCards: AllCardsService,
 	cardsData: CardsData,
 	sharedState: SharedState,
@@ -1348,6 +1351,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		boardWithKilledMinionHero,
 		opponentBoard,
 		opponentBoardHero,
+		entitiesDeadThisAttack,
 		allCards,
 		cardsData,
 		sharedState,
@@ -1415,6 +1419,7 @@ const buildBoardAfterDeathrattleSpawns = (
 				deadMinionIndexFromRight2,
 				opponentBoard,
 				opponentBoardHero,
+				entitiesDeadThisAttack,
 				allCards,
 				cardsData,
 				sharedState,

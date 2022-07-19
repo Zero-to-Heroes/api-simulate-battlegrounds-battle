@@ -10,7 +10,7 @@ import {
 	hasCorrectTribe,
 	isCorrectTribe,
 	modifyAttack,
-	modifyHealth,
+	modifyHealth
 } from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -154,13 +154,19 @@ export const spawnEntitiesFromDeathrattle = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
+	entitiesDeadThisAttack: readonly BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_FP1_031);
-	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
+	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
+	const rivendare = [...boardWithDeadEntity, ...entitiesDeadThisAttack].find(
+		(entity) => entity.cardId === CardIds.BaronRivendare_FP1_031,
+	);
+	const goldenRivendare = [...boardWithDeadEntity, ...entitiesDeadThisAttack].find(
+		(entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds,
+	);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
