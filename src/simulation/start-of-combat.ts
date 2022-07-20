@@ -101,17 +101,57 @@ const handlePreCombatHeroPowers = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
+	currentAttacker = handlePreCombatHeroPowersForPlayer(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	currentAttacker = handlePreCombatHeroPowersForPlayer(
+		opponentEntity,
+		opponentBoard,
+		playerEntity,
+		playerBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	return currentAttacker;
+};
+
+const handlePreCombatHeroPowersForPlayer = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
 	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
 	// Since the order is not important here, we just always do the player first
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
 		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
-	}
-
-	const opponentHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
-	if (opponentHeroPowerId === CardIds.SwattingInsectsBattlegrounds && opponentBoard.length > 0) {
-		handleAlakirForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, allCards, spawns, sharedState, spectator);
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EarthInvocationToken) {
+		applyEarthInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaterInvocationToken) {
+		applyWaterInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
+		applyFireInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
 	}
 
 	return currentAttacker;
@@ -523,12 +563,6 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EarthInvocationToken) {
-		applyEarthInvocationEnchantment(playerBoard, null, allCards, spectator);
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaterInvocationToken) {
-		applyWaterInvocationEnchantment(playerBoard, null, allCards, spectator);
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
-		applyFireInvocationEnchantment(playerBoard, null, allCards, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.LightningInvocationToken) {
 		applyLightningInvocationEnchantment(
 			playerBoard,

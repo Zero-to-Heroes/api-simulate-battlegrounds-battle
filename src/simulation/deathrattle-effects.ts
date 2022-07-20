@@ -16,7 +16,7 @@ import {
 	isCorrectTribe,
 	makeMinionGolden,
 	modifyAttack,
-	modifyHealth
+	modifyHealth,
 } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -349,17 +349,17 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.EarthRecollectionEnchantment:
 				for (let i = 0; i < multiplier; i++) {
-					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, allCards, spectator);
 				}
 				break;
 			case CardIds.FireRecollectionEnchantment:
 				for (let i = 0; i < multiplier; i++) {
-					applyFireInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+					applyFireInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, allCards, spectator);
 				}
 				break;
 			case CardIds.WaterRecollectionEnchantment:
 				for (let i = 0; i < multiplier; i++) {
-					applyWaterInvocationEnchantment(boardWithDeadEntity, deadEntity, allCards, spectator);
+					applyWaterInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, allCards, spectator);
 				}
 				break;
 			case CardIds.LightningRecollectionEnchantment:
@@ -417,6 +417,7 @@ export const applyLightningInvocationEnchantment = (
 export const applyWaterInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
+	sourceEntity: BgsPlayerEntity | BoardEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
@@ -427,6 +428,7 @@ export const applyWaterInvocationEnchantment = (
 			modifyHealth(target, 3, boardWithDeadEntity, allCards);
 			target.taunt = true;
 			afterStatsUpdate(target, boardWithDeadEntity, allCards);
+			spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity);
 		}
 	}
 };
@@ -434,6 +436,7 @@ export const applyWaterInvocationEnchantment = (
 export const applyFireInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
+	sourceEntity: BgsPlayerEntity | BoardEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
@@ -443,6 +446,7 @@ export const applyFireInvocationEnchantment = (
 		if (!!target) {
 			modifyAttack(target, target.attack, boardWithDeadEntity, allCards);
 			afterStatsUpdate(target, boardWithDeadEntity, allCards);
+			spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity);
 		}
 	}
 };
@@ -450,6 +454,7 @@ export const applyFireInvocationEnchantment = (
 export const applyEarthInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
+	sourceEntity: BgsPlayerEntity | BoardEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
@@ -461,6 +466,7 @@ export const applyEarthInvocationEnchantment = (
 				cardId: CardIds.EarthInvocation_ElementEarthEnchantment,
 				originEntityId: deadEntity?.entityId,
 			});
+			spectator.registerPowerTarget(sourceEntity, minion, boardWithDeadEntity);
 		});
 	}
 };
