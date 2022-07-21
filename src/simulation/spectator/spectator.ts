@@ -166,7 +166,7 @@ export class Spectator {
 		if (!targetEntity) {
 			return;
 		}
-		if (!sourceEntity.entityId) {
+		if (!sourceEntity.entityId && !(sourceEntity as BgsPlayerEntity).heroPowerId) {
 			console.error('missing damaging entity id', sourceEntity);
 		}
 		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
