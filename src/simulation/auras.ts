@@ -6,7 +6,13 @@ import { AURA_ENCHANTMENTS, AURA_ORIGINS, CardsData } from '../cards/cards-data'
 import { isCorrectTribe, normalizeCardIdForSkin } from '../utils';
 
 // Check if aura is already applied, and if not re-apply it
-export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: number, data: CardsData, cards: AllCardsService): void => {
+export const applyAuras = (
+	board: BoardEntity[],
+	numberOfDeathwingPresents: number,
+	isSmokingGunPresent: boolean,
+	data: CardsData,
+	cards: AllCardsService,
+): void => {
 	for (let i = 0; i < board.length; i++) {
 		if (AURA_ORIGINS.indexOf(board[i].cardId) !== -1) {
 			const enchantmentId = AURA_ENCHANTMENTS.find((aura) => aura[0] === board[i].cardId)[1];
@@ -16,6 +22,9 @@ export const applyAuras = (board: BoardEntity[], numberOfDeathwingPresents: numb
 
 	for (let i = 0; i < numberOfDeathwingPresents; i++) {
 		applyDeathwingAura(board, CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds);
+	}
+	if (isSmokingGunPresent) {
+		applySmokingGunAura(board, CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment);
 	}
 	// return board;
 };
@@ -140,6 +149,9 @@ const removeAura = (
 		case CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds:
 			removeDeathwingAura(entity, enchantmentId);
 			return;
+		case CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment:
+			removeSmokingGunAura(entity, enchantmentId);
+			return;
 		// case CardIds.WhirlwindTempest_WhirlingEnchantment:
 		// 	removeWhirlwindTempestAura(entity, enchantmentId);
 		// 	return;
@@ -151,6 +163,16 @@ const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string): void =
 		const entity = board[i];
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
 			entity.attack += 3;
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
+		}
+	}
+};
+
+const applySmokingGunAura = (board: BoardEntity[], enchantmentId: string): void => {
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
+			entity.attack += 5;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
 		}
 	}
@@ -213,6 +235,12 @@ const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId
 const removeDeathwingAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
 	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 3);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+};
+
+const removeSmokingGunAura = (entity: BoardEntity, enchantmentId: string): void => {
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 5);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 

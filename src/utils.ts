@@ -240,7 +240,7 @@ export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity
 
 export const makeMinionGolden = (
 	target: BoardEntity,
-	source: BoardEntity,
+	source: BoardEntity | BgsPlayerEntity,
 	sourceBoard: BoardEntity[],
 	allCards: AllCardsService,
 	spectator: Spectator,

@@ -46,6 +46,8 @@ export const simulateAttack = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
+	const isSmokingGunPresentForAttacker = attackingBoardHero.questReward === CardIds.TheSmokingGun;
+	const isSmokingGunPresentForDefender = defendingBoardHero.questReward === CardIds.TheSmokingGun;
 
 	const attackingEntity =
 		forceAttackingEntityIndex != null
@@ -63,8 +65,8 @@ export const simulateAttack = (
 			}
 			// The auras need to be handled on a per-attack basis, as otherwise minions that spawn
 			// in-between attacks don't get aura buffs
-			applyAuras(attackingBoard, numberOfDeathwingPresents, spawns, allCards);
-			applyAuras(defendingBoard, numberOfDeathwingPresents, spawns, allCards);
+			applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, spawns, allCards);
+			applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, spawns, allCards);
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);

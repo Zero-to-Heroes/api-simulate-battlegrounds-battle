@@ -5,7 +5,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
-import { afterStatsUpdate, isCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { afterStatsUpdate, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
 import { applyAuras, removeAuras } from './auras';
 import {
@@ -29,6 +29,19 @@ export const handleStartOfCombat = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
+	// https://twitter.com/DCalkosz/status/1564705111850434561
+	currentAttacker = handleStartOfCombatQuestRewards(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
 	// https://twitter.com/DCalkosz/status/1488361384320528388?s=20&t=1ECxRZFdjqwEa2fRsXk32Q
 	// There’s a certain order for Start of Combat hero powers, rather than “coin flips” where
 	// an unlucky trigger order could mess up some positioning you had planned for your own hero
@@ -66,20 +79,6 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
-		gameState,
-		spectator,
-	);
-	currentAttacker = handleStartOfCombatSpells(
-		playerEntity,
-		playerBoard,
-		opponentEntity,
-		opponentBoard,
-		currentAttacker,
-		playerBoardBefore,
-		opponentBoardBefore,
 		allCards,
 		spawns,
 		sharedState,
@@ -298,22 +297,88 @@ const handleStartOfCombatMinions = (
 	return currentAttacker;
 };
 
-const handleStartOfCombatSpells = (
+const handleStartOfCombatQuestRewards = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	playerBoardBefore: BoardEntity[],
-	opponentBoardBefore: BoardEntity[],
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
-	// TODO. No idea how this will be in the logs, or if we will have a way to know that these will trigger
-	// (maybe there will be a PLAY zone spell that triggers? Maybe it will come from nowhere?)
+	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
+		opponentEntity,
+		opponentBoard,
+		playerEntity,
+		playerBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	return currentAttacker;
+};
+
+const handleStartOfCombatQuestRewardsForPlayer = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
+	switch (playerEntity.questReward) {
+		case CardIds.EvilTwin:
+			if (playerBoard.length < 7) {
+				const highestHealthMinion = [...playerBoard].sort((a, b) => b.health - a.health)[0];
+				const copy: BoardEntity = {
+					...highestHealthMinion,
+					lastAffectedByEntity: null,
+					entityId: sharedState.currentEntityId++,
+				};
+				playerBoard.push(copy);
+				spectator.registerPowerTarget(playerEntity, copy, playerBoard);
+			}
+			break;
+		case CardIds.StaffOfOrigination_BG24_Reward_312:
+			playerBoard.forEach((entity) => {
+				modifyAttack(entity, 15, playerBoard, allCards);
+				modifyHealth(entity, 15, playerBoard, allCards);
+				afterStatsUpdate(entity, playerBoard, allCards);
+				spectator.registerPowerTarget(playerEntity, entity, playerBoard);
+			});
+			break;
+		case CardIds.StolenGold:
+			if (playerBoard.length > 0) {
+				makeMinionGolden(playerBoard[0], playerEntity, playerBoard, allCards, spectator);
+			}
+			if (playerBoard.length > 1) {
+				makeMinionGolden(playerBoard[playerBoard.length - 1], playerEntity, playerBoard, allCards, spectator);
+			}
+			break;
+	}
+
 	return currentAttacker;
 };
 
@@ -334,8 +399,10 @@ export const handleStartOfCombatHeroPowers = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	applyAuras(playerBoard, numberOfDeathwingPresents, cardsData, allCards);
-	applyAuras(opponentBoard, numberOfDeathwingPresents, cardsData, allCards);
+	const isSmokingGunPresentForAttacker = playerEntity.questReward === CardIds.TheSmokingGun;
+	const isSmokingGunPresentForDefender = opponentEntity.questReward === CardIds.TheSmokingGun;
+	applyAuras(playerBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
+	applyAuras(opponentBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
 
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
@@ -653,8 +720,10 @@ export const performStartOfCombatMinionsForPlayer = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	applyAuras(attackingBoard, numberOfDeathwingPresents, cardsData, allCards);
-	applyAuras(defendingBoard, numberOfDeathwingPresents, cardsData, allCards);
+	const isSmokingGunPresentForAttacker = attackingBoardHero.questReward === CardIds.TheSmokingGun;
+	const isSmokingGunPresentForDefender = defendingBoardHero.questReward === CardIds.TheSmokingGun;
+	applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
+	applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
 
 	// For now we're only dealing with the red whelp
 	if (attacker.cardId === CardIds.RedWhelp) {
