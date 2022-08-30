@@ -150,7 +150,7 @@ const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string): void =
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
-			entity.attack += 2;
+			entity.attack += 3;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
 		}
 	}
@@ -212,7 +212,7 @@ const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId
 
 const removeDeathwingAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
-	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 2);
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 3);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
