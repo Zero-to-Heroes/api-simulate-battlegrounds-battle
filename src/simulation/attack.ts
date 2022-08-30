@@ -13,7 +13,7 @@ import {
 	hasMechanic,
 	isCorrectTribe,
 	modifyAttack,
-	modifyHealth
+	modifyHealth,
 } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { applyAvengeEffects } from './avenge';
@@ -157,7 +157,7 @@ const performAttack = (
 	if (hasCorrectTribe(attackingEntity, Race.DRAGON, allCards)) {
 		const prestors = attackingBoard
 			.filter((e) => e.entityId !== attackingEntity.entityId)
-			.filter((e) => e.cardId === CardIds.PrestorsPyrospawn || e.cardId === CardIds.PrestorsPyrospawnBattlegrounds);
+			.filter((e) => e.cardId === CardIds.PrestorsPyrospawn_BG21_012 || e.cardId === CardIds.PrestorsPyrospawn_BG21_012_G);
 		prestors.forEach((prestor) => {
 			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
 			dealDamageToEnemy(
@@ -165,7 +165,7 @@ const performAttack = (
 				defendingBoard,
 				defendingBoardHero,
 				prestor,
-				prestor.cardId === CardIds.PrestorsPyrospawnBattlegrounds ? 6 : 3,
+				prestor.cardId === CardIds.PrestorsPyrospawn_BG21_012_G ? 6 : 3,
 				attackingBoard,
 				attackingBoardHero,
 				allCards,

@@ -6,7 +6,12 @@ import { CardsData } from './cards/cards-data';
 import { groupByFunction, pickRandom } from './services/utils';
 import { Spectator } from './simulation/spectator/spectator';
 
-const CLEAVE_IDS = [CardIds.CaveHydra, CardIds.CaveHydraBattlegrounds, CardIds.FoeReaper4000, CardIds.FoeReaper4000Battlegrounds];
+const CLEAVE_IDS = [
+	CardIds.CaveHydra_BG_LOOT_078,
+	CardIds.CaveHydraBattlegrounds,
+	CardIds.FoeReaper4000_BG_GVG_113,
+	CardIds.FoeReaper4000Battlegrounds,
+];
 // Because for some reason, the Taunt keyword is only a referenced tag,
 // so we have to know when a taunt minion is spawned (the taunt tag
 // is passed in input properly, so it's not an issue there)
@@ -23,7 +28,7 @@ const TAUNT_IDS = [
 	CardIds.GentleDjinniBattlegrounds,
 	CardIds.AcolyteOfCthun,
 	CardIds.AcolyteOfCthunBattlegrounds,
-	CardIds.RingMatron,
+	CardIds.RingMatron_BG_DMF_533,
 	CardIds.RingMatronBattlegrounds,
 	CardIds.DynamicDuo,
 	CardIds.DynamicDuoBattlegrounds,

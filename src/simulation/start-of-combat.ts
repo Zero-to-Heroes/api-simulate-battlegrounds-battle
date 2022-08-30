@@ -72,6 +72,20 @@ export const handleStartOfCombat = (
 		gameState,
 		spectator,
 	);
+	currentAttacker = handleStartOfCombatSpells(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		playerBoardBefore,
+		opponentBoardBefore,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
 	currentAttacker = handleStartOfCombatMinions(
 		playerEntity,
 		playerBoard,
@@ -281,6 +295,25 @@ const handleStartOfCombatMinions = (
 		}
 		attackerForStart = (attackerForStart + 1) % 2;
 	}
+	return currentAttacker;
+};
+
+const handleStartOfCombatSpells = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	playerBoardBefore: BoardEntity[],
+	opponentBoardBefore: BoardEntity[],
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
+	// TODO. No idea how this will be in the logs, or if we will have a way to know that these will trigger
+	// (maybe there will be a PLAY zone spell that triggers? Maybe it will come from nowhere?)
 	return currentAttacker;
 };
 
@@ -710,6 +743,14 @@ export const performStartOfCombatMinionsForPlayer = (
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
+	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {
+		const otherDragon = pickRandom(attackingBoardBefore.filter((e) => e.entityId !== attacker.entityId));
+		if (otherDragon) {
+			modifyAttack(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 6 : 3, attackingBoard, allCards);
+			modifyHealth(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 6 : 3, attackingBoard, allCards);
+			afterStatsUpdate(otherDragon, attackingBoard, allCards);
+			spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
+		}
 	} else if (attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy || attacker.cardId === CardIds.CrabbyBattlegrounds) {
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds ? 2 : 1;

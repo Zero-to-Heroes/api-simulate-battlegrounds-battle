@@ -126,12 +126,12 @@ const handleAvenge = (
 		case CardIds.BirdBuddyBattlegrounds:
 			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
 			break;
-		case CardIds.BuddingGreenthumb:
-		case CardIds.BuddingGreenthumbBattlegrounds:
+		case CardIds.BuddingGreenthumb_BG21_030:
+		case CardIds.BuddingGreenthumb_BG21_030_G:
 			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
 			neighbours.forEach((entity) => {
-				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2, boardWithDeadEntity, allCards);
-				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1, boardWithDeadEntity, allCards);
+				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2, boardWithDeadEntity, allCards);
+				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1, boardWithDeadEntity, allCards);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
 			});
@@ -309,6 +309,22 @@ const handleHeroAvenge = (
 					false,
 				),
 			);
+			break;
+		case CardIds.VanndarStormpike_LeadTheStormpikes:
+			boardWithDeadEntity
+				.filter((entity) => !entity.definitelyDead && entity.health > 0)
+				.forEach((entity) => {
+					modifyHealth(entity, 1, boardWithDeadEntity, allCards);
+					afterStatsUpdate(entity, boardWithDeadEntity, allCards);
+					spectator.registerPowerTarget(boardWithDeadEntityHero, entity, boardWithDeadEntity);
+				});
+			break;
+		case CardIds.Drekthar_LeadTheFrostwolves:
+			boardWithDeadEntity.forEach((entity) => {
+				modifyAttack(entity, 1, boardWithDeadEntity, allCards);
+				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
+				spectator.registerPowerTarget(boardWithDeadEntityHero, entity, boardWithDeadEntity);
+			});
 			break;
 	}
 	boardWithDeadEntityHero.avengeCurrent = boardWithDeadEntityHero.avengeDefault;

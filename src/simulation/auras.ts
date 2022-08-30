@@ -84,15 +84,15 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.KathranatirBattlegrounds:
 			applyKathranatirAura(board, i, enchantmentId, cards);
 			return;
-		case CardIds.MurlocWarleaderLegacy:
+		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderVanilla:
-		case CardIds.MurlocWarleaderBattlegrounds:
+		case CardIds.MurlocWarleaderLegacyBattlegrounds:
 			applyMurlocWarleaderAura(board, i, enchantmentId, cards);
 			return;
-		case CardIds.SouthseaCaptainLegacy:
+		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainCore:
 		case CardIds.SouthseaCaptainVanilla:
-		case CardIds.SouthseaCaptainBattlegrounds:
+		case CardIds.SouthseaCaptainLegacyBattlegrounds:
 			applySouthseaCaptainAura(board, i, enchantmentId, cards);
 			return;
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:

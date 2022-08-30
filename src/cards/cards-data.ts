@@ -5,10 +5,10 @@ import { getRaceEnum, hasMechanic } from '../utils';
 export const AURA_ENCHANTMENTS: readonly string[][] = [
 	[CardIds.Kathranatir_BG21_039, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e],
 	[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge],
-	[CardIds.MurlocWarleaderLegacy, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
-	[CardIds.MurlocWarleaderBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
-	[CardIds.SouthseaCaptainLegacy, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
-	[CardIds.SouthseaCaptainBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
+	[CardIds.MurlocWarleaderLegacy_BG_EX1_507, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
+	[CardIds.MurlocWarleaderLegacyBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
+	[CardIds.SouthseaCaptainLegacy_BG_NEW1_027, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
+	[CardIds.SouthseaCaptainLegacyBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
 	[
 		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy,
 		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_e,
@@ -119,13 +119,15 @@ export class CardsData {
 			case CardIds.PalescaleCrocoliskBattlegrounds:
 			case CardIds.StormpikeLieutenant:
 			case CardIds.StormpikeLieutenantBattlegrounds:
+			case CardIds.VanndarStormpike_LeadTheStormpikes:
 				return 2;
-			case CardIds.BuddingGreenthumb:
-			case CardIds.BuddingGreenthumbBattlegrounds:
+			case CardIds.BuddingGreenthumb_BG21_030:
+			case CardIds.BuddingGreenthumb_BG21_030_G:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
 			case CardIds.WitchwingNestmatron:
 			case CardIds.WitchwingNestmatronBattlegrounds:
+			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 3;
 			case CardIds.ImpatientDoomsayer:
 			case CardIds.ImpatientDoomsayerBattlegrounds:

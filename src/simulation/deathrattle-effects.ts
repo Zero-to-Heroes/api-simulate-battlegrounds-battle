@@ -41,7 +41,7 @@ export const handleDeathrattleEffects = (
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
 	// and avoid proccing deathrattle spawns between the times the damage triggers
 	switch (deadEntity.cardId) {
-		case CardIds.SelflessHero:
+		case CardIds.SelflessHero_BG_OG_221:
 			for (let i = 0; i < multiplier; i++) {
 				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
 			}
@@ -80,7 +80,7 @@ export const handleDeathrattleEffects = (
 				grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
 			}
 			break;
-		case CardIds.SpawnOfNzoth:
+		case CardIds.SpawnOfNzoth_BG_OG_256:
 			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards, spectator);
 			break;
 		case CardIds.SpawnOfNzothBattlegrounds:
@@ -199,7 +199,7 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
-		case CardIds.KaboomBot:
+		case CardIds.KaboomBot_BG_BOT_606:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
 			for (let i = 0; i < multiplier; i++) {
@@ -807,12 +807,12 @@ const applySoulJugglerEffect = (
 const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): void => {
 	// const copy = [...board];
 	for (let i = 0; i < board.length; i++) {
-		if (board[i].cardId === CardIds.ScavengingHyenaLegacy) {
+		if (board[i].cardId === CardIds.ScavengingHyenaLegacy_BG_EX1_531) {
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 1, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
 			spectator.registerPowerTarget(board[i], board[i], board);
-		} else if (board[i].cardId === CardIds.ScavengingHyenaBattlegrounds) {
+		} else if (board[i].cardId === CardIds.ScavengingHyenaLegacyBattlegrounds) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 2, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
@@ -876,7 +876,7 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 		.map((enchantment) => enchantment.cardId)
 		.filter((enchantmentId) =>
 			[
-				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment,
+				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
 				CardIds.LivingSpores_LivingSporesEnchantment,
 				CardIds.SneedsReplicator_ReplicateEnchantment,
