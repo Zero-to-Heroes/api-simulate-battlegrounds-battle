@@ -48,6 +48,13 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData)
 		hero.avengeCurrent = avengeValue;
 		hero.avengeDefault = avengeValue;
 	}
+	// Backward compatibility
+	if (!!hero.questRewards?.length && !Array.isArray(hero.questRewards)) {
+		hero.questRewards = [hero.questRewards as any];
+	}
+
+	// Because Denathrius can send a quest reward as its hero power (I think)
+	hero.questRewards = [...(hero.questRewards ?? []), hero.heroPowerId].filter((e) => !!e);
 };
 
 // When removing and applying auras without any action in-between (like for attackImmediately minions),
@@ -73,7 +80,7 @@ export const removeAurasAfterAuraSourceDeath = (board: BoardEntity[], auraSource
 
 const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsData, allowNegativeHealth: boolean): void => {
 	// let newEntity = entity;
-	for (const enchantment of entity.enchantments) {
+	for (const enchantment of entity.enchantments ?? []) {
 		removeAura(entity, enchantment.cardId, board, allowNegativeHealth);
 	}
 	// return newEntity;

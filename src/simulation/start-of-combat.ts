@@ -348,35 +348,40 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
-	switch (playerEntity.questReward) {
-		case CardIds.EvilTwin:
-			if (playerBoard.length < 7) {
-				const highestHealthMinion = [...playerBoard].sort((a, b) => b.health - a.health)[0];
-				const copy: BoardEntity = {
-					...highestHealthMinion,
-					lastAffectedByEntity: null,
-					entityId: sharedState.currentEntityId++,
-				};
-				playerBoard.push(copy);
-				spectator.registerPowerTarget(playerEntity, copy, playerBoard);
-			}
-			break;
-		case CardIds.StaffOfOrigination_BG24_Reward_312:
-			playerBoard.forEach((entity) => {
-				modifyAttack(entity, 15, playerBoard, allCards);
-				modifyHealth(entity, 15, playerBoard, allCards);
-				afterStatsUpdate(entity, playerBoard, allCards);
-				spectator.registerPowerTarget(playerEntity, entity, playerBoard);
-			});
-			break;
-		case CardIds.StolenGold:
-			if (playerBoard.length > 0) {
-				makeMinionGolden(playerBoard[0], playerEntity, playerBoard, allCards, spectator);
-			}
-			if (playerBoard.length > 1) {
-				makeMinionGolden(playerBoard[playerBoard.length - 1], playerEntity, playerBoard, allCards, spectator);
-			}
-			break;
+	if (!playerEntity.questRewards?.length) {
+		return currentAttacker;
+	}
+	for (const reward of playerEntity.questRewards) {
+		switch (reward) {
+			case CardIds.EvilTwin:
+				if (!!playerBoard.length && playerBoard.length < 7) {
+					const highestHealthMinion = [...playerBoard].sort((a, b) => b.health - a.health)[0];
+					const copy: BoardEntity = {
+						...highestHealthMinion,
+						lastAffectedByEntity: null,
+						entityId: sharedState.currentEntityId++,
+					};
+					playerBoard.push(copy);
+					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
+				}
+				break;
+			case CardIds.StaffOfOrigination_BG24_Reward_312:
+				playerBoard.forEach((entity) => {
+					modifyAttack(entity, 15, playerBoard, allCards);
+					modifyHealth(entity, 15, playerBoard, allCards);
+					afterStatsUpdate(entity, playerBoard, allCards);
+					spectator.registerPowerTarget(playerEntity, entity, playerBoard);
+				});
+				break;
+			case CardIds.StolenGold:
+				if (playerBoard.length > 0) {
+					makeMinionGolden(playerBoard[0], playerEntity, playerBoard, allCards, spectator);
+				}
+				if (playerBoard.length > 1) {
+					makeMinionGolden(playerBoard[playerBoard.length - 1], playerEntity, playerBoard, allCards, spectator);
+				}
+				break;
+		}
 	}
 
 	return currentAttacker;
@@ -399,8 +404,8 @@ export const handleStartOfCombatHeroPowers = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	const isSmokingGunPresentForAttacker = playerEntity.questReward === CardIds.TheSmokingGun;
-	const isSmokingGunPresentForDefender = opponentEntity.questReward === CardIds.TheSmokingGun;
+	const isSmokingGunPresentForAttacker = playerEntity.questRewards?.includes(CardIds.TheSmokingGun);
+	const isSmokingGunPresentForDefender = opponentEntity.questRewards?.includes(CardIds.TheSmokingGun);
 	applyAuras(playerBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
 	applyAuras(opponentBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
 
@@ -720,8 +725,8 @@ export const performStartOfCombatMinionsForPlayer = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	const isSmokingGunPresentForAttacker = attackingBoardHero.questReward === CardIds.TheSmokingGun;
-	const isSmokingGunPresentForDefender = defendingBoardHero.questReward === CardIds.TheSmokingGun;
+	const isSmokingGunPresentForAttacker = attackingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
+	const isSmokingGunPresentForDefender = defendingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
 	applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
 	applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
 

@@ -46,8 +46,8 @@ export const simulateAttack = (
 	const numberOfDeathwingPresents =
 		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	const isSmokingGunPresentForAttacker = attackingBoardHero.questReward === CardIds.TheSmokingGun;
-	const isSmokingGunPresentForDefender = defendingBoardHero.questReward === CardIds.TheSmokingGun;
+	const isSmokingGunPresentForAttacker = attackingBoardHero.questRewards.includes(CardIds.TheSmokingGun);
+	const isSmokingGunPresentForDefender = defendingBoardHero.questRewards.includes(CardIds.TheSmokingGun);
 
 	const attackingEntity =
 		forceAttackingEntityIndex != null

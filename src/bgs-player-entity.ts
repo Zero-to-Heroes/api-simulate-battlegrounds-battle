@@ -5,9 +5,9 @@ export interface BgsPlayerEntity {
 	readonly tavernTier: number;
 	readonly heroPowerId: string;
 	readonly heroPowerUsed: boolean;
-	readonly questReward?: string;
 	readonly heroPowerInfo?: number;
 	readonly entityId?: number;
+	questRewards?: readonly string[];
 	cardsInHand?: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
