@@ -306,7 +306,10 @@ export const grantRandomStats = (
 	spectator: Spectator,
 ): BoardEntity => {
 	if (board.length > 0) {
-		const validBeast: BoardEntity = getRandomAliveMinion(board, race, allCards);
+		const validBeast: BoardEntity = getRandomAliveMinion(
+			board.filter((e) => e.entityId !== source.entityId), race, allCards);
+		//tmp fix for PalescaleCrocolisk, PalescaleCrocolisk won't apply avenge and dethrattle effect on itself. 
+		//const validBeast: BoardEntity = getRandomAliveMinion(board, race, allCards);
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
 			modifyHealth(validBeast, health, board, allCards);
