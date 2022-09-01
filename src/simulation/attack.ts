@@ -24,6 +24,7 @@ import { SharedState } from './shared-state';
 import { handleSpawnEffects } from './spawn-effect';
 import { Spectator } from './spectator/spectator';
 import { getHeroPowerForHero } from './start-of-combat';
+import { canAttack } from './utils/entity-utils';
 
 // Only use it to simulate actual attack. To simulate damage, or something similar, use bumpInto
 export const simulateAttack = (
@@ -142,6 +143,7 @@ const applyAfterAttackEffects = (
 			spectator.registerPowerTarget(attackingEntity, entity, attackingBoard);
 		});
 	}
+	attackingEntity.stealth = false;
 };
 
 const performAttack = (
@@ -445,7 +447,7 @@ const triggerRandomDeathrattle = (
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: number): BoardEntity => {
-	let validAttackers = attackingBoard.filter((entity) => entity.attack > 0).filter((entity) => !entity.cantAttack);
+	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
 	}
@@ -592,10 +594,10 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);
 	} else if (!ignoreTaunts) {
-		const taunts = defendingBoard.filter((entity) => entity.taunt);
+		const taunts = defendingBoard.filter((entity) => entity.taunt && !entity.stealth);
 		possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
 	} else {
-		possibleDefenders = defendingBoard;
+		possibleDefenders = defendingBoard.filter((e) => !e.stealth);
 	}
 	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 	if (chosenDefender.taunt) {
@@ -608,6 +610,7 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 	}
 	return chosenDefender;
 };
+
 export const bumpEntities = (
 	entity: BoardEntity,
 	bumpInto: BoardEntity,

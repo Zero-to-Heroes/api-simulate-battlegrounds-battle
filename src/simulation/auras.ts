@@ -58,6 +58,20 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
 };
 
+export const clearStealthIfNeeded = (board: BoardEntity[], otherBoard: BoardEntity[]): void => {
+	// https://twitter.com/DCalkosz/status/1562194944688660481?s=20&t=100I8IVZmBKgYQWkdK8nIA
+	if (board.every((entity) => entity.stealth && !entity.attack)) {
+		board.forEach((e) => (e.stealth = false));
+	}
+	if (otherBoard.every((entity) => entity.stealth && !entity.attack)) {
+		otherBoard.forEach((e) => (e.stealth = false));
+	}
+	if (board.every((e) => e.stealth) && otherBoard.every((e) => e.stealth)) {
+		board.forEach((e) => (e.stealth = false));
+		otherBoard.forEach((e) => (e.stealth = false));
+	}
+};
+
 // When removing and applying auras without any action in-between (like for attackImmediately minions),
 // we use this hack to avoid granting additional health to minions that would end at 0 HP
 // once the aura is removed (eg two Southsea Captains)

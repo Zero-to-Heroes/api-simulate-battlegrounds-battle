@@ -6,6 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { stringifySimple } from '../utils';
 import { simulateAttack } from './attack';
+import { clearStealthIfNeeded } from './auras';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 import { handleStartOfCombat } from './start-of-combat';
@@ -82,6 +83,7 @@ export class Simulator {
 		// }
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
+			clearStealthIfNeeded(playerBoard, opponentBoard);
 			// console.log('this.currentSpeedAttacker', this.currentAttacker);
 			// If there are "attack immediately" minions, we keep the same player
 			// We put it here so that it can kick in after the start of combat effects. However here we don't want
