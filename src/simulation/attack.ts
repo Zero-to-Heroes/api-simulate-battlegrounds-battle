@@ -593,11 +593,12 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 	if (attackingEntity.cardId === CardIds.ZappSlywick || attackingEntity.cardId === CardIds.ZappSlywickBattlegrounds) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);
-	} else if (!ignoreTaunts) {
-		const taunts = defendingBoard.filter((entity) => entity.taunt && !entity.stealth);
-		possibleDefenders = taunts.length > 0 ? taunts : defendingBoard;
 	} else {
 		possibleDefenders = defendingBoard.filter((e) => !e.stealth);
+		if (!ignoreTaunts) {
+			const taunts = possibleDefenders.filter((entity) => entity.taunt);
+			possibleDefenders = taunts.length > 0 ? taunts : possibleDefenders;
+		}
 	}
 	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 	if (chosenDefender.taunt) {
