@@ -35,7 +35,9 @@ export const spawnEntities = (
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
 	}
-	const spawnMultiplier = useKhadgar ? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_DAL_575).length || 1 : 1;
+	const spawnMultiplier = useKhadgar
+		? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_BG_DAL_575).length || 1
+		: 1;
 	const spawnMultiplierGolden = useKhadgar
 		? 3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.KhadgarBattlegrounds).length || 1
 		: 1;
@@ -162,7 +164,7 @@ export const spawnEntitiesFromDeathrattle = (
 ): readonly BoardEntity[] => {
 	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
 	const rivendare = [...boardWithDeadEntity, ...entitiesDeadThisAttack].find(
-		(entity) => entity.cardId === CardIds.BaronRivendare_FP1_031,
+		(entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031,
 	);
 	const goldenRivendare = [...boardWithDeadEntity, ...entitiesDeadThisAttack].find(
 		(entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds,
@@ -1273,7 +1275,7 @@ export const spawnEntitiesFromEnchantments = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_FP1_031);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	const spawnedEntities: BoardEntity[] = [];

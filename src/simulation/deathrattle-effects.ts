@@ -35,7 +35,7 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_FP1_031);
+	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
 	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
