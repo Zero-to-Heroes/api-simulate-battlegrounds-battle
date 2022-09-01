@@ -42,7 +42,7 @@ export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): voi
 	}
 };
 
-export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData): void => {
+export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData, isPlayer: boolean): void => {
 	const avengeValue = cardsData.avengeValue(hero.heroPowerId);
 	if (avengeValue > 0) {
 		hero.avengeCurrent = avengeValue;
@@ -55,6 +55,7 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData)
 
 	// Because Denathrius can send a quest reward as its hero power (I think)
 	hero.questRewards = [...(hero.questRewards ?? []), hero.heroPowerId].filter((e) => !!e);
+	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
 };
 
 // When removing and applying auras without any action in-between (like for attackImmediately minions),

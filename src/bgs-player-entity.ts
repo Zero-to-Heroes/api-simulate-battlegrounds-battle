@@ -6,7 +6,7 @@ export interface BgsPlayerEntity {
 	readonly heroPowerId: string;
 	readonly heroPowerUsed: boolean;
 	readonly heroPowerInfo?: number;
-	readonly entityId?: number;
+	entityId?: number;
 	questRewards?: readonly string[];
 	cardsInHand?: number;
 	avengeCurrent?: number;

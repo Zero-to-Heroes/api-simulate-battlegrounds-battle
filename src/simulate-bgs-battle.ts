@@ -61,9 +61,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	removeAuras(opponentBoard, cardsData);
 	setImplicitData(playerBoard, cardsData); // Avenge, maxHealth, etc.
 	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
-	setImplicitDataHero(playerInfo.player, cardsData);
+	setImplicitDataHero(playerInfo.player, cardsData, true);
 	// console.log('after implicit data', playerInfo.player.avengeCurrent, playerInfo.player.avengeDefault);
-	setImplicitDataHero(opponentInfo.player, cardsData);
+	setImplicitDataHero(opponentInfo.player, cardsData, false);
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation

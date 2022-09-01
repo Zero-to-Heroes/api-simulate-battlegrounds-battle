@@ -1,6 +1,6 @@
 /* eslint-disable prefer-rest-params */
 const error = console.error;
-console.error = function(message) {
+console.error = function (message) {
 	error.apply(console, [...arguments, new Error().stack]); // keep default behaviour, but log the stack trace
 };
 
