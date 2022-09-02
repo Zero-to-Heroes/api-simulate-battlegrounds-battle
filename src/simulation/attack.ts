@@ -72,6 +72,10 @@ export const simulateAttack = (
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
+				// Can happen with a single defender that has stealth
+				if (!defendingEntity) {
+					return;
+				}
 				spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
 				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards, spectator);
 				performAttack(
@@ -601,7 +605,7 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 		}
 	}
 	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
-	if (chosenDefender.taunt) {
+	if (chosenDefender?.taunt) {
 		const elistras = defendingBoard.filter(
 			(entity) => entity.cardId === CardIds.ElistraTheImmortal_BGS_205 || entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
 		);
