@@ -14,7 +14,6 @@ import {
 	isCorrectTribe,
 	modifyAttack,
 	modifyHealth,
-	stringifySimpleCard,
 } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { applyAvengeEffects } from './avenge';
@@ -58,7 +57,7 @@ export const simulateAttack = (
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
-		console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
+		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury

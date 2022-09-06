@@ -322,10 +322,22 @@ export const handleDeathrattleEffects = (
 		// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
 		// often as we should, so that we can have the stats themselves correct
 		const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
-		enchantments = Object.keys(enchantmentGroups).map((cardId) => ({
-			cardId: cardId,
-			repeats: enchantmentGroups[cardId].length,
-		}));
+		enchantments = Object.keys(enchantmentGroups).flatMap((cardId) => {
+			// We don't want to lump everything together, as it skews the stats when there are a lot of buffs
+			// Instead, we build groups
+			const groupSize = 10;
+			let repeatsToApply = enchantmentGroups[cardId].length;
+			const results = [];
+			while (repeatsToApply > 0) {
+				const repeats = Math.min(groupSize, repeatsToApply);
+				results.push({
+					cardId: cardId,
+					repeats: repeats,
+				});
+				repeatsToApply -= repeats;
+			}
+			return results;
+		});
 	}
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
