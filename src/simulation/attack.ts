@@ -14,6 +14,7 @@ import {
 	isCorrectTribe,
 	modifyAttack,
 	modifyHealth,
+	stringifySimpleCard,
 } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { applyAvengeEffects } from './avenge';
@@ -57,7 +58,7 @@ export const simulateAttack = (
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
-		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking, new Error().stack);
+		console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury
@@ -1148,10 +1149,12 @@ const handleRebornForFirstBoard = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	for (let i = 0; i < deadMinionIndexesFromRight.length; i++) {
+	// console.log('will handle reborn', stringifySimple(firstBoard, allCards), deadMinionIndexesFromRight);
+	for (let i = deadMinionIndexesFromRight.length - 1; i >= 0; i--) {
 		const entity = deadEntities[i];
 		const indexFromRight = deadMinionIndexesFromRight[i];
 		if (entity.health <= 0 || entity.definitelyDead) {
+			// console.log('dead entity', stringifySimpleCard(entity, allCards), indexFromRight);
 			buildBoardAfterRebornSpawns(
 				firstBoard,
 				firstBoardHero,
@@ -1164,6 +1167,7 @@ const handleRebornForFirstBoard = (
 				sharedState,
 				spectator,
 			);
+			// console.log('after rebord', stringifySimple(firstBoard, allCards));
 		} else if (firstBoard.length > 0) {
 			// const newBoardD = [...firstBoard];
 			firstBoard.splice(firstBoard.length - indexFromRight, 1, entity);
