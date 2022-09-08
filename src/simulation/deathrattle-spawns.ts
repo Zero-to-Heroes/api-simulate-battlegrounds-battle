@@ -11,6 +11,7 @@ import {
 	isCorrectTribe,
 	modifyAttack,
 	modifyHealth,
+	stringifySimple,
 } from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -33,7 +34,7 @@ export const spawnEntities = (
 	useKhadgar = true,
 ): readonly BoardEntity[] => {
 	if (!cardId) {
-		console.error('Cannot spawn a minion without any cardId defined', new Error().stack);
+		console.error('Cannot spawn a minion without any cardId defined', stringifySimple(boardToSpawnInto, allCards), new Error().stack);
 	}
 	const spawnMultiplier = useKhadgar
 		? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_BG_DAL_575).length || 1
