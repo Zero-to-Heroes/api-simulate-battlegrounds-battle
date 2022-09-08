@@ -142,7 +142,6 @@ export class Simulator {
 			}
 
 			// Update the attacker indices in case there were some deaths
-
 			if (playerBoard.some((entity) => entity.attackImmediately)) {
 				this.currentSpeedAttacker = 0;
 			} else if (opponentBoard.some((entity) => entity.attackImmediately)) {

@@ -14,6 +14,8 @@ import {
 	isCorrectTribe,
 	modifyAttack,
 	modifyHealth,
+	stringifySimple,
+	stringifySimpleCard,
 } from '../utils';
 import { applyAuras, removeAuras } from './auras';
 import { applyAvengeEffects } from './avenge';
@@ -57,7 +59,7 @@ export const simulateAttack = (
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
-		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), attackingEntity.attacking);
+		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), stringifySimple(defendingBoard, allCards));
 		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury
@@ -73,52 +75,54 @@ export const simulateAttack = (
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				// Can happen with a single defender that has stealth
-				if (!defendingEntity) {
-					return;
-				}
-				spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
-				applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards, spectator);
-				performAttack(
-					attackingEntity,
-					defendingEntity,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoard,
-					defendingBoardHero,
-					allCards,
-					spawns,
-					sharedState,
-					spectator,
-				);
-				applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
-				if (
-					defendingEntity.health > 0 &&
-					!defendingEntity.definitelyDead &&
-					(defendingEntity.cardId === CardIds.YoHoOgre || defendingEntity.cardId === CardIds.YoHoOgreBattlegrounds)
-				) {
-					defendingEntity.attackImmediately = true;
-					if (defendingEntity.attackImmediately) {
-						// Whenever we are already in a combat phase, we need to first clean up the state
-						removeAuras(attackingBoard, spawns, true);
-						removeAuras(defendingBoard, spawns, true);
-						simulateAttack(
-							defendingBoard,
-							defendingBoardHero,
-							attackingBoard,
-							attackingBoardHero,
-							null,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
-						);
+				if (defendingEntity) {
+					spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
+					applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards, spectator);
+					performAttack(
+						attackingEntity,
+						defendingEntity,
+						attackingBoard,
+						attackingBoardHero,
+						defendingBoard,
+						defendingBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+					);
+					applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
+					if (
+						defendingEntity.health > 0 &&
+						!defendingEntity.definitelyDead &&
+						(defendingEntity.cardId === CardIds.YoHoOgre || defendingEntity.cardId === CardIds.YoHoOgreBattlegrounds)
+					) {
+						defendingEntity.attackImmediately = true;
+						if (defendingEntity.attackImmediately) {
+							// Whenever we are already in a combat phase, we need to first clean up the state
+							removeAuras(attackingBoard, spawns, true);
+							removeAuras(defendingBoard, spawns, true);
+							simulateAttack(
+								defendingBoard,
+								defendingBoardHero,
+								attackingBoard,
+								attackingBoardHero,
+								null,
+								allCards,
+								spawns,
+								sharedState,
+								spectator,
+							);
+						}
 					}
+					// console.log(
+					// 	'after attack by',
+					// 	stringifySimpleCard(attackingEntity, allCards),
+					// 	stringifySimpleCard(defendingEntity, allCards),
+					// );
+				} else {
+					// Solves the edge case of Sky Pirate vs a stealth board
+					attackingEntity.attackImmediately = false;
 				}
-				// console.log(
-				// 	'after attack by',
-				// 	stringifySimpleCard(attackingEntity, allCards),
-				// 	stringifySimpleCard(defendingEntity, allCards),
-				// );
 			}
 			removeAuras(attackingBoard, spawns);
 			removeAuras(defendingBoard, spawns);
@@ -1153,6 +1157,16 @@ const handleRebornForFirstBoard = (
 		const entity = deadEntities[i];
 		const indexFromRight = deadMinionIndexesFromRight[i];
 		if (entity.health <= 0 || entity.definitelyDead) {
+			if (!entity?.cardId) {
+				console.error(
+					'missing card id for entity that died',
+					stringifySimpleCard(entity, allCards),
+					entity,
+					indexFromRight,
+					deadMinionIndexesFromRight,
+					stringifySimple(firstBoard, allCards),
+				);
+			}
 			// console.log('dead entity', stringifySimpleCard(entity, allCards), indexFromRight);
 			buildBoardAfterRebornSpawns(
 				firstBoard,
@@ -1475,6 +1489,9 @@ const buildBoardAfterRebornSpawns = (
 		1 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy).length +
 		2 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy_G).length;
 	// Reborn happens after deathrattles
+	if (!deadEntity.cardId) {
+		console.error('missing card id for dead entity', stringifySimpleCard(deadEntity, allCards), deadEntity);
+	}
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndexFromRight >= 0
 			? spawnEntities(

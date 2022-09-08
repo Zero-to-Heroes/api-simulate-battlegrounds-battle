@@ -10,8 +10,9 @@ describe('Full tests for performance and accuracy', () => {
 		const input: BgsBattleInfo = {
 			...jsonEvent3,
 			options: {
-				numberOfSimulations: 1,
+				numberOfSimulations: 10000,
 				skipInfoLogs: false,
+				maxAcceptableDuration: 999999999,
 			},
 			gameState: {
 				currentTurn: 0,
@@ -27,11 +28,11 @@ describe('Full tests for performance and accuracy', () => {
 
 		const sample = simulationResult.outcomeSamples.won[0];
 		const base64 = encode(JSON.stringify(sample));
-		console.log('encoded', base64);
-		console.log('result', {
-			...simulationResult,
-			outcomeSamples: undefined,
-		});
+		// console.log('encoded', base64);
+		// console.log('result', {
+		// 	...simulationResult,
+		// 	outcomeSamples: undefined,
+		// });
 	});
 });
 

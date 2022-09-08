@@ -307,8 +307,11 @@ export const grantRandomStats = (
 ): BoardEntity => {
 	if (board.length > 0) {
 		const validBeast: BoardEntity = getRandomAliveMinion(
-			board.filter((e) => e.entityId !== source.entityId), race, allCards);
-		//tmp fix for PalescaleCrocolisk, PalescaleCrocolisk won't apply avenge and dethrattle effect on itself. 
+			board.filter((e) => e.entityId !== source.entityId),
+			race,
+			allCards,
+		);
+		//tmp fix for PalescaleCrocolisk, PalescaleCrocolisk won't apply avenge and dethrattle effect on itself.
 		//const validBeast: BoardEntity = getRandomAliveMinion(board, race, allCards);
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
@@ -472,8 +475,8 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
 	return entity
-		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/${entity.attack}/${entity.health}/${entity.entityId}/${
+		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}/ds=${
 				entity.divineShield
-		  }/${entity.taunt}/${entity.enchantments?.length ?? 0}`
+		  }/taunt=${entity.taunt}/stealth=${entity.stealth}`
 		: null;
 };
