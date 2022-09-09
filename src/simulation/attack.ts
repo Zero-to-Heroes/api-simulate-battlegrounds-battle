@@ -425,7 +425,19 @@ const triggerRandomDeathrattle = (
 	if (validDeathrattles.length === 0) {
 		return;
 	}
-	const targetEntity = validDeathrattles[Math.floor(Math.random() * validDeathrattles.length)];
+	const targetEntity = pickRandom(validDeathrattles);
+	if (!targetEntity?.cardId) {
+		console.error(
+			'missing card id when triggering random deathrattle',
+			stringifySimpleCard(targetEntity, allCards),
+			targetEntity,
+			validDeathrattles.length,
+			stringifySimple(validDeathrattles, allCards),
+			stringifySimple(attackingBoard, allCards),
+			excludeSource,
+			stringifySimpleCard(sourceEntity, allCards),
+		);
+	}
 	spectator.registerPowerTarget(sourceEntity, targetEntity, attackingBoard);
 	buildBoardAfterDeathrattleSpawns(
 		attackingBoard,
