@@ -246,6 +246,11 @@ export const makeMinionGolden = (
 	spectator: Spectator,
 ): void => {
 	const refCard = allCards.getCard(target.cardId);
+	// Typically, we are already golden
+	if (!refCard.battlegroundsPremiumDbfId) {
+		return;
+	}
+
 	const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 	target.cardId = goldenCard.id;
 	// A minion becoming golden ignore the current death.

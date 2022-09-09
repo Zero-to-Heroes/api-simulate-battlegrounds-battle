@@ -24,44 +24,26 @@ export const handleSpawn = (
 ): void => {
 	switch (entity.cardId) {
 		case CardIds.MurlocTidecallerLegacy:
-			modifyAttack(
-				entity,
-				spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
-				friendlyBoard,
-				allCards,
-			);
-			afterStatsUpdate(entity, friendlyBoard, allCards);
-			spectator.registerPowerTarget(entity, entity, friendlyBoard);
-			return;
 		case CardIds.MurlocTidecallerBattlegrounds:
-			modifyAttack(
-				entity,
-				2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
-				friendlyBoard,
-				allCards,
-			);
-			afterStatsUpdate(entity, friendlyBoard, allCards);
-			spectator.registerPowerTarget(entity, entity, friendlyBoard);
+			const multiplier = entity.cardId === CardIds.MurlocTidecallerBattlegrounds ? 2 : 1;
+			const buffAmount =
+				multiplier * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length;
+			if (buffAmount > 0) {
+				modifyAttack(entity, buffAmount, friendlyBoard, allCards);
+				afterStatsUpdate(entity, friendlyBoard, allCards);
+				spectator.registerPowerTarget(entity, entity, friendlyBoard);
+			}
 			return;
 		case CardIds.Swampstriker:
-			modifyAttack(
-				entity,
-				spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
-				friendlyBoard,
-				allCards,
-			);
-			afterStatsUpdate(entity, friendlyBoard, allCards);
-			spectator.registerPowerTarget(entity, entity, friendlyBoard);
-			return;
 		case CardIds.SwampstrikerBattlegrounds:
-			modifyAttack(
-				entity,
-				2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length,
-				friendlyBoard,
-				allCards,
-			);
-			afterStatsUpdate(entity, friendlyBoard, allCards);
-			spectator.registerPowerTarget(entity, entity, friendlyBoard);
+			const multiplier2 = entity.cardId === CardIds.SwampstrikerBattlegrounds ? 2 : 1;
+			const buffAmount2 =
+				multiplier2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length;
+			if (buffAmount2 > 0) {
+				modifyAttack(entity, buffAmount2, friendlyBoard, allCards);
+				afterStatsUpdate(entity, friendlyBoard, allCards);
+				spectator.registerPowerTarget(entity, entity, friendlyBoard);
+			}
 			return;
 		case CardIds.CobaltGuardian:
 		case CardIds.DeflectOBot:
