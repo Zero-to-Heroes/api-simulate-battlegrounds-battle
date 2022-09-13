@@ -5,7 +5,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
-import { afterStatsUpdate, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth } from '../utils';
+import { afterStatsUpdate, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth, stringifySimple } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
 import { applyAuras, removeAuras } from './auras';
 import {
@@ -567,6 +567,10 @@ const handleTamsinForPlayer = (
 	const lowestHealth = Math.min(...playerBoard.map((e) => e.health));
 	const entitiesWithLowestHealth = playerBoard.filter((e) => e.health === lowestHealth);
 	const chosenEntity = pickRandom(entitiesWithLowestHealth);
+	if (!chosenEntity) {
+		console.warn('could not pick any entity for tamsin', stringifySimple(entitiesWithLowestHealth, allCards));
+		return;
+	}
 	const newBoard = playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);
 	const buffedEntities = pickMultipleRandomDifferent(newBoard, 5);
 	// How to mark the minion as dead
@@ -820,8 +824,8 @@ export const performStartOfCombatMinionsForPlayer = (
 	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {
 		const otherDragon = pickRandom(attackingBoardBefore.filter((e) => e.entityId !== attacker.entityId));
 		if (otherDragon) {
-			modifyAttack(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 6 : 3, attackingBoard, allCards);
-			modifyHealth(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 6 : 3, attackingBoard, allCards);
+			modifyAttack(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
+			modifyHealth(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
 			afterStatsUpdate(otherDragon, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
 		}
