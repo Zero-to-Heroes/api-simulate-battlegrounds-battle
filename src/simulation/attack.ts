@@ -439,11 +439,12 @@ const triggerRandomDeathrattle = (
 		);
 	}
 	spectator.registerPowerTarget(sourceEntity, targetEntity, attackingBoard);
+	const indexFromRight = attackingBoard.length - (attackingBoard.indexOf(targetEntity) + 1);
 	buildBoardAfterDeathrattleSpawns(
 		attackingBoard,
 		attackingBoardHero,
 		targetEntity,
-		-1,
+		indexFromRight,
 		defendingBoard,
 		defendingBoardHero,
 		[],
