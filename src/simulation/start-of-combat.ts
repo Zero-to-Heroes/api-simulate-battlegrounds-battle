@@ -361,7 +361,10 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						lastAffectedByEntity: null,
 						entityId: sharedState.currentEntityId++,
 					};
-					playerBoard.push(copy);
+					const index = playerBoard.indexOf(highestHealthMinion);
+					// Insert the copy at the right of the minion
+					playerBoard.splice(index + 1, 0, copy);
+					// playerBoard.push(copy);
 					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
 				}
 				break;
