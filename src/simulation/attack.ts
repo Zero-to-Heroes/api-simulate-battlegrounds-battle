@@ -453,11 +453,12 @@ const triggerRandomDeathrattle = (
 		sharedState,
 		spectator,
 	);
+	// The reborn minion spawns to the right of the DR spawns
 	buildBoardAfterRebornSpawns(
 		attackingBoard,
 		attackingBoardHero,
 		targetEntity,
-		-1,
+		indexFromRight,
 		defendingBoard,
 		defendingBoardHero,
 		allCards,
