@@ -256,8 +256,8 @@ const handleStartOfCombatMinions = (
 	spectator: Spectator,
 ): number => {
 	let attackerForStart = currentAttacker;
-	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.indexOf(entity.cardId as CardIds) !== -1);
-	const opponentAttackers = opponentBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.indexOf(entity.cardId as CardIds) !== -1);
+	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
+	const opponentAttackers = opponentBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
@@ -737,7 +737,7 @@ export const performStartOfCombatMinionsForPlayer = (
 	applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
 	applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
 
-	// For now we're only dealing with the red whelp
+	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp) {
 		const damage = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).race)
@@ -825,8 +825,12 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {
-		const otherDragon = pickRandom(attackingBoardBefore.filter((e) => e.entityId !== attacker.entityId));
+		// First try to get a target without divine shield, and if none is available, pick one with divine shield
+		const otherDragon =
+			pickRandom(attackingBoard.filter((e) => e.entityId !== attacker.entityId).filter((e) => !e.divineShield)) ??
+			pickRandom(attackingBoard.filter((e) => e.entityId !== attacker.entityId));
 		if (otherDragon) {
+			otherDragon.divineShield = true;
 			modifyAttack(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
 			modifyHealth(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
 			afterStatsUpdate(otherDragon, attackingBoard, allCards);

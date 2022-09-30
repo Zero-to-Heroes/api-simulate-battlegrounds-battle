@@ -32,6 +32,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.PrizedPromoDrakeBattlegrounds,
 	CardIds.RedWhelp,
 	CardIds.RedWhelpBattlegrounds,
+	CardIds.AmberGuardian,
+	CardIds.AmberGuardianBattlegrounds,
 ];
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
