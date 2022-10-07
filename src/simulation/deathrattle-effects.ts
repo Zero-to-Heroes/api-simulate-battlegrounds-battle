@@ -146,11 +146,6 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
-		case CardIds.LeapfroggerBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
-			}
-			break;
 		case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
@@ -309,8 +304,15 @@ export const handleDeathrattleEffects = (
 
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
-	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [...(deadEntity.enchantments ?? [])];
-	const threshold = 20;
+
+	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
+		...(deadEntity.enchantments ?? []),
+		...(deadEntity.rememberedDeathrattles ?? []),
+	];
+	// if (deadEntity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) {
+	// 	console.log('enchantments before death', enchantments, deadEntity);
+	// }
+	const threshold = 10;
 	if (enchantments.length > threshold || enchantments.some((e) => e.repeats && e.repeats > 1)) {
 		// console.warn(
 		// 	'too many enchtments, truncating',
@@ -332,7 +334,7 @@ export const handleDeathrattleEffects = (
 				const repeats = Math.min(groupSize, repeatsToApply);
 				results.push({
 					cardId: cardId,
-					repeats: repeats,
+					repeats: repeats || 1,
 				});
 				repeatsToApply -= repeats;
 			}
@@ -508,7 +510,7 @@ const applyLeapFroggerEffect = (
 				? CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge
 				: CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
 			originEntityId: deadEntity.entityId,
-			repeats: multiplier > 1 ? multiplier : undefined,
+			repeats: multiplier > 1 ? multiplier : 1,
 		});
 		// Don't register power effect here, since it's already done in the random stats
 		// spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
@@ -877,26 +879,33 @@ export const applyMonstrosity = (
 	}
 };
 
-export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly BoardEntity[], cardsData: CardsData): void => {
+export const rememberDeathrattles = (
+	fish: BoardEntity,
+	deadEntities: readonly BoardEntity[],
+	cardsData: CardsData,
+	allCards: AllCardsService,
+): void => {
 	const validDeathrattles = deadEntities
 		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId))
-		.map((entity) => entity.cardId);
+		.map((entity) => ({ cardId: entity.cardId, repeats: 1 }));
 	const validEnchantments = deadEntities
 		.filter((entity) => entity.enchantments?.length)
 		.map((entity) => entity.enchantments)
 		.reduce((a, b) => a.concat(b), [])
-		.map((enchantment) => enchantment.cardId)
-		.filter((enchantmentId) =>
+		.flatMap((enchantment) => ({ cardId: enchantment.cardId, repeats: enchantment.repeats ?? 1 }))
+		.filter((enchantment) =>
 			[
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds,
+				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
+				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
 				CardIds.LivingSpores_LivingSporesEnchantment,
 				CardIds.SneedsReplicator_ReplicateEnchantment,
 				CardIds.EarthInvocation_ElementEarthEnchantment,
 				CardIds.FireInvocation_ElementFireEnchantment,
 				CardIds.WaterInvocation_ElementWaterEnchantment,
 				CardIds.LightningInvocation,
-			].includes(enchantmentId as CardIds),
+			].includes(enchantment.cardId as CardIds),
 		);
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments];
 	// Order is important - the DR are triggered in the ordered the minions have died
@@ -906,6 +915,8 @@ export const rememberDeathrattles = (fish: BoardEntity, deadEntities: readonly B
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...doubleDr];
 	} else {
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
+		// console.log('remembering deathrattle', stringifySimple(deadEntities, allCards), '\n', fish.rememberedDeathrattles);
+		// console.log('remembering deathrattle after', fish.rememberedDeathrattles);
 	}
 };
 

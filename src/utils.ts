@@ -482,6 +482,6 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 	return entity
 		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}/ds=${
 				entity.divineShield
-		  }/taunt=${entity.taunt}/stealth=${entity.stealth}`
+		  }/taunt=${entity.taunt}/stealth=${entity.stealth}/ench=${JSON.stringify(entity.enchantments)}`
 		: null;
 };

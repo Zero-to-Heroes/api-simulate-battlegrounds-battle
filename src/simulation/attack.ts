@@ -1013,13 +1013,13 @@ export const processMinionDeath = (
 			(entity) =>
 				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
-		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData));
+		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData, allCards));
 	board2
 		.filter(
 			(entity) =>
 				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
-		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData));
+		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData, allCards));
 
 	board1
 		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
@@ -1445,11 +1445,12 @@ const buildBoardAfterDeathrattleSpawns = (
 			const entityToProcess: BoardEntity = {
 				...deadEntity,
 				rememberedDeathrattles: undefined,
-				cardId: deathrattle,
+				cardId: deathrattle.cardId,
 				enchantments: [
 					{
-						cardId: deathrattle,
+						cardId: deathrattle.cardId,
 						originEntityId: deadEntity.entityId,
+						repeats: deathrattle.repeats ?? 1,
 					},
 				],
 			};
