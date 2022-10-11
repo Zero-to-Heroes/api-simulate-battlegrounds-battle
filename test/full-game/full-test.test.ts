@@ -10,9 +10,9 @@ describe('Full tests for performance and accuracy', () => {
 		const input: BgsBattleInfo = {
 			...jsonEvent3,
 			options: {
-				numberOfSimulations: 1,
+				numberOfSimulations: 10000,
 				skipInfoLogs: false,
-				maxAcceptableDuration: 999999999,
+				maxAcceptableDuration: 20000,
 			},
 			gameState: {
 				currentTurn: 0,

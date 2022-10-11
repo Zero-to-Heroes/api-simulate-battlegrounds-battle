@@ -454,18 +454,18 @@ const triggerRandomDeathrattle = (
 		spectator,
 	);
 	// The reborn minion spawns to the right of the DR spawns
-	buildBoardAfterRebornSpawns(
-		attackingBoard,
-		attackingBoardHero,
-		targetEntity,
-		indexFromRight,
-		defendingBoard,
-		defendingBoardHero,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-	);
+	// buildBoardAfterRebornSpawns(
+	// 	attackingBoard,
+	// 	attackingBoardHero,
+	// 	targetEntity,
+	// 	indexFromRight,
+	// 	defendingBoard,
+	// 	defendingBoardHero,
+	// 	allCards,
+	// 	spawns,
+	// 	sharedState,
+	// 	spectator,
+	// );
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: number): BoardEntity => {
@@ -1323,7 +1323,19 @@ const makeMinionsDie = (board: BoardEntity[], allCards: AllCardsService): [numbe
 			i--;
 		}
 	}
-	return [deadMinionIndexesFromRight, deadEntities];
+	// Treat all dead entities as a single block
+	const blockIndexesFromRight = [...deadMinionIndexesFromRight];
+	for (let i = deadMinionIndexesFromRight.length - 1; i >= 0; i--) {
+		if (i === deadMinionIndexesFromRight.length - 1) {
+			continue;
+		}
+		if (Math.abs(deadMinionIndexesFromRight[i] - deadMinionIndexesFromRight[i + 1]) <= 1) {
+			blockIndexesFromRight[i] = blockIndexesFromRight[i + 1];
+		} else {
+			blockIndexesFromRight[i] = blockIndexesFromRight[i];
+		}
+	}
+	return [blockIndexesFromRight, deadEntities];
 };
 
 // const handleKillEffects = (
