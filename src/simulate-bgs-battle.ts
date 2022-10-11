@@ -195,9 +195,9 @@ export const validEnchantments = [
 ];
 
 const cleanEnchantmentsForEntity = (
-	enchantments: { cardId: string; originEntityId?: number }[],
+	enchantments: { cardId: string; originEntityId?: number; timing: number }[],
 	entityIds: readonly number[],
-): { cardId: string; originEntityId?: number }[] => {
+): { cardId: string; originEntityId?: number; timing: number }[] => {
 	return enchantments.filter(
 		(enchant) => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId as CardIds) !== -1,
 	);

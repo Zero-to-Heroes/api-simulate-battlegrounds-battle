@@ -68,8 +68,8 @@ export const simulateAttack = (
 			}
 			// The auras need to be handled on a per-attack basis, as otherwise minions that spawn
 			// in-between attacks don't get aura buffs
-			applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, spawns, allCards);
-			applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, spawns, allCards);
+			applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, spawns, allCards, sharedState);
+			applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, spawns, allCards, sharedState);
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
@@ -1013,13 +1013,13 @@ export const processMinionDeath = (
 			(entity) =>
 				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
-		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData, allCards));
+		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData, allCards, sharedState));
 	board2
 		.filter(
 			(entity) =>
 				entity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds || entity.cardId === CardIds.FishOfNzothBattlegrounds,
 		)
-		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData, allCards));
+		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData, allCards, sharedState));
 
 	board1
 		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
@@ -1463,6 +1463,7 @@ const buildBoardAfterDeathrattleSpawns = (
 						cardId: deathrattle.cardId,
 						originEntityId: deadEntity.entityId,
 						repeats: deathrattle.repeats ?? 1,
+						timing: deathrattle.timing,
 					},
 				],
 			};

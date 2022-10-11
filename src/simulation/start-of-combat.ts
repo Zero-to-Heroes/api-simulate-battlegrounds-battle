@@ -160,7 +160,7 @@ const handlePreCombatHeroPowersForPlayer = (
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
 		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EarthInvocationToken) {
-		applyEarthInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
+		applyEarthInvocationEnchantment(playerBoard, null, playerEntity, allCards, sharedState, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaterInvocationToken) {
 		applyWaterInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
@@ -409,8 +409,8 @@ export const handleStartOfCombatHeroPowers = (
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
 	const isSmokingGunPresentForAttacker = playerEntity.questRewards?.includes(CardIds.TheSmokingGun);
 	const isSmokingGunPresentForDefender = opponentEntity.questRewards?.includes(CardIds.TheSmokingGun);
-	applyAuras(playerBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
-	applyAuras(opponentBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
+	applyAuras(playerBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards, sharedState);
+	applyAuras(opponentBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards, sharedState);
 
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
@@ -734,8 +734,8 @@ export const performStartOfCombatMinionsForPlayer = (
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
 	const isSmokingGunPresentForAttacker = attackingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
 	const isSmokingGunPresentForDefender = defendingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
-	applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards);
-	applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards);
+	applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards, sharedState);
+	applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards, sharedState);
 
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp) {

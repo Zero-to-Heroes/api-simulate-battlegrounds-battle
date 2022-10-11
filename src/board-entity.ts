@@ -17,10 +17,10 @@ export interface BoardEntity {
 	windfury?: boolean;
 	megaWindfury?: boolean;
 	stealth?: boolean;
-	enchantments?: { cardId: string; originEntityId?: number; repeats?: number }[];
+	enchantments?: { cardId: string; originEntityId?: number; timing: number; repeats?: number }[];
 	// We only store the card id, because we want all the attack and other data to be computed at runtime, based on the
 	// current stats of the Fish
-	rememberedDeathrattles?: { cardId: string; repeats: number }[];
+	rememberedDeathrattles?: { cardId: string; timing: number; repeats: number }[];
 
 	friendly?: boolean;
 	cantAttack?: boolean;

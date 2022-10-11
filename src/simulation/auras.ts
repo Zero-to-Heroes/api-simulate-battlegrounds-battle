@@ -4,6 +4,7 @@ import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { AURA_ENCHANTMENTS, AURA_ORIGINS, CardsData } from '../cards/cards-data';
 import { isCorrectTribe, normalizeCardIdForSkin } from '../utils';
+import { SharedState } from './shared-state';
 
 // Check if aura is already applied, and if not re-apply it
 export const applyAuras = (
@@ -12,19 +13,20 @@ export const applyAuras = (
 	isSmokingGunPresent: boolean,
 	data: CardsData,
 	cards: AllCardsService,
+	sharedState: SharedState,
 ): void => {
 	for (let i = 0; i < board.length; i++) {
 		if (AURA_ORIGINS.indexOf(board[i].cardId) !== -1) {
 			const enchantmentId = AURA_ENCHANTMENTS.find((aura) => aura[0] === board[i].cardId)[1];
-			applyAura(board, i, enchantmentId, cards);
+			applyAura(board, i, enchantmentId, cards, sharedState);
 		}
 	}
 
 	for (let i = 0; i < numberOfDeathwingPresents; i++) {
-		applyDeathwingAura(board, CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds);
+		applyDeathwingAura(board, CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds, sharedState);
 	}
 	if (isSmokingGunPresent) {
-		applySmokingGunAura(board, CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment);
+		applySmokingGunAura(board, CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment, sharedState);
 	}
 	// return board;
 };
@@ -101,7 +103,7 @@ const removeAurasFrom = (entity: BoardEntity, board: BoardEntity[], data: CardsD
 	// return newEntity;
 };
 
-const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards: AllCardsService): void => {
+const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards: AllCardsService, sharedState: SharedState): void => {
 	switch (board[i].cardId) {
 		// case CardIds.SiegebreakerLegacy:
 		// case CardIds.SiegebreakerBattlegrounds:
@@ -113,22 +115,22 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		// 	return;
 		case CardIds.Kathranatir_BG21_039:
 		case CardIds.KathranatirBattlegrounds:
-			applyKathranatirAura(board, i, enchantmentId, cards);
+			applyKathranatirAura(board, i, enchantmentId, cards, sharedState);
 			return;
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderVanilla:
 		case CardIds.MurlocWarleaderLegacyBattlegrounds:
-			applyMurlocWarleaderAura(board, i, enchantmentId, cards);
+			applyMurlocWarleaderAura(board, i, enchantmentId, cards, sharedState);
 			return;
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainCore:
 		case CardIds.SouthseaCaptainVanilla:
 		case CardIds.SouthseaCaptainLegacyBattlegrounds:
-			applySouthseaCaptainAura(board, i, enchantmentId, cards);
+			applySouthseaCaptainAura(board, i, enchantmentId, cards, sharedState);
 			return;
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
-			applyLadySinestraAura(board, i, enchantmentId);
+			applyLadySinestraAura(board, i, enchantmentId, sharedState);
 			return;
 	}
 };
@@ -180,22 +182,22 @@ const removeAura = (
 	}
 };
 
-const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string): void => {
+const applyDeathwingAura = (board: BoardEntity[], enchantmentId: string, sharedState: SharedState): void => {
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
 			entity.attack += 3;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined, timing: sharedState.currentEntityId++ });
 		}
 	}
 };
 
-const applySmokingGunAura = (board: BoardEntity[], enchantmentId: string): void => {
+const applySmokingGunAura = (board: BoardEntity[], enchantmentId: string, sharedState: SharedState): void => {
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
 			entity.attack += 5;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined });
+			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined, timing: sharedState.currentEntityId++ });
 		}
 	}
 };
@@ -236,7 +238,13 @@ const applySmokingGunAura = (board: BoardEntity[], enchantmentId: string): void 
 // 	// return newBoard;
 // };
 
-const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
+const applyKathranatirAura = (
+	board: BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+	sharedState: SharedState,
+): void => {
 	const originEntity = board[index];
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
@@ -248,7 +256,11 @@ const applyKathranatirAura = (board: BoardEntity[], index: number, enchantmentId
 
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
 			entity.attack += enchantmentId === CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge ? 4 : 2;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+			entity.enchantments.push({
+				cardId: enchantmentId,
+				originEntityId: originEntity.entityId,
+				timing: sharedState.currentEntityId++,
+			});
 		}
 	}
 	// return newBoard;
@@ -297,7 +309,13 @@ const removeKathranatirAura = (entity: BoardEntity, enchantmentId: string): void
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
-const applyMurlocWarleaderAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
+const applyMurlocWarleaderAura = (
+	board: BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+	sharedState: SharedState,
+): void => {
 	const originEntity = board[index];
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
@@ -309,7 +327,11 @@ const applyMurlocWarleaderAura = (board: BoardEntity[], index: number, enchantme
 
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
 			entity.attack += enchantmentId === CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds ? 4 : 2;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+			entity.enchantments.push({
+				cardId: enchantmentId,
+				originEntityId: originEntity.entityId,
+				timing: sharedState.currentEntityId++,
+			});
 		}
 	}
 	// return newBoard;
@@ -324,7 +346,13 @@ const removeMurlocWarleaderAura = (entity: BoardEntity, enchantmentId: string): 
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
-const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantmentId: string, cards: AllCardsService): void => {
+const applySouthseaCaptainAura = (
+	board: BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+	sharedState: SharedState,
+): void => {
 	const originEntity = board[index];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
@@ -337,19 +365,23 @@ const applySouthseaCaptainAura = (board: BoardEntity[], index: number, enchantme
 			entity.attack += enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
 			entity.health += enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
 			// entity.maxHealth += enchantmentId === CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds ? 2 : 1;
-			entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+			entity.enchantments.push({
+				cardId: enchantmentId,
+				originEntityId: originEntity.entityId,
+				timing: sharedState.currentEntityId++,
+			});
 		}
 	}
 	// return newBoard;
 };
 
-const applyLadySinestraAura = (board: BoardEntity[], index: number, enchantmentId: string): void => {
+const applyLadySinestraAura = (board: BoardEntity[], index: number, enchantmentId: string, sharedState: SharedState): void => {
 	const originEntity = board[index];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		// TODO find proper enchantment
 		entity.attack += enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e ? 6 : 3;
-		entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId });
+		entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId, timing: sharedState.currentEntityId++ });
 	}
 };
 

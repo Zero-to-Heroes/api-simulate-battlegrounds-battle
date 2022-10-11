@@ -122,12 +122,12 @@ export const handleDeathrattleEffects = (
 			break;
 		case CardIds.Leapfrogger:
 			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, sharedState);
 			}
 			break;
 		case CardIds.LeapfroggerBattlegrounds:
 			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
+				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
 			}
 			break;
 		case CardIds.PalescaleCrocolisk:
@@ -308,7 +308,7 @@ export const handleDeathrattleEffects = (
 	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
 		...(deadEntity.enchantments ?? []),
 		...(deadEntity.rememberedDeathrattles ?? []),
-	];
+	].sort((a, b) => a.timing - b.timing);
 	// if (deadEntity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) {
 	// 	console.log('enchantments before death', enchantments, deadEntity);
 	// }
@@ -335,6 +335,7 @@ export const handleDeathrattleEffects = (
 				results.push({
 					cardId: cardId,
 					repeats: repeats || 1,
+					timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
 				});
 				repeatsToApply -= repeats;
 			}
@@ -345,25 +346,41 @@ export const handleDeathrattleEffects = (
 		switch (enchantment.cardId) {
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
 				if (!!enchantment.repeats && enchantment.repeats > 1) {
-					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, multiplier * enchantment.repeats);
+					applyLeapFroggerEffect(
+						boardWithDeadEntity,
+						deadEntity,
+						false,
+						allCards,
+						spectator,
+						sharedState,
+						multiplier * enchantment.repeats,
+					);
 				} else {
 					for (let i = 0; i < multiplier; i++) {
-						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator);
+						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, sharedState);
 					}
 				}
 				break;
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
 				if (!!enchantment.repeats && enchantment.repeats > 1) {
-					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, multiplier * enchantment.repeats);
+					applyLeapFroggerEffect(
+						boardWithDeadEntity,
+						deadEntity,
+						true,
+						allCards,
+						spectator,
+						sharedState,
+						multiplier * enchantment.repeats,
+					);
 				} else {
 					for (let i = 0; i < multiplier; i++) {
-						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator);
+						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
 					}
 				}
 				break;
 			case CardIds.EarthRecollectionEnchantment:
 				for (let i = 0; i < multiplier; i++) {
-					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, allCards, spectator);
+					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, allCards, sharedState, spectator);
 				}
 				break;
 			case CardIds.FireRecollectionEnchantment:
@@ -470,6 +487,7 @@ export const applyEarthInvocationEnchantment = (
 	deadEntity: BoardEntity,
 	sourceEntity: BgsPlayerEntity | BoardEntity,
 	allCards: AllCardsService,
+	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptorBattlegrounds ? 2 : 1;
@@ -479,6 +497,7 @@ export const applyEarthInvocationEnchantment = (
 			minion.enchantments.push({
 				cardId: CardIds.EarthInvocation_ElementEarthEnchantment,
 				originEntityId: deadEntity?.entityId,
+				timing: sharedState.currentEntityId++,
 			});
 			spectator.registerPowerTarget(sourceEntity, minion, boardWithDeadEntity);
 		});
@@ -491,6 +510,7 @@ const applyLeapFroggerEffect = (
 	isPremium: boolean,
 	allCards: AllCardsService,
 	spectator: Spectator,
+	sharedState: SharedState,
 	multiplier = 1,
 ): void => {
 	multiplier = multiplier || 1;
@@ -511,6 +531,7 @@ const applyLeapFroggerEffect = (
 				: CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
 			originEntityId: deadEntity.entityId,
 			repeats: multiplier > 1 ? multiplier : 1,
+			timing: sharedState.currentEntityId++,
 		});
 		// Don't register power effect here, since it's already done in the random stats
 		// spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
@@ -884,15 +905,20 @@ export const rememberDeathrattles = (
 	deadEntities: readonly BoardEntity[],
 	cardsData: CardsData,
 	allCards: AllCardsService,
+	sharedState: SharedState,
 ): void => {
 	const validDeathrattles = deadEntities
 		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId))
-		.map((entity) => ({ cardId: entity.cardId, repeats: 1 }));
+		.map((entity) => ({ cardId: entity.cardId, repeats: 1, timing: sharedState.currentEntityId++ }));
 	const validEnchantments = deadEntities
 		.filter((entity) => entity.enchantments?.length)
 		.map((entity) => entity.enchantments)
 		.reduce((a, b) => a.concat(b), [])
-		.flatMap((enchantment) => ({ cardId: enchantment.cardId, repeats: enchantment.repeats ?? 1 }))
+		.flatMap((enchantment) => ({
+			cardId: enchantment.cardId,
+			repeats: enchantment.repeats ?? 1,
+			timing: sharedState.currentEntityId++,
+		}))
 		.filter((enchantment) =>
 			[
 				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
