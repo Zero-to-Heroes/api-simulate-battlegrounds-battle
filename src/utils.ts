@@ -136,9 +136,8 @@ export const buildSingleBoardEntity = (
 };
 
 export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
-	// console.log('modifying attack', amount, stringifySimpleCard(entity, allCards), entity.attack);
-	entity.attack = Math.max(0, entity.attack + amount);
-	// console.log('modified attack', amount, stringifySimpleCard(entity, allCards), entity.attack);
+	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
+	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).race, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
@@ -159,7 +158,7 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 		mishmashes.forEach((mishmash) => {
 			modifyAttack(
 				mishmash,
-				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * amount,
+				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
 				friendlyBoard,
 				allCards,
 			);
@@ -168,9 +167,10 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 };
 
 export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
-	entity.health += amount;
-	if (amount > 0) {
-		entity.maxHealth += amount;
+	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
+	entity.health += realAmount;
+	if (realAmount > 0) {
+		entity.maxHealth += realAmount;
 	}
 	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
 		const mishmashes = friendlyBoard.filter(
@@ -181,7 +181,7 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 		mishmashes.forEach((mishmash) => {
 			modifyHealth(
 				mishmash,
-				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * amount,
+				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
 				friendlyBoard,
 				allCards,
 			);
@@ -198,7 +198,7 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 	titanicGuardians.forEach((guardian) => {
 		modifyHealth(
 			guardian,
-			(guardian.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * amount,
+			(guardian.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount,
 			friendlyBoard,
 			allCards,
 		);

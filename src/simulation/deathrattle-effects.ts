@@ -309,74 +309,52 @@ export const handleDeathrattleEffects = (
 		...(deadEntity.enchantments ?? []),
 		...(deadEntity.rememberedDeathrattles ?? []),
 	].sort((a, b) => a.timing - b.timing);
-	// if (deadEntity.cardId === CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) {
-	// 	console.log('enchantments before death', enchantments, deadEntity);
-	// }
-	const threshold = 10;
-	if (enchantments.length > threshold || enchantments.some((e) => e.repeats && e.repeats > 1)) {
-		// console.warn(
-		// 	'too many enchtments, truncating',
-		// 	stringifySimpleCard(deadEntity),
-		// 	deadEntity.enchantments.length,
-		// 	deadEntity.enchantments,
-		// );
-		// In some cases it's possible that there are way too many enchantments because of the frog
-		// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
-		// often as we should, so that we can have the stats themselves correct
-		const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
-		enchantments = Object.keys(enchantmentGroups).flatMap((cardId) => {
-			// We don't want to lump everything together, as it skews the stats when there are a lot of buffs
-			// Instead, we build groups
-			const groupSize = 10;
-			let repeatsToApply = enchantmentGroups[cardId].length;
-			const results = [];
-			while (repeatsToApply > 0) {
-				const repeats = Math.min(groupSize, repeatsToApply);
-				results.push({
-					cardId: cardId,
-					repeats: repeats || 1,
-					timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
-				});
-				repeatsToApply -= repeats;
-			}
-			return results;
-		});
-	}
+	// In some cases it's possible that there are way too many enchantments because of the frog
+	// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
+	// often as we should, so that we can have the stats themselves correct
+	// We don't want to lump everything together, as it skews the stats when there are a lot of buffs
+	// Instead, we build groups
+	const maxNumberOfGroups = 12;
+	const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
+	enchantments = Object.keys(enchantmentGroups).flatMap((cardId) => {
+		let repeatsToApply = enchantmentGroups[cardId].map((e) => e.repeats || 1).reduce((a, b) => a + b, 0);
+
+		// Frogs include the multiplers here directly
+		if (
+			[CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e, CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge].includes(
+				cardId as CardIds,
+			)
+		) {
+			repeatsToApply = repeatsToApply * multiplier;
+		}
+
+		const results = [];
+		const repeatsPerBuff = Math.max(1, Math.floor(repeatsToApply / maxNumberOfGroups));
+		let repeatsDone = 0;
+		while (repeatsDone < repeatsToApply) {
+			const repeats = Math.min(repeatsPerBuff, repeatsToApply - repeatsDone);
+			results.push({
+				cardId: cardId,
+				repeats: repeats,
+				timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
+			});
+			repeatsDone += repeatsPerBuff;
+		}
+		return results;
+	});
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
-				if (!!enchantment.repeats && enchantment.repeats > 1) {
-					applyLeapFroggerEffect(
-						boardWithDeadEntity,
-						deadEntity,
-						false,
-						allCards,
-						spectator,
-						sharedState,
-						multiplier * enchantment.repeats,
-					);
-				} else {
-					for (let i = 0; i < multiplier; i++) {
-						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, sharedState);
-					}
-				}
-				break;
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
-				if (!!enchantment.repeats && enchantment.repeats > 1) {
-					applyLeapFroggerEffect(
-						boardWithDeadEntity,
-						deadEntity,
-						true,
-						allCards,
-						spectator,
-						sharedState,
-						multiplier * enchantment.repeats,
-					);
-				} else {
-					for (let i = 0; i < multiplier; i++) {
-						applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
-					}
-				}
+				applyLeapFroggerEffect(
+					boardWithDeadEntity,
+					deadEntity,
+					enchantment.cardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
+					allCards,
+					spectator,
+					sharedState,
+					enchantment.repeats || 1,
+				);
 				break;
 			case CardIds.EarthRecollectionEnchantment:
 				for (let i = 0; i < multiplier; i++) {
@@ -410,6 +388,10 @@ export const handleDeathrattleEffects = (
 				break;
 		}
 	}
+	const playerCopy = boardWithDeadEntity.map((e) => ({ ...e, lastAffectedByEntity: null }));
+	const oppCopy = otherBoard.map((e) => ({ ...e, lastAffectedByEntity: null }));
+	// console.log('player board', boardWithDeadEntity.length, playerCopy.length, playerCopy.map((e) => JSON.stringify(e)).join('\n'));
+	// console.log('opp board', JSON.stringify(oppCopy));
 };
 
 export const applyLightningInvocationEnchantment = (
