@@ -43,7 +43,7 @@ const TAUNT_IDS = [
 	CardIds.Glowscale,
 	CardIds.GlowscaleBattlegrounds,
 	CardIds.SilverbackPatriarch_BG_CS2_127,
-	CardIds.SilverbackPatriarchBattlegrounds,
+	CardIds.SilverbackPatriarch_BG_CS2_127_G,
 	CardIds.SparringPartner_BG_AT_069,
 	CardIds.SparringPartnerBattlegrounds,
 	CardIds.TunnelBlaster_BG_DAL_775,
@@ -149,7 +149,11 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 			modifyHealth(entity, 2, friendlyBoard, allCards);
 		});
 	}
-	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
+	if (
+		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
+		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A ||
+		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G
+	) {
 		const mishmashes = friendlyBoard.filter(
 			(e) =>
 				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy ||
@@ -172,7 +176,11 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 	if (realAmount > 0) {
 		entity.maxHealth += realAmount;
 	}
-	if (entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds || entity.cardId === CardIds.CuddlgamBattlegrounds) {
+	if (
+		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
+		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A ||
+		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G
+	) {
 		const mishmashes = friendlyBoard.filter(
 			(e) =>
 				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy ||

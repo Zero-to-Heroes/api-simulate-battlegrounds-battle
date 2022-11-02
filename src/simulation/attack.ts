@@ -128,6 +128,9 @@ export const simulateAttack = (
 			removeAuras(defendingBoard, spawns);
 		}
 		attackingEntity.attacking = false;
+		if (attackingEntity.enchantments.some((e) => e.cardId === CardIds.VolatileVenom_VolatileEnchantment)) {
+			attackingEntity.definitelyDead = true;
+		}
 	}
 	// If entities that were before the attacker died, we need to update the attacker index
 	return attackingEntityIndex;
@@ -706,9 +709,9 @@ export const bumpEntities = (
 	}
 	entity.health = entity.health - bumpInto.attack;
 
-	if (entity.cardId === CardIds.Bubblette && bumpInto.attack === 1) {
+	if (entity.cardId === CardIds.Bubblette_BG_TID_713 && bumpInto.attack === 1) {
 		entity.definitelyDead = true;
-	} else if (entity.cardId === CardIds.BubbletteBattlegrounds && bumpInto.attack === 2) {
+	} else if (entity.cardId === CardIds.Bubblette_BG_TID_713_G && bumpInto.attack === 2) {
 		entity.definitelyDead = true;
 	}
 
@@ -1258,6 +1261,15 @@ export const applyOnAttackBuffs = (
 			});
 		});
 	}
+	if (attacker.cardId === CardIds.VanessaVancleef || attacker.cardId === CardIds.VanessaVancleefBattlegrounds) {
+		attackingBoard
+			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).race, Race.PIRATE))
+			.forEach((e) => {
+				modifyAttack(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2, attackingBoard, allCards);
+				modifyHealth(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 2 : 1, attackingBoard, allCards);
+				spectator.registerPowerTarget(attacker, e, attackingBoard);
+			});
+	}
 };
 
 export const applyOnBeingAttackedBuffs = (
@@ -1306,6 +1318,10 @@ export const applyOnBeingAttackedBuffs = (
 			modifyHealth(entity, 2, defendingBoard, allCards);
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
+	}
+	if (attackedEntity.cardId === CardIds.DozyWhelp || attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds) {
+		modifyAttack(attackedEntity, attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds ? 2 : 1, defendingBoard, allCards);
+		spectator.registerPowerTarget(attackedEntity, attackedEntity, defendingBoard);
 	}
 };
 

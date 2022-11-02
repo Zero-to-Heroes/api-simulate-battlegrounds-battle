@@ -851,6 +851,17 @@ export const performStartOfCombatMinionsForPlayer = (
 		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
 		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
+	} else if (attacker.cardId === CardIds.InterrogatorWhitemane || attacker.cardId === CardIds.InterrogatorWhitemaneBattlegrounds) {
+		if (defendingBoard.length > 0) {
+			const attackerIndex = attackingBoard.indexOf(attacker);
+			const defenderPosition = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
+			if (Math.round(defenderPosition) === defenderPosition) {
+				castImpure(defendingBoard[defenderPosition], attacker, attackingBoard, spectator);
+			} else {
+				castImpure(defendingBoard[defenderPosition - 0.5], attacker, attackingBoard, spectator);
+				castImpure(defendingBoard[defenderPosition + 0.5], attacker, attackingBoard, spectator);
+			}
+		}
 	} else if (attacker.cardId === CardIds.MantidQueen || attacker.cardId === CardIds.MantidQueenBattlegrounds) {
 		const multiplier = attacker.cardId === CardIds.MantidQueenBattlegrounds ? 2 : 1;
 		const allRaces = attackingBoardBefore
@@ -885,6 +896,17 @@ export const performStartOfCombatMinionsForPlayer = (
 	}
 	removeAuras(attackingBoard, cardsData);
 	removeAuras(defendingBoard, cardsData);
+};
+
+const castImpure = (entity: BoardEntity, source: BoardEntity, board: BoardEntity[], spectator: Spectator) => {
+	if (!entity) {
+		return;
+	}
+	const multiplier = source.cardId === CardIds.InterrogatorWhitemaneBattlegrounds ? 3 : 2;
+	entity.taunt = true;
+	entity.damageMultiplier = entity.damageMultiplier ?? 1;
+	entity.damageMultiplier *= multiplier;
+	spectator.registerPowerTarget(source, entity, board);
 };
 
 const getRandomMantidQueenBuffType = (entity: BoardEntity): 'stats' | 'divine-shield' | 'windfury' | 'taunt' => {

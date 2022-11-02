@@ -286,7 +286,7 @@ export const spawnEntitiesFromDeathrattle = (
 					),
 				);
 				break;
-			case CardIds.IckyImpBattlegrounds:
+			case CardIds.IckyImp_BG21_029_G:
 				spawnedEntities.push(
 					...spawnEntities(
 						CardIds.ImpGangBoss_ImpTokenBattlegrounds,

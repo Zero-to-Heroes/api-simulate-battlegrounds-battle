@@ -34,6 +34,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.RedWhelpBattlegrounds,
 	CardIds.AmberGuardian,
 	CardIds.AmberGuardianBattlegrounds,
+	CardIds.InterrogatorWhitemane,
+	CardIds.InterrogatorWhitemaneBattlegrounds,
 ];
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
@@ -127,14 +129,14 @@ export class CardsData {
 			case CardIds.BuddingGreenthumb_BG21_030_G:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
-			case CardIds.WitchwingNestmatron:
-			case CardIds.WitchwingNestmatronBattlegrounds:
+			case CardIds.WitchwingNestmatron_BG21_038:
+			case CardIds.WitchwingNestmatron_BG21_038_G:
 			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 3;
 			case CardIds.ImpatientDoomsayer:
 			case CardIds.ImpatientDoomsayerBattlegrounds:
-			case CardIds.Sisefin:
-			case CardIds.SisefinBattlegrounds:
+			case CardIds.Sisefin_BG21_009:
+			case CardIds.Sisefin_BG21_009_G:
 			case CardIds.TonyTwoTusk:
 			case CardIds.TonyTwoTuskBattlegrounds:
 			case CardIds.Onyxia_Broodmother:

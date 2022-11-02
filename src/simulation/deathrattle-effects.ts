@@ -5,6 +5,7 @@ import { BoardEntity } from '../board-entity';
 import { AURA_ORIGINS, CardsData } from '../cards/cards-data';
 import { groupByFunction, pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import {
+	addCardsInHand,
 	addStatsToBoard,
 	afterStatsUpdate,
 	grantAllDivineShield,
@@ -240,7 +241,7 @@ export const handleDeathrattleEffects = (
 				);
 			}
 			break;
-		case CardIds.UnstableGhoul:
+		case CardIds.UnstableGhoul_BG_FP1_024:
 		case CardIds.UnstableGhoulBattlegrounds:
 			const damage = deadEntity.cardId === CardIds.UnstableGhoulBattlegrounds ? 2 : 1;
 			for (let i = 0; i < multiplier; i++) {
@@ -562,7 +563,7 @@ export const applyMinionDeathEffect = (
 	}
 
 	if (deadEntity.taunt) {
-		// applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndex, allCards);
+		applyBristlemaneScrapsmithEffect(boardWithDeadEntity, boardWithDeadEntityHero, allCards, spectator);
 	}
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
@@ -833,6 +834,26 @@ const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsServ
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 2, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
+		}
+	}
+};
+
+const applyBristlemaneScrapsmithEffect = (
+	board: BoardEntity[],
+	boardPlayerEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].cardId === CardIds.BristlemaneScrapsmith || board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds) {
+			addCardsInHand(
+				boardPlayerEntity,
+				board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds ? 2 : 1,
+				board,
+				allCards,
+				spectator,
+			);
 			spectator.registerPowerTarget(board[i], board[i], board);
 		}
 	}

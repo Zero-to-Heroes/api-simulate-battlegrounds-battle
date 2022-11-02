@@ -180,10 +180,10 @@ const handleAvenge = (
 		case CardIds.PashmarTheVengefulBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
-		case CardIds.WitchwingNestmatron:
+		case CardIds.WitchwingNestmatron_BG21_038:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
-		case CardIds.WitchwingNestmatronBattlegrounds:
+		case CardIds.WitchwingNestmatron_BG21_038_G:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.Thorncaller:
@@ -192,7 +192,7 @@ const handleAvenge = (
 		case CardIds.ThorncallerBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator, CardIds.BloodGem);
 			break;
-		case CardIds.Sisefin:
+		case CardIds.Sisefin_BG21_009:
 			const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
 			const murloc = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
 			if (murloc) {
@@ -200,7 +200,7 @@ const handleAvenge = (
 				spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
 			}
 			break;
-		case CardIds.SisefinBattlegrounds:
+		case CardIds.Sisefin_BG21_009_G:
 			for (let i = 0; i < 2; i++) {
 				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
 				const murloc2 = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
