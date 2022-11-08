@@ -32,6 +32,7 @@ export const spawnEntities = (
 	limitSpawns: boolean,
 	spawnReborn = false,
 	useKhadgar = true,
+	boardEntityToSpawn: BoardEntity = null,
 ): readonly BoardEntity[] => {
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', stringifySimple(boardToSpawnInto, allCards), new Error().stack);
@@ -47,17 +48,19 @@ export const spawnEntities = (
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
 	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
-		const newMinion = buildSingleBoardEntity(
-			cardId,
-			boardToSpawnIntoHero,
-			boardToSpawnInto,
-			allCards,
-			friendly,
-			sharedState.currentEntityId++,
-			spawnReborn,
-			cardsData,
-			spectator,
-		);
+		const newMinion = !!boardEntityToSpawn
+			? { ...boardEntityToSpawn, entityId: sharedState.currentEntityId++ }
+			: buildSingleBoardEntity(
+					cardId,
+					boardToSpawnIntoHero,
+					boardToSpawnInto,
+					allCards,
+					friendly,
+					sharedState.currentEntityId++,
+					spawnReborn,
+					cardsData,
+					spectator,
+			  );
 
 		if (hasCorrectTribe(newMinion, Race.BEAST, allCards)) {
 			const packLeaders = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.PackLeader);

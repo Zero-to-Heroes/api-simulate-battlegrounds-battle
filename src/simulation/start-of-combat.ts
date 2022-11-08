@@ -6,7 +6,14 @@ import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import { afterStatsUpdate, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth, stringifySimple } from '../utils';
-import { dealDamageToEnemy, dealDamageToRandomEnemy, getNeighbours, processMinionDeath, simulateAttack } from './attack';
+import {
+	dealDamageToEnemy,
+	dealDamageToRandomEnemy,
+	getNeighbours,
+	performEntitySpawns,
+	processMinionDeath,
+	simulateAttack,
+} from './attack';
 import { applyAuras, removeAuras } from './auras';
 import {
 	applyEarthInvocationEnchantment,
@@ -14,6 +21,7 @@ import {
 	applyLightningInvocationEnchantment,
 	applyWaterInvocationEnchantment,
 } from './deathrattle-effects';
+import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -359,12 +367,38 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					const copy: BoardEntity = {
 						...highestHealthMinion,
 						lastAffectedByEntity: null,
-						entityId: sharedState.currentEntityId++,
 					};
-					const index = playerBoard.indexOf(highestHealthMinion);
-					// Insert the copy at the right of the minion
-					playerBoard.splice(index + 1, 0, copy);
-					// playerBoard.push(copy);
+					const newMinions = spawnEntities(
+						copy.cardId,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						highestHealthMinion.friendly,
+						true,
+						false,
+						true,
+						copy,
+					);
+					const indexFromRight = playerBoard.length - (playerBoard.indexOf(highestHealthMinion) + 1);
+					performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						highestHealthMinion,
+						indexFromRight,
+						opponentBoard,
+						opponentEntity,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+					);
 					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
 				}
 				break;
