@@ -409,8 +409,26 @@ export const handleStartOfCombatHeroPowers = (
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
 	const isSmokingGunPresentForAttacker = playerEntity.questRewards?.includes(CardIds.TheSmokingGun);
 	const isSmokingGunPresentForDefender = opponentEntity.questRewards?.includes(CardIds.TheSmokingGun);
-	applyAuras(playerBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards, sharedState);
-	applyAuras(opponentBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards, sharedState);
+	const isVolatileVenomPresentForAttacker = playerEntity.questRewards?.includes(CardIds.VolatileVenom);
+	const isVolatileVenomPresentForDefender = opponentEntity.questRewards?.includes(CardIds.VolatileVenom);
+	applyAuras(
+		playerBoard,
+		numberOfDeathwingPresents,
+		isSmokingGunPresentForAttacker,
+		isVolatileVenomPresentForAttacker,
+		cardsData,
+		allCards,
+		sharedState,
+	);
+	applyAuras(
+		opponentBoard,
+		numberOfDeathwingPresents,
+		isSmokingGunPresentForDefender,
+		isVolatileVenomPresentForDefender,
+		cardsData,
+		allCards,
+		sharedState,
+	);
 
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
@@ -734,8 +752,26 @@ export const performStartOfCombatMinionsForPlayer = (
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
 	const isSmokingGunPresentForAttacker = attackingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
 	const isSmokingGunPresentForDefender = defendingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
-	applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, cardsData, allCards, sharedState);
-	applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, cardsData, allCards, sharedState);
+	const isVolatileVenomPresentForAttacker = attackingBoardHero.questRewards?.includes(CardIds.VolatileVenom);
+	const isVolatileVenomPresentForDefender = defendingBoardHero.questRewards?.includes(CardIds.VolatileVenom);
+	applyAuras(
+		attackingBoard,
+		numberOfDeathwingPresents,
+		isSmokingGunPresentForAttacker,
+		isVolatileVenomPresentForAttacker,
+		cardsData,
+		allCards,
+		sharedState,
+	);
+	applyAuras(
+		defendingBoard,
+		numberOfDeathwingPresents,
+		isSmokingGunPresentForDefender,
+		isVolatileVenomPresentForDefender,
+		cardsData,
+		allCards,
+		sharedState,
+	);
 
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp) {

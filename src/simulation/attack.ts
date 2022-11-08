@@ -51,6 +51,8 @@ export const simulateAttack = (
 		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
 	const isSmokingGunPresentForAttacker = attackingBoardHero.questRewards.includes(CardIds.TheSmokingGun);
 	const isSmokingGunPresentForDefender = defendingBoardHero.questRewards.includes(CardIds.TheSmokingGun);
+	const isVolatileVenomPresentForAttacker = attackingBoardHero.questRewards.includes(CardIds.VolatileVenom);
+	const isVolatileVenomPresentForDefender = defendingBoardHero.questRewards.includes(CardIds.VolatileVenom);
 
 	const attackingEntity =
 		forceAttackingEntityIndex != null
@@ -68,8 +70,24 @@ export const simulateAttack = (
 			}
 			// The auras need to be handled on a per-attack basis, as otherwise minions that spawn
 			// in-between attacks don't get aura buffs
-			applyAuras(attackingBoard, numberOfDeathwingPresents, isSmokingGunPresentForAttacker, spawns, allCards, sharedState);
-			applyAuras(defendingBoard, numberOfDeathwingPresents, isSmokingGunPresentForDefender, spawns, allCards, sharedState);
+			applyAuras(
+				attackingBoard,
+				numberOfDeathwingPresents,
+				isSmokingGunPresentForAttacker,
+				isVolatileVenomPresentForAttacker,
+				spawns,
+				allCards,
+				sharedState,
+			);
+			applyAuras(
+				defendingBoard,
+				numberOfDeathwingPresents,
+				isSmokingGunPresentForDefender,
+				isVolatileVenomPresentForDefender,
+				spawns,
+				allCards,
+				sharedState,
+			);
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
@@ -128,9 +146,6 @@ export const simulateAttack = (
 			removeAuras(defendingBoard, spawns);
 		}
 		attackingEntity.attacking = false;
-		if (attackingEntity.enchantments.some((e) => e.cardId === CardIds.VolatileVenom_VolatileEnchantment)) {
-			attackingEntity.definitelyDead = true;
-		}
 	}
 	// If entities that were before the attacker died, we need to update the attacker index
 	return attackingEntityIndex;
@@ -390,6 +405,9 @@ const performAttack = (
 	}
 
 	attackingEntity.attackImmediately = false;
+	if (attackingEntity.enchantments.some((e) => e.cardId === CardIds.VolatileVenom_VolatileEnchantment)) {
+		attackingEntity.definitelyDead = true;
+	}
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, cardsData, sharedState, spectator);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 };
@@ -707,7 +725,7 @@ export const bumpEntities = (
 		return 0;
 		// return entity;
 	}
-	entity.health = entity.health - bumpInto.attack;
+	entity.health = entity.health - (bumpInto.damageMultiplier || 1) * bumpInto.attack;
 
 	if (entity.cardId === CardIds.Bubblette_BG_TID_713 && bumpInto.attack === 1) {
 		entity.definitelyDead = true;
