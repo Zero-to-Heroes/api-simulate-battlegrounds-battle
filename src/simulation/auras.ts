@@ -213,8 +213,8 @@ const applyVolatileVenomAura = (board: BoardEntity[], enchantmentId: string, sha
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId)) {
-			entity.attack += 8;
-			entity.health += 8;
+			entity.attack += 7;
+			entity.health += 7;
 			entity.enchantments.push({ cardId: enchantmentId, originEntityId: undefined, timing: sharedState.currentEntityId++ });
 		}
 	}
@@ -298,8 +298,8 @@ const removeSmokingGunAura = (entity: BoardEntity, enchantmentId: string): void 
 
 const removeVolatileVenomAura = (entity: BoardEntity, enchantmentId: string): void => {
 	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
-	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 8);
-	entity.health = Math.max(1, entity.health - numberOfBuffs * 8);
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * 7);
+	entity.health = Math.max(1, entity.health - numberOfBuffs * 7);
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
