@@ -382,7 +382,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						highestHealthMinion.friendly,
 						true,
 						false,
-						true,
+						false,
 						copy,
 					);
 					const indexFromRight = playerBoard.length - (playerBoard.indexOf(highestHealthMinion) + 1);
