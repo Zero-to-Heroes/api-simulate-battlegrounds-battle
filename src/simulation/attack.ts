@@ -160,9 +160,9 @@ const applyAfterAttackEffects = (
 ): void => {
 	if (attackingEntity.cardId === CardIds.Bonker || attackingEntity.cardId === CardIds.BonkerBattlegrounds) {
 		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator, CardIds.BloodGem);
-	} else if (attackingEntity.cardId === CardIds.Yrel || attackingEntity.cardId === CardIds.YrelBattlegrounds) {
+	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
 		applyEffectToMinionTypes(attackingBoard, attackingBoardHero, allCards, (entity: BoardEntity) => {
-			const modifier = attackingEntity.cardId === CardIds.YrelBattlegrounds ? 2 : 1;
+			const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 			modifyAttack(entity, modifier * 1, attackingBoard, allCards);
 			modifyHealth(entity, modifier * 2, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
@@ -675,7 +675,7 @@ export const bumpEntities = (
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
 		for (let i = 0; i < entityBoard.length; i++) {
-			if (entityBoard[i].cardId === CardIds.BolvarFireblood) {
+			if (entityBoard[i].cardId === CardIds.BolvarFireblood_ICC_858) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
@@ -698,9 +698,9 @@ export const bumpEntities = (
 				(entityBoard[i].cardId === CardIds.HolyMecherel || entityBoard[i].cardId === CardIds.HolyMecherelBattlegrounds)
 			) {
 				entityBoard[i].divineShield = true;
-			} else if (entityBoard[i].cardId === CardIds.Gemsplitter) {
+			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
 				addCardsInHand(entityBoardHero, 1, entityBoard, allCards, spectator, CardIds.BloodGem);
-			} else if (entityBoard[i].cardId === CardIds.GemsplitterBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
 				addCardsInHand(entityBoardHero, 2, entityBoard, allCards, spectator, CardIds.BloodGem);
 			}
 

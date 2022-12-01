@@ -152,7 +152,9 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	if (
 		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
 		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G
+		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G ||
+		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D ||
+		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D_G
 	) {
 		const mishmashes = friendlyBoard.filter(
 			(e) =>
@@ -179,7 +181,9 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 	if (
 		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
 		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G
+		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G ||
+		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D ||
+		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D_G
 	) {
 		const mishmashes = friendlyBoard.filter(
 			(e) =>

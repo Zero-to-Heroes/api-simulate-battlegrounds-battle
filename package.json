@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.215",
+	"version": "1.1.216",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
@@ -9,7 +9,7 @@
 		"singleTest": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand -t",
 		"singleFile": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand",
 		"singleFileDev": "node --max_old_space_size=6000 --inspect --expose-gc ./node_modules/jest/bin/jest.js --runInBand",
-		"build": "npm audit fix && webpack --env.buildEnv=prod --color",
+		"build": "webpack --env.buildEnv=prod --color",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
 		"clean": "rm -rf -v dist/*",
@@ -28,7 +28,7 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
-		"@firestone-hs/reference-data": "^1.0.31",
+		"@firestone-hs/reference-data": "^1.0.40",
 		"cross-fetch": "^3.1.5",
 		"lodash.clonedeep": "^4.5.0",
 		"node-fetch": "^2.6.7"
