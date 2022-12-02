@@ -6,26 +6,9 @@
 			"tavernTier": 6,
 			"heroPowerId": null,
 			"heroPowerUsed": true,
-			"heroPowerInfo": 0,
-			"questRewards": ["BG24_Reward_111"]
+			"heroPowerInfo": 0
 		},
-		"board": [
-			{ "entityId": 7, "cardId": "TB_BaconShop_HP_033t", "attack": 2, "health": 20, "enchantments": [] },
-			{
-				"entityId": 8,
-				"cardId": "BG_DAL_575",
-				"attack": 2,
-				"health": 2,
-				"divineShield": false,
-				"poisonous": false,
-				"taunt": false,
-				"reborn": false,
-				"stealth": false,
-				"windfury": false,
-				"megaWindfury": false,
-				"enchantments": []
-			}
-		]
+		"board": [{ "entityId": 1, "cardId": "TB_BaconShop_HP_033t", "attack": 2, "health": 2, "enchantments": [] }]
 	},
 	"opponentBoard": {
 		"player": {
@@ -36,7 +19,42 @@
 			"heroPowerUsed": true,
 			"heroPowerInfo": 0
 		},
-		"board": [{ "entityId": 10, "cardId": "TB_BaconShop_HP_033t", "attack": 4, "health": 30, "enchantments": [] }]
+		"board": [
+			{
+				"entityId": 3,
+				"cardId": "BG21_027",
+				"attack": 1,
+				"health": 4,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"stealth": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			},
+			{
+				"entityId": 2,
+				"cardId": "BG24_704",
+				"attack": 8,
+				"health": 5,
+				"divineShield": false,
+				"friendly": true,
+				"megaWindfury": false,
+				"windfury": false,
+				"stealth": false,
+				"poisonous": false,
+				"reborn": false,
+				"taunt": false,
+				"enchantments": [],
+				"definitelyDead": false,
+				"immuneWhenAttackCharges": 0
+			}
+		]
 	},
 	"options": { "numberOfSimulations": 15000, "maxAcceptableDuration": 6000 },
 	"gameState": { "currentTurn": 0 }

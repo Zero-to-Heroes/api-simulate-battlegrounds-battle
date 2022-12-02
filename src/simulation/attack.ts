@@ -725,7 +725,7 @@ export const bumpEntities = (
 		return 0;
 		// return entity;
 	}
-	entity.health = entity.health - (bumpInto.damageMultiplier || 1) * bumpInto.attack;
+	entity.health = entity.health - (entity.damageMultiplier || 1) * bumpInto.attack;
 
 	if (entity.cardId === CardIds.Bubblette_BG_TID_713 && bumpInto.attack === 1) {
 		entity.definitelyDead = true;
@@ -742,7 +742,7 @@ export const bumpEntities = (
 	}
 	// FIXME: This will likely be incorrect in terms of timings, e.g. if the entity ends up
 	// surviving following a buff like Spawn.
-	spectator.registerDamageDealt(bumpInto, entity, bumpInto.attack, entityBoard);
+	spectator.registerDamageDealt(bumpInto, entity, (entity.damageMultiplier || 1) * bumpInto.attack, entityBoard);
 	entity.lastAffectedByEntity = bumpInto;
 	if (!entity.frenzyApplied && entity.health > 0 && !entity.definitelyDead) {
 		applyFrenzy(entity, entityBoard, entityBoardHero, allCards, cardsData, sharedState, spectator);
