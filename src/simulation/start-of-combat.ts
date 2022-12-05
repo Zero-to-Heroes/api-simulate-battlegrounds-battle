@@ -5,7 +5,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
-import { afterStatsUpdate, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth, stringifySimple } from '../utils';
+import { afterStatsUpdate, hasCorrectTribe, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth, stringifySimple } from '../utils';
 import {
 	dealDamageToEnemy,
 	dealDamageToRandomEnemy,
@@ -896,9 +896,10 @@ export const performStartOfCombatMinionsForPlayer = (
 		});
 	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
-		const otherDragon =
-			pickRandom(attackingBoard.filter((e) => e.entityId !== attacker.entityId).filter((e) => !e.divineShield)) ??
-			pickRandom(attackingBoard.filter((e) => e.entityId !== attacker.entityId));
+		const otherDragons = attackingBoard
+			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
+			.filter((e) => e.entityId !== attacker.entityId);
+		const otherDragon = pickRandom(otherDragons.filter((e) => !e.divineShield)) ?? pickRandom(otherDragons);
 		if (otherDragon) {
 			otherDragon.divineShield = true;
 			modifyAttack(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
