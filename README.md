@@ -33,7 +33,7 @@ Copy it, and open a new tab in your navigator at the following URL: `file:///<pa
 ```
 npm run build && npm run package && npm run deploy
 
-rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /e/Source/zerotoheroes/firestone/core/node_modules/\@firestone-hs/simulate-bgs-battle/
+rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /e/Source/zerotoheroes/firestone/node_modules/\@firestone-hs/simulate-bgs-battle/
 rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /e/Source/zerotoheroes/coliseum/node_modules/\@firestone-hs/simulate-bgs-battle/
 rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /e/Source/zerotoheroes/firestone-libs/node_modules/\@firestone-hs/simulate-bgs-battle/
 rm -rf dist && tsc && rm -rf dist/node_modules && npm publish

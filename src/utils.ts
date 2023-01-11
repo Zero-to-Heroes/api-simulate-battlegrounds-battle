@@ -492,8 +492,16 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
 	return entity
-		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}/ds=${
-				entity.divineShield
-		  }/taunt=${entity.taunt}/stealth=${entity.stealth}/ench=${JSON.stringify(entity.enchantments)}`
+		? `${entity.cardId}/${entity.entityId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${
+				entity.health
+		  }/ds=${entity.divineShield}/taunt=${entity.taunt}/stealth=${entity.stealth}}`
 		: null;
+};
+
+export const isFish = (cardId: string): boolean => {
+	return cardId.startsWith(CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) || cardId.startsWith(CardIds.FishOfNzothBattlegrounds);
+};
+
+export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {
+	return !!allCards.getCard(cardId).battlegroundsNormalDbfId;
 };

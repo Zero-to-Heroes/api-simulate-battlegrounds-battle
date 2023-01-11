@@ -166,6 +166,6 @@ export class CardsData {
 
 	private isValidTribe(validTribes: readonly Race[], race: string): boolean {
 		const raceEnum: Race = getRaceEnum(race);
-		return raceEnum === Race.ALL || !validTribes || validTribes.length === 0 || validTribes.includes(raceEnum);
+		return raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum);
 	}
 }

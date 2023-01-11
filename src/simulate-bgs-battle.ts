@@ -85,9 +85,8 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		battleInput.opponentBoard.player.heroPowerId,
 	);
 	!battleInput.options?.skipInfoLogs && console.time('simulation');
+	const outcomes = {};
 	for (let i = 0; i < numberOfSimulations; i++) {
-		// global.gc();
-		// continue;
 		const simulator = new Simulator(cards, cardsData);
 		const input: BgsBattleInfo = JSON.parse(inputStr);
 		const battleResult = simulator.simulateSingleBattle(
@@ -115,6 +114,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		} else if (battleResult.result === 'lost') {
 			simulationResult.lost++;
 			simulationResult.damageLost += battleResult.damageDealt;
+			outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
 			if (battleInput.playerBoard.player.hpLeft && battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft) {
 				simulationResult.lostLethal++;
 			}
@@ -155,6 +155,7 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	spectator.prune();
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
 	// spectator.reset();
+	console.debug(outcomes);
 	return simulationResult;
 };
 

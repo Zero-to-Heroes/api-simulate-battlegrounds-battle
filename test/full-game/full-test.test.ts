@@ -28,11 +28,11 @@ describe('Full tests for performance and accuracy', () => {
 
 		const sample = simulationResult.outcomeSamples.won[0];
 		const base64 = encode(JSON.stringify(sample));
-		// console.log('encoded', base64);
-		// console.log('result', {
-		// 	...simulationResult,
-		// 	outcomeSamples: undefined,
-		// });
+		console.log('encoded', base64);
+		console.log('result', {
+			...simulationResult,
+			outcomeSamples: undefined,
+		});
 	});
 });
 
