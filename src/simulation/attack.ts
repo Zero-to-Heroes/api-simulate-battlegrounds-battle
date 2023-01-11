@@ -95,11 +95,11 @@ export const simulateAttack = (
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				// Can happen with a single defender that has stealth
 				if (defendingEntity) {
-					console.log(
-						'AATTTTTTTTTTTAAAAAAAAAAAAAAAAAACK by',
-						stringifySimpleCard(attackingEntity, allCards),
-						stringifySimpleCard(defendingEntity, allCards),
-					);
+					// console.log(
+					// 	'AATTTTTTTTTTTAAAAAAAAAAAAAAAAAACK by',
+					// 	stringifySimpleCard(attackingEntity, allCards),
+					// 	stringifySimpleCard(defendingEntity, allCards),
+					// );
 					spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
 					applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards, spectator);
 					performAttack(
@@ -898,7 +898,7 @@ export const processMinionDeath = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	console.debug('processing minions death', stringifySimple(board1, allCards), stringifySimple(board2, allCards));
+	// console.debug('processing minions death', stringifySimple(board1, allCards), stringifySimple(board2, allCards));
 	const [deadMinionIndexesFromRights1, deadEntities1] = makeMinionsDie(board1, allCards);
 	const [deadMinionIndexesFromRights2, deadEntities2] = makeMinionsDie(board2, allCards);
 	spectator.registerDeadEntities(
@@ -1029,19 +1029,6 @@ export const processMinionDeath = (
 	}
 
 	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
-	console.debug('will try to remember dr', stringifySimple(deadEntities1, allCards), stringifySimple(deadEntities2, allCards));
-	console.debug(
-		'fish that will remember',
-		stringifySimple(
-			board1.filter((entity) => isFish(entity.cardId)),
-			allCards,
-		),
-		stringifySimple(
-			board2.filter((entity) => isFish(entity.cardId)),
-			allCards,
-		),
-	);
-	console.debug('full boards', stringifySimple(board1, allCards), stringifySimple(board2, allCards));
 	board1
 		.filter((entity) => isFish(entity.cardId))
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData, allCards, sharedState));

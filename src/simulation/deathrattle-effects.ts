@@ -20,8 +20,6 @@ import {
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
-	stringifySimple,
-	stringifySimpleCard,
 } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy } from './attack';
 import { removeAurasAfterAuraSourceDeath } from './auras';
@@ -914,7 +912,6 @@ export const rememberDeathrattles = (
 	allCards: AllCardsService,
 	sharedState: SharedState,
 ): void => {
-	console.log('will try to remember DR for', stringifySimpleCard(fish, allCards), 'with dead entities', stringifySimple(deadEntities));
 	const validDeathrattles = deadEntities
 		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId) || isFish(entity.cardId))
 		.map((entity) => ({ cardId: entity.cardId, repeats: 1, timing: sharedState.currentEntityId++ }));
@@ -946,15 +943,15 @@ export const rememberDeathrattles = (
 		deadEntities.filter((e) => !!e.rememberedDeathrattles?.length).flatMap((e) => e.rememberedDeathrattles) ?? [];
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments, ...deadEntityRememberedDeathrattles];
 	// Order is important - the DR are triggered in the ordered the minions have died
-	console.log(
-		'remembering deathrattle',
-		'\n',
-		stringifySimpleCard(fish, allCards),
-		'\n',
-		stringifySimple(deadEntities, allCards),
-		'\n',
-		fish.rememberedDeathrattles,
-	);
+	// console.log(
+	// 	'remembering deathrattle',
+	// 	'\n',
+	// 	stringifySimpleCard(fish, allCards),
+	// 	'\n',
+	// 	stringifySimple(deadEntities, allCards),
+	// 	'\n',
+	// 	fish.rememberedDeathrattles,
+	// );
 	if (isGolden(fish.cardId, allCards)) {
 		// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
 		const doubleDr = newDeathrattles.reduce((res, current) => res.concat([current, current]), []);
@@ -962,7 +959,7 @@ export const rememberDeathrattles = (
 	} else {
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 	}
-	console.log('remembering deathrattle after', '\n', fish.rememberedDeathrattles);
+	// console.log('remembering deathrattle after', '\n', fish.rememberedDeathrattles);
 };
 
 const removeOldMurkEyeAttack = (boardWithDeadEntity: BoardEntity[], allCards: AllCardsService) => {
