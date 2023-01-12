@@ -154,8 +154,6 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
 	spectator.prune();
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
-	// spectator.reset();
-	console.debug(outcomes);
 	return simulationResult;
 };
 
