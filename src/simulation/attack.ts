@@ -7,8 +7,9 @@ import { pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
 import {
 	addCardsInHand,
+	addStatsToBoard,
 	afterStatsUpdate,
-	applyEffectToMinionTypes,
+	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	hasMechanic,
 	isCorrectTribe,
@@ -101,7 +102,7 @@ export const simulateAttack = (
 					// 	stringifySimpleCard(defendingEntity, allCards),
 					// );
 					spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
-					applyOnBeingAttackedBuffs(defendingEntity, defendingBoard, allCards, spectator);
+					applyOnBeingAttackedBuffs(attackingEntity, defendingEntity, defendingBoard, allCards, spectator);
 					performAttack(
 						attackingEntity,
 						defendingEntity,
@@ -167,13 +168,7 @@ const applyAfterAttackEffects = (
 	if (attackingEntity.cardId === CardIds.Bonker || attackingEntity.cardId === CardIds.BonkerBattlegrounds) {
 		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator, CardIds.BloodGem);
 	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
-		applyEffectToMinionTypes(attackingBoard, attackingBoardHero, allCards, (entity: BoardEntity) => {
-			const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
-			modifyAttack(entity, modifier * 1, attackingBoard, allCards);
-			modifyHealth(entity, modifier * 2, attackingBoard, allCards);
-			afterStatsUpdate(entity, attackingBoard, allCards);
-			spectator.registerPowerTarget(attackingEntity, entity, attackingBoard);
-		});
+		grantStatsToMinionsOfEachType(attackingEntity, attackingBoard, modifier * 1, modifier * 2, allCards, spectator);
 	}
 	attackingEntity.stealth = false;
 };
@@ -917,6 +912,11 @@ export const processMinionDeath = (
 
 	sharedState.deaths.push(...deadEntities1);
 	sharedState.deaths.push(...deadEntities2);
+	sharedState.eternalKnightsDeadThisGame.push(
+		[...deadEntities1, ...deadEntities2].filter(
+			(e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds,
+		),
+	);
 
 	// First process all DRs, then process the reborn
 	if (Math.random() > 0.5) {
@@ -1243,7 +1243,7 @@ export const applyOnAttackBuffs = (
 	}
 
 	// Ripsnarl Captain
-	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
+	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
 		const ripsnarls = attackingBoard
 			.filter((e) => e.cardId === CardIds.RipsnarlCaptain)
 			.filter((e) => e.entityId !== attacker.entityId);
@@ -1263,7 +1263,7 @@ export const applyOnAttackBuffs = (
 	}
 
 	// Dread Admiral Eliza
-	if (isCorrectTribe(allCards.getCard(attacker.cardId).race, Race.PIRATE)) {
+	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
 		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza);
 		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralElizaBattlegrounds);
 
@@ -1284,7 +1284,7 @@ export const applyOnAttackBuffs = (
 	}
 	if (attacker.cardId === CardIds.VanessaVancleef || attacker.cardId === CardIds.VanessaVancleefBattlegrounds) {
 		attackingBoard
-			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).race, Race.PIRATE))
+			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {
 				modifyAttack(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2, attackingBoard, allCards);
 				modifyHealth(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 2 : 1, attackingBoard, allCards);
@@ -1294,6 +1294,7 @@ export const applyOnAttackBuffs = (
 };
 
 export const applyOnBeingAttackedBuffs = (
+	attackerEntity: BoardEntity,
 	attackedEntity: BoardEntity,
 	defendingBoard: BoardEntity[],
 	allCards: AllCardsService,
@@ -1343,6 +1344,10 @@ export const applyOnBeingAttackedBuffs = (
 	if (attackedEntity.cardId === CardIds.DozyWhelp || attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds) {
 		modifyAttack(attackedEntity, attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds ? 2 : 1, defendingBoard, allCards);
 		spectator.registerPowerTarget(attackedEntity, attackedEntity, defendingBoard);
+	}
+	if (attackerEntity.cardId === SindoreiStraightShot || attackerEntity.cardId === SindoreiStraightShotBattlegrounds) {
+		attackedEntity.taunt = false;
+		attackedEntity.reborn = false;
 	}
 };
 
@@ -1534,6 +1539,8 @@ const buildBoardAfterDeathrattleSpawns = (
 		sharedState,
 		spectator,
 	);
+
+	gregre;
 };
 
 const buildBoardAfterRebornSpawns = (
@@ -1557,6 +1564,11 @@ const buildBoardAfterRebornSpawns = (
 	if (!deadEntity.cardId) {
 		console.error('missing card id for dead entity', stringifySimpleCard(deadEntity, allCards), deadEntity);
 	}
+	let entityToSpawn: BoardEntity = null;
+	// TODO: test
+	if (deadEntity.cardId === CardIds.SinrunnBlanchy || deadEntity.cardId === CardIds.SinrunnerBlanchyBattlegrounds) {
+		entityToSpawn = { ...deadEntity, health: deadEntity.maxHealth };
+	}
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndexFromRight >= 0
 			? spawnEntities(
@@ -1573,6 +1585,8 @@ const buildBoardAfterRebornSpawns = (
 					deadEntity.friendly,
 					false,
 					true,
+					true,
+					entityToSpawn,
 			  )
 			: [];
 	performEntitySpawns(
@@ -1588,6 +1602,24 @@ const buildBoardAfterRebornSpawns = (
 		sharedState,
 		spectator,
 	);
+	const numberOfTriggersForDeathwhisper = 1;
+	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
+		boardWithKilledMinion
+			.filter((e) => e.cardId === CardIds.SisterDeathwhisper || e.cardId === CardIds.SisterDeathwhisperBattlegrouds)
+			.forEach((e) => {
+				const multiplier = e.cardId === CardIds.SisterDeathwhisperBattlegrouds ? 2 : 1;
+				addStatsToBoard(e, boardWithKilledMinion, multiplier * 1, multiplier * 3, allCards, spectator, Race[Race.UNDEAD]);
+			});
+		boardWithKilledMinion
+			.filter((e) => e.cardId === CardIds.JellyBelly || e.cardId === CardIds.JellyBellyBattlegrounds)
+			.forEach((e) => {
+				const multiplier = e.cardId === CardIds.JellyBellyBattlegrounds ? 2 : 1;
+				modifyAttack(e, multiplier * 3, boardWithKilledMinion, allCards);
+				modifyHealth(e, multiplier * 3, boardWithKilledMinion, allCards);
+				afterStatsUpdate(e, boardWithKilledMinion, allCards);
+				spectator.registerPowerTarget(e, e, boardWithKilledMinion);
+			});
+	}
 };
 
 export const performEntitySpawns = (
@@ -1638,6 +1670,7 @@ export const performEntitySpawns = (
 
 	// Minion has already been removed from the board in the previous step
 	handleSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards, spectator);
+	handleAfterSpawnEffects(boardWithKilledMinion, spawnedEntities, allCards, spectator);
 	spectator.registerMinionsSpawn(spawnSourceEntity, boardWithKilledMinion, spawnedEntities);
 	return spawnedEntities;
 };

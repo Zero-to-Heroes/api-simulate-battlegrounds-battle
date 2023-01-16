@@ -9,6 +9,7 @@ import {
 	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
+	grantStatsToMinionsOfEachType,
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
@@ -270,6 +271,19 @@ const handleAvenge = (
 					makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
 				}
 			}
+			break;
+		case CardIds.GhoulOfTheFeast:
+		case CardIds.GhoulOfTheFeastBattlegrounds:
+			const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeastBattlegrounds ? 2 : 1;
+			grantStatsToMinionsOfEachType(avenger, boardWithDeadEntity, ghoulMultiplier * 3, 0, allCards, spectator);
+			break;
+		case CardIds.HungeringAbomination:
+		case CardIds.HungeringAbominationBattlegrounds:
+			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbominationBattlegrounds ? 2 : 1;
+			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
+			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
+			afterStatsUpdate(avenger, boardWithDeadEntity, allCards);
+			spectator.registerPowerTarget(avenger, avenger, boardWithDeadEntity);
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;

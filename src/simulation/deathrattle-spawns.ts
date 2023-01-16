@@ -1,4 +1,5 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { computeDeathrattleMultiplier } from 'src/simulation/deathrattle-effects';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, WHELP_CARD_IDS } from '../cards/cards-data';
@@ -48,19 +49,18 @@ export const spawnEntities = (
 		: quantity * spawnMultiplier * spawnMultiplierGolden;
 	const result: BoardEntity[] = [];
 	for (let i = 0; i < minionsToSpawn; i++) {
-		const newMinion = !!boardEntityToSpawn
-			? { ...boardEntityToSpawn, entityId: sharedState.currentEntityId++ }
-			: buildSingleBoardEntity(
-					cardId,
-					boardToSpawnIntoHero,
-					boardToSpawnInto,
-					allCards,
-					friendly,
-					sharedState.currentEntityId++,
-					spawnReborn,
-					cardsData,
-					spectator,
-			  );
+		const newMinion = buildSingleBoardEntity(
+			cardId,
+			boardToSpawnIntoHero,
+			boardToSpawnInto,
+			allCards,
+			friendly,
+			sharedState.currentEntityId++,
+			spawnReborn,
+			cardsData,
+			sharedState,
+			boardEntityToSpawn,
+		);
 
 		if (hasCorrectTribe(newMinion, Race.BEAST, allCards)) {
 			const packLeaders = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.PackLeader);
@@ -99,7 +99,7 @@ export const spawnEntities = (
 		}
 		result.push(newMinion);
 
-		if (isCorrectTribe(allCards.getCard(newMinion.cardId).race, Race.DEMON)) {
+		if (isCorrectTribe(allCards.getCard(newMinion.cardId).races, Race.DEMON)) {
 			const bigfernals = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Bigfernal);
 			const goldenBigfernals = boardToSpawnInto.filter((entity) => entity.cardId === CardIds.BigfernalBattlegrounds);
 			bigfernals.forEach((entity) => {
@@ -167,13 +167,7 @@ export const spawnEntitiesFromDeathrattle = (
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
 	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
-	const rivendare = [...boardWithDeadEntity, ...entitiesDeadThisAttack].find(
-		(entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031,
-	);
-	const goldenRivendare = [...boardWithDeadEntity, ...entitiesDeadThisAttack].find(
-		(entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds,
-	);
-	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
+	const multiplier = computeDeathrattleMultiplier([...boardWithDeadEntity, ...entitiesDeadThisAttack]);
 	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
@@ -221,6 +215,49 @@ export const spawnEntitiesFromDeathrattle = (
 						deadEntity.cardId === CardIds.PiggybackImpBattlegrounds
 							? CardIds.PiggybackImp_BackpiggyImpToken_BG_AV_309t
 							: CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.HandlessForsaken:
+			case CardIds.HandlessForsakenBattlegrounds:
+				spawnedEntities.push(
+					...spawnEntities(
+						deadEntity.cardId === CardIds.HandlessForsakenBattlegrounds
+							? CardIds.HandlessForsakenBattlegrounds_HandToken
+							: CardIds.HandlessForsaken_HandToken,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					),
+				);
+				break;
+			case CardIds.EternalSummoner:
+			case CardIds.EternalSummonerBattlegrounds:
+				// TODO
+				spawnedEntities.push(
+					...spawnEntities(
+						deadEntity.cardId === CardIds.EternalSummonerBattlegrounds
+							? CardIds.EternalSummoner_EternalKnight
+							: CardIds.EternalSummonerBattlegrounds_EternalKnight,
 						1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -1076,7 +1113,7 @@ export const spawnEntitiesFromDeathrattle = (
 				const cardIdsToSpawn = sharedState.deaths
 					.filter((entity) => entity.friendly === deadEntity.friendly)
 					// eslint-disable-next-line prettier/prettier
-					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH))
+					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH))
 					.slice(0, 2)
 					.map((entity) => entity.cardId);
 				cardIdsToSpawn.forEach((cardId) =>
@@ -1101,7 +1138,7 @@ export const spawnEntitiesFromDeathrattle = (
 			case CardIds.KangorsApprenticeBattlegrounds:
 				const cardIdsToSpawn2 = sharedState.deaths
 					.filter((entity) => entity.friendly === deadEntity.friendly)
-					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH))
+					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH))
 					.slice(0, 4)
 					.map((entity) => entity.cardId);
 				cardIdsToSpawn2.forEach((cardId) =>
@@ -1279,9 +1316,7 @@ export const spawnEntitiesFromEnchantments = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
-	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
-	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
+	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity);
 	const spawnedEntities: BoardEntity[] = [];
 	for (const enchantment of deadEntity.enchantments || []) {
 		for (let i = 0; i < multiplier; i++) {

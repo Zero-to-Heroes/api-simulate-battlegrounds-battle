@@ -15,6 +15,25 @@ export const handleSpawnEffects = (
 	}
 };
 
+export const handleAfterSpawnEffects = (
+	board: BoardEntity[],
+	spawned: readonly BoardEntity[],
+	cards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	for (const source of board) {
+		const felstomperBuff = source.cardId === CardIds.FelstomperBattlegrounds ? 6 : source.cardId === CardIds.Felstomper ? 3 : 0;
+		if (felstomperBuff > 0) {
+			const amountToBuff = felstomperBuff * spawned.length;
+			board.forEach((e) => {
+				modifyAttack(e, amountToBuff, board, cards);
+				afterStatsUpdate(e, board, cards);
+				spectator.registerPowerTarget(source, e, board);
+			});
+		}
+	}
+};
+
 export const handleSpawn = (
 	entity: BoardEntity,
 	friendlyBoard: BoardEntity[],
@@ -27,7 +46,7 @@ export const handleSpawn = (
 		case CardIds.MurlocTidecallerBattlegrounds:
 			const multiplier = entity.cardId === CardIds.MurlocTidecallerBattlegrounds ? 2 : 1;
 			const buffAmount =
-				multiplier * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length;
+				multiplier * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).races, Race.MURLOC)).length;
 			if (buffAmount > 0) {
 				modifyAttack(entity, buffAmount, friendlyBoard, allCards);
 				afterStatsUpdate(entity, friendlyBoard, allCards);
@@ -38,7 +57,7 @@ export const handleSpawn = (
 		case CardIds.SwampstrikerBattlegrounds:
 			const multiplier2 = entity.cardId === CardIds.SwampstrikerBattlegrounds ? 2 : 1;
 			const buffAmount2 =
-				multiplier2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MURLOC)).length;
+				multiplier2 * spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).races, Race.MURLOC)).length;
 			if (buffAmount2 > 0) {
 				modifyAttack(entity, buffAmount2, friendlyBoard, allCards);
 				afterStatsUpdate(entity, friendlyBoard, allCards);
@@ -55,7 +74,7 @@ export const handleSpawn = (
 			}
 			return;
 		case CardIds.DeflectOBotBattlegrounds:
-			if (spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).race, Race.MECH)).length > 0) {
+			if (spawned.filter((spawn) => isCorrectTribe(allCards.getCard(spawn.cardId).races, Race.MECH)).length > 0) {
 				entity.divineShield = true;
 				modifyAttack(entity, 4, friendlyBoard, allCards);
 				afterStatsUpdate(entity, friendlyBoard, allCards);

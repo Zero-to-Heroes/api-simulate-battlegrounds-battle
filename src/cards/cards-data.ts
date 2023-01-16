@@ -17,6 +17,10 @@ export const AURA_ENCHANTMENTS: readonly string[][] = [
 		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G,
 		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e,
 	],
+	[CardIds.RotHideGnoll, CardIds.RotHideGnollEnchantment],
+	[CardIds.RotHideGnoll_G, CardIds.RotHideGnollEnchantment_G],
+	[CardIds.CyborgDrake, CardIds.CyborgDrake_Enchantment],
+	[CardIds.CyborgDrakeBattlegrounds, CardIds.CardIds.CyborgDrake_Enchantment_G],
 ];
 // Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
 // and that stop once the origin entity leaves play (so it doesn't include buffs)
@@ -36,6 +40,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.AmberGuardianBattlegrounds,
 	CardIds.InterrogatorWhitemane,
 	CardIds.InterrogatorWhitemaneBattlegrounds,
+	CardIds.Soulsplitter,
+	CardIds.SoulsplitterBattlegrounds,
 ];
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
@@ -73,29 +79,29 @@ export class CardsData {
 			.filter((card) => card.id !== 'BGS_008')
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter((card) => this.isValidTribe(validTribes, card.race))
+			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
 		this.validDeathrattles = pool
 			// .filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.filter((card) => this.isValidTribe(validTribes, card.race))
+			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
 		this.impMamaSpawns = pool
 			.filter((card) => !this.isGolden(card))
-			.filter((card) => card.race === 'DEMON')
+			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.ImpMama)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.gentleDjinniSpawns = pool
 			.filter((card) => !this.isGolden(card))
-			.filter((card) => card.race === 'ELEMENTAL')
+			.filter((card) => isCorrectTribe(card.races, Race.ELEMENTAL))
 			.filter((card) => card.id !== CardIds.GentleDjinni)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.kilrekSpawns = pool
 			.filter((card) => !this.isGolden(card))
-			.filter((card) => card.race === Race[Race.DEMON])
+			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
@@ -105,7 +111,7 @@ export class CardsData {
 			.map((card) => card.id);
 		this.pirateSpawns = pool
 			.filter((card) => !this.isGolden(card))
-			.filter((card) => card.race === 'PIRATE')
+			.filter((card) => isCorrectTribe(card.races, Race.PIRATE))
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 	}
@@ -114,6 +120,10 @@ export class CardsData {
 		switch (cardId) {
 			case CardIds.BirdBuddy:
 			case CardIds.BirdBuddyBattlegrounds:
+			case CardIds.GhoulOfTheFeast:
+			case CardIds.GhoulOfTheFeastBattlegrounds:
+			case CardIds.HungeringAbomination:
+			case CardIds.HungeringAbominationBattlegrounds:
 				return 1;
 			case CardIds.FrostwolfLieutenant:
 			case CardIds.FrostwolfLieutenantBattlegrounds:
@@ -164,8 +174,12 @@ export class CardsData {
 		return !!card.battlegroundsNormalDbfId;
 	}
 
-	private isValidTribe(validTribes: readonly Race[], race: string): boolean {
-		const raceEnum: Race = getRaceEnum(race);
-		return raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum);
+	private isValidTribe(validTribes: readonly Race[], races: readonly string[]): boolean {
+		if (!races?.length) {
+			return false;
+		}
+		return races
+			.map((race) => getRaceEnum(race))
+			.some((raceEnum) => raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum));
 	}
 }

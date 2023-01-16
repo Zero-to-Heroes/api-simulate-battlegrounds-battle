@@ -121,6 +121,10 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.KathranatirBattlegrounds:
 			applyKathranatirAura(board, i, enchantmentId, cards, sharedState);
 			return;
+		case CardIds.CyborgDrake:
+		case CardIds.CyborgDrakeBattlegrounds:
+			applyCyborgDrakeAura(board, i, enchantmentId, cards, sharedState);
+			return;
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderVanilla:
 		case CardIds.MurlocWarleaderLegacyBattlegrounds:
@@ -135,6 +139,14 @@ const applyAura = (board: BoardEntity[], i: number, enchantmentId: string, cards
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
 			applyLadySinestraAura(board, i, enchantmentId, sharedState);
+			return;
+		case CardIds.RotHideGnoll:
+		case CardIds.RotHideGnoll_D:
+			applyRotHideGnollAura(board, i, enchantmentId, sharedState);
+			return;
+		case CardIds.EternalKnight:
+		case CardIds.EternalKnightBattlegrounds:
+			applyEternalKnightAura(board, i, enchantmentId, sharedState);
 			return;
 	}
 };
@@ -159,6 +171,10 @@ const removeAura = (
 		case CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge:
 			removeKathranatirAura(entity, enchantmentId);
 			return;
+		case CardIds.CyborgDrake_Enchantment:
+		case CardIds.CyborgDrake_Enchantment_G:
+			removeCyborgDrakeAura(entity, enchantmentId);
+			return;
 		case CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment:
 		case CardIds.MurlocWarleader_MrgglaarglVanillaEnchantment:
 		case CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds:
@@ -182,6 +198,14 @@ const removeAura = (
 			return;
 		case CardIds.VolatileVenom_VolatileEnchantment:
 			removeVolatileVenomAura(entity, enchantmentId);
+			return;
+		case CardIds.RotHideGnollEnchantment:
+		case CardIds.RotHideGnollEnchantment_D:
+			removeRotHideGnollAura(entity, enchantmentId);
+			return;
+		case CardIds.EternalKnightEnchantment:
+		case CardIds.EternalKnightEnchantment_G:
+			removeEternalKnightAura(entity, enchantmentId);
 			return;
 		// case CardIds.WhirlwindTempest_WhirlingEnchantment:
 		// 	removeWhirlwindTempestAura(entity, enchantmentId);
@@ -267,13 +291,40 @@ const applyKathranatirAura = (
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.DEMON)) {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).races, Race.DEMON)) {
 			// newBoard.push(entity);
 			continue;
 		}
 
 		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
 			entity.attack += enchantmentId === CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge ? 4 : 2;
+			entity.enchantments.push({
+				cardId: enchantmentId,
+				originEntityId: originEntity.entityId,
+				timing: sharedState.currentEntityId++,
+			});
+		}
+	}
+	// return newBoard;
+};
+
+const applyCyborgDrakeAura = (
+	board: BoardEntity[],
+	index: number,
+	enchantmentId: string,
+	cards: AllCardsService,
+	sharedState: SharedState,
+): void => {
+	const originEntity = board[index];
+	// const newBoard = [];
+	for (let i = 0; i < board.length; i++) {
+		const entity = board[i];
+		if (i === index || !entity.divineShield) {
+			continue;
+		}
+
+		if (!entity.enchantments.some((aura) => aura.cardId === enchantmentId && aura.originEntityId === originEntity.entityId)) {
+			entity.attack += enchantmentId === CardIds.CyborgDrake_Enchantment_G ? 20 : 10;
 			entity.enchantments.push({
 				cardId: enchantmentId,
 				originEntityId: originEntity.entityId,
@@ -334,6 +385,12 @@ const removeKathranatirAura = (entity: BoardEntity, enchantmentId: string): void
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };
 
+const removeCyborgDrakeAura = (entity: BoardEntity, enchantmentId: string): void => {
+	const numberOfBuffs = entity.enchantments.filter((e) => e.cardId === enchantmentId).length;
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === CardIds.CyborgDrake_Enchantment_G ? 20 : 10));
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+};
+
 const applyMurlocWarleaderAura = (
 	board: BoardEntity[],
 	index: number,
@@ -345,7 +402,7 @@ const applyMurlocWarleaderAura = (
 	// const newBoard = [];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.MURLOC)) {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).races, Race.MURLOC)) {
 			// newBoard.push(entity);
 			continue;
 		}
@@ -381,7 +438,7 @@ const applySouthseaCaptainAura = (
 	const originEntity = board[index];
 	for (let i = 0; i < board.length; i++) {
 		const entity = board[i];
-		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).race, Race.PIRATE)) {
+		if (i === index || !isCorrectTribe(cards.getCard(entity.cardId).races, Race.PIRATE)) {
 			continue;
 		}
 
@@ -408,6 +465,21 @@ const applyLadySinestraAura = (board: BoardEntity[], index: number, enchantmentI
 		entity.attack += enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e ? 6 : 3;
 		entity.enchantments.push({ cardId: enchantmentId, originEntityId: originEntity.entityId, timing: sharedState.currentEntityId++ });
 	}
+};
+
+// TODO: test it
+const applyRotHideGnollAura = (board: BoardEntity[], index: number, enchantmentId: string, sharedState: SharedState): void => {
+	const originEntity = board[index];
+	const mulitplier = enchantmentId === CardIds.RotHideGnollEnchantment_G ? 2 : 1;
+	originEntity.attack += mulitplier * sharedState.deaths.filter((e) => e.friendly === originEntity.friendly);
+};
+
+// TODO: test it
+const applyEternalKnightAura = (board: BoardEntity[], index: number, enchantmentId: string, sharedState: SharedState): void => {
+	const originEntity = board[index];
+	const mulitplier = enchantmentId === CardIds.EternalKnightEnchantment ? 2 : 1;
+	originEntity.attack += mulitplier * sharedState.eternalKnightsDeadThisGame;
+	originEntity.health += mulitplier * sharedState.eternalKnightsDeadThisGame;
 };
 
 const removeSouthseaCaptainAura = (
@@ -469,5 +541,18 @@ const removeLadySinestraAura = (entity: BoardEntity, enchantmentId: string): voi
 		entity.attack -
 			numberOfBuffs * (enchantmentId === CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e ? 6 : 3),
 	);
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+};
+
+const removeRotHideGnollAura = (entity: BoardEntity, enchantmentId: string, sharedState: SharedState): void => {
+	const numberOfBuffs = sharedState.deaths.filter((e) => e.friendly === entity.friendly).length;
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === CardIds.RotHideGnollEnchantment_G ? 2 : 1));
+	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
+};
+
+const removeEternalKnightAura = (entity: BoardEntity, enchantmentId: string, sharedState: SharedState): void => {
+	const numberOfBuffs = sharedState.eternalKnightsDeadThisGame;
+	entity.attack = Math.max(0, entity.attack - numberOfBuffs * (enchantmentId === CardIds.EternalKnightEnchantment_G ? 2 : 1));
+	entity.health = Math.max(1, entity.health - numberOfBuffs * (enchantmentId === CardIds.EternalKnightEnchantment_G ? 2 : 1));
 	entity.enchantments = entity.enchantments.filter((aura) => aura.cardId !== enchantmentId);
 };

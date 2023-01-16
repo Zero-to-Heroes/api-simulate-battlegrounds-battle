@@ -27,6 +27,16 @@ import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
+export const computeDeathrattleMultiplier = (board: BoardEntity[]): number => {
+	const rivendare = board.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
+	const goldenRivendare = board.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
+	const titus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare).length;
+	const goldenTitus = board.filter((entity) => entity.cardId === CardIds.TitusRivendareBattlegrounds).length;
+	// The multiplication / addition order here is irrelelvant, since Baron has been removed once Titus was introduced
+	const multiplier = (goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus;
+	return multiplier;
+};
+
 export const handleDeathrattleEffects = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
@@ -38,9 +48,7 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const rivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
-	const goldenRivendare = boardWithDeadEntity.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
-	const multiplier = goldenRivendare ? 3 : rivendare ? 2 : 1;
+	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity);
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
 	// and avoid proccing deathrattle spawns between the times the damage triggers
 	switch (deadEntity.cardId) {
@@ -149,6 +157,32 @@ export const handleDeathrattleEffects = (
 				}
 			}
 			break;
+		case CardIds.ScarletSkull:
+		case CardIds.ScarletSkullBattlegrounds:
+			const scarletMultiplier = deadEntity.cardId === ScarletSkullBattlegrounds ? 2 : 1;
+			for (let i = 0; i < multiplier; i++) {
+				const target = grantRandomStats(
+					deadEntity,
+					boardWithDeadEntity,
+					scarletMultiplier * 1,
+					scarletMultiplier * 2,
+					Race.UNDEAD,
+					allCards,
+					spectator,
+				);
+				if (!!target) {
+					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				}
+			}
+			break;
+		case CardIds.AnubarakNerubianKing:
+		case CardIds.AnubarakNerubianKingBattlegrounds:
+			const anubarakMultiplier = deadEntity.cardId === AnubarakNerubianKingBattlegrounds ? 2 : 1;
+			for (let i = 0; i < multiplier; i++) {
+				// TODO: handle the "wherever they are"
+				addStatsToBoard(deadEntity, boardWithDeadEntity, anubarakMultiplier * 2, 0, allCards, spectator, Race[Race.UNDEAD]);
+			}
+			break;
 		case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
 			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 			// could be spawned between the shots firing), but let's say it's good enough for now
@@ -156,7 +190,7 @@ export const handleDeathrattleEffects = (
 				const numberOfDeadMechsThisCombat = sharedState.deaths
 					.filter((entity) => entity.friendly === deadEntity.friendly)
 					// eslint-disable-next-line prettier/prettier
-					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH)).length;
+					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
 				for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
 					dealDamageToRandomEnemy(
 						otherBoard,
@@ -180,7 +214,7 @@ export const handleDeathrattleEffects = (
 				const numberOfDeadMechsThisCombat = sharedState.deaths
 					.filter((entity) => entity.friendly === deadEntity.friendly)
 					// eslint-disable-next-line prettier/prettier
-					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.race, Race.MECH)).length;
+					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
 				for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
 					dealDamageToRandomEnemy(
 						otherBoard,
@@ -537,10 +571,10 @@ export const applyMinionDeathEffect = (
 	spectator: Spectator,
 ): void => {
 	// console.log('applying minion death effect', stringifySimpleCard(deadEntity, allCards));
-	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.BEAST)) {
+	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).races, Race.BEAST)) {
 		applyScavengingHyenaEffect(boardWithDeadEntity, allCards, spectator);
 	}
-	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.DEMON)) {
+	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).races, Race.DEMON)) {
 		applySoulJugglerEffect(
 			boardWithDeadEntity,
 			boardWithDeadEntityHero,
@@ -552,7 +586,7 @@ export const applyMinionDeathEffect = (
 			spectator,
 		);
 	}
-	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).race, Race.MECH)) {
+	if (isCorrectTribe(allCards.getCard(deadEntity.cardId).races, Race.MECH)) {
 		applyJunkbotEffect(boardWithDeadEntity, allCards, spectator);
 	}
 	if (hasCorrectTribe(deadEntity, Race.MURLOC, allCards)) {
@@ -687,7 +721,7 @@ export const applyMinionDeathEffect = (
 			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {
 			const otherPirates = otherBoard
-				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
+				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).races, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 2, boardWithDeadEntity, allCards);
@@ -697,7 +731,7 @@ export const applyMinionDeathEffect = (
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliathBattlegrounds) {
 			const otherPirates = otherBoard
-				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).race, Race.PIRATE))
+				.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId).races, Race.PIRATE))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 4, boardWithDeadEntity, allCards);

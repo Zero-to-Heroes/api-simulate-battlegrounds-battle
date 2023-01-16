@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { AllCardsService, ALL_BG_RACES, CardIds, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
-import { groupByFunction, pickRandom } from './services/utils';
 import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [
@@ -71,30 +71,33 @@ export const buildSingleBoardEntity = (
 	entityId = 1,
 	spawnReborn = false,
 	cardsData: CardsData,
-	spectator: Spectator,
+	sharedState: SharedState,
+	entityToSpawn: BoardEntity,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId as CardIds) !== -1;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId as CardIds) !== -1;
-	const newEntity = addImpliedMechanics({
-		attack: card.attack,
-		attacksPerformed: 0,
-		cardId: cardId,
-		divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
-		entityId: entityId,
-		health: card.health,
-		maxHealth: card.health,
-		taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId as CardIds),
-		reborn: hasMechanic(card, 'REBORN'),
-		poisonous: hasMechanic(card, 'POISONOUS'),
-		windfury: !megaWindfury && (hasMechanic(card, 'WINDFURY') || card.referencedTags?.includes('WINDFURY')),
-		megaWindfury: megaWindfury,
-		enchantments: [],
-		friendly: friendly,
-		attackImmediately: attackImmediately,
-		avengeCurrent: cardsData.avengeValue(cardId),
-		avengeDefault: cardsData.avengeValue(cardId),
-	} as BoardEntity);
+	const newEntity = !!entityToSpawn
+		? { ...entityToSpawn, entityId: sharedState.currentEntityId++ }
+		: addImpliedMechanics({
+				attack: card.attack,
+				attacksPerformed: 0,
+				cardId: cardId,
+				divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
+				entityId: entityId,
+				health: card.health,
+				maxHealth: card.health,
+				taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId as CardIds),
+				reborn: hasMechanic(card, 'REBORN'),
+				poisonous: hasMechanic(card, 'POISONOUS'),
+				windfury: !megaWindfury && (hasMechanic(card, 'WINDFURY') || card.referencedTags?.includes('WINDFURY')),
+				megaWindfury: megaWindfury,
+				enchantments: [],
+				friendly: friendly,
+				attackImmediately: attackImmediately,
+				avengeCurrent: cardsData.avengeValue(cardId),
+				avengeDefault: cardsData.avengeValue(cardId),
+		  } as BoardEntity);
 
 	if (spawnReborn) {
 		newEntity.health = 1;
@@ -112,6 +115,11 @@ export const buildSingleBoardEntity = (
 		modifyHealth(newEntity, 2, friendlyBoard, allCards);
 		afterStatsUpdate(newEntity, friendlyBoard, allCards);
 		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
+	} else if (controllerHero?.heroPowerId === CardIds.Toki_TinkerBattlegrounds) {
+		if (hasCorrectTribe(newEntity, Race.MECH, allCards)) {
+			modifyAttack(newEntity, 2, friendlyBoard, allCards);
+			afterStatsUpdate(newEntity, friendlyBoard, allCards);
+		}
 	}
 
 	if (allCards.getCard(cardId).techLevel === controllerHero.tavernTier) {
@@ -139,7 +147,7 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
-	if (isCorrectTribe(allCards.getCard(entity.cardId).race, Race.DRAGON)) {
+	if (isCorrectTribe(allCards.getCard(entity.cardId).races, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
 		const whelpSmugglersBattlegrounds = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds);
 		whelpSmugglers.forEach((smuggler) => {
@@ -352,9 +360,14 @@ export const addCardsInHand = (
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
 	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
 	const multiplier = 1 + (cardAdded === CardIds.BloodGem ? sages.length + 2 * sagesGolden.length : 0);
-	playerEntity.cardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + multiplier * cards);
+	const newCardsInHand = Math.min(10, (playerEntity.cardsInHand ?? 0) + multiplier * cards);
+	if (newCardsInHand <= playerEntity.cardsInHand) {
+		return;
+	}
 
-	const peggys = board.filter((e) => e.cardId === CardIds.PeggyBrittlebone || e.cardId === CardIds.PeggyBrittleboneBattlegrounds);
+	playerEntity.cardsInHand = newCardsInHand;
+
+	const peggys = board.filter((e) => e.cardId === CardIds.PeggySturdybone || e.cardId === CardIds.PeggySturdyboneBattlegrounds);
 	peggys.forEach((peggy) => {
 		const pirate = getRandomAliveMinion(
 			board.filter((e) => e.entityId !== peggy.entityId),
@@ -362,11 +375,18 @@ export const addCardsInHand = (
 			allCards,
 		);
 		if (pirate) {
-			modifyAttack(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
-			modifyHealth(pirate, peggy.cardId === CardIds.PeggyBrittleboneBattlegrounds ? 2 : 1, board, allCards);
+			modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
+			modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
 			afterStatsUpdate(pirate, board, allCards);
 			spectator.registerPowerTarget(peggy, pirate, board);
 		}
+	});
+
+	const thornCaptains = board.filter((e) => e.cardId === CardIds.ThornCaptain || e.cardId === CardIds.ThornCaptainBattlegrounds);
+	thornCaptains.forEach((captain) => {
+		modifyHealth(captain, captain.cardId === CardIds.ThornCaptainBattlegrounds ? 2 : 1, board, allCards);
+		afterStatsUpdate(captain, board, allCards);
+		spectator.registerPowerTarget(captain, captain, board);
 	});
 };
 
@@ -385,7 +405,7 @@ export const grantRandomDivineShield = (source: BoardEntity, board: BoardEntity[
 export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCardsService): void => {
 	const elligibleEntities = board
 		.filter((entity) => !entity.divineShield)
-		.filter((entity) => isCorrectTribe(cards.getCard(entity.cardId).race, getRaceEnum(tribe)));
+		.filter((entity) => isCorrectTribe(cards.getCard(entity.cardId).races, getRaceEnum(tribe)));
 	for (const entity of elligibleEntities) {
 		entity.divineShield = true;
 	}
@@ -394,7 +414,7 @@ export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards:
 
 export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
 	const validTribes = board
-		.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).race, race))
+		.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).races, race))
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (!validTribes.length) {
 		return null;
@@ -422,7 +442,7 @@ export const addStatsToBoard = (
 	tribe?: string,
 ): void => {
 	for (const entity of board) {
-		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).race, Race[tribe])) {
+		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).races, Race[tribe])) {
 			modifyAttack(entity, attack, board, allCards);
 			modifyHealth(entity, health, board, allCards);
 			afterStatsUpdate(entity, board, allCards);
@@ -431,21 +451,27 @@ export const addStatsToBoard = (
 	}
 };
 
-export const applyEffectToMinionTypes = (
+export const grantStatsToMinionsOfEachType = (
+	source: BoardEntity,
 	board: BoardEntity[],
-	hero: BgsPlayerEntity,
+	attack: number,
+	health: number,
 	allCards: AllCardsService,
-	effect: (entity: BoardEntity) => void,
+	spectator: Spectator,
 ): void => {
-	const groupedByRace = groupByFunction((e: BoardEntity) => allCards.getCard(e.cardId).race)(
-		board.filter((e) => !!allCards.getCard(e.cardId).race),
-	);
-	Object.values(groupedByRace)
-		.filter((minions) => !!minions?.length)
-		.forEach((minions) => {
-			const target = pickRandom(minions);
-			effect(target);
-		});
+	if (board.length > 0) {
+		let boardCopy = [...board];
+		for (const tribe of ALL_BG_RACES) {
+			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, allCards);
+			if (validMinion) {
+				modifyAttack(validMinion, attack, board, allCards);
+				modifyHealth(validMinion, health, board, allCards);
+				afterStatsUpdate(validMinion, board, allCards);
+				spectator.registerPowerTarget(source, validMinion, board);
+				boardCopy = boardCopy.filter((e) => e !== validMinion);
+			}
+		}
+	}
 };
 
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
@@ -453,11 +479,14 @@ export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
 };
 
 export const hasCorrectTribe = (entity: BoardEntity, targetTribe: Race, allCards: AllCardsService): boolean => {
-	return isCorrectTribe(allCards.getCard(entity.cardId).race, targetTribe);
+	return isCorrectTribe(allCards.getCard(entity.cardId).races, targetTribe);
 };
 
-export const isCorrectTribe = (cardRace: string, targetTribe: Race): boolean => {
-	return getRaceEnum(cardRace) === Race.ALL || getRaceEnum(cardRace) === targetTribe;
+export const isCorrectTribe = (cardRaces: readonly string[], targetTribe: Race): boolean => {
+	if (!cardRaces?.length) {
+		return false;
+	}
+	return cardRaces.map((cardRace) => getRaceEnum(cardRace)).some((raceEnum) => raceEnum === Race.ALL || raceEnum === targetTribe);
 };
 
 export const getRaceEnum = (race: string): Race => {

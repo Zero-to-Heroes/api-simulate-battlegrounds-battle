@@ -810,8 +810,8 @@ export const performStartOfCombatMinionsForPlayer = (
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp) {
 		const damage = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).race)
-			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
+			.map((entity) => allCards.getCard(entity.cardId).races)
+			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		dealDamageToRandomEnemy(
 			defendingBoard,
 			defendingBoardHero,
@@ -836,8 +836,8 @@ export const performStartOfCombatMinionsForPlayer = (
 		);
 	} else if (attacker.cardId === CardIds.RedWhelpBattlegrounds) {
 		const damage = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).race)
-			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
+			.map((entity) => allCards.getCard(entity.cardId).races)
+			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		dealDamageToRandomEnemy(
 			defendingBoard,
 			defendingBoardHero,
@@ -874,8 +874,8 @@ export const performStartOfCombatMinionsForPlayer = (
 		);
 	} else if (attacker.cardId === CardIds.PrizedPromoDrake) {
 		const numberOfDragons = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).race)
-			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
+			.map((entity) => allCards.getCard(entity.cardId).races)
+			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, numberOfDragons, attackingBoard, allCards);
@@ -885,8 +885,8 @@ export const performStartOfCombatMinionsForPlayer = (
 		});
 	} else if (attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds) {
 		const dragons = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).race)
-			.filter((race) => isCorrectTribe(race, Race.DRAGON)).length;
+			.map((entity) => allCards.getCard(entity.cardId).races)
+			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2 * dragons, attackingBoard, allCards);
@@ -899,13 +899,25 @@ export const performStartOfCombatMinionsForPlayer = (
 		const otherDragons = attackingBoard
 			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
-		const otherDragon = pickRandom(otherDragons.filter((e) => !e.divineShield)) ?? pickRandom(otherDragons);
-		if (otherDragon) {
-			otherDragon.divineShield = true;
-			modifyAttack(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
-			modifyHealth(otherDragon, attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 4 : 2, attackingBoard, allCards);
-			afterStatsUpdate(otherDragon, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
+		const loops = attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 2 : 1;
+		for (let i = 0; i < loops; i++) {
+			const dragonsToConsider = otherDragons;
+			const otherDragon = pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
+			if (otherDragon) {
+				otherDragon.divineShield = true;
+				modifyAttack(otherDragon, 2, attackingBoard, allCards);
+				modifyHealth(otherDragon, 2, attackingBoard, allCards);
+				afterStatsUpdate(otherDragon, attackingBoard, allCards);
+				spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
+				dragonsToConsider.remove(otherDragon);
+			}
+		}
+	} else if (attacker.cardId === CardIds.Soulsplitter || attacker.cardId === CardIds.SoulsplitterBattlegrounds) {
+		const undeadsWithoutReborn = attackingBoard.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards)).filter((e) => !e.reborn);
+		const chosenUndead = pickRandom(undeadsWithoutReborn);
+		if (chosenUndead) {
+			chosenUndead.reborn = true;
+			spectator.registerPowerTarget(attacker, chosenUndead, attackingBoard);
 		}
 	} else if (attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy || attacker.cardId === CardIds.CrabbyBattlegrounds) {
 		const neighbours = getNeighbours(attackingBoard, attacker);
@@ -937,7 +949,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.MantidQueenBattlegrounds ? 2 : 1;
 		const allRaces = attackingBoardBefore
 			.map((entity) => entity.cardId)
-			.map((cardId) => allCards.getCard(cardId).race)
+			.flatMap((cardId) => allCards.getCard(cardId).races)
 			.filter((race) => !!race && race !== Race[Race.BLANK]);
 		const totalRaces =
 			[...new Set(allRaces.filter((race) => race !== Race[Race.ALL]))].length +
