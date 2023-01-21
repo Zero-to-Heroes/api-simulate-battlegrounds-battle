@@ -99,7 +99,7 @@ export const buildSingleBoardEntity = (
 				avengeDefault: cardsData.avengeValue(cardId),
 		  } as BoardEntity);
 
-	if (spawnReborn) {
+	if (spawnReborn && !entityToSpawn) {
 		newEntity.health = 1;
 		newEntity.reborn = false;
 	}

@@ -1551,7 +1551,7 @@ const buildBoardAfterRebornSpawns = (
 	let entityToSpawn: BoardEntity = null;
 	// TODO: test
 	if (deadEntity.cardId === CardIds.SinrunnerBlanchy || deadEntity.cardId === CardIds.SinrunnerBlanchyBattlegrounds) {
-		entityToSpawn = { ...deadEntity, health: deadEntity.maxHealth };
+		entityToSpawn = { ...deadEntity, health: deadEntity.maxHealth, reborn: false };
 	}
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndexFromRight >= 0
@@ -1586,7 +1586,7 @@ const buildBoardAfterRebornSpawns = (
 		sharedState,
 		spectator,
 	);
-	const numberOfTriggersForDeathwhisper = 1;
+	const numberOfTriggersForDeathwhisper = Math.min(entitiesFromReborn.length, 1);
 	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
 		boardWithKilledMinion
 			.filter((e) => e.cardId === CardIds.SisterDeathwhisper || e.cardId === CardIds.SisterDeathwhisperBattlegrounds)
