@@ -11,6 +11,12 @@ export interface BgsPlayerEntity {
 	cardsInHand?: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
+	globalInfo?: BgsPlayerGlobalInfo;
 
 	deadEyeDamageDone?: number;
+}
+
+export interface BgsPlayerGlobalInfo {
+	EternalKnightsDeadThisGame: number;
+	UndeadAttackBonus: number;
 }

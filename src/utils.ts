@@ -58,7 +58,7 @@ export const MEGA_WINDFURY_IDS = [
 	CardIds.ZappSlywickBattlegrounds,
 	CardIds.CracklingCycloneBattlegrounds,
 	CardIds.BristlebackKnightBattlegrounds,
-	CardIds.BonkerBattlegrounds,
+	CardIds.Bonker_BG20_104_G,
 ];
 const CANT_ATTACK_IDS = [CardIds.ArcaneCannonBattlegrounds];
 
@@ -102,42 +102,6 @@ export const buildSingleBoardEntity = (
 	if (spawnReborn) {
 		newEntity.health = 1;
 		newEntity.reborn = false;
-	}
-
-	if (controllerHero?.heroPowerId === CardIds.SproutItOutBattlegrounds) {
-		newEntity.taunt = true;
-		modifyAttack(newEntity, 1, friendlyBoard, allCards);
-		modifyHealth(newEntity, 2, friendlyBoard, allCards);
-		afterStatsUpdate(newEntity, friendlyBoard, allCards);
-		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
-	} else if (controllerHero?.heroPowerId === CardIds.KurtrusAshfallen_CloseThePortal) {
-		modifyAttack(newEntity, 2, friendlyBoard, allCards);
-		modifyHealth(newEntity, 2, friendlyBoard, allCards);
-		afterStatsUpdate(newEntity, friendlyBoard, allCards);
-		// spectator && spectator.registerPowerTarget(result, result, friendlyBoard);
-	} else if (controllerHero?.heroPowerId === CardIds.Toki_TinkerBattlegrounds) {
-		if (hasCorrectTribe(newEntity, Race.MECH, allCards)) {
-			modifyAttack(newEntity, 2, friendlyBoard, allCards);
-			afterStatsUpdate(newEntity, friendlyBoard, allCards);
-		}
-	}
-
-	if (allCards.getCard(cardId).techLevel === controllerHero.tavernTier) {
-		const statsBonus =
-			4 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy).length +
-			8 * friendlyBoard.filter((e) => e.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G).length;
-		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
-		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
-		afterStatsUpdate(newEntity, friendlyBoard, allCards);
-	}
-
-	if (newEntity.taunt) {
-		const statsBonus =
-			2 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy).length +
-			4 * friendlyBoard.filter((e) => e.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G).length;
-		modifyAttack(newEntity, statsBonus, friendlyBoard, allCards);
-		modifyHealth(newEntity, statsBonus, friendlyBoard, allCards);
-		afterStatsUpdate(newEntity, friendlyBoard, allCards);
 	}
 
 	return newEntity;
@@ -336,8 +300,6 @@ export const grantRandomStats = (
 			race,
 			allCards,
 		);
-		//tmp fix for PalescaleCrocolisk, PalescaleCrocolisk won't apply avenge and dethrattle effect on itself.
-		//const validBeast: BoardEntity = getRandomAliveMinion(board, race, allCards);
 		if (validBeast) {
 			modifyAttack(validBeast, attack, board, allCards);
 			modifyHealth(validBeast, health, board, allCards);
@@ -382,24 +344,51 @@ export const addCardsInHand = (
 		}
 	});
 
-	const thornCaptains = board.filter((e) => e.cardId === CardIds.ThornCaptain || e.cardId === CardIds.ThornCaptainBattlegrounds);
+	const thornCaptains = board.filter((e) => e.cardId === CardIds.Thorncaptain || e.cardId === CardIds.ThorncaptainBattlegrounds);
 	thornCaptains.forEach((captain) => {
-		modifyHealth(captain, captain.cardId === CardIds.ThornCaptainBattlegrounds ? 2 : 1, board, allCards);
+		modifyHealth(captain, captain.cardId === CardIds.ThorncaptainBattlegrounds ? 2 : 1, board, allCards);
 		afterStatsUpdate(captain, board, allCards);
 		spectator.registerPowerTarget(captain, captain, board);
 	});
 };
 
-export const grantRandomDivineShield = (source: BoardEntity, board: BoardEntity[], spectator: Spectator): void => {
+export const grantRandomDivineShield = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	const elligibleEntities = board
 		.filter((entity) => !entity.divineShield)
 		.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 	if (elligibleEntities.length > 0) {
 		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
-		chosen.divineShield = true;
+		updateDivineShield(chosen, board, true, allCards);
 		spectator.registerPowerTarget(source, chosen, board);
 	}
 	// return board;
+};
+
+export const updateDivineShield = (entity: BoardEntity, board: BoardEntity[], newValue: boolean, allCards: AllCardsService): void => {
+	// if ((entity.divineShield ?? false) === newValue) {
+	// 	return;
+	// }
+	entity.divineShield = newValue;
+	if (entity.divineShield) {
+		const boardForDrake = board;
+		const statsBonus =
+			10 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
+			20 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+		// Don't trigger all "on attack changed" effects, since it's an aura
+		entity.attack += statsBonus;
+	} else {
+		// Also consider itself
+		const boardForDrake = board;
+		const statsBonus =
+			10 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
+			20 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+		entity.attack -= statsBonus;
+	}
 };
 
 export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards: AllCardsService): void => {
@@ -407,9 +396,8 @@ export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards:
 		.filter((entity) => !entity.divineShield)
 		.filter((entity) => isCorrectTribe(cards.getCard(entity.cardId).races, getRaceEnum(tribe)));
 	for (const entity of elligibleEntities) {
-		entity.divineShield = true;
+		updateDivineShield(entity, board, true, cards);
 	}
-	// return board;
 };
 
 export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
@@ -520,15 +508,15 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity
-		? `${entity.cardId}/${entity.entityId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${
-				entity.health
-		  }/ds=${entity.divineShield}/taunt=${entity.taunt}/stealth=${entity.stealth}}`
-		: null;
+	return entity ? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}}` : null;
 };
 
-export const isFish = (cardId: string): boolean => {
-	return cardId.startsWith(CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) || cardId.startsWith(CardIds.FishOfNzothBattlegrounds);
+export const isFish = (entity: BoardEntity): boolean => {
+	return (
+		entity.cardId.startsWith(CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) ||
+		entity.cardId.startsWith(CardIds.FishOfNzothBattlegrounds) ||
+		entity.additionalCards?.includes(CardIds.DevourerOfSouls_BG_RLK_538)
+	);
 };
 
 export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {

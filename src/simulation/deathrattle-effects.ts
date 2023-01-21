@@ -2,7 +2,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { AURA_ORIGINS, CardsData } from '../cards/cards-data';
+import { CardsData } from '../cards/cards-data';
 import { groupByFunction, pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import {
 	addCardsInHand,
@@ -20,20 +20,21 @@ import {
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
+	updateDivineShield,
 } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy } from './attack';
-import { removeAurasAfterAuraSourceDeath } from './auras';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
-export const computeDeathrattleMultiplier = (board: BoardEntity[]): number => {
+export const computeDeathrattleMultiplier = (board: BoardEntity[], deadEntity: BoardEntity): number => {
 	const rivendare = board.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
 	const goldenRivendare = board.find((entity) => entity.cardId === CardIds.BaronRivendareBattlegrounds);
 	const titus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare).length;
 	const goldenTitus = board.filter((entity) => entity.cardId === CardIds.TitusRivendareBattlegrounds).length;
 	// The multiplication / addition order here is irrelelvant, since Baron has been removed once Titus was introduced
-	const multiplier = (goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus;
+	const scourgeMultiplier = deadEntity.additionalCards?.includes(CardIds.ScourgeTroll) ? 2 : 1;
+	const multiplier = scourgeMultiplier * ((goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus);
 	return multiplier;
 };
 
@@ -48,155 +49,203 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity);
+	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity, deadEntity);
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
 	// and avoid proccing deathrattle spawns between the times the damage triggers
-	switch (deadEntity.cardId) {
-		case CardIds.SelflessHero_BG_OG_221:
-			for (let i = 0; i < multiplier; i++) {
-				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
-			}
-			break;
-		case CardIds.SelflessHeroBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
-				grantRandomDivineShield(deadEntity, boardWithDeadEntity, spectator);
-			}
-			break;
-		case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy:
-		case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G:
-			const iterations = deadEntity.cardId === CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
-			for (let i = 0; i < multiplier; i++) {
-				for (let j = 0; j < iterations; j++) {
-					let validTargets = boardWithDeadEntity.filter((entity) => !entity.divineShield);
-					if (!validTargets?.length) {
-						validTargets = boardWithDeadEntity.filter((entity) => !entity.taunt);
+
+	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
+	for (const deadEntityCardId of cardIds) {
+		switch (deadEntityCardId) {
+			case CardIds.SelflessHero_BG_OG_221:
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomDivineShield(deadEntity, boardWithDeadEntity, allCards, spectator);
+				}
+				break;
+			case CardIds.SelflessHeroBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomDivineShield(deadEntity, boardWithDeadEntity, allCards, spectator);
+					grantRandomDivineShield(deadEntity, boardWithDeadEntity, allCards, spectator);
+				}
+				break;
+			case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy:
+			case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G:
+				const iterations = deadEntityCardId === CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < iterations; j++) {
+						let validTargets = boardWithDeadEntity.filter((entity) => !entity.divineShield);
 						if (!validTargets?.length) {
-							validTargets = boardWithDeadEntity.filter((entity) => !entity.windfury);
+							validTargets = boardWithDeadEntity.filter((entity) => !entity.taunt);
+							if (!validTargets?.length) {
+								validTargets = boardWithDeadEntity.filter((entity) => !entity.windfury);
+							}
+						}
+						const target = pickRandom(validTargets);
+						if (target) {
+							if (!target.divineShield) {
+								updateDivineShield(target, boardWithDeadEntity, true, allCards);
+							}
+							target.taunt = true;
+							target.windfury = true;
+							spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 						}
 					}
-					const target = pickRandom(validTargets);
-					if (target) {
-						target.divineShield = true;
-						target.taunt = true;
-						target.windfury = true;
+				}
+				break;
+			case CardIds.NadinaTheRed:
+			case CardIds.NadinaTheRedBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
+					grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
+				}
+				break;
+			case CardIds.SpawnOfNzoth_BG_OG_256:
+				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards, spectator);
+				break;
+			case CardIds.SpawnOfNzothBattlegrounds:
+				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator);
+				break;
+			case CardIds.GoldrinnTheGreatWolf:
+				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, spectator, 'BEAST');
+				break;
+			case CardIds.GoldrinnTheGreatWolfBattlegrounds:
+				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, spectator, 'BEAST');
+				break;
+			case CardIds.KingBagurgle:
+				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator, 'MURLOC');
+				break;
+			case CardIds.KingBagurgleBattlegrounds:
+				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, spectator, 'MURLOC');
+				break;
+			case CardIds.FiendishServant:
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
+				}
+				break;
+			case CardIds.FiendishServantBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
+					grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
+				}
+				break;
+			case CardIds.ImpulsiveTrickster:
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
+				}
+				break;
+			case CardIds.ImpulsiveTricksterBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
+					grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
+				}
+				break;
+			case CardIds.Leapfrogger:
+				for (let i = 0; i < multiplier; i++) {
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, sharedState);
+				}
+				break;
+			case CardIds.LeapfroggerBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
+					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
+				}
+				break;
+			case CardIds.PalescaleCrocolisk_BG21_001:
+				for (let i = 0; i < multiplier; i++) {
+					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
+					if (!!target) {
 						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 					}
 				}
-			}
-			break;
-		case CardIds.NadinaTheRed:
-		case CardIds.NadinaTheRedBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
-			}
-			break;
-		case CardIds.SpawnOfNzoth_BG_OG_256:
-			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 1, multiplier * 1, allCards, spectator);
-			break;
-		case CardIds.SpawnOfNzothBattlegrounds:
-			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator);
-			break;
-		case CardIds.GoldrinnTheGreatWolf:
-			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, spectator, 'BEAST');
-			break;
-		case CardIds.GoldrinnTheGreatWolfBattlegrounds:
-			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, spectator, 'BEAST');
-			break;
-		case CardIds.KingBagurgle:
-			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator, 'MURLOC');
-			break;
-		case CardIds.KingBagurgleBattlegrounds:
-			addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, spectator, 'MURLOC');
-			break;
-		case CardIds.FiendishServant:
-			for (let i = 0; i < multiplier; i++) {
-				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
-			}
-			break;
-		case CardIds.FiendishServantBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
-				grantRandomAttack(deadEntity, boardWithDeadEntity, deadEntity.attack, allCards, spectator);
-			}
-			break;
-		case CardIds.ImpulsiveTrickster:
-			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
-			}
-			break;
-		case CardIds.ImpulsiveTricksterBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
-				grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
-			}
-			break;
-		case CardIds.Leapfrogger:
-			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, sharedState);
-			}
-			break;
-		case CardIds.LeapfroggerBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
-			}
-			break;
-		case CardIds.PalescaleCrocolisk:
-			for (let i = 0; i < multiplier; i++) {
-				const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
-				if (!!target) {
-					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				break;
+			case CardIds.PalescaleCrocolisk_BG21_001_G:
+				for (let i = 0; i < multiplier; i++) {
+					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
+					if (!!target) {
+						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+					}
 				}
-			}
-			break;
-		case CardIds.PalescaleCrocoliskBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
-				if (!!target) {
-					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				break;
+			case CardIds.ScarletSkull:
+			case CardIds.ScarletSkullBattlegrounds:
+				const scarletMultiplier = deadEntityCardId === CardIds.ScarletSkullBattlegrounds ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					const target = grantRandomStats(
+						deadEntity,
+						boardWithDeadEntity,
+						scarletMultiplier * 1,
+						scarletMultiplier * 2,
+						Race.UNDEAD,
+						allCards,
+						spectator,
+					);
+					if (!!target) {
+						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+					}
 				}
-			}
-			break;
-		case CardIds.ScarletSkull:
-		case CardIds.ScarletSkullBattlegrounds:
-			const scarletMultiplier = deadEntity.cardId === ScarletSkullBattlegrounds ? 2 : 1;
-			for (let i = 0; i < multiplier; i++) {
-				const target = grantRandomStats(
-					deadEntity,
-					boardWithDeadEntity,
-					scarletMultiplier * 1,
-					scarletMultiplier * 2,
-					Race.UNDEAD,
-					allCards,
-					spectator,
-				);
-				if (!!target) {
-					spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+				break;
+			case CardIds.AnubarakNerubianKing:
+			case CardIds.AnubarakNerubianKingBattlegrounds:
+				const anubarakMultiplier = deadEntityCardId === CardIds.AnubarakNerubianKingBattlegrounds ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					addStatsToBoard(deadEntity, boardWithDeadEntity, anubarakMultiplier * 2, 0, allCards, spectator, Race[Race.UNDEAD]);
+					boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += anubarakMultiplier * 2;
 				}
-			}
-			break;
-		case CardIds.AnubarakNerubianKing:
-		case CardIds.AnubarakNerubianKingBattlegrounds:
-			const anubarakMultiplier = deadEntity.cardId === AnubarakNerubianKingBattlegrounds ? 2 : 1;
-			for (let i = 0; i < multiplier; i++) {
-				// TODO: handle the "wherever they are"
-				addStatsToBoard(deadEntity, boardWithDeadEntity, anubarakMultiplier * 2, 0, allCards, spectator, Race[Race.UNDEAD]);
-			}
-			break;
-		case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
-			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
-			// could be spawned between the shots firing), but let's say it's good enough for now
-			for (let i = 0; i < multiplier; i++) {
-				const numberOfDeadMechsThisCombat = sharedState.deaths
-					.filter((entity) => entity.friendly === deadEntity.friendly)
-					// eslint-disable-next-line prettier/prettier
-					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
-				for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+				break;
+			case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
+				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+				// could be spawned between the shots firing), but let's say it's good enough for now
+				for (let i = 0; i < multiplier; i++) {
+					const numberOfDeadMechsThisCombat = sharedState.deaths
+						.filter((entity) => entity.friendly === deadEntity.friendly)
+						// eslint-disable-next-line prettier/prettier
+						.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
+					for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+						dealDamageToRandomEnemy(
+							otherBoard,
+							otherBoardHero,
+							deadEntity,
+							3,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						);
+					}
+				}
+				break;
+			case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G:
+				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+				// could be spawned between the shots firing), but let's say it's good enough for now
+				for (let i = 0; i < multiplier; i++) {
+					const numberOfDeadMechsThisCombat = sharedState.deaths
+						.filter((entity) => entity.friendly === deadEntity.friendly)
+						// eslint-disable-next-line prettier/prettier
+						.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
+					for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+						dealDamageToRandomEnemy(
+							otherBoard,
+							otherBoardHero,
+							deadEntity,
+							6,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						);
+					}
+				}
+				break;
+			case CardIds.KaboomBot_BG_BOT_606:
+				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+				// could be spawned between the shots firing), but let's say it's good enough for now
+				for (let i = 0; i < multiplier; i++) {
 					dealDamageToRandomEnemy(
 						otherBoard,
 						otherBoardHero,
 						deadEntity,
-						3,
+						4,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						allCards,
@@ -205,22 +254,26 @@ export const handleDeathrattleEffects = (
 						spectator,
 					);
 				}
-			}
-			break;
-		case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G:
-			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
-			// could be spawned between the shots firing), but let's say it's good enough for now
-			for (let i = 0; i < multiplier; i++) {
-				const numberOfDeadMechsThisCombat = sharedState.deaths
-					.filter((entity) => entity.friendly === deadEntity.friendly)
-					// eslint-disable-next-line prettier/prettier
-					.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
-				for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+				break;
+			case CardIds.KaboomBotBattlegrounds:
+				for (let i = 0; i < multiplier; i++) {
 					dealDamageToRandomEnemy(
 						otherBoard,
 						otherBoardHero,
 						deadEntity,
-						6,
+						4,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+					);
+					dealDamageToRandomEnemy(
+						otherBoard,
+						otherBoardHero,
+						deadEntity,
+						4,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						allCards,
@@ -229,114 +282,99 @@ export const handleDeathrattleEffects = (
 						spectator,
 					);
 				}
-			}
-			break;
-		case CardIds.KaboomBot_BG_BOT_606:
-			// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
-			// could be spawned between the shots firing), but let's say it's good enough for now
-			for (let i = 0; i < multiplier; i++) {
-				dealDamageToRandomEnemy(
-					otherBoard,
-					otherBoardHero,
-					deadEntity,
-					4,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
-			}
-			break;
-		case CardIds.KaboomBotBattlegrounds:
-			for (let i = 0; i < multiplier; i++) {
-				dealDamageToRandomEnemy(
-					otherBoard,
-					otherBoardHero,
-					deadEntity,
-					4,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
-				dealDamageToRandomEnemy(
-					otherBoard,
-					otherBoardHero,
-					deadEntity,
-					4,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
-			}
-			break;
-		case CardIds.UnstableGhoul_BG_FP1_024:
-		case CardIds.UnstableGhoulBattlegrounds:
-			const damage = deadEntity.cardId === CardIds.UnstableGhoulBattlegrounds ? 2 : 1;
-			for (let i = 0; i < multiplier; i++) {
-				dealDamageToAllMinions(
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoard,
-					otherBoardHero,
-					deadEntity,
-					damage,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
-				);
-			}
-			break;
-		case CardIds.TunnelBlaster_BG_DAL_775:
-		case CardIds.TunnelBlasterBattlegrounds:
-			const loops = deadEntity.cardId === CardIds.TunnelBlasterBattlegrounds ? 2 : 1;
-			for (let i = 0; i < multiplier; i++) {
-				for (let j = 0; j < loops; j++) {
+				break;
+			case CardIds.UnstableGhoul_BG_FP1_024:
+			case CardIds.UnstableGhoulBattlegrounds:
+				const damage = deadEntityCardId === CardIds.UnstableGhoulBattlegrounds ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
 					dealDamageToAllMinions(
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						otherBoard,
 						otherBoardHero,
 						deadEntity,
-						3,
+						damage,
 						allCards,
 						cardsData,
 						sharedState,
 						spectator,
 					);
 				}
-			}
-			break;
-		case CardIds.LeeroyTheReckless:
-		case CardIds.LeeroyTheRecklessBattlegrounds:
-			if (deadEntity.lastAffectedByEntity) {
-				deadEntity.lastAffectedByEntity.definitelyDead = true;
-			}
-			break;
-		case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy:
-			for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
-				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
-				if (rightMostMinion) {
-					makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
+				break;
+			case CardIds.TunnelBlaster_BG_DAL_775:
+			case CardIds.TunnelBlasterBattlegrounds:
+				const loops = deadEntityCardId === CardIds.TunnelBlasterBattlegrounds ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < loops; j++) {
+						dealDamageToAllMinions(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							deadEntity,
+							3,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						);
+					}
 				}
-			}
-			break;
-		case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy_G:
-			for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
-				const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
-				if (rightMostMinion) {
-					makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
+				break;
+			case CardIds.LeeroyTheReckless:
+			case CardIds.LeeroyTheRecklessBattlegrounds:
+				if (deadEntity.lastAffectedByEntity) {
+					deadEntity.lastAffectedByEntity.definitelyDead = true;
 				}
-			}
-			break;
+				break;
+			case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy:
+				for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
+					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
+					if (rightMostMinion) {
+						makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
+					}
+				}
+				break;
+			case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy_G:
+				for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
+					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
+					if (rightMostMinion) {
+						makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
+					}
+				}
+				break;
+
+			// Putricide-only
+			case CardIds.Banshee_BG_RLK_957:
+				for (let i = 0; i < multiplier; i++) {
+					addStatsToBoard(deadEntity, boardWithDeadEntity, 2, 1, allCards, spectator, Race[Race.UNDEAD]);
+				}
+				break;
+			case CardIds.LostSpirit_BG26_GIL_513:
+				for (let i = 0; i < multiplier; i++) {
+					addStatsToBoard(deadEntity, boardWithDeadEntity, 1, 0, allCards, spectator, null);
+				}
+				break;
+			case CardIds.TickingAbomination_BG_ICC_099:
+				for (let i = 0; i < multiplier; i++) {
+					for (const entity of boardWithDeadEntity) {
+						dealDamageToEnemy(
+							entity,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							deadEntity,
+							5,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						);
+					}
+				}
+				break;
+		}
 	}
 
 	// It's important to first copy the enchantments, otherwise you could end up
@@ -425,8 +463,8 @@ export const handleDeathrattleEffects = (
 				break;
 		}
 	}
-	const playerCopy = boardWithDeadEntity.map((e) => ({ ...e, lastAffectedByEntity: null }));
-	const oppCopy = otherBoard.map((e) => ({ ...e, lastAffectedByEntity: null }));
+	// const playerCopy = boardWithDeadEntity.map((e) => ({ ...e, lastAffectedByEntity: null }));
+	// const oppCopy = otherBoard.map((e) => ({ ...e, lastAffectedByEntity: null }));
 	// console.log('player board', boardWithDeadEntity.length, playerCopy.length, playerCopy.map((e) => JSON.stringify(e)).join('\n'));
 	// console.log('opp board', JSON.stringify(oppCopy));
 };
@@ -593,14 +631,23 @@ export const applyMinionDeathEffect = (
 		removeOldMurkEyeAttack(boardWithDeadEntity, allCards);
 		removeOldMurkEyeAttack(otherBoard, allCards);
 	}
-
-	if (AURA_ORIGINS.includes(deadEntity.cardId)) {
-		removeAurasAfterAuraSourceDeath(boardWithDeadEntity, deadEntity, cardsData);
-	}
-
 	if (deadEntity.taunt) {
 		applyBristlemaneScrapsmithEffect(boardWithDeadEntity, boardWithDeadEntityHero, allCards, spectator);
 	}
+	if (deadEntity.cardId === CardIds.EternalKnight || deadEntity.cardId === CardIds.EternalKnightBattlegrounds) {
+		applyEternalKnightEffect(boardWithDeadEntity, allCards, spectator);
+	}
+
+	// Putricide-only
+	boardWithDeadEntity
+		.filter((e) => e.additionalCards?.includes(CardIds.FlesheatingGhoulLegacy_BG26_tt_004))
+		.forEach((e) => {
+			modifyAttack(e, 1, boardWithDeadEntity, allCards);
+			afterStatsUpdate(e, boardWithDeadEntity, allCards);
+		});
+
+	applyRotHideGnollEffect(boardWithDeadEntity, allCards, spectator);
+
 	// Overkill
 	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_BGS_032) {
@@ -875,6 +922,29 @@ const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsServ
 	}
 };
 
+const applyEternalKnightEffect = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): void => {
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].cardId === CardIds.EternalKnight || board[i].cardId === CardIds.EternalKnightBattlegrounds) {
+			const multiplier = board[i].cardId === CardIds.EternalKnightBattlegrounds ? 2 : 1;
+			modifyAttack(board[i], multiplier * 1, board, allCards);
+			modifyHealth(board[i], multiplier * 1, board, allCards);
+			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
+		}
+	}
+};
+
+const applyRotHideGnollEffect = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): void => {
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].cardId === CardIds.RotHideGnoll || board[i].cardId === CardIds.RotHideGnollBattlegrounds) {
+			const multiplier = board[i].cardId === CardIds.RotHideGnollBattlegrounds ? 2 : 1;
+			modifyAttack(board[i], multiplier * 1, board, allCards);
+			afterStatsUpdate(board[i], board, allCards);
+			spectator.registerPowerTarget(board[i], board[i], board);
+		}
+	}
+};
+
 const applyBristlemaneScrapsmithEffect = (
 	board: BoardEntity[],
 	boardPlayerEntity: BgsPlayerEntity,
@@ -947,7 +1017,7 @@ export const rememberDeathrattles = (
 	sharedState: SharedState,
 ): void => {
 	const validDeathrattles = deadEntities
-		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId) || isFish(entity.cardId))
+		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId) || isFish(entity))
 		.map((entity) => ({ cardId: entity.cardId, repeats: 1, timing: sharedState.currentEntityId++ }));
 	const validEnchantments = deadEntities
 		.filter((entity) => entity.enchantments?.length)

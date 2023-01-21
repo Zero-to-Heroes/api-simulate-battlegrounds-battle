@@ -38,10 +38,10 @@ export const applyAvengeEffects = (
 		// Get Tony to be processed first, because of the "when turned golden, the minion ignores the death for the avenge counter"
 		// behavior
 		.sort((a, b) => {
-			if (a.cardId === CardIds.TonyTwoTusk || a.cardId === CardIds.TonyTwoTuskBattlegrounds) {
+			if (a.cardId === CardIds.TonyTwoTusk_BG21_031 || a.cardId === CardIds.TonyTwoTusk_BG21_031_G) {
 				return -1;
 			}
-			if (b.cardId === CardIds.TonyTwoTusk || b.cardId === CardIds.TonyTwoTuskBattlegrounds) {
+			if (b.cardId === CardIds.TonyTwoTusk_BG21_031 || b.cardId === CardIds.TonyTwoTusk_BG21_031_G) {
 				return 1;
 			}
 			return 0;
@@ -127,12 +127,12 @@ const handleAvenge = (
 		case CardIds.BirdBuddyBattlegrounds:
 			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
 			break;
-		case CardIds.BuddingGreenthumb_BG21_030:
-		case CardIds.BuddingGreenthumb_BG21_030_G:
+		case CardIds.BuddingGreenthumb:
+		case CardIds.BuddingGreenthumbBattlegrounds:
 			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
 			neighbours.forEach((entity) => {
-				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2, boardWithDeadEntity, allCards);
-				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1, boardWithDeadEntity, allCards);
+				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2, boardWithDeadEntity, allCards);
+				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1, boardWithDeadEntity, allCards);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
 			});
@@ -159,13 +159,13 @@ const handleAvenge = (
 				spectator,
 			);
 			break;
-		case CardIds.PalescaleCrocolisk:
+		case CardIds.PalescaleCrocolisk_BG21_001:
 			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
 			if (!!target1) {
 				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
 			}
 			break;
-		case CardIds.PalescaleCrocoliskBattlegrounds:
+		case CardIds.PalescaleCrocolisk_BG21_001_G:
 			const target2 = grantRandomStats(avenger, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
 			if (!!target2) {
 				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
@@ -181,10 +181,10 @@ const handleAvenge = (
 		case CardIds.PashmarTheVengefulBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
-		case CardIds.WitchwingNestmatron_BG21_038:
+		case CardIds.WitchwingNestmatron:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
-		case CardIds.WitchwingNestmatron_BG21_038_G:
+		case CardIds.WitchwingNestmatronBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.Thorncaller:
@@ -211,7 +211,7 @@ const handleAvenge = (
 				}
 			}
 			break;
-		case CardIds.MechanoTank:
+		case CardIds.MechanoTank_BG21_023:
 			// This can be null if the avenge triggers when the last enemy minion dies as well
 			const target = getRandomMinionWithHighestHealth(otherBoard);
 			spectator.registerPowerTarget(avenger, target, otherBoard);
@@ -229,7 +229,7 @@ const handleAvenge = (
 				spectator,
 			);
 			break;
-		case CardIds.MechanoTankBattlegrounds:
+		case CardIds.MechanoTank_BG21_023_G:
 			for (let i = 0; i < 2; i++) {
 				const target = getRandomMinionWithHighestHealth(otherBoard);
 				spectator.registerPowerTarget(avenger, target, otherBoard);
@@ -248,7 +248,7 @@ const handleAvenge = (
 				);
 			}
 			break;
-		case CardIds.TonyTwoTusk:
+		case CardIds.TonyTwoTusk_BG21_031:
 			const nonGoldenMinions = boardWithDeadEntity
 				.filter((e) => e.entityId !== avenger.entityId)
 				.filter((e) => {
@@ -260,7 +260,7 @@ const handleAvenge = (
 				makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
 			}
 			break;
-		case CardIds.TonyTwoTuskBattlegrounds:
+		case CardIds.TonyTwoTusk_BG21_031_G:
 			for (let i = 0; i < 2; i++) {
 				const nonGoldenMinions = boardWithDeadEntity.filter((e) => {
 					const ref = allCards.getCard(e.cardId);

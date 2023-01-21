@@ -3,7 +3,7 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { addCardsInHand } from '../utils';
+import { addCardsInHand, updateDivineShield } from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -17,7 +17,9 @@ export const applyFrenzy = (
 	spectator: Spectator,
 ): void => {
 	if (entityWithFrenzy.cardId === CardIds.BristlebackKnight || entityWithFrenzy.cardId === CardIds.BristlebackKnightBattlegrounds) {
-		entityWithFrenzy.divineShield = true;
+		if (!entityWithFrenzy.divineShield) {
+			updateDivineShield(entityWithFrenzy, entityWithFrenzyBoard, true, allCards);
+		}
 	} else if (entityWithFrenzy.cardId === CardIds.Roadboar || entityWithFrenzy.cardId === CardIds.RoadboarBattlegrounds) {
 		addCardsInHand(
 			entityWithFrenzyBoardHero,

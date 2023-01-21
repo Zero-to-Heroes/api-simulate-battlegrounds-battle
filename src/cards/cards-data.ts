@@ -1,30 +1,7 @@
 import { AllCardsService, CardIds, GameTag, isBattlegroundsCard, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { getRaceEnum, hasMechanic } from '../utils';
+import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 
-export const AURA_ENCHANTMENTS: readonly string[][] = [
-	[CardIds.Kathranatir_BG21_039, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e],
-	[CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge],
-	[CardIds.MurlocWarleaderLegacy_BG_EX1_507, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment],
-	[CardIds.MurlocWarleaderLegacyBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds],
-	[CardIds.SouthseaCaptainLegacy_BG_NEW1_027, CardIds.SouthseaCaptain_YarrrLegacyEnchantment],
-	[CardIds.SouthseaCaptainLegacyBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds],
-	[
-		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy,
-		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_e,
-	],
-	[
-		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G,
-		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e,
-	],
-	[CardIds.RotHideGnoll, CardIds.RotHideGnollEnchantment],
-	[CardIds.RotHideGnoll_G, CardIds.RotHideGnollEnchantment_G],
-	[CardIds.CyborgDrake, CardIds.CyborgDrake_Enchantment],
-	[CardIds.CyborgDrakeBattlegrounds, CardIds.CardIds.CyborgDrake_Enchantment_G],
-];
-// Auras are effects that are permanent (unlike deathrattles or "whenever" effects)
-// and that stop once the origin entity leaves play (so it doesn't include buffs)
-export const AURA_ORIGINS: readonly string[] = AURA_ENCHANTMENTS.map((pair) => pair[0]);
 export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.CorruptedMyrmidon,
 	CardIds.CorruptedMyrmidonBattlegrounds,
@@ -38,8 +15,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.RedWhelpBattlegrounds,
 	CardIds.AmberGuardian,
 	CardIds.AmberGuardianBattlegrounds,
-	CardIds.InterrogatorWhitemane,
-	CardIds.InterrogatorWhitemaneBattlegrounds,
+	CardIds.InterrogatorWhitemane_BG24_704,
+	CardIds.InterrogatorWhitemane_BG24_704_G,
 	CardIds.Soulsplitter,
 	CardIds.SoulsplitterBattlegrounds,
 ];
@@ -56,7 +33,6 @@ export class CardsData {
 	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
-	public auraOrigins: readonly string[];
 
 	private minionsForTier: { [key: string]: readonly ReferenceCard[] };
 
@@ -127,28 +103,28 @@ export class CardsData {
 				return 1;
 			case CardIds.FrostwolfLieutenant:
 			case CardIds.FrostwolfLieutenantBattlegrounds:
-			case CardIds.MechanoTank:
-			case CardIds.MechanoTankBattlegrounds:
-			case CardIds.PalescaleCrocolisk:
-			case CardIds.PalescaleCrocoliskBattlegrounds:
+			case CardIds.MechanoTank_BG21_023:
+			case CardIds.MechanoTank_BG21_023_G:
+			case CardIds.PalescaleCrocolisk_BG21_001:
+			case CardIds.PalescaleCrocolisk_BG21_001_G:
 			case CardIds.StormpikeLieutenant:
 			case CardIds.StormpikeLieutenantBattlegrounds:
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
 				return 2;
-			case CardIds.BuddingGreenthumb_BG21_030:
-			case CardIds.BuddingGreenthumb_BG21_030_G:
+			case CardIds.BuddingGreenthumb:
+			case CardIds.BuddingGreenthumbBattlegrounds:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
-			case CardIds.WitchwingNestmatron_BG21_038:
-			case CardIds.WitchwingNestmatron_BG21_038_G:
+			case CardIds.WitchwingNestmatron:
+			case CardIds.WitchwingNestmatronBattlegrounds:
 			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 3;
 			case CardIds.ImpatientDoomsayer:
 			case CardIds.ImpatientDoomsayerBattlegrounds:
 			case CardIds.Sisefin_BG21_009:
 			case CardIds.Sisefin_BG21_009_G:
-			case CardIds.TonyTwoTusk:
-			case CardIds.TonyTwoTuskBattlegrounds:
+			case CardIds.TonyTwoTusk_BG21_031:
+			case CardIds.TonyTwoTusk_BG21_031_G:
 			case CardIds.Onyxia_Broodmother:
 				return 4;
 		}

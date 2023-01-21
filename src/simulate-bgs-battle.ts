@@ -4,7 +4,7 @@ import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
-import { removeAuras, setImplicitData, setImplicitDataHero } from './simulation/auras';
+import { setImplicitData, setImplicitDataHero, setMissingAuras } from './simulation/auras';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
 import { addImpliedMechanics } from './utils';
@@ -57,12 +57,14 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 
 	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
 	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
-	removeAuras(playerBoard, cardsData);
-	removeAuras(opponentBoard, cardsData);
-	setImplicitData(playerBoard, cardsData); // Avenge, maxHealth, etc.
-	setImplicitData(opponentBoard, cardsData); // Avenge, maxHealth, etc.
+	// When using the simulator, the aura is not applied when receiving the board state. When
+	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player);
+	setMissingAuras(opponentBoard, opponentInfo.player, playerInfo.player);
+	// Avenge, maxHealth, etc.
+	setImplicitData(playerBoard, cardsData);
+	setImplicitData(opponentBoard, cardsData);
+	// Avenge, globalInfo
 	setImplicitDataHero(playerInfo.player, cardsData, true);
-	// console.log('after implicit data', playerInfo.player.avengeCurrent, playerInfo.player.avengeDefault);
 	setImplicitDataHero(opponentInfo.player, cardsData, false);
 
 	// We do this so that we can have mutated objects inside the simulation and still

@@ -5,7 +5,16 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
-import { afterStatsUpdate, hasCorrectTribe, isCorrectTribe, makeMinionGolden, modifyAttack, modifyHealth, stringifySimple } from '../utils';
+import {
+	afterStatsUpdate,
+	hasCorrectTribe,
+	isCorrectTribe,
+	makeMinionGolden,
+	modifyAttack,
+	modifyHealth,
+	stringifySimple,
+	updateDivineShield,
+} from '../utils';
 import {
 	dealDamageToEnemy,
 	dealDamageToRandomEnemy,
@@ -14,7 +23,6 @@ import {
 	processMinionDeath,
 	simulateAttack,
 } from './attack';
-import { applyAuras, removeAuras } from './auras';
 import {
 	applyEarthInvocationEnchantment,
 	applyFireInvocationEnchantment,
@@ -436,34 +444,6 @@ export const handleStartOfCombatHeroPowers = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
-	const attackingHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	const defendingHeroPowerId = opponentEntity.heroPowerId || getHeroPowerForHero(opponentEntity.cardId);
-	const numberOfDeathwingPresents =
-		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
-		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	const isSmokingGunPresentForAttacker = playerEntity.questRewards?.includes(CardIds.TheSmokingGun);
-	const isSmokingGunPresentForDefender = opponentEntity.questRewards?.includes(CardIds.TheSmokingGun);
-	const isVolatileVenomPresentForAttacker = playerEntity.questRewards?.includes(CardIds.VolatileVenom);
-	const isVolatileVenomPresentForDefender = opponentEntity.questRewards?.includes(CardIds.VolatileVenom);
-	applyAuras(
-		playerBoard,
-		numberOfDeathwingPresents,
-		isSmokingGunPresentForAttacker,
-		isVolatileVenomPresentForAttacker,
-		cardsData,
-		allCards,
-		sharedState,
-	);
-	applyAuras(
-		opponentBoard,
-		numberOfDeathwingPresents,
-		isSmokingGunPresentForDefender,
-		isVolatileVenomPresentForDefender,
-		cardsData,
-		allCards,
-		sharedState,
-	);
-
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
 	if (Math.random() < 0.5) {
@@ -517,8 +497,6 @@ export const handleStartOfCombatHeroPowers = (
 			spectator,
 		);
 	}
-	removeAuras(playerBoard, cardsData);
-	removeAuras(opponentBoard, cardsData);
 	return currentAttacker;
 };
 
@@ -604,7 +582,9 @@ const handleAlakirForPlayer = (
 ): void => {
 	const firstEntity = playerBoard[0];
 	firstEntity.windfury = true;
-	firstEntity.divineShield = true;
+	if (!firstEntity.divineShield) {
+		updateDivineShield(firstEntity, playerBoard, true, allCards);
+	}
 	firstEntity.taunt = true;
 	spectator.registerPowerTarget(firstEntity, firstEntity, playerBoard);
 };
@@ -779,34 +759,6 @@ export const performStartOfCombatMinionsForPlayer = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): void => {
-	const attackingHeroPowerId = attackingBoardHero.heroPowerId || getHeroPowerForHero(attackingBoardHero.cardId);
-	const defendingHeroPowerId = defendingBoardHero.heroPowerId || getHeroPowerForHero(defendingBoardHero.cardId);
-	const numberOfDeathwingPresents =
-		(attackingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0) +
-		(defendingHeroPowerId === CardIds.AllWillBurnBattlegrounds ? 1 : 0);
-	const isSmokingGunPresentForAttacker = attackingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
-	const isSmokingGunPresentForDefender = defendingBoardHero.questRewards?.includes(CardIds.TheSmokingGun);
-	const isVolatileVenomPresentForAttacker = attackingBoardHero.questRewards?.includes(CardIds.VolatileVenom);
-	const isVolatileVenomPresentForDefender = defendingBoardHero.questRewards?.includes(CardIds.VolatileVenom);
-	applyAuras(
-		attackingBoard,
-		numberOfDeathwingPresents,
-		isSmokingGunPresentForAttacker,
-		isVolatileVenomPresentForAttacker,
-		cardsData,
-		allCards,
-		sharedState,
-	);
-	applyAuras(
-		defendingBoard,
-		numberOfDeathwingPresents,
-		isSmokingGunPresentForDefender,
-		isVolatileVenomPresentForDefender,
-		cardsData,
-		allCards,
-		sharedState,
-	);
-
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp) {
 		const damage = attackingBoardBefore
@@ -904,12 +856,14 @@ export const performStartOfCombatMinionsForPlayer = (
 			const dragonsToConsider = otherDragons;
 			const otherDragon = pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
 			if (otherDragon) {
-				otherDragon.divineShield = true;
+				if (!otherDragon.divineShield) {
+					updateDivineShield(otherDragon, attackingBoard, true, allCards);
+				}
 				modifyAttack(otherDragon, 2, attackingBoard, allCards);
 				modifyHealth(otherDragon, 2, attackingBoard, allCards);
 				afterStatsUpdate(otherDragon, attackingBoard, allCards);
 				spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
-				dragonsToConsider.remove(otherDragon);
+				dragonsToConsider.splice(dragonsToConsider.indexOf(otherDragon), 1);
 			}
 		}
 	} else if (attacker.cardId === CardIds.Soulsplitter || attacker.cardId === CardIds.SoulsplitterBattlegrounds) {
@@ -934,7 +888,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
 		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
-	} else if (attacker.cardId === CardIds.InterrogatorWhitemane || attacker.cardId === CardIds.InterrogatorWhitemaneBattlegrounds) {
+	} else if (attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704 || attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G) {
 		if (defendingBoard.length > 0) {
 			const attackerIndex = attackingBoard.indexOf(attacker);
 			const defenderPosition = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
@@ -964,7 +918,9 @@ export const performStartOfCombatMinionsForPlayer = (
 						afterStatsUpdate(attacker, attackingBoard, allCards);
 						break;
 					case 'divine-shield':
-						attacker.divineShield = true;
+						if (!attacker.divineShield) {
+							updateDivineShield(attacker, attackingBoard, true, allCards);
+						}
 						break;
 					case 'taunt':
 						attacker.taunt = true;
@@ -977,15 +933,13 @@ export const performStartOfCombatMinionsForPlayer = (
 			}
 		}
 	}
-	removeAuras(attackingBoard, cardsData);
-	removeAuras(defendingBoard, cardsData);
 };
 
 const castImpure = (entity: BoardEntity, source: BoardEntity, board: BoardEntity[], spectator: Spectator) => {
 	if (!entity) {
 		return;
 	}
-	const multiplier = source.cardId === CardIds.InterrogatorWhitemaneBattlegrounds ? 3 : 2;
+	const multiplier = source.cardId === CardIds.InterrogatorWhitemane_BG24_704_G ? 3 : 2;
 	entity.taunt = true;
 	entity.damageMultiplier = entity.damageMultiplier ?? 1;
 	entity.damageMultiplier *= multiplier;
