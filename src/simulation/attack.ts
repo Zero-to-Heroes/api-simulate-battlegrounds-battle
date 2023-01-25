@@ -1571,6 +1571,7 @@ const buildBoardAfterRebornSpawns = (
 					true,
 					true,
 					entityToSpawn,
+					deadEntity,
 			  )
 			: [];
 	performEntitySpawns(

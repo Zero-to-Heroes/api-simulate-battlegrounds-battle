@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, ALL_BG_RACES, CardIds, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { AllCardsService, ALL_BG_RACES, CardIds, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
@@ -73,6 +73,7 @@ export const buildSingleBoardEntity = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 	entityToSpawn: BoardEntity,
+	originalEntity: BoardEntity = null,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId as CardIds) !== -1;
@@ -80,11 +81,11 @@ export const buildSingleBoardEntity = (
 	const newEntity = !!entityToSpawn
 		? { ...entityToSpawn, entityId: sharedState.currentEntityId++ }
 		: addImpliedMechanics({
+				entityId: entityId,
 				attack: card.attack,
 				attacksPerformed: 0,
 				cardId: cardId,
 				divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
-				entityId: entityId,
 				health: card.health,
 				maxHealth: card.health,
 				taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId as CardIds),
@@ -100,6 +101,21 @@ export const buildSingleBoardEntity = (
 		  } as BoardEntity);
 
 	if (spawnReborn && !entityToSpawn) {
+		if (cardId === CardIds.BuildAnUndead_PutricidesCreationToken) {
+			const stitchedCardId = !!originalEntity.additionalCards?.length ? originalEntity.additionalCards[0] : null;
+			if (stitchedCardId) {
+				const stitchedCard = allCards.getCard(stitchedCardId);
+				newEntity.attack = newEntity.attack + stitchedCard.attack;
+				newEntity.maxHealth = newEntity.maxHealth + stitchedCard.health;
+				newEntity.taunt =
+					newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) || TAUNT_IDS.includes(stitchedCardId as CardIds);
+				newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
+				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
+				newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
+				newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
+				newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
+			}
+		}
 		newEntity.health = 1;
 		newEntity.reborn = false;
 	}
@@ -430,7 +446,7 @@ export const addStatsToBoard = (
 	tribe?: string,
 ): void => {
 	for (const entity of board) {
-		if (!tribe || isCorrectTribe(allCards.getCard(entity.cardId).races, Race[tribe])) {
+		if (!tribe || hasCorrectTribe(entity, Race[tribe], allCards)) {
 			modifyAttack(entity, attack, board, allCards);
 			modifyHealth(entity, health, board, allCards);
 			afterStatsUpdate(entity, board, allCards);

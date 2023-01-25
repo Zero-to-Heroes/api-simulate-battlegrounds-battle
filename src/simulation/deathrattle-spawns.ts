@@ -24,6 +24,7 @@ export const spawnEntities = (
 	spawnReborn = false,
 	useKhadgar = true,
 	boardEntityToSpawn: BoardEntity = null,
+	originalEntity: BoardEntity = null,
 ): readonly BoardEntity[] => {
 	if (!cardId) {
 		console.error('Cannot spawn a minion without any cardId defined', stringifySimple(boardToSpawnInto, allCards), new Error().stack);
@@ -50,6 +51,7 @@ export const spawnEntities = (
 			cardsData,
 			sharedState,
 			boardEntityToSpawn,
+			originalEntity,
 		);
 		if (!newMinion.cardId) {
 			console.warn('Invalid spawn', newMinion, cardId);
