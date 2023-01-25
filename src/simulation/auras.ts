@@ -110,7 +110,7 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	setMissingAura(
 		board.filter((e) => e.divineShield),
 		CardIds.CyborgDrake,
-		CardIds.CyborgEnhancementEnchantment_BG25_901e,
+		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043e,
 		10,
 		0,
 		false,
@@ -118,7 +118,7 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	setMissingAura(
 		board.filter((e) => e.divineShield),
 		CardIds.CyborgDrakeBattlegrounds,
-		CardIds.CyborgEnhancementEnchantment_BG25_901e2,
+		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043_Ge,
 		20,
 		0,
 		false,
@@ -132,6 +132,7 @@ const setMissingAura = (
 	attack: number,
 	health: number,
 	ignoreSelf = true,
+	allCards: AllCardsService = null,
 ): void => {
 	const buffers = board.filter((e) => e.cardId === minionCardId);
 	for (const buffer of buffers) {

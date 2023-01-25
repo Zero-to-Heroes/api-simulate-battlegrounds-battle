@@ -524,7 +524,11 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}}` : null;
+	return entity
+		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}/ench=${
+				entity.enchantments
+		  }`
+		: null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {
