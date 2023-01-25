@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { normalizeCardIdForSkin } from '../utils';
+import { hasCorrectTribe, normalizeCardIdForSkin } from '../utils';
 
-export const setMissingAuras = (board: BoardEntity[], boardHero: BgsPlayerEntity, otherHero: BgsPlayerEntity): void => {
-	setMissingMinionsAura(board);
+export const setMissingAuras = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+): void => {
+	setMissingMinionsAura(board, allCards);
 	setMissingHeroPowerAura(board, boardHero, otherHero);
 };
 
@@ -43,13 +48,49 @@ export const setMissingHeroPowerAura = (board: BoardEntity[], boardHero: BgsPlay
 	}
 };
 
-const setMissingMinionsAura = (board: BoardEntity[]): void => {
-	setMissingAura(board, CardIds.SouthseaCaptainLegacy_BG_NEW1_027, CardIds.SouthseaCaptain_YarrrLegacyEnchantment, 1, 1);
-	setMissingAura(board, CardIds.SouthseaCaptainLegacyBattlegrounds, CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds, 2, 2);
-	setMissingAura(board, CardIds.MurlocWarleaderLegacy_BG_EX1_507, CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment, 2, 0);
-	setMissingAura(board, CardIds.MurlocWarleaderLegacyBattlegrounds, CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds, 4, 0);
-	setMissingAura(board, CardIds.Kathranatir_BG21_039, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e, 2, 0);
-	setMissingAura(board, CardIds.KathranatirBattlegrounds, CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge, 4, 0);
+const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService): void => {
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards)),
+		CardIds.SouthseaCaptainLegacy_BG_NEW1_027,
+		CardIds.SouthseaCaptain_YarrrLegacyEnchantment,
+		1,
+		1,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards)),
+		CardIds.SouthseaCaptainLegacyBattlegrounds,
+		CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds,
+		2,
+		2,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards)),
+		CardIds.MurlocWarleaderLegacy_BG_EX1_507,
+		CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment,
+		2,
+		0,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards)),
+		CardIds.MurlocWarleaderLegacyBattlegrounds,
+		CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds,
+		4,
+		0,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards)),
+		CardIds.Kathranatir_BG21_039,
+		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e,
+		2,
+		0,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards)),
+		CardIds.KathranatirBattlegrounds,
+		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge,
+		4,
+		0,
+	);
 	setMissingAura(
 		board,
 		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy,
@@ -66,8 +107,22 @@ const setMissingMinionsAura = (board: BoardEntity[]): void => {
 		0,
 		false,
 	);
-	setMissingAura(board, CardIds.CyborgDrake, CardIds.CyborgEnhancementEnchantment_BG25_901e, 10, 0, false);
-	setMissingAura(board, CardIds.CyborgDrakeBattlegrounds, CardIds.CyborgEnhancementEnchantment_BG25_901e2, 20, 0, false);
+	setMissingAura(
+		board.filter((e) => e.divineShield),
+		CardIds.CyborgDrake,
+		CardIds.CyborgEnhancementEnchantment_BG25_901e,
+		10,
+		0,
+		false,
+	);
+	setMissingAura(
+		board.filter((e) => e.divineShield),
+		CardIds.CyborgDrakeBattlegrounds,
+		CardIds.CyborgEnhancementEnchantment_BG25_901e2,
+		20,
+		0,
+		false,
+	);
 };
 
 const setMissingAura = (

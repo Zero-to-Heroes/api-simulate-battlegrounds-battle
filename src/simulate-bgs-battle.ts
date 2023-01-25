@@ -58,8 +58,8 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
 	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
 	// When using the simulator, the aura is not applied when receiving the board state. When
-	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player);
-	setMissingAuras(opponentBoard, opponentInfo.player, playerInfo.player);
+	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player, cards);
+	setMissingAuras(opponentBoard, opponentInfo.player, playerInfo.player, cards);
 	// Avenge, maxHealth, etc.
 	setImplicitData(playerBoard, cardsData);
 	setImplicitData(opponentBoard, cardsData);
