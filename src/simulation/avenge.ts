@@ -275,7 +275,7 @@ const handleAvenge = (
 		case CardIds.GhoulOfTheFeast:
 		case CardIds.GhoulOfTheFeastBattlegrounds:
 			const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeastBattlegrounds ? 2 : 1;
-			grantStatsToMinionsOfEachType(avenger, boardWithDeadEntity, ghoulMultiplier * 3, 0, allCards, spectator);
+			grantStatsToMinionsOfEachType(avenger, boardWithDeadEntity, ghoulMultiplier * 2, 0, allCards, spectator);
 			break;
 		case CardIds.HungeringAbomination:
 		case CardIds.HungeringAbominationBattlegrounds:

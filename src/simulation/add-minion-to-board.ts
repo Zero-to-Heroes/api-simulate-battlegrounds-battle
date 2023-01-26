@@ -94,7 +94,7 @@ const handleSpawnEffect = (
 				board
 					.filter((e) => e.divineShield)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.CyborgDrakeBattlegrounds ? 20 : 10;
+						e.attack += spawned.cardId === CardIds.CyborgDrakeBattlegrounds ? 16 : 8;
 					});
 				break;
 
@@ -167,7 +167,7 @@ const handleSpawnEffect = (
 			case CardIds.CyborgDrake:
 			case CardIds.CyborgDrakeBattlegrounds:
 				if (spawned.divineShield) {
-					spawned.attack += entity.cardId === CardIds.CyborgDrakeBattlegrounds ? 20 : 10;
+					spawned.attack += entity.cardId === CardIds.CyborgDrakeBattlegrounds ? 16 : 8;
 				}
 				break;
 
@@ -322,7 +322,7 @@ const handleAfterSpawnEffect = (board: BoardEntity[], spawned: BoardEntity, allC
 			case CardIds.Felstomper:
 			case CardIds.FelstomperBattlegrounds:
 				// console.debug('felstomper');
-				const felstomperBuff = entity.cardId === CardIds.FelstomperBattlegrounds ? 6 : 3;
+				const felstomperBuff = entity.cardId === CardIds.FelstomperBattlegrounds ? 4 : 2;
 				board.forEach((e) => {
 					modifyAttack(e, felstomperBuff, board, allCards);
 					afterStatsUpdate(e, board, allCards);

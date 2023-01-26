@@ -393,16 +393,16 @@ export const updateDivineShield = (entity: BoardEntity, board: BoardEntity[], ne
 	if (entity.divineShield) {
 		const boardForDrake = board;
 		const statsBonus =
-			10 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
-			20 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
+			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
 		// Don't trigger all "on attack changed" effects, since it's an aura
 		entity.attack += statsBonus;
 	} else {
 		// Also consider itself
 		const boardForDrake = board;
 		const statsBonus =
-			10 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
-			20 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
+			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
 		entity.attack -= statsBonus;
 	}
 };

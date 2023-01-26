@@ -867,11 +867,14 @@ export const performStartOfCombatMinionsForPlayer = (
 			}
 		}
 	} else if (attacker.cardId === CardIds.Soulsplitter || attacker.cardId === CardIds.SoulsplitterBattlegrounds) {
-		const undeadsWithoutReborn = attackingBoard.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards)).filter((e) => !e.reborn);
-		const chosenUndead = pickRandom(undeadsWithoutReborn);
-		if (chosenUndead) {
-			chosenUndead.reborn = true;
-			spectator.registerPowerTarget(attacker, chosenUndead, attackingBoard);
+		const numberOfTargets = attacker.cardId === CardIds.SoulsplitterBattlegrounds ? 2 : 1;
+		for (let i = 0; i < numberOfTargets; i++) {
+			const undeadsWithoutReborn = attackingBoard.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards)).filter((e) => !e.reborn);
+			const chosenUndead = pickRandom(undeadsWithoutReborn);
+			if (chosenUndead) {
+				chosenUndead.reborn = true;
+				spectator.registerPowerTarget(attacker, chosenUndead, attackingBoard);
+			}
 		}
 	} else if (attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy || attacker.cardId === CardIds.CrabbyBattlegrounds) {
 		const neighbours = getNeighbours(attackingBoard, attacker);

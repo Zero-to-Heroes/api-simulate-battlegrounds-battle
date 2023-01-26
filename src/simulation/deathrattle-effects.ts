@@ -184,9 +184,10 @@ export const handleDeathrattleEffects = (
 			case CardIds.AnubarakNerubianKing:
 			case CardIds.AnubarakNerubianKingBattlegrounds:
 				const anubarakMultiplier = deadEntityCardId === CardIds.AnubarakNerubianKingBattlegrounds ? 2 : 1;
+				const attackBonus = anubarakMultiplier * 1;
 				for (let i = 0; i < multiplier; i++) {
-					addStatsToBoard(deadEntity, boardWithDeadEntity, anubarakMultiplier * 2, 0, allCards, spectator, Race[Race.UNDEAD]);
-					boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += anubarakMultiplier * 2;
+					addStatsToBoard(deadEntity, boardWithDeadEntity, attackBonus, 0, allCards, spectator, Race[Race.UNDEAD]);
+					boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += attackBonus;
 				}
 				break;
 			case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:

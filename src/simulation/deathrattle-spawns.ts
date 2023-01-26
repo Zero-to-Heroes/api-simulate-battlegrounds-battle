@@ -166,7 +166,7 @@ export const spawnEntitiesFromDeathrattle = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.EternalKnight,
-							deadEntityCardId === CardIds.EternalSummonerBattlegrounds ? 4 : 2,
+							deadEntityCardId === CardIds.EternalSummonerBattlegrounds ? 2 : 1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,

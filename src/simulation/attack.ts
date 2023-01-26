@@ -1237,13 +1237,13 @@ export const applyOnAttackBuffs = (
 			.filter((entity) => entity.cardId === CardIds.RipsnarlCaptainBattlegrounds)
 			.filter((e) => e.entityId !== attacker.entityId);
 		ripsnarls.forEach((captain) => {
-			modifyAttack(attacker, 2, attackingBoard, allCards);
-			modifyHealth(attacker, 2, attackingBoard, allCards);
+			modifyAttack(attacker, 3, attackingBoard, allCards);
+			modifyHealth(attacker, 3, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
 		});
 		ripsnarlsTB.forEach((captain) => {
-			modifyAttack(attacker, 4, attackingBoard, allCards);
-			modifyHealth(attacker, 4, attackingBoard, allCards);
+			modifyAttack(attacker, 6, attackingBoard, allCards);
+			modifyHealth(attacker, 6, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
 		});
 	}
@@ -1273,7 +1273,7 @@ export const applyOnAttackBuffs = (
 			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {
 				modifyAttack(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2, attackingBoard, allCards);
-				modifyHealth(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 2 : 1, attackingBoard, allCards);
+				modifyHealth(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2, attackingBoard, allCards);
 				spectator.registerPowerTarget(attacker, e, attackingBoard);
 			});
 	}
@@ -1593,7 +1593,7 @@ const buildBoardAfterRebornSpawns = (
 			.filter((e) => e.cardId === CardIds.SisterDeathwhisper || e.cardId === CardIds.SisterDeathwhisperBattlegrounds)
 			.forEach((e) => {
 				const multiplier = e.cardId === CardIds.SisterDeathwhisperBattlegrounds ? 2 : 1;
-				addStatsToBoard(e, boardWithKilledMinion, multiplier * 1, multiplier * 3, allCards, spectator, Race[Race.UNDEAD]);
+				addStatsToBoard(e, boardWithKilledMinion, multiplier * 1, multiplier * 2, allCards, spectator, Race[Race.UNDEAD]);
 			});
 		boardWithKilledMinion
 			.filter((e) => e.cardId === CardIds.JellyBelly || e.cardId === CardIds.JellyBellyBattlegrounds)

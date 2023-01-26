@@ -45,7 +45,7 @@ const handleMinionRemovedEffect = (board: BoardEntity[], removed: BoardEntity, a
 			board
 				.filter((e) => e.divineShield)
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.CyborgDrakeBattlegrounds ? 20 : 10;
+					const diff = removed.cardId === CardIds.CyborgDrakeBattlegrounds ? 16 : 8;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
