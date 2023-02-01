@@ -252,18 +252,6 @@ const handleSpawnEffect = (
 		case CardIds.AllWillBurnBattlegrounds:
 			spawned.attack += 3;
 			break;
-		case CardIds.TheSmokingGun:
-			spawned.attack += 5;
-			break;
-		case CardIds.VolatileVenom:
-			spawned.attack += 7;
-			spawned.health += 7;
-			spawned.enchantments.push({
-				cardId: CardIds.VolatileVenom_VolatileEnchantment,
-				originEntityId: undefined,
-				timing: sharedState.currentEntityId++,
-			});
-			break;
 		case CardIds.SproutItOutBattlegrounds:
 			spawned.taunt = true;
 			modifyAttack(spawned, 1, board, allCards);
@@ -281,6 +269,25 @@ const handleSpawnEffect = (
 				afterStatsUpdate(spawned, board, allCards);
 			}
 			break;
+	}
+
+	if (!!boardHero.questRewards?.length) {
+		for (const quest of boardHero.questRewards) {
+			switch (quest) {
+				case CardIds.VolatileVenom:
+					spawned.attack += 7;
+					spawned.health += 7;
+					spawned.enchantments.push({
+						cardId: CardIds.VolatileVenom_VolatileEnchantment,
+						originEntityId: undefined,
+						timing: sharedState.currentEntityId++,
+					});
+					break;
+				case CardIds.TheSmokingGun:
+					spawned.attack += 5;
+					break;
+			}
+		}
 	}
 };
 
