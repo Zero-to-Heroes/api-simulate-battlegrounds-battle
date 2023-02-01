@@ -312,6 +312,11 @@ const performAttack = (
 				sharedState,
 				spectator,
 			);
+			// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
+			// cause wrong results to happen
+			if (attackingEntity.attack > 0 && neighbour.divineShield) {
+				updateDivineShield(neighbour, defendingBoard, false, allCards);
+			}
 		}
 	}
 	if (
@@ -609,6 +614,11 @@ export const dealDamageToEnemy = (
 		sharedState,
 		spectator,
 	);
+	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
+	// cause wrong results to happen
+	if (fakeAttacker.attack > 0 && defendingEntity.divineShield) {
+		updateDivineShield(defendingEntity, defendingBoard, false, allCards);
+	}
 	if (!isDeadBeforeDamage && actualDamageDone > 0) {
 		defendingEntity.lastAffectedByEntity = damageSource;
 	}
