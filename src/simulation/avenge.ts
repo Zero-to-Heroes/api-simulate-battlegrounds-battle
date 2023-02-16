@@ -181,10 +181,10 @@ const handleAvenge = (
 		case CardIds.PashmarTheVengefulBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
-		case CardIds.WitchwingNestmatron:
+		case CardIds.WitchwingNestmatron_BG21_038:
 			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 			break;
-		case CardIds.WitchwingNestmatronBattlegrounds:
+		case CardIds.WitchwingNestmatron_BG21_038_G:
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 			break;
 		case CardIds.Thorncaller:

@@ -115,8 +115,8 @@ export class CardsData {
 			case CardIds.BuddingGreenthumbBattlegrounds:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
-			case CardIds.WitchwingNestmatron:
-			case CardIds.WitchwingNestmatronBattlegrounds:
+			case CardIds.WitchwingNestmatron_BG21_038:
+			case CardIds.WitchwingNestmatron_BG21_038_G:
 			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 3;
 			case CardIds.ImpatientDoomsayer:

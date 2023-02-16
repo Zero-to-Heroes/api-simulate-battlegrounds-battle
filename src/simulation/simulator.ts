@@ -4,8 +4,8 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { SingleSimulationResult } from '../single-simulation-result';
-import { stringifySimple } from '../utils';
-import { simulateAttack } from './attack';
+import { buildSingleBoardEntity, stringifySimple } from '../utils';
+import { performEntitySpawns, simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -69,6 +69,16 @@ export class Simulator {
 			gameState,
 			spectator,
 		);
+		handleRapidReanimation(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			this.allCards,
+			this.spawns,
+			this.sharedState,
+			spectator,
+		);
 		// console.log('suggestedNewCurrentAttacker', suggestedNewCurrentAttacker);
 		// When both players have the same amount of minions, it's possible that Illidan's Start of Combat
 		// ability causes the same player to attack twice in a row, which is not the case in real life
@@ -83,6 +93,16 @@ export class Simulator {
 		// }
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
+			handleRapidReanimation(
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				this.allCards,
+				this.spawns,
+				this.sharedState,
+				spectator,
+			);
 			clearStealthIfNeeded(playerBoard, opponentBoard);
 			// console.log('this.currentSpeedAttacker', this.currentAttacker);
 			// If there are "attack immediately" minions, we keep the same player
@@ -190,3 +210,65 @@ export class Simulator {
 			.reduce((a, b) => a + b, 0);
 	}
 }
+
+const handleRapidReanimation = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	if (playerEntity.rapidReanimationMinion) {
+		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+	}
+	if (opponentEntity.rapidReanimationMinion) {
+		handleRapidReanimationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, allCards, spawns, sharedState, spectator);
+	}
+};
+
+const handleRapidReanimationForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	if (playerBoard.length >= 7) {
+		return;
+	}
+	const newMinion = buildSingleBoardEntity(
+		playerEntity.rapidReanimationMinion.cardId,
+		playerEntity,
+		playerBoard,
+		allCards,
+		playerEntity.rapidReanimationMinion.friendly,
+		sharedState.currentEntityId++,
+		false,
+		cardsData,
+		sharedState,
+		playerEntity.rapidReanimationMinion,
+		null,
+	);
+	const indexFromRight = Math.min(playerBoard.length, playerEntity.rapidReanimationIndexFromRight ?? 0);
+	performEntitySpawns(
+		[newMinion],
+		playerBoard,
+		playerEntity,
+		playerEntity,
+		indexFromRight,
+		opponentBoard,
+		opponentEntity,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+	spectator.registerPowerTarget(playerEntity, newMinion, playerBoard);
+	playerEntity.rapidReanimationMinion = null;
+};

@@ -1352,7 +1352,6 @@ const makeMinionsDie = (board: BoardEntity[], allCards: AllCardsService, spectat
 	const deadMinionIndexesFromRight: number[] = [];
 	const deadEntities: BoardEntity[] = [];
 	for (let i = 0; i < board.length; i++) {
-		const index = board.map((entity) => entity.entityId).indexOf(board[i].entityId);
 		if (board[i].health <= 0 || board[i].definitelyDead) {
 			deadMinionIndexesFromRight.push(board.length - (i + 1));
 			deadEntities.push(board[i]);
@@ -1561,7 +1560,7 @@ const buildBoardAfterRebornSpawns = (
 	let entityToSpawn: BoardEntity = null;
 	// TODO: test
 	if (deadEntity.cardId === CardIds.SinrunnerBlanchy || deadEntity.cardId === CardIds.SinrunnerBlanchyBattlegrounds) {
-		entityToSpawn = { ...deadEntity, health: deadEntity.maxHealth, reborn: false };
+		entityToSpawn = { ...deadEntity, health: deadEntity.maxHealth, divineShield: deadEntity.hadDivineShield, reborn: false };
 	}
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndexFromRight >= 0
@@ -1621,7 +1620,7 @@ export const performEntitySpawns = (
 	candidateEntities: readonly BoardEntity[],
 	boardWithKilledMinion: BoardEntity[],
 	boardWithKilledMinionHero: BgsPlayerEntity,
-	spawnSourceEntity: BoardEntity,
+	spawnSourceEntity: BoardEntity | BgsPlayerEntity,
 	spawnSourceEntityIndexFromRight: number,
 	opponentBoard: BoardEntity[],
 	opponentBoardHero: BgsPlayerEntity,

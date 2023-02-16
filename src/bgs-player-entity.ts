@@ -1,3 +1,5 @@
+import { BoardEntity } from './board-entity';
+
 export interface BgsPlayerEntity {
 	readonly cardId: string;
 	readonly nonGhostCardId?: string;
@@ -14,6 +16,8 @@ export interface BgsPlayerEntity {
 	globalInfo?: BgsPlayerGlobalInfo;
 
 	deadEyeDamageDone?: number;
+	rapidReanimationMinion?: BoardEntity;
+	rapidReanimationIndexFromRight?: number;
 }
 
 export interface BgsPlayerGlobalInfo {

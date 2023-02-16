@@ -120,6 +120,7 @@ export const buildSingleBoardEntity = (
 		newEntity.reborn = false;
 	}
 
+	newEntity.hadDivineShield = newEntity.divineShield || newEntity.hadDivineShield;
 	return newEntity;
 };
 
@@ -390,6 +391,9 @@ export const updateDivineShield = (entity: BoardEntity, board: BoardEntity[], ne
 	// 	return;
 	// }
 	entity.divineShield = newValue;
+	if (entity.divineShield) {
+		entity.hadDivineShield = true;
+	}
 	if (entity.divineShield) {
 		const boardForDrake = board;
 		const statsBonus =

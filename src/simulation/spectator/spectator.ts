@@ -183,7 +183,7 @@ export class Spectator {
 	}
 
 	public registerMinionsSpawn(
-		sourceEntity: BoardEntity,
+		sourceEntity: BoardEntity | BgsPlayerEntity,
 		boardOnWhichToSpawn: BoardEntity[],
 		spawnedEntities: readonly BoardEntity[],
 	): void {

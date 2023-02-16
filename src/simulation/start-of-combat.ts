@@ -618,6 +618,31 @@ const handleTamsinForPlayer = (
 	});
 };
 
+const handleTeronForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	// The board state is snapshot after the minion dies
+	const deadMinionEntityId = playerEntity.heroPowerInfo;
+	const minionThatWillDie = playerBoard.find((e) => e.entityId === deadMinionEntityId);
+	if (minionThatWillDie) {
+		const minionIndexFromRight = playerBoard.length - 1 - playerBoard.indexOf(minionThatWillDie);
+		playerEntity.rapidReanimationIndexFromRight = minionIndexFromRight;
+		playerEntity.rapidReanimationMinion = {
+			...minionThatWillDie,
+			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
+		} as BoardEntity;
+		minionThatWillDie.definitelyDead = true;
+		spectator.registerPowerTarget(playerEntity, minionThatWillDie, playerBoard);
+	}
+};
+
 const handlePlayerStartOfCombatHeroPowers = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
@@ -636,6 +661,10 @@ const handlePlayerStartOfCombatHeroPowers = (
 		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		// Tamsin's hero power somehow happens before the current attacker is chosen.
 		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
+		shouldRecomputeCurrentAttacker = true;
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
+		handleTeronForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		// Same as Tamsin?
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
@@ -737,6 +766,8 @@ export const getHeroPowerForHero = (heroCardId: string): string => {
 			return CardIds.RagePotionBattlegrounds;
 		case CardIds.DeathwingBattlegrounds:
 			return CardIds.AllWillBurnBattlegrounds;
+		case CardIds.TeronGorefiend_BG25_HERO_103:
+			return CardIds.TeronGorefiend_RapidReanimation;
 	}
 	return null;
 };
