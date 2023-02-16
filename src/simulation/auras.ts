@@ -52,7 +52,7 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards)),
 		CardIds.SouthseaCaptainLegacy_BG_NEW1_027,
-		CardIds.SouthseaCaptain_YarrrLegacyEnchantment,
+		CardIds.SouthseaCaptain_YarrrVanillaEnchantment,
 		1,
 		1,
 	);
