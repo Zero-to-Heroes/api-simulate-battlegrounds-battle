@@ -96,13 +96,13 @@ export class CardsData {
 		switch (cardId) {
 			case CardIds.BirdBuddy:
 			case CardIds.BirdBuddyBattlegrounds:
-			case CardIds.GhoulOfTheFeast:
-			case CardIds.GhoulOfTheFeastBattlegrounds:
 			case CardIds.HungeringAbomination:
 			case CardIds.HungeringAbominationBattlegrounds:
 				return 1;
 			case CardIds.FrostwolfLieutenant:
 			case CardIds.FrostwolfLieutenantBattlegrounds:
+			case CardIds.GhoulOfTheFeast:
+			case CardIds.GhoulOfTheFeastBattlegrounds:
 			case CardIds.MechanoTank_BG21_023:
 			case CardIds.MechanoTank_BG21_023_G:
 			case CardIds.PalescaleCrocolisk_BG21_001:

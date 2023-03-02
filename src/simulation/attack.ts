@@ -708,13 +708,13 @@ export const bumpEntities = (
 		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
 		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
 		greaseBots.forEach((bot) => {
-			modifyAttack(entity, 3, entityBoard, allCards);
-			modifyHealth(entity, 2, entityBoard, allCards);
+			modifyAttack(entity, 2, entityBoard, allCards);
+			modifyHealth(entity, 1, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
-			modifyAttack(entity, 6, entityBoard, allCards);
-			modifyHealth(entity, 4, entityBoard, allCards);
+			modifyAttack(entity, 4, entityBoard, allCards);
+			modifyHealth(entity, 2, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 

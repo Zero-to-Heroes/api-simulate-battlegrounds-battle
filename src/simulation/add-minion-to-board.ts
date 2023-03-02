@@ -329,7 +329,7 @@ const handleAfterSpawnEffect = (board: BoardEntity[], spawned: BoardEntity, allC
 			case CardIds.Felstomper:
 			case CardIds.FelstomperBattlegrounds:
 				// console.debug('felstomper');
-				const felstomperBuff = entity.cardId === CardIds.FelstomperBattlegrounds ? 4 : 2;
+				const felstomperBuff = entity.cardId === CardIds.FelstomperBattlegrounds ? 6 : 3;
 				board.forEach((e) => {
 					modifyAttack(e, felstomperBuff, board, allCards);
 					afterStatsUpdate(e, board, allCards);
