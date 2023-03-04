@@ -79,7 +79,15 @@ export const buildSingleBoardEntity = (
 	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId as CardIds) !== -1;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId as CardIds) !== -1;
 	const newEntity = !!entityToSpawn
-		? { ...entityToSpawn, entityId: sharedState.currentEntityId++ }
+		? ({
+				...entityToSpawn,
+				entityId: sharedState.currentEntityId++,
+				definitelyDead: false,
+				avengeCurrent: entityToSpawn.avengeDefault,
+				attacking: false,
+				damageMultiplier: 1,
+				frenzyApplied: false,
+		  } as BoardEntity)
 		: addImpliedMechanics({
 				entityId: entityId,
 				attack: card.attack,
