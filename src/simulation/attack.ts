@@ -1560,7 +1560,12 @@ const buildBoardAfterRebornSpawns = (
 	let entityToSpawn: BoardEntity = null;
 	// TODO: test
 	if (deadEntity.cardId === CardIds.SinrunnerBlanchy || deadEntity.cardId === CardIds.SinrunnerBlanchyBattlegrounds) {
-		entityToSpawn = { ...deadEntity, health: deadEntity.maxHealth, divineShield: deadEntity.hadDivineShield, reborn: false };
+		entityToSpawn = {
+			...deadEntity,
+			health: deadEntity.maxHealth,
+			divineShield: deadEntity.hadDivineShield,
+			reborn: false,
+		};
 	}
 	const entitiesFromReborn: readonly BoardEntity[] =
 		deadEntity.reborn && deadMinionIndexFromRight >= 0
