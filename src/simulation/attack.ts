@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { pickRandom } from '../services/utils';
+import { groupByFunction, pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
 import {
 	addCardsInHand,
@@ -516,15 +516,58 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: nu
 	return attackingEntity;
 };
 
-export const getNeighbours = (board: BoardEntity[], entity: BoardEntity, deadEntityIndex?: number): readonly BoardEntity[] => {
-	const neighbours = [];
-	if (deadEntityIndex != null) {
-		if (deadEntityIndex < board.length - 1) {
-			neighbours.push(board[deadEntityIndex]);
+export const findNearestEnemies = (
+	attackingBoard: BoardEntity[],
+	entity: BoardEntity,
+	entityIndexFromRight: number,
+	defendingBoard: BoardEntity[],
+	numberOfTargets: number,
+): BoardEntity[] => {
+	const result = [];
+	if (defendingBoard.length > 0) {
+		const alreadyDamaged = [];
+		const attackerIndex = attackingBoard.length - entityIndexFromRight - 1;
+		const targetIndex = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
+
+		const pickRandomNearest = () => {
+			const possibleTargets = defendingBoard.filter((e) => !e.definitelyDead).filter((e) => !alreadyDamaged.includes(e.entityId));
+			if (!possibleTargets.length) {
+				return null;
+			}
+			const targetGroups = groupByFunction((e: BoardEntity) => defendingBoard.indexOf(e) - targetIndex)(defendingBoard);
+			const distances = Object.keys(targetGroups)
+				.map((k) => +k)
+				.sort();
+			const nearestDistance = distances[0];
+			if (nearestDistance != null) {
+				const target = pickRandom(targetGroups[nearestDistance]);
+				alreadyDamaged.push(target?.entityId);
+				return target;
+			}
+			return null;
+		};
+
+		for (let i = 0; i < numberOfTargets; i++) {
+			result.push(pickRandomNearest());
 		}
-		// Could happen if a cleave kills several entities at the same time
-		if (deadEntityIndex > 0 && deadEntityIndex <= board.length) {
-			neighbours.push(board[deadEntityIndex - 1]);
+	}
+	return result.filter((e) => !!e);
+};
+
+export const getNeighbours = (board: BoardEntity[], entity: BoardEntity, deadEntityIndexFromRight?: number): readonly BoardEntity[] => {
+	const neighbours = [];
+	if (deadEntityIndexFromRight != null) {
+		// If the deadEntityIndexFromRight === 0 (right-most minion), no neighbour will be found
+		const rightNeighbourIndex = board.length - 1 - (deadEntityIndexFromRight - 1);
+		const rightNeighbour = board[rightNeighbourIndex];
+		if (rightNeighbour) {
+			neighbours.push(rightNeighbour);
+		}
+
+		const leftNeighbourIndex = board.length - 1 - deadEntityIndexFromRight;
+		const leftNeighbour = board[leftNeighbourIndex];
+		if (leftNeighbour) {
+			neighbours.push(leftNeighbour);
 		}
 	} else {
 		const index = board.map((e) => e.entityId).indexOf(entity.entityId);
@@ -1480,6 +1523,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		boardWithKilledMinion,
 		boardWithKilledMinionHero,
 		deadEntity,
+		deadMinionIndexFromRight2,
 		opponentBoard,
 		opponentBoardHero,
 		allCards,
@@ -1548,11 +1592,7 @@ const buildBoardAfterRebornSpawns = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const otherEntityCardIds = boardWithKilledMinion.filter((e) => e.entityId !== deadEntity.entityId).map((e) => e.cardId);
-	const numberOfReborns =
-		1 +
-		1 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy).length +
-		2 * otherEntityCardIds.filter((cardId) => cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy_G).length;
+	const numberOfReborns = 1;
 	// Reborn happens after deathrattles
 	if (!deadEntity.cardId) {
 		console.error('missing card id for dead entity', stringifySimpleCard(deadEntity, allCards), deadEntity);
@@ -1588,7 +1628,7 @@ const buildBoardAfterRebornSpawns = (
 					deadEntity,
 			  )
 			: [];
-	performEntitySpawns(
+	const entitiesThatWereReborn = performEntitySpawns(
 		entitiesFromReborn,
 		boardWithKilledMinion,
 		boardWithKilledMinionHero,
@@ -1601,6 +1641,22 @@ const buildBoardAfterRebornSpawns = (
 		sharedState,
 		spectator,
 	);
+
+	const arfus = boardWithKilledMinion
+		.filter((e) => e.cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy)
+		.map((e) => e.attack)
+		.reduce((a, b) => a + b, 0);
+	const goldenArfus = boardWithKilledMinion
+		.filter((e) => e.cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy_G)
+		.map((e) => 2 * e.attack)
+		.reduce((a, b) => a + b, 0);
+	if (arfus + goldenArfus > 0) {
+		entitiesThatWereReborn.forEach((e) => {
+			modifyAttack(e, arfus + goldenArfus, boardWithKilledMinion, allCards);
+			afterStatsUpdate(e, boardWithKilledMinion, allCards);
+		});
+	}
+
 	const numberOfTriggersForDeathwhisper = Math.min(entitiesFromReborn.length, 1);
 	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
 		boardWithKilledMinion

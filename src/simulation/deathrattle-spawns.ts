@@ -324,6 +324,52 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
+				case CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy:
+				case CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G:
+					const minionsToSpawnMawsworn =
+						deadEntityCardId === CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G ? 6 : 3;
+					for (let i = 0; i < minionsToSpawnMawsworn; i++) {
+						const minionCardId = spawns.getRandomMinionForTavernTier(1);
+						spawnedEntities.push(
+							...spawnEntities(
+								minionCardId,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								allCards,
+								spawns,
+								sharedState,
+								spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+					}
+					break;
+				case CardIds.Festergut_BG25_HERO_100_Buddy:
+				case CardIds.FestergutBattlegrounds:
+					const minionsToSpawnFestergut = deadEntityCardId === CardIds.FestergutBattlegrounds ? 2 : 1;
+					for (let i = 0; i < minionsToSpawnFestergut; i++) {
+						spawnedEntities.push(
+							...spawnEntities(
+								spawns.festergutSpawns[Math.floor(Math.random() * spawns.festergutSpawns.length)],
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								allCards,
+								spawns,
+								sharedState,
+								spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+					}
+					break;
 				case CardIds.KindlyGrandmother_KAR_005:
 					spawnedEntities.push(
 						...spawnEntities(
@@ -1205,6 +1251,30 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						],
 					);
+					break;
+				case CardIds.SlyRaptor:
+				case CardIds.SlyRaptorBattlegrounds:
+					const raptorStat = deadEntity.cardId === CardIds.SlyRaptorBattlegrounds ? 14 : 7;
+					const beastPool = spawns.beastSpawns.filter((id) => id !== CardIds.SlyRaptor);
+					const beastsFromRaptor = spawnEntities(
+						beastPool[Math.floor(Math.random() * beastPool.length)],
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					);
+					beastsFromRaptor.forEach((b) => {
+						b.attack = raptorStat;
+						b.health = raptorStat;
+					});
+					spawnedEntities.push(...beastsFromRaptor);
 					break;
 
 				// Putricide-only

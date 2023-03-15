@@ -22,7 +22,7 @@ import {
 	modifyHealth,
 	updateDivineShield,
 } from '../utils';
-import { dealDamageToEnemy, dealDamageToRandomEnemy } from './attack';
+import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -42,6 +42,7 @@ export const handleDeathrattleEffects = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
+	deadEntityIndexFromRight: number,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
@@ -190,33 +191,36 @@ export const handleDeathrattleEffects = (
 					boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += attackBonus;
 				}
 				break;
+			// case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
+			// 	// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+			// 	// could be spawned between the shots firing), but let's say it's good enough for now
+			// 	for (let i = 0; i < multiplier; i++) {
+			// 		const numberOfDeadMechsThisCombat = sharedState.deaths
+			// 			.filter((entity) => entity.friendly === deadEntity.friendly)
+			// 			// eslint-disable-next-line prettier/prettier
+			// 			.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
+			// 		for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+			// 			dealDamageToRandomEnemy(
+			// 				otherBoard,
+			// 				otherBoardHero,
+			// 				deadEntity,
+			// 				3,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				allCards,
+			// 				cardsData,
+			// 				sharedState,
+			// 				spectator,
+			// 			);
+			// 		}
+			// 	}
+			// 	break;
 			case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
-				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
-				// could be spawned between the shots firing), but let's say it's good enough for now
-				for (let i = 0; i < multiplier; i++) {
-					const numberOfDeadMechsThisCombat = sharedState.deaths
-						.filter((entity) => entity.friendly === deadEntity.friendly)
-						// eslint-disable-next-line prettier/prettier
-						.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
-					for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
-						dealDamageToRandomEnemy(
-							otherBoard,
-							otherBoardHero,
-							deadEntity,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							allCards,
-							cardsData,
-							sharedState,
-							spectator,
-						);
-					}
-				}
-				break;
 			case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G:
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 				// could be spawned between the shots firing), but let's say it's good enough for now
+				const squirrelDamage =
+					deadEntity.cardId === CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G ? 4 : 2;
 				for (let i = 0; i < multiplier; i++) {
 					const numberOfDeadMechsThisCombat = sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
@@ -227,7 +231,7 @@ export const handleDeathrattleEffects = (
 							otherBoard,
 							otherBoardHero,
 							deadEntity,
-							6,
+							squirrelDamage,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							allCards,
@@ -238,49 +242,64 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
+			// for (let i = 0; i < multiplier; i++) {
+			// 	dealDamageToRandomEnemy(
+			// 		otherBoard,
+			// 		otherBoardHero,
+			// 		deadEntity,
+			// 		4,
+			// 		boardWithDeadEntity,
+			// 		boardWithDeadEntityHero,
+			// 		allCards,
+			// 		cardsData,
+			// 		sharedState,
+			// 		spectator,
+			// 	);
+			// }
+			// break;
 			case CardIds.KaboomBot_BG_BOT_606:
+			case CardIds.KaboomBotBattlegrounds:
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 				// could be spawned between the shots firing), but let's say it's good enough for now
+				const kaboomLoops = deadEntity.cardId === CardIds.KaboomBotBattlegrounds ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
-					dealDamageToRandomEnemy(
-						otherBoard,
-						otherBoardHero,
-						deadEntity,
-						4,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						allCards,
-						cardsData,
-						sharedState,
-						spectator,
-					);
+					for (let j = 0; j < kaboomLoops; j++) {
+						dealDamageToRandomEnemy(
+							otherBoard,
+							otherBoardHero,
+							deadEntity,
+							4,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						);
+					}
 				}
 				break;
-			case CardIds.KaboomBotBattlegrounds:
+			case CardIds.DrBoombox:
+			case CardIds.DrBoomboxBattlegrounds:
+				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+				// could be spawned between the shots firing), but let's say it's good enough for now
+				const boomboxDamage = deadEntity.cardId === CardIds.DrBoomboxBattlegrounds ? 14 : 7;
 				for (let i = 0; i < multiplier; i++) {
-					dealDamageToRandomEnemy(
-						otherBoard,
-						otherBoardHero,
-						deadEntity,
-						4,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						allCards,
-						cardsData,
-						sharedState,
-						spectator,
-					);
-					dealDamageToRandomEnemy(
-						otherBoard,
-						otherBoardHero,
-						deadEntity,
-						4,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						allCards,
-						cardsData,
-						sharedState,
-						spectator,
+					const targets = findNearestEnemies(boardWithDeadEntity, null, deadEntityIndexFromRight, otherBoard, 2);
+					targets.forEach((target) =>
+						dealDamageToEnemy(
+							target,
+							otherBoard,
+							otherBoardHero,
+							deadEntity,
+							boomboxDamage,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						),
 					);
 				}
 				break;

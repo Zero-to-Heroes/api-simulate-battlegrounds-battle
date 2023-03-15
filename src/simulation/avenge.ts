@@ -50,6 +50,8 @@ export const applyAvengeEffects = (
 		handleAvenge(
 			boardWithDeadEntity,
 			boardWithDeadEntityHero,
+			deadEntity,
+			deadEntityIndexFromRight,
 			avenger,
 			otherBoard,
 			otherBoardHero,
@@ -111,6 +113,8 @@ const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDeadEntity
 const handleAvenge = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
+	deadEntity: BoardEntity,
+	deadEntityIndexFromRight: number,
 	avenger: BoardEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
@@ -284,6 +288,17 @@ const handleAvenge = (
 			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
 			afterStatsUpdate(avenger, boardWithDeadEntity, allCards);
 			spectator.registerPowerTarget(avenger, avenger, boardWithDeadEntity);
+			break;
+		case CardIds.ShadowyConstruct:
+		case CardIds.ShadowyConstructBattlegrounds:
+			const neighboursShadowy = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
+			const multiplierShadowy = avenger.cardId === CardIds.ShadowyConstructBattlegrounds ? 2 : 1;
+			neighboursShadowy.forEach((neighbour) => {
+				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, allCards);
+				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, allCards);
+				afterStatsUpdate(neighbour, boardWithDeadEntity, allCards);
+				spectator.registerPowerTarget(avenger, neighbour, boardWithDeadEntity);
+			});
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;

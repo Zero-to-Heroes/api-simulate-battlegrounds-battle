@@ -28,11 +28,13 @@ export class CardsData {
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
+	public festergutSpawns: readonly string[];
 	public kilrekSpawns: readonly string[];
 	public brannEpicEggSpawns: readonly string[];
 	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
+	public beastSpawns: readonly string[];
 
 	private minionsForTier: { [key: string]: readonly ReferenceCard[] };
 
@@ -75,6 +77,13 @@ export class CardsData {
 			.filter((card) => card.id !== CardIds.GentleDjinni)
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
+		// FIXME: just spawn a random undead instead of an Undead Creation
+		this.festergutSpawns = pool
+			.filter((card) => !this.isGolden(card))
+			.filter((card) => isCorrectTribe(card.races, Race.UNDEAD))
+			.filter((card) => card.id !== CardIds.Festergut_BG25_HERO_100_Buddy)
+			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
 		this.kilrekSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
@@ -90,6 +99,11 @@ export class CardsData {
 			.filter((card) => isCorrectTribe(card.races, Race.PIRATE))
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
+		this.beastSpawns = pool
+			.filter((card) => !this.isGolden(card))
+			.filter((card) => isCorrectTribe(card.races, Race.BEAST))
+			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
 	}
 
 	public avengeValue(cardId: string): number {
@@ -98,9 +112,10 @@ export class CardsData {
 			case CardIds.BirdBuddyBattlegrounds:
 			case CardIds.HungeringAbomination:
 			case CardIds.HungeringAbominationBattlegrounds:
+			// Not technically an avenge, but behaves as if
+			case CardIds.ShadowyConstruct:
+			case CardIds.ShadowyConstructBattlegrounds:
 				return 1;
-			case CardIds.FrostwolfLieutenant:
-			case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.GhoulOfTheFeast:
 			case CardIds.GhoulOfTheFeastBattlegrounds:
 			case CardIds.MechanoTank_BG21_023:
@@ -113,6 +128,8 @@ export class CardsData {
 				return 2;
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:
+			case CardIds.FrostwolfLieutenant:
+			case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
 			case CardIds.WitchwingNestmatron_BG21_038:
