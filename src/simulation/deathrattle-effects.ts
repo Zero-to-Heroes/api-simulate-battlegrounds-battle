@@ -286,7 +286,9 @@ export const handleDeathrattleEffects = (
 				const boomboxDamage = deadEntity.cardId === CardIds.DrBoomboxBattlegrounds ? 14 : 7;
 				for (let i = 0; i < multiplier; i++) {
 					const targets = findNearestEnemies(boardWithDeadEntity, null, deadEntityIndexFromRight, otherBoard, 2);
-					targets.forEach((target) =>
+					// console.debug('nearest', stringifySimple(targets));
+					targets.forEach((target) => {
+						// console.debug('dealing damage to', stringifySimpleCard(target));
 						dealDamageToEnemy(
 							target,
 							otherBoard,
@@ -299,8 +301,8 @@ export const handleDeathrattleEffects = (
 							cardsData,
 							sharedState,
 							spectator,
-						),
-					);
+						);
+					});
 				}
 				break;
 			case CardIds.UnstableGhoul_BG_FP1_024:

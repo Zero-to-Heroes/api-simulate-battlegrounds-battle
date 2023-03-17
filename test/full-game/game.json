@@ -1,76 +1,58 @@
 {
 	"playerBoard": {
 		"player": {
-			"tavernTier": 1,
+			"cardId": "TB_BaconShop_HERO_KelThuzad",
 			"hpLeft": 40,
-			"cardId": "BG25_HERO_103",
-			"entityId": 73,
-			"nonGhostCardId": "BG25_HERO_103",
-			"heroPowerId": "BG25_HERO_103p",
+			"tavernTier": 6,
+			"heroPowerId": null,
 			"heroPowerUsed": true,
-			"heroPowerInfo": 240,
-			"questRewards": [],
+			"heroPowerInfo": 0,
 			"globalInfo": { "EternalKnightsDeadThisGame": 0, "UndeadAttackBonus": 0 },
-			"debugHealth": 40
+			"questRewards": []
 		},
-		"secrets": [],
 		"board": [
 			{
-				"cardId": "BG25_013",
-				"attack": 1,
+				"entityId": 1,
+				"cardId": "BG25_165",
+				"attack": 7,
+				"health": 1,
 				"divineShield": false,
-				"enchantments": [{ "originEntityId": 329, "cardId": "BG25_HERO_103pe", "timing": 0 }],
-				"entityId": 240,
-				"health": 4,
 				"poisonous": false,
-				"reborn": false,
 				"taunt": false,
+				"reborn": false,
 				"stealth": false,
 				"windfury": false,
 				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0,
-				"additionalCards": null
+				"enchantments": []
 			}
 		]
 	},
 	"opponentBoard": {
 		"player": {
-			"tavernTier": 1,
-			"hpLeft": 47,
-			"cardId": "TB_BaconShop_HERO_91",
-			"entityId": 359,
-			"nonGhostCardId": "TB_BaconShop_HERO_91",
-			"heroPowerId": "TB_BaconShop_HP_102",
-			"heroPowerUsed": false,
-			"heroPowerInfo": 3,
-			"questRewards": [],
+			"cardId": "TB_BaconShop_HERO_KelThuzad",
+			"hpLeft": 40,
+			"tavernTier": 6,
+			"heroPowerId": null,
+			"heroPowerUsed": true,
+			"heroPowerInfo": 0,
 			"globalInfo": { "EternalKnightsDeadThisGame": 0, "UndeadAttackBonus": 0 },
-			"debugArmor": 7,
-			"debugHealth": 40
+			"questRewards": []
 		},
-		"secrets": [],
 		"board": [
+			{ "entityId": 2, "cardId": "TB_BaconShop_HP_033t", "attack": 2, "health": 14, "enchantments": [] },
 			{
-				"cardId": "BG22_401",
-				"attack": 1,
+				"entityId": 3,
+				"cardId": "TB_BaconShop_HP_105t",
+				"attack": 2,
+				"health": 7,
 				"divineShield": false,
-				"enchantments": [],
-				"entityId": 358,
-				"health": 4,
 				"poisonous": false,
-				"reborn": false,
 				"taunt": false,
+				"reborn": false,
 				"stealth": false,
 				"windfury": false,
 				"megaWindfury": false,
-				"friendly": true,
-				"frenzyApplied": false,
-				"definitelyDead": false,
-				"immuneWhenAttackCharges": 0,
-				"additionalCards": null
+				"enchantments": []
 			}
 		]
 	},

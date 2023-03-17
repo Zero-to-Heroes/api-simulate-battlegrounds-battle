@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, ALL_BG_RACES, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
@@ -7,6 +7,7 @@ import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import {
 	afterStatsUpdate,
+	getRandomAliveMinion,
 	hasCorrectTribe,
 	isCorrectTribe,
 	makeMinionGolden,
@@ -643,6 +644,87 @@ const handleTeronForPlayer = (
 	}
 };
 
+const handleWaxWarbandForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	if (playerBoard.length > 0) {
+		let tribesGranted = 0;
+		let boardCopy = [...playerBoard];
+		let racesLeft = [...ALL_BG_RACES];
+		while (tribesGranted < 3) {
+			const tribe = pickRandom(racesLeft);
+			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, allCards);
+			if (validMinion) {
+				modifyAttack(validMinion, cardsData.getTavernLevel(validMinion.cardId), playerBoard, allCards);
+				modifyHealth(validMinion, cardsData.getTavernLevel(validMinion.cardId), playerBoard, allCards);
+				afterStatsUpdate(validMinion, playerBoard, allCards);
+				spectator.registerPowerTarget(playerEntity, validMinion, playerBoard);
+				boardCopy = boardCopy.filter((e) => e !== validMinion);
+				tribesGranted++;
+			}
+			racesLeft = racesLeft.filter((r) => r !== tribe);
+		}
+	}
+};
+
+const handleOzumatForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	friendly: boolean,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	// Because of some interactions between start of combat hero powers, it can happen that Ozumat is already present
+	// on the board when we receive the board state
+	if (playerBoard.length < 7 && !playerBoard.some((e) => e.cardId === CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt)) {
+		const tentacularSize = playerEntity.heroPowerInfo;
+		const tentacular = spawnEntities(
+			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
+			1,
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+			friendly,
+			true,
+			false,
+			false,
+		);
+		tentacular[0].attack = tentacularSize;
+		tentacular[0].health = tentacularSize;
+		const indexFromRight = 0;
+		performEntitySpawns(
+			tentacular,
+			playerBoard,
+			playerEntity,
+			playerEntity,
+			indexFromRight,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard);
+	}
+};
+
 const handlePlayerStartOfCombatHeroPowers = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
@@ -664,6 +746,22 @@ const handlePlayerStartOfCombatHeroPowers = (
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
 		handleTeronForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		// Same as Tamsin? No, because the new minion should repop automatically
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarbandBattlegrounds) {
+		handleWaxWarbandForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		// Same as Tamsin? No, because the new minion should repop automatically
+	} else if (playerHeroPowerId === CardIds.Ozumat_Tentacular) {
+		handleOzumatForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			friendly,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 		// Same as Tamsin? No, because the new minion should repop automatically
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];

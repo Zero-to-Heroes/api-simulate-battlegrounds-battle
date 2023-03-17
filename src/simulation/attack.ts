@@ -525,30 +525,26 @@ export const findNearestEnemies = (
 ): BoardEntity[] => {
 	const result = [];
 	if (defendingBoard.length > 0) {
-		const alreadyDamaged = [];
+		// console.debug('defending board', numberOfTargets, stringifySimple(defendingBoard));
 		const attackerIndex = attackingBoard.length - entityIndexFromRight - 1;
 		const targetIndex = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
 
-		const pickRandomNearest = () => {
-			const possibleTargets = defendingBoard.filter((e) => !e.definitelyDead).filter((e) => !alreadyDamaged.includes(e.entityId));
+		for (let i = 0; i < numberOfTargets; i++) {
+			const possibleTargets = defendingBoard.filter((e) => !e.definitelyDead && e.health > 0).filter((e) => !result.includes(e));
+			// console.debug('possibleTargets', stringifySimple(possibleTargets));
 			if (!possibleTargets.length) {
-				return null;
+				break;
 			}
-			const targetGroups = groupByFunction((e: BoardEntity) => defendingBoard.indexOf(e) - targetIndex)(defendingBoard);
+
+			const targetGroups = groupByFunction((e: BoardEntity) => defendingBoard.indexOf(e) - targetIndex)(possibleTargets);
 			const distances = Object.keys(targetGroups)
 				.map((k) => +k)
 				.sort();
 			const nearestDistance = distances[0];
 			if (nearestDistance != null) {
 				const target = pickRandom(targetGroups[nearestDistance]);
-				alreadyDamaged.push(target?.entityId);
-				return target;
+				result.push(target);
 			}
-			return null;
-		};
-
-		for (let i = 0; i < numberOfTargets; i++) {
-			result.push(pickRandomNearest());
 		}
 	}
 	return result.filter((e) => !!e);
