@@ -4,6 +4,7 @@ import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { pickRandom } from './services/utils';
 import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [
@@ -129,6 +130,43 @@ export const buildSingleBoardEntity = (
 	}
 
 	newEntity.hadDivineShield = newEntity.divineShield || newEntity.hadDivineShield;
+	return newEntity;
+};
+
+export const buildRandomUndeadCreation = (
+	controllerHero: BgsPlayerEntity,
+	friendlyBoard: BoardEntity[],
+	allCards: AllCardsService,
+	friendly: boolean,
+	cardsData: CardsData,
+	sharedState: SharedState,
+): BoardEntity => {
+	const baseCard = pickRandom(cardsData.putricidePool1);
+	const stitchedCardId =
+		baseCard === CardIds.EternalSummoner
+			? pickRandom(cardsData.putridicePool2ForEternalSummoner)
+			: pickRandom(cardsData.putricidePool2);
+	const newEntity = buildSingleBoardEntity(
+		baseCard,
+		controllerHero,
+		friendlyBoard,
+		allCards,
+		friendly,
+		sharedState.currentEntityId++,
+		false,
+		cardsData,
+		sharedState,
+		null,
+	);
+	const stitchedCard = allCards.getCard(stitchedCardId);
+	newEntity.attack += stitchedCard.attack;
+	newEntity.health += stitchedCard.health;
+	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) || TAUNT_IDS.includes(stitchedCardId as CardIds);
+	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
+	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
+	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
+	newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
+	newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
 	return newEntity;
 };
 

@@ -2,7 +2,14 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { addCardsInHand, addStatsToBoard, buildSingleBoardEntity, isCorrectTribe, stringifySimple } from '../utils';
+import {
+	addCardsInHand,
+	addStatsToBoard,
+	buildRandomUndeadCreation,
+	buildSingleBoardEntity,
+	isCorrectTribe,
+	stringifySimple,
+} from '../utils';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -352,9 +359,17 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.FestergutBattlegrounds:
 					const minionsToSpawnFestergut = deadEntityCardId === CardIds.FestergutBattlegrounds ? 2 : 1;
 					for (let i = 0; i < minionsToSpawnFestergut; i++) {
+						const randomUndeadCreation = buildRandomUndeadCreation(
+							boardWithDeadEntityHero,
+							boardWithDeadEntity,
+							allCards,
+							deadEntity.friendly,
+							spawns,
+							sharedState,
+						);
 						spawnedEntities.push(
 							...spawnEntities(
-								spawns.festergutSpawns[Math.floor(Math.random() * spawns.festergutSpawns.length)],
+								randomUndeadCreation.cardId,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -366,6 +381,9 @@ export const spawnEntitiesFromDeathrattle = (
 								spectator,
 								deadEntity.friendly,
 								false,
+								false,
+								true,
+								randomUndeadCreation,
 							),
 						);
 					}

@@ -13,9 +13,9 @@
 		"board": [
 			{
 				"entityId": 1,
-				"cardId": "BG25_165",
-				"attack": 7,
-				"health": 1,
+				"cardId": "BG25_HERO_100_Buddy",
+				"attack": 5,
+				"health": 2,
 				"divineShield": false,
 				"poisonous": false,
 				"taunt": false,
@@ -39,12 +39,11 @@
 			"questRewards": []
 		},
 		"board": [
-			{ "entityId": 2, "cardId": "TB_BaconShop_HP_033t", "attack": 2, "health": 14, "enchantments": [] },
 			{
-				"entityId": 3,
+				"entityId": 2,
 				"cardId": "TB_BaconShop_HP_105t",
-				"attack": 2,
-				"health": 7,
+				"attack": 20,
+				"health": 100,
 				"divineShield": false,
 				"poisonous": false,
 				"taunt": false,

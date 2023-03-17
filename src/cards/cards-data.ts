@@ -36,13 +36,17 @@ export class CardsData {
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
-	public festergutSpawns: readonly string[];
+	// public festergutSpawns: readonly string[];
 	public kilrekSpawns: readonly string[];
 	public brannEpicEggSpawns: readonly string[];
 	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
 	public beastSpawns: readonly string[];
+
+	public putricidePool1: readonly string[];
+	public putricidePool2: readonly string[];
+	public putridicePool2ForEternalSummoner: readonly string[];
 
 	private minionsForTier: { [key: string]: readonly ReferenceCard[] };
 
@@ -87,12 +91,12 @@ export class CardsData {
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		// FIXME: just spawn a random undead instead of an Undead Creation
-		this.festergutSpawns = pool
-			.filter((card) => !this.isGolden(card))
-			.filter((card) => isCorrectTribe(card.races, Race.UNDEAD))
-			.filter((card) => card.id !== CardIds.Festergut_BG25_HERO_100_Buddy)
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
-			.map((card) => card.id);
+		// this.festergutSpawns = pool
+		// 	.filter((card) => !this.isGolden(card))
+		// 	.filter((card) => isCorrectTribe(card.races, Race.UNDEAD))
+		// 	.filter((card) => card.id !== CardIds.Festergut_BG25_HERO_100_Buddy)
+		// 	// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+		// 	.map((card) => card.id);
 		this.kilrekSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
@@ -112,6 +116,13 @@ export class CardsData {
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.BEAST))
 			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
+
+		this.putricidePool1 = pool.filter((card) => card.battlegroundsPutridicePool1).map((card) => card.id);
+		this.putricidePool2 = pool.filter((card) => card.battlegroundsPutridicePool2).map((card) => card.id);
+		this.putridicePool2ForEternalSummoner = pool
+			.filter((card) => card.battlegroundsPutridicePool2)
+			.filter((card) => !card.battlegroundsPutridiceSummonerExclusion)
 			.map((card) => card.id);
 	}
 
