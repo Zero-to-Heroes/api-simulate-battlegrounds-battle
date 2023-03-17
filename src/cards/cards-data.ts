@@ -1,4 +1,12 @@
-import { AllCardsService, CardIds, GameTag, isBattlegroundsCard, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import {
+	AllCardsService,
+	CardIds,
+	GameTag,
+	isBattlegroundsCard,
+	NON_BUYABLE_MINION_IDS,
+	Race,
+	ReferenceCard,
+} from '@firestone-hs/reference-data';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 
@@ -48,6 +56,7 @@ export class CardsData {
 		const pool = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
+			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
 			.filter((card) => !!card.techLevel)
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla');
