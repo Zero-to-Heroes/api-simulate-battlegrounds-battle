@@ -141,17 +141,17 @@ const handleAvenge = (
 				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
 			});
 			break;
-		case CardIds.FrostwolfLieutenant:
-		case CardIds.FrostwolfLieutenantBattlegrounds:
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
-				0,
-				allCards,
-				spectator,
-			);
-			break;
+		// case CardIds.FrostwolfLieutenant:
+		// case CardIds.FrostwolfLieutenantBattlegrounds:
+		// 	addStatsToBoard(
+		// 		avenger,
+		// 		boardWithDeadEntity,
+		// 		avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
+		// 		0,
+		// 		allCards,
+		// 		spectator,
+		// 	);
+		// 	break;
 		case CardIds.StormpikeLieutenant:
 		case CardIds.StormpikeLieutenantBattlegrounds:
 			addStatsToBoard(

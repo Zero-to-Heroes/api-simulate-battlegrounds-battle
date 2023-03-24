@@ -19,7 +19,7 @@ export interface BoardEntity {
 	stealth?: boolean;
 	enchantments?: { cardId: string; originEntityId?: number; timing: number; repeats?: number; value?: number }[];
 	// For Build-An-Undead
-	additionalCards?: readonly string[];
+	additionalCards?: readonly string[] | null;
 
 	// We only store the card id, because we want all the attack and other data to be computed at runtime, based on the
 	// current stats of the Fish

@@ -148,8 +148,8 @@ export class CardsData {
 				return 2;
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:
-			case CardIds.FrostwolfLieutenant:
-			case CardIds.FrostwolfLieutenantBattlegrounds:
+			// case CardIds.FrostwolfLieutenant:
+			// case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
 			case CardIds.WitchwingNestmatron_BG21_038:
