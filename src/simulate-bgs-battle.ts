@@ -131,9 +131,19 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 		simulationResult.won,
 		totalMatches,
 	);
+	simulationResult.wonLethalPercent = checkRounding(
+		Math.round((10 * (100 * simulationResult.wonLethal)) / totalMatches) / 10,
+		simulationResult.wonLethal,
+		totalMatches,
+	);
 	simulationResult.lostPercent = checkRounding(
 		Math.round((10 * (100 * simulationResult.lost)) / totalMatches) / 10,
 		simulationResult.lost,
+		totalMatches,
+	);
+	simulationResult.lostLethalPercent = checkRounding(
+		Math.round((10 * (100 * simulationResult.lostLethal)) / totalMatches) / 10,
+		simulationResult.lostLethal,
 		totalMatches,
 	);
 	// simulationResult.tiedPercent = checkRounding(Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10, simulationResult.tied, totalMatches);
