@@ -51,6 +51,52 @@ const handleSpawnEffect = (
 	spectator: Spectator,
 	sharedState: SharedState,
 ): void => {
+	if (otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds) {
+		spawned.attack += 3;
+	}
+
+	switch (boardHero.heroPowerId) {
+		case CardIds.AllWillBurnBattlegrounds:
+			spawned.attack += 3;
+			break;
+		case CardIds.SproutItOutBattlegrounds:
+			spawned.taunt = true;
+			modifyAttack(spawned, 1, board, allCards);
+			modifyHealth(spawned, 2, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.KurtrusAshfallen_CloseThePortal:
+			modifyAttack(spawned, 2, board, allCards);
+			modifyHealth(spawned, 2, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.TinkerBattlegrounds:
+			if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
+				modifyAttack(spawned, 2, board, allCards);
+				afterStatsUpdate(spawned, board, allCards);
+			}
+			break;
+	}
+
+	if (!!boardHero.questRewards?.length) {
+		for (const quest of boardHero.questRewards) {
+			switch (quest) {
+				case CardIds.VolatileVenom:
+					spawned.attack += 7;
+					spawned.health += 7;
+					spawned.enchantments.push({
+						cardId: CardIds.VolatileVenom_VolatileEnchantment,
+						originEntityId: undefined,
+						timing: sharedState.currentEntityId++,
+					});
+					break;
+				case CardIds.TheSmokingGun:
+					spawned.attack += 5;
+					break;
+			}
+		}
+	}
+
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 	for (const spawnedCardId of cardIds) {
 		switch (spawnedCardId) {
@@ -180,6 +226,7 @@ const handleSpawnEffect = (
 					afterStatsUpdate(spawned, board, allCards);
 				}
 				break;
+			// This has to happen after greybough's hero power kicks in
 			case CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy:
 			case CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G:
 				if (spawned.taunt) {
@@ -241,52 +288,6 @@ const handleSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-		}
-	}
-
-	if (otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds) {
-		spawned.attack += 3;
-	}
-
-	switch (boardHero.heroPowerId) {
-		case CardIds.AllWillBurnBattlegrounds:
-			spawned.attack += 3;
-			break;
-		case CardIds.SproutItOutBattlegrounds:
-			spawned.taunt = true;
-			modifyAttack(spawned, 1, board, allCards);
-			modifyHealth(spawned, 2, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-		case CardIds.KurtrusAshfallen_CloseThePortal:
-			modifyAttack(spawned, 2, board, allCards);
-			modifyHealth(spawned, 2, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-		case CardIds.TinkerBattlegrounds:
-			if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
-				modifyAttack(spawned, 2, board, allCards);
-				afterStatsUpdate(spawned, board, allCards);
-			}
-			break;
-	}
-
-	if (!!boardHero.questRewards?.length) {
-		for (const quest of boardHero.questRewards) {
-			switch (quest) {
-				case CardIds.VolatileVenom:
-					spawned.attack += 7;
-					spawned.health += 7;
-					spawned.enchantments.push({
-						cardId: CardIds.VolatileVenom_VolatileEnchantment,
-						originEntityId: undefined,
-						timing: sharedState.currentEntityId++,
-					});
-					break;
-				case CardIds.TheSmokingGun:
-					spawned.attack += 5;
-					break;
-			}
 		}
 	}
 };
