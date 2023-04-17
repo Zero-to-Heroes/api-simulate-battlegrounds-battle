@@ -187,11 +187,12 @@ export class CardsData {
 		return !!card.battlegroundsNormalDbfId;
 	}
 
-	private isValidTribe(validTribes: readonly Race[], races: readonly string[]): boolean {
-		if (!races?.length) {
-			return false;
+	private isValidTribe(validTribes: readonly Race[], cardRaces: readonly string[]): boolean {
+		// Blank races are always ok
+		if (!cardRaces?.length) {
+			return true;
 		}
-		return races
+		return cardRaces
 			.map((race) => getRaceEnum(race))
 			.some((raceEnum) => raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum));
 	}
