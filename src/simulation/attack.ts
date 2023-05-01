@@ -22,7 +22,12 @@ import {
 } from '../utils';
 import { addMinionToBoard, addMinionsToBoard } from './add-minion-to-board';
 import { applyAvengeEffects } from './avenge';
-import { applyMinionDeathEffect, applyMonstrosity, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
+import {
+	applyMinionDeathEffect,
+	applyMonstrosity,
+	handleDeathrattleEffects,
+	rememberDeathrattles,
+} from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { removeMinionFromBoard } from './remove-minion-from-board';
@@ -91,7 +96,8 @@ export const simulateAttack = (
 					if (
 						defendingEntity.health > 0 &&
 						!defendingEntity.definitelyDead &&
-						(defendingEntity.cardId === CardIds.YoHoOgre || defendingEntity.cardId === CardIds.YoHoOgreBattlegrounds)
+						(defendingEntity.cardId === CardIds.YoHoOgre ||
+							defendingEntity.cardId === CardIds.YoHoOgreBattlegrounds)
 					) {
 						defendingEntity.attackImmediately = true;
 						if (defendingEntity.attackImmediately) {
@@ -167,7 +173,11 @@ const performAttack = (
 	if (hasCorrectTribe(attackingEntity, Race.DRAGON, allCards)) {
 		const prestors = attackingBoard
 			.filter((e) => e.entityId !== attackingEntity.entityId)
-			.filter((e) => e.cardId === CardIds.PrestorsPyrospawn_BG21_012 || e.cardId === CardIds.PrestorsPyrospawn_BG21_012_G);
+			.filter(
+				(e) =>
+					e.cardId === CardIds.PrestorsPyrospawn_BG21_012 ||
+					e.cardId === CardIds.PrestorsPyrospawn_BG21_012_G,
+			);
 		prestors.forEach((prestor) => {
 			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
 			dealDamageToEnemy(
@@ -185,7 +195,10 @@ const performAttack = (
 			);
 		});
 	}
-	if (attackingEntity.cardId === CardIds.Atramedes_BG23_362 || attackingEntity.cardId === CardIds.AtramedesBattlegrounds) {
+	if (
+		attackingEntity.cardId === CardIds.Atramedes_BG23_362 ||
+		attackingEntity.cardId === CardIds.AtramedesBattlegrounds
+	) {
 		const targets = [defendingEntity, ...getNeighbours(defendingBoard, defendingEntity)];
 		const multiplier = attackingEntity.cardId === CardIds.AtramedesBattlegrounds ? 2 : 1;
 
@@ -211,7 +224,9 @@ const performAttack = (
 
 	if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
 		const spawns = spawnEntities(
-			attackingEntity.cardId === CardIds.BabyKrush_BG22_001_G ? CardIds.DevilsaurBattlegrounds : CardIds.BabyKrush_DevilsaurToken,
+			attackingEntity.cardId === CardIds.BabyKrush_BG22_001_G
+				? CardIds.DevilsaurBattlegrounds
+				: CardIds.BabyKrush_DevilsaurToken,
 			1,
 			attackingBoard,
 			attackingBoardHero,
@@ -321,7 +336,8 @@ const performAttack = (
 	}
 	if (
 		(defendingEntity.health <= 0 || defendingEntity.definitelyDead) &&
-		(attackingEntity.cardId === CardIds.WildfireElemental || attackingEntity.cardId === CardIds.WildfireElementalBattlegrounds)
+		(attackingEntity.cardId === CardIds.WildfireElemental ||
+			attackingEntity.cardId === CardIds.WildfireElementalBattlegrounds)
 	) {
 		const excessDamage = -defendingEntity.health;
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
@@ -399,7 +415,16 @@ const performAttack = (
 	if (attackingEntity.enchantments.some((e) => e.cardId === CardIds.VolatileVenom_VolatileEnchantment)) {
 		attackingEntity.definitelyDead = true;
 	}
-	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, allCards, cardsData, sharedState, spectator);
+	processMinionDeath(
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 };
 
@@ -530,13 +555,17 @@ export const findNearestEnemies = (
 		const targetIndex = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
 
 		for (let i = 0; i < numberOfTargets; i++) {
-			const possibleTargets = defendingBoard.filter((e) => !e.definitelyDead && e.health > 0).filter((e) => !result.includes(e));
+			const possibleTargets = defendingBoard
+				.filter((e) => !e.definitelyDead && e.health > 0)
+				.filter((e) => !result.includes(e));
 			// console.debug('possibleTargets', stringifySimple(possibleTargets));
 			if (!possibleTargets.length) {
 				break;
 			}
 
-			const targetGroups = groupByFunction((e: BoardEntity) => defendingBoard.indexOf(e) - targetIndex)(possibleTargets);
+			const targetGroups = groupByFunction((e: BoardEntity) => defendingBoard.indexOf(e) - targetIndex)(
+				possibleTargets,
+			);
 			const distances = Object.keys(targetGroups)
 				.map((k) => +k)
 				.sort();
@@ -550,7 +579,11 @@ export const findNearestEnemies = (
 	return result.filter((e) => !!e);
 };
 
-export const getNeighbours = (board: BoardEntity[], entity: BoardEntity, deadEntityIndexFromRight?: number): readonly BoardEntity[] => {
+export const getNeighbours = (
+	board: BoardEntity[],
+	entity: BoardEntity,
+	deadEntityIndexFromRight?: number,
+): readonly BoardEntity[] => {
 	const neighbours = [];
 	if (deadEntityIndexFromRight != null) {
 		// If the deadEntityIndexFromRight === 0 (right-most minion), no neighbour will be found
@@ -666,7 +699,11 @@ export const dealDamageToEnemy = (
 	return actualDamageDone;
 };
 
-export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntity: BoardEntity, ignoreTaunts = false): BoardEntity => {
+export const getDefendingEntity = (
+	defendingBoard: BoardEntity[],
+	attackingEntity: BoardEntity,
+	ignoreTaunts = false,
+): BoardEntity => {
 	let possibleDefenders: readonly BoardEntity[];
 	if (attackingEntity.cardId === CardIds.ZappSlywick || attackingEntity.cardId === CardIds.ZappSlywickBattlegrounds) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
@@ -681,7 +718,9 @@ export const getDefendingEntity = (defendingBoard: BoardEntity[], attackingEntit
 	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
 	if (chosenDefender?.taunt) {
 		const elistras = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.ElistraTheImmortal_BGS_205 || entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
+			(entity) =>
+				entity.cardId === CardIds.ElistraTheImmortal_BGS_205 ||
+				entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
 		);
 		if (elistras.length > 0) {
 			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
@@ -730,7 +769,8 @@ export const bumpEntities = (
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
 			} else if (
 				entityBoard[i].entityId !== entity.entityId &&
-				(entityBoard[i].cardId === CardIds.HolyMecherel || entityBoard[i].cardId === CardIds.HolyMecherelBattlegrounds)
+				(entityBoard[i].cardId === CardIds.HolyMecherel ||
+					entityBoard[i].cardId === CardIds.HolyMecherelBattlegrounds)
 			) {
 				updateDivineShield(entityBoard[i], entityBoard, true, allCards);
 			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
@@ -802,7 +842,16 @@ export const bumpEntities = (
 	);
 	if (!!entitySpawns?.length) {
 		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		addMinionsToBoard(entityBoard, entityBoardHero, otherHero, index, entitySpawns, allCards, spectator, sharedState);
+		addMinionsToBoard(
+			entityBoard,
+			entityBoardHero,
+			otherHero,
+			index,
+			entitySpawns,
+			allCards,
+			spectator,
+			sharedState,
+		);
 		spectator.registerMinionsSpawn(entity, entityBoard, entitySpawns);
 	}
 	return bumpInto.attack;
@@ -948,10 +997,14 @@ export const processMinionDeath = (
 	sharedState.deaths.push(...deadEntities2);
 	board1Hero.globalInfo.EternalKnightsDeadThisGame =
 		board1Hero.globalInfo.EternalKnightsDeadThisGame +
-		deadEntities1.filter((e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds).length;
+		deadEntities1.filter(
+			(e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds,
+		).length;
 	board2Hero.globalInfo.EternalKnightsDeadThisGame =
 		board2Hero.globalInfo.EternalKnightsDeadThisGame +
-		deadEntities2.filter((e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds).length;
+		deadEntities2.filter(
+			(e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds,
+		).length;
 
 	// First process all DRs, then process the reborn
 	if (Math.random() > 0.5) {
@@ -1165,9 +1218,18 @@ const handleAfterMinionsDeathsForBoard = (
 				afterStatsUpdate(killer, otherBoard, allCards);
 				// Icesnarl the Mighty
 				otherBoard
-					.filter((e) => e.cardId === CardIds.IcesnarlTheMighty || e.cardId === CardIds.IcesnarlTheMightyBattlegrounds)
+					.filter(
+						(e) =>
+							e.cardId === CardIds.IcesnarlTheMighty ||
+							e.cardId === CardIds.IcesnarlTheMightyBattlegrounds,
+					)
 					.forEach((icesnarl) => {
-						modifyHealth(icesnarl, icesnarl.cardId === CardIds.IcesnarlTheMightyBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+						modifyHealth(
+							icesnarl,
+							icesnarl.cardId === CardIds.IcesnarlTheMightyBattlegrounds ? 2 : 1,
+							friendlyBoard,
+							allCards,
+						);
 						afterStatsUpdate(icesnarl, friendlyBoard, allCards);
 					});
 			}
@@ -1321,8 +1383,18 @@ export const applyOnAttackBuffs = (
 		attackingBoard
 			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {
-				modifyAttack(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2, attackingBoard, allCards);
-				modifyHealth(e, attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2, attackingBoard, allCards);
+				modifyAttack(
+					e,
+					attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2,
+					attackingBoard,
+					allCards,
+				);
+				modifyHealth(
+					e,
+					attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2,
+					attackingBoard,
+					allCards,
+				);
 				spectator.registerPowerTarget(attacker, e, attackingBoard);
 			});
 	}
@@ -1337,7 +1409,9 @@ export const applyOnBeingAttackedBuffs = (
 ): void => {
 	if (attackedEntity.taunt) {
 		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj);
-		const goldenChampions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarjBattlegrounds);
+		const goldenChampions = defendingBoard.filter(
+			(entity) => entity.cardId === CardIds.ChampionOfYshaarjBattlegrounds,
+		);
 		champions.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
 			modifyHealth(entity, 1, defendingBoard, allCards);
@@ -1377,16 +1451,28 @@ export const applyOnBeingAttackedBuffs = (
 		});
 	}
 	if (attackedEntity.cardId === CardIds.DozyWhelp || attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds) {
-		modifyAttack(attackedEntity, attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds ? 2 : 1, defendingBoard, allCards);
+		modifyAttack(
+			attackedEntity,
+			attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds ? 2 : 1,
+			defendingBoard,
+			allCards,
+		);
 		spectator.registerPowerTarget(attackedEntity, attackedEntity, defendingBoard);
 	}
-	if (attackerEntity.cardId === CardIds.SindoreiStraightShot || attackerEntity.cardId === CardIds.SindoreiStraightShotBattlegrounds) {
+	if (
+		attackerEntity.cardId === CardIds.SindoreiStraightShot ||
+		attackerEntity.cardId === CardIds.SindoreiStraightShotBattlegrounds
+	) {
 		attackedEntity.taunt = false;
 		attackedEntity.reborn = false;
 	}
 };
 
-const makeMinionsDie = (board: BoardEntity[], allCards: AllCardsService, spectator: Spectator): [number[], BoardEntity[]] => {
+const makeMinionsDie = (
+	board: BoardEntity[],
+	allCards: AllCardsService,
+	spectator: Spectator,
+): [number[], BoardEntity[]] => {
 	// Because entities spawn to the left, so the right index is unchanged
 	const deadMinionIndexesFromRight: number[] = [];
 	const deadEntities: BoardEntity[] = [];
@@ -1408,7 +1494,7 @@ const makeMinionsDie = (board: BoardEntity[], allCards: AllCardsService, spectat
 		if (Math.abs(deadMinionIndexesFromRight[i] - deadMinionIndexesFromRight[i + 1]) <= 1) {
 			blockIndexesFromRight[i] = blockIndexesFromRight[i + 1];
 		} else {
-			blockIndexesFromRight[i] = blockIndexesFromRight[i];
+			// blockIndexesFromRight[i] = blockIndexesFromRight[i];
 		}
 	}
 	return [blockIndexesFromRight, deadEntities];
@@ -1656,10 +1742,20 @@ const buildBoardAfterRebornSpawns = (
 	const numberOfTriggersForDeathwhisper = Math.min(entitiesFromReborn.length, 1);
 	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
 		boardWithKilledMinion
-			.filter((e) => e.cardId === CardIds.SisterDeathwhisper || e.cardId === CardIds.SisterDeathwhisperBattlegrounds)
+			.filter(
+				(e) => e.cardId === CardIds.SisterDeathwhisper || e.cardId === CardIds.SisterDeathwhisperBattlegrounds,
+			)
 			.forEach((e) => {
 				const multiplier = e.cardId === CardIds.SisterDeathwhisperBattlegrounds ? 2 : 1;
-				addStatsToBoard(e, boardWithKilledMinion, multiplier * 1, multiplier * 2, allCards, spectator, Race[Race.UNDEAD]);
+				addStatsToBoard(
+					e,
+					boardWithKilledMinion,
+					multiplier * 1,
+					multiplier * 2,
+					allCards,
+					spectator,
+					Race[Race.UNDEAD],
+				);
 			});
 		boardWithKilledMinion
 			.filter((e) => e.cardId === CardIds.JellyBelly || e.cardId === CardIds.JellyBellyBattlegrounds)
