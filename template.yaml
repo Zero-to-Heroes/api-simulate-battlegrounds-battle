@@ -18,7 +18,7 @@ Resources:
         Type: AWS::Serverless::Function
         Properties:
             Handler: simulate-bgs-battle.default
-            Runtime: nodejs12.x
+            Runtime: nodejs16.x
             Timeout: 15
             MemorySize: 512
             CodeUri: ./dist/simulate-bgs-battle
@@ -35,6 +35,24 @@ Resources:
                     Properties:
                         Path: /{proxy+}
                         Method: any
+    SimulateBgsBattleFunctionLive:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: simulate-bgs-battle.default
+            Runtime: nodejs16.x
+            Timeout: 15
+            MemorySize: 512
+            CodeUri: ./dist/simulate-bgs-battle
+            Policies:
+                - AWSLambdaVPCAccessExecutionRole
+                - AmazonSESFullAccess
+                - SecretsManagerReadWrite
+                # - arn:aws:iam::478062583808:policy/CloudWatchPolicyForLambda # See https://stackoverflow.com/questions/51166504/disable-cloudwatch-to-monitor-logs-for-lambda-function
+            Tags:
+                LambdaName: api-simulate-battlegrounds-battle-2
+            AutoPublishAlias: live
+            FunctionUrlConfig:
+                AuthType: NONE
 
 Outputs:
     SimulateBgsBattleApi:
