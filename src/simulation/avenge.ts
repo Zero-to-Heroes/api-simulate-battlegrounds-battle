@@ -164,13 +164,13 @@ const handleAvenge = (
 			);
 			break;
 		case CardIds.PalescaleCrocolisk_BG21_001:
-			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
+			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, true, allCards, spectator);
 			if (!!target1) {
 				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
 			}
 			break;
 		case CardIds.PalescaleCrocolisk_BG21_001_G:
-			const target2 = grantRandomStats(avenger, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
+			const target2 = grantRandomStats(avenger, boardWithDeadEntity, 12, 12, Race.BEAST, true, allCards, spectator);
 			if (!!target2) {
 				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
 			}

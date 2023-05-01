@@ -20,7 +20,7 @@ import {
 	stringifySimpleCard,
 	updateDivineShield,
 } from '../utils';
-import { addMinionsToBoard, addMinionToBoard } from './add-minion-to-board';
+import { addMinionToBoard, addMinionsToBoard } from './add-minion-to-board';
 import { applyAvengeEffects } from './avenge';
 import { applyMinionDeathEffect, applyMonstrosity, handleDeathrattleEffects, rememberDeathrattles } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';

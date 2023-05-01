@@ -150,7 +150,7 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.PalescaleCrocolisk_BG21_001:
 				for (let i = 0; i < multiplier; i++) {
-					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, allCards, spectator);
+					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, true, allCards, spectator);
 					if (!!target) {
 						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 					}
@@ -158,7 +158,7 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.PalescaleCrocolisk_BG21_001_G:
 				for (let i = 0; i < multiplier; i++) {
-					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, allCards, spectator);
+					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, true, allCards, spectator);
 					if (!!target) {
 						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 					}
@@ -174,6 +174,7 @@ export const handleDeathrattleEffects = (
 						scarletMultiplier * 1,
 						scarletMultiplier * 2,
 						Race.UNDEAD,
+						false,
 						allCards,
 						spectator,
 					);
@@ -599,6 +600,7 @@ const applyLeapFroggerEffect = (
 		multiplier * (isPremium ? 2 : 1),
 		multiplier * (isPremium ? 2 : 1),
 		Race.BEAST,
+		false,
 		allCards,
 		spectator,
 	);

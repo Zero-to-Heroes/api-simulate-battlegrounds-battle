@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, ALL_BG_RACES, CardIds, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { ALL_BG_RACES, AllCardsService, CardIds, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
@@ -354,21 +354,22 @@ export const grantRandomStats = (
 	attack: number,
 	health: number,
 	race: Race,
+	excludeSource: boolean,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): BoardEntity => {
 	if (board.length > 0) {
-		const validBeast: BoardEntity = getRandomAliveMinion(
-			board.filter((e) => e.entityId !== source.entityId),
+		const target: BoardEntity = getRandomAliveMinion(
+			board.filter((e) => (excludeSource ? e.entityId !== source.entityId : true)),
 			race,
 			allCards,
 		);
-		if (validBeast) {
-			modifyAttack(validBeast, attack, board, allCards);
-			modifyHealth(validBeast, health, board, allCards);
-			afterStatsUpdate(validBeast, board, allCards);
-			spectator.registerPowerTarget(source, validBeast, board);
-			return validBeast;
+		if (target) {
+			modifyAttack(target, attack, board, allCards);
+			modifyHealth(target, health, board, allCards);
+			afterStatsUpdate(target, board, allCards);
+			spectator.registerPowerTarget(source, target, board);
+			return target;
 		}
 	}
 	return null;
@@ -470,10 +471,12 @@ export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards:
 	const validTribes = board
 		.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).races, race))
 		.filter((e) => e.health > 0 && !e.definitelyDead);
+	// console.log('picking a random alive minion', stringifySimple(validTribes, allCards));
 	if (!validTribes.length) {
 		return null;
 	}
-	return validTribes[Math.floor(Math.random() * validTribes.length)];
+	const randomIndex = Math.floor(Math.random() * validTribes.length);
+	return validTribes[randomIndex];
 };
 
 export const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => {
@@ -574,11 +577,7 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity
-		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}/ench=${
-				entity.enchantments
-		  }`
-		: null;
+	return entity ? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}` : null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {

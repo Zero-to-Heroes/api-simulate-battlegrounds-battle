@@ -1,11 +1,9 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.262",
+	"version": "1.1.263",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
-		"start": "webpack -w --color",
-		"test": "jest",
 		"singleTest": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand -t",
 		"singleFile": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand",
 		"singleFileDev": "node --max_old_space_size=6000 --inspect --expose-gc ./node_modules/jest/bin/jest.js --runInBand",
@@ -14,7 +12,6 @@
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
 		"clean": "rm -rf -v dist/*",
 		"full-deploy": "npm run build && npm run package && npm run deploy",
-		"increment-version": "npm --no-git-tag-version version patch && git add . && git commit -m \"increment version\"",
 		"publish-version": "rm -rf dist && tsc && rm -rf dist/node_modules && npm publish --access public"
 	},
 	"repository": {},
