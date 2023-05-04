@@ -70,7 +70,8 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy:
 			case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G:
-				const iterations = deadEntityCardId === CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
+				const iterations =
+					deadEntityCardId === CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < iterations; j++) {
 						let validTargets = boardWithDeadEntity.filter((entity) => !entity.divineShield);
@@ -105,16 +106,48 @@ export const handleDeathrattleEffects = (
 				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator);
 				break;
 			case CardIds.GoldrinnTheGreatWolf:
-				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 5, multiplier * 5, allCards, spectator, 'BEAST');
+				addStatsToBoard(
+					deadEntity,
+					boardWithDeadEntity,
+					multiplier * 5,
+					multiplier * 5,
+					allCards,
+					spectator,
+					'BEAST',
+				);
 				break;
 			case CardIds.GoldrinnTheGreatWolfBattlegrounds:
-				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 10, multiplier * 10, allCards, spectator, 'BEAST');
+				addStatsToBoard(
+					deadEntity,
+					boardWithDeadEntity,
+					multiplier * 10,
+					multiplier * 10,
+					allCards,
+					spectator,
+					'BEAST',
+				);
 				break;
 			case CardIds.KingBagurgle:
-				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 2, multiplier * 2, allCards, spectator, 'MURLOC');
+				addStatsToBoard(
+					deadEntity,
+					boardWithDeadEntity,
+					multiplier * 2,
+					multiplier * 2,
+					allCards,
+					spectator,
+					'MURLOC',
+				);
 				break;
 			case CardIds.KingBagurgleBattlegrounds:
-				addStatsToBoard(deadEntity, boardWithDeadEntity, multiplier * 4, multiplier * 4, allCards, spectator, 'MURLOC');
+				addStatsToBoard(
+					deadEntity,
+					boardWithDeadEntity,
+					multiplier * 4,
+					multiplier * 4,
+					allCards,
+					spectator,
+					'MURLOC',
+				);
 				break;
 			case CardIds.FiendishServant:
 				for (let i = 0; i < multiplier; i++) {
@@ -150,7 +183,16 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.PalescaleCrocolisk_BG21_001:
 				for (let i = 0; i < multiplier; i++) {
-					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 6, 6, Race.BEAST, true, allCards, spectator);
+					const target = grantRandomStats(
+						deadEntity,
+						boardWithDeadEntity,
+						6,
+						6,
+						Race.BEAST,
+						true,
+						allCards,
+						spectator,
+					);
 					if (!!target) {
 						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 					}
@@ -158,7 +200,16 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.PalescaleCrocolisk_BG21_001_G:
 				for (let i = 0; i < multiplier; i++) {
-					const target = grantRandomStats(deadEntity, boardWithDeadEntity, 12, 12, Race.BEAST, true, allCards, spectator);
+					const target = grantRandomStats(
+						deadEntity,
+						boardWithDeadEntity,
+						12,
+						12,
+						Race.BEAST,
+						true,
+						allCards,
+						spectator,
+					);
 					if (!!target) {
 						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
 					}
@@ -188,7 +239,15 @@ export const handleDeathrattleEffects = (
 				const anubarakMultiplier = deadEntityCardId === CardIds.AnubarakNerubianKingBattlegrounds ? 2 : 1;
 				const attackBonus = anubarakMultiplier * 1;
 				for (let i = 0; i < multiplier; i++) {
-					addStatsToBoard(deadEntity, boardWithDeadEntity, attackBonus, 0, allCards, spectator, Race[Race.UNDEAD]);
+					addStatsToBoard(
+						deadEntity,
+						boardWithDeadEntity,
+						attackBonus,
+						0,
+						allCards,
+						spectator,
+						Race[Race.UNDEAD],
+					);
 					boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += attackBonus;
 				}
 				break;
@@ -221,7 +280,9 @@ export const handleDeathrattleEffects = (
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 				// could be spawned between the shots firing), but let's say it's good enough for now
 				const squirrelDamage =
-					deadEntity.cardId === CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G ? 4 : 2;
+					deadEntity.cardId === CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy_G
+						? 4
+						: 2;
 				for (let i = 0; i < multiplier; i++) {
 					const numberOfDeadMechsThisCombat = sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
@@ -286,8 +347,20 @@ export const handleDeathrattleEffects = (
 				// could be spawned between the shots firing), but let's say it's good enough for now
 				const boomboxDamage = deadEntity.cardId === CardIds.DrBoomboxBattlegrounds ? 14 : 7;
 				for (let i = 0; i < multiplier; i++) {
-					const targets = findNearestEnemies(boardWithDeadEntity, null, deadEntityIndexFromRight, otherBoard, 2);
-					// console.debug('nearest', stringifySimple(targets));
+					// The nearest enemies use the full board info
+					// const boardIncludingDeadEntityAtCorrectIndex = boardWithDeadEntity.splice(
+					// 	deadEntityIndexFromRight,
+					// 	0,
+					// 	deadEntity,
+					// );
+					const targets = findNearestEnemies(
+						boardWithDeadEntity,
+						null,
+						deadEntityIndexFromRight,
+						otherBoard,
+						2,
+						allCards,
+					);
 					targets.forEach((target) => {
 						// console.debug('dealing damage to', stringifySimpleCard(target));
 						dealDamageToEnemy(
@@ -419,9 +492,10 @@ export const handleDeathrattleEffects = (
 
 		// Frogs include the multiplers here directly
 		if (
-			[CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e, CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge].includes(
-				cardId as CardIds,
-			)
+			[
+				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
+				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
+			].includes(cardId as CardIds)
 		) {
 			repeatsToApply = repeatsToApply * multiplier;
 		}
@@ -456,7 +530,14 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.EarthRecollectionEnchantment:
 				for (let i = 0; i < multiplier; i++) {
-					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, allCards, sharedState, spectator);
+					applyEarthInvocationEnchantment(
+						boardWithDeadEntity,
+						deadEntity,
+						deadEntity,
+						allCards,
+						sharedState,
+						spectator,
+					);
 				}
 				break;
 			case CardIds.FireRecollectionEnchantment:
@@ -976,7 +1057,10 @@ const applyBristlemaneScrapsmithEffect = (
 	spectator: Spectator,
 ): void => {
 	for (let i = 0; i < board.length; i++) {
-		if (board[i].cardId === CardIds.BristlemaneScrapsmith || board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds) {
+		if (
+			board[i].cardId === CardIds.BristlemaneScrapsmith ||
+			board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds
+		) {
 			addCardsInHand(
 				boardPlayerEntity,
 				board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds ? 2 : 1,

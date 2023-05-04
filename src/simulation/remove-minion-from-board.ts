@@ -3,12 +3,22 @@ import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
 import { Spectator } from './spectator/spectator';
 
-export const removeMinionFromBoard = (board: BoardEntity[], index: number, allCards: AllCardsService, spectator: Spectator): void => {
+export const removeMinionFromBoard = (
+	board: BoardEntity[],
+	index: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	const removedEntity = board.splice(index, 1)[0];
 	handleMinionRemovedEffect(board, removedEntity, allCards, spectator);
 };
 
-const handleMinionRemovedEffect = (board: BoardEntity[], removed: BoardEntity, allCards: AllCardsService, spectator: Spectator): void => {
+const handleMinionRemovedEffect = (
+	board: BoardEntity[],
+	removed: BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	switch (removed.cardId) {
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderLegacyBattlegrounds:
@@ -18,6 +28,13 @@ const handleMinionRemovedEffect = (board: BoardEntity[], removed: BoardEntity, a
 					const diff = removed.cardId === CardIds.MurlocWarleaderLegacyBattlegrounds ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
 				});
+			break;
+		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
+		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
+			board.forEach((e) => {
+				const diff = removed.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+				e.attack = Math.max(0, e.attack - diff);
+			});
 			break;
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainLegacyBattlegrounds:

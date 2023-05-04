@@ -547,23 +547,25 @@ export const findNearestEnemies = (
 	entityIndexFromRight: number,
 	defendingBoard: BoardEntity[],
 	numberOfTargets: number,
+	allCards: AllCardsService,
 ): BoardEntity[] => {
 	const result = [];
 	if (defendingBoard.length > 0) {
-		// console.debug('defending board', numberOfTargets, stringifySimple(defendingBoard));
+		// console.debug('defending board', numberOfTargets, stringifySimple(defendingBoard, allCards));
 		const attackerIndex = attackingBoard.length - entityIndexFromRight - 1;
 		const targetIndex = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
+		// console.debug('indexes', attackerIndex, entityIndexFromRight, targetIndex, attackingBoard.length);
 
 		for (let i = 0; i < numberOfTargets; i++) {
 			const possibleTargets = defendingBoard
 				.filter((e) => !e.definitelyDead && e.health > 0)
 				.filter((e) => !result.includes(e));
-			// console.debug('possibleTargets', stringifySimple(possibleTargets));
+			// console.debug('possibleTargets', stringifySimple(possibleTargets, allCards));
 			if (!possibleTargets.length) {
 				break;
 			}
 
-			const targetGroups = groupByFunction((e: BoardEntity) => defendingBoard.indexOf(e) - targetIndex)(
+			const targetGroups = groupByFunction((e: BoardEntity) => Math.abs(defendingBoard.indexOf(e) - targetIndex))(
 				possibleTargets,
 			);
 			const distances = Object.keys(targetGroups)
@@ -571,9 +573,15 @@ export const findNearestEnemies = (
 				.sort();
 			const nearestDistance = distances[0];
 			if (nearestDistance != null) {
+				// console.debug(
+				// 	'targetGroups[nearestDistance]',
+				// 	nearestDistance,
+				// 	stringifySimple(targetGroups[nearestDistance], allCards),
+				// );
 				const target = pickRandom(targetGroups[nearestDistance]);
 				result.push(target);
 			}
+			// console.debug('\n');
 		}
 	}
 	return result.filter((e) => !!e);
