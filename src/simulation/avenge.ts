@@ -312,6 +312,14 @@ const handleAvenge = (
 			const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeastBattlegrounds ? 2 : 1;
 			grantStatsToMinionsOfEachType(avenger, boardWithDeadEntity, ghoulMultiplier * 3, 0, allCards, spectator);
 			break;
+		case CardIds.Bristlebach:
+		case CardIds.BristlebachBattlegrounds:
+			const bristlebachMultiplier = avenger.cardId === CardIds.BristlebachBattlegrounds ? 2 : 1;
+			// TODO: use current blood gem buff values
+			for (let i = 0; i < bristlebachMultiplier * 2; i++) {
+				addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, allCards, spectator, Race[Race.QUILBOAR]);
+			}
+			break;
 		case CardIds.HungeringAbomination:
 		case CardIds.HungeringAbominationBattlegrounds:
 			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbominationBattlegrounds ? 2 : 1;

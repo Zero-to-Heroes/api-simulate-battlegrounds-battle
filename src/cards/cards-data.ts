@@ -140,6 +140,8 @@ export class CardsData {
 			// Not technically an avenge, but behaves as if
 			case CardIds.ShadowyConstruct:
 			case CardIds.ShadowyConstructBattlegrounds:
+			case CardIds.Bristlebach:
+			case CardIds.BristlebachBattlegrounds:
 				return 1;
 			case CardIds.GhoulOfTheFeast:
 			case CardIds.GhoulOfTheFeastBattlegrounds:
