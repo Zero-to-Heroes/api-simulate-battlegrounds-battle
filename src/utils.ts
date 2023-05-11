@@ -13,43 +13,6 @@ const CLEAVE_IDS = [
 	CardIds.FoeReaper4000_BG_GVG_113,
 	CardIds.FoeReaper4000Battlegrounds,
 ];
-// Because for some reason, the Taunt keyword is only a referenced tag,
-// so we have to know when a taunt minion is spawned (the taunt tag
-// is passed in input properly, so it's not an issue there)
-const TAUNT_IDS = [
-	CardIds.YoHoOgre,
-	CardIds.YoHoOgreBattlegrounds,
-	CardIds.SecurityRover_GuardBotToken,
-	CardIds.SecurityRover_GuardBotTokenBattlegrounds,
-	CardIds.MoltenRock,
-	CardIds.MoltenRockBattlegrounds,
-	CardIds.LieutenantGarr,
-	CardIds.LieutenantGarrBattlegrounds,
-	CardIds.GentleDjinni,
-	CardIds.GentleDjinniBattlegrounds,
-	CardIds.AcolyteOfCthun,
-	CardIds.AcolyteOfCthunBattlegrounds,
-	CardIds.RingMatron_BG_DMF_533,
-	CardIds.RingMatronBattlegrounds,
-	CardIds.DynamicDuo,
-	CardIds.DynamicDuoBattlegrounds,
-	CardIds.InsatiableUrzul,
-	CardIds.InsatiableUrzulBattlegrounds,
-	CardIds.MasterOfRealities_BG21_036,
-	CardIds.MasterOfRealitiesBattlegrounds,
-	CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy,
-	CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G,
-	CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy,
-	CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G,
-	CardIds.Glowscale,
-	CardIds.GlowscaleBattlegrounds,
-	CardIds.SilverbackPatriarch_BG_CS2_127,
-	CardIds.SilverbackPatriarch_BG_CS2_127_G,
-	CardIds.SparringPartner_BG_AT_069,
-	CardIds.SparringPartnerBattlegrounds,
-	CardIds.TunnelBlaster_BG_DAL_775,
-	CardIds.TunnelBlasterBattlegrounds,
-];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken,
 	CardIds.Scallywag_SkyPirateTokenBattlegrounds,
@@ -90,7 +53,7 @@ export const buildSingleBoardEntity = (
 				divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
 				health: card.health,
 				maxHealth: card.health,
-				taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId as CardIds),
+				taunt: hasMechanic(card, GameTag[GameTag.TAUNT]),
 				reborn: hasMechanic(card, 'REBORN'),
 				poisonous: hasMechanic(card, 'POISONOUS'),
 				windfury:
@@ -110,10 +73,7 @@ export const buildSingleBoardEntity = (
 				const stitchedCard = allCards.getCard(stitchedCardId);
 				newEntity.attack = newEntity.attack + stitchedCard.attack;
 				newEntity.maxHealth = newEntity.maxHealth + stitchedCard.health;
-				newEntity.taunt =
-					newEntity.taunt ||
-					hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) ||
-					TAUNT_IDS.includes(stitchedCardId as CardIds);
+				newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
 				newEntity.divineShield =
 					newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
 				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
@@ -158,10 +118,7 @@ export const buildRandomUndeadCreation = (
 	const stitchedCard = allCards.getCard(stitchedCardId);
 	newEntity.attack += stitchedCard.attack;
 	newEntity.health += stitchedCard.health;
-	newEntity.taunt =
-		newEntity.taunt ||
-		hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) ||
-		TAUNT_IDS.includes(stitchedCardId as CardIds);
+	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
 	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
 	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
 	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);

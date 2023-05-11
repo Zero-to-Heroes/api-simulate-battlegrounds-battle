@@ -31,8 +31,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
 export class CardsData {
-	// public shredderSpawns: readonly string[];
 	public ghastcoilerSpawns: readonly string[];
+	// public shredderSpawns: readonly string[];
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
@@ -64,7 +64,9 @@ export class CardsData {
 			.filter((card) => !!card.techLevel)
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla');
-		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(pool.filter((card) => !this.isGolden(card)));
+		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(
+			pool.filter((card) => !this.isGolden(card)),
+		);
 		this.ghastcoilerSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.id !== 'BGS_008')
