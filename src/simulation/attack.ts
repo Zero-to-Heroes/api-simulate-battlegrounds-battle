@@ -139,7 +139,8 @@ const applyAfterAttackEffects = (
 	spectator: Spectator,
 ): void => {
 	if (attackingEntity.cardId === CardIds.Bonker_BG20_104 || attackingEntity.cardId === CardIds.Bonker_BG20_104_G) {
-		addCardsInHand(attackingBoardHero, 1, attackingBoard, allCards, spectator, CardIds.BloodGem);
+		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
+		addCardsInHand(attackingBoardHero, quantity, attackingBoard, allCards, spectator, CardIds.BloodGem);
 	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
 		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(attackingEntity, attackingBoard, modifier * 1, modifier * 2, allCards, spectator);

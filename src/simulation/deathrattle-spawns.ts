@@ -34,7 +34,11 @@ export const spawnEntities = (
 	originalEntity: BoardEntity = null,
 ): readonly BoardEntity[] => {
 	if (!cardId) {
-		console.error('Cannot spawn a minion without any cardId defined', stringifySimple(boardToSpawnInto, allCards), new Error().stack);
+		console.error(
+			'Cannot spawn a minion without any cardId defined',
+			stringifySimple(boardToSpawnInto, allCards),
+			new Error().stack,
+		);
 	}
 	const spawnMultiplier = useKhadgar
 		? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_BG_DAL_575).length || 1
@@ -334,7 +338,9 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy:
 				case CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G:
 					const minionsToSpawnMawsworn =
-						deadEntityCardId === CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G ? 6 : 3;
+						deadEntityCardId === CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G
+							? 6
+							: 3;
 					for (let i = 0; i < minionsToSpawnMawsworn; i++) {
 						const minionCardId = spawns.getRandomMinionForTavernTier(1);
 						spawnedEntities.push(
@@ -784,8 +790,6 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						],
 					);
-					// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
-					// but close enough for now
 					addCardsInHand(
 						boardWithDeadEntityHero,
 						Math.min(1, 7 - boardWithDeadEntity.length),
@@ -1034,8 +1038,12 @@ export const spawnEntitiesFromDeathrattle = (
 					// and then Omega Buster spawns. In this case, it will not have yet processed the token's attack,
 					// and will limit the spawns
 					const cardParam = 5;
-					const entitiesToSpawn = Math.max(0, Math.min(cardParam, 7 - boardWithDeadEntity.length - spawnedEntities.length));
-					const buffAmount = (deadEntityCardId === CardIds.OmegaBusterBattlegrounds ? 2 : 1) * (cardParam - entitiesToSpawn);
+					const entitiesToSpawn = Math.max(
+						0,
+						Math.min(cardParam, 7 - boardWithDeadEntity.length - spawnedEntities.length),
+					);
+					const buffAmount =
+						(deadEntityCardId === CardIds.OmegaBusterBattlegrounds ? 2 : 1) * (cardParam - entitiesToSpawn);
 					spawnedEntities.push(
 						...spawnEntities(
 							deadEntityCardId === CardIds.OmegaBusterBattlegrounds
@@ -1054,9 +1062,25 @@ export const spawnEntitiesFromDeathrattle = (
 							true,
 						),
 					);
-					addStatsToBoard(deadEntity, boardWithDeadEntity, buffAmount, buffAmount, allCards, spectator, Race[Race.MECH]);
+					addStatsToBoard(
+						deadEntity,
+						boardWithDeadEntity,
+						buffAmount,
+						buffAmount,
+						allCards,
+						spectator,
+						Race[Race.MECH],
+					);
 					// when the buster triggers multiple times because of Baron for instance
-					addStatsToBoard(deadEntity, spawnedEntities, buffAmount, buffAmount, allCards, spectator, Race[Race.MECH]);
+					addStatsToBoard(
+						deadEntity,
+						spawnedEntities,
+						buffAmount,
+						buffAmount,
+						allCards,
+						spectator,
+						Race[Race.MECH],
+					);
 					break;
 				// case CardIds.OmegaBusterBattlegrounds:
 				// 	const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
@@ -1432,7 +1456,9 @@ export const spawnEntitiesFromEnchantments = (
 				case CardIds.SneedsReplicator_ReplicateEnchantment:
 					spawnedEntities.push(
 						...spawnEntities(
-							spawns.getRandomMinionForTavernTier(Math.max(1, spawns.getTavernLevel(deadEntity.cardId) - 1)),
+							spawns.getRandomMinionForTavernTier(
+								Math.max(1, spawns.getTavernLevel(deadEntity.cardId) - 1),
+							),
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
