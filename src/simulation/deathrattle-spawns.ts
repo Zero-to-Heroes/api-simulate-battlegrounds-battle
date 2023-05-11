@@ -129,6 +129,29 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
+				case CardIds.Manasaber:
+				case CardIds.ManasaberBattlegrounds:
+					const cublingId =
+						deadEntity.cardId === CardIds.ManasaberBattlegrounds
+							? CardIds.Manasaber_CublingTokenBattlegrounds
+							: CardIds.Manasaber_CublingToken;
+					spawnedEntities.push(
+						...spawnEntities(
+							cublingId,
+							2,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 				case CardIds.PiggybackImp_BG_AV_309:
 				case CardIds.PiggybackImpBattlegrounds:
 					spawnedEntities.push(
