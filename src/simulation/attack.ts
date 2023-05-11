@@ -1387,7 +1387,10 @@ export const applyOnAttackBuffs = (
 			});
 		});
 	}
-	if (attacker.cardId === CardIds.VanessaVancleef || attacker.cardId === CardIds.VanessaVancleefBattlegrounds) {
+	if (
+		attacker.cardId === CardIds.VanessaVancleef_BG24_708 ||
+		attacker.cardId === CardIds.VanessaVancleefBattlegrounds
+	) {
 		attackingBoard
 			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {

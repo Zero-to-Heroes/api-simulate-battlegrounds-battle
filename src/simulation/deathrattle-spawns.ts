@@ -1312,24 +1312,24 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.SplittingFesteroot_BG26_GIL_616:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SplittingFesteroot_SplittingSaplingToken,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
+				// case CardIds.SplittingFesteroot_BG26_GIL_616:
+				// 	spawnedEntities.push(
+				// 		...spawnEntities(
+				// 			CardIds.SplittingFesteroot_SplittingSaplingToken,
+				// 			2,
+				// 			boardWithDeadEntity,
+				// 			boardWithDeadEntityHero,
+				// 			otherBoard,
+				// 			otherBoardHero,
+				// 			allCards,
+				// 			spawns,
+				// 			sharedState,
+				// 			spectator,
+				// 			deadEntity.friendly,
+				// 			false,
+				// 		),
+				// 	);
+				// 	break;
 				default:
 					break;
 			}
