@@ -2,6 +2,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { pickRandom } from '../services/utils';
 import {
 	addCardsInHand,
 	addStatsToBoard,
@@ -195,26 +196,32 @@ const handleAvenge = (
 			}
 			break;
 		case CardIds.ImpatientDoomsayer:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-			break;
 		case CardIds.ImpatientDoomsayerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
+			const doomsayerCardsToAddQuantity = avenger.cardId === CardIds.ImpatientDoomsayerBattlegrounds ? 2 : 1;
+			const doomsayerCardsToAdd = [];
+			for (let i = 0; i < doomsayerCardsToAddQuantity; i++) {
+				doomsayerCardsToAdd.push(pickRandom(cardsData.demonSpawns));
+			}
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, doomsayerCardsToAdd);
 			break;
 		case CardIds.PashmarTheVengeful:
 		case CardIds.PashmarTheVengefulBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, [null]);
 			break;
 		case CardIds.WitchwingNestmatron_BG21_038:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-			break;
 		case CardIds.WitchwingNestmatron_BG21_038_G:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
+			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
+			const nestmatronCardsToAdd = [];
+			for (let i = 0; i < nestmatronToAddQuantity; i++) {
+				nestmatronCardsToAdd.push(pickRandom(cardsData.brannEpicEggSpawns));
+			}
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, nestmatronCardsToAdd);
 			break;
 		case CardIds.Thorncaller:
-			addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-			break;
 		case CardIds.ThorncallerBattlegrounds:
-			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator, CardIds.BloodGem);
+			const thorncallerToAddQuantity = avenger.cardId === CardIds.ThorncallerBattlegrounds ? 2 : 1;
+			const thorncallerCardsToAdd = Array(thorncallerToAddQuantity).fill(CardIds.BloodGem);
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, thorncallerCardsToAdd);
 			break;
 		case CardIds.Sisefin_BG21_009:
 		case CardIds.Sisefin_BG21_009_G:
@@ -230,8 +237,12 @@ const handleAvenge = (
 			break;
 		case CardIds.ScrapScraper:
 		case CardIds.ScrapScraperBattlegrounds:
-			const scrapScraperQuantity = avenger.cardId === CardIds.ScrapScraperBattlegrounds ? 2 : 1;
-			addCardsInHand(boardWithDeadEntityHero, scrapScraperQuantity, boardWithDeadEntity, allCards, spectator);
+			const scraperToAddQuantity = avenger.cardId === CardIds.ScrapScraperBattlegrounds ? 2 : 1;
+			const scraperCardsToAdd = [];
+			for (let i = 0; i < scraperToAddQuantity; i++) {
+				scraperCardsToAdd.push(pickRandom(cardsData.scrapScraperSpawns));
+			}
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, scraperCardsToAdd);
 			break;
 		case CardIds.MechanoTank_BG21_023:
 			// This can be null if the avenge triggers when the last enemy minion dies as well

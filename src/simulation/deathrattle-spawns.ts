@@ -2,12 +2,14 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { pickRandom } from '../services/utils';
 import {
 	addCardsInHand,
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
 	isCorrectTribe,
+	removeCardFromHand,
 	stringifySimple,
 } from '../utils';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
@@ -795,31 +797,16 @@ export const spawnEntitiesFromDeathrattle = (
 					);
 					break;
 				case CardIds.GentleDjinni:
-					spawnedEntities.push(
-						...[
-							...spawnEntities(
-								spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-					break;
 				case CardIds.GentleDjinniBattlegrounds:
-					spawnedEntities.push(
-						...[
+					const djinniSpawns = [];
+					const djinniToSpawnQuandtity = deadEntity.cardId === CardIds.GentleDjinniBattlegrounds ? 2 : 1;
+					for (let i = 0; i < djinniToSpawnQuandtity; i++) {
+						djinniSpawns.push(pickRandom(spawns.gentleDjinniSpawns));
+					}
+					for (const djinniSpawn of djinniSpawns) {
+						spawnedEntities.push(
 							...spawnEntities(
-								spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
+								djinniSpawn,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -832,72 +819,34 @@ export const spawnEntitiesFromDeathrattle = (
 								deadEntity.friendly,
 								false,
 							),
-							...spawnEntities(
-								spawns.gentleDjinniSpawns[Math.floor(Math.random() * spawns.gentleDjinniSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
+						);
+					}
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, djinniSpawns);
 					break;
 
 				case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy:
-					// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
-					// but close enough for now
-					addCardsInHand(
-						boardWithDeadEntityHero,
-						Math.min(1, 7 - boardWithDeadEntity.length),
-						boardWithDeadEntity,
-						allCards,
-						spectator,
-					);
-					break;
 				case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G:
-					addCardsInHand(
-						boardWithDeadEntityHero,
-						Math.min(2, 7 - boardWithDeadEntity.length),
-						boardWithDeadEntity,
-						allCards,
-						spectator,
-					);
+					const kilrekCardsToAddQuantity =
+						deadEntity.cardId === CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G ? 2 : 1;
+					const kilrekCardsToAdd = [];
+					for (let i = 0; i < kilrekCardsToAddQuantity; i++) {
+						kilrekCardsToAdd.push(pickRandom(spawns.demonSpawns));
+					}
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, kilrekCardsToAdd);
 					break;
 
 				case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy:
-					spawnedEntities.push(
-						...[
-							...spawnEntities(
-								spawns.brannEpicEggSpawns[Math.floor(Math.random() * spawns.brannEpicEggSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
-					break;
 				case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G:
-					spawnedEntities.push(
-						...[
+					const brannSpawns = [];
+					const brannToSpawnQuandtity =
+						deadEntity.cardId === CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G ? 2 : 1;
+					for (let i = 0; i < brannToSpawnQuandtity; i++) {
+						brannSpawns.push(pickRandom(spawns.brannEpicEggSpawns));
+					}
+					for (const brannSpawn of brannSpawns) {
+						spawnedEntities.push(
 							...spawnEntities(
-								spawns.brannEpicEggSpawns[Math.floor(Math.random() * spawns.brannEpicEggSpawns.length)],
+								brannSpawn,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -910,23 +859,9 @@ export const spawnEntitiesFromDeathrattle = (
 								deadEntity.friendly,
 								false,
 							),
-							...spawnEntities(
-								spawns.brannEpicEggSpawns[Math.floor(Math.random() * spawns.brannEpicEggSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
+						);
+					}
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, brannSpawns);
 					break;
 
 				case CardIds.GhastcoilerBattlegrounds:
@@ -1341,6 +1276,44 @@ export const spawnEntitiesFromDeathrattle = (
 						b.health += stats;
 					});
 					spawnedEntities.push(...octoSpawns);
+					break;
+				case CardIds.Bassgill:
+				case CardIds.BassgillBattlegrounds:
+					const bassgillIterations = deadEntity.cardId === CardIds.BassgillBattlegrounds ? 2 : 1;
+					for (let i = 0; i < bassgillIterations; i++) {
+						const highestHealth = Math.max(
+							...boardWithDeadEntityHero.cardsInHand.filter((c) => c.health != null).map((c) => c.health),
+						);
+						const highestHealthMinions = boardWithDeadEntityHero.cardsInHand.filter(
+							(c) => c.health === highestHealth,
+						);
+						const spawn = !!highestHealthMinions.length
+							? pickRandom(highestHealthMinions)
+							: boardWithDeadEntityHero.cardsInHand.filter((c) => c.cardId).length
+							? pickRandom(boardWithDeadEntityHero.cardsInHand.filter((c) => c.cardId))
+							: null;
+						removeCardFromHand(boardWithDeadEntityHero, spawn);
+						if (spawn) {
+							const bassgillSpawns = spawnEntities(
+								spawn.cardId,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								allCards,
+								spawns,
+								sharedState,
+								spectator,
+								deadEntity.friendly,
+								false,
+								false,
+								true,
+								spawn,
+							);
+							spawnedEntities.push(...bassgillSpawns);
+						}
+					}
 					break;
 
 				// Putricide-only

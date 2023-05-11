@@ -140,7 +140,8 @@ const applyAfterAttackEffects = (
 ): void => {
 	if (attackingEntity.cardId === CardIds.Bonker_BG20_104 || attackingEntity.cardId === CardIds.Bonker_BG20_104_G) {
 		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
-		addCardsInHand(attackingBoardHero, quantity, attackingBoard, allCards, spectator, CardIds.BloodGem);
+		const cards = quantity === 1 ? [CardIds.BloodGem] : [CardIds.BloodGem, CardIds.BloodGem];
+		addCardsInHand(attackingBoardHero, attackingBoard, allCards, spectator, cards);
 	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
 		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(attackingEntity, attackingBoard, modifier * 1, modifier * 2, allCards, spectator);
@@ -783,9 +784,9 @@ export const bumpEntities = (
 			) {
 				updateDivineShield(entityBoard[i], entityBoard, true, allCards);
 			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
-				addCardsInHand(entityBoardHero, 1, entityBoard, allCards, spectator, CardIds.BloodGem);
+				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem]);
 			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
-				addCardsInHand(entityBoardHero, 2, entityBoard, allCards, spectator, CardIds.BloodGem);
+				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem, CardIds.BloodGem]);
 			}
 
 			// So that self-buffs from Bolvar are taken into account

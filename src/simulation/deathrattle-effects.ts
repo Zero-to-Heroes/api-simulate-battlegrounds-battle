@@ -426,14 +426,8 @@ export const handleDeathrattleEffects = (
 			case CardIds.RadioStar:
 			case CardIds.RadioStarBattlegrounds:
 				const radioQuantity = deadEntityCardId === CardIds.RadioStarBattlegrounds ? 2 : 1;
-				addCardsInHand(
-					boardWithDeadEntityHero,
-					radioQuantity,
-					boardWithDeadEntity,
-					allCards,
-					spectator,
-					deadEntity.lastAffectedByEntity?.cardId,
-				);
+				const radioEntities = Array(radioQuantity).fill(deadEntity.lastAffectedByEntity);
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, radioEntities);
 				break;
 			case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy:
 				for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
@@ -1073,13 +1067,8 @@ const applyBristlemaneScrapsmithEffect = (
 			board[i].cardId === CardIds.BristlemaneScrapsmith ||
 			board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds
 		) {
-			addCardsInHand(
-				boardPlayerEntity,
-				board[i].cardId === CardIds.BristlemaneScrapsmithBattlegrounds ? 2 : 1,
-				board,
-				allCards,
-				spectator,
-			);
+			const cardsToAdd = Array(CardIds.BristlemaneScrapsmithBattlegrounds ? 2 : 1).fill(CardIds.BloodGem);
+			addCardsInHand(boardPlayerEntity, board, allCards, spectator, cardsToAdd);
 			spectator.registerPowerTarget(board[i], board[i], board);
 		}
 	}

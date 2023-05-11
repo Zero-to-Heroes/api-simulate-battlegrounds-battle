@@ -35,6 +35,7 @@ export class CardsData {
 	// public shredderSpawns: readonly string[];
 	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
+	public demonSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
 	// public festergutSpawns: readonly string[];
 	public kilrekSpawns: readonly string[];
@@ -79,11 +80,11 @@ export class CardsData {
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
-		this.impMamaSpawns = pool
+		this.demonSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
-			.filter((card) => card.id !== CardIds.ImpMama)
 			.map((card) => card.id);
+		this.impMamaSpawns = this.demonSpawns.filter((cardId) => cardId !== CardIds.ImpMama);
 		this.gentleDjinniSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.ELEMENTAL))
