@@ -1292,6 +1292,33 @@ export const spawnEntitiesFromDeathrattle = (
 					});
 					spawnedEntities.push(...beastsFromRaptor);
 					break;
+				case CardIds.OctosariWrapGod:
+				case CardIds.OctosariWrapGodBattlegrounds:
+					const stats = deadEntity.scriptDataNum1;
+					const octosariSpawn =
+						deadEntity.cardId === CardIds.OctosariWrapGodBattlegrounds
+							? CardIds.TentacleOfOctosariTokenBattlegrounds
+							: CardIds.TentacleOfOctosariToken;
+					const octoSpawns = spawnEntities(
+						octosariSpawn,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						deadEntity.friendly,
+						false,
+					);
+					octoSpawns.forEach((b) => {
+						b.attack += stats;
+						b.health += stats;
+					});
+					spawnedEntities.push(...octoSpawns);
+					break;
 
 				// Putricide-only
 				case CardIds.FoulEgg_BG26_RLK_833:

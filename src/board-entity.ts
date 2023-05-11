@@ -18,6 +18,7 @@ export interface BoardEntity {
 	windfury?: boolean;
 	stealth?: boolean;
 	enchantments?: { cardId: string; originEntityId?: number; timing: number; repeats?: number; value?: number }[];
+	scriptDataNum1?: number;
 	// For Build-An-Undead
 	additionalCards?: readonly string[] | null;
 

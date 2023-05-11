@@ -2,7 +2,14 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
-import { afterStatsUpdate, hasCorrectTribe, isCorrectTribe, modifyAttack, modifyHealth, updateDivineShield } from '../utils';
+import {
+	afterStatsUpdate,
+	hasCorrectTribe,
+	isCorrectTribe,
+	modifyAttack,
+	modifyHealth,
+	updateDivineShield,
+} from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -123,7 +130,8 @@ const handleSpawnEffect = (
 			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
 			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
 				board.forEach((e) => {
-					e.attack += spawned.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+					e.attack +=
+						spawned.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
 				});
 				break;
 			case CardIds.Kathranatir_BG21_039:
@@ -155,7 +163,8 @@ const handleSpawnEffect = (
 			case CardIds.RotHideGnoll:
 			case CardIds.RotHideGnollBattlegrounds:
 				const multiplierGnoll = spawned.cardId === CardIds.RotHideGnollBattlegrounds ? 2 : 1;
-				const statsBonusGnoll = multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
+				const statsBonusGnoll =
+					multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
 				modifyAttack(spawned, statsBonusGnoll, board, allCards);
 				afterStatsUpdate(spawned, board, allCards);
 				break;
@@ -202,7 +211,8 @@ const handleSpawnEffect = (
 				break;
 			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
 			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
-				spawned.attack += entity.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+				spawned.attack +=
+					entity.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
 				break;
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.KathranatirBattlegrounds:
@@ -220,7 +230,8 @@ const handleSpawnEffect = (
 			case CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy:
 			case CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G:
 				if (allCards.getCard(spawned.cardId).techLevel === boardHero.tavernTier) {
-					const statsBonus = entity.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
+					const statsBonus =
+						entity.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(spawned, board, allCards);
@@ -230,7 +241,8 @@ const handleSpawnEffect = (
 			case CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy:
 			case CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G:
 				if (spawned.taunt) {
-					const statsBonus = entity.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G ? 4 : 2;
+					const statsBonus =
+						entity.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G ? 4 : 2;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(spawned, board, allCards);
@@ -288,6 +300,11 @@ const handleSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
+			case CardIds.OctosariWrapGod:
+			case CardIds.OctosariWrapGodBattlegrounds:
+				const octoStats = entity.cardId === CardIds.OctosariWrapGodBattlegrounds ? 4 : 2;
+				entity.scriptDataNum1 += octoStats;
+				break;
 		}
 	}
 };
@@ -303,14 +320,20 @@ const handleAfterSpawnEffects = (
 	}
 };
 
-const handleAfterSpawnEffect = (board: BoardEntity[], spawned: BoardEntity, allCards: AllCardsService, spectator: Spectator): void => {
+const handleAfterSpawnEffect = (
+	board: BoardEntity[],
+	spawned: BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
 	// console.debug('after spawn', stringifySimpleCard(spawned, allCards), stringifySimple(board, allCards));
 	for (const entity of board) {
 		switch (entity.cardId) {
 			case CardIds.MurlocTidecallerLegacy:
 			case CardIds.MurlocTidecallerBattlegrounds:
 				const multiplier = entity.cardId === CardIds.MurlocTidecallerBattlegrounds ? 2 : 1;
-				const buffAmount = multiplier * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
+				const buffAmount =
+					multiplier * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
 				if (buffAmount > 0) {
 					modifyAttack(entity, buffAmount, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
@@ -320,7 +343,8 @@ const handleAfterSpawnEffect = (board: BoardEntity[], spawned: BoardEntity, allC
 			case CardIds.Swampstriker:
 			case CardIds.SwampstrikerBattlegrounds:
 				const multiplier2 = entity.cardId === CardIds.SwampstrikerBattlegrounds ? 2 : 1;
-				const buffAmount2 = multiplier2 * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
+				const buffAmount2 =
+					multiplier2 * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
 				if (buffAmount2 > 0) {
 					modifyAttack(entity, buffAmount2, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
