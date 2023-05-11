@@ -1349,20 +1349,14 @@ export const applyOnAttackBuffs = (
 
 	// Ripsnarl Captain
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
-		const ripsnarls = attackingBoard
-			.filter((e) => e.cardId === CardIds.RipsnarlCaptain)
-			.filter((e) => e.entityId !== attacker.entityId);
-		const ripsnarlsTB = attackingBoard
-			.filter((entity) => entity.cardId === CardIds.RipsnarlCaptainBattlegrounds)
-			.filter((e) => e.entityId !== attacker.entityId);
+		const ripsnarls = attackingBoard.filter((e) => e.cardId === CardIds.RipsnarlCaptain);
+		const ripsnarlsTB = attackingBoard.filter((entity) => entity.cardId === CardIds.RipsnarlCaptainBattlegrounds);
 		ripsnarls.forEach((captain) => {
 			modifyAttack(attacker, 3, attackingBoard, allCards);
-			modifyHealth(attacker, 3, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
 		});
 		ripsnarlsTB.forEach((captain) => {
 			modifyAttack(attacker, 6, attackingBoard, allCards);
-			modifyHealth(attacker, 6, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
 		});
 	}
