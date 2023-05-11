@@ -1046,28 +1046,30 @@ export const performStartOfCombatMinionsForPlayer = (
 			sharedState,
 			spectator,
 		);
-	} else if (attacker.cardId === CardIds.PrizedPromoDrake) {
+	} else if (
+		attacker.cardId === CardIds.PrizedPromoDrake ||
+		attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds
+	) {
 		const numberOfDragons = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
+		const multiplier = attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds ? 2 : 1;
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, numberOfDragons, attackingBoard, allCards);
-			modifyHealth(entity, numberOfDragons, attackingBoard, allCards);
+			modifyAttack(entity, multiplier * numberOfDragons, attackingBoard, allCards);
+			modifyHealth(entity, multiplier * numberOfDragons, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds) {
-		const dragons = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).races)
-			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
-		const neighbours = getNeighbours(attackingBoard, attacker);
-		neighbours.forEach((entity) => {
-			modifyAttack(entity, 2 * dragons, attackingBoard, allCards);
-			modifyHealth(entity, 2 * dragons, attackingBoard, allCards);
-			afterStatsUpdate(entity, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, entity, attackingBoard);
-		});
+	} else if (attacker.cardId === CardIds.ChoralMrrrglr || attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds) {
+		const statsOfMinionsInHand = attackingBoardHero.cardsInHand
+			.map((c) => (c.attack ?? 0) + (c.health ?? 0))
+			.reduce((a, b) => a + b, 0);
+		const multiplier = attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds ? 2 : 1;
+		modifyAttack(attacker, multiplier * statsOfMinionsInHand, attackingBoard, allCards);
+		modifyHealth(attacker, multiplier * statsOfMinionsInHand, attackingBoard, allCards);
+		afterStatsUpdate(attacker, attackingBoard, allCards);
+		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard

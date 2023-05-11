@@ -27,6 +27,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.InterrogatorWhitemane_BG24_704_G,
 	CardIds.Soulsplitter,
 	CardIds.SoulsplitterBattlegrounds,
+	CardIds.ChoralMrrrglr,
+	CardIds.ChoralMrrrglrBattlegrounds,
 ];
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
