@@ -376,33 +376,36 @@ export const addCardsInHand = (
 		return;
 	}
 
+	const cardsAdded = newCardsInHand - playerEntity.cardsInHand;
 	playerEntity.cardsInHand = newCardsInHand;
 
-	const peggys = board.filter(
-		(e) => e.cardId === CardIds.PeggySturdybone || e.cardId === CardIds.PeggySturdyboneBattlegrounds,
-	);
-	peggys.forEach((peggy) => {
-		const pirate = getRandomAliveMinion(
-			board.filter((e) => e.entityId !== peggy.entityId),
-			Race.PIRATE,
-			allCards,
+	for (let i = 0; i < cardsAdded; i++) {
+		const peggys = board.filter(
+			(e) => e.cardId === CardIds.PeggySturdybone || e.cardId === CardIds.PeggySturdyboneBattlegrounds,
 		);
-		if (pirate) {
-			modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
-			modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
-			afterStatsUpdate(pirate, board, allCards);
-			spectator.registerPowerTarget(peggy, pirate, board);
-		}
-	});
+		peggys.forEach((peggy) => {
+			const pirate = getRandomAliveMinion(
+				board.filter((e) => e.entityId !== peggy.entityId),
+				Race.PIRATE,
+				allCards,
+			);
+			if (pirate) {
+				modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
+				modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
+				afterStatsUpdate(pirate, board, allCards);
+				spectator.registerPowerTarget(peggy, pirate, board);
+			}
+		});
 
-	const thornCaptains = board.filter(
-		(e) => e.cardId === CardIds.Thorncaptain || e.cardId === CardIds.ThorncaptainBattlegrounds,
-	);
-	thornCaptains.forEach((captain) => {
-		modifyHealth(captain, captain.cardId === CardIds.ThorncaptainBattlegrounds ? 2 : 1, board, allCards);
-		afterStatsUpdate(captain, board, allCards);
-		spectator.registerPowerTarget(captain, captain, board);
-	});
+		const thornCaptains = board.filter(
+			(e) => e.cardId === CardIds.Thorncaptain || e.cardId === CardIds.ThorncaptainBattlegrounds,
+		);
+		thornCaptains.forEach((captain) => {
+			modifyHealth(captain, captain.cardId === CardIds.ThorncaptainBattlegrounds ? 2 : 1, board, allCards);
+			afterStatsUpdate(captain, board, allCards);
+			spectator.registerPowerTarget(captain, captain, board);
+		});
+	}
 };
 
 export const grantRandomDivineShield = (

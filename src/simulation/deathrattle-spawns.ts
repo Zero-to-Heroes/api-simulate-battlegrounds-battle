@@ -790,13 +790,7 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						],
 					);
-					addCardsInHand(
-						boardWithDeadEntityHero,
-						Math.min(1, 7 - boardWithDeadEntity.length),
-						boardWithDeadEntity,
-						allCards,
-						spectator,
-					);
+					addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 					break;
 				case CardIds.GentleDjinniBattlegrounds:
 					spawnedEntities.push(
@@ -831,13 +825,7 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						],
 					);
-					addCardsInHand(
-						boardWithDeadEntityHero,
-						Math.min(2, 7 - boardWithDeadEntity.length),
-						boardWithDeadEntity,
-						allCards,
-						spectator,
-					);
+					addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 					break;
 
 				case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy:
@@ -880,15 +868,7 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						],
 					);
-					// Not totally exact, since the DR could be prevented by other DR triggering at the same time,
-					// but close enough for now
-					addCardsInHand(
-						boardWithDeadEntityHero,
-						Math.min(1, 7 - boardWithDeadEntity.length),
-						boardWithDeadEntity,
-						allCards,
-						spectator,
-					);
+					addCardsInHand(boardWithDeadEntityHero, 1, boardWithDeadEntity, allCards, spectator);
 					break;
 				case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G:
 					spawnedEntities.push(
@@ -923,13 +903,7 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						],
 					);
-					addCardsInHand(
-						boardWithDeadEntityHero,
-						Math.min(2, 7 - boardWithDeadEntity.length),
-						boardWithDeadEntity,
-						allCards,
-						spectator,
-					);
+					addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator);
 					break;
 
 				case CardIds.GhastcoilerBattlegrounds:
