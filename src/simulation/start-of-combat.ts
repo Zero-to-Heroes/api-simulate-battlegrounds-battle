@@ -1091,6 +1091,17 @@ export const performStartOfCombatMinionsForPlayer = (
 				dragonsToConsider.splice(dragonsToConsider.indexOf(otherDragon), 1);
 			}
 		}
+	} else if (attacker.cardId === CardIds.SanctumRester || attacker.cardId === CardIds.SanctumResterBattlegrounds) {
+		const buff = attacker.cardId === CardIds.SanctumResterBattlegrounds ? 16 : 8;
+		// First try to get a target without divine shield, and if none is available, pick one with divine shield
+		const otherDragons = attackingBoard
+			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
+			.filter((e) => e.entityId !== attacker.entityId);
+		otherDragons.forEach((otherDragon) => {
+			modifyHealth(otherDragon, buff, attackingBoard, allCards);
+			afterStatsUpdate(otherDragon, attackingBoard, allCards);
+			spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
+		});
 	} else if (attacker.cardId === CardIds.Soulsplitter || attacker.cardId === CardIds.SoulsplitterBattlegrounds) {
 		const numberOfTargets = attacker.cardId === CardIds.SoulsplitterBattlegrounds ? 2 : 1;
 		for (let i = 0; i < numberOfTargets; i++) {

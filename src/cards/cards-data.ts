@@ -29,6 +29,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.SoulsplitterBattlegrounds,
 	CardIds.ChoralMrrrglr,
 	CardIds.ChoralMrrrglrBattlegrounds,
+	CardIds.SanctumRester,
+	CardIds.SanctumResterBattlegrounds,
 ];
 export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
 
