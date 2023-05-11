@@ -369,7 +369,7 @@ export const addCardsInHand = (
 	board: BoardEntity[],
 	allCards: AllCardsService,
 	spectator: Spectator,
-	cardAdded: CardIds = null,
+	cardAdded: CardIds | string = null,
 ): void => {
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
 	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);

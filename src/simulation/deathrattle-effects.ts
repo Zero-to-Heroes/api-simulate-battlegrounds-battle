@@ -423,6 +423,18 @@ export const handleDeathrattleEffects = (
 					deadEntity.lastAffectedByEntity.definitelyDead = true;
 				}
 				break;
+			case CardIds.RadioStar:
+			case CardIds.RadioStarBattlegrounds:
+				const radioQuantity = deadEntityCardId === CardIds.RadioStarBattlegrounds ? 2 : 1;
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					radioQuantity,
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+					deadEntity.lastAffectedByEntity?.cardId,
+				);
+				break;
 			case CardIds.SrTombDiverBattlegrounds_TB_BaconShop_HERO_41_Buddy:
 				for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
 					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
