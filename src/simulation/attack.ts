@@ -60,7 +60,7 @@ export const simulateAttack = (
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
 		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), stringifySimple(defendingBoard, allCards));
-		const numberOfAttacks = attackingEntity.megaWindfury ? 4 : attackingEntity.windfury ? 2 : 1;
+		const numberOfAttacks = attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {

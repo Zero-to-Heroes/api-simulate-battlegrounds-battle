@@ -55,12 +55,6 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateTokenBattlegrounds,
 	CardIds.Onyxia_OnyxianWhelpToken,
 ];
-export const MEGA_WINDFURY_IDS = [
-	CardIds.ZappSlywickBattlegrounds,
-	CardIds.CracklingCycloneBattlegrounds,
-	CardIds.BristlebackKnightBattlegrounds,
-	CardIds.Bonker_BG20_104_G,
-];
 const CANT_ATTACK_IDS = [CardIds.ArcaneCannonBattlegrounds];
 
 export const buildSingleBoardEntity = (
@@ -77,7 +71,6 @@ export const buildSingleBoardEntity = (
 	originalEntity: BoardEntity = null,
 ): BoardEntity => {
 	const card = allCards.getCard(cardId);
-	const megaWindfury = MEGA_WINDFURY_IDS.indexOf(cardId as CardIds) !== -1;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId as CardIds) !== -1;
 	const newEntity = !!entityToSpawn
 		? ({
@@ -100,8 +93,9 @@ export const buildSingleBoardEntity = (
 				taunt: hasMechanic(card, 'TAUNT') || TAUNT_IDS.includes(cardId as CardIds),
 				reborn: hasMechanic(card, 'REBORN'),
 				poisonous: hasMechanic(card, 'POISONOUS'),
-				windfury: !megaWindfury && (hasMechanic(card, 'WINDFURY') || card.referencedTags?.includes('WINDFURY')),
-				megaWindfury: megaWindfury,
+				windfury:
+					hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
+					card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
 				enchantments: [],
 				friendly: friendly,
 				attackImmediately: attackImmediately,
@@ -117,8 +111,11 @@ export const buildSingleBoardEntity = (
 				newEntity.attack = newEntity.attack + stitchedCard.attack;
 				newEntity.maxHealth = newEntity.maxHealth + stitchedCard.health;
 				newEntity.taunt =
-					newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) || TAUNT_IDS.includes(stitchedCardId as CardIds);
-				newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
+					newEntity.taunt ||
+					hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) ||
+					TAUNT_IDS.includes(stitchedCardId as CardIds);
+				newEntity.divineShield =
+					newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
 				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
 				newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
 				newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
@@ -161,7 +158,10 @@ export const buildRandomUndeadCreation = (
 	const stitchedCard = allCards.getCard(stitchedCardId);
 	newEntity.attack += stitchedCard.attack;
 	newEntity.health += stitchedCard.health;
-	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) || TAUNT_IDS.includes(stitchedCardId as CardIds);
+	newEntity.taunt =
+		newEntity.taunt ||
+		hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]) ||
+		TAUNT_IDS.includes(stitchedCardId as CardIds);
 	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
 	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
 	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
@@ -170,13 +170,20 @@ export const buildRandomUndeadCreation = (
 	return newEntity;
 };
 
-export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
+export const modifyAttack = (
+	entity: BoardEntity,
+	amount: number,
+	friendlyBoard: BoardEntity[],
+	allCards: AllCardsService,
+): void => {
 	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).races, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
-		const whelpSmugglersBattlegrounds = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds);
+		const whelpSmugglersBattlegrounds = friendlyBoard.filter(
+			(e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds,
+		);
 		whelpSmugglers.forEach((smuggler) => {
 			modifyHealth(entity, 1, friendlyBoard, allCards);
 		});
@@ -207,7 +214,12 @@ export const modifyAttack = (entity: BoardEntity, amount: number, friendlyBoard:
 	}
 };
 
-export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
+export const modifyHealth = (
+	entity: BoardEntity,
+	amount: number,
+	friendlyBoard: BoardEntity[],
+	allCards: AllCardsService,
+): void => {
 	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
 	entity.health += realAmount;
 	if (realAmount > 0) {
@@ -245,21 +257,37 @@ export const modifyHealth = (entity: BoardEntity, amount: number, friendlyBoard:
 	titanicGuardians.forEach((guardian) => {
 		modifyHealth(
 			guardian,
-			(guardian.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount,
+			(guardian.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) *
+				realAmount,
 			friendlyBoard,
 			allCards,
 		);
 	});
 };
 
-export const afterStatsUpdate = (entity: BoardEntity, friendlyBoard: BoardEntity[], allCards: AllCardsService): void => {
+export const afterStatsUpdate = (
+	entity: BoardEntity,
+	friendlyBoard: BoardEntity[],
+	allCards: AllCardsService,
+): void => {
 	if (hasCorrectTribe(entity, Race.ELEMENTAL, allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
+			(e) =>
+				e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
 		);
 		masterOfRealities.forEach((master) => {
-			modifyAttack(master, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
-			modifyHealth(master, master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1, friendlyBoard, allCards);
+			modifyAttack(
+				master,
+				master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1,
+				friendlyBoard,
+				allCards,
+			);
+			modifyHealth(
+				master,
+				master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1,
+				friendlyBoard,
+				allCards,
+			);
 		});
 	}
 	const tentaclesOfCthun = friendlyBoard
@@ -393,7 +421,9 @@ export const addCardsInHand = (
 
 	playerEntity.cardsInHand = newCardsInHand;
 
-	const peggys = board.filter((e) => e.cardId === CardIds.PeggySturdybone || e.cardId === CardIds.PeggySturdyboneBattlegrounds);
+	const peggys = board.filter(
+		(e) => e.cardId === CardIds.PeggySturdybone || e.cardId === CardIds.PeggySturdyboneBattlegrounds,
+	);
 	peggys.forEach((peggy) => {
 		const pirate = getRandomAliveMinion(
 			board.filter((e) => e.entityId !== peggy.entityId),
@@ -408,7 +438,9 @@ export const addCardsInHand = (
 		}
 	});
 
-	const thornCaptains = board.filter((e) => e.cardId === CardIds.Thorncaptain || e.cardId === CardIds.ThorncaptainBattlegrounds);
+	const thornCaptains = board.filter(
+		(e) => e.cardId === CardIds.Thorncaptain || e.cardId === CardIds.ThorncaptainBattlegrounds,
+	);
 	thornCaptains.forEach((captain) => {
 		modifyHealth(captain, captain.cardId === CardIds.ThorncaptainBattlegrounds ? 2 : 1, board, allCards);
 		afterStatsUpdate(captain, board, allCards);
@@ -433,7 +465,12 @@ export const grantRandomDivineShield = (
 	// return board;
 };
 
-export const updateDivineShield = (entity: BoardEntity, board: BoardEntity[], newValue: boolean, allCards: AllCardsService): void => {
+export const updateDivineShield = (
+	entity: BoardEntity,
+	board: BoardEntity[],
+	newValue: boolean,
+	allCards: AllCardsService,
+): void => {
 	// if ((entity.divineShield ?? false) === newValue) {
 	// 	return;
 	// }
@@ -543,7 +580,9 @@ export const isCorrectTribe = (cardRaces: readonly string[], targetTribe: Race):
 	if (!cardRaces?.length) {
 		return false;
 	}
-	return cardRaces.map((cardRace) => getRaceEnum(cardRace)).some((raceEnum) => raceEnum === Race.ALL || raceEnum === targetTribe);
+	return cardRaces
+		.map((cardRace) => getRaceEnum(cardRace))
+		.some((raceEnum) => raceEnum === Race.ALL || raceEnum === targetTribe);
 };
 
 export const getRaceEnum = (race: string): Race => {
@@ -577,7 +616,9 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}` : null;
+	return entity
+		? `${entity.cardId}/${allCards?.getCard(entity.cardId)?.name ?? ''}/atk=${entity.attack}/hp=${entity.health}`
+		: null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {

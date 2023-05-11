@@ -15,7 +15,6 @@ export interface BoardEntity {
 	reborn?: boolean;
 	cleave?: boolean;
 	windfury?: boolean;
-	megaWindfury?: boolean;
 	stealth?: boolean;
 	enchantments?: { cardId: string; originEntityId?: number; timing: number; repeats?: number; value?: number }[];
 	// For Build-An-Undead
