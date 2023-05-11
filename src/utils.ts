@@ -12,6 +12,8 @@ const CLEAVE_IDS = [
 	CardIds.CaveHydraBattlegrounds,
 	CardIds.FoeReaper4000_BG_GVG_113,
 	CardIds.FoeReaper4000Battlegrounds,
+	CardIds.BladeCollector,
+	CardIds.BladeCollectorBattlegrounds,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken,
@@ -377,9 +379,9 @@ export const addCardsInHand = (
 
 	const cardsThatWillBeAdded = [];
 	for (const cardAdded of cardsAdded) {
-		const cardToAdd = (cardsAdded[i] as BoardEntity)?.cardId
-			? cardsAdded[i]
-			: ({ cardId: cardsAdded[i] } as BoardEntity);
+		const cardToAdd: { cardId: CardIds } = (cardAdded as BoardEntity)?.cardId
+			? cardAdded
+			: ({ cardId: cardAdded } as BoardEntity);
 		cardsThatWillBeAdded.push(cardToAdd);
 		if (cardToAdd.cardId === CardIds.BloodGem) {
 			for (let i = 0; i < multiplier; i++) {
