@@ -371,6 +371,15 @@ const handleAfterSpawnEffect = (
 					spectator.registerPowerTarget(entity, e, board);
 				});
 				break;
+			case CardIds.Xylobones:
+			case CardIds.XylobonesBattlegrounds:
+				const xylobonesBuff = entity.cardId === CardIds.XylobonesBattlegrounds ? 6 : 3;
+				board.forEach((e) => {
+					modifyHealth(e, xylobonesBuff, board, allCards);
+					afterStatsUpdate(e, board, allCards);
+					spectator.registerPowerTarget(entity, e, board);
+				});
+				break;
 			case CardIds.OctosariWrapGod:
 			case CardIds.OctosariWrapGodBattlegrounds:
 				const octoStats = entity.cardId === CardIds.OctosariWrapGodBattlegrounds ? 4 : 2;
