@@ -43,6 +43,7 @@ export class CardsData {
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
 	public beastSpawns: readonly string[];
+	public scrapScraperSpawns: readonly string[];
 
 	public putricidePool1: readonly string[];
 	public putricidePool2: readonly string[];
@@ -71,26 +72,22 @@ export class CardsData {
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => card.id !== 'BGS_008')
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
 		this.validDeathrattles = pool
-			// .filter((card) => !card.id.startsWith('TB_BaconUps')) // Ignore golden
+			.filter((card) => !this.isGolden(card))
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
 		this.impMamaSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.ImpMama)
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.gentleDjinniSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.ELEMENTAL))
 			.filter((card) => card.id !== CardIds.GentleDjinni)
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		// FIXME: just spawn a random undead instead of an Undead Creation
 		// this.festergutSpawns = pool
@@ -103,7 +100,6 @@ export class CardsData {
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy)
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.brannEpicEggSpawns = pool
 			.filter((card) => !this.isGolden(card))
@@ -112,12 +108,14 @@ export class CardsData {
 		this.pirateSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.PIRATE))
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 			.map((card) => card.id);
 		this.beastSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.BEAST))
-			// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
+			.map((card) => card.id);
+		this.scrapScraperSpawns = pool
+			.filter((card) => !this.isGolden(card))
+			.filter((card) => hasMechanic(card, GameTag[GameTag.MAGNETIC]))
 			.map((card) => card.id);
 
 		this.putricidePool1 = pool.filter((card) => card.battlegroundsPutridicePool1).map((card) => card.id);
@@ -165,6 +163,8 @@ export class CardsData {
 			case CardIds.TonyTwoTusk_BG21_031:
 			case CardIds.TonyTwoTusk_BG21_031_G:
 			case CardIds.Onyxia_Broodmother:
+			case CardIds.ScrapScraper:
+			case CardIds.ScrapScraperBattlegrounds:
 				return 4;
 		}
 		return 0;

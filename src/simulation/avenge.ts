@@ -227,6 +227,12 @@ const handleAvenge = (
 					spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
 				}
 			}
+			break;
+		case CardIds.ScrapScraper:
+		case CardIds.ScrapScraperBattlegrounds:
+			const scrapScraperQuantity = avenger.cardId === CardIds.ScrapScraperBattlegrounds ? 2 : 1;
+			addCardsInHand(boardWithDeadEntityHero, scrapScraperQuantity, boardWithDeadEntity, allCards, spectator);
+			break;
 		case CardIds.MechanoTank_BG21_023:
 			// This can be null if the avenge triggers when the last enemy minion dies as well
 			const target = getRandomMinionWithHighestHealth(otherBoard);
