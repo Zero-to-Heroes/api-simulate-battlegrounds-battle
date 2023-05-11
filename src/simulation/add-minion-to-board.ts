@@ -300,11 +300,6 @@ const handleSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-			case CardIds.OctosariWrapGod:
-			case CardIds.OctosariWrapGodBattlegrounds:
-				const octoStats = entity.cardId === CardIds.OctosariWrapGodBattlegrounds ? 4 : 2;
-				entity.scriptDataNum1 += octoStats;
-				break;
 		}
 	}
 };
@@ -360,6 +355,19 @@ const handleAfterSpawnEffect = (
 					afterStatsUpdate(e, board, allCards);
 					spectator.registerPowerTarget(entity, e, board);
 				});
+				break;
+			case CardIds.OctosariWrapGod:
+			case CardIds.OctosariWrapGodBattlegrounds:
+				const octoStats = entity.cardId === CardIds.OctosariWrapGodBattlegrounds ? 4 : 2;
+				entity.scriptDataNum1 += octoStats;
+				break;
+			case CardIds.BananaSlamma:
+			case CardIds.BananaSlammaBattlegrounds:
+				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
+					const bananaStatBuff = entity.cardId === CardIds.BananaSlammaBattlegrounds ? 3 : 2;
+					spawned.attack = spawned.attack * bananaStatBuff;
+					spawned.health = spawned.health * bananaStatBuff;
+				}
 				break;
 
 			// Putricide-only
