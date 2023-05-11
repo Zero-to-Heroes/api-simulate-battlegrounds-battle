@@ -823,7 +823,12 @@ export const bumpEntities = (
 		// So that further buffs don't revive it
 		// And we don't just set the health to avoid applying overkill effects
 		entity.definitelyDead = true;
-		// return entity;
+	}
+	if (bumpInto.venomous) {
+		// So that further buffs don't revive it
+		// And we don't just set the health to avoid applying overkill effects
+		entity.definitelyDead = true;
+		bumpInto.venomous = false;
 	}
 	// FIXME: This will likely be incorrect in terms of timings, e.g. if the entity ends up
 	// surviving following a buff like Spawn.

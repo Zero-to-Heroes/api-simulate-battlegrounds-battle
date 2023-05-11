@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, ALL_BG_RACES, CardIds, Race } from '@firestone-hs/reference-data';
+import { ALL_BG_RACES, AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
@@ -175,7 +175,16 @@ const handlePreCombatHeroPowersForPlayer = (
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
-		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+		handleAlakirForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EarthInvocationToken) {
 		applyEarthInvocationEnchantment(playerBoard, null, playerEntity, allCards, sharedState, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaterInvocationToken) {
@@ -253,7 +262,16 @@ export const handleIllidanHeroPowers = (
 			spectator,
 		);
 	}
-	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+	processMinionDeath(
+		playerBoard,
+		playerEntity,
+		opponentBoard,
+		opponentEntity,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 	// console.log('current attacker after', currentAttacker);
 	return currentAttacker;
 };
@@ -274,7 +292,9 @@ const handleStartOfCombatMinions = (
 ): number => {
 	let attackerForStart = currentAttacker;
 	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
-	const opponentAttackers = opponentBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
+	const opponentAttackers = opponentBoard.filter((entity) =>
+		START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds),
+	);
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
@@ -424,7 +444,13 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					makeMinionGolden(playerBoard[0], playerEntity, playerBoard, allCards, spectator);
 				}
 				if (playerBoard.length > 1) {
-					makeMinionGolden(playerBoard[playerBoard.length - 1], playerEntity, playerBoard, allCards, spectator);
+					makeMinionGolden(
+						playerBoard[playerBoard.length - 1],
+						playerEntity,
+						playerBoard,
+						allCards,
+						spectator,
+					);
 				}
 				break;
 		}
@@ -515,7 +541,16 @@ const handlePlayerIllidanHeroPowers = (
 ): number => {
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.WingmenBattlegrounds && playerBoard.length > 0) {
-		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+		handleIllidanForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
 	return currentAttacker;
@@ -547,13 +582,28 @@ const handleIllidanForPlayer = (
 	) {
 		firstAttacker.immuneWhenAttackCharges = 1;
 	}
-	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, undefined, allCards, spawns, sharedState, spectator, 0);
+	simulateAttack(
+		playerBoard,
+		playerEntity,
+		opponentBoard,
+		opponentEntity,
+		undefined,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+		0,
+	);
 
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
-		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy_G)) {
+		if (
+			playerBoard
+				.map((e) => e.cardId)
+				.includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy_G)
+		) {
 			secondAttacker.immuneWhenAttackCharges = 1;
 		}
 		simulateAttack(
@@ -687,7 +737,10 @@ const handleOzumatForPlayer = (
 ): void => {
 	// Because of some interactions between start of combat hero powers, it can happen that Ozumat is already present
 	// on the board when we receive the board state
-	if (playerBoard.length < 7 && !playerBoard.some((e) => e.cardId === CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt)) {
+	if (
+		playerBoard.length < 7 &&
+		!playerBoard.some((e) => e.cardId === CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt)
+	) {
 		const tentacularSize = playerEntity.heroPowerInfo;
 		const tentacular = spawnEntities(
 			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
@@ -740,15 +793,42 @@ const handlePlayerStartOfCombatHeroPowers = (
 	let shouldRecomputeCurrentAttacker = false;
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
-		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		handleTamsinForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 		// Tamsin's hero power somehow happens before the current attacker is chosen.
 		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
-		handleTeronForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		handleTeronForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 		// Same as Tamsin? No, because the new minion should repop automatically
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarbandBattlegrounds) {
-		handleWaxWarbandForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+		handleWaxWarbandForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 		// Same as Tamsin? No, because the new minion should repop automatically
 	} else if (playerHeroPowerId === CardIds.Ozumat_Tentacular) {
 		handleOzumatForPlayer(
@@ -846,9 +926,23 @@ const handlePlayerStartOfCombatHeroPowers = (
 			spectator,
 		);
 	}
-	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
+	processMinionDeath(
+		playerBoard,
+		playerEntity,
+		opponentBoard,
+		opponentEntity,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 	if (shouldRecomputeCurrentAttacker) {
-		currentAttacker = playerBoard.length > opponentBoard.length ? 0 : opponentBoard.length > playerBoard.length ? 1 : currentAttacker;
+		currentAttacker =
+			playerBoard.length > opponentBoard.length
+				? 0
+				: opponentBoard.length > playerBoard.length
+				? 1
+				: currentAttacker;
 	}
 	return currentAttacker;
 };
@@ -982,7 +1076,8 @@ export const performStartOfCombatMinionsForPlayer = (
 		const loops = attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			const dragonsToConsider = otherDragons;
-			const otherDragon = pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
+			const otherDragon =
+				pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
 			if (otherDragon) {
 				if (!otherDragon.divineShield) {
 					updateDivineShield(otherDragon, attackingBoard, true, allCards);
@@ -997,14 +1092,19 @@ export const performStartOfCombatMinionsForPlayer = (
 	} else if (attacker.cardId === CardIds.Soulsplitter || attacker.cardId === CardIds.SoulsplitterBattlegrounds) {
 		const numberOfTargets = attacker.cardId === CardIds.SoulsplitterBattlegrounds ? 2 : 1;
 		for (let i = 0; i < numberOfTargets; i++) {
-			const undeadsWithoutReborn = attackingBoard.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards)).filter((e) => !e.reborn);
+			const undeadsWithoutReborn = attackingBoard
+				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+				.filter((e) => !e.reborn);
 			const chosenUndead = pickRandom(undeadsWithoutReborn);
 			if (chosenUndead) {
 				chosenUndead.reborn = true;
 				spectator.registerPowerTarget(attacker, chosenUndead, attackingBoard);
 			}
 		}
-	} else if (attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy || attacker.cardId === CardIds.CrabbyBattlegrounds) {
+	} else if (
+		attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy ||
+		attacker.cardId === CardIds.CrabbyBattlegrounds
+	) {
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds ? 2 : 1;
 		neighbours.forEach((entity) => {
@@ -1013,13 +1113,19 @@ export const performStartOfCombatMinionsForPlayer = (
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.CorruptedMyrmidon || attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds) {
+	} else if (
+		attacker.cardId === CardIds.CorruptedMyrmidon ||
+		attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds
+	) {
 		const multiplier = attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds ? 2 : 1;
 		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
 		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
 		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
-	} else if (attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704 || attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G) {
+	} else if (
+		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704 ||
+		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G
+	) {
 		if (defendingBoard.length > 0) {
 			const attackerIndex = attackingBoard.indexOf(attacker);
 			const defenderPosition = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
@@ -1048,10 +1154,8 @@ export const performStartOfCombatMinionsForPlayer = (
 						modifyHealth(attacker, 5, attackingBoard, allCards);
 						afterStatsUpdate(attacker, attackingBoard, allCards);
 						break;
-					case 'divine-shield':
-						if (!attacker.divineShield) {
-							updateDivineShield(attacker, attackingBoard, true, allCards);
-						}
+					case 'reborn':
+						attacker.reborn = true;
 						break;
 					case 'taunt':
 						attacker.taunt = true;
@@ -1077,10 +1181,10 @@ const castImpure = (entity: BoardEntity, source: BoardEntity, board: BoardEntity
 	spectator.registerPowerTarget(source, entity, board);
 };
 
-const getRandomMantidQueenBuffType = (entity: BoardEntity): 'stats' | 'divine-shield' | 'windfury' | 'taunt' => {
-	const possibilities: ('stats' | 'divine-shield' | 'windfury' | 'taunt')[] = ['stats'];
-	if (!entity.divineShield) {
-		possibilities.push('divine-shield');
+const getRandomMantidQueenBuffType = (entity: BoardEntity): 'stats' | 'reborn' | 'windfury' | 'taunt' => {
+	const possibilities: ('stats' | 'reborn' | 'windfury' | 'taunt')[] = ['stats'];
+	if (!entity.reborn) {
+		possibilities.push('reborn');
 	}
 	if (!entity.windfury) {
 		possibilities.push('windfury');

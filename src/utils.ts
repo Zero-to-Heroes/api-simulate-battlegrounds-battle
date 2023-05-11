@@ -55,7 +55,8 @@ export const buildSingleBoardEntity = (
 				maxHealth: card.health,
 				taunt: hasMechanic(card, GameTag[GameTag.TAUNT]),
 				reborn: hasMechanic(card, 'REBORN'),
-				poisonous: hasMechanic(card, 'POISONOUS'),
+				poisonous: hasMechanic(card, GameTag[GameTag.POISONOUS]),
+				venomous: hasMechanic(card, GameTag[GameTag.VENOMOUS]),
 				windfury:
 					hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
 					card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
@@ -77,6 +78,7 @@ export const buildSingleBoardEntity = (
 				newEntity.divineShield =
 					newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
 				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
+				newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
 				newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
 				newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 				newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
@@ -120,7 +122,8 @@ export const buildRandomUndeadCreation = (
 	newEntity.health += stitchedCard.health;
 	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
 	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
-	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
+	newEntity.poisonous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
+	newEntity.venomous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
 	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
 	newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 	newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);

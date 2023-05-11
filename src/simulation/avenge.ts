@@ -135,8 +135,18 @@ const handleAvenge = (
 		case CardIds.BuddingGreenthumbBattlegrounds:
 			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
 			neighbours.forEach((entity) => {
-				modifyAttack(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2, boardWithDeadEntity, allCards);
-				modifyHealth(entity, avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1, boardWithDeadEntity, allCards);
+				modifyAttack(
+					entity,
+					avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2,
+					boardWithDeadEntity,
+					allCards,
+				);
+				modifyHealth(
+					entity,
+					avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1,
+					boardWithDeadEntity,
+					allCards,
+				);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
 			});
@@ -170,7 +180,16 @@ const handleAvenge = (
 			}
 			break;
 		case CardIds.PalescaleCrocolisk_BG21_001_G:
-			const target2 = grantRandomStats(avenger, boardWithDeadEntity, 12, 12, Race.BEAST, true, allCards, spectator);
+			const target2 = grantRandomStats(
+				avenger,
+				boardWithDeadEntity,
+				12,
+				12,
+				Race.BEAST,
+				true,
+				allCards,
+				spectator,
+			);
 			if (!!target2) {
 				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
 			}
@@ -198,23 +217,16 @@ const handleAvenge = (
 			addCardsInHand(boardWithDeadEntityHero, 2, boardWithDeadEntity, allCards, spectator, CardIds.BloodGem);
 			break;
 		case CardIds.Sisefin_BG21_009:
-			const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
-			const murloc = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
-			if (murloc) {
-				murloc.poisonous = true;
-				spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
-			}
-			break;
 		case CardIds.Sisefin_BG21_009_G:
-			for (let i = 0; i < 2; i++) {
-				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous);
-				const murloc2 = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
-				if (murloc2) {
-					murloc2.poisonous = true;
-					spectator.registerPowerTarget(avenger, murloc2, boardWithDeadEntity);
+			const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
+			for (let i = 0; i < poisonousIterations; i++) {
+				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
+				const murloc = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
+				if (murloc) {
+					murloc.venomous = true;
+					spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
 				}
 			}
-			break;
 		case CardIds.MechanoTank_BG21_023:
 			// This can be null if the avenge triggers when the last enemy minion dies as well
 			const target = getRandomMinionWithHighestHealth(otherBoard);
@@ -257,7 +269,9 @@ const handleAvenge = (
 				.filter((e) => e.entityId !== avenger.entityId)
 				.filter((e) => {
 					const ref = allCards.getCard(e.cardId);
-					return !!ref.battlegroundsPremiumDbfId && !!allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id;
+					return (
+						!!ref.battlegroundsPremiumDbfId && !!allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
+					);
 				});
 			const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, allCards);
 			if (pirate) {
