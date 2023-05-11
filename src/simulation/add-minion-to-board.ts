@@ -127,6 +127,15 @@ const handleSpawnEffect = (
 						e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacyBattlegrounds ? 4 : 2;
 					});
 				break;
+			case CardIds.HummingBird:
+			case CardIds.HummingBirdBattlegrounds:
+				board
+					.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
+					.filter((e) => e.entityId !== spawned.entityId)
+					.forEach((e) => {
+						e.attack += spawned.cardId === CardIds.HummingBirdBattlegrounds ? 4 : 2;
+					});
+				break;
 			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
 			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
 				board.forEach((e) => {
@@ -200,6 +209,12 @@ const handleSpawnEffect = (
 			case CardIds.MurlocWarleaderLegacyBattlegrounds:
 				if (hasCorrectTribe(spawned, Race.MURLOC, allCards) && entity.entityId !== spawned.entityId) {
 					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacyBattlegrounds ? 4 : 2;
+				}
+				break;
+			case CardIds.HummingBird:
+			case CardIds.HummingBirdBattlegrounds:
+				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
+					spawned.attack += entity.cardId === CardIds.HummingBirdBattlegrounds ? 4 : 2;
 				}
 				break;
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:

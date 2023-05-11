@@ -15,20 +15,37 @@ export const setMissingAuras = (
 	setMissingHeroPowerAura(board, boardHero, otherHero);
 };
 
-export const setMissingHeroPowerAura = (board: BoardEntity[], boardHero: BgsPlayerEntity, otherHero: BgsPlayerEntity): void => {
-	if (boardHero.heroPowerId === CardIds.AllWillBurnBattlegrounds || otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds) {
+export const setMissingHeroPowerAura = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
+): void => {
+	if (
+		boardHero.heroPowerId === CardIds.AllWillBurnBattlegrounds ||
+		otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds
+	) {
 		const bonus =
 			(boardHero.heroPowerId === CardIds.AllWillBurnBattlegrounds ? 3 : 0) +
 			(otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds ? 3 : 0);
 		board
-			.filter((e) => !e.enchantments.find((ench) => ench.cardId === CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds))
+			.filter(
+				(e) =>
+					!e.enchantments.find(
+						(ench) => ench.cardId === CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds,
+					),
+			)
 			.forEach((e) => {
 				e.attack += bonus;
 			});
 	}
 	if (boardHero.heroPowerId === CardIds.TheSmokingGun) {
 		board
-			.filter((e) => !e.enchantments.find((ench) => ench.cardId === CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment))
+			.filter(
+				(e) =>
+					!e.enchantments.find(
+						(ench) => ench.cardId === CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment,
+					),
+			)
 			.forEach((e) => {
 				e.attack += 5;
 			});
@@ -74,6 +91,20 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 		board.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards)),
 		CardIds.MurlocWarleaderLegacyBattlegrounds,
 		CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds,
+		4,
+		0,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards)),
+		CardIds.HummingBird,
+		CardIds.HummingBird_EntrancedEnchantment_BG26_805e,
+		2,
+		0,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards)),
+		CardIds.HummingBirdBattlegrounds,
+		CardIds.HummingBird_EntrancedEnchantment_BG26_805_Ge,
 		4,
 		0,
 	);

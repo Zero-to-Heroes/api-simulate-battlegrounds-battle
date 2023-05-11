@@ -29,6 +29,15 @@ const handleMinionRemovedEffect = (
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
+		case CardIds.HummingBird:
+		case CardIds.HummingBirdBattlegrounds:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
+				.forEach((e) => {
+					const diff = removed.cardId === CardIds.HummingBirdBattlegrounds ? 4 : 2;
+					e.attack = Math.max(0, e.attack - diff);
+				});
+			break;
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
 		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
 			board.forEach((e) => {
