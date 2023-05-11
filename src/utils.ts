@@ -142,16 +142,23 @@ export const modifyAttack = (
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).races, Race.DRAGON)) {
-		const whelpSmugglers = friendlyBoard.filter((e) => e.cardId === CardIds.WhelpSmuggler);
-		const whelpSmugglersBattlegrounds = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.WhelpSmugglerBattlegrounds,
+		const whelpSmugglers = friendlyBoard.filter(
+			(e) => e.cardId === CardIds.WhelpSmuggler || CardIds.WhelpSmugglerBattlegrounds,
 		);
 		whelpSmugglers.forEach((smuggler) => {
-			modifyHealth(entity, 1, friendlyBoard, allCards);
+			const buff = smuggler.cardId === CardIds.WhelpSmugglerBattlegrounds ? 2 : 1;
+			modifyHealth(entity, buff, friendlyBoard, allCards);
 		});
-		whelpSmugglersBattlegrounds.forEach((smuggler) => {
-			modifyHealth(entity, 2, friendlyBoard, allCards);
-		});
+
+		if (entity.cardId !== CardIds.Stormbringer && entity.cardId !== CardIds.StormbringerBattlegrounds) {
+			const stormbringers = friendlyBoard.filter(
+				(e) => e.cardId === CardIds.Stormbringer || e.cardId === CardIds.StormbringerBattlegrounds,
+			);
+			stormbringers.forEach((stormbringer) => {
+				const multiplier = stormbringer.cardId === CardIds.StormbringerBattlegrounds ? 2 : 1;
+				(e) => modifyAttack(e, multiplier * amount, friendlyBoard, allCards);
+			});
+		}
 	}
 	if (
 		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
