@@ -6,6 +6,7 @@
 		"lint": "eslint --color --fix --ext .ts .",
 		"test-board": "ts-node test/full-game/full-test.test.ts",
 		"build": "webpack --color",
+		"build-tsc": "rm -rf dist && tsc",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
 		"full-deploy": "npm run build && npm run package && npm run deploy",

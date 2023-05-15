@@ -15,14 +15,10 @@ const cards = new AllCardsService();
 // the more traditional callback-style handler.
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
-	console.log('received event', event);
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
-	console.log('received battleInput', battleInput);
 	await cards.initializeCardsDb();
-	console.log('cards initialized');
 	const cardsData = new CardsData(cards, false);
 	cardsData.inititialize(battleInput.gameState?.validTribes ?? battleInput.options?.validTribes);
-	console.log('cardsData initialized');
 	const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
 	const response = {

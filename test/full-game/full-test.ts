@@ -5,11 +5,13 @@ import runSimulation from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
 import jsonEvent3 from './game.json';
 
+console.log('starting test');
 const test = async () => {
+	console.log('preparing to run simulation');
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
-			numberOfSimulations: 10000,
+			numberOfSimulations: 1,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 20000,
 		},

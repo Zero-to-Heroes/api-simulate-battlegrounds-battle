@@ -1,1 +1,101 @@
-{"playerBoard":{"player":{"tavernTier":5,"hpLeft":15,"cardId":"TB_BaconShop_HERO_93","entityId":80,"nonGhostCardId":"TB_BaconShop_HERO_93","heroPowerId":"TB_BaconShop_HP_105","heroPowerUsed":false,"heroPowerInfo":1,"questRewards":[],"globalInfo":{"EternalKnightsDeadThisGame":0,"UndeadAttackBonus":0},"debugArmor":0,"debugHealth":30},"secrets":[],"board":[{"cardId":"TB_BaconUps_085","attack":8,"divineShield":false,"enchantments":[{"originEntityId":19259,"cardId":"BG24_023e","timing":0}],"entityId":19229,"health":14,"poisonous":false,"reborn":false,"taunt":true,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BG21_000_G","attack":6,"divineShield":false,"enchantments":[{"originEntityId":18574,"cardId":"AT_069e","timing":0}],"entityId":18573,"health":6,"poisonous":false,"reborn":false,"taunt":true,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"TB_BaconUps_135","attack":20,"divineShield":false,"enchantments":[{"originEntityId":18576,"cardId":"BGS_021e","timing":0},{"originEntityId":18577,"cardId":"BGS_021e","timing":0}],"entityId":18575,"health":16,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"TB_BaconUps_135","attack":15,"divineShield":false,"enchantments":[{"originEntityId":19223,"cardId":"BGS_021e","timing":0}],"entityId":19222,"health":11,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BG19_010_G","attack":11,"divineShield":false,"enchantments":[{"originEntityId":18581,"cardId":"BGS_021e","timing":0},{"originEntityId":18582,"cardId":"BG24_023e","timing":0}],"entityId":18580,"health":15,"poisonous":false,"reborn":false,"taunt":true,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"TB_BaconShop_HP_105t","attack":2,"divineShield":false,"enchantments":[],"entityId":18584,"health":2,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BG25_354_G","attack":2,"divineShield":false,"enchantments":[],"entityId":19188,"health":14,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null}]},"opponentBoard":{"player":{"tavernTier":6,"hpLeft":11,"cardId":"BG20_HERO_282","entityId":19397,"nonGhostCardId":"BG20_HERO_282","heroPowerId":"BG20_HERO_282p","heroPowerUsed":true,"heroPowerInfo":-1,"questRewards":[],"globalInfo":{"EternalKnightsDeadThisGame":0,"UndeadAttackBonus":0},"debugArmor":0,"debugHealth":30},"secrets":[],"board":[{"cardId":"BGS_022","attack":7,"divineShield":false,"enchantments":[],"entityId":19386,"health":10,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":true,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"TB_BaconUps_135","attack":15,"divineShield":false,"enchantments":[{"originEntityId":19388,"cardId":"BGS_021e","timing":0},{"originEntityId":19389,"cardId":"BG21_003e","timing":0}],"entityId":19387,"health":11,"poisonous":false,"reborn":true,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BG25_165","attack":7,"divineShield":false,"enchantments":[],"entityId":19390,"health":1,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BGS_012","attack":3,"divineShield":false,"enchantments":[],"entityId":19391,"health":6,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BGS_012","attack":3,"divineShield":false,"enchantments":[],"entityId":19392,"health":6,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BG25_354","attack":15,"divineShield":false,"enchantments":[{"originEntityId":19394,"cardId":"BG20_HERO_201e3","timing":0},{"originEntityId":19395,"cardId":"BG23_190e","timing":0}],"entityId":19393,"health":15,"poisonous":false,"reborn":false,"taunt":false,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null},{"cardId":"BG_DAL_775_G","attack":6,"divineShield":false,"enchantments":[],"entityId":19396,"health":14,"poisonous":false,"reborn":false,"taunt":true,"stealth":false,"windfury":false,"megaWindfury":false,"friendly":true,"frenzyApplied":false,"definitelyDead":false,"immuneWhenAttackCharges":0,"additionalCards":null}]},"options":{"numberOfSimulations":15000,"maxAcceptableDuration":6000},"gameState":{"currentTurn":0}}
+{
+    "playerBoard": {
+        "player": {
+            "tavernTier": 1,
+            "hpLeft": 44,
+            "cardId": "TB_BaconShop_HERO_18",
+            "entityId": 90,
+            "nonGhostCardId": "TB_BaconShop_HERO_18",
+            "heroPowerId": "TB_BaconShop_HP_072",
+            "heroPowerUsed": false,
+            "heroPowerInfo": -1,
+            "questRewards": [],
+            "globalInfo": {
+                "EternalKnightsDeadThisGame": 0,
+                "UndeadAttackBonus": 0
+            },
+            "debugArmor": 14,
+            "debugHealth": 30
+        },
+        "board": [
+            {
+                "cardId": "BGS_061",
+                "attack": 3,
+                "divineShield": false,
+                "enchantments": [],
+                "entityId": 294,
+                "health": 1,
+                "poisonous": false,
+                "reborn": false,
+                "taunt": false,
+                "stealth": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false,
+                "definitelyDead": false,
+                "immuneWhenAttackCharges": 0,
+                "additionalCards": null
+            }
+        ],
+        "secrets": []
+    },
+    "opponentBoard": {
+        "player": {
+            "tavernTier": 1,
+            "hpLeft": 40,
+            "cardId": "TB_BaconShop_HERO_22",
+            "entityId": 402,
+            "nonGhostCardId": "TB_BaconShop_HERO_22",
+            "heroPowerId": "TB_BaconShop_HP_024",
+            "heroPowerUsed": false,
+            "heroPowerInfo": -1,
+            "questRewards": [],
+            "globalInfo": {
+                "EternalKnightsDeadThisGame": 0,
+                "UndeadAttackBonus": 0
+            },
+            "debugArmor": 10,
+            "debugHealth": 30
+        },
+        "board": [
+            {
+                "cardId": "BG26_800",
+                "attack": 4,
+                "divineShield": false,
+                "enchantments": [
+                    {
+                        "originEntityId": 401,
+                        "cardId": "TB_BaconShop_HP_024e2",
+                        "timing": 0
+                    }
+                ],
+                "entityId": 400,
+                "health": 1,
+                "poisonous": false,
+                "reborn": true,
+                "taunt": false,
+                "stealth": false,
+                "windfury": false,
+                "megaWindfury": false,
+                "friendly": true,
+                "frenzyApplied": false,
+                "definitelyDead": false,
+                "immuneWhenAttackCharges": 0,
+                "additionalCards": null
+            }
+        ],
+        "secrets": []
+    },
+    "options": null,
+    "gameState": {
+        "currentTurn": 1,
+        "validTribes": [
+            20,
+            23,
+            18,
+            92,
+            11
+        ]
+    }
+}
