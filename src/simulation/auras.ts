@@ -209,6 +209,7 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 		hero.globalInfo = {
 			EternalKnightsDeadThisGame: 0,
 			UndeadAttackBonus: 0,
+			FrostlingBonus: 0,
 		};
 	}
 };

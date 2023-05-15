@@ -23,4 +23,5 @@ export interface BgsPlayerEntity {
 export interface BgsPlayerGlobalInfo {
 	EternalKnightsDeadThisGame: number;
 	UndeadAttackBonus: number;
+	FrostlingBonus: number;
 }

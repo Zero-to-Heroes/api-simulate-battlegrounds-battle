@@ -169,6 +169,13 @@ const handleSpawnEffect = (
 				modifyHealth(spawned, statsBonusKnight, board, allCards);
 				afterStatsUpdate(spawned, board, allCards);
 				break;
+			case CardIds.FlourishingFrostling:
+			case CardIds.FlourishingFrostlingBattlegrounds:
+				const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostlingBattlegrounds ? 2 : 1;
+				const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
+				modifyAttack(spawned, statsBonusFrostling, board, allCards);
+				afterStatsUpdate(spawned, board, allCards);
+				break;
 			case CardIds.RotHideGnoll:
 			case CardIds.RotHideGnollBattlegrounds:
 				const multiplierGnoll = spawned.cardId === CardIds.RotHideGnollBattlegrounds ? 2 : 1;
