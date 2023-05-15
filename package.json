@@ -1,10 +1,10 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.268",
+	"version": "1.1.269",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
-		"test-board": "ts-node test/full-game/full-test.test.ts",
+		"test-board": "ts-node test/full-game/full-test.ts",
 		"build": "webpack --color",
 		"build-tsc": "rm -rf dist && tsc",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",

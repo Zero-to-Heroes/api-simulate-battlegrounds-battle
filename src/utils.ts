@@ -437,9 +437,9 @@ export const addCardsInHand = (
 
 export const removeCardFromHand = (playerEntity: BgsPlayerEntity, card: BoardEntity): void => {
 	let cardToRemove: BoardEntity;
-	if (card.entityId) {
+	if (card?.entityId) {
 		cardToRemove = playerEntity.cardsInHand.find((c) => c?.entityId !== card.entityId);
-	} else if (card.cardId) {
+	} else if (card?.cardId) {
 		cardToRemove = playerEntity.cardsInHand.find((c) => c?.cardId === card.cardId);
 	} else {
 		// Remove a single random card in hand that doesn't have an entityId
