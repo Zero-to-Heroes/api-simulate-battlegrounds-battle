@@ -379,16 +379,16 @@ export const addCardsInHand = (
 	spectator: Spectator,
 	cardsAdded: readonly (CardIds | BoardEntity)[],
 ): void => {
-	const previousCardsInHand = playerEntity.cardsInHand ?? 0;
+	const previousCardsInHand = playerEntity.cardsInHand?.length ?? 0;
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
 	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
 	const multiplier = sages.length + 2 * sagesGolden.length;
 
 	const cardsThatWillBeAdded = [];
 	for (const cardAdded of cardsAdded) {
-		const cardToAdd: { cardId: CardIds } = (cardAdded as BoardEntity)?.cardId
+		const cardToAdd: { cardId: string } = (cardAdded as BoardEntity)?.cardId
 			? (cardAdded as BoardEntity)
-			: ({ cardId: cardAdded as CardIds } as BoardEntity);
+			: ({ cardId: cardAdded as string } as BoardEntity);
 		cardsThatWillBeAdded.push(cardToAdd);
 		if (cardToAdd.cardId === CardIds.BloodGem) {
 			for (let i = 0; i < multiplier; i++) {
@@ -404,7 +404,7 @@ export const addCardsInHand = (
 		playerEntity.cardsInHand.push(cardsThatWillBeAdded[i]);
 	}
 
-	const numCardsAdded = nplayerEntity.cardsInHand - previousCardsInHand;
+	const numCardsAdded = playerEntity.cardsInHand.length - previousCardsInHand;
 
 	for (let i = 0; i < numCardsAdded; i++) {
 		const peggys = board.filter(

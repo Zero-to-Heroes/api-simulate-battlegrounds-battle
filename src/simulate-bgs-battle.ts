@@ -15,10 +15,14 @@ const cards = new AllCardsService();
 // the more traditional callback-style handler.
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
+	console.log('received event', event);
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
+	console.log('received battleInput', battleInput);
 	await cards.initializeCardsDb();
+	console.log('cards initialized');
 	const cardsData = new CardsData(cards, false);
 	cardsData.inititialize(battleInput.gameState?.validTribes ?? battleInput.options?.validTribes);
+	console.log('cardsData initialized');
 	const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
 	const response = {
@@ -29,7 +33,11 @@ export default async (event): Promise<any> => {
 	return response;
 };
 
-export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): SimulationResult => {
+export const simulateBattle = (
+	battleInput: BgsBattleInfo,
+	cards: AllCardsService,
+	cardsData: CardsData,
+): SimulationResult => {
 	const start = Date.now();
 
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
@@ -55,8 +63,12 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = playerInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity));
-	const opponentBoard = opponentInfo.board.map((entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity));
+	const playerBoard = playerInfo.board.map(
+		(entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity),
+	);
+	const opponentBoard = opponentInfo.board.map(
+		(entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity),
+	);
 	// When using the simulator, the aura is not applied when receiving the board state. When
 	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player, cards);
 	setMissingAuras(opponentBoard, opponentInfo.player, playerInfo.player, cards);
@@ -117,7 +129,10 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 			simulationResult.lost++;
 			simulationResult.damageLost += battleResult.damageDealt;
 			outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
-			if (battleInput.playerBoard.player.hpLeft && battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft) {
+			if (
+				battleInput.playerBoard.player.hpLeft &&
+				battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft
+			) {
 				simulationResult.lostLethal++;
 			}
 		} else if (battleResult.result === 'tied') {
@@ -156,7 +171,9 @@ export const simulateBattle = (battleInput: BgsBattleInfo, cards: AllCardsServic
 	simulationResult.wonLethalPercent = Math.round((10 * (100 * simulationResult.wonLethal)) / totalMatches) / 10;
 	simulationResult.lostLethalPercent = Math.round((10 * (100 * simulationResult.lostLethal)) / totalMatches) / 10;
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
-	simulationResult.averageDamageLost = simulationResult.lost ? simulationResult.damageLost / simulationResult.lost : 0;
+	simulationResult.averageDamageLost = simulationResult.lost
+		? simulationResult.damageLost / simulationResult.lost
+		: 0;
 	if (simulationResult.averageDamageWon > 0 && simulationResult.averageDamageWon < playerInfo.player.tavernTier) {
 		console.warn('average damage won issue', simulationResult, playerInfo);
 	}
@@ -210,6 +227,8 @@ const cleanEnchantmentsForEntity = (
 	entityIds: readonly number[],
 ): { cardId: string; originEntityId?: number; timing: number }[] => {
 	return enchantments.filter(
-		(enchant) => entityIds.indexOf(enchant.originEntityId) !== -1 || validEnchantments.indexOf(enchant.cardId as CardIds) !== -1,
+		(enchant) =>
+			entityIds.indexOf(enchant.originEntityId) !== -1 ||
+			validEnchantments.indexOf(enchant.cardId as CardIds) !== -1,
 	);
 };

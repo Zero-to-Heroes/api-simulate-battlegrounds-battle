@@ -145,6 +145,11 @@ const applyAfterAttackEffects = (
 	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
 		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(attackingEntity, attackingBoard, modifier * 1, modifier * 2, allCards, spectator);
+	} else if (
+		attackingEntity.cardId === CardIds.IncorporealCorporal_BG26_RLK_117 ||
+		attackingEntity.cardId === CardIds.IncorporealCorporal_BG26_RLK_117_G
+	) {
+		attackingEntity.definitelyDead = true;
 	}
 	// Putricide-only
 	else if (attackingEntity.additionalCards?.includes(CardIds.IncorporealCorporal_BG26_RLK_117)) {

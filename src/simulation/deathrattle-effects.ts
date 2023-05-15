@@ -68,6 +68,24 @@ export const handleDeathrattleEffects = (
 					grantRandomDivineShield(deadEntity, boardWithDeadEntity, allCards, spectator);
 				}
 				break;
+			case CardIds.OperaticBelcher:
+			case CardIds.OperaticBelcherBattlegrounds:
+				const belcherMultiplier = deadEntityCardId === CardIds.OperaticBelcherBattlegrounds ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < belcherMultiplier; j++) {
+						const possibleBelcherTargets = boardWithDeadEntity
+							.filter((entity) => !entity.venomous)
+							.filter((entity) => !entity.poisonous)
+							.filter((entity) => entity.health > 0 && !entity.definitelyDead)
+							.filter((entity) => hasCorrectTribe(entity, Race.MURLOC, allCards));
+						if (possibleBelcherTargets.length > 0) {
+							const chosen = pickRandom(possibleBelcherTargets);
+							chosen.venomous = true;
+							spectator.registerPowerTarget(deadEntity, chosen, boardWithDeadEntity);
+						}
+					}
+				}
+				break;
 			case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy:
 			case CardIds.SpiritOfAirBattlegrounds_TB_BaconShop_HERO_76_Buddy_G:
 				const iterations =

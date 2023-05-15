@@ -1,13 +1,10 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.266",
+	"version": "1.1.268",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
-		"test-board": "clear && ts-node test/full-game/full-test.test.ts",
-		"singleTest": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand -t",
-		"singleFile": "node --max_old_space_size=6000 ./node_modules/jest/bin/jest.js --runInBand",
-		"singleFileDev": "node --max_old_space_size=6000 --inspect --expose-gc ./node_modules/jest/bin/jest.js --runInBand",
+		"test-board": "ts-node test/full-game/full-test.test.ts",
 		"build": "webpack --color",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",
 		"deploy": "sam deploy --template-file template.packaged.yaml --stack-name SimulateBgsBattleStack --capabilities CAPABILITY_IAM",
