@@ -377,7 +377,7 @@ export const addCardsInHand = (
 	board: BoardEntity[],
 	allCards: AllCardsService,
 	spectator: Spectator,
-	cardsAdded: readonly (CardIds | BoardEntity)[],
+	cardsAdded: readonly any[],
 ): void => {
 	const previousCardsInHand = playerEntity.cardsInHand?.length ?? 0;
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
