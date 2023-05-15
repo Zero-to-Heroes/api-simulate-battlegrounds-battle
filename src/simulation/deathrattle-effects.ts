@@ -463,6 +463,22 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
+			case CardIds.Scourfin:
+			case CardIds.ScourfinBattlegrounds:
+				const statsScourfin = deadEntityCardId === CardIds.ScourfinBattlegrounds ? 10 : 5;
+				for (let i = 0; i < multiplier; i++) {
+					grantRandomStats(
+						deadEntity,
+						boardWithDeadEntityHero.cardsInHand,
+						statsScourfin,
+						statsScourfin,
+						null,
+						true,
+						allCards,
+						spectator,
+					);
+				}
+				break;
 
 			// Putricide-only
 			case CardIds.Banshee_BG_RLK_957:

@@ -315,6 +315,7 @@ const handleAvenge = (
 		case CardIds.Bristlebach:
 		case CardIds.BristlebachBattlegrounds:
 			const bristlebachMultiplier = avenger.cardId === CardIds.BristlebachBattlegrounds ? 2 : 1;
+			// const currentBloodGemBuff
 			// TODO: use current blood gem buff values
 			for (let i = 0; i < bristlebachMultiplier * 2; i++) {
 				addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, allCards, spectator, Race[Race.QUILBOAR]);

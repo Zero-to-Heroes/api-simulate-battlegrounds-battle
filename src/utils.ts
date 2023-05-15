@@ -512,8 +512,8 @@ export const grantAllDivineShield = (board: BoardEntity[], tribe: string, cards:
 
 export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
 	const validTribes = board
-		.filter((e) => !race || isCorrectTribe(allCards.getCard(e.cardId).races, race))
-		.filter((e) => e.health > 0 && !e.definitelyDead);
+		.filter((e) => !race || isCorrectTribe(allCards.getCard(e?.cardId).races, race))
+		.filter((e) => !!e?.health && !e.definitelyDead);
 	// console.log('picking a random alive minion', stringifySimple(validTribes, allCards));
 	if (!validTribes.length) {
 		return null;
