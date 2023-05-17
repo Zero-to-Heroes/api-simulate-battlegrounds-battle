@@ -379,7 +379,7 @@ export const addCardsInHand = (
 	spectator: Spectator,
 	cardsAdded: readonly any[],
 ): void => {
-	const previousCardsInHand = playerEntity.cardsInHand?.length ?? 0;
+	const previousCardsInHand = playerEntity.hand?.length ?? 0;
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
 	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
 	const multiplier = sages.length + 2 * sagesGolden.length;
@@ -398,13 +398,13 @@ export const addCardsInHand = (
 	}
 
 	for (let i = 0; i < cardsThatWillBeAdded.length; i++) {
-		if (playerEntity.cardsInHand.length >= 10) {
+		if (playerEntity.hand.length >= 10) {
 			break;
 		}
-		playerEntity.cardsInHand.push(cardsThatWillBeAdded[i]);
+		playerEntity.hand.push(cardsThatWillBeAdded[i]);
 	}
 
-	const numCardsAdded = playerEntity.cardsInHand.length - previousCardsInHand;
+	const numCardsAdded = playerEntity.hand.length - previousCardsInHand;
 
 	for (let i = 0; i < numCardsAdded; i++) {
 		const peggys = board.filter(
@@ -438,19 +438,18 @@ export const addCardsInHand = (
 export const removeCardFromHand = (playerEntity: BgsPlayerEntity, card: BoardEntity): void => {
 	let cardToRemove: BoardEntity;
 	if (card?.entityId) {
-		cardToRemove = playerEntity.cardsInHand.find((c) => c?.entityId !== card.entityId);
+		cardToRemove = playerEntity.hand.find((c) => c?.entityId !== card.entityId);
 	} else if (card?.cardId) {
-		cardToRemove = playerEntity.cardsInHand.find((c) => c?.cardId === card.cardId);
+		cardToRemove = playerEntity.hand.find((c) => c?.cardId === card.cardId);
 	} else {
 		// Remove a single random card in hand that doesn't have an entityId
 		cardToRemove =
-			pickRandom(playerEntity.cardsInHand.filter((c) => !c?.entityId && !c?.cardId)) ??
-			pickRandom(playerEntity.cardsInHand);
+			pickRandom(playerEntity.hand.filter((c) => !c?.entityId && !c?.cardId)) ?? pickRandom(playerEntity.hand);
 	}
 	// Remove the first occurrence of the card from playerEntity.cardsInHand, even if it is null
-	const index = playerEntity.cardsInHand.indexOf(cardToRemove);
+	const index = playerEntity.hand.indexOf(cardToRemove);
 	if (index !== -1) {
-		playerEntity.cardsInHand.splice(index, 1);
+		playerEntity.hand.splice(index, 1);
 	}
 };
 

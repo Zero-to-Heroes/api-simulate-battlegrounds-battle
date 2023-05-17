@@ -10,7 +10,7 @@ export interface BgsPlayerEntity {
 	readonly heroPowerInfo?: number;
 	entityId?: number;
 	questRewards?: readonly string[];
-	cardsInHand?: BoardEntity[];
+	hand?: BoardEntity[];
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	globalInfo?: BgsPlayerGlobalInfo;

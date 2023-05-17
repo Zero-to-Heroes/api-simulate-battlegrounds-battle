@@ -204,7 +204,7 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 	// Because Denathrius can send a quest reward as its hero power (I think)
 	hero.questRewards = [...(hero.questRewards ?? []), hero.heroPowerId].filter((e) => !!e);
 	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
-	hero.cardsInHand = hero.cardsInHand ?? [];
+	hero.hand = hero.hand ?? [];
 	if (!hero.globalInfo) {
 		hero.globalInfo = {
 			EternalKnightsDeadThisGame: 0,

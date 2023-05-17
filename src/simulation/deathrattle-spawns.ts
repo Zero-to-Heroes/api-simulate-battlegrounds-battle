@@ -1282,15 +1282,15 @@ export const spawnEntitiesFromDeathrattle = (
 					const bassgillIterations = deadEntity.cardId === CardIds.BassgillBattlegrounds ? 2 : 1;
 					for (let i = 0; i < bassgillIterations; i++) {
 						const highestHealth = Math.max(
-							...boardWithDeadEntityHero.cardsInHand.filter((c) => c.health != null).map((c) => c.health),
+							...boardWithDeadEntityHero.hand.filter((c) => c.health != null).map((c) => c.health),
 						);
-						const highestHealthMinions = boardWithDeadEntityHero.cardsInHand.filter(
+						const highestHealthMinions = boardWithDeadEntityHero.hand.filter(
 							(c) => c.health === highestHealth,
 						);
 						const spawn = !!highestHealthMinions.length
 							? pickRandom(highestHealthMinions)
-							: boardWithDeadEntityHero.cardsInHand.filter((c) => c.cardId).length
-							? pickRandom(boardWithDeadEntityHero.cardsInHand.filter((c) => c.cardId))
+							: boardWithDeadEntityHero.hand.filter((c) => c.cardId).length
+							? pickRandom(boardWithDeadEntityHero.hand.filter((c) => c.cardId))
 							: null;
 						removeCardFromHand(boardWithDeadEntityHero, spawn);
 						if (spawn) {

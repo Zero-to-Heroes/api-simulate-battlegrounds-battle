@@ -469,7 +469,7 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					grantRandomStats(
 						deadEntity,
-						boardWithDeadEntityHero.cardsInHand,
+						boardWithDeadEntityHero.hand,
 						statsScourfin,
 						statsScourfin,
 						null,

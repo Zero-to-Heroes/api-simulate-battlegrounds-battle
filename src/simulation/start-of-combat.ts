@@ -1062,7 +1062,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	} else if (attacker.cardId === CardIds.ChoralMrrrglr || attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds) {
-		const statsOfMinionsInHand = attackingBoardHero.cardsInHand
+		const statsOfMinionsInHand = attackingBoardHero.hand
 			.map((c) => (c.attack ?? 0) + (c.health ?? 0))
 			.reduce((a, b) => a + b, 0);
 		const multiplier = attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds ? 2 : 1;
