@@ -1076,8 +1076,8 @@ export const performStartOfCombatMinionsForPlayer = (
 			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
 		const loops = attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 2 : 1;
+		const dragonsToConsider = otherDragons;
 		for (let i = 0; i < loops; i++) {
-			const dragonsToConsider = otherDragons;
 			const otherDragon =
 				pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
 			if (otherDragon) {
