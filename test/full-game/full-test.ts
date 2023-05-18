@@ -18,7 +18,7 @@ const test = async () => {
 		gameState: {
 			currentTurn: 0,
 		},
-	};
+	} as any;
 	SharedState.debugEnabled = false;
 	const result = await runSimulation({ body: JSON.stringify(input) });
 	const simulationResult = JSON.parse(result.body);

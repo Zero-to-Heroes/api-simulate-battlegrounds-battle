@@ -1309,7 +1309,7 @@ export const spawnEntitiesFromDeathrattle = (
 								false,
 								false,
 								true,
-								spawn,
+								spawn as BoardEntity,
 							);
 							spawnedEntities.push(...bassgillSpawns);
 						}

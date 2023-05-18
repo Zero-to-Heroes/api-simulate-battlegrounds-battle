@@ -143,7 +143,7 @@ export const modifyAttack = (
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).races, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.WhelpSmuggler || CardIds.WhelpSmugglerBattlegrounds,
+			(e) => e.cardId === CardIds.WhelpSmuggler || e.cardId === CardIds.WhelpSmugglerBattlegrounds,
 		);
 		whelpSmugglers.forEach((smuggler) => {
 			const buff = smuggler.cardId === CardIds.WhelpSmugglerBattlegrounds ? 2 : 1;
