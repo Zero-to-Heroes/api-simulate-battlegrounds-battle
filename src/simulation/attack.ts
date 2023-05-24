@@ -93,6 +93,16 @@ export const simulateAttack = (
 						spectator,
 					);
 					applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
+					processMinionDeath(
+						attackingBoard,
+						attackingBoardHero,
+						defendingBoard,
+						defendingBoardHero,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+					);
 					if (
 						defendingEntity.health > 0 &&
 						!defendingEntity.definitelyDead &&
