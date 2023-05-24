@@ -210,6 +210,8 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 			EternalKnightsDeadThisGame: 0,
 			UndeadAttackBonus: 0,
 			FrostlingBonus: 0,
+			BloodGemAttackBonus: 0,
+			BloodGemHealthBonus: 0,
 		};
 	}
 };

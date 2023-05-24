@@ -8,7 +8,6 @@ import {
 	addCardsInHand,
 	addStatsToBoard,
 	afterStatsUpdate,
-	grantAllDivineShield,
 	grantRandomAttack,
 	grantRandomDivineShield,
 	grantRandomHealth,
@@ -114,7 +113,17 @@ export const handleDeathrattleEffects = (
 			case CardIds.NadinaTheRed:
 			case CardIds.NadinaTheRedBattlegrounds:
 				for (let i = 0; i < multiplier; i++) {
-					grantAllDivineShield(boardWithDeadEntity, 'DRAGON', allCards);
+					const nadinaMultiplier = deadEntityCardId === CardIds.NadinaTheRedBattlegrounds ? 6 : 3;
+					for (let j = 0; j < nadinaMultiplier; j++) {
+						const validTargets = boardWithDeadEntity
+							.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
+							.filter((entity) => !entity.divineShield);
+						const target = pickRandom(validTargets);
+						if (target) {
+							updateDivineShield(target, boardWithDeadEntity, true, allCards);
+							spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+						}
+					}
 				}
 				break;
 			case CardIds.SpawnOfNzoth_BG_OG_256:

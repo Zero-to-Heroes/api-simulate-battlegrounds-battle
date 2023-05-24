@@ -1292,8 +1292,8 @@ export const spawnEntitiesFromDeathrattle = (
 							: boardWithDeadEntityHero.hand.filter((c) => c.cardId).length
 							? pickRandom(boardWithDeadEntityHero.hand.filter((c) => c.cardId))
 							: null;
-						removeCardFromHand(boardWithDeadEntityHero, spawn);
 						if (spawn) {
+							removeCardFromHand(boardWithDeadEntityHero, spawn);
 							const bassgillSpawns = spawnEntities(
 								spawn.cardId,
 								1,

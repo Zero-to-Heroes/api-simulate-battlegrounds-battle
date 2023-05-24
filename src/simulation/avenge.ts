@@ -315,10 +315,18 @@ const handleAvenge = (
 		case CardIds.Bristlebach:
 		case CardIds.BristlebachBattlegrounds:
 			const bristlebachMultiplier = avenger.cardId === CardIds.BristlebachBattlegrounds ? 2 : 1;
-			// const currentBloodGemBuff
-			// TODO: use current blood gem buff values
+			const bloodGemAttackBuff = 1 + (boardWithDeadEntityHero.globalInfo?.BloodGemAttackBonus ?? 0);
+			const bloodGemHealthBuff = 1 + (boardWithDeadEntityHero.globalInfo?.BloodGemHealthBonus ?? 0);
 			for (let i = 0; i < bristlebachMultiplier * 2; i++) {
-				addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, allCards, spectator, Race[Race.QUILBOAR]);
+				addStatsToBoard(
+					avenger,
+					boardWithDeadEntity,
+					bloodGemAttackBuff,
+					bloodGemHealthBuff,
+					allCards,
+					spectator,
+					Race[Race.QUILBOAR],
+				);
 			}
 			break;
 		case CardIds.HungeringAbomination:

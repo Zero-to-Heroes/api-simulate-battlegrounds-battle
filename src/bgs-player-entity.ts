@@ -24,4 +24,6 @@ export interface BgsPlayerGlobalInfo {
 	EternalKnightsDeadThisGame?: number;
 	UndeadAttackBonus?: number;
 	FrostlingBonus?: number;
+	BloodGemAttackBonus?: number;
+	BloodGemHealthBonus?: number;
 }

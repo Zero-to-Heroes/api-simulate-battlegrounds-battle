@@ -306,7 +306,7 @@ const handleSpawnEffect = (
 			case CardIds.MamaBear:
 			case CardIds.MamaBearBattlegrounds:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-					const statsBonus = entity.cardId === CardIds.MamaBearBattlegrounds ? 10 : 5;
+					const statsBonus = entity.cardId === CardIds.MamaBearBattlegrounds ? 8 : 4;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
