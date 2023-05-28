@@ -484,7 +484,7 @@ export const handleDeathrattleEffects = (
 						null,
 						true,
 						allCards,
-						spectator,
+						null,
 					);
 				}
 				break;

@@ -26,7 +26,7 @@ export interface BoardEntity {
 	// current stats of the Fish
 	rememberedDeathrattles?: { cardId: string; timing: number; repeats: number }[];
 	damageMultiplier?: number;
-
+	summonedFromHand?: boolean;
 	friendly?: boolean;
 	cantAttack?: boolean;
 	attacksPerformed?: number;

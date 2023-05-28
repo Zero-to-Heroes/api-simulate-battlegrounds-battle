@@ -353,7 +353,7 @@ export const grantRandomStats = (
 	race: Race,
 	excludeSource: boolean,
 	allCards: AllCardsService,
-	spectator: Spectator,
+	spectator?: Spectator,
 ): BoardEntity => {
 	if (board.length > 0) {
 		const target: BoardEntity = getRandomAliveMinion(
@@ -365,7 +365,9 @@ export const grantRandomStats = (
 			modifyAttack(target, attack, board, allCards);
 			modifyHealth(target, health, board, allCards);
 			afterStatsUpdate(target, board, allCards);
-			spectator.registerPowerTarget(source, target, board);
+			if (spectator) {
+				spectator.registerPowerTarget(source, target, board);
+			}
 			return target;
 		}
 	}

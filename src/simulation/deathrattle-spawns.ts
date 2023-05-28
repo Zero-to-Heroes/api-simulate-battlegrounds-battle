@@ -9,7 +9,6 @@ import {
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
 	isCorrectTribe,
-	removeCardFromHand,
 	stringifySimple,
 } from '../utils';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
@@ -1281,19 +1280,21 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.BassgillBattlegrounds:
 					const bassgillIterations = deadEntity.cardId === CardIds.BassgillBattlegrounds ? 2 : 1;
 					for (let i = 0; i < bassgillIterations; i++) {
-						const highestHealth = Math.max(
-							...boardWithDeadEntityHero.hand.filter((c) => c.health != null).map((c) => c.health),
-						);
-						const highestHealthMinions = boardWithDeadEntityHero.hand.filter(
-							(c) => c.health === highestHealth,
-						);
-						const spawn = !!highestHealthMinions.length
+						const hand = boardWithDeadEntityHero.hand?.filter((e) => !e.summonedFromHand) ?? [];
+						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
+						const highestHealthMinions = highestHealth
+							? hand.filter((c) => c.health === highestHealth)
+							: null;
+						const spawn = !!highestHealthMinions?.length
 							? pickRandom(highestHealthMinions)
-							: boardWithDeadEntityHero.hand.filter((c) => c.cardId).length
-							? pickRandom(boardWithDeadEntityHero.hand.filter((c) => c.cardId))
+							: hand.filter((c) => c.cardId).length
+							? pickRandom(hand.filter((c) => c.cardId))
 							: null;
 						if (spawn) {
-							removeCardFromHand(boardWithDeadEntityHero, spawn);
+							// Technically it should not be removed from hand, but rather flagged
+							// Probably very low impact doing it like this
+							spawn.summonedFromHand = true;
+							// removeCardFromHand(boardWithDeadEntityHero, spawn);
 							const bassgillSpawns = spawnEntities(
 								spawn.cardId,
 								1,
@@ -1309,7 +1310,7 @@ export const spawnEntitiesFromDeathrattle = (
 								false,
 								false,
 								true,
-								spawn as BoardEntity,
+								{ ...spawn } as BoardEntity,
 							);
 							spawnedEntities.push(...bassgillSpawns);
 						}
