@@ -124,10 +124,13 @@ export const simulateAttack = (
 							);
 						}
 					}
-					// console.log(
+					// console.debug(
 					// 	'after attack by',
 					// 	stringifySimpleCard(attackingEntity, allCards),
-					// 	stringifySimpleCard(defendingEntity, allCards),
+					// 	'\n',
+					// 	stringifySimple(attackingBoard, allCards),
+					// 	'\n',
+					// 	stringifySimple(defendingBoard, allCards),
 					// );
 				} else {
 					// Solves the edge case of Sky Pirate vs a stealth board

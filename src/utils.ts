@@ -46,6 +46,7 @@ export const buildSingleBoardEntity = (
 				attacking: false,
 				damageMultiplier: 1,
 				frenzyApplied: false,
+				friendly: friendly,
 		  } as BoardEntity)
 		: addImpliedMechanics({
 				entityId: entityId,
@@ -515,7 +516,6 @@ export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards:
 	const validTribes = board
 		.filter((e) => !race || isCorrectTribe(allCards.getCard(e?.cardId).races, race))
 		.filter((e) => !!e?.health && !e.definitelyDead);
-	// console.log('picking a random alive minion', stringifySimple(validTribes, allCards));
 	if (!validTribes.length) {
 		return null;
 	}
