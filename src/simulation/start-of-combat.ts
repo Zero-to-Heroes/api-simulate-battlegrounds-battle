@@ -1062,12 +1062,12 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	} else if (attacker.cardId === CardIds.ChoralMrrrglr || attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds) {
-		const statsOfMinionsInHand = attackingBoardHero.hand
-			.map((c) => (c.attack ?? 0) + (c.health ?? 0))
-			.reduce((a, b) => a + b, 0);
+		// const statsOfMinionsInHand = attackingBoardHero.hand
+		// 	.map((c) => (c.attack ?? 0) + (c.health ?? 0))
+		// 	.reduce((a, b) => a + b, 0);
 		const multiplier = attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds ? 2 : 1;
-		modifyAttack(attacker, multiplier * statsOfMinionsInHand, attackingBoard, allCards);
-		modifyHealth(attacker, multiplier * statsOfMinionsInHand, attackingBoard, allCards);
+		modifyAttack(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff, attackingBoard, allCards);
+		modifyHealth(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
 		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {

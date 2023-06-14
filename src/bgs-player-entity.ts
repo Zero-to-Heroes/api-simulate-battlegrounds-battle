@@ -23,6 +23,8 @@ export interface BgsPlayerEntity {
 export interface BgsPlayerGlobalInfo {
 	EternalKnightsDeadThisGame?: number;
 	UndeadAttackBonus?: number;
+	ChoralAttackBuff?: number;
+	ChoralHealthBuff?: number;
 	FrostlingBonus?: number;
 	BloodGemAttackBonus?: number;
 	BloodGemHealthBonus?: number;
