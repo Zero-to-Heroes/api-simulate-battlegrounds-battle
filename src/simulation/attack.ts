@@ -1781,7 +1781,7 @@ const buildBoardAfterRebornSpawns = (
 					e,
 					boardWithKilledMinion,
 					multiplier * 1,
-					multiplier * 2,
+					multiplier * 3,
 					allCards,
 					spectator,
 					Race[Race.UNDEAD],
