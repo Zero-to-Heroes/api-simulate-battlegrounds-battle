@@ -133,8 +133,8 @@ export class CardsData {
 
 	public avengeValue(cardId: string): number {
 		switch (cardId) {
-			case CardIds.BirdBuddy:
-			case CardIds.BirdBuddyBattlegrounds:
+			case CardIds.BirdBuddy_BG21_002:
+			case CardIds.BirdBuddy_BG21_002_G:
 			case CardIds.HungeringAbomination:
 			case CardIds.HungeringAbominationBattlegrounds:
 			// Not technically an avenge, but behaves as if
@@ -147,29 +147,29 @@ export class CardsData {
 			case CardIds.GhoulOfTheFeastBattlegrounds:
 			case CardIds.MechanoTank_BG21_023:
 			case CardIds.MechanoTank_BG21_023_G:
-			case CardIds.PalescaleCrocolisk_BG21_001:
-			case CardIds.PalescaleCrocolisk_BG21_001_G:
+			case CardIds.PalescaleCrocolisk:
+			case CardIds.PalescaleCrocoliskBattlegrounds:
 			case CardIds.StormpikeLieutenant:
 			case CardIds.StormpikeLieutenantBattlegrounds:
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
+			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 2;
 			case CardIds.BuddingGreenthumb:
 			case CardIds.BuddingGreenthumbBattlegrounds:
 			// case CardIds.FrostwolfLieutenant:
 			// case CardIds.FrostwolfLieutenantBattlegrounds:
+			case CardIds.Onyxia_Broodmother:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
 			case CardIds.WitchwingNestmatron_BG21_038:
 			case CardIds.WitchwingNestmatron_BG21_038_G:
-			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 3;
-			case CardIds.ImpatientDoomsayer:
-			case CardIds.ImpatientDoomsayerBattlegrounds:
+			case CardIds.ImpatientDoomsayer_BG21_007:
+			case CardIds.ImpatientDoomsayer_BG21_007_G:
 			case CardIds.Sisefin_BG21_009:
 			case CardIds.Sisefin_BG21_009_G:
 			case CardIds.TonyTwoTusk_BG21_031:
 			case CardIds.TonyTwoTusk_BG21_031_G:
-			case CardIds.Onyxia_Broodmother:
 			case CardIds.ScrapScraper:
 			case CardIds.ScrapScraperBattlegrounds:
 				return 4;

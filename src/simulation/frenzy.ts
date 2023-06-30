@@ -24,10 +24,10 @@ export const applyFrenzy = (
 			updateDivineShield(entityWithFrenzy, entityWithFrenzyBoard, true, allCards);
 		}
 	} else if (
-		entityWithFrenzy.cardId === CardIds.Roadboar ||
-		entityWithFrenzy.cardId === CardIds.RoadboarBattlegrounds
+		entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101 ||
+		entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101_G
 	) {
-		const cardsToAdd = Array(entityWithFrenzy.cardId === CardIds.RoadboarBattlegrounds ? 2 : 1).fill(
+		const cardsToAdd = Array(entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101_G ? 2 : 1).fill(
 			CardIds.BloodGem,
 		);
 		addCardsInHand(entityWithFrenzyBoardHero, entityWithFrenzyBoard, allCards, spectator, cardsToAdd);

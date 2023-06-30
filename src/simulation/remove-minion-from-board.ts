@@ -58,20 +58,20 @@ const handleMinionRemovedEffect = (
 			// console.debug('after removing southsea captain', stringifySimpleCard(removed, allCards), stringifySimple(board, allCards));
 			break;
 		case CardIds.Kathranatir_BG21_039:
-		case CardIds.KathranatirBattlegrounds:
+		case CardIds.Kathranatir_BG21_039_G:
 			board
 				.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards))
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.KathranatirBattlegrounds ? 4 : 2;
+					const diff = removed.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.CyborgDrake:
-		case CardIds.CyborgDrakeBattlegrounds:
+		case CardIds.CyborgDrake_BG25_043:
+		case CardIds.CyborgDrake_BG25_043_G:
 			board
 				.filter((e) => e.divineShield)
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.CyborgDrakeBattlegrounds ? 16 : 8;
+					const diff = removed.cardId === CardIds.CyborgDrake_BG25_043_G ? 16 : 8;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;

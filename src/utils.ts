@@ -242,19 +242,18 @@ export const afterStatsUpdate = (
 ): void => {
 	if (hasCorrectTribe(entity, Race.ELEMENTAL, allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
-			(e) =>
-				e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealitiesBattlegrounds,
+			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
 		);
 		masterOfRealities.forEach((master) => {
 			modifyAttack(
 				master,
-				master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1,
+				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
 				friendlyBoard,
 				allCards,
 			);
 			modifyHealth(
 				master,
-				master.cardId === CardIds.MasterOfRealitiesBattlegrounds ? 2 : 1,
+				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
 				friendlyBoard,
 				allCards,
 			);
@@ -489,16 +488,16 @@ export const updateDivineShield = (
 	if (entity.divineShield) {
 		const boardForDrake = board;
 		const statsBonus =
-			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
-			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043).length +
+			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043_G).length;
 		// Don't trigger all "on attack changed" effects, since it's an aura
 		entity.attack += statsBonus;
 	} else {
 		// Also consider itself
 		const boardForDrake = board;
 		const statsBonus =
-			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
-			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043).length +
+			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043_G).length;
 		entity.attack -= statsBonus;
 	}
 };

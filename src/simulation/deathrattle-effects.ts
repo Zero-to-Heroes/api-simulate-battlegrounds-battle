@@ -208,7 +208,7 @@ export const handleDeathrattleEffects = (
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
 				}
 				break;
-			case CardIds.PalescaleCrocolisk_BG21_001:
+			case CardIds.PalescaleCrocolisk:
 				for (let i = 0; i < multiplier; i++) {
 					const target = grantRandomStats(
 						deadEntity,
@@ -225,7 +225,7 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
-			case CardIds.PalescaleCrocolisk_BG21_001_G:
+			case CardIds.PalescaleCrocoliskBattlegrounds:
 				for (let i = 0; i < multiplier; i++) {
 					const target = grantRandomStats(
 						deadEntity,

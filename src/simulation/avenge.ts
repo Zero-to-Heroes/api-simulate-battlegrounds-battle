@@ -126,10 +126,10 @@ const handleAvenge = (
 ) => {
 	// Don't forget to update the avenge data in cards-data
 	switch (avenger.cardId) {
-		case CardIds.BirdBuddy:
+		case CardIds.BirdBuddy_BG21_002:
 			addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, allCards, spectator, 'BEAST');
 			break;
-		case CardIds.BirdBuddyBattlegrounds:
+		case CardIds.BirdBuddy_BG21_002_G:
 			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
 			break;
 		case CardIds.BuddingGreenthumb:
@@ -174,13 +174,13 @@ const handleAvenge = (
 				spectator,
 			);
 			break;
-		case CardIds.PalescaleCrocolisk_BG21_001:
+		case CardIds.PalescaleCrocolisk:
 			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, true, allCards, spectator);
 			if (!!target1) {
 				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
 			}
 			break;
-		case CardIds.PalescaleCrocolisk_BG21_001_G:
+		case CardIds.PalescaleCrocoliskBattlegrounds:
 			const target2 = grantRandomStats(
 				avenger,
 				boardWithDeadEntity,
@@ -195,9 +195,9 @@ const handleAvenge = (
 				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
 			}
 			break;
-		case CardIds.ImpatientDoomsayer:
-		case CardIds.ImpatientDoomsayerBattlegrounds:
-			const doomsayerCardsToAddQuantity = avenger.cardId === CardIds.ImpatientDoomsayerBattlegrounds ? 2 : 1;
+		case CardIds.ImpatientDoomsayer_BG21_007:
+		case CardIds.ImpatientDoomsayer_BG21_007_G:
+			const doomsayerCardsToAddQuantity = avenger.cardId === CardIds.ImpatientDoomsayer_BG21_007_G ? 2 : 1;
 			const doomsayerCardsToAdd = [];
 			for (let i = 0; i < doomsayerCardsToAddQuantity; i++) {
 				doomsayerCardsToAdd.push(pickRandom(cardsData.demonSpawns));

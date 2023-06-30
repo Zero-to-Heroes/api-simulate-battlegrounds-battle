@@ -4,7 +4,7 @@ import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
-import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
+import { pickRandom } from '../services/utils';
 import {
 	afterStatsUpdate,
 	getRandomAliveMinion,
@@ -191,6 +191,8 @@ const handlePreCombatHeroPowersForPlayer = (
 		applyWaterInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
 		applyFireInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
+	} else if (playerHeroPowerId === CardIds.AllWillBurnBattlegrounds) {
+		applyAllWillBurn(playerBoard, opponentBoard, playerEntity, allCards, spectator);
 	}
 
 	return currentAttacker;
@@ -574,6 +576,7 @@ const handleIllidanForPlayer = (
 	const secondAttacker = minionsAtStart > 1 ? playerBoard[playerBoard.length - 1] : null;
 
 	modifyAttack(firstAttacker, 2, playerBoard, allCards);
+	modifyHealth(firstAttacker, 1, playerBoard, allCards);
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
 	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard);
 	if (
@@ -658,10 +661,9 @@ const handleTamsinForPlayer = (
 		return;
 	}
 	const newBoard = playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);
-	const buffedEntities = pickMultipleRandomDifferent(newBoard, 5);
 	// How to mark the minion as dead
 	chosenEntity.definitelyDead = true;
-	buffedEntities.forEach((e) => {
+	newBoard.forEach((e) => {
 		modifyAttack(e, chosenEntity.attack, newBoard, allCards);
 		modifyHealth(e, chosenEntity.health, newBoard, allCards);
 		afterStatsUpdate(e, newBoard, allCards);
@@ -705,10 +707,10 @@ const handleWaxWarbandForPlayer = (
 	spectator: Spectator,
 ): void => {
 	if (playerBoard.length > 0) {
-		let tribesGranted = 0;
+		// let tribesGranted = 0;
 		let boardCopy = [...playerBoard];
 		let racesLeft = [...ALL_BG_RACES];
-		while (tribesGranted < 3) {
+		while (racesLeft.length > 0) {
 			const tribe = pickRandom(racesLeft);
 			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, allCards);
 			if (validMinion) {
@@ -717,7 +719,9 @@ const handleWaxWarbandForPlayer = (
 				afterStatsUpdate(validMinion, playerBoard, allCards);
 				spectator.registerPowerTarget(playerEntity, validMinion, playerBoard);
 				boardCopy = boardCopy.filter((e) => e !== validMinion);
-				tribesGranted++;
+				// tribesGranted++;
+			} else {
+				break;
 			}
 			racesLeft = racesLeft.filter((r) => r !== tribe);
 		}
@@ -951,7 +955,7 @@ export const getHeroPowerForHero = (heroCardId: string): string => {
 	switch (heroCardId) {
 		case CardIds.IllidanStormrageBattlegrounds:
 			return CardIds.WingmenBattlegrounds;
-		case CardIds.TheLichKingBattlegrounds:
+		case CardIds.TheLichKingBattlegrounds_TB_BaconShop_HERO_22:
 			return CardIds.RebornRitesBattlegrounds;
 		case CardIds.ProfessorPutricideBattlegrounds:
 			return CardIds.RagePotionBattlegrounds;
@@ -1180,6 +1184,25 @@ export const performStartOfCombatMinionsForPlayer = (
 				spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 			}
 		}
+	}
+};
+
+const applyAllWillBurn = (
+	board1: BoardEntity[],
+	board2: BoardEntity[],
+	sourceEntity: BgsPlayerEntity | BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	for (const entity of board1) {
+		modifyAttack(entity, 2, board1, allCards);
+		afterStatsUpdate(entity, board1, allCards);
+		spectator.registerPowerTarget(sourceEntity, entity, board1);
+	}
+	for (const entity of board2) {
+		modifyAttack(entity, 2, board2, allCards);
+		afterStatsUpdate(entity, board2, allCards);
+		spectator.registerPowerTarget(sourceEntity, entity, board2);
 	}
 };
 

@@ -9,6 +9,7 @@ import {
 	addCardsInHand,
 	addStatsToBoard,
 	afterStatsUpdate,
+	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	hasMechanic,
@@ -217,10 +218,10 @@ const performAttack = (
 	}
 	if (
 		attackingEntity.cardId === CardIds.Atramedes_BG23_362 ||
-		attackingEntity.cardId === CardIds.AtramedesBattlegrounds
+		attackingEntity.cardId === CardIds.Atramedes_BG23_362_G
 	) {
 		const targets = [defendingEntity, ...getNeighbours(defendingBoard, defendingEntity)];
-		const multiplier = attackingEntity.cardId === CardIds.AtramedesBattlegrounds ? 2 : 1;
+		const multiplier = attackingEntity.cardId === CardIds.Atramedes_BG23_362_G ? 2 : 1;
 
 		for (let i = 0; i < multiplier; i++) {
 			targets.forEach((target) => {
@@ -797,14 +798,20 @@ export const bumpEntities = (
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
 			} else if (
 				entityBoard[i].entityId !== entity.entityId &&
-				(entityBoard[i].cardId === CardIds.HolyMecherel ||
-					entityBoard[i].cardId === CardIds.HolyMecherelBattlegrounds)
+				(entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401 ||
+					entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401_G)
 			) {
 				updateDivineShield(entityBoard[i], entityBoard, true, allCards);
 			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
 				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem]);
 			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
 				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem, CardIds.BloodGem]);
+			} else if (
+				entityBoard[i].cardId === CardIds.CogworkCopter ||
+				entityBoard[i].cardId === CardIds.CogworkCopterBattlegrounds
+			) {
+				const buff = entityBoard[i].cardId === CardIds.CogworkCopterBattlegrounds ? 2 : 1;
+				grantRandomStats(entityBoard[i], entityBoardHero.hand, buff, buff, null, true, allCards, null);
 			}
 
 			// So that self-buffs from Bolvar are taken into account
@@ -812,16 +819,16 @@ export const bumpEntities = (
 			// 	updateDivineShield(entityBoard[i], entityBoard, false, allCards);
 			// }
 		}
-		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
-		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
+		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
+		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
 		greaseBots.forEach((bot) => {
 			modifyAttack(entity, 2, entityBoard, allCards);
-			modifyHealth(entity, 1, entityBoard, allCards);
+			modifyHealth(entity, 2, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
 			modifyAttack(entity, 4, entityBoard, allCards);
-			modifyHealth(entity, 2, entityBoard, allCards);
+			modifyHealth(entity, 4, entityBoard, allCards);
 			spectator.registerPowerTarget(bot, entity, entityBoard);
 		});
 
@@ -1444,12 +1451,12 @@ export const applyOnBeingAttackedBuffs = (
 		);
 		champions.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
-			modifyHealth(entity, 1, defendingBoard, allCards);
+			modifyHealth(entity, 2, defendingBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, defendingBoard);
 		});
 		goldenChampions.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
-			modifyHealth(entity, 2, defendingBoard, allCards);
+			modifyHealth(entity, 4, defendingBoard, allCards);
 			spectator.registerPowerTarget(entity, entity, defendingBoard);
 		});
 
@@ -1788,9 +1795,9 @@ const buildBoardAfterRebornSpawns = (
 				);
 			});
 		boardWithKilledMinion
-			.filter((e) => e.cardId === CardIds.JellyBelly || e.cardId === CardIds.JellyBellyBattlegrounds)
+			.filter((e) => e.cardId === CardIds.JellyBelly_BG25_005 || e.cardId === CardIds.JellyBelly_BG25_005_G)
 			.forEach((e) => {
-				const multiplier = e.cardId === CardIds.JellyBellyBattlegrounds ? 2 : 1;
+				const multiplier = e.cardId === CardIds.JellyBelly_BG25_005_G ? 2 : 1;
 				modifyAttack(e, multiplier * 3, boardWithKilledMinion, allCards);
 				modifyHealth(e, multiplier * 3, boardWithKilledMinion, allCards);
 				afterStatsUpdate(e, boardWithKilledMinion, allCards);

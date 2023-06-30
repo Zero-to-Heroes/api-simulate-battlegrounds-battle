@@ -154,10 +154,10 @@ export const spawnEntitiesFromDeathrattle = (
 					);
 					break;
 				case CardIds.PiggybackImp_BG_AV_309:
-				case CardIds.PiggybackImpBattlegrounds:
+				case CardIds.PiggybackImp_BG_AV_309_G:
 					spawnedEntities.push(
 						...spawnEntities(
-							deadEntityCardId === CardIds.PiggybackImpBattlegrounds
+							deadEntityCardId === CardIds.PiggybackImp_BG_AV_309_G
 								? CardIds.PiggybackImp_BackpiggyImpToken_BG_AV_309t
 								: CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
 							1,
@@ -947,6 +947,29 @@ export const spawnEntitiesFromDeathrattle = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.Voidlord_VoidwalkerLegacyTokenBattlegrounds,
+							3,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.AnnoyOTroupe_BG26_ETC_321:
+				case CardIds.AnnoyOTroupeBattlegrounds:
+					const annoyOTroupeSpawns =
+						deadEntity.cardId === CardIds.AnnoyOTroupeBattlegrounds
+							? CardIds.AnnoyOTronBattlegrounds
+							: CardIds.AnnoyOTron_BG_GVG_085;
+					spawnedEntities.push(
+						...spawnEntities(
+							annoyOTroupeSpawns,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

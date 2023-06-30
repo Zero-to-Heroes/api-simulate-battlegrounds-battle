@@ -58,14 +58,14 @@ const handleSpawnEffect = (
 	spectator: Spectator,
 	sharedState: SharedState,
 ): void => {
-	if (otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds) {
-		spawned.attack += 3;
-	}
+	// if (otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds) {
+	// 	spawned.attack += 3;
+	// }
 
 	switch (boardHero.heroPowerId) {
-		case CardIds.AllWillBurnBattlegrounds:
-			spawned.attack += 3;
-			break;
+		// case CardIds.AllWillBurnBattlegrounds:
+		// 	spawned.attack += 3;
+		// 	break;
 		case CardIds.SproutItOutBattlegrounds:
 			spawned.taunt = true;
 			modifyAttack(spawned, 1, board, allCards);
@@ -144,20 +144,20 @@ const handleSpawnEffect = (
 				});
 				break;
 			case CardIds.Kathranatir_BG21_039:
-			case CardIds.KathranatirBattlegrounds:
+			case CardIds.Kathranatir_BG21_039_G:
 				board
 					.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards))
 					.filter((e) => e.entityId !== spawned.entityId)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.KathranatirBattlegrounds ? 4 : 2;
+						e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
 					});
 				break;
-			case CardIds.CyborgDrake:
-			case CardIds.CyborgDrakeBattlegrounds:
+			case CardIds.CyborgDrake_BG25_043:
+			case CardIds.CyborgDrake_BG25_043_G:
 				board
 					.filter((e) => e.divineShield)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.CyborgDrakeBattlegrounds ? 16 : 8;
+						e.attack += spawned.cardId === CardIds.CyborgDrake_BG25_043_G ? 16 : 8;
 					});
 				break;
 
@@ -237,15 +237,15 @@ const handleSpawnEffect = (
 					entity.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
 				break;
 			case CardIds.Kathranatir_BG21_039:
-			case CardIds.KathranatirBattlegrounds:
+			case CardIds.Kathranatir_BG21_039_G:
 				if (hasCorrectTribe(spawned, Race.DEMON, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.KathranatirBattlegrounds ? 2 : 1;
+					spawned.attack += entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1;
 				}
 				break;
-			case CardIds.CyborgDrake:
-			case CardIds.CyborgDrakeBattlegrounds:
+			case CardIds.CyborgDrake_BG25_043:
+			case CardIds.CyborgDrake_BG25_043_G:
 				if (spawned.divineShield) {
-					spawned.attack += entity.cardId === CardIds.CyborgDrakeBattlegrounds ? 16 : 8;
+					spawned.attack += entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 16 : 8;
 				}
 				break;
 
@@ -396,6 +396,14 @@ const handleAfterSpawnEffect = (
 					const bananaStatBuff = entity.cardId === CardIds.BananaSlammaBattlegrounds ? 3 : 2;
 					spawned.attack = spawned.attack * bananaStatBuff;
 					spawned.health = spawned.health * bananaStatBuff;
+				}
+				break;
+			case CardIds.HungrySnapjaw:
+			case CardIds.HungrySnapjawBattlegrounds:
+				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
+					const snapjawBuff = entity.cardId === CardIds.HungrySnapjawBattlegrounds ? 2 : 1;
+					modifyHealth(entity, snapjawBuff, board, allCards);
+					afterStatsUpdate(entity, board, allCards);
 				}
 				break;
 
