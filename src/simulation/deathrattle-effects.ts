@@ -21,7 +21,7 @@ import {
 	modifyHealth,
 	updateDivineShield,
 } from '../utils';
-import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies } from './attack';
+import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -331,21 +331,6 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
-			// for (let i = 0; i < multiplier; i++) {
-			// 	dealDamageToRandomEnemy(
-			// 		otherBoard,
-			// 		otherBoardHero,
-			// 		deadEntity,
-			// 		4,
-			// 		boardWithDeadEntity,
-			// 		boardWithDeadEntityHero,
-			// 		allCards,
-			// 		cardsData,
-			// 		sharedState,
-			// 		spectator,
-			// 	);
-			// }
-			// break;
 			case CardIds.KaboomBot_BG_BOT_606:
 			case CardIds.KaboomBotBattlegrounds:
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
@@ -787,6 +772,7 @@ export const applyMinionDeathEffect = (
 	}
 	if (deadEntity.taunt) {
 		applyBristlemaneScrapsmithEffect(boardWithDeadEntity, boardWithDeadEntityHero, allCards, spectator);
+		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndexFromRight, allCards, spectator);
 	}
 	if (deadEntity.cardId === CardIds.EternalKnight || deadEntity.cardId === CardIds.EternalKnightBattlegrounds) {
 		applyEternalKnightEffect(boardWithDeadEntity, allCards, spectator);
@@ -1133,19 +1119,23 @@ const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService, spe
 	}
 };
 
-// const applyQirajiHarbringerEffect = (board: BoardEntity[], deadEntityIndex: number, allCards: AllCardsService): void => {
-// 	const qiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger);
-// 	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbingerBattlegrounds);
-// 	const neighbours = getNeighbours(board, null, deadEntityIndex);
+const applyQirajiHarbringerEffect = (
+	board: BoardEntity[],
+	deadEntityIndexFromRight: number,
+	allCards: AllCardsService,
+	spectator: Spectator,
+): void => {
+	const qiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger);
+	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbingerBattlegrounds);
+	const neighbours = getNeighbours(board, null, deadEntityIndexFromRight);
 
-// 	// TODO: if reactivated, properly apply buffs one by one, instead of all together
-
-// 	neighbours.forEach((entity) => {
-// 		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
-// 		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length);
-// 		afterStatsUpdate(entity, board, allCards);
-// 	});
-// };
+	// TODO: if reactivated, properly apply buffs one by one, instead of all together
+	neighbours.forEach((entity) => {
+		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
+		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, allCards);
+		afterStatsUpdate(entity, board, allCards);
+	});
+};
 
 export const applyMonstrosity = (
 	monstrosity: BoardEntity,
