@@ -60,13 +60,18 @@ export const simulateAttack = (
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
-		// console.log('attack by', stringifySimpleCard(attackingEntity, allCards), stringifySimple(defendingBoard, allCards));
 		const numberOfAttacks = attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 				return;
 			}
+			// console.log(
+			// 	'\nattack by',
+			// 	stringifySimpleCard(attackingEntity, allCards),
+			// 	stringifySimple(defendingBoard, allCards),
+			// 	stringifySimple(attackingBoard, allCards),
+			// );
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
@@ -296,6 +301,9 @@ const performAttack = (
 
 	// For Prestor
 	const defenderAliveBeforeAttack = defendingEntity.health > 0 && !defendingEntity.definitelyDead;
+	// Because of Bristleback Knight, which changes its divine shield status during bumpEntities
+	const attackerHadDivineShield = attackingEntity.divineShield;
+	const defenderHadDivineShield = defendingEntity.divineShield;
 	if (defenderAliveBeforeAttack) {
 		if (!attackingEntity.immuneWhenAttackCharges || attackingEntity.immuneWhenAttackCharges <= 0) {
 			bumpEntities(
@@ -325,10 +333,10 @@ const performAttack = (
 		);
 		// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 		// cause wrong results to happen
-		if (defendingEntity.attack > 0 && attackingEntity.divineShield) {
+		if (defendingEntity.attack > 0 && attackerHadDivineShield) {
 			updateDivineShield(attackingEntity, attackingBoard, false, allCards);
 		}
-		if (attackingEntity.attack > 0 && defendingEntity.divineShield) {
+		if (attackingEntity.attack > 0 && defenderHadDivineShield) {
 			updateDivineShield(defendingEntity, defendingBoard, false, allCards);
 		}
 	}

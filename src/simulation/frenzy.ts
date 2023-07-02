@@ -3,7 +3,7 @@ import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { addCardsInHand, updateDivineShield } from '../utils';
+import { addCardsInHand, stringifySimpleCard, updateDivineShield } from '../utils';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
