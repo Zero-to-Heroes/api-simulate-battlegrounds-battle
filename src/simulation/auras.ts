@@ -180,7 +180,7 @@ const setMissingAura = (
 export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): void => {
 	for (const entity of board) {
 		entity.cardId = normalizeCardIdForSkin(entity.cardId);
-		entity.maxHealth = entity.health;
+		entity.maxHealth = Math.max(0, entity.health);
 		const avengeValue = cardsData.avengeValue(entity.cardId);
 		if (avengeValue > 0) {
 			entity.avengeCurrent = avengeValue;
