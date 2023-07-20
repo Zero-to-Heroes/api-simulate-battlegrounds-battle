@@ -47,7 +47,7 @@ export const setMissingHeroPowerAura = (
 					),
 			)
 			.forEach((e) => {
-				e.attack += 5;
+				e.attack += 4;
 			});
 	}
 	if (boardHero.heroPowerId === CardIds.VolatileVenom) {
@@ -140,17 +140,17 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	);
 	setMissingAura(
 		board.filter((e) => e.divineShield),
-		CardIds.CyborgDrake_BG25_043,
+		CardIds.CyborgDrake,
 		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043e,
-		8,
+		6,
 		0,
 		false,
 	);
 	setMissingAura(
 		board.filter((e) => e.divineShield),
-		CardIds.CyborgDrake_BG25_043_G,
+		CardIds.CyborgDrakeBattlegrounds,
 		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043_Ge,
-		16,
+		12,
 		0,
 		false,
 	);
@@ -203,6 +203,11 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 
 	// Because Denathrius can send a quest reward as its hero power (I think)
 	hero.questRewards = [...(hero.questRewards ?? []), hero.heroPowerId].filter((e) => !!e);
+	hero.questRewardEntities = hero.questRewards.map((reward) => ({
+		cardId: reward,
+		avengeCurrent: 0,
+		avengeDefault: cardsData.avengeValue(reward),
+	}));
 	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
 	hero.hand = hero.hand ?? [];
 	if (!hero.globalInfo) {

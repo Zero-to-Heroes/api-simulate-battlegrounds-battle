@@ -161,8 +161,8 @@ const applyAfterAttackEffects = (
 		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
 		const cards = quantity === 1 ? [CardIds.BloodGem] : [CardIds.BloodGem, CardIds.BloodGem];
 		addCardsInHand(attackingBoardHero, attackingBoard, allCards, spectator, cards);
-	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
-		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
+	} else if (attackingEntity.cardId === CardIds.Yrel || attackingEntity.cardId === CardIds.YrelBattlegrounds) {
+		const modifier = attackingEntity.cardId === CardIds.YrelBattlegrounds ? 2 : 1;
 		grantStatsToMinionsOfEachType(attackingEntity, attackingBoard, modifier * 1, modifier * 2, allCards, spectator);
 	} else if (
 		attackingEntity.cardId === CardIds.IncorporealCorporal_BG26_RLK_117 ||
@@ -248,9 +248,9 @@ const performAttack = (
 		}
 	}
 
-	if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
+	if ([CardIds.BabyKrush, CardIds.BabyKrushBattlegrounds].includes(attackingEntity.cardId as CardIds)) {
 		const spawns = spawnEntities(
-			attackingEntity.cardId === CardIds.BabyKrush_BG22_001_G
+			attackingEntity.cardId === CardIds.BabyKrushBattlegrounds
 				? CardIds.DevilsaurBattlegrounds
 				: CardIds.BabyKrush_DevilsaurToken,
 			1,
@@ -810,9 +810,9 @@ export const bumpEntities = (
 					entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401_G)
 			) {
 				updateDivineShield(entityBoard[i], entityBoard, true, allCards);
-			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
+			} else if (entityBoard[i].cardId === CardIds.Gemsplitter) {
 				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem]);
-			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
+			} else if (entityBoard[i].cardId === CardIds.GemsplitterBattlegrounds) {
 				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem, CardIds.BloodGem]);
 			} else if (
 				entityBoard[i].cardId === CardIds.CogworkCopter ||
@@ -827,8 +827,8 @@ export const bumpEntities = (
 			// 	updateDivineShield(entityBoard[i], entityBoard, false, allCards);
 			// }
 		}
-		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
-		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
+		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
+		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
 		greaseBots.forEach((bot) => {
 			modifyAttack(entity, 2, entityBoard, allCards);
 			modifyHealth(entity, 2, entityBoard, allCards);
@@ -1726,7 +1726,10 @@ const buildBoardAfterRebornSpawns = (
 	}
 	let entityToSpawn: BoardEntity = null;
 	// TODO: test
-	if (deadEntity.cardId === CardIds.SinrunnerBlanchy || deadEntity.cardId === CardIds.SinrunnerBlanchyBattlegrounds) {
+	if (
+		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005 ||
+		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005_G
+	) {
 		entityToSpawn = {
 			...deadEntity,
 			health: deadEntity.maxHealth,

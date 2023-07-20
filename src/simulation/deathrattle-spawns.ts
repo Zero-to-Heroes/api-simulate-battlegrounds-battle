@@ -269,7 +269,7 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.IckyImpBattlegrounds:
+				case CardIds.IckyImp_BG21_029_G:
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.ImpGangBoss_ImpTokenBattlegrounds,
@@ -984,8 +984,8 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.OmegaBuster:
-				case CardIds.OmegaBusterBattlegrounds:
+				case CardIds.OmegaBuster_BG21_025:
+				case CardIds.OmegaBuster_BG21_025_G:
 					// Here we have to truncate the spawned entities instead of letting the caller handle it,
 					// because we need to know how many minions couldn't spawn so that we can apply the buff.
 					// HOWEVER, this can cause an issue, if for instance a Scallywag token spawns, attacks right away,
@@ -997,10 +997,10 @@ export const spawnEntitiesFromDeathrattle = (
 						Math.min(cardParam, 7 - boardWithDeadEntity.length - spawnedEntities.length),
 					);
 					const buffAmount =
-						(deadEntityCardId === CardIds.OmegaBusterBattlegrounds ? 2 : 1) * (cardParam - entitiesToSpawn);
+						(deadEntityCardId === CardIds.OmegaBuster_BG21_025_G ? 2 : 1) * (cardParam - entitiesToSpawn);
 					spawnedEntities.push(
 						...spawnEntities(
-							deadEntityCardId === CardIds.OmegaBusterBattlegrounds
+							deadEntityCardId === CardIds.OmegaBuster_BG21_025_G
 								? CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds
 								: CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
 							entitiesToSpawn,

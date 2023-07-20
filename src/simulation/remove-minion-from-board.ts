@@ -66,12 +66,12 @@ const handleMinionRemovedEffect = (
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.CyborgDrake_BG25_043:
-		case CardIds.CyborgDrake_BG25_043_G:
+		case CardIds.CyborgDrake:
+		case CardIds.CyborgDrakeBattlegrounds:
 			board
 				.filter((e) => e.divineShield)
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.CyborgDrake_BG25_043_G ? 16 : 8;
+					const diff = removed.cardId === CardIds.CyborgDrakeBattlegrounds ? 12 : 6;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;

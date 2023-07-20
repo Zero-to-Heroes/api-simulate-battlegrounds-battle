@@ -198,12 +198,12 @@ export const handleDeathrattleEffects = (
 					grantRandomHealth(deadEntity, boardWithDeadEntity, deadEntity.maxHealth, allCards, spectator, true);
 				}
 				break;
-			case CardIds.Leapfrogger:
+			case CardIds.Leapfrogger_BG21_000:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, false, allCards, spectator, sharedState);
 				}
 				break;
-			case CardIds.LeapfroggerBattlegrounds:
+			case CardIds.Leapfrogger_BG21_000_G:
 				for (let i = 0; i < multiplier; i++) {
 					applyLeapFroggerEffect(boardWithDeadEntity, deadEntity, true, allCards, spectator, sharedState);
 				}
@@ -353,11 +353,11 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
-			case CardIds.DrBoombox:
-			case CardIds.DrBoomboxBattlegrounds:
+			case CardIds.DrBoombox_BG25_165:
+			case CardIds.DrBoombox_BG25_165_G:
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 				// could be spawned between the shots firing), but let's say it's good enough for now
-				const boomboxDamage = deadEntity.cardId === CardIds.DrBoomboxBattlegrounds ? 14 : 7;
+				const boomboxDamage = deadEntity.cardId === CardIds.DrBoombox_BG25_165_G ? 14 : 7;
 				for (let i = 0; i < multiplier; i++) {
 					// The nearest enemies use the full board info
 					// const boardIncludingDeadEntityAtCorrectIndex = boardWithDeadEntity.splice(

@@ -98,7 +98,7 @@ const handleSpawnEffect = (
 					});
 					break;
 				case CardIds.TheSmokingGun:
-					spawned.attack += 5;
+					spawned.attack += 4;
 					break;
 			}
 		}
@@ -152,12 +152,12 @@ const handleSpawnEffect = (
 						e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
 					});
 				break;
-			case CardIds.CyborgDrake_BG25_043:
-			case CardIds.CyborgDrake_BG25_043_G:
+			case CardIds.CyborgDrake:
+			case CardIds.CyborgDrakeBattlegrounds:
 				board
 					.filter((e) => e.divineShield)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.CyborgDrake_BG25_043_G ? 16 : 8;
+						e.attack += spawned.cardId === CardIds.CyborgDrakeBattlegrounds ? 12 : 6;
 					});
 				break;
 
@@ -242,10 +242,10 @@ const handleSpawnEffect = (
 					spawned.attack += entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1;
 				}
 				break;
-			case CardIds.CyborgDrake_BG25_043:
-			case CardIds.CyborgDrake_BG25_043_G:
+			case CardIds.CyborgDrake:
+			case CardIds.CyborgDrakeBattlegrounds:
 				if (spawned.divineShield) {
-					spawned.attack += entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 16 : 8;
+					spawned.attack += entity.cardId === CardIds.CyborgDrakeBattlegrounds ? 12 : 6;
 				}
 				break;
 

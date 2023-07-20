@@ -35,7 +35,7 @@ export const applyAvengeEffects = (
 	const candidatesEntitiesSpawnedFromAvenge: BoardEntity[] = [];
 	updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
 	const avengers = boardWithDeadEntity
-		.filter((e) => !!e.avengeDefault && e.avengeCurrent === 0)
+		.filter((e) => !!e.avengeDefault && e.avengeCurrent <= 0)
 		// Get Tony to be processed first, because of the "when turned golden, the minion ignores the death for the avenge counter"
 		// behavior
 		.sort((a, b) => {
@@ -85,6 +85,25 @@ export const applyAvengeEffects = (
 		);
 	}
 
+	const questRewardAvengers = boardWithDeadEntityHero.questRewardEntities.filter(
+		(e) => !!e.avengeDefault && e.avengeCurrent <= 0,
+	);
+	for (const avenger of questRewardAvengers) {
+		handleAvenge(
+			boardWithDeadEntity,
+			boardWithDeadEntityHero,
+			deadEntity,
+			deadEntityIndexFromRight,
+			avenger as BoardEntity,
+			otherBoard,
+			otherBoardHero,
+			cardsData,
+			sharedState,
+			spectator,
+			allCards,
+		);
+	}
+
 	performEntitySpawns(
 		candidatesEntitiesSpawnedFromAvenge,
 		boardWithDeadEntity,
@@ -109,6 +128,12 @@ const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDeadEntity
 	if (!!boardWithDeadEntityHero.avengeDefault) {
 		boardWithDeadEntityHero.avengeCurrent -= 1;
 	}
+
+	for (const reward of boardWithDeadEntityHero.questRewardEntities) {
+		if (!!reward.avengeDefault) {
+			reward.avengeCurrent -= 1;
+		}
+	}
 };
 
 const handleAvenge = (
@@ -132,19 +157,19 @@ const handleAvenge = (
 		case CardIds.BirdBuddy_BG21_002_G:
 			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, allCards, spectator, 'BEAST');
 			break;
-		case CardIds.BuddingGreenthumb:
-		case CardIds.BuddingGreenthumbBattlegrounds:
+		case CardIds.BuddingGreenthumb_BG21_030:
+		case CardIds.BuddingGreenthumb_BG21_030_G:
 			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
 			neighbours.forEach((entity) => {
 				modifyAttack(
 					entity,
-					avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 4 : 2,
+					avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2,
 					boardWithDeadEntity,
 					allCards,
 				);
 				modifyHealth(
 					entity,
-					avenger.cardId === CardIds.BuddingGreenthumbBattlegrounds ? 2 : 1,
+					avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1,
 					boardWithDeadEntity,
 					allCards,
 				);
@@ -208,9 +233,9 @@ const handleAvenge = (
 		case CardIds.PashmarTheVengefulBattlegrounds:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, [null]);
 			break;
-		case CardIds.WitchwingNestmatron_BG21_038:
-		case CardIds.WitchwingNestmatron_BG21_038_G:
-			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
+		case CardIds.WitchwingNestmatron:
+		case CardIds.WitchwingNestmatronBattlegrounds:
+			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatronBattlegrounds ? 2 : 1;
 			const nestmatronCardsToAdd = [];
 			for (let i = 0; i < nestmatronToAddQuantity; i++) {
 				nestmatronCardsToAdd.push(pickRandom(cardsData.brannEpicEggSpawns));
@@ -347,6 +372,26 @@ const handleAvenge = (
 				afterStatsUpdate(neighbour, boardWithDeadEntity, allCards);
 				spectator.registerPowerTarget(avenger, neighbour, boardWithDeadEntity);
 			});
+			break;
+		case CardIds.IceSickle:
+			grantRandomStats(avenger, boardWithDeadEntityHero.hand, 3, 0, null, true, allCards, null);
+			break;
+		case CardIds.BoomSquad_BG27_Reward_502:
+			const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
+			dealDamageToEnemy(
+				highestHealthMinion,
+				otherBoard,
+				otherBoardHero,
+				avenger,
+				10,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+			spectator.registerPowerTarget(avenger, highestHealthMinion, otherBoard);
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;

@@ -142,6 +142,7 @@ export class CardsData {
 			case CardIds.ShadowyConstructBattlegrounds:
 			case CardIds.Bristlebach:
 			case CardIds.BristlebachBattlegrounds:
+			case CardIds.IceSickle:
 				return 1;
 			case CardIds.GhoulOfTheFeast:
 			case CardIds.GhoulOfTheFeastBattlegrounds:
@@ -154,15 +155,16 @@ export class CardsData {
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
 			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 2;
-			case CardIds.BuddingGreenthumb:
-			case CardIds.BuddingGreenthumbBattlegrounds:
+			case CardIds.BuddingGreenthumb_BG21_030:
+			case CardIds.BuddingGreenthumb_BG21_030_G:
 			// case CardIds.FrostwolfLieutenant:
 			// case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.Onyxia_Broodmother:
 			case CardIds.PashmarTheVengeful:
 			case CardIds.PashmarTheVengefulBattlegrounds:
-			case CardIds.WitchwingNestmatron_BG21_038:
-			case CardIds.WitchwingNestmatron_BG21_038_G:
+			case CardIds.WitchwingNestmatron:
+			case CardIds.WitchwingNestmatronBattlegrounds:
+			case CardIds.BoomSquad_BG27_Reward_502:
 				return 3;
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
