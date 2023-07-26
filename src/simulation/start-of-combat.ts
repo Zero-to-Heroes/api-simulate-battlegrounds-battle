@@ -173,7 +173,7 @@ const handlePreCombatHeroPowersForPlayer = (
 	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
 	// Since the order is not important here, we just always do the player first
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.SwattingInsectsBattlegrounds && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.SwattingInsects && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
 		handleAlakirForPlayer(
 			playerBoard,
@@ -191,7 +191,7 @@ const handlePreCombatHeroPowersForPlayer = (
 		applyWaterInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
 		applyFireInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
-	} else if (playerHeroPowerId === CardIds.AllWillBurnBattlegrounds) {
+	} else if (playerHeroPowerId === CardIds.AllWillBurn) {
 		applyAllWillBurn(playerBoard, opponentBoard, playerEntity, allCards, spectator);
 	}
 
@@ -542,7 +542,7 @@ const handlePlayerIllidanHeroPowers = (
 	spectator: Spectator,
 ): number => {
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.WingmenBattlegrounds && playerBoard.length > 0) {
+	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
 		handleIllidanForPlayer(
 			playerBoard,
 			playerEntity,
@@ -580,8 +580,8 @@ const handleIllidanForPlayer = (
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
 	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard);
 	if (
-		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy) ||
-		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy_G)
+		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy) ||
+		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G)
 	) {
 		firstAttacker.immuneWhenAttackCharges = 1;
 	}
@@ -602,11 +602,7 @@ const handleIllidanForPlayer = (
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
-		if (
-			playerBoard
-				.map((e) => e.cardId)
-				.includes(CardIds.EclipsionIllidariBattlegrounds_TB_BaconShop_HERO_08_Buddy_G)
-		) {
+		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G)) {
 			secondAttacker.immuneWhenAttackCharges = 1;
 		}
 		simulateAttack(
@@ -822,7 +818,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 			spectator,
 		);
 		// Same as Tamsin? No, because the new minion should repop automatically
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarbandBattlegrounds) {
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarband) {
 		handleWaxWarbandForPlayer(
 			playerBoard,
 			playerEntity,
@@ -953,14 +949,14 @@ const handlePlayerStartOfCombatHeroPowers = (
 
 export const getHeroPowerForHero = (heroCardId: string): string => {
 	switch (heroCardId) {
-		case CardIds.IllidanStormrageBattlegrounds:
-			return CardIds.WingmenBattlegrounds;
-		case CardIds.TheLichKingBattlegrounds_TB_BaconShop_HERO_22:
-			return CardIds.RebornRitesBattlegrounds;
-		case CardIds.ProfessorPutricideBattlegrounds:
-			return CardIds.RagePotionBattlegrounds;
-		case CardIds.DeathwingBattlegrounds:
-			return CardIds.AllWillBurnBattlegrounds;
+		case CardIds.IllidanStormrage_TB_BaconShop_HERO_08:
+			return CardIds.Wingmen;
+		case CardIds.TheLichKing_TB_BaconShop_HERO_22:
+			return CardIds.RebornRites;
+		case CardIds.ProfessorPutricide_BG25_HERO_100:
+			return CardIds.RagePotion;
+		case CardIds.Deathwing_TB_BaconShop_HERO_52:
+			return CardIds.AllWillBurn;
 		case CardIds.TeronGorefiend_BG25_HERO_103:
 			return CardIds.TeronGorefiend_RapidReanimation;
 	}
@@ -986,7 +982,7 @@ export const performStartOfCombatMinionsForPlayer = (
 	spectator: Spectator,
 ): void => {
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
-	if (attacker.cardId === CardIds.RedWhelp) {
+	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
 		const damage = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
@@ -1012,7 +1008,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			sharedState,
 			spectator,
 		);
-	} else if (attacker.cardId === CardIds.RedWhelpBattlegrounds) {
+	} else if (attacker.cardId === CardIds.RedWhelp_TB_BaconUps_102) {
 		const damage = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
@@ -1051,35 +1047,41 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator,
 		);
 	} else if (
-		attacker.cardId === CardIds.PrizedPromoDrake ||
-		attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds
+		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014 ||
+		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G
 	) {
 		const numberOfDragons = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
-		const multiplier = attacker.cardId === CardIds.PrizedPromoDrakeBattlegrounds ? 2 : 1;
+		const multiplier = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 2 : 1;
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, multiplier * numberOfDragons, attackingBoard, allCards);
 			modifyHealth(entity, multiplier * numberOfDragons, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.ChoralMrrrglr || attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds) {
+	} else if (
+		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
+		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
+	) {
 		// const statsOfMinionsInHand = attackingBoardHero.hand
 		// 	.map((c) => (c.attack ?? 0) + (c.health ?? 0))
 		// 	.reduce((a, b) => a + b, 0);
-		const multiplier = attacker.cardId === CardIds.ChoralMrrrglrBattlegrounds ? 2 : 1;
+		const multiplier = attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;
 		modifyAttack(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff, attackingBoard, allCards);
 		modifyHealth(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
 		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
-	} else if (attacker.cardId === CardIds.AmberGuardian || attacker.cardId === CardIds.AmberGuardianBattlegrounds) {
+	} else if (
+		attacker.cardId === CardIds.AmberGuardian_BG24_500 ||
+		attacker.cardId === CardIds.AmberGuardian_BG24_500_G
+	) {
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard
 			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
-		const loops = attacker.cardId === CardIds.AmberGuardianBattlegrounds ? 2 : 1;
+		const loops = attacker.cardId === CardIds.AmberGuardian_BG24_500_G ? 2 : 1;
 		const dragonsToConsider = otherDragons;
 		for (let i = 0; i < loops; i++) {
 			const otherDragon =
@@ -1095,8 +1097,11 @@ export const performStartOfCombatMinionsForPlayer = (
 				dragonsToConsider.splice(dragonsToConsider.indexOf(otherDragon), 1);
 			}
 		}
-	} else if (attacker.cardId === CardIds.SanctumRester || attacker.cardId === CardIds.SanctumResterBattlegrounds) {
-		const buff = attacker.cardId === CardIds.SanctumResterBattlegrounds ? 16 : 8;
+	} else if (
+		attacker.cardId === CardIds.SanctumRester_BG26_356 ||
+		attacker.cardId === CardIds.SanctumRester_BG26_356_G
+	) {
+		const buff = attacker.cardId === CardIds.SanctumRester_BG26_356_G ? 16 : 8;
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard
 			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
@@ -1106,8 +1111,11 @@ export const performStartOfCombatMinionsForPlayer = (
 			afterStatsUpdate(otherDragon, attackingBoard, allCards);
 			spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
 		});
-	} else if (attacker.cardId === CardIds.Soulsplitter || attacker.cardId === CardIds.SoulsplitterBattlegrounds) {
-		const numberOfTargets = attacker.cardId === CardIds.SoulsplitterBattlegrounds ? 2 : 1;
+	} else if (
+		attacker.cardId === CardIds.Soulsplitter_BG25_023 ||
+		attacker.cardId === CardIds.Soulsplitter_BG25_023_G
+	) {
+		const numberOfTargets = attacker.cardId === CardIds.Soulsplitter_BG25_023_G ? 2 : 1;
 		for (let i = 0; i < numberOfTargets; i++) {
 			const undeadsWithoutReborn = attackingBoard
 				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
@@ -1120,10 +1128,10 @@ export const performStartOfCombatMinionsForPlayer = (
 		}
 	} else if (
 		attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy ||
-		attacker.cardId === CardIds.CrabbyBattlegrounds
+		attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy_G
 	) {
 		const neighbours = getNeighbours(attackingBoard, attacker);
-		const multiplier = attacker.cardId === CardIds.CrabbyBattlegrounds ? 2 : 1;
+		const multiplier = attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy_G ? 2 : 1;
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
 			modifyHealth(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
@@ -1131,10 +1139,10 @@ export const performStartOfCombatMinionsForPlayer = (
 			spectator.registerPowerTarget(attacker, entity, attackingBoard);
 		});
 	} else if (
-		attacker.cardId === CardIds.CorruptedMyrmidon ||
-		attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds
+		attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012 ||
+		attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012_G
 	) {
-		const multiplier = attacker.cardId === CardIds.CorruptedMyrmidonBattlegrounds ? 2 : 1;
+		const multiplier = attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012_G ? 2 : 1;
 		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
 		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
@@ -1153,8 +1161,8 @@ export const performStartOfCombatMinionsForPlayer = (
 				castImpure(defendingBoard[defenderPosition + 0.5], attacker, attackingBoard, spectator);
 			}
 		}
-	} else if (attacker.cardId === CardIds.MantidQueen || attacker.cardId === CardIds.MantidQueenBattlegrounds) {
-		const multiplier = attacker.cardId === CardIds.MantidQueenBattlegrounds ? 2 : 1;
+	} else if (attacker.cardId === CardIds.MantidQueen_BG22_402 || attacker.cardId === CardIds.MantidQueen_BG22_402_G) {
+		const multiplier = attacker.cardId === CardIds.MantidQueen_BG22_402_G ? 2 : 1;
 		const allRaces = attackingBoardBefore
 			.map((entity) => entity.cardId)
 			.flatMap((cardId) => allCards.getCard(cardId).races)

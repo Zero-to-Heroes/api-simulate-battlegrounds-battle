@@ -188,24 +188,24 @@ const handleAvenge = (
 		// 		spectator,
 		// 	);
 		// 	break;
-		case CardIds.StormpikeLieutenant:
-		case CardIds.StormpikeLieutenantBattlegrounds:
+		case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
+		case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 			addStatsToBoard(
 				avenger,
 				boardWithDeadEntity,
 				0,
-				avenger.cardId === CardIds.StormpikeLieutenantBattlegrounds ? 2 : 1,
+				avenger.cardId === CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G ? 2 : 1,
 				allCards,
 				spectator,
 			);
 			break;
-		case CardIds.PalescaleCrocolisk:
+		case CardIds.PalescaleCrocolisk_BG21_001:
 			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, true, allCards, spectator);
 			if (!!target1) {
 				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
 			}
 			break;
-		case CardIds.PalescaleCrocoliskBattlegrounds:
+		case CardIds.PalescaleCrocolisk_BG21_001_G:
 			const target2 = grantRandomStats(
 				avenger,
 				boardWithDeadEntity,
@@ -229,22 +229,22 @@ const handleAvenge = (
 			}
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, doomsayerCardsToAdd);
 			break;
-		case CardIds.PashmarTheVengeful:
-		case CardIds.PashmarTheVengefulBattlegrounds:
+		case CardIds.PashmarTheVengeful_BG23_014:
+		case CardIds.PashmarTheVengeful_BG23_014_G:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, [null]);
 			break;
-		case CardIds.WitchwingNestmatron:
-		case CardIds.WitchwingNestmatronBattlegrounds:
-			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatronBattlegrounds ? 2 : 1;
+		case CardIds.WitchwingNestmatron_BG21_038:
+		case CardIds.WitchwingNestmatron_BG21_038_G:
+			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
 			const nestmatronCardsToAdd = [];
 			for (let i = 0; i < nestmatronToAddQuantity; i++) {
 				nestmatronCardsToAdd.push(pickRandom(cardsData.brannEpicEggSpawns));
 			}
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, nestmatronCardsToAdd);
 			break;
-		case CardIds.Thorncaller:
-		case CardIds.ThorncallerBattlegrounds:
-			const thorncallerToAddQuantity = avenger.cardId === CardIds.ThorncallerBattlegrounds ? 2 : 1;
+		case CardIds.Thorncaller_BG20_105:
+		case CardIds.Thorncaller_BG20_105_G:
+			const thorncallerToAddQuantity = avenger.cardId === CardIds.Thorncaller_BG20_105_G ? 2 : 1;
 			const thorncallerCardsToAdd = Array(thorncallerToAddQuantity).fill(CardIds.BloodGem);
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, thorncallerCardsToAdd);
 			break;
@@ -260,9 +260,9 @@ const handleAvenge = (
 				}
 			}
 			break;
-		case CardIds.ScrapScraper:
-		case CardIds.ScrapScraperBattlegrounds:
-			const scraperToAddQuantity = avenger.cardId === CardIds.ScrapScraperBattlegrounds ? 2 : 1;
+		case CardIds.ScrapScraper_BG26_148:
+		case CardIds.ScrapScraper_BG26_148_G:
+			const scraperToAddQuantity = avenger.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
 			const scraperCardsToAdd = [];
 			for (let i = 0; i < scraperToAddQuantity; i++) {
 				scraperCardsToAdd.push(pickRandom(cardsData.scrapScraperSpawns));
@@ -332,14 +332,14 @@ const handleAvenge = (
 				}
 			}
 			break;
-		case CardIds.GhoulOfTheFeast:
-		case CardIds.GhoulOfTheFeastBattlegrounds:
-			const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeastBattlegrounds ? 2 : 1;
+		case CardIds.GhoulOfTheFeast_BG25_002:
+		case CardIds.GhoulOfTheFeast_BG25_002_G:
+			const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
 			grantStatsToMinionsOfEachType(avenger, boardWithDeadEntity, ghoulMultiplier * 3, 0, allCards, spectator);
 			break;
-		case CardIds.Bristlebach:
-		case CardIds.BristlebachBattlegrounds:
-			const bristlebachMultiplier = avenger.cardId === CardIds.BristlebachBattlegrounds ? 2 : 1;
+		case CardIds.Bristlebach_BG26_157:
+		case CardIds.Bristlebach_BG26_157_G:
+			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 2 : 1;
 			const bloodGemAttackBuff = 1 + (boardWithDeadEntityHero.globalInfo?.BloodGemAttackBonus ?? 0);
 			const bloodGemHealthBuff = 1 + (boardWithDeadEntityHero.globalInfo?.BloodGemHealthBonus ?? 0);
 			for (let i = 0; i < bristlebachMultiplier * 2; i++) {
@@ -354,18 +354,18 @@ const handleAvenge = (
 				);
 			}
 			break;
-		case CardIds.HungeringAbomination:
-		case CardIds.HungeringAbominationBattlegrounds:
-			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbominationBattlegrounds ? 2 : 1;
+		case CardIds.HungeringAbomination_BG25_014:
+		case CardIds.HungeringAbomination_BG25_014_G:
+			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
 			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
 			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
 			afterStatsUpdate(avenger, boardWithDeadEntity, allCards);
 			spectator.registerPowerTarget(avenger, avenger, boardWithDeadEntity);
 			break;
-		case CardIds.ShadowyConstruct:
-		case CardIds.ShadowyConstructBattlegrounds:
+		case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
+		case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
 			const neighboursShadowy = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
-			const multiplierShadowy = avenger.cardId === CardIds.ShadowyConstructBattlegrounds ? 2 : 1;
+			const multiplierShadowy = avenger.cardId === CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G ? 2 : 1;
 			neighboursShadowy.forEach((neighbour) => {
 				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, allCards);
 				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, allCards);

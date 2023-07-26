@@ -9,18 +9,18 @@ import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
-	CardIds.CaveHydraBattlegrounds,
+	CardIds.CaveHydra_TB_BaconUps_151,
 	CardIds.FoeReaper4000_BG_GVG_113,
-	CardIds.FoeReaper4000Battlegrounds,
-	CardIds.BladeCollector,
-	CardIds.BladeCollectorBattlegrounds,
+	CardIds.FoeReaper4000_TB_BaconUps_153,
+	CardIds.BladeCollector_BG26_817,
+	CardIds.BladeCollector_BG26_817_G,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
-	CardIds.Scallywag_SkyPirateToken,
-	CardIds.Scallywag_SkyPirateTokenBattlegrounds,
+	CardIds.Scallywag_SkyPirateToken_BGS_061t,
+	CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 	CardIds.Onyxia_OnyxianWhelpToken,
 ];
-const CANT_ATTACK_IDS = [CardIds.ArcaneCannonBattlegrounds];
+const CANT_ATTACK_IDS = [CardIds.ArcaneCannon_BGS_077, CardIds.ArcaneCannon_TB_BaconUps_128];
 
 export const buildSingleBoardEntity = (
 	cardId: string,
@@ -105,7 +105,7 @@ export const buildRandomUndeadCreation = (
 ): BoardEntity => {
 	const baseCard = pickRandom(cardsData.putricidePool1);
 	const stitchedCardId =
-		baseCard === CardIds.EternalSummoner
+		baseCard === CardIds.EternalSummoner_BG25_009
 			? pickRandom(cardsData.putridicePool2ForEternalSummoner)
 			: pickRandom(cardsData.putricidePool2);
 	const newEntity = buildSingleBoardEntity(
@@ -139,44 +139,44 @@ export const modifyAttack = (
 	friendlyBoard: BoardEntity[],
 	allCards: AllCardsService,
 ): void => {
-	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
+	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
 	if (isCorrectTribe(allCards.getCard(entity.cardId).races, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.WhelpSmuggler || e.cardId === CardIds.WhelpSmugglerBattlegrounds,
+			(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
 		);
 		whelpSmugglers.forEach((smuggler) => {
-			const buff = smuggler.cardId === CardIds.WhelpSmugglerBattlegrounds ? 2 : 1;
+			const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
 			modifyHealth(entity, buff, friendlyBoard, allCards);
 		});
 
-		if (entity.cardId !== CardIds.Stormbringer && entity.cardId !== CardIds.StormbringerBattlegrounds) {
+		if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
 			const stormbringers = friendlyBoard.filter(
-				(e) => e.cardId === CardIds.Stormbringer || e.cardId === CardIds.StormbringerBattlegrounds,
+				(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
 			);
 			stormbringers.forEach((stormbringer) => {
-				const multiplier = stormbringer.cardId === CardIds.StormbringerBattlegrounds ? 2 : 1;
+				const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
 				(e) => modifyAttack(e, multiplier * amount, friendlyBoard, allCards);
 			});
 		}
 	}
 	if (
-		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
-		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G ||
-		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D ||
-		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D_G
+		entity.cardId === CardIds.Menagerist_AmalgamToken ||
+		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
+		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A_G ||
+		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D ||
+		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D_G
 	) {
 		const mishmashes = friendlyBoard.filter(
 			(e) =>
-				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy ||
-				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G,
+				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy ||
+				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
 		);
 		mishmashes.forEach((mishmash) => {
 			modifyAttack(
 				mishmash,
-				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
+				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
 				friendlyBoard,
 				allCards,
 			);
@@ -190,27 +190,27 @@ export const modifyHealth = (
 	friendlyBoard: BoardEntity[],
 	allCards: AllCardsService,
 ): void => {
-	const realAmount = entity.cardId === CardIds.TarecgosaBattlegrounds ? 2 * amount : amount;
+	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015 ? 2 * amount : amount;
 	entity.health += realAmount;
 	if (realAmount > 0) {
 		entity.maxHealth += realAmount;
 	}
 	if (
-		entity.cardId === CardIds.Menagerist_AmalgamTokenBattlegrounds ||
-		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.CuddlgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_A_G ||
-		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D ||
-		entity.cardId === CardIds.AbominableAmalgamBattlegrounds_TB_BaconShop_HP_033t_SKIN_D_G
+		entity.cardId === CardIds.Menagerist_AmalgamToken ||
+		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
+		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A_G ||
+		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D ||
+		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D_G
 	) {
 		const mishmashes = friendlyBoard.filter(
 			(e) =>
-				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy ||
-				e.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G,
+				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy ||
+				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
 		);
 		mishmashes.forEach((mishmash) => {
 			modifyHealth(
 				mishmash,
-				(mishmash.cardId === CardIds.MishmashBattlegrounds_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
+				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
 				friendlyBoard,
 				allCards,
 			);
@@ -221,14 +221,13 @@ export const modifyHealth = (
 		.filter((e) => e.entityId !== entity.entityId)
 		.filter(
 			(e) =>
-				e.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy ||
-				e.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G,
+				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy ||
+				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G,
 		);
 	titanicGuardians.forEach((guardian) => {
 		modifyHealth(
 			guardian,
-			(guardian.cardId === CardIds.TitanicGuardianBattlegrounds_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) *
-				realAmount,
+			(guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount,
 			friendlyBoard,
 			allCards,
 		);
@@ -263,19 +262,19 @@ export const afterStatsUpdate = (
 		.filter((e) => e.entityId !== entity.entityId)
 		.filter(
 			(e) =>
-				e.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy ||
-				e.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy_G,
+				e.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy ||
+				e.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G,
 		);
 	tentaclesOfCthun.forEach((tentacle) => {
 		modifyAttack(
 			tentacle,
-			tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
+			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
 			friendlyBoard,
 			allCards,
 		);
 		modifyHealth(
 			tentacle,
-			tentacle.cardId === CardIds.TentacleOfCthunBattlegrounds_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
+			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
 			friendlyBoard,
 			allCards,
 		);
@@ -382,8 +381,8 @@ export const addCardsInHand = (
 	cardsAdded: readonly any[],
 ): void => {
 	const previousCardsInHand = playerEntity.hand?.length ?? 0;
-	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage);
-	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSageBattlegrounds);
+	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy);
+	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy_G);
 	const multiplier = sages.length + 2 * sagesGolden.length;
 
 	const cardsThatWillBeAdded = [];
@@ -410,7 +409,7 @@ export const addCardsInHand = (
 
 	for (let i = 0; i < numCardsAdded; i++) {
 		const peggys = board.filter(
-			(e) => e.cardId === CardIds.PeggySturdybone || e.cardId === CardIds.PeggySturdyboneBattlegrounds,
+			(e) => e.cardId === CardIds.PeggySturdybone_BG25_032 || e.cardId === CardIds.PeggySturdybone_BG25_032_G,
 		);
 		peggys.forEach((peggy) => {
 			const pirate = getRandomAliveMinion(
@@ -419,18 +418,18 @@ export const addCardsInHand = (
 				allCards,
 			);
 			if (pirate) {
-				modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
-				modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdyboneBattlegrounds ? 2 : 1, board, allCards);
+				modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1, board, allCards);
+				modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1, board, allCards);
 				afterStatsUpdate(pirate, board, allCards);
 				spectator.registerPowerTarget(peggy, pirate, board);
 			}
 		});
 
 		const thornCaptains = board.filter(
-			(e) => e.cardId === CardIds.Thorncaptain || e.cardId === CardIds.ThorncaptainBattlegrounds,
+			(e) => e.cardId === CardIds.Thorncaptain_BG25_045 || e.cardId === CardIds.Thorncaptain_BG25_045_G,
 		);
 		thornCaptains.forEach((captain) => {
-			modifyHealth(captain, captain.cardId === CardIds.ThorncaptainBattlegrounds ? 2 : 1, board, allCards);
+			modifyHealth(captain, captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1, board, allCards);
 			afterStatsUpdate(captain, board, allCards);
 			spectator.registerPowerTarget(captain, captain, board);
 		});
@@ -488,16 +487,16 @@ export const updateDivineShield = (
 	if (entity.divineShield) {
 		const boardForDrake = board;
 		const statsBonus =
-			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
-			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043).length +
+			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043_G).length;
 		// Don't trigger all "on attack changed" effects, since it's an aura
 		entity.attack += statsBonus;
 	} else {
 		// Also consider itself
 		const boardForDrake = board;
 		const statsBonus =
-			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake).length +
-			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrakeBattlegrounds).length;
+			8 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043).length +
+			16 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043_G).length;
 		entity.attack -= statsBonus;
 	}
 };
@@ -631,8 +630,8 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 
 export const isFish = (entity: BoardEntity): boolean => {
 	return (
-		entity.cardId.startsWith(CardIds.AvatarOfNzoth_FishOfNzothTokenBattlegrounds) ||
-		entity.cardId.startsWith(CardIds.FishOfNzothBattlegrounds) ||
+		entity.cardId.startsWith(CardIds.AvatarOfNzoth_FishOfNzothToken) ||
+		entity.cardId.startsWith(CardIds.FishOfNzoth) ||
 		entity.additionalCards?.includes(CardIds.DevourerOfSouls_BG_RLK_538)
 	);
 };

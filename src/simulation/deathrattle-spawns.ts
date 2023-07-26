@@ -45,7 +45,7 @@ export const spawnEntities = (
 		? 2 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_BG_DAL_575).length || 1
 		: 1;
 	const spawnMultiplierGolden = useKhadgar
-		? 3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.KhadgarBattlegrounds).length || 1
+		? 3 * boardToSpawnInto.filter((entity) => entity.cardId === CardIds.Khadgar_TB_BaconUps_034).length || 1
 		: 1;
 	const minionsToSpawn = limitSpawns
 		? Math.min(quantity * spawnMultiplier * spawnMultiplierGolden, 7 - boardToSpawnInto.length)
@@ -87,17 +87,21 @@ export const spawnEntitiesFromDeathrattle = (
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
 	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
-	const multiplier = computeDeathrattleMultiplier([...boardWithDeadEntity, ...entitiesDeadThisAttack], deadEntity);
+	const multiplier = computeDeathrattleMultiplier(
+		[...boardWithDeadEntity, ...entitiesDeadThisAttack],
+		boardWithDeadEntityHero,
+		deadEntity,
+	);
 	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
 		const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
 		for (const deadEntityCardId of cardIds) {
 			switch (deadEntityCardId) {
-				case CardIds.Mecharoo:
+				case CardIds.Mecharoo_BOT_445:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.Mecharoo_JoEBotToken,
+							CardIds.Mecharoo_JoEBotToken_BOT_445t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -112,10 +116,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.MecharooBattlegrounds:
+				case CardIds.Mecharoo_TB_BaconUps_002:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.Mecharoo_JoEBotTokenBattlegrounds,
+							CardIds.Mecharoo_JoEBotToken_TB_BaconUps_002t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -130,12 +134,12 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.Manasaber:
-				case CardIds.ManasaberBattlegrounds:
+				case CardIds.Manasaber_BG26_800:
+				case CardIds.Manasaber_BG26_800_G:
 					const cublingId =
-						deadEntity.cardId === CardIds.ManasaberBattlegrounds
-							? CardIds.Manasaber_CublingTokenBattlegrounds
-							: CardIds.Manasaber_CublingToken;
+						deadEntity.cardId === CardIds.Manasaber_BG26_800_G
+							? CardIds.Manasaber_CublingToken_BG26_800_Gt
+							: CardIds.Manasaber_CublingToken_BG26_800t;
 					spawnedEntities.push(
 						...spawnEntities(
 							cublingId,
@@ -174,13 +178,13 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.HandlessForsaken:
-				case CardIds.HandlessForsakenBattlegrounds:
+				case CardIds.HandlessForsaken_BG25_010:
+				case CardIds.HandlessForsaken_BG25_010_G:
 					spawnedEntities.push(
 						...spawnEntities(
-							deadEntityCardId === CardIds.HandlessForsakenBattlegrounds
-								? CardIds.HandlessForsaken_HelpingHandTokenBattlegrounds
-								: CardIds.HandlessForsaken_HelpingHandToken,
+							deadEntityCardId === CardIds.HandlessForsaken_BG25_010_G
+								? CardIds.HandlessForsaken_HelpingHandToken_BG25_010_Gt
+								: CardIds.HandlessForsaken_HelpingHandToken_BG25_010t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -195,13 +199,13 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.EternalSummoner:
-				case CardIds.EternalSummonerBattlegrounds:
+				case CardIds.EternalSummoner_BG25_009:
+				case CardIds.EternalSummoner_BG25_009_G:
 					// TODO
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.EternalKnight,
-							deadEntityCardId === CardIds.EternalSummonerBattlegrounds ? 2 : 1,
+							CardIds.EternalKnight_BG25_008,
+							deadEntityCardId === CardIds.EternalSummoner_BG25_009_G ? 2 : 1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,
@@ -215,10 +219,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.Scallywag:
+				case CardIds.Scallywag_BGS_061:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.Scallywag_SkyPirateToken,
+							CardIds.Scallywag_SkyPirateToken_BGS_061t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -233,10 +237,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.ScallywagBattlegrounds:
+				case CardIds.Scallywag_TB_BaconUps_141:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.Scallywag_SkyPirateTokenBattlegrounds,
+							CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -254,7 +258,7 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.IckyImp_BG21_029:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ImpGangBoss_ImpToken,
+							CardIds.ImpGangBoss_ImpToken_BRM_006t,
 							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -272,7 +276,7 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.IckyImp_BG21_029_G:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ImpGangBoss_ImpTokenBattlegrounds,
+							CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
 							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -305,10 +309,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.HarvestGolemLegacyBattlegrounds:
+				case CardIds.HarvestGolemLegacy_TB_BaconUps_006:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.HarvestGolem_DamagedGolemLegacyTokenBattlegrounds,
+							CardIds.HarvestGolem_DamagedGolemLegacyToken_TB_BaconUps_006t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -323,10 +327,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.SewerRat:
+				case CardIds.SewerRat_BG19_010:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.SewerRat_HalfShellToken,
+							CardIds.SewerRat_HalfShellToken_BG19_010t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -341,10 +345,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.SewerRatBattlegrounds:
+				case CardIds.SewerRat_BG19_010_G:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.SewerRat_HalfShellTokenBattlegrounds,
+							CardIds.SewerRat_HalfShellToken_BG19_010_Gt,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -359,12 +363,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy:
-				case CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G:
+				case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy:
+				case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G:
 					const minionsToSpawnMawsworn =
-						deadEntityCardId === CardIds.MawswornSoulkeeperBattlegrounds_TB_BaconShop_HERO_702_Buddy_G
-							? 6
-							: 3;
+						deadEntityCardId === CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G ? 6 : 3;
 					for (let i = 0; i < minionsToSpawnMawsworn; i++) {
 						const minionCardId = spawns.getRandomMinionForTavernTier(1);
 						spawnedEntities.push(
@@ -386,8 +388,9 @@ export const spawnEntitiesFromDeathrattle = (
 					}
 					break;
 				case CardIds.Festergut_BG25_HERO_100_Buddy:
-				case CardIds.FestergutBattlegrounds:
-					const minionsToSpawnFestergut = deadEntityCardId === CardIds.FestergutBattlegrounds ? 2 : 1;
+				case CardIds.Festergut_BG25_HERO_100_Buddy_G:
+					const minionsToSpawnFestergut =
+						deadEntityCardId === CardIds.Festergut_BG25_HERO_100_Buddy_G ? 2 : 1;
 					for (let i = 0; i < minionsToSpawnFestergut; i++) {
 						const randomUndeadCreation = buildRandomUndeadCreation(
 							boardWithDeadEntityHero,
@@ -436,10 +439,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.KindlyGrandmotherBattlegrounds:
+				case CardIds.KindlyGrandmother_TB_BaconUps_004:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.KindlyGrandmother_BigBadWolfTokenBattlegrounds,
+							CardIds.KindlyGrandmother_BigBadWolf,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -472,10 +475,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.RatPackBattlegrounds:
+				case CardIds.RatPack_TB_BaconUps_027:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.RatPack_RatTokenBattlegrounds,
+							CardIds.RatPack_RatToken_TB_BaconUps_027t,
 							deadEntity.attack,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -490,10 +493,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.Imprisoner:
+				case CardIds.Imprisoner_BGS_014:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ImpGangBoss_ImpToken,
+							CardIds.ImpGangBoss_ImpToken_BRM_006t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -508,10 +511,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.ImprisonerBattlegrounds:
+				case CardIds.Imprisoner_TB_BaconUps_113:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ImpGangBoss_ImpTokenBattlegrounds,
+							CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -526,7 +529,7 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.InfestedWolf:
+				case CardIds.InfestedWolf_OG_216:
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.InfestedWolf_Spider,
@@ -544,10 +547,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.InfestedWolfBattlegrounds:
+				case CardIds.InfestedWolf_TB_BaconUps_026:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.InfestedWolf_SpiderTokenBattlegrounds,
+							CardIds.InfestedWolf_SpiderToken,
 							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -599,10 +602,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.ReplicatingMenaceBattlegrounds:
+				case CardIds.ReplicatingMenace_TB_BaconUps_032:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds,
+							CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -617,10 +620,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.MechanoEgg:
+				case CardIds.MechanoEgg_BOT_537:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.MechanoEgg_RobosaurToken,
+							CardIds.MechanoEgg_RobosaurToken_BOT_537t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -635,10 +638,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.MechanoEggBattlegrounds:
+				case CardIds.MechanoEgg_TB_BaconUps_039:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.MechanoEgg_RobosaurTokenBattlegrounds,
+							CardIds.MechanoEgg_RobosaurToken_TB_BaconUps_039t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -671,10 +674,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.SavannahHighmaneLegacyBattlegrounds:
+				case CardIds.SavannahHighmaneLegacy_TB_BaconUps_049:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.SavannahHighmane_HyenaLegacyTokenBattlegrounds,
+							CardIds.SavannahHighmane_HyenaLegacyToken_TB_BaconUps_049t,
 							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -707,10 +710,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.RingMatronBattlegrounds:
+				case CardIds.RingMatron_TB_BaconUps_309:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.RingMatron_FieryImpTokenBattlegrounds,
+							CardIds.RingMatron_FieryImpToken_TB_BaconUps_309t,
 							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -725,7 +728,7 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.SatedThreshadon:
+				case CardIds.SatedThreshadon_UNG_010:
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.PrimalfinTotem_PrimalfinToken,
@@ -743,10 +746,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.SatedThreshadonBattlegrounds:
+				case CardIds.SatedThreshadon_TB_BaconUps_052:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.SatedThreshadon_PrimalfinTokenBattlegrounds,
+							CardIds.SatedThreshadon_PrimalfinToken,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -795,10 +798,10 @@ export const spawnEntitiesFromDeathrattle = (
 						],
 					);
 					break;
-				case CardIds.GentleDjinni:
-				case CardIds.GentleDjinniBattlegrounds:
+				case CardIds.GentleDjinni_BGS_121:
+				case CardIds.GentleDjinni_TB_BaconUps_165:
 					const djinniSpawns = [];
-					const djinniToSpawnQuandtity = deadEntity.cardId === CardIds.GentleDjinniBattlegrounds ? 2 : 1;
+					const djinniToSpawnQuandtity = deadEntity.cardId === CardIds.GentleDjinni_TB_BaconUps_165 ? 2 : 1;
 					for (let i = 0; i < djinniToSpawnQuandtity; i++) {
 						djinniSpawns.push(pickRandom(spawns.gentleDjinniSpawns));
 					}
@@ -823,10 +826,10 @@ export const spawnEntitiesFromDeathrattle = (
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, djinniSpawns);
 					break;
 
-				case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy:
-				case CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G:
+				case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy:
+				case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G:
 					const kilrekCardsToAddQuantity =
-						deadEntity.cardId === CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy_G ? 2 : 1;
+						deadEntity.cardId === CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G ? 2 : 1;
 					const kilrekCardsToAdd = [];
 					for (let i = 0; i < kilrekCardsToAddQuantity; i++) {
 						kilrekCardsToAdd.push(pickRandom(spawns.demonSpawns));
@@ -834,11 +837,11 @@ export const spawnEntitiesFromDeathrattle = (
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, kilrekCardsToAdd);
 					break;
 
-				case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy:
-				case CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G:
+				case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy:
+				case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G:
 					const brannSpawns = [];
 					const brannToSpawnQuandtity =
-						deadEntity.cardId === CardIds.BrannsEpicEggBattlegrounds_TB_BaconShop_HERO_43_Buddy_G ? 2 : 1;
+						deadEntity.cardId === CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G ? 2 : 1;
 					for (let i = 0; i < brannToSpawnQuandtity; i++) {
 						brannSpawns.push(pickRandom(spawns.brannEpicEggSpawns));
 					}
@@ -863,67 +866,31 @@ export const spawnEntitiesFromDeathrattle = (
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, brannSpawns);
 					break;
 
-				case CardIds.GhastcoilerBattlegrounds:
-					spawnedEntities.push(
-						...[
-							...spawnEntities(
-								spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								spawns.ghastcoilerSpawns[Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
+				case CardIds.Ghastcoiler_TRLA_149:
+				case CardIds.Ghastcoiler_TB_BaconUps_057:
+					const ghastcoilerLoop = deadEntity.cardId === CardIds.Ghastcoiler_TB_BaconUps_057 ? 4 : 2;
+					for (let i = 0; i < ghastcoilerLoop; i++) {
+						spawnedEntities.push(
+							...[
+								...spawnEntities(
+									spawns.ghastcoilerSpawns[
+										Math.floor(Math.random() * spawns.ghastcoilerSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									allCards,
+									spawns,
+									sharedState,
+									spectator,
+									deadEntity.friendly,
+									false,
+								),
+							],
+						);
+					}
 					break;
 				case CardIds.Voidlord_BG_LOOT_368:
 					spawnedEntities.push(
@@ -943,10 +910,10 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.VoidlordBattlegrounds:
+				case CardIds.Voidlord_TB_BaconUps_059:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.Voidlord_VoidwalkerLegacyTokenBattlegrounds,
+							CardIds.Voidlord_VoidwalkerLegacyToken,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -962,10 +929,10 @@ export const spawnEntitiesFromDeathrattle = (
 					);
 					break;
 				case CardIds.AnnoyOTroupe_BG26_ETC_321:
-				case CardIds.AnnoyOTroupeBattlegrounds:
+				case CardIds.AnnoyOTroupe_BG26_ETC_321_G:
 					const annoyOTroupeSpawns =
-						deadEntity.cardId === CardIds.AnnoyOTroupeBattlegrounds
-							? CardIds.AnnoyOTronBattlegrounds
+						deadEntity.cardId === CardIds.AnnoyOTroupe_BG26_ETC_321_G
+							? CardIds.AnnoyOTron_BG_GVG_085_G
 							: CardIds.AnnoyOTron_BG_GVG_085;
 					spawnedEntities.push(
 						...spawnEntities(
@@ -1001,7 +968,7 @@ export const spawnEntitiesFromDeathrattle = (
 					spawnedEntities.push(
 						...spawnEntities(
 							deadEntityCardId === CardIds.OmegaBuster_BG21_025_G
-								? CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds
+								? CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t
 								: CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
 							entitiesToSpawn,
 							boardWithDeadEntity,
@@ -1059,7 +1026,7 @@ export const spawnEntitiesFromDeathrattle = (
 				// 	// when the buster triggers multiple times because of Baron for instance
 				// 	addStatsToBoard(deadEntity, spawnedEntities, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
 				// 	break;
-				case CardIds.KangorsApprentice:
+				case CardIds.KangorsApprentice_BGS_012:
 					const cardIdsToSpawn = sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
 						// eslint-disable-next-line prettier/prettier
@@ -1085,7 +1052,7 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.KangorsApprenticeBattlegrounds:
+				case CardIds.KangorsApprentice_TB_BaconUps_087:
 					const cardIdsToSpawn2 = sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
 						.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH))
@@ -1110,7 +1077,7 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.TheTideRazor:
+				case CardIds.TheTideRazor_BGS_079:
 					spawnedEntities.push(
 						...[
 							...spawnEntities(
@@ -1158,7 +1125,7 @@ export const spawnEntitiesFromDeathrattle = (
 						],
 					);
 					break;
-				case CardIds.TheTideRazorBattlegrounds:
+				case CardIds.TheTideRazor_TB_BaconUps_137:
 					spawnedEntities.push(
 						...[
 							...spawnEntities(
@@ -1248,10 +1215,10 @@ export const spawnEntitiesFromDeathrattle = (
 						],
 					);
 					break;
-				case CardIds.SlyRaptor:
-				case CardIds.SlyRaptorBattlegrounds:
-					const raptorStat = deadEntity.cardId === CardIds.SlyRaptorBattlegrounds ? 14 : 7;
-					const beastPool = spawns.beastSpawns.filter((id) => id !== CardIds.SlyRaptor);
+				case CardIds.SlyRaptor_BG25_806:
+				case CardIds.SlyRaptor_BG25_806_G:
+					const raptorStat = deadEntity.cardId === CardIds.SlyRaptor_BG25_806_G ? 14 : 7;
+					const beastPool = spawns.beastSpawns.filter((id) => id !== CardIds.SlyRaptor_BG25_806);
 					const beastsFromRaptor = spawnEntities(
 						beastPool[Math.floor(Math.random() * beastPool.length)],
 						1,
@@ -1272,13 +1239,13 @@ export const spawnEntitiesFromDeathrattle = (
 					});
 					spawnedEntities.push(...beastsFromRaptor);
 					break;
-				case CardIds.OctosariWrapGod:
-				case CardIds.OctosariWrapGodBattlegrounds:
+				case CardIds.OctosariWrapGod_BG26_804:
+				case CardIds.OctosariWrapGod_BG26_804_G:
 					const stats = deadEntity.scriptDataNum1;
 					const octosariSpawn =
-						deadEntity.cardId === CardIds.OctosariWrapGodBattlegrounds
-							? CardIds.TentacleOfOctosariTokenBattlegrounds
-							: CardIds.TentacleOfOctosariToken;
+						deadEntity.cardId === CardIds.OctosariWrapGod_BG26_804_G
+							? CardIds.TentacleOfOctosariToken_BG26_803_Gt
+							: CardIds.TentacleOfOctosariToken_BG26_803t;
 					const octoSpawns = spawnEntities(
 						octosariSpawn,
 						1,
@@ -1299,9 +1266,9 @@ export const spawnEntitiesFromDeathrattle = (
 					});
 					spawnedEntities.push(...octoSpawns);
 					break;
-				case CardIds.Bassgill:
-				case CardIds.BassgillBattlegrounds:
-					const bassgillIterations = deadEntity.cardId === CardIds.BassgillBattlegrounds ? 2 : 1;
+				case CardIds.Bassgill_BG26_350:
+				case CardIds.Bassgill_BG26_350_G:
+					const bassgillIterations = deadEntity.cardId === CardIds.Bassgill_BG26_350_G ? 2 : 1;
 					for (let i = 0; i < bassgillIterations; i++) {
 						const hand = boardWithDeadEntityHero.hand?.filter((e) => !e.summonedFromHand) ?? [];
 						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
@@ -1396,7 +1363,7 @@ export const spawnEntitiesFromEnchantments = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity, deadEntity);
+	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity, boardWithDeadEntityHero, deadEntity);
 	const spawnedEntities: BoardEntity[] = [];
 	for (const enchantment of deadEntity.enchantments || []) {
 		for (let i = 0; i < multiplier; i++) {
@@ -1420,10 +1387,10 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantmentBattlegrounds:
+				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds,
+							CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

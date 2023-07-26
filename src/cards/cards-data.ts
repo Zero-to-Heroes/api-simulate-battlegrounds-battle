@@ -11,28 +11,32 @@ import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 
 export const START_OF_COMBAT_CARD_IDS = [
-	CardIds.CorruptedMyrmidon,
-	CardIds.CorruptedMyrmidonBattlegrounds,
+	CardIds.CorruptedMyrmidon_BG23_012,
+	CardIds.CorruptedMyrmidon_BG23_012_G,
 	CardIds.Crabby_BG22_HERO_000_Buddy,
-	CardIds.CrabbyBattlegrounds,
-	CardIds.MantidQueen,
-	CardIds.MantidQueenBattlegrounds,
-	CardIds.PrizedPromoDrake,
-	CardIds.PrizedPromoDrakeBattlegrounds,
-	CardIds.RedWhelp,
-	CardIds.RedWhelpBattlegrounds,
-	CardIds.AmberGuardian,
-	CardIds.AmberGuardianBattlegrounds,
+	CardIds.Crabby_BG22_HERO_000_Buddy_G,
+	CardIds.MantidQueen_BG22_402,
+	CardIds.MantidQueen_BG22_402_G,
+	CardIds.PrizedPromoDrake_BG21_014,
+	CardIds.PrizedPromoDrake_BG21_014_G,
+	CardIds.RedWhelp_BGS_019,
+	CardIds.RedWhelp_TB_BaconUps_102,
+	CardIds.AmberGuardian_BG24_500,
+	CardIds.AmberGuardian_BG24_500_G,
 	CardIds.InterrogatorWhitemane_BG24_704,
 	CardIds.InterrogatorWhitemane_BG24_704_G,
-	CardIds.Soulsplitter,
-	CardIds.SoulsplitterBattlegrounds,
-	CardIds.ChoralMrrrglr,
-	CardIds.ChoralMrrrglrBattlegrounds,
-	CardIds.SanctumRester,
-	CardIds.SanctumResterBattlegrounds,
+	CardIds.Soulsplitter_BG25_023,
+	CardIds.Soulsplitter_BG25_023_G,
+	CardIds.ChoralMrrrglr_BG26_354,
+	CardIds.ChoralMrrrglr_BG26_354_G,
+	CardIds.SanctumRester_BG26_356,
+	CardIds.SanctumRester_BG26_356_G,
 ];
-export const WHELP_CARD_IDS = [CardIds.RedWhelp, CardIds.RedWhelpBattlegrounds, CardIds.Onyxia_OnyxianWhelpToken];
+export const WHELP_CARD_IDS = [
+	CardIds.RedWhelp_BGS_019,
+	CardIds.RedWhelp_TB_BaconUps_102,
+	CardIds.Onyxia_OnyxianWhelpToken,
+];
 
 export class CardsData {
 	public ghastcoilerSpawns: readonly string[];
@@ -88,11 +92,11 @@ export class CardsData {
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.map((card) => card.id);
-		this.impMamaSpawns = this.demonSpawns.filter((cardId) => cardId !== CardIds.ImpMama);
+		this.impMamaSpawns = this.demonSpawns.filter((cardId) => cardId !== CardIds.ImpMama_BGS_044);
 		this.gentleDjinniSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.ELEMENTAL))
-			.filter((card) => card.id !== CardIds.GentleDjinni)
+			.filter((card) => card.id !== CardIds.GentleDjinni_BGS_121)
 			.map((card) => card.id);
 		// FIXME: just spawn a random undead instead of an Undead Creation
 		// this.festergutSpawns = pool
@@ -104,7 +108,7 @@ export class CardsData {
 		this.kilrekSpawns = pool
 			.filter((card) => !this.isGolden(card))
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
-			.filter((card) => card.id !== CardIds.KilrekBattlegrounds_TB_BaconShop_HERO_37_Buddy)
+			.filter((card) => card.id !== CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy)
 			.map((card) => card.id);
 		this.brannEpicEggSpawns = pool
 			.filter((card) => !this.isGolden(card))
@@ -135,23 +139,23 @@ export class CardsData {
 		switch (cardId) {
 			case CardIds.BirdBuddy_BG21_002:
 			case CardIds.BirdBuddy_BG21_002_G:
-			case CardIds.HungeringAbomination:
-			case CardIds.HungeringAbominationBattlegrounds:
+			case CardIds.HungeringAbomination_BG25_014:
+			case CardIds.HungeringAbomination_BG25_014_G:
 			// Not technically an avenge, but behaves as if
-			case CardIds.ShadowyConstruct:
-			case CardIds.ShadowyConstructBattlegrounds:
-			case CardIds.Bristlebach:
-			case CardIds.BristlebachBattlegrounds:
+			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
+			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
+			case CardIds.Bristlebach_BG26_157:
+			case CardIds.Bristlebach_BG26_157_G:
 			case CardIds.IceSickle:
 				return 1;
-			case CardIds.GhoulOfTheFeast:
-			case CardIds.GhoulOfTheFeastBattlegrounds:
+			case CardIds.GhoulOfTheFeast_BG25_002:
+			case CardIds.GhoulOfTheFeast_BG25_002_G:
 			case CardIds.MechanoTank_BG21_023:
 			case CardIds.MechanoTank_BG21_023_G:
-			case CardIds.PalescaleCrocolisk:
-			case CardIds.PalescaleCrocoliskBattlegrounds:
-			case CardIds.StormpikeLieutenant:
-			case CardIds.StormpikeLieutenantBattlegrounds:
+			case CardIds.PalescaleCrocolisk_BG21_001:
+			case CardIds.PalescaleCrocolisk_BG21_001_G:
+			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
+			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
 			case CardIds.Drekthar_LeadTheFrostwolves:
 				return 2;
@@ -160,10 +164,10 @@ export class CardsData {
 			// case CardIds.FrostwolfLieutenant:
 			// case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.Onyxia_Broodmother:
-			case CardIds.PashmarTheVengeful:
-			case CardIds.PashmarTheVengefulBattlegrounds:
-			case CardIds.WitchwingNestmatron:
-			case CardIds.WitchwingNestmatronBattlegrounds:
+			case CardIds.PashmarTheVengeful_BG23_014:
+			case CardIds.PashmarTheVengeful_BG23_014_G:
+			case CardIds.WitchwingNestmatron_BG21_038:
+			case CardIds.WitchwingNestmatron_BG21_038_G:
 			case CardIds.BoomSquad_BG27_Reward_502:
 				return 3;
 			case CardIds.ImpatientDoomsayer_BG21_007:
@@ -172,8 +176,8 @@ export class CardsData {
 			case CardIds.Sisefin_BG21_009_G:
 			case CardIds.TonyTwoTusk_BG21_031:
 			case CardIds.TonyTwoTusk_BG21_031_G:
-			case CardIds.ScrapScraper:
-			case CardIds.ScrapScraperBattlegrounds:
+			case CardIds.ScrapScraper_BG26_148:
+			case CardIds.ScrapScraper_BG26_148_G:
 				return 4;
 		}
 		return 0;

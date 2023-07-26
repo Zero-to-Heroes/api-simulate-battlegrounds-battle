@@ -66,7 +66,7 @@ const handleSpawnEffect = (
 		// case CardIds.AllWillBurnBattlegrounds:
 		// 	spawned.attack += 3;
 		// 	break;
-		case CardIds.SproutItOutBattlegrounds:
+		case CardIds.SproutItOut:
 			spawned.taunt = true;
 			modifyAttack(spawned, 1, board, allCards);
 			modifyHealth(spawned, 2, board, allCards);
@@ -77,7 +77,7 @@ const handleSpawnEffect = (
 			modifyHealth(spawned, 2, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
 			break;
-		case CardIds.TinkerBattlegrounds:
+		case CardIds.Tinker_TB_BaconShop_HP_015:
 			if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
 				modifyAttack(spawned, 2, board, allCards);
 				afterStatsUpdate(spawned, board, allCards);
@@ -108,39 +108,38 @@ const handleSpawnEffect = (
 	for (const spawnedCardId of cardIds) {
 		switch (spawnedCardId) {
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
-			case CardIds.SouthseaCaptainLegacyBattlegrounds:
+			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				board
 					.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards))
 					// Other
 					.filter((e) => e.entityId !== spawned.entityId)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.SouthseaCaptainLegacyBattlegrounds ? 2 : 1;
-						e.health += spawned.cardId === CardIds.SouthseaCaptainLegacyBattlegrounds ? 2 : 1;
+						e.attack += spawned.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
+						e.health += spawned.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
 					});
 				break;
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
-			case CardIds.MurlocWarleaderLegacyBattlegrounds:
+			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 				board
 					.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
 					.filter((e) => e.entityId !== spawned.entityId)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacyBattlegrounds ? 4 : 2;
+						e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
 					});
 				break;
-			case CardIds.HummingBird:
-			case CardIds.HummingBirdBattlegrounds:
+			case CardIds.HummingBird_BG26_805:
+			case CardIds.HummingBird_BG26_805_G:
 				board
 					.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
 					.filter((e) => e.entityId !== spawned.entityId)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.HummingBirdBattlegrounds ? 4 : 2;
+						e.attack += spawned.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
 					});
 				break;
-			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
-			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
 				board.forEach((e) => {
-					e.attack +=
-						spawned.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+					e.attack += spawned.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
 				});
 				break;
 			case CardIds.Kathranatir_BG21_039:
@@ -152,33 +151,33 @@ const handleSpawnEffect = (
 						e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
 					});
 				break;
-			case CardIds.CyborgDrake:
-			case CardIds.CyborgDrakeBattlegrounds:
+			case CardIds.CyborgDrake_BG25_043:
+			case CardIds.CyborgDrake_BG25_043_G:
 				board
 					.filter((e) => e.divineShield)
 					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.CyborgDrakeBattlegrounds ? 12 : 6;
+						e.attack += spawned.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
 					});
 				break;
 
-			case CardIds.EternalKnight:
-			case CardIds.EternalKnightBattlegrounds:
-				const multiplierKnight = spawned.cardId === CardIds.EternalKnightBattlegrounds ? 2 : 1;
+			case CardIds.EternalKnight_BG25_008:
+			case CardIds.EternalKnight_BG25_008_G:
+				const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
 				const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
 				modifyAttack(spawned, statsBonusKnight, board, allCards);
 				modifyHealth(spawned, statsBonusKnight, board, allCards);
 				afterStatsUpdate(spawned, board, allCards);
 				break;
-			case CardIds.FlourishingFrostling:
-			case CardIds.FlourishingFrostlingBattlegrounds:
-				const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostlingBattlegrounds ? 2 : 1;
+			case CardIds.FlourishingFrostling_BG26_537:
+			case CardIds.FlourishingFrostling_BG26_537_G:
+				const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
 				const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
 				modifyAttack(spawned, statsBonusFrostling, board, allCards);
 				afterStatsUpdate(spawned, board, allCards);
 				break;
-			case CardIds.RotHideGnoll:
-			case CardIds.RotHideGnollBattlegrounds:
-				const multiplierGnoll = spawned.cardId === CardIds.RotHideGnollBattlegrounds ? 2 : 1;
+			case CardIds.RotHideGnoll_BG25_013:
+			case CardIds.RotHideGnoll_BG25_013_G:
+				const multiplierGnoll = spawned.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
 				const statsBonusGnoll =
 					multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
 				modifyAttack(spawned, statsBonusGnoll, board, allCards);
@@ -196,8 +195,8 @@ const handleSpawnEffect = (
 
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
 	if (cardIds.some((cardId) => WHELP_CARD_IDS.includes(cardId as CardIds))) {
-		const manyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps);
-		const goldenManyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelpsBattlegrounds);
+		const manyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps_BG22_HERO_305_Buddy);
+		const goldenManyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps_BG22_HERO_305_Buddy_G);
 		manyWhelps.forEach((entity) => {
 			modifyAttack(entity, 2, board, allCards);
 			modifyHealth(entity, 2, board, allCards);
@@ -213,28 +212,27 @@ const handleSpawnEffect = (
 	for (const entity of board) {
 		switch (entity.cardId) {
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
-			case CardIds.MurlocWarleaderLegacyBattlegrounds:
+			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 				if (hasCorrectTribe(spawned, Race.MURLOC, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacyBattlegrounds ? 4 : 2;
+					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
 				}
 				break;
-			case CardIds.HummingBird:
-			case CardIds.HummingBirdBattlegrounds:
+			case CardIds.HummingBird_BG26_805:
+			case CardIds.HummingBird_BG26_805_G:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.HummingBirdBattlegrounds ? 4 : 2;
+					spawned.attack += entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
 				}
 				break;
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
-			case CardIds.SouthseaCaptainLegacyBattlegrounds:
+			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				if (hasCorrectTribe(spawned, Race.PIRATE, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.SouthseaCaptainLegacyBattlegrounds ? 2 : 1;
-					spawned.health += entity.cardId === CardIds.SouthseaCaptainLegacyBattlegrounds ? 2 : 1;
+					spawned.attack += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
+					spawned.health += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
 				}
 				break;
-			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
-			case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
-				spawned.attack +=
-					entity.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
+				spawned.attack += entity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
 				break;
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
@@ -242,29 +240,27 @@ const handleSpawnEffect = (
 					spawned.attack += entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1;
 				}
 				break;
-			case CardIds.CyborgDrake:
-			case CardIds.CyborgDrakeBattlegrounds:
+			case CardIds.CyborgDrake_BG25_043:
+			case CardIds.CyborgDrake_BG25_043_G:
 				if (spawned.divineShield) {
-					spawned.attack += entity.cardId === CardIds.CyborgDrakeBattlegrounds ? 12 : 6;
+					spawned.attack += entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
 				}
 				break;
 
-			case CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy:
-			case CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G:
+			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy:
+			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G:
 				if (allCards.getCard(spawned.cardId).techLevel === boardHero.tavernTier) {
-					const statsBonus =
-						entity.cardId === CardIds.BabyYshaarjBattlegrounds_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
+					const statsBonus = entity.cardId === CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(spawned, board, allCards);
 				}
 				break;
 			// This has to happen after greybough's hero power kicks in
-			case CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy:
-			case CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G:
+			case CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy:
+			case CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G:
 				if (spawned.taunt) {
-					const statsBonus =
-						entity.cardId === CardIds.WanderingTreantBattlegrounds_TB_BaconShop_HERO_95_Buddy_G ? 4 : 2;
+					const statsBonus = entity.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G ? 4 : 2;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(spawned, board, allCards);
@@ -281,10 +277,10 @@ const handleSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-			case CardIds.DeflectOBot:
-			case CardIds.DeflectOBotBattlegrounds:
+			case CardIds.DeflectOBot_BGS_071:
+			case CardIds.DeflectOBot_TB_BaconUps_123:
 				if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
-					const statsBonus = entity.cardId === CardIds.DeflectOBotBattlegrounds ? 4 : 2;
+					const statsBonus = entity.cardId === CardIds.DeflectOBot_TB_BaconUps_123 ? 4 : 2;
 					if (!entity.divineShield) {
 						updateDivineShield(entity, board, true, allCards);
 					}
@@ -293,30 +289,30 @@ const handleSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-			case CardIds.Bigfernal:
-			case CardIds.BigfernalBattlegrounds:
+			case CardIds.Bigfernal_BGS_204:
+			case CardIds.Bigfernal_TB_BaconUps_304:
 				if (hasCorrectTribe(spawned, Race.DEMON, allCards)) {
-					const statsBonus = entity.cardId === CardIds.BigfernalBattlegrounds ? 2 : 1;
+					const statsBonus = entity.cardId === CardIds.Bigfernal_TB_BaconUps_304 ? 2 : 1;
 					modifyAttack(entity, statsBonus, board, allCards);
 					modifyHealth(entity, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-			case CardIds.MamaBear:
-			case CardIds.MamaBearBattlegrounds:
+			case CardIds.MamaBear_BGS_021:
+			case CardIds.MamaBear_TB_BaconUps_090:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-					const statsBonus = entity.cardId === CardIds.MamaBearBattlegrounds ? 8 : 4;
+					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 8 : 4;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-			case CardIds.PackLeader:
-			case CardIds.PackLeaderBattlegrounds:
+			case CardIds.PackLeader_BGS_017:
+			case CardIds.PackLeader_TB_BaconUps_086:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-					const statsBonus = entity.cardId === CardIds.PackLeaderBattlegrounds ? 4 : 2;
+					const statsBonus = entity.cardId === CardIds.PackLeader_TB_BaconUps_086 ? 4 : 2;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
 					spectator.registerPowerTarget(entity, entity, board);
@@ -346,20 +342,20 @@ const handleAfterSpawnEffect = (
 	// console.debug('after spawn', stringifySimpleCard(spawned, allCards), stringifySimple(board, allCards));
 	for (const entity of board) {
 		switch (entity.cardId) {
-			case CardIds.MurlocTidecallerLegacy:
-			case CardIds.MurlocTidecallerBattlegrounds:
-				const multiplier = entity.cardId === CardIds.MurlocTidecallerBattlegrounds ? 2 : 1;
-				const buffAmount =
-					multiplier * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
-				if (buffAmount > 0) {
-					modifyAttack(entity, buffAmount, board, allCards);
-					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
-				}
-				break;
-			case CardIds.Swampstriker:
-			case CardIds.SwampstrikerBattlegrounds:
-				const multiplier2 = entity.cardId === CardIds.SwampstrikerBattlegrounds ? 2 : 1;
+			// case CardIds.MurlocTidecallerLegacy:
+			// case CardIds.MurlocTidecallerCore:
+			// 	const multiplier = entity.cardId === CardIds.MurlocTidecallerBattlegrounds ? 2 : 1;
+			// 	const buffAmount =
+			// 		multiplier * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
+			// 	if (buffAmount > 0) {
+			// 		modifyAttack(entity, buffAmount, board, allCards);
+			// 		afterStatsUpdate(entity, board, allCards);
+			// 		spectator.registerPowerTarget(entity, entity, board);
+			// 	}
+			// 	break;
+			case CardIds.Swampstriker_BG22_401:
+			case CardIds.Swampstriker_BG22_401_G:
+				const multiplier2 = entity.cardId === CardIds.Swampstriker_BG22_401_G ? 2 : 1;
 				const buffAmount2 =
 					multiplier2 * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
 				if (buffAmount2 > 0) {
@@ -368,40 +364,40 @@ const handleAfterSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
-			case CardIds.Felstomper:
-			case CardIds.FelstomperBattlegrounds:
+			case CardIds.Felstomper_BG25_042:
+			case CardIds.Felstomper_BG25_042_G:
 				// console.debug('felstomper');
-				const felstomperBuff = entity.cardId === CardIds.FelstomperBattlegrounds ? 6 : 3;
+				const felstomperBuff = entity.cardId === CardIds.Felstomper_BG25_042_G ? 6 : 3;
 				board.forEach((e) => {
 					modifyAttack(e, felstomperBuff, board, allCards);
 					afterStatsUpdate(e, board, allCards);
 					spectator.registerPowerTarget(entity, e, board);
 				});
 				break;
-			case CardIds.XyloBones:
-			case CardIds.XyloBonesBattlegrounds:
-				const xylobonesBuff = entity.cardId === CardIds.XyloBonesBattlegrounds ? 6 : 3;
+			case CardIds.XyloBones_BG26_172:
+			case CardIds.XyloBones_BG26_172_G:
+				const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 6 : 3;
 				modifyHealth(entity, xylobonesBuff, board, allCards);
 				afterStatsUpdate(entity, board, allCards);
 				spectator.registerPowerTarget(entity, entity, board);
 				break;
-			case CardIds.OctosariWrapGod:
-			case CardIds.OctosariWrapGodBattlegrounds:
-				const octoStats = entity.cardId === CardIds.OctosariWrapGodBattlegrounds ? 4 : 2;
+			case CardIds.OctosariWrapGod_BG26_804:
+			case CardIds.OctosariWrapGod_BG26_804_G:
+				const octoStats = entity.cardId === CardIds.OctosariWrapGod_BG26_804_G ? 4 : 2;
 				entity.scriptDataNum1 += octoStats;
 				break;
-			case CardIds.BananaSlamma:
-			case CardIds.BananaSlammaBattlegrounds:
+			case CardIds.BananaSlamma_BG26_802:
+			case CardIds.BananaSlamma_BG26_802_G:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-					const bananaStatBuff = entity.cardId === CardIds.BananaSlammaBattlegrounds ? 3 : 2;
+					const bananaStatBuff = entity.cardId === CardIds.BananaSlamma_BG26_802_G ? 3 : 2;
 					spawned.attack = spawned.attack * bananaStatBuff;
 					spawned.health = spawned.health * bananaStatBuff;
 				}
 				break;
-			case CardIds.HungrySnapjaw:
-			case CardIds.HungrySnapjawBattlegrounds:
+			case CardIds.HungrySnapjaw_BG26_370:
+			case CardIds.HungrySnapjaw_BG26_370_G:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-					const snapjawBuff = entity.cardId === CardIds.HungrySnapjawBattlegrounds ? 2 : 1;
+					const snapjawBuff = entity.cardId === CardIds.HungrySnapjaw_BG26_370_G ? 2 : 1;
 					modifyHealth(entity, snapjawBuff, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
 				}

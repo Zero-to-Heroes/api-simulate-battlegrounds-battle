@@ -112,8 +112,8 @@ export const simulateAttack = (
 					if (
 						defendingEntity.health > 0 &&
 						!defendingEntity.definitelyDead &&
-						(defendingEntity.cardId === CardIds.YoHoOgre ||
-							defendingEntity.cardId === CardIds.YoHoOgreBattlegrounds)
+						(defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
+							defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
 					) {
 						defendingEntity.attackImmediately = true;
 						if (defendingEntity.attackImmediately) {
@@ -161,8 +161,8 @@ const applyAfterAttackEffects = (
 		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
 		const cards = quantity === 1 ? [CardIds.BloodGem] : [CardIds.BloodGem, CardIds.BloodGem];
 		addCardsInHand(attackingBoardHero, attackingBoard, allCards, spectator, cards);
-	} else if (attackingEntity.cardId === CardIds.Yrel || attackingEntity.cardId === CardIds.YrelBattlegrounds) {
-		const modifier = attackingEntity.cardId === CardIds.YrelBattlegrounds ? 2 : 1;
+	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
+		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(attackingEntity, attackingBoard, modifier * 1, modifier * 2, allCards, spectator);
 	} else if (
 		attackingEntity.cardId === CardIds.IncorporealCorporal_BG26_RLK_117 ||
@@ -248,10 +248,10 @@ const performAttack = (
 		}
 	}
 
-	if ([CardIds.BabyKrush, CardIds.BabyKrushBattlegrounds].includes(attackingEntity.cardId as CardIds)) {
+	if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
 		const spawns = spawnEntities(
-			attackingEntity.cardId === CardIds.BabyKrushBattlegrounds
-				? CardIds.DevilsaurBattlegrounds
+			attackingEntity.cardId === CardIds.BabyKrush_BG22_001_G
+				? CardIds.BabyKrush_BG22_001_G
 				: CardIds.BabyKrush_DevilsaurToken,
 			1,
 			attackingBoard,
@@ -365,14 +365,14 @@ const performAttack = (
 	}
 	if (
 		(defendingEntity.health <= 0 || defendingEntity.definitelyDead) &&
-		(attackingEntity.cardId === CardIds.WildfireElemental ||
-			attackingEntity.cardId === CardIds.WildfireElementalBattlegrounds)
+		(attackingEntity.cardId === CardIds.WildfireElemental_BGS_126 ||
+			attackingEntity.cardId === CardIds.WildfireElemental_TB_BaconUps_166)
 	) {
 		const excessDamage = -defendingEntity.health;
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		// console.log('neighbours', stringifySimple(neighbours, allCards));
 		if (neighbours.length > 0) {
-			if (attackingEntity.cardId === CardIds.WildfireElemental) {
+			if (attackingEntity.cardId === CardIds.WildfireElemental_BGS_126) {
 				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
 				dealDamageToEnemy(
 					randomTarget,
@@ -410,7 +410,7 @@ const performAttack = (
 	// After attack hooks
 	// Arcane Cannon
 	// Monstrous Macaw
-	if (attackingEntity.cardId === CardIds.MonstrousMacaw) {
+	if (attackingEntity.cardId === CardIds.MonstrousMacaw_BGS_078) {
 		triggerRandomDeathrattle(
 			attackingEntity,
 			attackingBoard,
@@ -423,7 +423,7 @@ const performAttack = (
 			spectator,
 			true,
 		);
-	} else if (attackingEntity.cardId === CardIds.MonstrousMacawBattlegrounds) {
+	} else if (attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135) {
 		for (let i = 0; i < 2; i++) {
 			triggerRandomDeathrattle(
 				attackingEntity,
@@ -742,7 +742,10 @@ export const getDefendingEntity = (
 	ignoreTaunts = false,
 ): BoardEntity => {
 	let possibleDefenders: readonly BoardEntity[];
-	if (attackingEntity.cardId === CardIds.ZappSlywick || attackingEntity.cardId === CardIds.ZappSlywickBattlegrounds) {
+	if (
+		attackingEntity.cardId === CardIds.ZappSlywick_BGS_022 ||
+		attackingEntity.cardId === CardIds.ZappSlywick_TB_BaconUps_091
+	) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);
 	} else {
@@ -757,7 +760,7 @@ export const getDefendingEntity = (
 		const elistras = defendingBoard.filter(
 			(entity) =>
 				entity.cardId === CardIds.ElistraTheImmortal_BGS_205 ||
-				entity.cardId === CardIds.ElistraTheImmortalBattlegrounds,
+				entity.cardId === CardIds.ElistraTheImmortal_TB_BaconUps_306,
 		);
 		if (elistras.length > 0) {
 			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
@@ -790,16 +793,16 @@ export const bumpEntities = (
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
-			} else if (entityBoard[i].cardId === CardIds.BolvarFirebloodBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
-			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer) {
+			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				modifyHealth(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
 				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
-			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcerBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
 				modifyHealth(entityBoard[i], 4, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
@@ -810,15 +813,15 @@ export const bumpEntities = (
 					entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401_G)
 			) {
 				updateDivineShield(entityBoard[i], entityBoard, true, allCards);
-			} else if (entityBoard[i].cardId === CardIds.Gemsplitter) {
+			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
 				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem]);
-			} else if (entityBoard[i].cardId === CardIds.GemsplitterBattlegrounds) {
+			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
 				addCardsInHand(entityBoardHero, entityBoard, allCards, spectator, [CardIds.BloodGem, CardIds.BloodGem]);
 			} else if (
-				entityBoard[i].cardId === CardIds.CogworkCopter ||
-				entityBoard[i].cardId === CardIds.CogworkCopterBattlegrounds
+				entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008 ||
+				entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G
 			) {
-				const buff = entityBoard[i].cardId === CardIds.CogworkCopterBattlegrounds ? 2 : 1;
+				const buff = entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
 				grantRandomStats(entityBoard[i], entityBoardHero.hand, buff, buff, null, true, allCards, null);
 			}
 
@@ -827,8 +830,8 @@ export const bumpEntities = (
 			// 	updateDivineShield(entityBoard[i], entityBoard, false, allCards);
 			// }
 		}
-		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot);
-		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBotBattlegrounds);
+		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
+		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
 		greaseBots.forEach((bot) => {
 			modifyAttack(entity, 2, entityBoard, allCards);
 			modifyHealth(entity, 2, entityBoard, allCards);
@@ -920,9 +923,9 @@ const getWheneverEntitySpawns = (
 		return null;
 	}
 
-	if (entity.cardId === CardIds.ImpGangBoss) {
+	if (entity.cardId === CardIds.ImpGangBoss_BRM_006) {
 		return spawnEntities(
-			CardIds.ImpGangBoss_ImpToken,
+			CardIds.ImpGangBoss_ImpToken_BRM_006t,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -935,9 +938,9 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		);
-	} else if (entity.cardId === CardIds.ImpGangBossBattlegrounds) {
+	} else if (entity.cardId === CardIds.ImpGangBoss_TB_BaconUps_030) {
 		return spawnEntities(
-			CardIds.ImpGangBoss_ImpTokenBattlegrounds,
+			CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -950,7 +953,7 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		);
-	} else if (entity.cardId === CardIds.ImpMama) {
+	} else if (entity.cardId === CardIds.ImpMama_BGS_044) {
 		return spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			1,
@@ -965,7 +968,7 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
-	} else if (entity.cardId === CardIds.ImpMamaBattlegrounds) {
+	} else if (entity.cardId === CardIds.ImpMama_TB_BaconUps_116) {
 		return spawnEntities(
 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
 			2,
@@ -980,9 +983,9 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		).map((entity) => ({ ...entity, taunt: true }));
-	} else if (entity.cardId === CardIds.SecurityRover) {
+	} else if (entity.cardId === CardIds.SecurityRover_BOT_218) {
 		return spawnEntities(
-			CardIds.SecurityRover_GuardBotToken,
+			CardIds.SecurityRover_GuardBotToken_BOT_218t,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -995,9 +998,9 @@ const getWheneverEntitySpawns = (
 			entity.friendly,
 			true,
 		);
-	} else if (entity.cardId === CardIds.SecurityRoverBattlegrounds) {
+	} else if (entity.cardId === CardIds.SecurityRover_TB_BaconUps_041) {
 		return spawnEntities(
-			CardIds.SecurityRover_GuardBotTokenBattlegrounds,
+			CardIds.SecurityRover_GuardBotToken_TB_BaconUps_041t,
 			1,
 			entityBoard,
 			entityBoardHero,
@@ -1046,12 +1049,12 @@ export const processMinionDeath = (
 	board1Hero.globalInfo.EternalKnightsDeadThisGame =
 		board1Hero.globalInfo.EternalKnightsDeadThisGame +
 		deadEntities1.filter(
-			(e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds,
+			(e) => e.cardId === CardIds.EternalKnight_BG25_008 || e.cardId === CardIds.EternalKnight_BG25_008_G,
 		).length;
 	board2Hero.globalInfo.EternalKnightsDeadThisGame =
 		board2Hero.globalInfo.EternalKnightsDeadThisGame +
 		deadEntities2.filter(
-			(e) => e.cardId === CardIds.EternalKnight || e.cardId === CardIds.EternalKnightBattlegrounds,
+			(e) => e.cardId === CardIds.EternalKnight_BG25_008 || e.cardId === CardIds.EternalKnight_BG25_008_G,
 		).length;
 
 	// First process all DRs, then process the reborn
@@ -1173,10 +1176,18 @@ export const processMinionDeath = (
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities2, cardsData, allCards, sharedState));
 
 	board1
-		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
+		.filter(
+			(entity) =>
+				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy ||
+				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy_G,
+		)
 		.forEach((entity) => applyMonstrosity(entity, deadEntities1, board1, allCards));
 	board2
-		.filter((entity) => entity.cardId === CardIds.Monstrosity || entity.cardId === CardIds.MonstrosityBattlegrounds)
+		.filter(
+			(entity) =>
+				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy ||
+				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy_G,
+		)
 		.forEach((entity) => applyMonstrosity(entity, deadEntities2, board2, allCards));
 
 	// Make sure we only return when there are no more deaths to process
@@ -1268,13 +1279,13 @@ const handleAfterMinionsDeathsForBoard = (
 				otherBoard
 					.filter(
 						(e) =>
-							e.cardId === CardIds.IcesnarlTheMighty ||
-							e.cardId === CardIds.IcesnarlTheMightyBattlegrounds,
+							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy ||
+							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G,
 					)
 					.forEach((icesnarl) => {
 						modifyHealth(
 							icesnarl,
-							icesnarl.cardId === CardIds.IcesnarlTheMightyBattlegrounds ? 2 : 1,
+							icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1,
 							friendlyBoard,
 							allCards,
 						);
@@ -1383,14 +1394,16 @@ export const applyOnAttackBuffs = (
 		// For now the utility method only works additively, so we hack around it
 		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
-	if (attacker.cardId === CardIds.GlyphGuardianBattlegrounds) {
+	if (attacker.cardId === CardIds.GlyphGuardian_TB_BaconUps_115) {
 		modifyAttack(attacker, 3 * attacker.attack - attacker.attack, attackingBoard, allCards);
 	}
 
 	// Ripsnarl Captain
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
-		const ripsnarls = attackingBoard.filter((e) => e.cardId === CardIds.RipsnarlCaptain);
-		const ripsnarlsTB = attackingBoard.filter((entity) => entity.cardId === CardIds.RipsnarlCaptainBattlegrounds);
+		const ripsnarls = attackingBoard.filter((e) => e.cardId === CardIds.RipsnarlCaptain_BGS_056);
+		const ripsnarlsTB = attackingBoard.filter(
+			(entity) => entity.cardId === CardIds.RipsnarlCaptain_TB_BaconUps_139,
+		);
 		ripsnarls.forEach((captain) => {
 			modifyAttack(attacker, 3, attackingBoard, allCards);
 			spectator.registerPowerTarget(captain, attacker, attackingBoard);
@@ -1403,8 +1416,8 @@ export const applyOnAttackBuffs = (
 
 	// Dread Admiral Eliza
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
-		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza);
-		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralElizaBattlegrounds);
+		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza_BGS_047);
+		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza_TB_BaconUps_134);
 
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
@@ -1423,20 +1436,20 @@ export const applyOnAttackBuffs = (
 	}
 	if (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708 ||
-		attacker.cardId === CardIds.VanessaVancleefBattlegrounds
+		attacker.cardId === CardIds.VanessaVancleef_BG24_708_G
 	) {
 		attackingBoard
 			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {
 				modifyAttack(
 					e,
-					attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2,
+					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attackingBoard,
 					allCards,
 				);
 				modifyHealth(
 					e,
-					attacker.cardId === CardIds.VanessaVancleefBattlegrounds ? 4 : 2,
+					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attackingBoard,
 					allCards,
 				);
@@ -1453,9 +1466,9 @@ export const applyOnBeingAttackedBuffs = (
 	spectator: Spectator,
 ): void => {
 	if (attackedEntity.taunt) {
-		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj);
+		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj_BGS_111);
 		const goldenChampions = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.ChampionOfYshaarjBattlegrounds,
+			(entity) => entity.cardId === CardIds.ChampionOfYshaarj_TB_BaconUps_301,
 		);
 		champions.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
@@ -1468,8 +1481,8 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(entity, entity, defendingBoard);
 		});
 
-		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire);
-		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpireBattlegrounds);
+		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_BGS_110);
+		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_TB_BaconUps_302);
 		arms.forEach((arm) => {
 			modifyAttack(attackedEntity, 2, defendingBoard, allCards);
 			spectator.registerPowerTarget(arm, attackedEntity, defendingBoard);
@@ -1479,7 +1492,7 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(arm, attackedEntity, defendingBoard);
 		});
 	}
-	if (attackedEntity.cardId === CardIds.TormentedRitualist) {
+	if (attackedEntity.cardId === CardIds.TormentedRitualist_BGS_201) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
@@ -1487,7 +1500,7 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
 	}
-	if (attackedEntity.cardId === CardIds.TormentedRitualistBattlegrounds) {
+	if (attackedEntity.cardId === CardIds.TormentedRitualist_TB_BaconUps_257) {
 		const neighbours = getNeighbours(defendingBoard, attackedEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
@@ -1495,18 +1508,21 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(attackedEntity, entity, defendingBoard);
 		});
 	}
-	if (attackedEntity.cardId === CardIds.DozyWhelp || attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds) {
+	if (
+		attackedEntity.cardId === CardIds.DozyWhelp_BG24_300 ||
+		attackedEntity.cardId === CardIds.DozyWhelp_BG24_300_G
+	) {
 		modifyAttack(
 			attackedEntity,
-			attackedEntity.cardId === CardIds.DozyWhelpBattlegrounds ? 2 : 1,
+			attackedEntity.cardId === CardIds.DozyWhelp_BG24_300_G ? 2 : 1,
 			defendingBoard,
 			allCards,
 		);
 		spectator.registerPowerTarget(attackedEntity, attackedEntity, defendingBoard);
 	}
 	if (
-		attackerEntity.cardId === CardIds.SindoreiStraightShot ||
-		attackerEntity.cardId === CardIds.SindoreiStraightShotBattlegrounds
+		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016 ||
+		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016_G
 	) {
 		attackedEntity.taunt = false;
 		attackedEntity.reborn = false;
@@ -1773,11 +1789,11 @@ const buildBoardAfterRebornSpawns = (
 	);
 
 	const arfus = boardWithKilledMinion
-		.filter((e) => e.cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy)
+		.filter((e) => e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy)
 		.map((e) => e.attack)
 		.reduce((a, b) => a + b, 0);
 	const goldenArfus = boardWithKilledMinion
-		.filter((e) => e.cardId === CardIds.ArfusBattlegrounds_TB_BaconShop_HERO_22_Buddy_G)
+		.filter((e) => e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy_G)
 		.map((e) => 2 * e.attack)
 		.reduce((a, b) => a + b, 0);
 	if (arfus + goldenArfus > 0) {
@@ -1791,10 +1807,12 @@ const buildBoardAfterRebornSpawns = (
 	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
 		boardWithKilledMinion
 			.filter(
-				(e) => e.cardId === CardIds.SisterDeathwhisper || e.cardId === CardIds.SisterDeathwhisperBattlegrounds,
+				(e) =>
+					e.cardId === CardIds.SisterDeathwhisper_BG25_020 ||
+					e.cardId === CardIds.SisterDeathwhisper_BG25_020_G,
 			)
 			.forEach((e) => {
-				const multiplier = e.cardId === CardIds.SisterDeathwhisperBattlegrounds ? 2 : 1;
+				const multiplier = e.cardId === CardIds.SisterDeathwhisper_BG25_020_G ? 2 : 1;
 				addStatsToBoard(
 					e,
 					boardWithKilledMinion,

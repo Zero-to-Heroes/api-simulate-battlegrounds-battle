@@ -21,37 +21,37 @@ const handleMinionRemovedEffect = (
 ): void => {
 	switch (removed.cardId) {
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
-		case CardIds.MurlocWarleaderLegacyBattlegrounds:
+		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 			board
 				.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.MurlocWarleaderLegacyBattlegrounds ? 4 : 2;
+					const diff = removed.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.HummingBird:
-		case CardIds.HummingBirdBattlegrounds:
+		case CardIds.HummingBird_BG26_805:
+		case CardIds.HummingBird_BG26_805_G:
 			board
 				.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.HummingBirdBattlegrounds ? 4 : 2;
+					const diff = removed.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy:
-		case CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G:
+		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
+		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
 			board.forEach((e) => {
-				const diff = removed.cardId === CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+				const diff = removed.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
 				e.attack = Math.max(0, e.attack - diff);
 			});
 			break;
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
-		case CardIds.SouthseaCaptainLegacyBattlegrounds:
+		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			// console.debug('removing southsea captain', stringifySimpleCard(removed, allCards), stringifySimple(board, allCards));
 			board
 				.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards))
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.SouthseaCaptainLegacyBattlegrounds ? 2 : 1;
+					const diff = removed.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
 					e.attack = Math.max(0, e.attack - diff);
 					e.health = Math.max(1, e.health - diff);
 				});
@@ -66,12 +66,12 @@ const handleMinionRemovedEffect = (
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.CyborgDrake:
-		case CardIds.CyborgDrakeBattlegrounds:
+		case CardIds.CyborgDrake_BG25_043:
+		case CardIds.CyborgDrake_BG25_043_G:
 			board
 				.filter((e) => e.divineShield)
 				.forEach((e) => {
-					const diff = removed.cardId === CardIds.CyborgDrakeBattlegrounds ? 12 : 6;
+					const diff = removed.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;

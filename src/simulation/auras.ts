@@ -75,8 +75,8 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	);
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards)),
-		CardIds.SouthseaCaptainLegacyBattlegrounds,
-		CardIds.SouthseaCaptain_YarrrEnchantmentBattlegrounds,
+		CardIds.SouthseaCaptainLegacy_TB_BaconUps_136,
+		CardIds.SouthseaCaptain_YarrrEnchantment,
 		2,
 		2,
 	);
@@ -89,21 +89,21 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	);
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards)),
-		CardIds.MurlocWarleaderLegacyBattlegrounds,
-		CardIds.MurlocWarleader_MrgglaarglEnchantmentBattlegrounds,
+		CardIds.MurlocWarleaderLegacy_BG_EX1_507,
+		CardIds.MurlocWarleader_MrgglaarglEnchantment,
 		4,
 		0,
 	);
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards)),
-		CardIds.HummingBird,
+		CardIds.HummingBird_BG26_805,
 		CardIds.HummingBird_EntrancedEnchantment_BG26_805e,
 		2,
 		0,
 	);
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards)),
-		CardIds.HummingBirdBattlegrounds,
+		CardIds.HummingBird_BG26_805_G,
 		CardIds.HummingBird_EntrancedEnchantment_BG26_805_Ge,
 		4,
 		0,
@@ -124,23 +124,23 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	);
 	setMissingAura(
 		board,
-		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy,
-		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_e,
+		CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy,
+		CardIds.DraconicBlessingEnchantment_TB_BaconShop_HERO_52_Buddy_e,
 		3,
 		0,
 		false,
 	);
 	setMissingAura(
 		board,
-		CardIds.LadySinestraBattlegrounds_TB_BaconShop_HERO_52_Buddy_G,
-		CardIds.DraconicBlessingEnchantmentBattlegrounds_TB_BaconShop_HERO_52_Buddy_G_e,
+		CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G,
+		CardIds.DraconicBlessingEnchantment_TB_BaconShop_HERO_52_Buddy_G_e,
 		6,
 		0,
 		false,
 	);
 	setMissingAura(
 		board.filter((e) => e.divineShield),
-		CardIds.CyborgDrake,
+		CardIds.CyborgDrake_BG25_043,
 		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043e,
 		6,
 		0,
@@ -148,7 +148,7 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 	);
 	setMissingAura(
 		board.filter((e) => e.divineShield),
-		CardIds.CyborgDrakeBattlegrounds,
+		CardIds.CyborgDrake_BG25_043_G,
 		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043_Ge,
 		12,
 		0,
