@@ -871,9 +871,9 @@ export const bumpEntities = (
 	// surviving following a buff like Spawn.
 	spectator.registerDamageDealt(bumpInto, entity, (entity.damageMultiplier || 1) * bumpInto.attack, entityBoard);
 	entity.lastAffectedByEntity = bumpInto;
-	if (!entity.frenzyApplied && entity.health > 0 && !entity.definitelyDead) {
+	if (entity.frenzyChargesLeft > 0 && entity.health > 0 && !entity.definitelyDead) {
 		applyFrenzy(entity, entityBoard, entityBoardHero, allCards, cardsData, sharedState, spectator);
-		entity.frenzyApplied = true;
+		entity.frenzyChargesLeft--;
 	}
 
 	// We spawn them here, because it says "whenever", and so happens right away

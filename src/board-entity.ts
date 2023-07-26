@@ -7,7 +7,7 @@ export interface BoardEntity {
 	maxHealth?: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
-	frenzyApplied?: boolean;
+	frenzyChargesLeft?: number;
 	definitelyDead?: boolean;
 	taunt?: boolean;
 	divineShield?: boolean;

@@ -186,6 +186,7 @@ export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): voi
 			entity.avengeCurrent = avengeValue;
 			entity.avengeDefault = avengeValue;
 		}
+
 		entity.immuneWhenAttackCharges = 0;
 	}
 };

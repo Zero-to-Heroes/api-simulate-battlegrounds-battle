@@ -45,7 +45,7 @@ export const buildSingleBoardEntity = (
 				avengeCurrent: entityToSpawn.avengeDefault,
 				attacking: false,
 				damageMultiplier: 1,
-				frenzyApplied: false,
+				frenzyChargesLeft: 1,
 				friendly: friendly,
 		  } as BoardEntity)
 		: addImpliedMechanics({
@@ -605,6 +605,12 @@ export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
 		...entity,
 		cleave: cleave,
 		cantAttack: cantAttack,
+		frenzyChargesLeft:
+			entity.cardId === CardIds.BristlebackKnight_BG20_204_G
+				? 2
+				: entity.cardId === CardIds.BristlebackKnight_BG20_204
+				? 1
+				: 0,
 	} as BoardEntity;
 };
 
