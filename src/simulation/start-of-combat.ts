@@ -600,6 +600,7 @@ const handleIllidanForPlayer = (
 
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
+		modifyHealth(secondAttacker, 1, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
 		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G)) {
