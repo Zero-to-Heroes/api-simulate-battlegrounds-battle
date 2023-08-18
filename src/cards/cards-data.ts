@@ -58,6 +58,7 @@ export class CardsData {
 	public putricidePool2: readonly string[];
 	public putridicePool2ForEternalSummoner: readonly string[];
 
+	private pool: readonly ReferenceCard[];
 	private minionsForTier: { [key: string]: readonly ReferenceCard[] };
 
 	constructor(private readonly allCards: AllCardsService, init = true) {
@@ -67,34 +68,27 @@ export class CardsData {
 	}
 
 	public inititialize(validTribes?: readonly Race[]): void {
-		const pool = this.allCards
+		this.pool = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
 			.filter((card) => !!card.techLevel)
+			.filter((card) => !this.isGolden(card))
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla');
-		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(
-			pool.filter((card) => !this.isGolden(card)),
-		);
-		this.ghastcoilerSpawns = pool
-			.filter((card) => !this.isGolden(card))
+		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(this.pool);
+		this.ghastcoilerSpawns = this.pool
 			.filter((card) => card.id !== 'BGS_008')
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
-		this.validDeathrattles = pool
-			.filter((card) => !this.isGolden(card))
+		this.validDeathrattles = this.pool
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
-		this.demonSpawns = pool
-			.filter((card) => !this.isGolden(card))
-			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
-			.map((card) => card.id);
+		this.demonSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.DEMON)).map((card) => card.id);
 		this.impMamaSpawns = this.demonSpawns.filter((cardId) => cardId !== CardIds.ImpMama_BGS_044);
-		this.gentleDjinniSpawns = pool
-			.filter((card) => !this.isGolden(card))
+		this.gentleDjinniSpawns = this.pool
 			.filter((card) => isCorrectTribe(card.races, Race.ELEMENTAL))
 			.filter((card) => card.id !== CardIds.GentleDjinni_BGS_121)
 			.map((card) => card.id);
@@ -105,31 +99,20 @@ export class CardsData {
 		// 	.filter((card) => card.id !== CardIds.Festergut_BG25_HERO_100_Buddy)
 		// 	// .filter((card) => REMOVED_CARD_IDS.indexOf(card.id) === -1)
 		// 	.map((card) => card.id);
-		this.kilrekSpawns = pool
-			.filter((card) => !this.isGolden(card))
+		this.kilrekSpawns = this.pool
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy)
 			.map((card) => card.id);
-		this.brannEpicEggSpawns = pool
-			.filter((card) => !this.isGolden(card))
-			.filter((card) => hasMechanic(card, 'BATTLECRY'))
-			.map((card) => card.id);
-		this.pirateSpawns = pool
-			.filter((card) => !this.isGolden(card))
-			.filter((card) => isCorrectTribe(card.races, Race.PIRATE))
-			.map((card) => card.id);
-		this.beastSpawns = pool
-			.filter((card) => !this.isGolden(card))
-			.filter((card) => isCorrectTribe(card.races, Race.BEAST))
-			.map((card) => card.id);
-		this.scrapScraperSpawns = pool
-			.filter((card) => !this.isGolden(card))
+		this.brannEpicEggSpawns = this.pool.filter((card) => hasMechanic(card, 'BATTLECRY')).map((card) => card.id);
+		this.pirateSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.PIRATE)).map((card) => card.id);
+		this.beastSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.BEAST)).map((card) => card.id);
+		this.scrapScraperSpawns = this.pool
 			.filter((card) => hasMechanic(card, GameTag[GameTag.MAGNETIC]))
 			.map((card) => card.id);
 
-		this.putricidePool1 = pool.filter((card) => card.battlegroundsPutridicePool1).map((card) => card.id);
-		this.putricidePool2 = pool.filter((card) => card.battlegroundsPutridicePool2).map((card) => card.id);
-		this.putridicePool2ForEternalSummoner = pool
+		this.putricidePool1 = this.pool.filter((card) => card.battlegroundsPutridicePool1).map((card) => card.id);
+		this.putricidePool2 = this.pool.filter((card) => card.battlegroundsPutridicePool2).map((card) => card.id);
+		this.putridicePool2ForEternalSummoner = this.pool
 			.filter((card) => card.battlegroundsPutridicePool2)
 			.filter((card) => !card.battlegroundsPutridiceSummonerExclusion)
 			.map((card) => card.id);
@@ -196,6 +179,13 @@ export class CardsData {
 			console.error('incorrect minions for tier', tavernTier, this.minionsForTier, minionsForTier);
 		}
 		return pickRandom(this.minionsForTier[tavernTier ?? 1])?.id;
+	}
+
+	public getRandomMinionForTribe(tribe: Race, tavernLimitUpper: number): string {
+		const pool = this.pool
+			.filter((m) => this.isValidTribe([tribe], m.races))
+			.filter((m) => m.techLevel <= tavernLimitUpper);
+		return pickRandom(pool)?.id;
 	}
 
 	private isGolden(card: ReferenceCard): boolean {

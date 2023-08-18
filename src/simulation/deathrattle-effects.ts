@@ -22,6 +22,7 @@ import {
 	updateDivineShield,
 } from '../utils';
 import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
+import { triggerBattlecry } from './battlecries';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -63,6 +64,28 @@ export const handleDeathrattleEffects = (
 	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
 	for (const deadEntityCardId of cardIds) {
 		switch (deadEntityCardId) {
+			case CardIds.RylakMetalhead_BG26_801:
+			case CardIds.RylakMetalhead_BG26_801_G:
+				const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
+					for (const neighbour of neighbours) {
+						for (let j = 0; j < rylakMutltiplier; j++) {
+							triggerBattlecry(
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								neighbour,
+								otherBoard,
+								otherBoardHero,
+								allCards,
+								cardsData,
+								sharedState,
+								spectator,
+							);
+						}
+					}
+				}
+				break;
 			case CardIds.SelflessHero_BG_OG_221:
 				for (let i = 0; i < multiplier; i++) {
 					grantRandomDivineShield(deadEntity, boardWithDeadEntity, allCards, spectator);

@@ -4,7 +4,7 @@ import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
-import { pickRandom } from './services/utils';
+import { pickRandom, shuffleArray } from './services/utils';
 import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [
@@ -557,10 +557,17 @@ export const grantStatsToMinionsOfEachType = (
 	health: number,
 	allCards: AllCardsService,
 	spectator: Spectator,
+	numberOfDifferentTypes = 99,
 ): void => {
 	if (board.length > 0) {
 		let boardCopy = [...board];
-		for (const tribe of ALL_BG_RACES) {
+		const allRaces = shuffleArray(ALL_BG_RACES);
+		let typesBuffed = 0;
+		for (const tribe of allRaces) {
+			if (typesBuffed >= numberOfDifferentTypes) {
+				return;
+			}
+
 			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, allCards);
 			if (validMinion) {
 				modifyAttack(validMinion, attack, board, allCards);
@@ -568,6 +575,7 @@ export const grantStatsToMinionsOfEachType = (
 				afterStatsUpdate(validMinion, board, allCards);
 				spectator.registerPowerTarget(source, validMinion, board);
 				boardCopy = boardCopy.filter((e) => e !== validMinion);
+				typesBuffed++;
 			}
 		}
 	}
