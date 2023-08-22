@@ -4,7 +4,7 @@ import { BgsBattleInfo } from './bgs-battle-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
-import { setImplicitData, setImplicitDataHero, setMissingAuras } from './simulation/auras';
+import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
 import { addImpliedMechanics } from './utils';
@@ -18,7 +18,10 @@ export default async (event): Promise<any> => {
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
 	await cards.initializeCardsDb();
 	const cardsData = new CardsData(cards, false);
-	cardsData.inititialize(battleInput.gameState?.validTribes ?? battleInput.options?.validTribes);
+	cardsData.inititialize(
+		battleInput.gameState?.validTribes ?? battleInput.options?.validTribes,
+		battleInput.gameState?.anomalies ?? [],
+	);
 	const simulationResult = simulateBattle(battleInput, cards, cardsData);
 
 	const response = {
@@ -60,17 +63,17 @@ export const simulateBattle = (
 	const opponentInfo = battleInput.opponentBoard;
 
 	const playerBoard = playerInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity), friendly: true } as BoardEntity),
+		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 	);
 	const opponentBoard = opponentInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity), friendly: false } as BoardEntity),
+		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
 	);
 	// When using the simulator, the aura is not applied when receiving the board state. When
 	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player, cards);
 	setMissingAuras(opponentBoard, opponentInfo.player, playerInfo.player, cards);
 	// Avenge, maxHealth, etc.
-	setImplicitData(playerBoard, cardsData);
-	setImplicitData(opponentBoard, cardsData);
+	// setImplicitData(playerBoard, cardsData);
+	// setImplicitData(opponentBoard, cardsData);
 	// Avenge, globalInfo
 	setImplicitDataHero(playerInfo.player, cardsData, true);
 	setImplicitDataHero(opponentInfo.player, cardsData, false);
@@ -216,6 +219,10 @@ export const validEnchantments = [
 	// CardIds.FireInvocation_ElementFireEnchantment, // Attack is doubled, probably no use to keep it
 	// CardIds.WaterInvocation_ElementWaterEnchantment, // +3 health and taunt, same
 	CardIds.LightningInvocation, // Deal 1 damage to 5 enemy minions
+	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e,
+	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
+	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
+	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge,
 ];
 
 const cleanEnchantmentsForEntity = (

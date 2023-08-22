@@ -48,27 +48,30 @@ export const buildSingleBoardEntity = (
 				frenzyChargesLeft: 1,
 				friendly: friendly,
 		  } as BoardEntity)
-		: addImpliedMechanics({
-				entityId: entityId,
-				attack: card.attack,
-				attacksPerformed: 0,
-				cardId: cardId,
-				divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
-				health: card.health,
-				maxHealth: card.health,
-				taunt: hasMechanic(card, GameTag[GameTag.TAUNT]),
-				reborn: hasMechanic(card, 'REBORN'),
-				poisonous: hasMechanic(card, GameTag[GameTag.POISONOUS]),
-				venomous: hasMechanic(card, GameTag[GameTag.VENOMOUS]),
-				windfury:
-					hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
-					card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
-				enchantments: [],
-				friendly: friendly,
-				attackImmediately: attackImmediately,
-				avengeCurrent: cardsData.avengeValue(cardId),
-				avengeDefault: cardsData.avengeValue(cardId),
-		  } as BoardEntity);
+		: addImpliedMechanics(
+				{
+					entityId: entityId,
+					attack: card.attack,
+					attacksPerformed: 0,
+					cardId: cardId,
+					divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
+					health: card.health,
+					maxHealth: card.health,
+					taunt: hasMechanic(card, GameTag[GameTag.TAUNT]),
+					reborn: hasMechanic(card, 'REBORN'),
+					poisonous: hasMechanic(card, GameTag[GameTag.POISONOUS]),
+					venomous: hasMechanic(card, GameTag[GameTag.VENOMOUS]),
+					windfury:
+						hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
+						card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
+					enchantments: [],
+					friendly: friendly,
+					attackImmediately: attackImmediately,
+					avengeCurrent: cardsData.avengeValue(cardId),
+					avengeDefault: cardsData.avengeValue(cardId),
+				} as BoardEntity,
+				cardsData,
+		  );
 
 	if (spawnReborn && !entityToSpawn) {
 		if (cardId === CardIds.BuildAnUndead_PutricidesCreationToken) {
@@ -138,6 +141,7 @@ export const modifyAttack = (
 	amount: number,
 	friendlyBoard: BoardEntity[],
 	allCards: AllCardsService,
+	spectator: Spectator = null,
 ): void => {
 	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
 	entity.attack = Math.max(0, entity.attack + realAmount);
@@ -181,6 +185,17 @@ export const modifyAttack = (
 				allCards,
 			);
 		});
+	}
+
+	if ([CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(entity.cardId as CardIds)) {
+		addStatsToBoard(
+			entity,
+			friendlyBoard,
+			0,
+			entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
+			allCards,
+			null,
+		);
 	}
 };
 
@@ -288,12 +303,12 @@ export const makeMinionGolden = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	const refCard = allCards.getCard(target.cardId);
 	// Typically, we are already golden
-	if (!refCard.battlegroundsPremiumDbfId) {
+	if (isMinionGolden(target, allCards)) {
 		return;
 	}
 
+	const refCard = allCards.getCard(target.cardId);
 	const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 	target.cardId = goldenCard.id;
 	// A minion becoming golden ignore the current death.
@@ -304,6 +319,13 @@ export const makeMinionGolden = (
 	modifyHealth(target, refCard.health, sourceBoard, allCards);
 	afterStatsUpdate(target, sourceBoard, allCards);
 	spectator.registerPowerTarget(source, target, sourceBoard);
+};
+
+export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): boolean => {
+	const ref = allCards.getCard(entity.cardId);
+	return !ref.battlegroundsPremiumDbfId;
+	// Why this condition?
+	// || !allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
 };
 
 export const grantRandomAttack = (
@@ -545,7 +567,7 @@ export const addStatsToBoard = (
 			modifyAttack(entity, attack, board, allCards);
 			modifyHealth(entity, health, board, allCards);
 			afterStatsUpdate(entity, board, allCards);
-			spectator.registerPowerTarget(sourceEntity, entity, board);
+			spectator?.registerPowerTarget(sourceEntity, entity, board);
 		}
 	}
 };
@@ -602,24 +624,44 @@ export const getRaceEnum = (race: string): Race => {
 	return Race[race];
 };
 
-export const addImpliedMechanics = (entity: BoardEntity): BoardEntity => {
+export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): BoardEntity => {
 	const cleave = CLEAVE_IDS.indexOf(entity.cardId as CardIds) !== -1;
 	const cantAttack = CANT_ATTACK_IDS.indexOf(entity.cardId as CardIds) !== -1;
 	// Avoid creating a new object if not necessary
 	if (!cleave && !cantAttack) {
 		return entity;
 	}
-	return {
-		...entity,
-		cleave: cleave,
-		cantAttack: cantAttack,
-		frenzyChargesLeft:
-			entity.cardId === CardIds.BristlebackKnight_BG20_204_G
-				? 2
-				: entity.cardId === CardIds.BristlebackKnight_BG20_204
-				? 1
-				: 0,
-	} as BoardEntity;
+	return setImplicitDataForEntity(
+		{
+			...entity,
+			cleave: cleave,
+			cantAttack: cantAttack,
+			immuneWhenAttackCharges:
+				entity.cardId === CardIds.Warpwing_BG24_004 || entity.cardId === CardIds.Warpwing_BG24_004_G
+					? 99999
+					: 0,
+			frenzyChargesLeft:
+				entity.cardId === CardIds.BristlebackKnight_BG20_204_G
+					? 2
+					: entity.cardId === CardIds.BristlebackKnight_BG20_204
+					? 1
+					: 0,
+			// It's not an issue adding a charge for entities without a special ability
+			abiityChargesLeft: entity.cardId === CardIds.TransmutedBramblewitch_BG27_013_G ? 2 : 1,
+		} as BoardEntity,
+		cardsData,
+	);
+};
+
+const setImplicitDataForEntity = (entity: BoardEntity, cardsData: CardsData): BoardEntity => {
+	entity.cardId = normalizeCardIdForSkin(entity.cardId);
+	entity.maxHealth = Math.max(0, entity.health);
+	const avengeValue = cardsData.avengeValue(entity.cardId);
+	if (avengeValue > 0) {
+		entity.avengeCurrent = avengeValue;
+		entity.avengeDefault = avengeValue;
+	}
+	return entity;
 };
 
 export const normalizeCardIdForSkin = (cardId: string): string => {

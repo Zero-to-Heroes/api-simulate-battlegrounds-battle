@@ -31,6 +31,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.ChoralMrrrglr_BG26_354_G,
 	CardIds.SanctumRester_BG26_356,
 	CardIds.SanctumRester_BG26_356_G,
+	CardIds.CarbonicCopy_BG27_503,
+	CardIds.CarbonicCopy_BG27_503_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,
@@ -67,15 +69,26 @@ export class CardsData {
 		}
 	}
 
-	public inititialize(validTribes?: readonly Race[]): void {
+	public inititialize(validTribes?: readonly Race[], anomalies?: readonly string[]): void {
 		this.pool = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
 			.filter((card) => !!card.techLevel)
-			.filter((card) => !this.isGolden(card))
+			.filter((card) =>
+				anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801)
+					? this.isGolden(card)
+					: !this.isGolden(card),
+			)
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
-			.filter((card) => card.set !== 'Vanilla');
+			.filter((card) => card.set !== 'Vanilla')
+			.filter((card) =>
+				anomalies?.includes(CardIds.BigLeague_BG27_Anomaly_100)
+					? card.techLevel >= 3
+					: anomalies?.includes(CardIds.LittleLeague_BG27_Anomaly_800)
+					? card.techLevel <= 4
+					: true,
+			);
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(this.pool);
 		this.ghastcoilerSpawns = this.pool
 			.filter((card) => card.id !== 'BGS_008')
@@ -141,6 +154,8 @@ export class CardsData {
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
 			case CardIds.Drekthar_LeadTheFrostwolves:
+			case CardIds.ChampionOfThePrimus_BG27_029:
+			case CardIds.ChampionOfThePrimus_BG27_029_G:
 				return 2;
 			case CardIds.BuddingGreenthumb_BG21_030:
 			case CardIds.BuddingGreenthumb_BG21_030_G:
@@ -161,6 +176,10 @@ export class CardsData {
 			case CardIds.TonyTwoTusk_BG21_031_G:
 			case CardIds.ScrapScraper_BG26_148:
 			case CardIds.ScrapScraper_BG26_148_G:
+			case CardIds.RelentlessSentry_BG25_003:
+			case CardIds.RelentlessSentry_BG25_003_G:
+			case CardIds.RelentlessMurghoul_BG27_010:
+			case CardIds.RelentlessMurghoul_BG27_010_G:
 				return 4;
 		}
 		return 0;

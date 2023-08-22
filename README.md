@@ -48,5 +48,4 @@ Used this project as template: https://github.com/alukach/aws-sam-typescript-boi
 Some things are not done yet:
 
 -   Some edge cases about minions spawning order, which won't be tackled for now
--   It's too slow to simulate big comps like leapfrogger infinite DR
 -   There's no guide on how to use it (either as a standalone package or via an API). Ping me if you'd like to use it

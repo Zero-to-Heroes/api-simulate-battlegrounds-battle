@@ -31,17 +31,26 @@ export const computeDeathrattleMultiplier = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
+	sharedState: SharedState,
 ): number => {
-	const rivendare = board.find((entity) => entity.cardId === CardIds.BaronRivendare_BG_FP1_031);
-	const goldenRivendare = board.find((entity) => entity.cardId === CardIds.BaronRivendare_TB_BaconUps_055);
+	const rivendare = !!board.find(
+		(entity) =>
+			entity.cardId === CardIds.BaronRivendare_BG_FP1_031 || entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
+	);
+	const goldenRivendare = board.find(
+		(entity) =>
+			entity.cardId === CardIds.BaronRivendare_TB_BaconUps_055 ||
+			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
+	);
 	const titus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354).length;
 	const goldenTitus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354_G).length;
 	const tombs =
 		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.TurbulentTombs)?.length ?? 0;
-	// The multiplication / addition order here is irrelelvant, since Baron has been removed once Titus was introduced
+	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
 	const scourgeMultiplier = deadEntity.additionalCards?.includes(CardIds.ScourgeTroll) ? 2 : 1;
 	const multiplier =
-		scourgeMultiplier * ((goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus + tombs);
+		scourgeMultiplier *
+		((goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus + tombs + echoesOfArgus);
 	return multiplier;
 };
 
@@ -57,7 +66,12 @@ export const handleDeathrattleEffects = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity, boardWithDeadEntityHero, deadEntity);
+	const multiplier = computeDeathrattleMultiplier(
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		deadEntity,
+		sharedState,
+	);
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
 	// and avoid proccing deathrattle spawns between the times the damage triggers
 
@@ -188,7 +202,7 @@ export const handleDeathrattleEffects = (
 					deadEntity,
 					boardWithDeadEntity,
 					multiplier * 2,
-					multiplier * 2,
+					multiplier * 3,
 					allCards,
 					spectator,
 					'MURLOC',
@@ -199,7 +213,7 @@ export const handleDeathrattleEffects = (
 					deadEntity,
 					boardWithDeadEntity,
 					multiplier * 4,
-					multiplier * 4,
+					multiplier * 6,
 					allCards,
 					spectator,
 					'MURLOC',
@@ -500,6 +514,12 @@ export const handleDeathrattleEffects = (
 					);
 				}
 				break;
+			case CardIds.SanguineChampion_BG23_017:
+			case CardIds.SanguineChampion_BG23_017_G:
+				const sanguineChampionStats = deadEntityCardId === CardIds.SanguineChampion_BG23_017 ? 1 : 2;
+				boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += sanguineChampionStats;
+				boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += sanguineChampionStats;
+				break;
 
 			// Putricide-only
 			case CardIds.Banshee_BG_RLK_957:
@@ -529,6 +549,32 @@ export const handleDeathrattleEffects = (
 							spectator,
 						);
 					}
+				}
+				break;
+			case CardIds.WitheredSpearhide_BG27_006:
+			case CardIds.WitheredSpearhide_BG27_006_G:
+				const witheredSpearhideCardsToAdd = Array(CardIds.WitheredSpearhide_BG27_006_G ? 2 : 1).fill(
+					CardIds.BloodGem,
+				);
+				addCardsInHand(
+					boardWithDeadEntityHero,
+					boardWithDeadEntity,
+					allCards,
+					spectator,
+					witheredSpearhideCardsToAdd,
+				);
+				break;
+			case CardIds.RecurringNightmare_BG26_055:
+			case CardIds.RecurringNightmare_BG26_055_G:
+				for (let i = 0; i < multiplier; i++) {
+					applyRecurringNightmareDeathrattleEffect(
+						boardWithDeadEntity,
+						deadEntity,
+						deadEntityCardId === CardIds.RecurringNightmare_BG26_055_G,
+						allCards,
+						spectator,
+						sharedState,
+					);
 				}
 				break;
 		}
@@ -762,6 +808,36 @@ const applyLeapFroggerEffect = (
 	}
 };
 
+const applyRecurringNightmareDeathrattleEffect = (
+	boardWithDeadEntity: BoardEntity[],
+	deadEntity: BoardEntity,
+	isPremium: boolean,
+	allCards: AllCardsService,
+	spectator: Spectator,
+	sharedState: SharedState,
+	multiplier = 1,
+): void => {
+	multiplier = multiplier || 1;
+	const target = pickRandom(
+		boardWithDeadEntity.filter(
+			(e) =>
+				e.cardId !== CardIds.RecurringNightmare_BG26_055 && e.cardId !== CardIds.RecurringNightmare_BG26_055_G,
+		),
+	);
+	if (target) {
+		target.enchantments = target.enchantments ?? [];
+		target.enchantments.push({
+			cardId: isPremium
+				? CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge
+				: CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
+			originEntityId: deadEntity.entityId,
+			repeats: multiplier > 1 ? multiplier : 1,
+			timing: sharedState.currentEntityId++,
+		});
+		spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+	}
+};
+
 export const applyMinionDeathEffect = (
 	deadEntity: BoardEntity,
 	deadEntityIndexFromRight: number,
@@ -801,6 +877,7 @@ export const applyMinionDeathEffect = (
 		applyBristlemaneScrapsmithEffect(boardWithDeadEntity, boardWithDeadEntityHero, allCards, spectator);
 		applyQirajiHarbringerEffect(boardWithDeadEntity, deadEntityIndexFromRight, allCards, spectator);
 	}
+
 	if (
 		deadEntity.cardId === CardIds.EternalKnight_BG25_008 ||
 		deadEntity.cardId === CardIds.EternalKnight_BG25_008_G

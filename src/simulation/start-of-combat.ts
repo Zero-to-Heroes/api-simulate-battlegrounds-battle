@@ -1193,6 +1193,52 @@ export const performStartOfCombatMinionsForPlayer = (
 				spectator.registerPowerTarget(attacker, attacker, attackingBoard);
 			}
 		}
+	} else if (
+		attacker.cardId === CardIds.CarbonicCopy_BG27_503 ||
+		attacker.cardId === CardIds.CarbonicCopy_BG27_503_G
+	) {
+		const numberOfCopies = attacker.cardId === CardIds.CarbonicCopy_BG27_503_G ? 2 : 1;
+		for (let i = 0; i < numberOfCopies; i++) {
+			if (!!attackingBoard.length && attackingBoard.length < 7) {
+				const copy: BoardEntity = {
+					...attacker,
+					lastAffectedByEntity: null,
+				};
+				const newMinions = spawnEntities(
+					copy.cardId,
+					1,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoard,
+					defendingBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+					attacker.friendly,
+					true,
+					false,
+					false,
+					copy,
+				);
+				const indexFromRight = attackingBoard.length - (attackingBoard.indexOf(attacker) + 1);
+				performEntitySpawns(
+					newMinions,
+					attackingBoard,
+					attackingBoardHero,
+					attacker,
+					indexFromRight,
+					defendingBoard,
+					defendingBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+				spectator.registerPowerTarget(attacker, copy, attackingBoard);
+			}
+			break;
+		}
 	}
 };
 

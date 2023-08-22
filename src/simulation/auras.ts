@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { hasCorrectTribe, normalizeCardIdForSkin } from '../utils';
+import { hasCorrectTribe } from '../utils';
 
 export const setMissingAuras = (
 	board: BoardEntity[],
@@ -11,7 +11,7 @@ export const setMissingAuras = (
 	otherHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 ): void => {
-	setMissingMinionsAura(board, allCards);
+	setMissingMinionsAura(board, boardHero, allCards);
 	setMissingHeroPowerAura(board, boardHero, otherHero);
 };
 
@@ -65,7 +65,7 @@ export const setMissingHeroPowerAura = (
 	}
 };
 
-const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService): void => {
+const setMissingMinionsAura = (board: BoardEntity[], boardHero: BgsPlayerEntity, allCards: AllCardsService): void => {
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards)),
 		CardIds.SouthseaCaptainLegacy_BG_NEW1_027,
@@ -154,6 +154,20 @@ const setMissingMinionsAura = (board: BoardEntity[], allCards: AllCardsService):
 		0,
 		false,
 	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards)),
+		CardIds.SoreLoser_BG27_030,
+		CardIds.SoreLoser_NoImWinningEnchantment_BG27_030e,
+		boardHero.tavernTier,
+		0,
+	);
+	setMissingAura(
+		board.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards)),
+		CardIds.SoreLoser_BG27_030_G,
+		CardIds.SoreLoser_NoImWinningEnchantment_BG27_030e,
+		2 * boardHero.tavernTier,
+		0,
+	);
 };
 
 const setMissingAura = (
@@ -174,20 +188,6 @@ const setMissingAura = (
 				e.attack += attack;
 				e.health += health;
 			});
-	}
-};
-
-export const setImplicitData = (board: BoardEntity[], cardsData: CardsData): void => {
-	for (const entity of board) {
-		entity.cardId = normalizeCardIdForSkin(entity.cardId);
-		entity.maxHealth = Math.max(0, entity.health);
-		const avengeValue = cardsData.avengeValue(entity.cardId);
-		if (avengeValue > 0) {
-			entity.avengeCurrent = avengeValue;
-			entity.avengeDefault = avengeValue;
-		}
-
-		entity.immuneWhenAttackCharges = 0;
 	}
 };
 

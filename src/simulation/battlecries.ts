@@ -9,6 +9,9 @@ import {
 	afterStatsUpdate,
 	getRandomAliveMinion,
 	grantStatsToMinionsOfEachType,
+	hasCorrectTribe,
+	isMinionGolden,
+	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
@@ -16,10 +19,23 @@ import { playBloodGemsOn } from './blood-gems';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
-export const computeBattlecryMultiplier = (board: BoardEntity[], boardHero: BgsPlayerEntity): number => {
-	const brann = board.find((entity) => entity.cardId === CardIds.BrannBronzebeard_BG_LOE_077);
-	const goldenBrann = board.find((entity) => entity.cardId === CardIds.BrannBronzebeard_TB_BaconUps_045);
-	const multiplier = goldenBrann ? 3 : brann ? 2 : 1;
+export const computeBattlecryMultiplier = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	sharedState: SharedState,
+): number => {
+	const brann = board.find(
+		(entity) =>
+			entity.cardId === CardIds.BrannBronzebeard_BG_LOE_077 ||
+			entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
+	);
+	const goldenBrann = board.find(
+		(entity) =>
+			entity.cardId === CardIds.BrannBronzebeard_TB_BaconUps_045 ||
+			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
+	);
+	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
+	const multiplier = echoesOfArgus + (goldenBrann ? 3 : brann ? 2 : 1);
 	return multiplier;
 };
 
@@ -35,7 +51,7 @@ export const triggerBattlecry = (
 	spectator: Spectator,
 ) => {
 	const allMinions = [...board, ...otherBoard];
-	const totalTriggers = computeBattlecryMultiplier(board, hero);
+	const totalTriggers = computeBattlecryMultiplier(board, hero, sharedState);
 	for (let z = 0; z < totalTriggers; z++) {
 		let hasTriggered = true;
 		switch (entity.cardId) {
@@ -256,7 +272,7 @@ export const triggerBattlecry = (
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
-					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
+					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
 					allCards,
 					spectator,
 					Race[Race.MURLOC],
@@ -287,6 +303,14 @@ export const triggerBattlecry = (
 						: [CardIds.TheCoinCore, CardIds.TheCoinCore];
 				addCardsInHand(hero, board, allCards, spectator, mechaJaraxxusCardsToAdd);
 				break;
+			case CardIds.OozelingGladiator_BG27_002:
+			case CardIds.OozelingGladiator_BG27_002_G:
+				const oozelingCardsToAdd =
+					entity.cardId === CardIds.OozelingGladiator_BG27_002
+						? [CardIds.TheCoinCore, CardIds.TheCoinCore]
+						: [CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore];
+				addCardsInHand(hero, board, allCards, spectator, oozelingCardsToAdd);
+				break;
 			case CardIds.UtherTheLightbringer_BG23_190:
 			case CardIds.UtherTheLightbringer_BG23_190_G:
 				const utherTarget = pickRandom(allMinions);
@@ -294,6 +318,84 @@ export const triggerBattlecry = (
 				utherTarget.attack = utherStats;
 				utherTarget.health = utherStats;
 				utherTarget.maxHealth = utherStats;
+				break;
+			case CardIds.IronGroundskeeper_BG27_000:
+			case CardIds.IronGroundskeeper_BG27_000_G:
+				const ironGroundskeeperTargets = allMinions;
+				const ironGroundskeeperTarget = pickRandom(ironGroundskeeperTargets);
+				ironGroundskeeperTarget.taunt = !ironGroundskeeperTarget.taunt;
+				break;
+			case CardIds.LivingConstellation_BG27_001:
+			case CardIds.LivingConstellation_BG27_001_G:
+				const differentTypes = extractUniqueTribes(board, allCards);
+				const livingConstellationStats =
+					(entity.cardId === CardIds.LivingConstellation_BG27_001 ? 1 : 2) * differentTypes.length;
+				const livingConstellationTarget = pickRandom(board);
+				modifyAttack(livingConstellationTarget, livingConstellationStats, board, allCards);
+				modifyHealth(livingConstellationTarget, livingConstellationStats, board, allCards);
+				afterStatsUpdate(livingConstellationTarget, board, allCards);
+				spectator.registerPowerTarget(entity, livingConstellationTarget, board);
+				break;
+			case CardIds.FairyTaleCaroler_BG26_001:
+			case CardIds.FairyTaleCaroler_BG26_001_G:
+				addStatsToBoard(
+					entity,
+					board.filter((e) => e.entityId != entity.entityId),
+					entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
+					entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 1 : 2,
+					allCards,
+					spectator,
+				);
+				break;
+			case CardIds.SparkLing_BG27_019:
+			case CardIds.SparkLing_BG27_019_G:
+				addStatsToBoard(
+					entity,
+					board.filter((e) => e.entityId != entity.entityId),
+					entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+					entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+					allCards,
+					spectator,
+				);
+				addStatsToBoard(
+					entity,
+					otherBoard,
+					entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+					entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+					allCards,
+					spectator,
+				);
+				break;
+			case CardIds.EmergentFlame_BG27_018:
+			case CardIds.EmergentFlame_BG27_018_G:
+				const emergentFlameTarget = pickRandom(
+					board.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, allCards)),
+				);
+				const emergentFlameStats = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
+				modifyAttack(emergentFlameTarget, emergentFlameStats, board, allCards);
+				modifyHealth(emergentFlameTarget, emergentFlameStats, board, allCards);
+				afterStatsUpdate(emergentFlameTarget, board, allCards);
+				break;
+			case CardIds.ArgentBraggart_BG_SCH_149:
+			case CardIds.ArgentBraggart_TB_BaconUps_308:
+				const highestAttack = Math.max(...allMinions.map((minion) => minion.attack));
+				const highestHealth = Math.max(...allMinions.map((minion) => minion.health));
+				const argentBraggartMultiplier = entity.cardId === CardIds.ArgentBraggart_BG_SCH_149 ? 1 : 2;
+				entity.attack = argentBraggartMultiplier * highestAttack;
+				entity.health = argentBraggartMultiplier * highestHealth;
+				break;
+			case CardIds.CaptainSanders_BG25_034:
+			case CardIds.CaptainSanders_BG25_034_G:
+				const captainSandersTarget = pickRandom(board.filter((e) => !isMinionGolden(e, allCards)));
+				if (captainSandersTarget) {
+					makeMinionGolden(captainSandersTarget, entity, board, allCards, spectator);
+				}
+				break;
+			case CardIds.SanguineChampion_BG23_017:
+			case CardIds.SanguineChampion_BG23_017_G:
+				const sanguineChampionStats = entity.cardId === CardIds.SanguineChampion_BG23_017 ? 1 : 2;
+				hero.globalInfo.BloodGemAttackBonus += sanguineChampionStats;
+				hero.globalInfo.BloodGemHealthBonus += sanguineChampionStats;
 				break;
 			default:
 				hasTriggered = false;
@@ -325,4 +427,50 @@ const afterBattlecryTriggered = (
 		.forEach((e) => {
 			addStatsToBoard(entity, board, 2, 2, allCards, spectator, Race[Race.DRAGON]);
 		});
+};
+
+// TODO: this is probably too slow
+const extractUniqueTribes = (board: BoardEntity[], allCards: AllCardsService): readonly Race[] => {
+	const boardReferenceCards = board.map((m) => allCards.getCard(m.cardId));
+	const minionsPlayedWithTribes = boardReferenceCards.filter((c) => !!c.races?.length);
+	const minionsToProcess: /*Mutable<ReferenceCard & { picked?: boolean }>*/ any[] = [
+		...minionsPlayedWithTribes
+			.filter((c) => !c.races.includes(Race[Race.ALL]))
+			.map((c) => ({ ...c, races: [...c.races] })),
+	];
+
+	const uniqueTribes: Race[] = [];
+	const maxTribesPerMinion = 2;
+	for (let i = 1; i <= maxTribesPerMinion; i++) {
+		let dirty = true;
+		while (dirty) {
+			dirty = false;
+			for (let j = 0; j < minionsToProcess.length; j++) {
+				const minion = minionsToProcess[j];
+				// console.debug('considering minion', minion.name, minion.races);
+				if (!minion.picked && minion.races.length > 0 && minion.races.length <= i) {
+					const raceToAdd: string = minion.races[0];
+					uniqueTribes.push(Race[raceToAdd]);
+					// console.debug('added', raceToAdd, uniqueTribes);
+					for (const m of minionsToProcess) {
+						m.races = m.races.filter((r) => r !== raceToAdd);
+						// console.debug('updates races', m.name, m.races, raceToAdd);
+					}
+					minion.picked = true;
+					dirty = true;
+					// Restart the loop, so we're not dependant on the order in which we process things
+					j = 0;
+				}
+			}
+			// minionsToProcess = minionsToProcess.filter((c) => !c.picked);
+		}
+	}
+
+	uniqueTribes.push(
+		...minionsPlayedWithTribes
+			.filter((m) => m.races.includes(Race[Race.ALL]))
+			.flatMap((m) => m.races)
+			.map((r: string) => Race[r]),
+	);
+	return uniqueTribes;
 };

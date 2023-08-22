@@ -91,6 +91,7 @@ export const spawnEntitiesFromDeathrattle = (
 		[...boardWithDeadEntity, ...entitiesDeadThisAttack],
 		boardWithDeadEntityHero,
 		deadEntity,
+		sharedState,
 	);
 	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
@@ -204,8 +205,10 @@ export const spawnEntitiesFromDeathrattle = (
 					// TODO
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.EternalKnight_BG25_008,
-							deadEntityCardId === CardIds.EternalSummoner_BG25_009_G ? 2 : 1,
+							deadEntityCardId === CardIds.EternalSummoner_BG25_009_G
+								? CardIds.EternalKnight_BG25_008_G
+								: CardIds.EternalKnight_BG25_008,
+							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,
@@ -1306,6 +1309,69 @@ export const spawnEntitiesFromDeathrattle = (
 						}
 					}
 					break;
+				case CardIds.MechanizedGiftHorse_BG27_008:
+				case CardIds.MechanizedGiftHorse_BG27_008_G:
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntity.cardId === CardIds.MechanizedGiftHorse_BG27_008_G
+								? CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
+								: CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t:
+				case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt:
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntity.cardId === CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
+								? CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008_Gt2
+								: CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008t2,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.PapaBear_BG27_509:
+				case CardIds.PapaBear_BG27_509_G:
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntity.cardId === CardIds.PapaBear_BG27_509_G
+								? CardIds.MamaBear_TB_BaconUps_090
+								: CardIds.MamaBear_BGS_021,
+							3,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 
 				// Putricide-only
 				case CardIds.FoulEgg_BG26_RLK_833:
@@ -1363,11 +1429,37 @@ export const spawnEntitiesFromEnchantments = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): readonly BoardEntity[] => {
-	const multiplier = computeDeathrattleMultiplier(boardWithDeadEntity, boardWithDeadEntityHero, deadEntity);
+	const multiplier = computeDeathrattleMultiplier(
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		deadEntity,
+		sharedState,
+	);
 	const spawnedEntities: BoardEntity[] = [];
 	for (const enchantment of deadEntity.enchantments || []) {
 		for (let i = 0; i < multiplier; i++) {
 			switch (enchantment.cardId) {
+				case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
+				case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
+					spawnedEntities.push(
+						...spawnEntities(
+							enchantment.cardId === CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e
+								? CardIds.RecurringNightmare_BG26_055
+								: CardIds.RecurringNightmare_BG26_055_G,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 				// Replicating Menace
 				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e:
 					spawnedEntities.push(
@@ -1447,6 +1539,27 @@ export const spawnEntitiesFromEnchantments = (
 							spawns.getRandomMinionForTavernTier(
 								Math.max(1, spawns.getTavernLevel(deadEntity.cardId) - 1),
 							),
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e:
+				case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge:
+					spawnedEntities.push(
+						...spawnEntities(
+							enchantment.cardId === CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge
+								? CardIds.SurfNSurf_CrabMountToken_BG27_004_Gt
+								: CardIds.SurfNSurf_CrabMountToken_BG27_004t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

@@ -183,6 +183,15 @@ const handleSpawnEffect = (
 				modifyAttack(spawned, statsBonusGnoll, board, allCards);
 				afterStatsUpdate(spawned, board, allCards);
 				break;
+			case CardIds.SoreLoser_BG27_030:
+			case CardIds.SoreLoser_BG27_030_G:
+				board
+					.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+					.filter((e) => e.entityId !== spawned.entityId)
+					.forEach((e) => {
+						e.attack += (spawned.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
+					});
+				break;
 		}
 	}
 
@@ -316,6 +325,12 @@ const handleSpawnEffect = (
 					modifyAttack(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
 					spectator.registerPowerTarget(entity, entity, board);
+				}
+				break;
+			case CardIds.SoreLoser_BG27_030:
+			case CardIds.SoreLoser_BG27_030_G:
+				if (hasCorrectTribe(spawned, Race.UNDEAD, allCards) && entity.entityId !== spawned.entityId) {
+					spawned.attack += (entity.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
 				}
 				break;
 		}

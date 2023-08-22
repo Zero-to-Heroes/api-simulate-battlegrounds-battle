@@ -34,6 +34,7 @@ export class Simulator {
 		gameState: BgsGameState,
 		spectator: Spectator,
 	): SingleSimulationResult {
+		this.sharedState.anomalies = gameState.anomalies ?? [];
 		spectator.registerStartOfCombat(playerBoard, opponentBoard);
 		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
 		// is sent tothe simulator
@@ -56,7 +57,10 @@ export class Simulator {
 				? 1
 				: Math.round(Math.random());
 		this.sharedState.currentEntityId =
-			Math.max(...playerBoard.map((entity) => entity.entityId), ...opponentBoard.map((entity) => entity.entityId)) + 1;
+			Math.max(
+				...playerBoard.map((entity) => entity.entityId),
+				...opponentBoard.map((entity) => entity.entityId),
+			) + 1;
 		const suggestedNewCurrentAttacker = handleStartOfCombat(
 			playerEntity,
 			playerBoard,
@@ -124,7 +128,9 @@ export class Simulator {
 			}
 			// console.log('this.currentSpeedAttacker 2', this.currentAttacker, this.currentSpeedAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
-				const opponentEntitiesBeforeAttack = opponentBoard.map((e) => e.entityId).slice(0, this.lastOpponentAttackerEntityIndex);
+				const opponentEntitiesBeforeAttack = opponentBoard
+					.map((e) => e.entityId)
+					.slice(0, this.lastOpponentAttackerEntityIndex);
 				const outputAttacker = simulateAttack(
 					playerBoard,
 					playerEntity,
@@ -137,12 +143,17 @@ export class Simulator {
 					spectator,
 				);
 				// The "attack immediately" doesn't change the next attacker
-				this.lastPlayerAttackerEntityIndex = this.currentSpeedAttacker === -1 ? outputAttacker : this.lastPlayerAttackerEntityIndex;
+				this.lastPlayerAttackerEntityIndex =
+					this.currentSpeedAttacker === -1 ? outputAttacker : this.lastPlayerAttackerEntityIndex;
 				const opponentEntitiesAfterAttack = opponentBoard.map((e) => e.entityId);
-				const opponentEntitiesThatDied = opponentEntitiesBeforeAttack.filter((e) => !opponentEntitiesAfterAttack.includes(e));
+				const opponentEntitiesThatDied = opponentEntitiesBeforeAttack.filter(
+					(e) => !opponentEntitiesAfterAttack.includes(e),
+				);
 				this.lastOpponentAttackerEntityIndex -= opponentEntitiesThatDied.length;
 			} else {
-				const playerEntitiesBeforeAttack = playerBoard.map((e) => e.entityId).slice(0, this.lastPlayerAttackerEntityIndex);
+				const playerEntitiesBeforeAttack = playerBoard
+					.map((e) => e.entityId)
+					.slice(0, this.lastPlayerAttackerEntityIndex);
 				const outputAttacker = simulateAttack(
 					opponentBoard,
 					opponentEntity,
@@ -157,7 +168,9 @@ export class Simulator {
 				this.lastOpponentAttackerEntityIndex =
 					this.currentSpeedAttacker === -1 ? outputAttacker : this.lastOpponentAttackerEntityIndex;
 				const playerEntitiesAfterAttack = playerBoard.map((e) => e.entityId);
-				const playerEntitiesThatDied = playerEntitiesBeforeAttack.filter((e) => !playerEntitiesAfterAttack.includes(e));
+				const playerEntitiesThatDied = playerEntitiesBeforeAttack.filter(
+					(e) => !playerEntitiesAfterAttack.includes(e),
+				);
 				this.lastPlayerAttackerEntityIndex -= playerEntitiesThatDied.length;
 			}
 
@@ -222,10 +235,28 @@ const handleRapidReanimation = (
 	spectator: Spectator,
 ) => {
 	if (playerEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+		handleRapidReanimationForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 	if (opponentEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, allCards, spawns, sharedState, spectator);
+		handleRapidReanimationForPlayer(
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 };
 

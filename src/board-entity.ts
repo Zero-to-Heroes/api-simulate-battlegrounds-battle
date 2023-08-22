@@ -38,4 +38,5 @@ export interface BoardEntity {
 	attacking?: boolean;
 	// Did it have divine shield at least once? (for Sinrunner Blanchy)
 	hadDivineShield?: boolean;
+	abiityChargesLeft?: number;
 }

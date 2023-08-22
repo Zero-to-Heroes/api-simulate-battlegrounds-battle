@@ -11,6 +11,7 @@ import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
+	isMinionGolden,
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
@@ -322,10 +323,7 @@ const handleAvenge = (
 			break;
 		case CardIds.TonyTwoTusk_BG21_031_G:
 			for (let i = 0; i < 2; i++) {
-				const nonGoldenMinions = boardWithDeadEntity.filter((e) => {
-					const ref = allCards.getCard(e.cardId);
-					return !!ref.battlegroundsPremiumDbfId;
-				});
+				const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, allCards));
 				const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, allCards);
 				if (pirate) {
 					makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
@@ -392,6 +390,20 @@ const handleAvenge = (
 				spectator,
 			);
 			spectator.registerPowerTarget(avenger, highestHealthMinion, otherBoard);
+			break;
+		case CardIds.RelentlessSentry_BG25_003:
+		case CardIds.RelentlessSentry_BG25_003_G:
+			avenger.reborn = true;
+			avenger.taunt = true;
+			break;
+		case CardIds.RelentlessMurghoul_BG27_010:
+		case CardIds.RelentlessMurghoul_BG27_010_G:
+			avenger.reborn = true;
+			break;
+		case CardIds.ChampionOfThePrimus_BG27_029:
+		case CardIds.ChampionOfThePrimus_BG27_029_G:
+			const championPrimusStat = avenger.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
+			boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += championPrimusStat;
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;

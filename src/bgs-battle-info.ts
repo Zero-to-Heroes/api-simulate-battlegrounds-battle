@@ -13,4 +13,5 @@ export interface BgsBattleInfo {
 export interface BgsGameState {
 	readonly currentTurn: number;
 	readonly validTribes?: readonly Race[];
+	readonly anomalies?: readonly string[];
 }

@@ -1,21 +1,24 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
 import { Spectator } from './spectator/spectator';
 
 export const removeMinionFromBoard = (
 	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
 	index: number,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
 	const removedEntity = board.splice(index, 1)[0];
-	handleMinionRemovedEffect(board, removedEntity, allCards, spectator);
+	handleMinionRemovedEffect(board, removedEntity, boardHero, allCards, spectator);
 };
 
 const handleMinionRemovedEffect = (
 	board: BoardEntity[],
 	removed: BoardEntity,
+	boardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
@@ -72,6 +75,15 @@ const handleMinionRemovedEffect = (
 				.filter((e) => e.divineShield)
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
+					e.attack = Math.max(0, e.attack - diff);
+				});
+			break;
+		case CardIds.SoreLoser_BG27_030:
+		case CardIds.SoreLoser_BG27_030_G:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+				.forEach((e) => {
+					const diff = (removed.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
