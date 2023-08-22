@@ -89,6 +89,7 @@ export const simulateBattle = (
 			board: opponentBoard,
 			player: opponentInfo.player,
 		},
+		gameState: battleInput.gameState,
 	} as BgsBattleInfo;
 	const inputStr = JSON.stringify(inputReady);
 	const spectator = new Spectator(
