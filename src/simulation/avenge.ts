@@ -11,12 +11,14 @@ import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
+	hasCorrectTribe,
 	isMinionGolden,
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
 import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
+import { playBloodGemsOn } from './blood-gems';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -338,18 +340,13 @@ const handleAvenge = (
 		case CardIds.Bristlebach_BG26_157:
 		case CardIds.Bristlebach_BG26_157_G:
 			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 2 : 1;
-			const bloodGemAttackBuff = 1 + (boardWithDeadEntityHero.globalInfo?.BloodGemAttackBonus ?? 0);
-			const bloodGemHealthBuff = 1 + (boardWithDeadEntityHero.globalInfo?.BloodGemHealthBonus ?? 0);
-			for (let i = 0; i < bristlebachMultiplier * 2; i++) {
-				addStatsToBoard(
-					avenger,
-					boardWithDeadEntity,
-					bloodGemAttackBuff,
-					bloodGemHealthBuff,
-					allCards,
-					spectator,
-					Race[Race.QUILBOAR],
-				);
+			for (let i = 0; i < bristlebachMultiplier; i++) {
+				console.log('playing blood gems on bristlebach');
+				for (const entity of boardWithDeadEntity) {
+					if (hasCorrectTribe(entity, Race.QUILBOAR, allCards)) {
+						playBloodGemsOn(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, allCards, spectator);
+					}
+				}
 			}
 			break;
 		case CardIds.HungeringAbomination_BG25_014:

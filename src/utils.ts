@@ -627,10 +627,6 @@ export const getRaceEnum = (race: string): Race => {
 export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): BoardEntity => {
 	const cleave = CLEAVE_IDS.indexOf(entity.cardId as CardIds) !== -1;
 	const cantAttack = CANT_ATTACK_IDS.indexOf(entity.cardId as CardIds) !== -1;
-	// Avoid creating a new object if not necessary
-	if (!cleave && !cantAttack) {
-		return entity;
-	}
 	return setImplicitDataForEntity(
 		{
 			...entity,
@@ -647,7 +643,11 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 					? 1
 					: 0,
 			// It's not an issue adding a charge for entities without a special ability
-			abiityChargesLeft: entity.cardId === CardIds.TransmutedBramblewitch_BG27_013_G ? 2 : 1,
+			abiityChargesLeft: [CardIds.TransmutedBramblewitch_BG27_013_G, CardIds.Mannoroth_BG27_507_G].includes(
+				entity.cardId as CardIds,
+			)
+				? 2
+				: 1,
 		} as BoardEntity,
 		cardsData,
 	);
