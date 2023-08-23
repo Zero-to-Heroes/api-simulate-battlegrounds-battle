@@ -432,7 +432,13 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					);
 					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
 				}
-				break;
+				// Recompute first attacker
+				// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
+				return playerBoard.length > opponentBoard.length
+					? 0
+					: opponentBoard.length > playerBoard.length
+					? 1
+					: Math.round(Math.random());
 			case CardIds.StaffOfOrigination_BG24_Reward_312:
 				playerBoard.forEach((entity) => {
 					modifyAttack(entity, 15, playerBoard, allCards);
