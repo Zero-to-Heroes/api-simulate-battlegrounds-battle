@@ -341,7 +341,6 @@ const handleAvenge = (
 		case CardIds.Bristlebach_BG26_157_G:
 			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 2 : 1;
 			for (let i = 0; i < bristlebachMultiplier; i++) {
-				console.log('playing blood gems on bristlebach');
 				for (const entity of boardWithDeadEntity) {
 					if (hasCorrectTribe(entity, Race.QUILBOAR, allCards)) {
 						playBloodGemsOn(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, allCards, spectator);
