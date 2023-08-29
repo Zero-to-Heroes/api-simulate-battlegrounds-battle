@@ -10,6 +10,7 @@ import {
 	buildSingleBoardEntity,
 	isCorrectTribe,
 	stringifySimple,
+	stringifySimpleCard,
 } from '../utils';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
 import { SharedState } from './shared-state';
@@ -1558,8 +1559,8 @@ export const spawnEntitiesFromEnchantments = (
 					spawnedEntities.push(
 						...spawnEntities(
 							enchantment.cardId === CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge
-								? CardIds.SurfNSurf_CrabMountToken_BG27_004_Gt
-								: CardIds.SurfNSurf_CrabMountToken_BG27_004t,
+								? CardIds.SurfNSurf_CrabToken_BG27_004_Gt2
+								: CardIds.SurfNSurf_CrabToken_BG27_004t2,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
