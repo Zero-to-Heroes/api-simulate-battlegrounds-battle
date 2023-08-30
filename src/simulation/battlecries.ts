@@ -158,7 +158,7 @@ export const triggerBattlecry = (
 				addStatsToBoard(
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
-					entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 1 : 2,
+					entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 2 : 4,
 					entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 2 : 4,
 					allCards,
 					spectator,
@@ -198,8 +198,8 @@ export const triggerBattlecry = (
 				addStatsToBoard(
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
-					0,
 					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 3 : 6,
+					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 1 : 2,
 					allCards,
 					spectator,
 					Race[Race.DRAGON],
@@ -342,7 +342,7 @@ export const triggerBattlecry = (
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
-					entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 1 : 2,
+					entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
 					allCards,
 					spectator,
 				);

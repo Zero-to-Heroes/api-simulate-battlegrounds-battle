@@ -154,8 +154,6 @@ export class CardsData {
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
 			case CardIds.Drekthar_LeadTheFrostwolves:
-			case CardIds.ChampionOfThePrimus_BG27_029:
-			case CardIds.ChampionOfThePrimus_BG27_029_G:
 				return 2;
 			case CardIds.BuddingGreenthumb_BG21_030:
 			case CardIds.BuddingGreenthumb_BG21_030_G:
@@ -167,6 +165,8 @@ export class CardsData {
 			case CardIds.WitchwingNestmatron_BG21_038:
 			case CardIds.WitchwingNestmatron_BG21_038_G:
 			case CardIds.BoomSquad_BG27_Reward_502:
+			case CardIds.ChampionOfThePrimus_BG27_029:
+			case CardIds.ChampionOfThePrimus_BG27_029_G:
 				return 3;
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
