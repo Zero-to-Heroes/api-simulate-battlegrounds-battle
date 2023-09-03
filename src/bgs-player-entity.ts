@@ -8,6 +8,7 @@ export interface BgsPlayerEntity {
 	readonly heroPowerId?: string | undefined | null;
 	readonly heroPowerUsed: boolean;
 	readonly heroPowerInfo?: number;
+	readonly heroPowerInfo2?: number;
 	entityId?: number;
 	questRewards?: readonly string[];
 	questRewardEntities?: readonly {
