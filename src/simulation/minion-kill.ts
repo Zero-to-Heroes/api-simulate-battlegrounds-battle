@@ -15,7 +15,8 @@ export const onMinionKill = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
-	switch (killer.cardId) {
+	// Can be null if killed by a hero power for instance
+	switch (killer?.cardId) {
 		case CardIds.Murcules_BG27_023:
 		case CardIds.Murcules_BG27_023_G:
 			const murculesTarget = pickRandom(killerHero.hand);
