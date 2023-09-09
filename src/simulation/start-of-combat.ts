@@ -1243,7 +1243,6 @@ export const performStartOfCombatMinionsForPlayer = (
 				);
 				spectator.registerPowerTarget(attacker, copy, attackingBoard);
 			}
-			break;
 		}
 	}
 };
