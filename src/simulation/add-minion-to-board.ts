@@ -370,31 +370,37 @@ const handleAfterSpawnEffect = (
 			// 	break;
 			case CardIds.Swampstriker_BG22_401:
 			case CardIds.Swampstriker_BG22_401_G:
-				const multiplier2 = entity.cardId === CardIds.Swampstriker_BG22_401_G ? 2 : 1;
-				const buffAmount2 =
-					multiplier2 * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
-				if (buffAmount2 > 0) {
-					modifyAttack(entity, buffAmount2, board, allCards);
-					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+				if (entity.entityId !== spawned.entityId) {
+					const multiplier2 = entity.cardId === CardIds.Swampstriker_BG22_401_G ? 2 : 1;
+					const buffAmount2 =
+						multiplier2 * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
+					if (buffAmount2 > 0) {
+						modifyAttack(entity, buffAmount2, board, allCards);
+						afterStatsUpdate(entity, board, allCards);
+						spectator.registerPowerTarget(entity, entity, board);
+					}
 				}
 				break;
 			case CardIds.Felstomper_BG25_042:
 			case CardIds.Felstomper_BG25_042_G:
 				// console.debug('felstomper');
-				const felstomperBuff = entity.cardId === CardIds.Felstomper_BG25_042_G ? 6 : 3;
-				board.forEach((e) => {
-					modifyAttack(e, felstomperBuff, board, allCards);
-					afterStatsUpdate(e, board, allCards);
-					spectator.registerPowerTarget(entity, e, board);
-				});
+				if (entity.entityId !== spawned.entityId) {
+					const felstomperBuff = entity.cardId === CardIds.Felstomper_BG25_042_G ? 6 : 3;
+					board.forEach((e) => {
+						modifyAttack(e, felstomperBuff, board, allCards);
+						afterStatsUpdate(e, board, allCards);
+						spectator.registerPowerTarget(entity, e, board);
+					});
+				}
 				break;
 			case CardIds.XyloBones_BG26_172:
 			case CardIds.XyloBones_BG26_172_G:
-				const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 6 : 3;
-				modifyHealth(entity, xylobonesBuff, board, allCards);
-				afterStatsUpdate(entity, board, allCards);
-				spectator.registerPowerTarget(entity, entity, board);
+				if (entity.entityId !== spawned.entityId) {
+					const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 6 : 3;
+					modifyHealth(entity, xylobonesBuff, board, allCards);
+					afterStatsUpdate(entity, board, allCards);
+					spectator.registerPowerTarget(entity, entity, board);
+				}
 				break;
 			case CardIds.OctosariWrapGod_BG26_804:
 			case CardIds.OctosariWrapGod_BG26_804_G:
@@ -403,7 +409,7 @@ const handleAfterSpawnEffect = (
 				break;
 			case CardIds.BananaSlamma_BG26_802:
 			case CardIds.BananaSlamma_BG26_802_G:
-				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
+				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
 					const bananaStatBuff = entity.cardId === CardIds.BananaSlamma_BG26_802_G ? 3 : 2;
 					spawned.attack = spawned.attack * bananaStatBuff;
 					spawned.health = spawned.health * bananaStatBuff;
@@ -411,7 +417,7 @@ const handleAfterSpawnEffect = (
 				break;
 			case CardIds.HungrySnapjaw_BG26_370:
 			case CardIds.HungrySnapjaw_BG26_370_G:
-				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
+				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
 					const snapjawBuff = entity.cardId === CardIds.HungrySnapjaw_BG26_370_G ? 2 : 1;
 					modifyHealth(entity, snapjawBuff, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
@@ -420,7 +426,7 @@ const handleAfterSpawnEffect = (
 
 			// Putricide-only
 			case CardIds.ArmsDealer_BG26_RLK_824:
-				if (hasCorrectTribe(spawned, Race.UNDEAD, allCards)) {
+				if (hasCorrectTribe(spawned, Race.UNDEAD, allCards) && entity.entityId !== spawned.entityId) {
 					modifyAttack(spawned, 1, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
 					spectator.registerPowerTarget(entity, entity, board);
