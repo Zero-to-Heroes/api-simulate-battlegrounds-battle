@@ -111,6 +111,7 @@ export const triggerBattlecry = (
 				const nerubianDeathswarmerStats = entity.cardId === CardIds.NerubianDeathswarmer_BG25_011 ? 1 : 2;
 				hero.globalInfo.UndeadAttackBonus =
 					(hero.globalInfo?.UndeadAttackBonus ?? 0) + nerubianDeathswarmerStats;
+				addStatsToBoard(entity, board, nerubianDeathswarmerStats, 0, allCards, spectator, Race[Race.UNDEAD]);
 				break;
 			case CardIds.SparringPartner_BG_AT_069:
 			case CardIds.SparringPartner_BG_AT_069_G:

@@ -400,6 +400,15 @@ const handleAvenge = (
 		case CardIds.ChampionOfThePrimus_BG27_029_G:
 			const championPrimusStat = avenger.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
 			boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += championPrimusStat;
+			addStatsToBoard(
+				avenger,
+				boardWithDeadEntity,
+				championPrimusStat,
+				0,
+				allCards,
+				spectator,
+				Race[Race.UNDEAD],
+			);
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;
