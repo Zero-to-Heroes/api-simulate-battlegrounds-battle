@@ -408,6 +408,67 @@ export const triggerBattlecry = (
 				modifyHealth(murkyTarget, murkyStats, board, allCards);
 				afterStatsUpdate(murkyTarget, board, allCards);
 				break;
+			case CardIds.Amalgadon_BGS_069:
+			case CardIds.Amalgadon_TB_BaconUps_121:
+				const numberOfTribes = extractUniqueTribes(board, allCards).length;
+				const amalgadonMultiplier = entity.cardId === CardIds.Amalgadon_BGS_069 ? 1 : 2;
+				const totalAdapts = amalgadonMultiplier * numberOfTribes;
+				for (let i = 0; i < totalAdapts; i++) {
+					const adapts = [
+						CardIds.FlamingClawsToken,
+						CardIds.LivingSporesToken,
+						CardIds.VolcanicMightToken,
+						CardIds.RockyCarapaceToken,
+					];
+					if (!entity.divineShield) {
+						adapts.push(CardIds.CracklingShieldToken);
+					}
+					if (!entity.windfury) {
+						adapts.push(CardIds.LightningSpeedToken);
+					}
+					if (!entity.taunt) {
+						adapts.push(CardIds.MassiveToken);
+					}
+					if (!entity.venomous && !entity.poisonous) {
+						adapts.push(CardIds.PoisonSpitToken);
+					}
+					const adapt = pickRandom(adapts);
+					switch (adapt) {
+						case CardIds.FlamingClawsToken:
+							modifyAttack(entity, 3, board, allCards);
+							afterStatsUpdate(entity, board, allCards);
+							break;
+						case CardIds.LivingSporesToken:
+							entity.enchantments = entity.enchantments ?? [];
+							entity.enchantments.push({
+								cardId: CardIds.LivingSpores_LivingSporesEnchantment,
+								timing: 0,
+							});
+							break;
+						case CardIds.LightningSpeedToken:
+							entity.windfury = true;
+							break;
+						case CardIds.MassiveToken:
+							entity.taunt = true;
+							break;
+						case CardIds.PoisonSpitToken:
+							entity.poisonous = true;
+							break;
+						case CardIds.RockyCarapaceToken:
+							modifyHealth(entity, 3, board, allCards);
+							afterStatsUpdate(entity, board, allCards);
+							break;
+						case CardIds.CracklingShieldToken:
+							entity.divineShield = true;
+							break;
+						case CardIds.VolcanicMightToken:
+							modifyAttack(entity, 1, board, allCards);
+							modifyHealth(entity, 1, board, allCards);
+							afterStatsUpdate(entity, board, allCards);
+							break;
+					}
+				}
+				break;
 			default:
 				hasTriggered = false;
 				break;
