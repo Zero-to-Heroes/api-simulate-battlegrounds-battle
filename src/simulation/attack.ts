@@ -1590,6 +1590,8 @@ export const applyOnBeingAttackedBuffs = (
 			spectator.registerPowerTarget(arm, defendingEntity, defendingBoard);
 		});
 	}
+
+	// Based on defending entity
 	if (defendingEntity.cardId === CardIds.TormentedRitualist_BGS_201) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		neighbours.forEach((entity) => {
@@ -1616,12 +1618,6 @@ export const applyOnBeingAttackedBuffs = (
 		);
 		spectator.registerPowerTarget(defendingEntity, defendingEntity, defendingBoard);
 	} else if (
-		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016 ||
-		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016_G
-	) {
-		defendingEntity.taunt = false;
-		defendingEntity.reborn = false;
-	} else if (
 		[CardIds.AdaptableBarricade_BG27_022, CardIds.AdaptableBarricade_BG27_022_G].includes(
 			defendingEntity.cardId as CardIds,
 		)
@@ -1639,6 +1635,21 @@ export const applyOnBeingAttackedBuffs = (
 			defendingEntity.attack = totalStats - defendingEntity.health;
 		}
 	} else if (
+		[CardIds.GraniteGuardian_BG24_001, CardIds.GraniteGuardian_BG24_001_G].includes(
+			defendingEntity.cardId as CardIds,
+		)
+	) {
+		attackerEntity.health = 1;
+	}
+
+	// Based on attacking entity
+	if (
+		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016 ||
+		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016_G
+	) {
+		defendingEntity.taunt = false;
+		defendingEntity.reborn = false;
+	} else if (
 		[CardIds.TransmutedBramblewitch_BG27_013, CardIds.TransmutedBramblewitch_BG27_013_G].includes(
 			attackerEntity.cardId as CardIds,
 		) &&
@@ -1647,12 +1658,6 @@ export const applyOnBeingAttackedBuffs = (
 		defendingEntity.attack = 3;
 		defendingEntity.health = 3;
 		attackerEntity.abiityChargesLeft--;
-	} else if (
-		[CardIds.GraniteGuardian_BG24_001, CardIds.GraniteGuardian_BG24_001_G].includes(
-			defendingEntity.cardId as CardIds,
-		)
-	) {
-		attackerEntity.health = 1;
 	}
 };
 
@@ -1875,6 +1880,7 @@ const buildBoardAfterDeathrattleSpawns = (
 		sharedState,
 		spectator,
 	);
+	// console.log('board after spawn', stringifySimple(boardWithKilledMinion, allCards));
 };
 
 const buildBoardAfterRebornSpawns = (
@@ -2004,7 +2010,8 @@ export const performEntitySpawns = (
 ): readonly BoardEntity[] => {
 	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 	const spawnedEntities = [];
-	for (const newMinion of aliveEntites) {
+	for (let i = 0; i < aliveEntites.length; i++) {
+		const newMinion = aliveEntites[i];
 		// All entities have been spawned
 		if (boardWithKilledMinion.length >= 7) {
 			break;

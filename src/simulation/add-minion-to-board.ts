@@ -47,6 +47,9 @@ export const addMinionToBoard = (
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, [minionToAdd], allCards, spectator);
 	}
+	if (minionToAdd.onActualSummon) {
+		minionToAdd.onActualSummon();
+	}
 };
 
 const handleSpawnEffect = (

@@ -9,7 +9,7 @@ import {
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
 	isCorrectTribe,
-	stringifySimple
+	stringifySimple,
 } from '../utils';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
 import { SharedState } from './shared-state';
@@ -1286,7 +1286,7 @@ export const spawnEntitiesFromDeathrattle = (
 						if (spawn) {
 							// Technically it should not be removed from hand, but rather flagged
 							// Probably very low impact doing it like this
-							spawn.summonedFromHand = true;
+							// spawn.summonedFromHand = true;
 							// removeCardFromHand(boardWithDeadEntityHero, spawn);
 							const bassgillSpawns = spawnEntities(
 								spawn.cardId,
@@ -1305,6 +1305,10 @@ export const spawnEntitiesFromDeathrattle = (
 								true,
 								{ ...spawn } as BoardEntity,
 							);
+							for (const s of bassgillSpawns) {
+								s.onActualSummon = () => (spawn.summonedFromHand = true);
+								// s.backRef = spawn;
+							}
 							spawnedEntities.push(...bassgillSpawns);
 						}
 					}
