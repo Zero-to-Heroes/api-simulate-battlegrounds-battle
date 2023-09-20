@@ -59,6 +59,18 @@ export const handleStartOfCombat = (
 		gameState,
 		spectator,
 	);
+	currentAttacker = handleStartOfCombatAnomalies(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
 	// https://twitter.com/DCalkosz/status/1488361384320528388?s=20&t=1ECxRZFdjqwEa2fRsXk32Q
 	// There’s a certain order for Start of Combat hero powers, rather than “coin flips” where
 	// an unlucky trigger order could mess up some positioning you had planned for your own hero
@@ -375,6 +387,45 @@ const handleStartOfCombatQuestRewards = (
 	return currentAttacker;
 };
 
+const handleStartOfCombatAnomalies = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
+	currentAttacker = handleStartOfCombatAnomaliesForPlayer(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	currentAttacker = handleStartOfCombatAnomaliesForPlayer(
+		opponentEntity,
+		opponentBoard,
+		playerEntity,
+		playerBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	return currentAttacker;
+};
+
 const handleStartOfCombatQuestRewardsForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
@@ -459,6 +510,37 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						allCards,
 						spectator,
 					);
+				}
+				break;
+		}
+	}
+
+	return currentAttacker;
+};
+
+const handleStartOfCombatAnomaliesForPlayer = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
+	if (!gameState.anomalies?.length) {
+		return currentAttacker;
+	}
+	for (const anomaly of gameState.anomalies) {
+		switch (anomaly) {
+			case CardIds.BlessedOrBlighted_BG27_Anomaly_726:
+				if (playerBoard.length > 0) {
+					const dsTarget = playerBoard[0];
+					updateDivineShield(dsTarget, playerBoard, true, allCards);
+					const rebornTarget = playerBoard[playerBoard.length - 1];
+					rebornTarget.reborn = true;
 				}
 				break;
 		}
