@@ -84,6 +84,7 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
 					for (const neighbour of neighbours) {
+						spectator.registerPowerTarget(deadEntity, neighbour, boardWithDeadEntity);
 						for (let j = 0; j < rylakMutltiplier; j++) {
 							triggerBattlecry(
 								boardWithDeadEntity,

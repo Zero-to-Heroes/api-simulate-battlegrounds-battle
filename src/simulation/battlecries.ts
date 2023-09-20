@@ -408,6 +408,17 @@ export const triggerBattlecry = (
 				modifyHealth(murkyTarget, murkyStats, board, allCards);
 				afterStatsUpdate(murkyTarget, board, allCards);
 				break;
+			case CardIds.LovesickBalladist_BG26_814:
+			case CardIds.LovesickBalladist_BG26_814_G:
+				const balladistMultiplier = entity.cardId === CardIds.LovesickBalladist_BG26_814 ? 1 : 2;
+				const balladistStats = balladistMultiplier * (entity.scriptDataNum1 ?? 0);
+				const balladistTarget = pickRandom(board.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards)));
+				if (balladistTarget) {
+					modifyHealth(balladistTarget, balladistStats, board, allCards);
+					afterStatsUpdate(balladistTarget, board, allCards);
+					spectator.registerPowerTarget(entity, balladistTarget, board);
+				}
+				break;
 			case CardIds.Amalgadon_BGS_069:
 			case CardIds.Amalgadon_TB_BaconUps_121:
 				const numberOfTribes = extractUniqueTribes(board, allCards).length;
