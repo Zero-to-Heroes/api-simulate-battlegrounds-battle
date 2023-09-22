@@ -352,7 +352,7 @@ const performAttack = (
 	const attackerHadDivineShield = attackingEntity.divineShield;
 	const defenderHadDivineShield = defendingEntity.divineShield;
 	if (defenderAliveBeforeAttack) {
-		if (!attackingEntity.immuneWhenAttackCharges || attackingEntity.immuneWhenAttackCharges <= 0) {
+		if (!attackingEntity.immuneWhenAttackCharges) {
 			// TODO: this bumpEntities approach doesn't work well, as it leads to code duplication
 			bumpEntities(
 				attackingEntity,
@@ -381,7 +381,8 @@ const performAttack = (
 		);
 		// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 		// cause wrong results to happen
-		if (defendingEntity.attack > 0 && attackerHadDivineShield) {
+		// This whole logic is a MEEEEESSSSSSSSSSSSSSS
+		if (defendingEntity.attack > 0 && attackerHadDivineShield && !attackingEntity.immuneWhenAttackCharges) {
 			updateDivineShield(attackingEntity, attackingBoard, false, allCards);
 		}
 		if (attackingEntity.attack > 0 && defenderHadDivineShield) {
