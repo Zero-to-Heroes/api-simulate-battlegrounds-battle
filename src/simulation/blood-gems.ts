@@ -1,7 +1,7 @@
-import { AllCardsService } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from '../utils';
+import { afterStatsUpdate, modifyAttack, modifyHealth, updateDivineShield } from '../utils';
 import { Spectator } from './spectator/spectator';
 
 export const playBloodGemsOn = (
@@ -18,5 +18,12 @@ export const playBloodGemsOn = (
 		modifyAttack(target, bloodGemAttack, board, allCards);
 		modifyHealth(target, bloodGemHealth, board, allCards);
 		afterStatsUpdate(target, board, allCards);
+	}
+	switch (target.cardId) {
+		case CardIds.ToughTusk_BG20_102:
+		case CardIds.ToughTusk_BG20_102_G:
+			updateDivineShield(target, board, true, allCards);
+			spectator.registerPowerTarget(target, target, board);
+			break;
 	}
 };
