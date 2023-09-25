@@ -70,16 +70,11 @@ export class CardsData {
 	}
 
 	public inititialize(validTribes?: readonly Race[], anomalies?: readonly string[]): void {
-		this.pool = this.allCards
+		const poolWithoutGolden = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
 			.filter((card) => !!card.techLevel)
-			.filter((card) =>
-				anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801)
-					? this.isGolden(card)
-					: !this.isGolden(card),
-			)
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla')
 			.filter((card) =>
@@ -89,13 +84,16 @@ export class CardsData {
 					? card.techLevel <= 4
 					: true,
 			);
+		this.pool = poolWithoutGolden.filter((card) =>
+			anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801) ? this.isGolden(card) : !this.isGolden(card),
+		);
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(this.pool);
 		this.ghastcoilerSpawns = this.pool
 			.filter((card) => card.id !== 'BGS_008')
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
-		this.validDeathrattles = this.pool
+		this.validDeathrattles = poolWithoutGolden
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
