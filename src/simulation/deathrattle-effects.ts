@@ -1293,6 +1293,8 @@ export const rememberDeathrattles = (
 				CardIds.FireInvocation_ElementFireEnchantment,
 				CardIds.WaterInvocation_ElementWaterEnchantment,
 				CardIds.LightningInvocation,
+				CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e,
+				CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
 			].includes(enchantment.cardId as CardIds),
 		);
 	// Multiple fish
