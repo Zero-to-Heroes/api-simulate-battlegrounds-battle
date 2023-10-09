@@ -1284,6 +1284,7 @@ export const spawnEntitiesFromDeathrattle = (
 							? pickRandom(hand.filter((c) => c.cardId))
 							: null;
 						if (spawn) {
+							spawn.summonedFromHand = true;
 							// Technically it should not be removed from hand, but rather flagged
 							// Probably very low impact doing it like this
 							// spawn.summonedFromHand = true;
@@ -1306,7 +1307,7 @@ export const spawnEntitiesFromDeathrattle = (
 								{ ...spawn } as BoardEntity,
 							);
 							for (const s of bassgillSpawns) {
-								s.onActualSummon = () => (spawn.summonedFromHand = true);
+								s.onCanceledSummon = () => (spawn.summonedFromHand = false);
 								// s.backRef = spawn;
 							}
 							spawnedEntities.push(...bassgillSpawns);

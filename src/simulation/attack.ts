@@ -2015,6 +2015,11 @@ export const performEntitySpawns = (
 		const newMinion = aliveEntites[i];
 		// All entities have been spawned
 		if (boardWithKilledMinion.length >= 7) {
+			for (let j = i; j < aliveEntites.length; j++) {
+				if (aliveEntites[j]?.onCanceledSummon) {
+					aliveEntites[j].onCanceledSummon();
+				}
+			}
 			break;
 		}
 		// Avoid minions spawning backwards (we don't have this issue if we add all elements at

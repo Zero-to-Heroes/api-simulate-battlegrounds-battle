@@ -665,6 +665,9 @@ const setImplicitDataForEntity = (entity: BoardEntity, cardsData: CardsData): Bo
 };
 
 export const normalizeCardIdForSkin = (cardId: string): string => {
+	if (!cardId?.length) {
+		return cardId;
+	}
 	const skinMatch = cardId.match(/(.*)_SKIN_.*/);
 	if (skinMatch) {
 		return skinMatch[1];

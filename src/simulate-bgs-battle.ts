@@ -65,8 +65,14 @@ export const simulateBattle = (
 	const playerBoard = playerInfo.board.map(
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 	);
+	const playerHand = playerInfo.player.hand?.map(
+		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
+	);
 	const opponentBoard = opponentInfo.board.map(
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
+	);
+	const opponentHand = opponentInfo.player.hand?.map(
+		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 	);
 	// When using the simulator, the aura is not applied when receiving the board state. When
 	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player, cards);
@@ -83,11 +89,17 @@ export const simulateBattle = (
 	const inputReady: BgsBattleInfo = {
 		playerBoard: {
 			board: playerBoard,
-			player: playerInfo.player,
+			player: {
+				...playerInfo.player,
+				hand: playerHand,
+			},
 		},
 		opponentBoard: {
 			board: opponentBoard,
-			player: opponentInfo.player,
+			player: {
+				...opponentInfo.player,
+				hand: opponentHand,
+			},
 		},
 		gameState: battleInput.gameState,
 	} as BgsBattleInfo;

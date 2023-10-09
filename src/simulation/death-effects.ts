@@ -31,7 +31,7 @@ export const applyOnDeathEffects = (
 				) ?? [];
 		// removeCardFromHand(boardWithDeadEntityHero, spawn);
 		for (const feathermaneSpawn of feathermanes) {
-			// feathermaneSpawn.summonedFromHand = true;
+			feathermaneSpawn.summonedFromHand = true;
 			const spawns = spawnEntities(
 				feathermaneSpawn.cardId,
 				1,
@@ -52,7 +52,7 @@ export const applyOnDeathEffects = (
 
 			// So that it can be flagged as "unspawned" if it is not spawned in the end
 			for (const spawn of spawns) {
-				spawn.onActualSummon = () => (feathermaneSpawn.summonedFromHand = true);
+				spawn.onCanceledSummon = () => (feathermaneSpawn.summonedFromHand = false);
 				// spawn.backRef = feathermaneSpawn;
 			}
 			// console.log(

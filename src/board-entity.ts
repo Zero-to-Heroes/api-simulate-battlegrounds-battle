@@ -40,5 +40,5 @@ export interface BoardEntity {
 	hadDivineShield?: boolean;
 	abiityChargesLeft?: number;
 
-	onActualSummon?: () => void;
+	onCanceledSummon?: () => void;
 }
