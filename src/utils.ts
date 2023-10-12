@@ -648,7 +648,6 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 			)
 				? 2
 				: 1,
-			maxHealth: entity.maxHealth ?? entity.health,
 		} as BoardEntity,
 		cardsData,
 	);
