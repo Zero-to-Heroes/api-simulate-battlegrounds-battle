@@ -820,10 +820,13 @@ const applyRecurringNightmareDeathrattleEffect = (
 ): void => {
 	multiplier = multiplier || 1;
 	const target = pickRandom(
-		boardWithDeadEntity.filter(
-			(e) =>
-				e.cardId !== CardIds.RecurringNightmare_BG26_055 && e.cardId !== CardIds.RecurringNightmare_BG26_055_G,
-		),
+		boardWithDeadEntity
+			.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+			.filter(
+				(e) =>
+					e.cardId !== CardIds.RecurringNightmare_BG26_055 &&
+					e.cardId !== CardIds.RecurringNightmare_BG26_055_G,
+			),
 	);
 	if (target) {
 		target.enchantments = target.enchantments ?? [];
