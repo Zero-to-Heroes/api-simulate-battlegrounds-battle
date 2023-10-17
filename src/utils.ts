@@ -5,6 +5,8 @@ import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
+import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
+import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
 
 const CLEAVE_IDS = [
@@ -299,15 +301,20 @@ export const afterStatsUpdate = (
 export const makeMinionGolden = (
 	target: BoardEntity,
 	source: BoardEntity | BgsPlayerEntity,
-	sourceBoard: BoardEntity[],
+	targetBoard: BoardEntity[],
+	targetBoardHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
+	sharedState: SharedState,
 ): void => {
 	// Typically, we are already golden
 	if (isMinionGolden(target, allCards)) {
 		return;
 	}
 
+	// console.log('before transforming minion', stringifySimple(targetBoard, allCards));
+	handleMinionRemovedAuraEffect(targetBoard, target, targetBoardHero, allCards, spectator);
+	// console.log('after removed effect', stringifySimple(targetBoard, allCards));
 	const refCard = allCards.getCard(target.cardId);
 	const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 	target.cardId = goldenCard.id;
@@ -315,10 +322,15 @@ export const makeMinionGolden = (
 	// This way of handling it is not ideal, since it will still trigger if both avenges trigger at the same time, but
 	// should solve the other cases
 	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
-	modifyAttack(target, refCard.attack, sourceBoard, allCards);
-	modifyHealth(target, refCard.health, sourceBoard, allCards);
-	afterStatsUpdate(target, sourceBoard, allCards);
-	spectator.registerPowerTarget(source, target, sourceBoard);
+	modifyAttack(target, refCard.attack, targetBoard, allCards);
+	modifyHealth(target, refCard.health, targetBoard, allCards);
+	afterStatsUpdate(target, targetBoard, allCards);
+
+	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
+	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, allCards, spectator, sharedState);
+	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
+
+	spectator.registerPowerTarget(source, target, targetBoard);
 };
 
 export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): boolean => {

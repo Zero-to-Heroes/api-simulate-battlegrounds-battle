@@ -320,7 +320,15 @@ const handleAvenge = (
 				});
 			const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, allCards);
 			if (pirate) {
-				makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
+				makeMinionGolden(
+					pirate,
+					avenger,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					allCards,
+					spectator,
+					sharedState,
+				);
 			}
 			break;
 		case CardIds.TonyTwoTusk_BG21_031_G:
@@ -328,7 +336,15 @@ const handleAvenge = (
 				const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, allCards));
 				const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, allCards);
 				if (pirate) {
-					makeMinionGolden(pirate, avenger, boardWithDeadEntity, allCards, spectator);
+					makeMinionGolden(
+						pirate,
+						avenger,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						allCards,
+						spectator,
+						sharedState,
+					);
 				}
 			}
 			break;

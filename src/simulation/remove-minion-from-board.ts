@@ -12,10 +12,10 @@ export const removeMinionFromBoard = (
 	spectator: Spectator,
 ): void => {
 	const removedEntity = board.splice(index, 1)[0];
-	handleMinionRemovedEffect(board, removedEntity, boardHero, allCards, spectator);
+	handleMinionRemovedAuraEffect(board, removedEntity, boardHero, allCards, spectator);
 };
 
-const handleMinionRemovedEffect = (
+export const handleMinionRemovedAuraEffect = (
 	board: BoardEntity[],
 	removed: BoardEntity,
 	boardHero: BgsPlayerEntity,

@@ -44,6 +44,7 @@ export const addMinionToBoard = (
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, allCards, spectator, sharedState);
+	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState);
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, [minionToAdd], allCards, spectator);
 	}
@@ -58,149 +59,16 @@ const handleSpawnEffect = (
 	spectator: Spectator,
 	sharedState: SharedState,
 ): void => {
-	// if (otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds) {
-	// 	spawned.attack += 3;
-	// }
-
 	switch (boardHero.heroPowerId) {
-		// case CardIds.AllWillBurnBattlegrounds:
-		// 	spawned.attack += 3;
-		// 	break;
 		case CardIds.SproutItOut:
 			spawned.taunt = true;
 			modifyAttack(spawned, 1, board, allCards);
 			modifyHealth(spawned, 2, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
 			break;
-		case CardIds.KurtrusAshfallen_CloseThePortal:
-			modifyAttack(spawned, 2, board, allCards);
-			modifyHealth(spawned, 2, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-		case CardIds.Tinker_TB_BaconShop_HP_015:
-			if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
-				modifyAttack(spawned, 2, board, allCards);
-				afterStatsUpdate(spawned, board, allCards);
-			}
-			break;
-	}
-
-	if (!!boardHero.questRewards?.length) {
-		for (const quest of boardHero.questRewards) {
-			switch (quest) {
-				case CardIds.VolatileVenom:
-					spawned.attack += 7;
-					spawned.health += 7;
-					spawned.enchantments.push({
-						cardId: CardIds.VolatileVenom_VolatileEnchantment,
-						originEntityId: undefined,
-						timing: sharedState.currentEntityId++,
-					});
-					break;
-				case CardIds.TheSmokingGun:
-					spawned.attack += 4;
-					break;
-			}
-		}
 	}
 
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
-	for (const spawnedCardId of cardIds) {
-		switch (spawnedCardId) {
-			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
-			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
-				board
-					.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards))
-					// Other
-					.filter((e) => e.entityId !== spawned.entityId)
-					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
-						e.health += spawned.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
-					});
-				break;
-			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
-			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
-				board
-					.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
-					.filter((e) => e.entityId !== spawned.entityId)
-					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
-					});
-				break;
-			case CardIds.HummingBird_BG26_805:
-			case CardIds.HummingBird_BG26_805_G:
-				board
-					.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
-					.filter((e) => e.entityId !== spawned.entityId)
-					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
-					});
-				break;
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
-				board.forEach((e) => {
-					e.attack += spawned.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
-				});
-				break;
-			case CardIds.Kathranatir_BG21_039:
-			case CardIds.Kathranatir_BG21_039_G:
-				board
-					.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards))
-					.filter((e) => e.entityId !== spawned.entityId)
-					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
-					});
-				break;
-			case CardIds.CyborgDrake_BG25_043:
-			case CardIds.CyborgDrake_BG25_043_G:
-				board
-					.filter((e) => e.divineShield)
-					.forEach((e) => {
-						e.attack += spawned.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
-					});
-				break;
-
-			case CardIds.EternalKnight_BG25_008:
-			case CardIds.EternalKnight_BG25_008_G:
-				const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
-				const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
-				modifyAttack(spawned, statsBonusKnight, board, allCards);
-				modifyHealth(spawned, statsBonusKnight, board, allCards);
-				afterStatsUpdate(spawned, board, allCards);
-				break;
-			case CardIds.FlourishingFrostling_BG26_537:
-			case CardIds.FlourishingFrostling_BG26_537_G:
-				const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
-				const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
-				modifyAttack(spawned, statsBonusFrostling, board, allCards);
-				afterStatsUpdate(spawned, board, allCards);
-				break;
-			case CardIds.RotHideGnoll_BG25_013:
-			case CardIds.RotHideGnoll_BG25_013_G:
-				const multiplierGnoll = spawned.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
-				const statsBonusGnoll =
-					multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
-				modifyAttack(spawned, statsBonusGnoll, board, allCards);
-				afterStatsUpdate(spawned, board, allCards);
-				break;
-			case CardIds.SoreLoser_BG27_030:
-			case CardIds.SoreLoser_BG27_030_G:
-				board
-					.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
-					.filter((e) => e.entityId !== spawned.entityId)
-					.forEach((e) => {
-						e.attack += (spawned.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
-					});
-				break;
-		}
-	}
-
-	if (hasCorrectTribe(spawned, Race.UNDEAD, allCards)) {
-		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
-			modifyAttack(spawned, boardHero.globalInfo.UndeadAttackBonus, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-		}
-	}
 
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
 	if (cardIds.some((cardId) => WHELP_CARD_IDS.includes(cardId as CardIds))) {
@@ -220,42 +88,6 @@ const handleSpawnEffect = (
 
 	for (const entity of board) {
 		switch (entity.cardId) {
-			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
-			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
-				if (hasCorrectTribe(spawned, Race.MURLOC, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
-				}
-				break;
-			case CardIds.HummingBird_BG26_805:
-			case CardIds.HummingBird_BG26_805_G:
-				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
-				}
-				break;
-			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
-			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
-				if (hasCorrectTribe(spawned, Race.PIRATE, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
-					spawned.health += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
-				}
-				break;
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
-				spawned.attack += entity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
-				break;
-			case CardIds.Kathranatir_BG21_039:
-			case CardIds.Kathranatir_BG21_039_G:
-				if (hasCorrectTribe(spawned, Race.DEMON, allCards) && entity.entityId !== spawned.entityId) {
-					spawned.attack += entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1;
-				}
-				break;
-			case CardIds.CyborgDrake_BG25_043:
-			case CardIds.CyborgDrake_BG25_043_G:
-				if (spawned.divineShield) {
-					spawned.attack += entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
-				}
-				break;
-
 			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy:
 			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G:
 				if (allCards.getCard(spawned.cardId).techLevel === boardHero.tavernTier) {
@@ -275,7 +107,6 @@ const handleSpawnEffect = (
 					afterStatsUpdate(spawned, board, allCards);
 				}
 				break;
-
 			case CardIds.CobaltGuardian:
 				if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
 					if (!entity.divineShield) {
@@ -327,6 +158,99 @@ const handleSpawnEffect = (
 					spectator.registerPowerTarget(entity, entity, board);
 				}
 				break;
+		}
+	}
+};
+export const handleAddedMinionAuraEffect = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	spawned: BoardEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+	sharedState: SharedState,
+): void => {
+	switch (boardHero.heroPowerId) {
+		case CardIds.KurtrusAshfallen_CloseThePortal:
+			modifyAttack(spawned, 2, board, allCards);
+			modifyHealth(spawned, 2, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.Tinker_TB_BaconShop_HP_015:
+			if (hasCorrectTribe(spawned, Race.MECH, allCards)) {
+				modifyAttack(spawned, 2, board, allCards);
+				afterStatsUpdate(spawned, board, allCards);
+			}
+			break;
+	}
+
+	if (!!boardHero.questRewards?.length) {
+		for (const quest of boardHero.questRewards) {
+			switch (quest) {
+				case CardIds.VolatileVenom:
+					spawned.attack += 7;
+					spawned.health += 7;
+					spawned.enchantments.push({
+						cardId: CardIds.VolatileVenom_VolatileEnchantment,
+						originEntityId: undefined,
+						timing: sharedState.currentEntityId++,
+					});
+					break;
+				case CardIds.TheSmokingGun:
+					spawned.attack += 4;
+					break;
+			}
+		}
+	}
+
+	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
+	for (const spawnedCardId of cardIds) {
+		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, allCards, spectator, sharedState);
+	}
+
+	if (hasCorrectTribe(spawned, Race.UNDEAD, allCards)) {
+		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
+			modifyAttack(spawned, boardHero.globalInfo.UndeadAttackBonus, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+		}
+	}
+
+	for (const entity of board) {
+		switch (entity.cardId) {
+			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
+			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
+				if (hasCorrectTribe(spawned, Race.MURLOC, allCards) && entity.entityId !== spawned.entityId) {
+					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
+				}
+				break;
+			case CardIds.HummingBird_BG26_805:
+			case CardIds.HummingBird_BG26_805_G:
+				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
+					spawned.attack += entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
+				}
+				break;
+			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
+			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
+				if (hasCorrectTribe(spawned, Race.PIRATE, allCards) && entity.entityId !== spawned.entityId) {
+					spawned.attack += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
+					spawned.health += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
+				}
+				break;
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
+				spawned.attack += entity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+				break;
+			case CardIds.Kathranatir_BG21_039:
+			case CardIds.Kathranatir_BG21_039_G:
+				if (hasCorrectTribe(spawned, Race.DEMON, allCards) && entity.entityId !== spawned.entityId) {
+					spawned.attack += entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1;
+				}
+				break;
+			case CardIds.CyborgDrake_BG25_043:
+			case CardIds.CyborgDrake_BG25_043_G:
+				if (spawned.divineShield) {
+					spawned.attack += entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
+				}
+				break;
 			case CardIds.SoreLoser_BG27_030:
 			case CardIds.SoreLoser_BG27_030_G:
 				if (hasCorrectTribe(spawned, Race.UNDEAD, allCards) && entity.entityId !== spawned.entityId) {
@@ -334,6 +258,104 @@ const handleSpawnEffect = (
 				}
 				break;
 		}
+	}
+};
+
+export const handleMinionAddedAuraEffect = (
+	spawnedCardId: string,
+	spawned: BoardEntity,
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spectator: Spectator,
+	sharedState: SharedState,
+): void => {
+	switch (spawnedCardId) {
+		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
+		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards))
+				// Other
+				.filter((e) => e.entityId !== spawned.entityId)
+				.forEach((e) => {
+					e.attack += spawned.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
+					e.health += spawned.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
+				});
+			break;
+		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
+		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
+				.filter((e) => e.entityId !== spawned.entityId)
+				.forEach((e) => {
+					e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
+				});
+			break;
+		case CardIds.HummingBird_BG26_805:
+		case CardIds.HummingBird_BG26_805_G:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
+				.filter((e) => e.entityId !== spawned.entityId)
+				.forEach((e) => {
+					e.attack += spawned.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
+				});
+			break;
+		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
+		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
+			board.forEach((e) => {
+				e.attack += spawned.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
+			});
+			break;
+		case CardIds.Kathranatir_BG21_039:
+		case CardIds.Kathranatir_BG21_039_G:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards))
+				.filter((e) => e.entityId !== spawned.entityId)
+				.forEach((e) => {
+					e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
+				});
+			break;
+		case CardIds.CyborgDrake_BG25_043:
+		case CardIds.CyborgDrake_BG25_043_G:
+			board
+				.filter((e) => e.divineShield)
+				.forEach((e) => {
+					e.attack += spawned.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6;
+				});
+			break;
+
+		case CardIds.EternalKnight_BG25_008:
+		case CardIds.EternalKnight_BG25_008_G:
+			const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
+			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
+			modifyAttack(spawned, statsBonusKnight, board, allCards);
+			modifyHealth(spawned, statsBonusKnight, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.FlourishingFrostling_BG26_537:
+		case CardIds.FlourishingFrostling_BG26_537_G:
+			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
+			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
+			modifyAttack(spawned, statsBonusFrostling, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.RotHideGnoll_BG25_013:
+		case CardIds.RotHideGnoll_BG25_013_G:
+			const multiplierGnoll = spawned.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
+			const statsBonusGnoll =
+				multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
+			modifyAttack(spawned, statsBonusGnoll, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.SoreLoser_BG27_030:
+		case CardIds.SoreLoser_BG27_030_G:
+			board
+				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+				.filter((e) => e.entityId !== spawned.entityId)
+				.forEach((e) => {
+					e.attack += (spawned.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
+				});
+			break;
 	}
 };
 

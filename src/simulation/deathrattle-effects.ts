@@ -487,7 +487,15 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
 					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 					if (rightMostMinion) {
-						makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
+						makeMinionGolden(
+							rightMostMinion,
+							deadEntity,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							spectator,
+							sharedState,
+						);
 					}
 				}
 				break;
@@ -495,7 +503,15 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
 					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
 					if (rightMostMinion) {
-						makeMinionGolden(rightMostMinion, deadEntity, boardWithDeadEntity, allCards, spectator);
+						makeMinionGolden(
+							rightMostMinion,
+							deadEntity,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							spectator,
+							sharedState,
+						);
 					}
 				}
 				break;

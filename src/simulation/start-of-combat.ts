@@ -500,15 +500,25 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				break;
 			case CardIds.StolenGold:
 				if (playerBoard.length > 0) {
-					makeMinionGolden(playerBoard[0], playerEntity, playerBoard, allCards, spectator);
+					makeMinionGolden(
+						playerBoard[0],
+						playerEntity,
+						playerBoard,
+						playerEntity,
+						allCards,
+						spectator,
+						sharedState,
+					);
 				}
 				if (playerBoard.length > 1) {
 					makeMinionGolden(
 						playerBoard[playerBoard.length - 1],
 						playerEntity,
 						playerBoard,
+						playerEntity,
 						allCards,
 						spectator,
+						sharedState,
 					);
 				}
 				break;
