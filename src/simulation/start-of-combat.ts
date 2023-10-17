@@ -667,12 +667,6 @@ const handleIllidanForPlayer = (
 	modifyHealth(firstAttacker, 1, playerBoard, allCards);
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
 	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard);
-	if (
-		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy) ||
-		playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G)
-	) {
-		firstAttacker.immuneWhenAttackCharges = 1;
-	}
 	simulateAttack(
 		playerBoard,
 		playerEntity,
@@ -691,9 +685,6 @@ const handleIllidanForPlayer = (
 		modifyHealth(secondAttacker, 1, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
-		if (playerBoard.map((e) => e.cardId).includes(CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G)) {
-			secondAttacker.immuneWhenAttackCharges = 1;
-		}
 		simulateAttack(
 			playerBoard,
 			playerEntity,

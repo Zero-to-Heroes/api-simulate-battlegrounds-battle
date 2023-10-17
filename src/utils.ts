@@ -643,9 +643,11 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 					? 1
 					: 0,
 			// It's not an issue adding a charge for entities without a special ability
-			abiityChargesLeft: [CardIds.TransmutedBramblewitch_BG27_013_G, CardIds.Mannoroth_BG27_507_G].includes(
-				entity.cardId as CardIds,
-			)
+			abiityChargesLeft: [
+				CardIds.TransmutedBramblewitch_BG27_013_G,
+				CardIds.Mannoroth_BG27_507_G,
+				CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G,
+			].includes(entity.cardId as CardIds)
 				? 2
 				: 1,
 		} as BoardEntity,

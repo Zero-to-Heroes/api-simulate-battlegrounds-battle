@@ -1555,6 +1555,18 @@ export const applyOnAttackBuffs = (
 				spectator.registerPowerTarget(attacker, e, attackingBoard);
 			});
 	}
+
+	const eclipsion = attackingBoard.find(
+		(e) =>
+			[
+				CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy,
+				CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G,
+			].includes(e.cardId as CardIds) && e.abiityChargesLeft > 0,
+	);
+	if (!!eclipsion) {
+		attacker.immuneWhenAttackCharges = 1;
+		eclipsion.abiityChargesLeft--;
+	}
 };
 
 export const applyOnBeingAttackedBuffs = (
