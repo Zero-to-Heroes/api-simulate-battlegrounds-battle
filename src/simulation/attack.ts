@@ -7,6 +7,7 @@ import { groupByFunction, pickRandom } from '../services/utils';
 import { validEnchantments } from '../simulate-bgs-battle';
 import {
 	addCardsInHand,
+	addImpliedMechanics,
 	addStatsToBoard,
 	afterStatsUpdate,
 	grantRandomStats,
@@ -27,10 +28,10 @@ import { applyOnDeathEffects } from './death-effects';
 import {
 	applyMinionDeathEffect,
 	applyMonstrosity,
-	handleDeathrattleEffects,
+	handleDeathrattles,
 	rememberDeathrattles,
 } from './deathrattle-effects';
-import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
+import { spawnEntities } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { onMinionKill } from './minion-kill';
 import { removeMinionFromBoard } from './remove-minion-from-board';
@@ -76,23 +77,14 @@ export const simulateAttack = (
 			// );
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
-				applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
 				// Can happen with a single defender that has stealth
 				if (defendingEntity) {
-					// console.log(
-					// 	'AATTTTTTTTTTTAAAAAAAAAAAAAAAAAACK by',
-					// 	stringifySimpleCard(attackingEntity, allCards),
-					// 	stringifySimpleCard(defendingEntity, allCards),
-					// 	stringifySimple(attackingBoard, allCards),
-					// );
-					spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
-					applyOnBeingAttackedBuffs(attackingEntity, defendingEntity, defendingBoard, allCards, spectator);
-					performAttack(
+					doFullAttack(
 						attackingEntity,
+						attackingBoard,
+						attackingBoardHero,
 						defendingEntity,
-						attackingBoard,
-						attackingBoardHero,
 						defendingBoard,
 						defendingBoardHero,
 						allCards,
@@ -100,46 +92,6 @@ export const simulateAttack = (
 						sharedState,
 						spectator,
 					);
-					applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
-					processMinionDeath(
-						attackingBoard,
-						attackingBoardHero,
-						defendingBoard,
-						defendingBoardHero,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
-					);
-					if (
-						defendingEntity.health > 0 &&
-						!defendingEntity.definitelyDead &&
-						(defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
-							defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
-					) {
-						defendingEntity.attackImmediately = true;
-						if (defendingEntity.attackImmediately) {
-							simulateAttack(
-								defendingBoard,
-								defendingBoardHero,
-								attackingBoard,
-								attackingBoardHero,
-								null,
-								allCards,
-								spawns,
-								sharedState,
-								spectator,
-							);
-						}
-					}
-					// console.debug(
-					// 	'after attack by',
-					// 	stringifySimpleCard(attackingEntity, allCards),
-					// 	'\n',
-					// 	stringifySimple(attackingBoard, allCards),
-					// 	'\n',
-					// 	stringifySimple(defendingBoard, allCards),
-					// );
 				} else {
 					// Solves the edge case of Sky Pirate vs a stealth board
 					attackingEntity.attackImmediately = false;
@@ -150,6 +102,67 @@ export const simulateAttack = (
 	}
 	// If entities that were before the attacker died, we need to update the attacker index
 	return attackingEntityIndex;
+};
+
+export const doFullAttack = (
+	attackingEntity: BoardEntity,
+	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
+	defendingEntity: BoardEntity,
+	defendingBoard: BoardEntity[],
+	defendingBoardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
+	spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
+	applyOnBeingAttackedBuffs(attackingEntity, defendingEntity, defendingBoard, allCards, spectator);
+	performAttack(
+		attackingEntity,
+		defendingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
+	applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
+	processMinionDeath(
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
+	if (
+		defendingEntity.health > 0 &&
+		!defendingEntity.definitelyDead &&
+		(defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
+			defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
+	) {
+		defendingEntity.attackImmediately = true;
+		if (defendingEntity.attackImmediately) {
+			simulateAttack(
+				defendingBoard,
+				defendingBoardHero,
+				attackingBoard,
+				attackingBoardHero,
+				null,
+				allCards,
+				spawns,
+				sharedState,
+				spectator,
+			);
+		}
+	}
 };
 
 const applyAfterAttackEffects = (
@@ -1143,8 +1156,16 @@ export const processMinionDeath = (
 		// return [board1, board2];
 	}
 
-	sharedState.deaths.push(...deadEntities1);
-	sharedState.deaths.push(...deadEntities2);
+	sharedState.deaths.push(
+		...deadEntities1.map((e) =>
+			addImpliedMechanics({ ...e, health: e.maxHealth, definitelyDead: false }, cardsData),
+		),
+	);
+	sharedState.deaths.push(
+		...deadEntities2.map((e) =>
+			addImpliedMechanics({ ...e, health: e.maxHealth, definitelyDead: false }, cardsData),
+		),
+	);
 	board1Hero.globalInfo.EternalKnightsDeadThisGame =
 		board1Hero.globalInfo.EternalKnightsDeadThisGame +
 		deadEntities1.filter(
@@ -1515,8 +1536,15 @@ export const applyOnAttackBuffs = (
 
 	// Dread Admiral Eliza
 	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
-		const elizas = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza_BGS_047);
-		const elizasTB = attackingBoard.filter((e) => e.cardId === CardIds.DreadAdmiralEliza_TB_BaconUps_134);
+		const elizas = attackingBoard.filter(
+			(e) =>
+				e.cardId === CardIds.DreadAdmiralEliza_BGS_047 || e.cardId === CardIds.AdmiralElizaGoreblade_BG27_555,
+		);
+		const elizasTB = attackingBoard.filter(
+			(e) =>
+				e.cardId === CardIds.DreadAdmiralEliza_TB_BaconUps_134 ||
+				e.cardId === CardIds.AdmiralElizaGoreblade_BG27_555_G,
+		);
 
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
@@ -1734,7 +1762,7 @@ const makeMinionsDie = (
 // 	}
 // };
 
-const buildBoardAfterDeathrattleSpawns = (
+export const buildBoardAfterDeathrattleSpawns = (
 	boardWithKilledMinion: BoardEntity[],
 	boardWithKilledMinionHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
@@ -1767,10 +1795,12 @@ const buildBoardAfterDeathrattleSpawns = (
 			spectator,
 		);
 	}
-	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
-		deadEntity,
+
+	handleDeathrattles(
 		boardWithKilledMinion,
 		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndexFromRight2,
 		opponentBoard,
 		opponentBoardHero,
 		entitiesDeadThisAttack,
@@ -1779,79 +1809,6 @@ const buildBoardAfterDeathrattleSpawns = (
 		sharedState,
 		spectator,
 	);
-
-	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
-		deadEntity,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		opponentBoard,
-		opponentBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
-
-	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
-	performEntitySpawns(
-		candidateEntities,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
-
-	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
-	handleDeathrattleEffects(
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
-
-	// eslint-disable-next-line prettier/prettier
-	if (deadEntity.rememberedDeathrattles?.length) {
-		for (const deathrattle of deadEntity.rememberedDeathrattles) {
-			const entityToProcess: BoardEntity = {
-				...deadEntity,
-				rememberedDeathrattles: undefined,
-				cardId: deathrattle.cardId,
-				enchantments: [
-					{
-						cardId: deathrattle.cardId,
-						originEntityId: deadEntity.entityId,
-						repeats: deathrattle.repeats ?? 1,
-						timing: deathrattle.timing,
-					},
-				],
-			};
-			buildBoardAfterDeathrattleSpawns(
-				boardWithKilledMinion,
-				boardWithKilledMinionHero,
-				entityToProcess,
-				deadMinionIndexFromRight2,
-				opponentBoard,
-				opponentBoardHero,
-				entitiesDeadThisAttack,
-				allCards,
-				cardsData,
-				sharedState,
-				spectator,
-			);
-		}
-	}
 
 	// TODO: check if Avenge effects should proc after deathrattles instead
 	// They most certainly do, since the rat pack + avenge beast buffer works

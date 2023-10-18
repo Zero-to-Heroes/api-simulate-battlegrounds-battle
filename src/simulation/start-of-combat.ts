@@ -19,6 +19,8 @@ import {
 import {
 	dealDamageToEnemy,
 	dealDamageToRandomEnemy,
+	doFullAttack,
+	findNearestEnemies,
 	getNeighbours,
 	performEntitySpawns,
 	processMinionDeath,
@@ -29,6 +31,7 @@ import {
 	applyFireInvocationEnchantment,
 	applyLightningInvocationEnchantment,
 	applyWaterInvocationEnchantment,
+	handleDeathrattles,
 } from './deathrattle-effects';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
@@ -553,6 +556,53 @@ const handleStartOfCombatAnomaliesForPlayer = (
 					rebornTarget.reborn = true;
 				}
 				break;
+			case CardIds.AnomalousTwin_BG27_Anomaly_560:
+				if (!!playerBoard.length && playerBoard.length < 7) {
+					const highestHealthMinion = [...playerBoard].sort((a, b) => b.health - a.health)[0];
+					const copy: BoardEntity = {
+						...highestHealthMinion,
+						lastAffectedByEntity: null,
+					};
+					const newMinions = spawnEntities(
+						copy.cardId,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+						highestHealthMinion.friendly,
+						true,
+						false,
+						false,
+						copy,
+					);
+					const indexFromRight = playerBoard.length - (playerBoard.indexOf(highestHealthMinion) + 1);
+					performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						highestHealthMinion,
+						indexFromRight,
+						opponentBoard,
+						opponentEntity,
+						allCards,
+						spawns,
+						sharedState,
+						spectator,
+					);
+					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
+				}
+				// Recompute first attacker
+				// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
+				return playerBoard.length > opponentBoard.length
+					? 0
+					: opponentBoard.length > playerBoard.length
+					? 1
+					: Math.round(Math.random());
 		}
 	}
 
@@ -1325,6 +1375,120 @@ export const performStartOfCombatMinionsForPlayer = (
 					spectator,
 				);
 				spectator.registerPowerTarget(attacker, copy, attackingBoard);
+			}
+		}
+	} else if (
+		attacker.cardId === CardIds.DiremuckForager_BG27_556 ||
+		attacker.cardId === CardIds.DiremuckForager_BG27_556_G
+	) {
+		const potentialTargets = attackingBoardHero.hand.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards));
+		if (potentialTargets.length > 0) {
+			const target = pickRandom(potentialTargets);
+			const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
+			modifyAttack(target, diremuckBuff, attackingBoard, allCards);
+			modifyHealth(target, diremuckBuff, attackingBoard, allCards);
+			afterStatsUpdate(target, attackingBoard, allCards);
+			spectator.registerPowerTarget(attacker, target, attackingBoard);
+			if (attackingBoard.length < 7) {
+				target.summonedFromHand = true;
+				const newMinions = spawnEntities(
+					target.cardId,
+					1,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoard,
+					defendingBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+					target.friendly,
+					false,
+					false,
+					true,
+					{ ...target } as BoardEntity,
+				);
+				for (const s of newMinions) {
+					s.onCanceledSummon = () => (target.summonedFromHand = false);
+				}
+				performEntitySpawns(
+					newMinions,
+					attackingBoard,
+					attackingBoardHero,
+					attacker,
+					0,
+					defendingBoard,
+					defendingBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+			}
+		}
+	} else if (
+		attacker.cardId === CardIds.HawkstriderHerald_BG27_079 ||
+		attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G
+	) {
+		const multiplier = attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
+		for (const entity of attackingBoard) {
+			for (let i = 0; i < multiplier; i++) {
+				handleDeathrattles(
+					attackingBoard,
+					attackingBoardHero,
+					entity,
+					attackingBoard.length - 1 - attackingBoard.indexOf(entity),
+					defendingBoard,
+					defendingBoardHero,
+					[],
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+			}
+		}
+	} else if (
+		attacker.cardId === CardIds.AudaciousAnchor_BG28_904 ||
+		attacker.cardId === CardIds.AudaciousAnchor_BG28_904_G
+	) {
+		const iterations = attacker.cardId === CardIds.AudaciousAnchor_BG28_904_G ? 2 : 1;
+		for (let i = 0; i < iterations; i++) {
+			const targets = findNearestEnemies(
+				attackingBoard,
+				attacker,
+				attackingBoard.length - 1 - attackingBoard.indexOf(attacker),
+				defendingBoard,
+				1,
+				allCards,
+			);
+			if (!targets.length) {
+				break;
+			}
+
+			const target = targets[0];
+			let battleAttacker = attacker;
+			let battleDefender = target;
+			while (
+				battleAttacker.health > 0 &&
+				battleDefender.health > 0 &&
+				!battleAttacker.definitelyDead &&
+				!battleDefender.definitelyDead
+			) {
+				doFullAttack(
+					battleAttacker,
+					attackingBoard,
+					attackingBoardHero,
+					battleDefender,
+					defendingBoard,
+					defendingBoardHero,
+					allCards,
+					cardsData,
+					sharedState,
+					spectator,
+				);
+				battleAttacker = target;
+				battleDefender = attacker;
 			}
 		}
 	}

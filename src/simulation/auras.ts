@@ -218,6 +218,7 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 			FrostlingBonus: 0,
 			BloodGemAttackBonus: 0,
 			BloodGemHealthBonus: 0,
+			GoldrinnBuff: 0,
 		};
 	}
 };

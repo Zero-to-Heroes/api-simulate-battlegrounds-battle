@@ -42,7 +42,11 @@ export class Spectator {
 	}
 
 	public commitBattleResult(result: 'won' | 'lost' | 'tied'): void {
-		if (this.wonBattles.length >= MAX_SAMPLES && this.lostBattles.length >= MAX_SAMPLES && this.tiedBattles.length >= MAX_SAMPLES) {
+		if (
+			this.wonBattles.length >= MAX_SAMPLES &&
+			this.lostBattles.length >= MAX_SAMPLES &&
+			this.tiedBattles.length >= MAX_SAMPLES
+		) {
 			this.actionsForCurrentBattle = [];
 			return;
 		}
@@ -108,7 +112,11 @@ export class Spectator {
 		this.addAction(action);
 	}
 
-	public registerPlayerAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
+	public registerPlayerAttack(
+		friendlyBoard: readonly BoardEntity[],
+		opponentBoard: readonly BoardEntity[],
+		damage: number,
+	): void {
 		const action: GameAction = {
 			type: 'player-attack',
 			playerBoard: this.sanitize(friendlyBoard),
@@ -122,7 +130,11 @@ export class Spectator {
 		this.addAction(action);
 	}
 
-	public registerOpponentAttack(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[], damage: number): void {
+	public registerOpponentAttack(
+		friendlyBoard: readonly BoardEntity[],
+		opponentBoard: readonly BoardEntity[],
+		damage: number,
+	): void {
 		const action: GameAction = {
 			type: 'opponent-attack',
 			playerBoard: this.sanitize(friendlyBoard),
@@ -162,7 +174,11 @@ export class Spectator {
 		this.addAction(action);
 	}
 
-	public registerPowerTarget(sourceEntity: BoardEntity | BgsPlayerEntity, targetEntity: BoardEntity, targetBoard: BoardEntity[]): void {
+	public registerPowerTarget(
+		sourceEntity: BoardEntity | BgsPlayerEntity,
+		targetEntity: BoardEntity,
+		targetBoard: BoardEntity[],
+	): void {
 		if (!targetEntity) {
 			return;
 		}
@@ -236,7 +252,10 @@ export class Spectator {
 			this.actionsForCurrentBattle.push(action);
 			return;
 		}
-		const collapsed = this.collapseActions([this.actionsForCurrentBattle[this.actionsForCurrentBattle.length - 1], action]);
+		const collapsed = this.collapseActions([
+			this.actionsForCurrentBattle[this.actionsForCurrentBattle.length - 1],
+			action,
+		]);
 		this.actionsForCurrentBattle.splice(this.actionsForCurrentBattle.length - 1, 1, ...collapsed);
 	}
 
@@ -280,8 +299,10 @@ export class Spectator {
 				lastAction.type === 'power-target' &&
 				action.sourceEntityId === lastAction.sourceEntityId
 			) {
-				lastAction.targetEntityIds = lastAction.targetEntityIds ?? (lastAction.targetEntityId ? [lastAction.targetEntityId] : []);
-				action.targetEntityIds = action.targetEntityIds ?? (action.targetEntityId ? [action.targetEntityId] : []);
+				lastAction.targetEntityIds =
+					lastAction.targetEntityIds ?? (lastAction.targetEntityId ? [lastAction.targetEntityId] : []);
+				action.targetEntityIds =
+					action.targetEntityIds ?? (action.targetEntityId ? [action.targetEntityId] : []);
 				lastAction.targetEntityIds.push(...action.targetEntityIds);
 				// So that when multiple Leapfroggers enchantments target the same minion,
 				// we can count them in the replay viewer's text

@@ -34,4 +34,5 @@ export interface BgsPlayerGlobalInfo {
 	FrostlingBonus?: number;
 	BloodGemAttackBonus?: number;
 	BloodGemHealthBonus?: number;
+	GoldrinnBuff?: number;
 }

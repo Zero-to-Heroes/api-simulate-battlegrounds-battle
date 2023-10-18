@@ -12,6 +12,7 @@ import {
 	grantRandomDivineShield,
 	grantRandomHealth,
 	grantRandomStats,
+	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	isCorrectTribe,
 	isFish,
@@ -21,9 +22,16 @@ import {
 	modifyHealth,
 	updateDivineShield,
 } from '../utils';
-import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
+import {
+	buildBoardAfterDeathrattleSpawns,
+	dealDamageToEnemy,
+	dealDamageToRandomEnemy,
+	findNearestEnemies,
+	getNeighbours,
+	performEntitySpawns,
+} from './attack';
 import { triggerBattlecry } from './battlecries';
-import { spawnEntities } from './deathrattle-spawns';
+import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -52,6 +60,106 @@ export const computeDeathrattleMultiplier = (
 		scourgeMultiplier *
 		((goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus + tombs + echoesOfArgus);
 	return multiplier;
+};
+
+export const handleDeathrattles = (
+	boardWithKilledMinion: BoardEntity[],
+	boardWithKilledMinionHero: BgsPlayerEntity,
+	deadEntity: BoardEntity,
+	deadMinionIndexFromRight2: number,
+	opponentBoard: BoardEntity[],
+	opponentBoardHero: BgsPlayerEntity,
+	entitiesDeadThisAttack: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
+		deadEntity,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		opponentBoard,
+		opponentBoardHero,
+		entitiesDeadThisAttack,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
+		deadEntity,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
+	performEntitySpawns(
+		candidateEntities,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndexFromRight2,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
+	handleDeathrattleEffects(
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndexFromRight2,
+		opponentBoard,
+		opponentBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+
+	// eslint-disable-next-line prettier/prettier
+	if (deadEntity.rememberedDeathrattles?.length) {
+		for (const deathrattle of deadEntity.rememberedDeathrattles) {
+			const entityToProcess: BoardEntity = {
+				...deadEntity,
+				rememberedDeathrattles: undefined,
+				cardId: deathrattle.cardId,
+				enchantments: [
+					{
+						cardId: deathrattle.cardId,
+						originEntityId: deadEntity.entityId,
+						repeats: deathrattle.repeats ?? 1,
+						timing: deathrattle.timing,
+					},
+				],
+			};
+			buildBoardAfterDeathrattleSpawns(
+				boardWithKilledMinion,
+				boardWithKilledMinionHero,
+				entityToProcess,
+				deadMinionIndexFromRight2,
+				opponentBoard,
+				opponentBoardHero,
+				entitiesDeadThisAttack,
+				allCards,
+				cardsData,
+				sharedState,
+				spectator,
+			);
+		}
+	}
 };
 
 export const handleDeathrattleEffects = (
@@ -180,23 +288,25 @@ export const handleDeathrattleEffects = (
 				addStatsToBoard(
 					deadEntity,
 					boardWithDeadEntity,
-					multiplier * 5,
-					multiplier * 5,
+					multiplier * 3,
+					multiplier * 3,
 					allCards,
 					spectator,
 					'BEAST',
 				);
+				boardWithDeadEntityHero.globalInfo.GoldrinnBuff += multiplier * 3;
 				break;
 			case CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085:
 				addStatsToBoard(
 					deadEntity,
 					boardWithDeadEntity,
-					multiplier * 10,
-					multiplier * 10,
+					multiplier * 6,
+					multiplier * 6,
 					allCards,
 					spectator,
 					'BEAST',
 				);
+				boardWithDeadEntityHero.globalInfo.GoldrinnBuff += multiplier * 3;
 				break;
 			case CardIds.KingBagurgle_BGS_030:
 				addStatsToBoard(
@@ -591,6 +701,20 @@ export const handleDeathrattleEffects = (
 						allCards,
 						spectator,
 						sharedState,
+					);
+				}
+				break;
+			case CardIds.MotleyPhalanx_BG27_080:
+			case CardIds.MotleyPhalanx_BG27_080_G:
+				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 14 : 7;
+				for (let i = 0; i < multiplier; i++) {
+					grantStatsToMinionsOfEachType(
+						deadEntity,
+						boardWithDeadEntity,
+						motleyBuff,
+						motleyBuff,
+						allCards,
+						spectator,
 					);
 				}
 				break;

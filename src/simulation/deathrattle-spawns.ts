@@ -1377,6 +1377,62 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
+				case CardIds.RapscallionRecruiter_BG26_018:
+				case CardIds.RapscallionRecruiter_BG26_018_G:
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntity.cardId === CardIds.RapscallionRecruiter_BG26_018_G
+								? CardIds.Scallywag_TB_BaconUps_141
+								: CardIds.Scallywag_BGS_061,
+							3,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.CultistSthara_BG27_081:
+				case CardIds.CultistSthara_BG27_081_G:
+					const cultistStharaSpawnNumber = deadEntity.cardId === CardIds.CultistSthara_BG27_081_G ? 2 : 1;
+					const cultistStharaSpawnCandidates = sharedState.deaths
+						.filter((entity) => entity.friendly === deadEntity.friendly)
+						.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.DEMON))
+						.slice(0, cultistStharaSpawnNumber);
+					// console.debug(
+					// 	'cultistStharaSpawnCandidates',
+					// 	i,
+					// 	stringifySimple(cultistStharaSpawnCandidates, allCards),
+					// );
+					cultistStharaSpawnCandidates.forEach((candidate) =>
+						spawnedEntities.push(
+							...spawnEntities(
+								candidate.cardId,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								allCards,
+								spawns,
+								sharedState,
+								spectator,
+								deadEntity.friendly,
+								false,
+								false,
+								true,
+								{ ...candidate } as BoardEntity,
+							),
+						),
+					);
+					// console.debug('spawnedEntities', stringifySimple(spawnedEntities, allCards));
+					break;
 
 				// Putricide-only
 				case CardIds.FoulEgg_BG26_RLK_833:

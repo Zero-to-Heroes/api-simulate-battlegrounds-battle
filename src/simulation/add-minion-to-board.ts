@@ -3,6 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import {
+	addStatsToBoard,
 	afterStatsUpdate,
 	hasCorrectTribe,
 	isCorrectTribe,
@@ -210,6 +211,13 @@ export const handleAddedMinionAuraEffect = (
 	if (hasCorrectTribe(spawned, Race.UNDEAD, allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			modifyAttack(spawned, boardHero.globalInfo.UndeadAttackBonus, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+		}
+	}
+	if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
+		if (boardHero.globalInfo.GoldrinnBuff > 0) {
+			modifyAttack(spawned, boardHero.globalInfo.GoldrinnBuff, board, allCards);
+			modifyHealth(spawned, boardHero.globalInfo.GoldrinnBuff, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
 		}
 	}
@@ -443,6 +451,13 @@ const handleAfterSpawnEffect = (
 					const snapjawBuff = entity.cardId === CardIds.HungrySnapjaw_BG26_370_G ? 2 : 1;
 					modifyHealth(entity, snapjawBuff, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
+				}
+				break;
+			case CardIds.ObserverOfMyths_BG_TTN_078:
+			case CardIds.ObserverOfMyths_BG_TTN_078_G:
+				if (spawned.attack > entity.attack) {
+					const observerBuff = entity.cardId === CardIds.ObserverOfMyths_BG_TTN_078_G ? 2 : 1;
+					addStatsToBoard(entity, board, observerBuff, 0, allCards, spectator);
 				}
 				break;
 
