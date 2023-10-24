@@ -212,15 +212,15 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
 	hero.hand = hero.hand ?? [];
 	if (!hero.globalInfo) {
-		hero.globalInfo = {
-			EternalKnightsDeadThisGame: 0,
-			UndeadAttackBonus: 0,
-			FrostlingBonus: 0,
-			BloodGemAttackBonus: 0,
-			BloodGemHealthBonus: 0,
-			GoldrinnBuff: 0,
-		};
+		hero.globalInfo = {};
 	}
+
+	hero.globalInfo.EternalKnightsDeadThisGame = hero.globalInfo.EternalKnightsDeadThisGame ?? 0;
+	hero.globalInfo.UndeadAttackBonus = hero.globalInfo.UndeadAttackBonus ?? 0;
+	hero.globalInfo.FrostlingBonus = hero.globalInfo.FrostlingBonus ?? 0;
+	hero.globalInfo.BloodGemAttackBonus = hero.globalInfo.BloodGemAttackBonus ?? 0;
+	hero.globalInfo.BloodGemHealthBonus = hero.globalInfo.BloodGemHealthBonus ?? 0;
+	hero.globalInfo.GoldrinnBuff = hero.globalInfo.GoldrinnBuff ?? 0;
 };
 
 export const clearStealthIfNeeded = (board: BoardEntity[], otherBoard: BoardEntity[]): void => {

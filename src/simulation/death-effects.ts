@@ -3,11 +3,12 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { hasCorrectTribe } from '../utils';
+import { performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
-export const applyOnDeathEffects = (
+export const applyAfterDeathEffects = (
 	deadEntity: BoardEntity,
 	deadEntityIndexFromRight: number,
 	boardWithDeadEntity: BoardEntity[],
@@ -18,7 +19,8 @@ export const applyOnDeathEffects = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): readonly BoardEntity[] => {
+) => {
+	const maxSpawns = 7 - boardWithDeadEntity.length;
 	const allSpawns = [];
 	if (hasCorrectTribe(deadEntity, Race.BEAST, allCards)) {
 		const feathermanes =
@@ -34,7 +36,7 @@ export const applyOnDeathEffects = (
 			feathermaneSpawn.summonedFromHand = true;
 			const spawns = spawnEntities(
 				feathermaneSpawn.cardId,
-				1,
+				Math.max(maxSpawns, 1),
 				boardWithDeadEntity,
 				boardWithDeadEntityHero,
 				otherBoard,
@@ -63,5 +65,34 @@ export const applyOnDeathEffects = (
 			allSpawns.push(...spawns);
 		}
 	}
-	return allSpawns;
+
+	performEntitySpawns(
+		allSpawns,
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		deadEntity,
+		deadEntityIndexFromRight,
+		otherBoard,
+		otherBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+};
+
+export const applyOnDeathEffects = (
+	deadEntity: BoardEntity,
+	deadEntityIndexFromRight: number,
+	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+) => {
+	// Nothing yet
+	return [];
 };

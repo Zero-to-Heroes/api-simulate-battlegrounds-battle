@@ -24,7 +24,7 @@ import {
 } from '../utils';
 import { addMinionToBoard, addMinionsToBoard } from './add-minion-to-board';
 import { applyAvengeEffects } from './avenge';
-import { applyOnDeathEffects } from './death-effects';
+import { applyAfterDeathEffects, applyOnDeathEffects } from './death-effects';
 import {
 	applyMinionDeathEffect,
 	applyMonstrosity,
@@ -1287,6 +1287,58 @@ export const processMinionDeath = (
 		);
 	}
 
+	if (Math.random() > 0.5) {
+		handleAfterDeathEffectsForFirstBoard(
+			board2,
+			board2Hero,
+			board1,
+			board1Hero,
+			deadMinionIndexesFromRights2,
+			deadEntities2,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		handleAfterDeathEffectsForFirstBoard(
+			board1,
+			board1Hero,
+			board2,
+			board2Hero,
+			deadMinionIndexesFromRights1,
+			deadEntities1,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	} else {
+		handleAfterDeathEffectsForFirstBoard(
+			board1,
+			board1Hero,
+			board2,
+			board2Hero,
+			deadMinionIndexesFromRights1,
+			deadEntities1,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		handleAfterDeathEffectsForFirstBoard(
+			board2,
+			board2Hero,
+			board1,
+			board1Hero,
+			deadMinionIndexesFromRights2,
+			deadEntities2,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
+
 	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
 	board1
 		.filter((entity) => isFish(entity))
@@ -1502,6 +1554,36 @@ const handleRebornForFirstBoard = (
 		}
 	}
 	// return [firstBoard, otherBoard];
+};
+
+const handleAfterDeathEffectsForFirstBoard = (
+	firstBoard: BoardEntity[],
+	firstBoardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	deadMinionIndexesFromRight: readonly number[],
+	deadEntities: readonly BoardEntity[],
+	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	for (let i = 0; i < deadMinionIndexesFromRight.length; i++) {
+		const entity = deadEntities[i];
+		const indexFromRight = deadMinionIndexesFromRight[i];
+		applyAfterDeathEffects(
+			entity,
+			indexFromRight,
+			firstBoard,
+			firstBoardHero,
+			otherBoard,
+			otherBoardHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
 };
 
 export const applyOnAttackBuffs = (

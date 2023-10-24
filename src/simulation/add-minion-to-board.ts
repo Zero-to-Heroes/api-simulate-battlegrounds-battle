@@ -44,8 +44,8 @@ export const addMinionToBoard = (
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
-	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, allCards, spectator, sharedState);
 	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState);
+	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, allCards, spectator, sharedState);
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, [minionToAdd], allCards, spectator);
 	}
@@ -60,15 +60,6 @@ const handleSpawnEffect = (
 	spectator: Spectator,
 	sharedState: SharedState,
 ): void => {
-	switch (boardHero.heroPowerId) {
-		case CardIds.SproutItOut:
-			spawned.taunt = true;
-			modifyAttack(spawned, 1, board, allCards);
-			modifyHealth(spawned, 2, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-	}
-
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
@@ -171,6 +162,12 @@ export const handleAddedMinionAuraEffect = (
 	sharedState: SharedState,
 ): void => {
 	switch (boardHero.heroPowerId) {
+		case CardIds.SproutItOut:
+			spawned.taunt = true;
+			modifyAttack(spawned, 1, board, allCards);
+			modifyHealth(spawned, 2, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
 		case CardIds.KurtrusAshfallen_CloseThePortal:
 			modifyAttack(spawned, 2, board, allCards);
 			modifyHealth(spawned, 2, board, allCards);
@@ -219,6 +216,7 @@ export const handleAddedMinionAuraEffect = (
 			modifyAttack(spawned, boardHero.globalInfo.GoldrinnBuff, board, allCards);
 			modifyHealth(spawned, boardHero.globalInfo.GoldrinnBuff, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
+			spectator.registerPowerTarget(boardHero, spawned, board);
 		}
 	}
 
@@ -443,6 +441,7 @@ const handleAfterSpawnEffect = (
 					const bananaStatBuff = entity.cardId === CardIds.BananaSlamma_BG26_802_G ? 3 : 2;
 					spawned.attack = spawned.attack * bananaStatBuff;
 					spawned.health = spawned.health * bananaStatBuff;
+					spectator.registerPowerTarget(entity, spawned, board);
 				}
 				break;
 			case CardIds.HungrySnapjaw_BG26_370:
