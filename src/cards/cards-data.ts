@@ -180,9 +180,10 @@ export class CardsData {
 			case CardIds.ScrapScraper_BG26_148_G:
 			case CardIds.RelentlessSentry_BG25_003:
 			case CardIds.RelentlessSentry_BG25_003_G:
+				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
-				return 4;
+				return 5;
 		}
 		return 0;
 	}

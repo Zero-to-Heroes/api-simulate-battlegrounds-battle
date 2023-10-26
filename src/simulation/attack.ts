@@ -1630,7 +1630,7 @@ export const applyOnAttackBuffs = (
 
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
-				modifyAttack(entity, 2, attackingBoard, allCards);
+				modifyAttack(entity, 3, attackingBoard, allCards);
 				modifyHealth(entity, 1, attackingBoard, allCards);
 				spectator.registerPowerTarget(eliza, entity, attackingBoard);
 			});
