@@ -37,6 +37,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.HawkstriderHerald_BG27_079_G,
 	CardIds.AudaciousAnchor_BG28_904,
 	CardIds.AudaciousAnchor_BG28_904_G,
+	CardIds.DiremuckForager_BG27_556,
+	CardIds.DiremuckForager_BG27_556_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,
