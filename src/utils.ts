@@ -145,6 +145,10 @@ export const modifyAttack = (
 	allCards: AllCardsService,
 	spectator: Spectator = null,
 ): void => {
+	if (amount === 0) {
+		return;
+	}
+
 	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
