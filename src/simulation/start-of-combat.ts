@@ -1381,7 +1381,9 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.DiremuckForager_BG27_556 ||
 		attacker.cardId === CardIds.DiremuckForager_BG27_556_G
 	) {
-		const potentialTargets = attackingBoardHero.hand.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards));
+		const potentialTargets = attackingBoardHero.hand
+			.filter((e) => !e.summonedFromHand)
+			.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards));
 		if (potentialTargets.length > 0) {
 			const target = pickRandom(potentialTargets);
 			const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
