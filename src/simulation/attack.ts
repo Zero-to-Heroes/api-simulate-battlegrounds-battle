@@ -263,9 +263,9 @@ const performAttack = (
 		}
 	} else if (
 		attackingEntity.cardId === CardIds.Niuzao_BG27_822 ||
-		attackingEntity.cardId === CardIds.Niuzao_BG27_822
+		attackingEntity.cardId === CardIds.Niuzao_BG27_822_G
 	) {
-		const multiplier = attackingEntity.cardId === CardIds.Niuzao_BG27_822 ? 2 : 1;
+		const multiplier = attackingEntity.cardId === CardIds.Niuzao_BG27_822_G ? 2 : 1;
 		for (let i = 0; i < multiplier; i++) {
 			const target = pickRandom(defendingBoard.filter((e) => e.entityId != defendingEntity.entityId));
 			if (target) {
