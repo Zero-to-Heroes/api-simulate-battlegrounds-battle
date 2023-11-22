@@ -4,10 +4,9 @@ import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
-import { pickRandom } from '../services/utils';
+import { pickRandom, shuffleArray } from '../services/utils';
 import {
 	afterStatsUpdate,
-	getRandomAliveMinion,
 	hasCorrectTribe,
 	isCorrectTribe,
 	makeMinionGolden,
@@ -843,25 +842,59 @@ const handleWaxWarbandForPlayer = (
 	spectator: Spectator,
 ): void => {
 	if (playerBoard.length > 0) {
-		// let tribesGranted = 0;
-		let boardCopy = [...playerBoard];
-		let racesLeft = [...ALL_BG_RACES];
-		while (racesLeft.length > 0) {
-			const tribe = pickRandom(racesLeft);
-			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, allCards);
-			if (validMinion) {
-				modifyAttack(validMinion, cardsData.getTavernLevel(validMinion.cardId), playerBoard, allCards);
-				modifyHealth(validMinion, cardsData.getTavernLevel(validMinion.cardId), playerBoard, allCards);
-				afterStatsUpdate(validMinion, playerBoard, allCards);
-				spectator.registerPowerTarget(playerEntity, validMinion, playerBoard);
-				boardCopy = boardCopy.filter((e) => e !== validMinion);
-				// tribesGranted++;
-			} else {
-				break;
+		const boardWithTribes = playerBoard.filter((e) => !!allCards.getCard(e.cardId)?.races?.length);
+		const boardWithoutAll = boardWithTribes.filter(
+			(e) => !allCards.getCard(e.cardId).races.includes(Race[Race.ALL]),
+		);
+		const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, allCards);
+		const allMinions = [
+			...selectedMinions,
+			...boardWithTribes.filter((e) => allCards.getCard(e.cardId).races.includes(Race[Race.ALL])),
+		];
+		allMinions.forEach((e) => {
+			modifyAttack(e, cardsData.getTavernLevel(e.cardId), playerBoard, allCards);
+			modifyHealth(e, cardsData.getTavernLevel(e.cardId), playerBoard, allCards);
+			afterStatsUpdate(e, playerBoard, allCards);
+			spectator.registerPowerTarget(playerEntity, e, playerBoard);
+		});
+	}
+};
+
+// Not perfect, as I don't think this solves the issue where some cards are mutually exclusive
+const selectMinions = (minions: BoardEntity[], tribes: Race[], allCards: AllCardsService): BoardEntity[] => {
+	// Step 1
+	const minionsByTribe: { [tribe: string]: BoardEntity[] } = {};
+	for (const minion of minions) {
+		for (const tribe of allCards.getCard(minion.cardId).races) {
+			if (!minionsByTribe[tribe]) {
+				minionsByTribe[tribe] = [];
 			}
-			racesLeft = racesLeft.filter((r) => r !== tribe);
+			minionsByTribe[tribe].push(minion);
 		}
 	}
+	for (const tribe of ALL_BG_RACES) {
+		minionsByTribe[tribe] = shuffleArray(minionsByTribe[Race[tribe]] ?? []);
+	}
+
+	const selectedMinions: BoardEntity[] = [];
+
+	// Step 3
+	for (const tribe of tribes) {
+		if (minionsByTribe[tribe]) {
+			minionsByTribe[tribe].sort(
+				(a, b) => allCards.getCard(a.cardId).races.length - allCards.getCard(b.cardId).races.length,
+			);
+			for (const minion of minionsByTribe[tribe]) {
+				if (!selectedMinions.includes(minion)) {
+					selectedMinions.push(minion);
+					break;
+				}
+			}
+		}
+	}
+
+	// Step 4
+	return selectedMinions;
 };
 
 const handleOzumatForPlayer = (
