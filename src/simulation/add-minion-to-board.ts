@@ -134,7 +134,7 @@ const handleSpawnEffect = (
 			case CardIds.MamaBear_BGS_021:
 			case CardIds.MamaBear_TB_BaconUps_090:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 8 : 4;
+					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 6 : 3;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
@@ -212,9 +212,9 @@ export const handleAddedMinionAuraEffect = (
 		}
 	}
 	if (hasCorrectTribe(spawned, Race.BEAST, allCards)) {
-		if (boardHero.globalInfo.GoldrinnBuff > 0) {
-			modifyAttack(spawned, boardHero.globalInfo.GoldrinnBuff, board, allCards);
-			modifyHealth(spawned, boardHero.globalInfo.GoldrinnBuff, board, allCards);
+		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
+			modifyAttack(spawned, boardHero.globalInfo.GoldrinnBuffAtk, board, allCards);
+			modifyHealth(spawned, boardHero.globalInfo.GoldrinnBuffHealth, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
 			spectator.registerPowerTarget(boardHero, spawned, board);
 		}
@@ -343,6 +343,7 @@ export const handleMinionAddedAuraEffect = (
 			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
 			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
 			modifyAttack(spawned, statsBonusFrostling, board, allCards);
+			modifyHealth(spawned, statsBonusFrostling, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:

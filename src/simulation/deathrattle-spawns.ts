@@ -8,6 +8,7 @@ import {
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
+	hasCorrectTribe,
 	isCorrectTribe,
 	stringifySimple,
 } from '../utils';
@@ -1273,7 +1274,10 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.Bassgill_BG26_350_G:
 					const bassgillIterations = deadEntity.cardId === CardIds.Bassgill_BG26_350_G ? 2 : 1;
 					for (let i = 0; i < bassgillIterations; i++) {
-						const hand = boardWithDeadEntityHero.hand?.filter((e) => !e.summonedFromHand) ?? [];
+						const hand =
+							boardWithDeadEntityHero.hand
+								?.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
+								?.filter((e) => !e.summonedFromHand) ?? [];
 						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
 						const highestHealthMinions = highestHealth
 							? hand.filter((c) => c.health === highestHealth)

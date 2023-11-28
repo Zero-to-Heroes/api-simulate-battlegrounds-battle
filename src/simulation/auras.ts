@@ -220,7 +220,8 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 	hero.globalInfo.FrostlingBonus = hero.globalInfo.FrostlingBonus ?? 0;
 	hero.globalInfo.BloodGemAttackBonus = hero.globalInfo.BloodGemAttackBonus ?? 0;
 	hero.globalInfo.BloodGemHealthBonus = hero.globalInfo.BloodGemHealthBonus ?? 0;
-	hero.globalInfo.GoldrinnBuff = hero.globalInfo.GoldrinnBuff ?? 0;
+	hero.globalInfo.GoldrinnBuffAtk = hero.globalInfo.GoldrinnBuffAtk ?? 0;
+	hero.globalInfo.GoldrinnBuffHealth = hero.globalInfo.GoldrinnBuffHealth ?? 0;
 };
 
 export const clearStealthIfNeeded = (board: BoardEntity[], otherBoard: BoardEntity[]): void => {

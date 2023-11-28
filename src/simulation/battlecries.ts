@@ -401,8 +401,8 @@ export const triggerBattlecry = (
 			case CardIds.Murky_BG24_012:
 			case CardIds.Murky_BG24_012_G:
 				const murkyScale = entity.cardId === CardIds.Murky_BG24_012 ? 1 : 2;
-				const murkyBattlecriesPlayed = entity.scriptDataNum1 > 0 ? entity.scriptDataNum1 / murkyScale - 1 : 0;
-				const murkyStats = murkyScale * (1 + murkyBattlecriesPlayed);
+				// const murkyBattlecriesPlayed = entity.scriptDataNum1 > 0 ? entity.scriptDataNum1 / murkyScale - 1 : 0;
+				const murkyStats = murkyScale * 10;
 				const murkyTarget = pickRandom(board.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards)));
 				modifyAttack(murkyTarget, murkyStats, board, allCards);
 				modifyHealth(murkyTarget, murkyStats, board, allCards);

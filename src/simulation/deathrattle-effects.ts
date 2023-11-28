@@ -289,24 +289,26 @@ export const handleDeathrattleEffects = (
 					deadEntity,
 					boardWithDeadEntity,
 					multiplier * 3,
-					multiplier * 3,
+					multiplier * 2,
 					allCards,
 					spectator,
 					'BEAST',
 				);
-				boardWithDeadEntityHero.globalInfo.GoldrinnBuff += multiplier * 3;
+				boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += multiplier * 3;
+				boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += multiplier * 2;
 				break;
 			case CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085:
 				addStatsToBoard(
 					deadEntity,
 					boardWithDeadEntity,
 					multiplier * 6,
-					multiplier * 6,
+					multiplier * 4,
 					allCards,
 					spectator,
 					'BEAST',
 				);
-				boardWithDeadEntityHero.globalInfo.GoldrinnBuff += multiplier * 3;
+				boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += multiplier * 6;
+				boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += multiplier * 4;
 				break;
 			case CardIds.KingBagurgle_BGS_030:
 				addStatsToBoard(
@@ -706,7 +708,7 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.MotleyPhalanx_BG27_080:
 			case CardIds.MotleyPhalanx_BG27_080_G:
-				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 14 : 7;
+				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 10 : 5;
 				for (let i = 0; i < multiplier; i++) {
 					grantStatsToMinionsOfEachType(
 						deadEntity,
