@@ -33,10 +33,13 @@ export const applyAfterDeathEffects = (
 				) ?? [];
 		// removeCardFromHand(boardWithDeadEntityHero, spawn);
 		for (const feathermaneSpawn of feathermanes) {
+			if (allSpawns.length >= maxSpawns) {
+				break;
+			}
 			feathermaneSpawn.summonedFromHand = true;
 			const spawns = spawnEntities(
 				feathermaneSpawn.cardId,
-				Math.max(maxSpawns, 1),
+				1,
 				boardWithDeadEntity,
 				boardWithDeadEntityHero,
 				otherBoard,
