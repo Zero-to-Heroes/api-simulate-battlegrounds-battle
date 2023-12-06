@@ -39,6 +39,7 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.AudaciousAnchor_BG28_904_G,
 	CardIds.DiremuckForager_BG27_556,
 	CardIds.DiremuckForager_BG27_556_G,
+	CardIds.UpperHand_BG28_573,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,
@@ -171,6 +172,8 @@ export class CardsData {
 			case CardIds.BoomSquad_BG27_Reward_502:
 			case CardIds.ChampionOfThePrimus_BG27_029:
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
+			case CardIds.TremblingTrolley_BG28_967:
+			case CardIds.TremblingTrolley_BG28_967_G:
 				return 3;
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
@@ -182,6 +185,8 @@ export class CardsData {
 			case CardIds.ScrapScraper_BG26_148_G:
 			case CardIds.RelentlessSentry_BG25_003:
 			case CardIds.RelentlessSentry_BG25_003_G:
+			case CardIds.PhaerixWrathOfTheSun_BG28_403:
+			case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:

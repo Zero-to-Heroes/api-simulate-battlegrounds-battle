@@ -4,7 +4,7 @@ import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
-import { pickRandom, shuffleArray } from '../services/utils';
+import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
 import {
 	afterStatsUpdate,
 	hasCorrectTribe,
@@ -12,7 +12,6 @@ import {
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
-	stringifySimple,
 	updateDivineShield,
 } from '../utils';
 import {
@@ -50,6 +49,18 @@ export const handleStartOfCombat = (
 ): number => {
 	// https://twitter.com/DCalkosz/status/1564705111850434561
 	currentAttacker = handleStartOfCombatQuestRewards(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	currentAttacker = handleStartOfCombatSpells(
 		playerEntity,
 		playerBoard,
 		opponentEntity,
@@ -389,6 +400,45 @@ const handleStartOfCombatQuestRewards = (
 	return currentAttacker;
 };
 
+const handleStartOfCombatSpells = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
+	currentAttacker = handleStartOfCombatSpellsForPlayer(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	currentAttacker = handleStartOfCombatSpellsForPlayer(
+		opponentEntity,
+		opponentBoard,
+		playerEntity,
+		playerBoard,
+		currentAttacker,
+		allCards,
+		spawns,
+		sharedState,
+		gameState,
+		spectator,
+	);
+	return currentAttacker;
+};
+
 const handleStartOfCombatAnomalies = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
@@ -522,6 +572,37 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						spectator,
 						sharedState,
 					);
+				}
+				break;
+		}
+	}
+
+	return currentAttacker;
+};
+
+const handleStartOfCombatSpellsForPlayer = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	allCards: AllCardsService,
+	spawns: CardsData,
+	sharedState: SharedState,
+	gameState: BgsGameState,
+	spectator: Spectator,
+): number => {
+	if (!playerEntity.secrets?.length) {
+		return currentAttacker;
+	}
+	for (const secret of playerEntity.secrets) {
+		switch (secret.cardId) {
+			case CardIds.UpperHand_BG28_573:
+				if (!!opponentBoard.length) {
+					const target = pickRandom(opponentBoard);
+					target.health = 1;
+					target.maxHealth = 1;
+					spectator.registerPowerTarget(playerEntity, target, opponentBoard);
 				}
 				break;
 		}
@@ -788,11 +869,9 @@ const handleTamsinForPlayer = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	const lowestHealth = Math.min(...playerBoard.map((e) => e.health));
-	const entitiesWithLowestHealth = playerBoard.filter((e) => e.health === lowestHealth);
-	const chosenEntity = pickRandom(entitiesWithLowestHealth);
+	const chosenEntity = pickRandomLowestHealth(playerBoard);
 	if (!chosenEntity) {
-		console.warn('could not pick any entity for tamsin', stringifySimple(entitiesWithLowestHealth, allCards));
+		console.warn('could not pick any entity for tamsin');
 		return;
 	}
 	const newBoard = playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);

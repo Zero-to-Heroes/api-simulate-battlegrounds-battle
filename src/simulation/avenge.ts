@@ -9,6 +9,7 @@ import {
 	afterStatsUpdate,
 	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
+	grantRandomDivineShield,
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
@@ -236,6 +237,14 @@ const handleAvenge = (
 		case CardIds.PashmarTheVengeful_BG23_014_G:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, [null]);
 			break;
+		case CardIds.TremblingTrolley_BG28_967:
+		case CardIds.TremblingTrolley_BG28_967_G:
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, [null]);
+			break;
+		case CardIds.MysticSporebat_BG28_900:
+		case CardIds.MysticSporebat_BG28_900_G:
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, allCards, spectator, [null]);
+			break;
 		case CardIds.WitchwingNestmatron_BG21_038:
 		case CardIds.WitchwingNestmatron_BG21_038_G:
 			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
@@ -425,6 +434,13 @@ const handleAvenge = (
 				spectator,
 				Race[Race.UNDEAD],
 			);
+			break;
+		case CardIds.PhaerixWrathOfTheSun_BG28_403:
+		case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
+			const phaerixLoops = avenger.cardId === CardIds.PhaerixWrathOfTheSun_BG28_403_G ? 2 : 1;
+			for (let i = 0; i < phaerixLoops; i++) {
+				grantRandomDivineShield(avenger, boardWithDeadEntity, allCards, spectator);
+			}
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;

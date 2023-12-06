@@ -1,3 +1,5 @@
+import { BoardEntity } from '../board-entity';
+
 function partitionArray<T>(array: readonly T[], partitionSize: number): readonly T[][] {
 	const workingCopy: T[] = [...array];
 	const result: T[][] = [];
@@ -11,13 +13,15 @@ async function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const groupByFunction = <T>(keyExtractor: (obj: T) => string | number) => (array: readonly T[]): { [key: string]: readonly T[] } => {
-	return array.reduce((objectsByKeyValue, obj) => {
-		const value = keyExtractor(obj);
-		objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
-		return objectsByKeyValue;
-	}, {});
-};
+export const groupByFunction =
+	<T>(keyExtractor: (obj: T) => string | number) =>
+	(array: readonly T[]): { [key: string]: readonly T[] } => {
+		return array.reduce((objectsByKeyValue, obj) => {
+			const value = keyExtractor(obj);
+			objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+			return objectsByKeyValue;
+		}, {});
+	};
 
 export { partitionArray, sleep };
 
@@ -26,6 +30,13 @@ export const pickRandom = <T>(array: readonly T[]): T => {
 		return null;
 	}
 	return array[Math.floor(Math.random() * array.length)];
+};
+
+export const pickRandomLowestHealth = (board: BoardEntity[]): BoardEntity => {
+	const lowestHealth = Math.min(...board.map((e) => e.health));
+	const entitiesWithLowestHealth = board.filter((e) => e.health === lowestHealth);
+	const chosenEntity = pickRandom(entitiesWithLowestHealth);
+	return chosenEntity;
 };
 
 export const encode = (input: string): string => {

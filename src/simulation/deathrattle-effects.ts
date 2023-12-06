@@ -3,7 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { groupByFunction, pickMultipleRandomDifferent, pickRandom } from '../services/utils';
+import { groupByFunction, pickMultipleRandomDifferent, pickRandom, pickRandomLowestHealth } from '../services/utils';
 import {
 	addCardsInHand,
 	addStatsToBoard,
@@ -41,10 +41,12 @@ export const computeDeathrattleMultiplier = (
 	deadEntity: BoardEntity,
 	sharedState: SharedState,
 ): number => {
-	const rivendare = !!board.find(
-		(entity) =>
-			entity.cardId === CardIds.BaronRivendare_BG_FP1_031 || entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
-	);
+	const rivendare =
+		!!board.find(
+			(entity) =>
+				entity.cardId === CardIds.BaronRivendare_BG_FP1_031 ||
+				entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
+		) || boardHero.secrets?.some((e) => e.cardId === CardIds.TitusTribute_BG28_843);
 	const goldenRivendare = board.find(
 		(entity) =>
 			entity.cardId === CardIds.BaronRivendare_TB_BaconUps_055 ||
@@ -507,6 +509,30 @@ export const handleDeathrattleEffects = (
 					}
 				}
 				break;
+			case CardIds.LighterFighter_BG28_968:
+			case CardIds.LighterFighter_BG28_968_G:
+				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
+				// could be spawned between the shots firing), but let's say it's good enough for now
+				const lighterFighterDamage = deadEntity.cardId === CardIds.LighterFighter_BG28_968_G ? 10 : 5;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < 2; j++) {
+						const target = pickRandomLowestHealth(otherBoard);
+						dealDamageToEnemy(
+							target,
+							otherBoard,
+							otherBoardHero,
+							deadEntity,
+							lighterFighterDamage,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						);
+					}
+				}
+				break;
 			case CardIds.DrBoombox_BG25_165:
 			case CardIds.DrBoombox_BG25_165_G:
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
@@ -718,6 +744,56 @@ export const handleDeathrattleEffects = (
 						allCards,
 						spectator,
 					);
+				}
+				break;
+			case CardIds.MoroesStewardOfDeath_BG28_304:
+			case CardIds.MoroesStewardOfDeath_BG28_304_G:
+				const moroesBuff = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 12 : 6;
+				for (let i = 0; i < multiplier; i++) {
+					addStatsToBoard(
+						deadEntity,
+						boardWithDeadEntity,
+						0,
+						moroesBuff,
+						allCards,
+						spectator,
+						Race[Race.UNDEAD],
+					);
+				}
+				break;
+			case CardIds.SteadfastSpirit_BG28_306:
+			case CardIds.SteadfastSpirit_BG28_306_G:
+				const steadfastSpiritBuff = deadEntity.cardId === CardIds.SteadfastSpirit_BG28_306_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					addStatsToBoard(
+						deadEntity,
+						boardWithDeadEntity,
+						steadfastSpiritBuff,
+						steadfastSpiritBuff,
+						allCards,
+						spectator,
+					);
+				}
+				break;
+			case CardIds.Mummifier_BG28_309:
+			case CardIds.Mummifier_BG28_309_G:
+				const mummifierBuff = deadEntity.cardId === CardIds.Mummifier_BG28_309_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < mummifierBuff; j++) {
+						const targets = boardWithDeadEntity
+							.filter(
+								(e) =>
+									e.cardId !== CardIds.Mummifier_BG28_309 &&
+									e.cardId !== CardIds.Mummifier_BG28_309_G,
+							)
+							.filter((e) => !e.reborn)
+							.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards));
+						const target = pickRandom(targets);
+						if (target) {
+							target.reborn = true;
+							spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+						}
+					}
 				}
 				break;
 		}

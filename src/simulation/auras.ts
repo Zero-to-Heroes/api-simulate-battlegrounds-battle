@@ -216,6 +216,7 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 	}
 
 	hero.globalInfo.EternalKnightsDeadThisGame = hero.globalInfo.EternalKnightsDeadThisGame ?? 0;
+	hero.globalInfo.TavernSpellsCastThisGame = hero.globalInfo.TavernSpellsCastThisGame ?? 0;
 	hero.globalInfo.UndeadAttackBonus = hero.globalInfo.UndeadAttackBonus ?? 0;
 	hero.globalInfo.FrostlingBonus = hero.globalInfo.FrostlingBonus ?? 0;
 	hero.globalInfo.BloodGemAttackBonus = hero.globalInfo.BloodGemAttackBonus ?? 0;

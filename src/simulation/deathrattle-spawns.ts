@@ -1409,11 +1409,6 @@ export const spawnEntitiesFromDeathrattle = (
 						.filter((entity) => entity.friendly === deadEntity.friendly)
 						.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.DEMON))
 						.slice(0, cultistStharaSpawnNumber);
-					// console.debug(
-					// 	'cultistStharaSpawnCandidates',
-					// 	i,
-					// 	stringifySimple(cultistStharaSpawnCandidates, allCards),
-					// );
 					cultistStharaSpawnCandidates.forEach((candidate) =>
 						spawnedEntities.push(
 							...spawnEntities(
@@ -1435,7 +1430,28 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						),
 					);
-					// console.debug('spawnedEntities', stringifySimple(spawnedEntities, allCards));
+					break;
+				case CardIds.HarmlessBonehead_BG28_300:
+				case CardIds.HarmlessBonehead_BG28_300_G:
+					const harmlessBoneheadStats = deadEntity.cardId === CardIds.HarmlessBonehead_BG28_300_G ? 2 : 1;
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.SkeletonToken,
+							2,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							allCards,
+							spawns,
+							sharedState,
+							spectator,
+							deadEntity.friendly,
+							false,
+							false,
+							true,
+						).map((e) => ({ ...e, attack: harmlessBoneheadStats, health: harmlessBoneheadStats })),
+					);
 					break;
 
 				// Putricide-only

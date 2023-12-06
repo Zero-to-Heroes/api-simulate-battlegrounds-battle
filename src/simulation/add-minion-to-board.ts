@@ -338,6 +338,14 @@ export const handleMinionAddedAuraEffect = (
 			modifyHealth(spawned, statsBonusKnight, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
 			break;
+		case CardIds.EnsorcelledFungus_BG28_555:
+		case CardIds.EnsorcelledFungus_BG28_555_G:
+			const multiplierFungus = spawned.cardId === CardIds.EnsorcelledFungus_BG28_555_G ? 2 : 1;
+			const statsBonusFungus = multiplierFungus * boardHero.globalInfo.TavernSpellsCastThisGame;
+			modifyAttack(spawned, statsBonusFungus, board, allCards);
+			modifyHealth(spawned, 2 * statsBonusFungus, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
 		case CardIds.FlourishingFrostling_BG26_537:
 		case CardIds.FlourishingFrostling_BG26_537_G:
 			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;

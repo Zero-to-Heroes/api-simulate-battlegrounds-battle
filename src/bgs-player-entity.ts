@@ -1,4 +1,5 @@
 import { BoardEntity } from './board-entity';
+import { BoardSecret } from './board-secret';
 
 export interface BgsPlayerEntity {
 	readonly cardId: string;
@@ -17,6 +18,7 @@ export interface BgsPlayerEntity {
 		avengeCurrent?: number;
 	}[];
 	hand?: BoardEntity[];
+	secrets?: BoardSecret[];
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	globalInfo?: BgsPlayerGlobalInfo;
@@ -36,4 +38,5 @@ export interface BgsPlayerGlobalInfo {
 	BloodGemHealthBonus?: number;
 	GoldrinnBuffAtk?: number;
 	GoldrinnBuffHealth?: number;
+	TavernSpellsCastThisGame?: number;
 }

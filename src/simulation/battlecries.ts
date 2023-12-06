@@ -29,13 +29,17 @@ export const computeBattlecryMultiplier = (
 			entity.cardId === CardIds.BrannBronzebeard_BG_LOE_077 ||
 			entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
 	);
+	const brannBlessings = boardHero.secrets?.some((e) => e.cardId === CardIds.BrannsBlessing_BG28_509);
+	const brannBonus = !!brann || brannBlessings ? 2 : 0;
 	const goldenBrann = board.find(
 		(entity) =>
 			entity.cardId === CardIds.BrannBronzebeard_TB_BaconUps_045 ||
 			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
 	);
+	const goldenBrannBonus = !!goldenBrann ? 3 : 0;
 	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
-	const multiplier = echoesOfArgus + (goldenBrann ? 3 : brann ? 2 : 1);
+
+	const multiplier = echoesOfArgus + Math.max(goldenBrannBonus, brannBonus, 1);
 	return multiplier;
 };
 
@@ -199,7 +203,7 @@ export const triggerBattlecry = (
 				addStatsToBoard(
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
-					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 3 : 6,
+					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 2 : 4,
 					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 1 : 2,
 					allCards,
 					spectator,
@@ -479,6 +483,12 @@ export const triggerBattlecry = (
 							break;
 					}
 				}
+				break;
+			case CardIds.RodeoPerformer_BG28_550:
+			case CardIds.RodeoPerformer_BG28_550_G:
+				const rodeoPerformerCardsToAdd =
+					entity.cardId === CardIds.RodeoPerformer_BG28_550_G ? [null] : [null, null];
+				addCardsInHand(hero, board, allCards, spectator, rodeoPerformerCardsToAdd);
 				break;
 			default:
 				hasTriggered = false;

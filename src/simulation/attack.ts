@@ -860,6 +860,19 @@ export const getDefendingEntity = (
 	) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);
+	} else if (
+		attackingEntity.cardId === CardIds.WorgenVigilante_BG26_921 ||
+		attackingEntity.cardId === CardIds.WorgenVigilante_BG26_921_G
+	) {
+		possibleDefenders = defendingBoard
+			.filter(
+				(entity) =>
+					entity.health <= attackingEntity.attack || attackingEntity.venomous || attackingEntity.poisonous,
+			)
+			.filter((e) => !e.divineShield);
+		if (!possibleDefenders.length) {
+			possibleDefenders = defendingBoard;
+		}
 	} else {
 		possibleDefenders = defendingBoard.filter((e) => !e.stealth);
 		if (!ignoreTaunts) {
@@ -867,7 +880,8 @@ export const getDefendingEntity = (
 			possibleDefenders = taunts.length > 0 ? taunts : possibleDefenders;
 		}
 	}
-	let chosenDefender = possibleDefenders[Math.floor(Math.random() * possibleDefenders.length)];
+
+	let chosenDefender = pickRandom(possibleDefenders);
 	if (chosenDefender?.taunt) {
 		const elistras = defendingBoard.filter(
 			(entity) =>
@@ -958,6 +972,26 @@ export const bumpEntities = (
 		spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);
 		return 0;
 		// return entity;
+	}
+
+	if (
+		entity.abiityChargesLeft > 0 &&
+		(entity.cardId === CardIds.MadMatador_BG28_404 || entity.cardId === CardIds.MadMatador_BG28_404_G)
+	) {
+		entity.abiityChargesLeft--;
+		const newTarget = pickRandom(otherBoard);
+		return bumpEntities(
+			newTarget,
+			bumpInto,
+			otherBoard,
+			otherHero,
+			entityBoard,
+			entityBoardHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
 	}
 	entity.health = entity.health - (entity.damageMultiplier || 1) * bumpInto.attack;
 
@@ -1763,6 +1797,12 @@ export const applyOnBeingAttackedBuffs = (
 		)
 	) {
 		attackerEntity.health = 1;
+	} else if (
+		[CardIds.WaywardGrimscale_BG28_406, CardIds.WaywardGrimscale_BG28_406_G].includes(
+			defendingEntity.cardId as CardIds,
+		)
+	) {
+		defendingEntity.venomous = true;
 	}
 
 	// Based on attacking entity
