@@ -1317,9 +1317,6 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
 	) {
-		// const statsOfMinionsInHand = attackingBoardHero.hand
-		// 	.map((c) => (c.attack ?? 0) + (c.health ?? 0))
-		// 	.reduce((a, b) => a + b, 0);
 		const multiplier = attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;
 		modifyAttack(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff, attackingBoard, allCards);
 		modifyHealth(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff, attackingBoard, allCards);
@@ -1493,7 +1490,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.DiremuckForager_BG27_556 ||
 		attacker.cardId === CardIds.DiremuckForager_BG27_556_G
 	) {
-		const potentialTargets = attackingBoardHero.hand.filter((e) => !e.summonedFromHand);
+		const potentialTargets = attackingBoardHero.hand.filter((e) => !!e.cardId).filter((e) => !e.summonedFromHand);
 		if (potentialTargets.length > 0) {
 			const target = pickRandom(potentialTargets);
 			const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;

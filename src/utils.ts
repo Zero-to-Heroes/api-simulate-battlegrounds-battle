@@ -394,7 +394,7 @@ export const grantRandomStats = (
 ): BoardEntity => {
 	if (board.length > 0) {
 		const target: BoardEntity = getRandomAliveMinion(
-			board.filter((e) => (excludeSource ? e.entityId !== source.entityId : true)),
+			board.filter((e) => !!e.cardId).filter((e) => (excludeSource ? e.entityId !== source.entityId : true)),
 			race,
 			allCards,
 		);

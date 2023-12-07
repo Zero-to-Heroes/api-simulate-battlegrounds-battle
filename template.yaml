@@ -4,37 +4,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: API endpoint to simulate the result of a Battlegrounds battle
 
-Globals:
-    Api:
-        # API Gateway regional endpoints
-        EndpointConfiguration: EDGE
-        Cors:
-            AllowMethods: "'*'"
-            AllowHeaders: "'*'"
-            AllowOrigin: "'*'"
-
 Resources:
-    SimulateBgsBattleFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            Handler: simulate-bgs-battle.default
-            Runtime: nodejs16.x
-            Timeout: 15
-            MemorySize: 512
-            CodeUri: ./dist/simulate-bgs-battle
-            Policies:
-                - AWSLambdaVPCAccessExecutionRole
-                - AmazonSESFullAccess
-                - SecretsManagerReadWrite
-                # - arn:aws:iam::478062583808:policy/CloudWatchPolicyForLambda # See https://stackoverflow.com/questions/51166504/disable-cloudwatch-to-monitor-logs-for-lambda-function
-            Tags:
-                LambdaName: api-simulate-battlegrounds-battle
-            Events:
-                GetMatchStatsResource:
-                    Type: Api
-                    Properties:
-                        Path: /{proxy+}
-                        Method: any
     SimulateBgsBattleFunctionLive:
         Type: AWS::Serverless::Function
         Properties:
@@ -53,10 +23,3 @@ Resources:
             AutoPublishAlias: live
             FunctionUrlConfig:
                 AuthType: NONE
-
-Outputs:
-    SimulateBgsBattleApi:
-        Description: URL to trigger a simulation of a battlegrounds battle
-        Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
-        Export:
-            Name: SimulateBgsBattleApi

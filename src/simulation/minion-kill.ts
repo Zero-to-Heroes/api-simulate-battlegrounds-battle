@@ -19,7 +19,7 @@ export const onMinionKill = (
 	switch (killer?.cardId) {
 		case CardIds.Murcules_BG27_023:
 		case CardIds.Murcules_BG27_023_G:
-			const murculesTarget = pickRandom(killerHero.hand);
+			const murculesTarget = pickRandom(killerHero.hand.filter((e) => !!e?.cardId));
 			if (murculesTarget) {
 				const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
 				modifyAttack(murculesTarget, murculesStats, killerBoard, allCards);
@@ -41,7 +41,7 @@ export const onMinionKill = (
 		case CardIds.TideOracleMorgl_BG27_513:
 		case CardIds.TideOracleMorgl_BG27_513_G:
 			if (killer.attacking) {
-				const tideOracleMorgleTarget = pickRandom(killerHero.hand);
+				const tideOracleMorgleTarget = pickRandom(killerHero.hand.filter((e) => !!e?.cardId));
 				if (tideOracleMorgleTarget) {
 					const tideOracleMorgleMultiplier = killer.cardId === CardIds.TideOracleMorgl_BG27_513 ? 1 : 2;
 					modifyAttack(

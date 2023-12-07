@@ -1277,7 +1277,8 @@ export const spawnEntitiesFromDeathrattle = (
 						const hand =
 							boardWithDeadEntityHero.hand
 								?.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
-								?.filter((e) => !e.summonedFromHand) ?? [];
+								.filter((e) => !!e?.cardId)
+								.filter((e) => !e.summonedFromHand) ?? [];
 						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
 						const highestHealthMinions = highestHealth
 							? hand.filter((c) => c.health === highestHealth)
