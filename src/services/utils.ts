@@ -33,8 +33,9 @@ export const pickRandom = <T>(array: readonly T[]): T => {
 };
 
 export const pickRandomLowestHealth = (board: BoardEntity[]): BoardEntity => {
-	const lowestHealth = Math.min(...board.map((e) => e.health));
-	const entitiesWithLowestHealth = board.filter((e) => e.health === lowestHealth);
+	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
+	const lowestHealth = Math.min(...targetBoard.map((e) => e.health));
+	const entitiesWithLowestHealth = targetBoard.filter((e) => e.health === lowestHealth);
 	const chosenEntity = pickRandom(entitiesWithLowestHealth);
 	return chosenEntity;
 };
