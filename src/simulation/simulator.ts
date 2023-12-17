@@ -126,6 +126,13 @@ export class Simulator {
 			} else {
 				this.currentSpeedAttacker = -1;
 			}
+			if (
+				playerBoard.filter((e) => e.attack > 0).length === 0 &&
+				opponentBoard.filter((e) => e.attack > 0).length === 0
+			) {
+				break;
+			}
+
 			// console.log('this.currentSpeedAttacker 2', this.currentAttacker, this.currentSpeedAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
 				const opponentEntitiesBeforeAttack = opponentBoard
@@ -193,10 +200,15 @@ export class Simulator {
 					'\n',
 					stringifySimple(opponentBoard, this.allCards),
 				);
-				return null;
+				break;
+				// return null;
 			}
 		}
-		if (playerBoard.length === 0 && opponentBoard.length === 0) {
+		if (
+			(playerBoard.length === 0 && opponentBoard.length === 0) ||
+			// E.g. when both players have a 0-attack minion
+			(playerBoard.length > 0 && opponentBoard.length > 0)
+		) {
 			return {
 				result: 'tied',
 			} as SingleSimulationResult;
