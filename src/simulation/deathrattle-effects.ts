@@ -1539,7 +1539,12 @@ export const rememberDeathrattles = (
 	} else {
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 	}
-	// console.log('remembering deathrattle after', '\n', fish.rememberedDeathrattles);
+	// console.log(
+	// 	'remembering deathrattle after',
+	// 	stringifySimple(deadEntities, allCards),
+	// 	'\n',
+	// 	fish.rememberedDeathrattles,
+	// );
 };
 
 const removeOldMurkEyeAttack = (boardWithDeadEntity: BoardEntity[], allCards: AllCardsService) => {

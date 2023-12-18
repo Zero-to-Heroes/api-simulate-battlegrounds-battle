@@ -1326,7 +1326,7 @@ export const spawnEntitiesFromDeathrattle = (
 							deadEntity.cardId === CardIds.MechanizedGiftHorse_BG27_008_G
 								? CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
 								: CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t,
-							1,
+							2,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,

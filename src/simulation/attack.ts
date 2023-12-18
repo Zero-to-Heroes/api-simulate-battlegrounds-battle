@@ -1374,6 +1374,7 @@ export const processMinionDeath = (
 	}
 
 	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
+	// console.debug('processing minion death', stringifySimple(board1, allCards), stringifySimple(board2, allCards));
 	board1
 		.filter((entity) => isFish(entity))
 		.forEach((entity) => rememberDeathrattles(entity, deadEntities1, cardsData, allCards, sharedState));
