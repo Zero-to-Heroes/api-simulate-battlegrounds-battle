@@ -20,24 +20,6 @@ export const setMissingHeroPowerAura = (
 	boardHero: BgsPlayerEntity,
 	otherHero: BgsPlayerEntity,
 ): void => {
-	// if (
-	// 	boardHero.heroPowerId === CardIds.AllWillBurnBattlegrounds ||
-	// 	otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds
-	// ) {
-	// 	const bonus =
-	// 		(boardHero.heroPowerId === CardIds.AllWillBurnBattlegrounds ? 3 : 0) +
-	// 		(otherHero.heroPowerId === CardIds.AllWillBurnBattlegrounds ? 3 : 0);
-	// 	board
-	// 		.filter(
-	// 			(e) =>
-	// 				!e.enchantments.find(
-	// 					(ench) => ench.cardId === CardIds.AllWillBurn_AllWillBurnEnchantmentBattlegrounds,
-	// 				),
-	// 		)
-	// 		.forEach((e) => {
-	// 			e.attack += bonus;
-	// 		});
-	// }
 	if (boardHero.heroPowerId === CardIds.TheSmokingGun) {
 		board
 			.filter(

@@ -364,7 +364,7 @@ const handleAvenge = (
 			break;
 		case CardIds.Bristlebach_BG26_157:
 		case CardIds.Bristlebach_BG26_157_G:
-			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 2 : 1;
+			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
 			for (let i = 0; i < bristlebachMultiplier; i++) {
 				for (const entity of boardWithDeadEntity) {
 					if (hasCorrectTribe(entity, Race.QUILBOAR, allCards)) {

@@ -734,7 +734,7 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.MotleyPhalanx_BG27_080:
 			case CardIds.MotleyPhalanx_BG27_080_G:
-				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 10 : 5;
+				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 8 : 4;
 				for (let i = 0; i < multiplier; i++) {
 					grantStatsToMinionsOfEachType(
 						deadEntity,
@@ -748,13 +748,14 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.MoroesStewardOfDeath_BG28_304:
 			case CardIds.MoroesStewardOfDeath_BG28_304_G:
-				const moroesBuff = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 12 : 6;
+				const moroesBuffAtk = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 4 : 2;
+				const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 12 : 6;
 				for (let i = 0; i < multiplier; i++) {
 					addStatsToBoard(
 						deadEntity,
 						boardWithDeadEntity,
-						0,
-						moroesBuff,
+						moroesBuffAtk,
+						moroesBuffHealth,
 						allCards,
 						spectator,
 						Race[Race.UNDEAD],

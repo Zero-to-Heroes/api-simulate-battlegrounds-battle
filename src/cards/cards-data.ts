@@ -145,8 +145,6 @@ export class CardsData {
 			// Not technically an avenge, but behaves as if
 			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
 			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
-			case CardIds.Bristlebach_BG26_157:
-			case CardIds.Bristlebach_BG26_157_G:
 			case CardIds.IceSickle:
 				return 1;
 			case CardIds.GhoulOfTheFeast_BG25_002:
@@ -159,6 +157,8 @@ export class CardsData {
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 			case CardIds.VanndarStormpike_LeadTheStormpikes:
 			case CardIds.Drekthar_LeadTheFrostwolves:
+			case CardIds.Bristlebach_BG26_157:
+			case CardIds.Bristlebach_BG26_157_G:
 				return 2;
 			case CardIds.BuddingGreenthumb_BG21_030:
 			case CardIds.BuddingGreenthumb_BG21_030_G:

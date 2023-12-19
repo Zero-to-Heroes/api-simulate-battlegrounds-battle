@@ -276,7 +276,7 @@ export const triggerBattlecry = (
 				addStatsToBoard(
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
-					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
+					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
 					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
 					allCards,
 					spectator,
