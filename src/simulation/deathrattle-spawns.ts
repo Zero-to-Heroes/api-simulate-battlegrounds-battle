@@ -1497,6 +1497,10 @@ export const spawnEntitiesFromDeathrattle = (
 			}
 		}
 	}
+	// For minion token attack order
+	spawnedEntities.forEach((e) => {
+		e.attacksPerformed = (deadEntity.attacksPerformed ?? 1) - 1;
+	});
 	return spawnedEntities;
 };
 
@@ -1659,5 +1663,8 @@ export const spawnEntitiesFromEnchantments = (
 			}
 		}
 	}
+	spawnedEntities.forEach((e) => {
+		e.attacksPerformed = (deadEntity.attacksPerformed ?? 1) - 1;
+	});
 	return spawnedEntities;
 };

@@ -59,7 +59,7 @@ export const simulateAttack = (
 	const attackingEntity =
 		forceAttackingEntityIndex != null
 			? attackingBoard[forceAttackingEntityIndex]
-			: getAttackingEntity(attackingBoard, lastAttackerEntityId);
+			: getAttackingEntity(attackingBoard, lastAttackerEntityId, allCards);
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
@@ -644,7 +644,12 @@ const triggerRandomDeathrattle = (
 	// );
 };
 
-const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: number): BoardEntity => {
+const getAttackingEntity = (
+	attackingBoard: BoardEntity[],
+	lastAttackerIndex: number,
+	allCards: AllCardsService,
+): BoardEntity => {
+	lastAttackerIndex = Math.max(0, lastAttackerIndex);
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
@@ -664,19 +669,35 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], lastAttackerIndex: nu
 			validAttackers = candidates;
 		}
 	}
+	// console.debug(
+	// 	'picking attacker',
+	// 	lastAttackerIndex,
+	// 	stringifySimple(validAttackers, allCards),
+	// 	'\n',
+	// 	stringifySimple(attackingBoard, allCards),
+	// );
 
 	let attackingEntity = validAttackers[0];
 	let minNumberOfAttacks: number = attackingEntity.attacksPerformed || 0;
-	for (const entity of validAttackers) {
+	let index = 0;
+	for (let i = 0; i < validAttackers.length; i++) {
+		const entity = validAttackers[i];
 		if ((entity.attacksPerformed || 0) < minNumberOfAttacks) {
 			attackingEntity = entity;
 			minNumberOfAttacks = entity.attacksPerformed;
+			index = i;
 		}
+	}
+
+	// Flag all entities to its left as "can't attack until cycled through"
+	for (let i = 0; i < index; i++) {
+		validAttackers[i].attacksPerformed = (validAttackers[i].attacksPerformed || 0) + 1;
 	}
 
 	if (!attackingEntity.attackImmediately) {
 		attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
 	}
+	// console.debug('chose attackingEntity', stringifySimple(attackingBoard, allCards));
 	return attackingEntity;
 };
 
