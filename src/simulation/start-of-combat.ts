@@ -156,30 +156,61 @@ const handlePreCombatHeroPowers = (
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
-	currentAttacker = handlePreCombatHeroPowersForPlayer(
-		playerEntity,
-		playerBoard,
-		opponentEntity,
-		opponentBoard,
-		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
-		gameState,
-		spectator,
-	);
-	currentAttacker = handlePreCombatHeroPowersForPlayer(
-		opponentEntity,
-		opponentBoard,
-		playerEntity,
-		playerBoard,
-		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
-		gameState,
-		spectator,
-	);
+	if (Math.random() < 0.5) {
+		currentAttacker = handlePreCombatHeroPowersForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			true,
+			allCards,
+			spawns,
+			sharedState,
+			gameState,
+			spectator,
+		);
+		currentAttacker = handlePreCombatHeroPowersForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			false,
+			allCards,
+			spawns,
+			sharedState,
+			gameState,
+			spectator,
+		);
+	} else {
+		currentAttacker = handlePreCombatHeroPowersForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			false,
+			allCards,
+			spawns,
+			sharedState,
+			gameState,
+			spectator,
+		);
+		currentAttacker = handlePreCombatHeroPowersForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			true,
+			allCards,
+			spawns,
+			sharedState,
+			gameState,
+			spectator,
+		);
+	}
 	return currentAttacker;
 };
 
@@ -189,6 +220,7 @@ const handlePreCombatHeroPowersForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
+	friendly: boolean,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
@@ -218,6 +250,18 @@ const handlePreCombatHeroPowersForPlayer = (
 		applyFireInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
 	} else if (playerHeroPowerId === CardIds.AllWillBurn) {
 		applyAllWillBurn(playerBoard, opponentBoard, playerEntity, allCards, spectator);
+	} else if (playerHeroPowerId === CardIds.Ozumat_Tentacular) {
+		handleOzumatForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			friendly,
+			allCards,
+			spawns,
+			sharedState,
+			spectator,
+		);
 	}
 
 	return currentAttacker;
@@ -1081,20 +1125,6 @@ const handlePlayerStartOfCombatHeroPowers = (
 			sharedState,
 			spectator,
 		);
-		// Same as Tamsin? No, because the new minion should repop automatically
-	} else if (playerHeroPowerId === CardIds.Ozumat_Tentacular) {
-		handleOzumatForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			friendly,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
-		// Same as Tamsin? No, because the new minion should repop automatically
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
 		const damageDone = dealDamageToEnemy(
