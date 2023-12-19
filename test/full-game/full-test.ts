@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
+import { encode } from '../../src/services/utils';
 import runSimulation from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
 import jsonEvent3 from './game.json';
@@ -10,7 +11,7 @@ const test = async () => {
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
-			numberOfSimulations: 1,
+			numberOfSimulations: 10000,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 20000,
 		},
@@ -26,12 +27,12 @@ const test = async () => {
 		outcomeSamples: undefined,
 	});
 
-	const sample = simulationResult.outcomeSamples.tied[0];
-	// const base64 = encode(JSON.stringify(sample));
-	// console.log('encoded', base64);
-	// console.log('result', {
-	// 	...simulationResult,
-	// 	outcomeSamples: undefined,
-	// });
+	const sample = simulationResult.outcomeSamples.won[0];
+	const base64 = encode(JSON.stringify(sample));
+	console.log(base64);
+	console.log('result', {
+		...simulationResult,
+		outcomeSamples: undefined,
+	});
 };
 test();

@@ -1101,6 +1101,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		// Tamsin's hero power somehow happens before the current attacker is chosen.
 		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
+		// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
 		handleTeronForPlayer(
@@ -1219,12 +1220,26 @@ const handlePlayerStartOfCombatHeroPowers = (
 		spectator,
 	);
 	if (shouldRecomputeCurrentAttacker) {
+		const previousCurrentAttacker = currentAttacker;
 		currentAttacker =
 			playerBoard.length > opponentBoard.length
-				? 0
+				? friendly
+					? 0
+					: 1
 				: opponentBoard.length > playerBoard.length
-				? 1
+				? friendly
+					? 1
+					: 0
 				: currentAttacker;
+		// console.debug(
+		// 	'recompting current attacker',
+		// 	currentAttacker,
+		// 	playerBoard.length,
+		// 	opponentBoard.length,
+		// 	previousCurrentAttacker,
+		// 	stringifySimple(playerBoard, allCards),
+		// 	stringifySimple(opponentBoard, allCards),
+		// );
 	}
 	return currentAttacker;
 };
