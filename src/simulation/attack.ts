@@ -118,7 +118,18 @@ export const doFullAttack = (
 ) => {
 	applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
 	spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
-	applyOnBeingAttackedBuffs(attackingEntity, defendingEntity, defendingBoard, allCards, spectator);
+	applyOnBeingAttackedBuffs(
+		attackingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingEntity,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		spawns,
+		sharedState,
+		spectator,
+	);
 	performAttack(
 		attackingEntity,
 		defendingEntity,
@@ -1184,6 +1195,7 @@ export const processMinionDeath = (
 		deadEntities2,
 		board2,
 	);
+	// console.debug('dead entities', stringifySimple(deadEntities1, allCards), stringifySimple(deadEntities2, allCards));
 	// No death to process, we can return
 	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
 		return;
@@ -1716,11 +1728,130 @@ export const applyOnAttackBuffs = (
 
 export const applyOnBeingAttackedBuffs = (
 	attackerEntity: BoardEntity,
+	attackerBoard: BoardEntity[],
+	attackerHero: BgsPlayerEntity,
 	defendingEntity: BoardEntity,
 	defendingBoard: BoardEntity[],
+	defendingPlayerEntity: BgsPlayerEntity,
 	allCards: AllCardsService,
+	cardsData: CardsData,
+	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	let secretTriggered = null;
+	if (
+		(secretTriggered = defendingPlayerEntity.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.AutodefenseMatrix_TB_Bacon_Secrets_07,
+		)) != null
+	) {
+		secretTriggered.triggered = true;
+		updateDivineShield(defendingEntity, defendingBoard, true, allCards);
+	} else if (
+		(secretTriggered = defendingPlayerEntity.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.SplittingImage_TB_Bacon_Secrets_04,
+		)) != null &&
+		defendingBoard.length < 7
+	) {
+		secretTriggered.triggered = true;
+		const candidateEntities = spawnEntities(
+			defendingEntity.cardId,
+			1,
+			defendingBoard,
+			defendingPlayerEntity,
+			attackerBoard,
+			attackerHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+			defendingEntity.friendly,
+			false,
+			false,
+			true,
+			{ ...defendingEntity },
+		);
+		const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
+		performEntitySpawns(
+			candidateEntities,
+			defendingBoard,
+			defendingPlayerEntity,
+			defendingEntity,
+			indexFromRight,
+			attackerBoard,
+			attackerHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	} else if (
+		(secretTriggered = defendingPlayerEntity.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.SnakeTrap_TB_Bacon_Secrets_02,
+		)) != null
+	) {
+		secretTriggered.triggered = true;
+		const candidateEntities: readonly BoardEntity[] = spawnEntities(
+			CardIds.SnakeTrap_SnakeLegacyToken,
+			3,
+			defendingBoard,
+			defendingPlayerEntity,
+			attackerBoard,
+			attackerHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+			defendingEntity.friendly,
+			false,
+		);
+		performEntitySpawns(
+			candidateEntities,
+			defendingBoard,
+			defendingPlayerEntity,
+			defendingEntity,
+			0,
+			attackerBoard,
+			attackerHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	} else if (
+		(secretTriggered = defendingPlayerEntity.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.VenomstrikeTrap_TB_Bacon_Secrets_01,
+		)) != null
+	) {
+		secretTriggered.triggered = true;
+		const candidateEntities: readonly BoardEntity[] = spawnEntities(
+			CardIds.EmperorCobraLegacy_BG_EX1_170,
+			1,
+			defendingBoard,
+			defendingPlayerEntity,
+			attackerBoard,
+			attackerHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+			defendingEntity.friendly,
+			false,
+		);
+		performEntitySpawns(
+			candidateEntities,
+			defendingBoard,
+			defendingPlayerEntity,
+			defendingEntity,
+			0,
+			attackerBoard,
+			attackerHero,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
+
 	if (defendingEntity.taunt) {
 		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj_BGS_111);
 		const goldenChampions = defendingBoard.filter(
