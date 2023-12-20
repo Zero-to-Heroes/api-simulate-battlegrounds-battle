@@ -517,6 +517,7 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < 2; j++) {
 						const target = pickRandomLowestHealth(otherBoard);
+						spectator.registerPowerTarget(deadEntity, target, otherBoard);
 						dealDamageToEnemy(
 							target,
 							otherBoard,

@@ -373,7 +373,6 @@ const handleStartOfCombatMinions = (
 			if (attacker.health <= 0 || attacker.definitelyDead) {
 				continue;
 			}
-
 			performStartOfCombatMinionsForPlayer(
 				attacker,
 				playerBoard,
@@ -393,7 +392,6 @@ const handleStartOfCombatMinions = (
 			if (attacker.health <= 0 || attacker.definitelyDead) {
 				continue;
 			}
-
 			performStartOfCombatMinionsForPlayer(
 				attacker,
 				opponentBoard,
@@ -1306,16 +1304,6 @@ export const performStartOfCombatMinionsForPlayer = (
 			sharedState,
 			spectator,
 		);
-		processMinionDeath(
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoard,
-			defendingBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
 	} else if (attacker.cardId === CardIds.RedWhelp_TB_BaconUps_102) {
 		const damage = attackingBoardBefore
 			.map((entity) => allCards.getCard(entity.cardId).races)
@@ -1339,16 +1327,6 @@ export const performStartOfCombatMinionsForPlayer = (
 			damage,
 			attackingBoard,
 			attackingBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
-		processMinionDeath(
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoard,
-			defendingBoardHero,
 			allCards,
 			cardsData,
 			sharedState,
@@ -1598,6 +1576,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
 		for (const entity of attackingBoard) {
 			for (let i = 0; i < multiplier; i++) {
+				// spectator.registerPowerTarget(attacker, entity, attackingBoard);
 				handleDeathrattles(
 					attackingBoard,
 					attackingBoardHero,
@@ -1657,6 +1636,16 @@ export const performStartOfCombatMinionsForPlayer = (
 			}
 		}
 	}
+	processMinionDeath(
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 };
 
 const applyAllWillBurn = (
