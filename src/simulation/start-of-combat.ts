@@ -366,9 +366,14 @@ const handleStartOfCombatMinions = (
 	const opponentAttackers = opponentBoard.filter((entity) =>
 		START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds),
 	);
+
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
+			if (attacker.health <= 0 || attacker.definitelyDead) {
+				continue;
+			}
+
 			performStartOfCombatMinionsForPlayer(
 				attacker,
 				playerBoard,
@@ -385,6 +390,10 @@ const handleStartOfCombatMinions = (
 			);
 		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
+			if (attacker.health <= 0 || attacker.definitelyDead) {
+				continue;
+			}
+
 			performStartOfCombatMinionsForPlayer(
 				attacker,
 				opponentBoard,
@@ -1126,7 +1135,9 @@ const handlePlayerStartOfCombatHeroPowers = (
 			sharedState,
 			spectator,
 		);
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
+	}
+	// TODO: should this recompute the first attack order?
+	else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
 		const damageDone = dealDamageToEnemy(
 			target,
