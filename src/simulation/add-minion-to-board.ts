@@ -9,6 +9,7 @@ import {
 	isCorrectTribe,
 	modifyAttack,
 	modifyHealth,
+	setEntityStats,
 	updateDivineShield,
 } from '../utils';
 import { SharedState } from './shared-state';
@@ -28,7 +29,7 @@ export const addMinionsToBoard = (
 	for (const minionToAdd of [...minionsToAdd].reverse()) {
 		addMinionToBoard(board, boardHero, otherHero, index, minionToAdd, allCards, spectator, sharedState, false);
 	}
-	handleAfterSpawnEffects(board, minionsToAdd, allCards, spectator);
+	handleAfterSpawnEffects(board, boardHero, minionsToAdd, allCards, sharedState, spectator);
 };
 
 export const addMinionToBoard = (
@@ -47,7 +48,7 @@ export const addMinionToBoard = (
 	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, allCards, spectator, sharedState);
 	if (performAfterSpawnEffects) {
-		handleAfterSpawnEffects(board, [minionToAdd], allCards, spectator);
+		handleAfterSpawnEffects(board, boardHero, [minionToAdd], allCards, sharedState, spectator);
 	}
 };
 
@@ -181,6 +182,25 @@ export const handleAddedMinionAuraEffect = (
 			break;
 	}
 
+	// The board here already contains the new minion
+	// TODO: what if the additional part is a potential target for the aura effect?
+	applyAurasToSelf(spawned, board, boardHero, allCards, sharedState, spectator);
+
+	// Apply auras to board
+	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
+	for (const spawnedCardId of cardIds) {
+		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, allCards, spectator, sharedState);
+	}
+};
+
+export const applyAurasToSelf = (
+	spawned: BoardEntity,
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
 	if (!!boardHero.questRewards?.length) {
 		for (const quest of boardHero.questRewards) {
 			switch (quest) {
@@ -200,11 +220,6 @@ export const handleAddedMinionAuraEffect = (
 		}
 	}
 
-	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
-	for (const spawnedCardId of cardIds) {
-		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, allCards, spectator, sharedState);
-	}
-
 	if (hasCorrectTribe(spawned, Race.UNDEAD, allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			modifyAttack(spawned, boardHero.globalInfo.UndeadAttackBonus, board, allCards);
@@ -220,6 +235,11 @@ export const handleAddedMinionAuraEffect = (
 		}
 	}
 
+	// In case Putricide spawns a stictched minion whose stitched part creates an aura effect
+	// const potentialAuraSources: { cardId: string; entityId: number }[] = [
+	// 	{ cardId: spawned.cardId, entityId: spawned.entityId },
+	// 	...(spawned.additionalCards ?? []).map((cardId) => ({ cardId, entityId: spawned.entityId })),
+	// ];
 	for (const entity of board) {
 		switch (entity.cardId) {
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
@@ -265,9 +285,44 @@ export const handleAddedMinionAuraEffect = (
 				break;
 		}
 	}
+
+	switch (spawned.cardId) {
+		case CardIds.EternalKnight_BG25_008:
+		case CardIds.EternalKnight_BG25_008_G:
+			const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
+			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
+			modifyAttack(spawned, statsBonusKnight, board, allCards);
+			modifyHealth(spawned, statsBonusKnight, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.EnsorcelledFungus_BG28_555:
+		case CardIds.EnsorcelledFungus_BG28_555_G:
+			const multiplierFungus = spawned.cardId === CardIds.EnsorcelledFungus_BG28_555_G ? 2 : 1;
+			const statsBonusFungus = multiplierFungus * boardHero.globalInfo.TavernSpellsCastThisGame;
+			modifyAttack(spawned, statsBonusFungus, board, allCards);
+			modifyHealth(spawned, 2 * statsBonusFungus, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.FlourishingFrostling_BG26_537:
+		case CardIds.FlourishingFrostling_BG26_537_G:
+			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
+			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
+			modifyAttack(spawned, statsBonusFrostling, board, allCards);
+			modifyHealth(spawned, statsBonusFrostling, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+		case CardIds.RotHideGnoll_BG25_013:
+		case CardIds.RotHideGnoll_BG25_013_G:
+			const multiplierGnoll = spawned.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
+			const statsBonusGnoll =
+				multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
+			modifyAttack(spawned, statsBonusGnoll, board, allCards);
+			afterStatsUpdate(spawned, board, allCards);
+			break;
+	}
 };
 
-export const handleMinionAddedAuraEffect = (
+const handleMinionAddedAuraEffect = (
 	spawnedCardId: string,
 	spawned: BoardEntity,
 	board: BoardEntity[],
@@ -330,38 +385,6 @@ export const handleMinionAddedAuraEffect = (
 				});
 			break;
 
-		case CardIds.EternalKnight_BG25_008:
-		case CardIds.EternalKnight_BG25_008_G:
-			const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
-			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
-			modifyAttack(spawned, statsBonusKnight, board, allCards);
-			modifyHealth(spawned, statsBonusKnight, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-		case CardIds.EnsorcelledFungus_BG28_555:
-		case CardIds.EnsorcelledFungus_BG28_555_G:
-			const multiplierFungus = spawned.cardId === CardIds.EnsorcelledFungus_BG28_555_G ? 2 : 1;
-			const statsBonusFungus = multiplierFungus * boardHero.globalInfo.TavernSpellsCastThisGame;
-			modifyAttack(spawned, statsBonusFungus, board, allCards);
-			modifyHealth(spawned, 2 * statsBonusFungus, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-		case CardIds.FlourishingFrostling_BG26_537:
-		case CardIds.FlourishingFrostling_BG26_537_G:
-			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
-			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
-			modifyAttack(spawned, statsBonusFrostling, board, allCards);
-			modifyHealth(spawned, statsBonusFrostling, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
-		case CardIds.RotHideGnoll_BG25_013:
-		case CardIds.RotHideGnoll_BG25_013_G:
-			const multiplierGnoll = spawned.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
-			const statsBonusGnoll =
-				multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
-			modifyAttack(spawned, statsBonusGnoll, board, allCards);
-			afterStatsUpdate(spawned, board, allCards);
-			break;
 		case CardIds.SoreLoser_BG27_030:
 		case CardIds.SoreLoser_BG27_030_G:
 			board
@@ -376,19 +399,23 @@ export const handleMinionAddedAuraEffect = (
 
 const handleAfterSpawnEffects = (
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	allSpawned: readonly BoardEntity[],
 	allCards: AllCardsService,
+	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
 	for (const spawned of allSpawned) {
-		handleAfterSpawnEffect(board, spawned, allCards, spectator);
+		handleAfterSpawnEffect(board, hero, spawned, allCards, sharedState, spectator);
 	}
 };
 
 const handleAfterSpawnEffect = (
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	allCards: AllCardsService,
+	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
 	// console.debug('after spawn', stringifySimpleCard(spawned, allCards), stringifySimple(board, allCards));
@@ -448,8 +475,16 @@ const handleAfterSpawnEffect = (
 			case CardIds.BananaSlamma_BG26_802_G:
 				if (hasCorrectTribe(spawned, Race.BEAST, allCards) && entity.entityId !== spawned.entityId) {
 					const bananaStatBuff = entity.cardId === CardIds.BananaSlamma_BG26_802_G ? 3 : 2;
-					spawned.attack = spawned.attack * bananaStatBuff;
-					spawned.health = spawned.health * bananaStatBuff;
+					setEntityStats(
+						spawned,
+						spawned.attack * bananaStatBuff,
+						spawned.health * bananaStatBuff,
+						board,
+						hero,
+						allCards,
+						sharedState,
+						spectator,
+					);
 					spectator.registerPowerTarget(entity, spawned, board);
 				}
 				break;

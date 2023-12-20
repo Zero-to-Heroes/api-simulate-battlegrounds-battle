@@ -18,6 +18,7 @@ import {
 	isFish,
 	modifyAttack,
 	modifyHealth,
+	setEntityStats,
 	stringifySimple,
 	stringifySimpleCard,
 	updateDivineShield,
@@ -1971,8 +1972,8 @@ export const applyOnBeingAttackedBuffs = (
 		) &&
 		attackerEntity.abiityChargesLeft > 0
 	) {
-		defendingEntity.attack = 3;
-		defendingEntity.health = 3;
+		// TODO: also modify all code that directly sets the stats of an entity
+		setEntityStats(defendingEntity, 3, 3, defendingBoard, defendingPlayerEntity, allCards, sharedState, spectator);
 		attackerEntity.abiityChargesLeft--;
 	}
 };

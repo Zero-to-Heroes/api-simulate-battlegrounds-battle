@@ -5,7 +5,7 @@ import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
-import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
+import { applyAurasToSelf, handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
 
@@ -136,6 +136,26 @@ export const buildRandomUndeadCreation = (
 	newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 	newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
 	return newEntity;
+};
+
+export const setEntityStats = (
+	entity: BoardEntity,
+	attack: number | null,
+	health: number | null,
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	if (attack !== null) {
+		entity.attack = attack;
+	}
+	if (health !== null) {
+		entity.health = health;
+		entity.maxHealth = health;
+	}
+	applyAurasToSelf(entity, board, boardHero, allCards, sharedState, spectator);
 };
 
 export const modifyAttack = (
