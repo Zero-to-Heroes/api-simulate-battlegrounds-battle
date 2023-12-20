@@ -299,6 +299,7 @@ const handleRapidReanimationForPlayer = (
 		null,
 	);
 	const indexFromRight = Math.min(playerBoard.length, playerEntity.rapidReanimationIndexFromRight ?? 0);
+	// Don't reapply auras in this particular case? See https://x.com/ZerotoHeroes_HS/status/1737422727118487808?s=20
 	performEntitySpawns(
 		[newMinion],
 		playerBoard,
@@ -311,6 +312,7 @@ const handleRapidReanimationForPlayer = (
 		cardsData,
 		sharedState,
 		spectator,
+		false,
 	);
 	spectator.registerPowerTarget(playerEntity, newMinion, playerBoard);
 	playerEntity.rapidReanimationMinion = null;

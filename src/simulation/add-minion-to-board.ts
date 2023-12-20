@@ -42,10 +42,11 @@ export const addMinionToBoard = (
 	spectator: Spectator,
 	sharedState: SharedState,
 	performAfterSpawnEffects = true,
+	applySelfAuras = true,
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
-	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState);
+	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState, applySelfAuras);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, allCards, spectator, sharedState);
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, boardHero, [minionToAdd], allCards, sharedState, spectator);
@@ -161,6 +162,7 @@ export const handleAddedMinionAuraEffect = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 	sharedState: SharedState,
+	applySelfAuras = true,
 ): void => {
 	switch (boardHero.heroPowerId) {
 		case CardIds.SproutItOut:
@@ -184,7 +186,9 @@ export const handleAddedMinionAuraEffect = (
 
 	// The board here already contains the new minion
 	// TODO: what if the additional part is a potential target for the aura effect?
-	applyAurasToSelf(spawned, board, boardHero, allCards, sharedState, spectator);
+	if (applySelfAuras) {
+		applyAurasToSelf(spawned, board, boardHero, allCards, sharedState, spectator);
+	}
 
 	// Apply auras to board
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];

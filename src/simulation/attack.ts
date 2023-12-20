@@ -2253,6 +2253,7 @@ export const performEntitySpawns = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
+	applySelfAuras = true,
 ): readonly BoardEntity[] => {
 	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 	const spawnedEntities = [];
@@ -2281,6 +2282,8 @@ export const performEntitySpawns = (
 			allCards,
 			spectator,
 			sharedState,
+			true,
+			applySelfAuras,
 		);
 		if (newMinion.attackImmediately) {
 			// Whenever we are already in a combat phase, we need to first clean up the state
