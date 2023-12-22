@@ -12,6 +12,7 @@ import {
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
+	stringifySimple,
 	updateDivineShield,
 } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
@@ -89,6 +90,8 @@ export const handleStartOfCombat = (
 	// There’s a certain order for Start of Combat hero powers, rather than “coin flips” where
 	// an unlucky trigger order could mess up some positioning you had planned for your own hero
 	// power. “Precombat” (Al’Akir, Y’Shaarj), then Illidan, then others.
+	// Update: this seems to have changed: https://x.com/LoewenMitchell/status/1737588920139825335?s=20
+	// now you have all hero powers trigger in a first phase, then you have Illidan, and once everything has triggered, you have Tavish
 	currentAttacker = handlePreCombatHeroPowers(
 		playerEntity,
 		playerBoard,
@@ -104,6 +107,12 @@ export const handleStartOfCombat = (
 	// Because start of combat powers like Red Whelp's use the board composition before Illidan's strike to know the amount of damage
 	const playerBoardBefore = playerBoard.map((e) => ({ ...e }));
 	const opponentBoardBefore = opponentBoard.map((e) => ({ ...e }));
+	console.debug(
+		'before illidan',
+		stringifySimple(playerBoard, allCards),
+		'\n',
+		stringifySimple(opponentBoard, allCards),
+	);
 	currentAttacker = handleIllidanHeroPowers(
 		playerEntity,
 		playerBoard,
@@ -223,11 +232,12 @@ const handlePreCombatHeroPowersForPlayer = (
 	currentAttacker: number,
 	friendly: boolean,
 	allCards: AllCardsService,
-	spawns: CardsData,
+	cardsData: CardsData,
 	sharedState: SharedState,
 	gameState: BgsGameState,
 	spectator: Spectator,
 ): number => {
+	let shouldRecomputeCurrentAttacker = false;
 	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
 	// Since the order is not important here, we just always do the player first
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
@@ -239,7 +249,7 @@ const handlePreCombatHeroPowersForPlayer = (
 			opponentBoard,
 			opponentEntity,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
@@ -259,10 +269,84 @@ const handlePreCombatHeroPowersForPlayer = (
 			opponentEntity,
 			friendly,
 			allCards,
-			spawns,
+			cardsData,
 			sharedState,
 			spectator,
 		);
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
+		handleTamsinForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		// Tamsin's hero power somehow happens before the current attacker is chosen.
+		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
+		// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
+		shouldRecomputeCurrentAttacker = true;
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
+		handleTeronForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+		// Same as Tamsin? No, because the new minion should repop automatically
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarband) {
+		handleWaxWarbandForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.LightningInvocationToken) {
+		applyLightningInvocationEnchantment(
+			playerBoard,
+			playerEntity,
+			null,
+			opponentBoard,
+			opponentEntity,
+			allCards,
+			cardsData,
+			sharedState,
+			spectator,
+		);
+	}
+
+	processMinionDeath(
+		playerBoard,
+		playerEntity,
+		opponentBoard,
+		opponentEntity,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
+	if (shouldRecomputeCurrentAttacker) {
+		const previousCurrentAttacker = currentAttacker;
+		currentAttacker =
+			playerBoard.length > opponentBoard.length
+				? friendly
+					? 0
+					: 1
+				: opponentBoard.length > playerBoard.length
+				? friendly
+					? 1
+					: 0
+				: currentAttacker;
 	}
 
 	return currentAttacker;
@@ -1096,49 +1180,11 @@ const handlePlayerStartOfCombatHeroPowers = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): number => {
+	// eslint-disable-next-line prefer-const
 	let shouldRecomputeCurrentAttacker = false;
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
-		handleTamsinForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
-		// Tamsin's hero power somehow happens before the current attacker is chosen.
-		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
-		// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
-		shouldRecomputeCurrentAttacker = true;
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
-		handleTeronForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
-		// Same as Tamsin? No, because the new minion should repop automatically
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarband) {
-		handleWaxWarbandForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
-	}
 	// TODO: should this recompute the first attack order?
-	else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
+	if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
 		const damageDone = dealDamageToEnemy(
 			target,
@@ -1208,18 +1254,6 @@ const handlePlayerStartOfCombatHeroPowers = (
 		);
 		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
-	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.LightningInvocationToken) {
-		applyLightningInvocationEnchantment(
-			playerBoard,
-			playerEntity,
-			null,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
 	}
 	processMinionDeath(
 		playerBoard,

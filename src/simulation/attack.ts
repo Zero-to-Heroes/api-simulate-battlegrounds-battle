@@ -37,6 +37,7 @@ import { applyFrenzy } from './frenzy';
 import { onMinionKill } from './minion-kill';
 import { removeMinionFromBoard } from './remove-minion-from-board';
 import { SharedState } from './shared-state';
+import { handleRapidReanimation } from './simulator';
 import { Spectator } from './spectator/spectator';
 import { canAttack } from './utils/entity-utils';
 
@@ -1439,6 +1440,9 @@ export const processMinionDeath = (
 	// also have multiple killers, which is not taken into account here.
 	// The current assumption is that it's a suffienctly fringe case to not matter too much
 	processMinionDeath(board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
+
+	// Not sure about the timing here, but I have bothered Mitchell quite a lot already recently :)
+	handleRapidReanimation(board1, board1Hero, board2, board2Hero, allCards, cardsData, sharedState, spectator);
 
 	// Apply "after minion death" effects
 	handleAfterMinionsDeaths(

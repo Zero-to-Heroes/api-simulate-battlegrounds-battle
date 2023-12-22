@@ -73,16 +73,16 @@ export class Simulator {
 			gameState,
 			spectator,
 		);
-		handleRapidReanimation(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			this.allCards,
-			this.spawns,
-			this.sharedState,
-			spectator,
-		);
+		// handleRapidReanimation(
+		// 	playerBoard,
+		// 	playerEntity,
+		// 	opponentBoard,
+		// 	opponentEntity,
+		// 	this.allCards,
+		// 	this.spawns,
+		// 	this.sharedState,
+		// 	spectator,
+		// );
 		// console.log('suggestedNewCurrentAttacker', suggestedNewCurrentAttacker);
 		// When both players have the same amount of minions, it's possible that Illidan's Start of Combat
 		// ability causes the same player to attack twice in a row, which is not the case in real life
@@ -236,7 +236,7 @@ export class Simulator {
 	}
 }
 
-const handleRapidReanimation = (
+export const handleRapidReanimation = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
