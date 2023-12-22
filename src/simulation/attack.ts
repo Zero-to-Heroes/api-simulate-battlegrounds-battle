@@ -2282,8 +2282,6 @@ export const performEntitySpawns = (
 			allCards,
 			spectator,
 			sharedState,
-			true,
-			applySelfAuras,
 		);
 		if (newMinion.attackImmediately) {
 			// Whenever we are already in a combat phase, we need to first clean up the state

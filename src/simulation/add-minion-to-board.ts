@@ -42,11 +42,10 @@ export const addMinionToBoard = (
 	spectator: Spectator,
 	sharedState: SharedState,
 	performAfterSpawnEffects = true,
-	applySelfAuras = true,
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
-	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState, applySelfAuras);
+	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, allCards, spectator, sharedState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, allCards, spectator, sharedState);
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, boardHero, [minionToAdd], allCards, sharedState, spectator);
@@ -162,7 +161,6 @@ export const handleAddedMinionAuraEffect = (
 	allCards: AllCardsService,
 	spectator: Spectator,
 	sharedState: SharedState,
-	applySelfAuras = true,
 ): void => {
 	switch (boardHero.heroPowerId) {
 		case CardIds.SproutItOut:
@@ -186,9 +184,7 @@ export const handleAddedMinionAuraEffect = (
 
 	// The board here already contains the new minion
 	// TODO: what if the additional part is a potential target for the aura effect?
-	if (applySelfAuras) {
-		applyAurasToSelf(spawned, board, boardHero, allCards, sharedState, spectator);
-	}
+	applyAurasToSelf(spawned, board, boardHero, allCards, sharedState, spectator);
 
 	// Apply auras to board
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
@@ -322,6 +318,147 @@ export const applyAurasToSelf = (
 				multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
 			modifyAttack(spawned, statsBonusGnoll, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
+			break;
+	}
+};
+
+// Introduced for Rapid Reanimation: since we will "addMinionToBoard" the minion afterwards, the auras will
+// be re-applied then, so we need to remove them first
+export const removeAurasFromSelf = (
+	entity: BoardEntity,
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	allCards: AllCardsService,
+	sharedState: SharedState,
+	spectator: Spectator,
+): void => {
+	if (!!boardHero.questRewards?.length) {
+		for (const quest of boardHero.questRewards) {
+			switch (quest) {
+				case CardIds.VolatileVenom:
+					entity.attack = Math.max(0, entity.attack - 7);
+					entity.health = Math.max(1, entity.health - 7);
+					entity.enchantments = entity.enchantments.filter(
+						(e) => e.cardId !== CardIds.VolatileVenom_VolatileEnchantment,
+					);
+					break;
+				case CardIds.TheSmokingGun:
+					entity.attack = Math.max(0, entity.attack - 7);
+					break;
+			}
+		}
+	}
+
+	if (hasCorrectTribe(entity, Race.UNDEAD, allCards)) {
+		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
+			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.UndeadAttackBonus);
+		}
+	}
+	if (hasCorrectTribe(entity, Race.BEAST, allCards)) {
+		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
+			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.GoldrinnBuffAtk);
+			entity.health = Math.max(1, entity.health - boardHero.globalInfo.GoldrinnBuffHealth);
+		}
+	}
+
+	for (const entity of board) {
+		switch (entity.cardId) {
+			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
+			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
+				if (hasCorrectTribe(entity, Race.MURLOC, allCards) && entity.entityId !== entity.entityId) {
+					entity.attack = Math.max(
+						0,
+						entity.attack - (entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2),
+					);
+				}
+				break;
+			case CardIds.HummingBird_BG26_805:
+			case CardIds.HummingBird_BG26_805_G:
+				if (hasCorrectTribe(entity, Race.BEAST, allCards) && entity.entityId !== entity.entityId) {
+					entity.attack = Math.max(
+						0,
+						entity.attack - (entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2),
+					);
+				}
+				break;
+			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
+			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
+				if (hasCorrectTribe(entity, Race.PIRATE, allCards) && entity.entityId !== entity.entityId) {
+					entity.attack = Math.max(
+						0,
+						entity.attack - (entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1),
+					);
+					entity.health = Math.max(
+						1,
+						entity.health - (entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1),
+					);
+				}
+				break;
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
+			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
+				entity.attack = Math.max(
+					0,
+					entity.attack - (entity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3),
+				);
+				break;
+			case CardIds.Kathranatir_BG21_039:
+			case CardIds.Kathranatir_BG21_039_G:
+				if (hasCorrectTribe(entity, Race.DEMON, allCards) && entity.entityId !== entity.entityId) {
+					entity.attack = Math.max(
+						0,
+						entity.attack - (entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1),
+					);
+				}
+				break;
+			case CardIds.CyborgDrake_BG25_043:
+			case CardIds.CyborgDrake_BG25_043_G:
+				if (entity.divineShield) {
+					entity.attack = Math.max(
+						0,
+						entity.attack - (entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6),
+					);
+				}
+				break;
+			case CardIds.SoreLoser_BG27_030:
+			case CardIds.SoreLoser_BG27_030_G:
+				if (hasCorrectTribe(entity, Race.UNDEAD, allCards) && entity.entityId !== entity.entityId) {
+					entity.attack = Math.max(
+						0,
+						entity.attack - (entity.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier,
+					);
+				}
+				break;
+		}
+	}
+
+	switch (entity.cardId) {
+		case CardIds.EternalKnight_BG25_008:
+		case CardIds.EternalKnight_BG25_008_G:
+			const multiplierKnight = entity.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
+			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
+			entity.attack = Math.max(0, entity.attack - statsBonusKnight);
+			entity.health = Math.max(1, entity.health - statsBonusKnight);
+			break;
+		case CardIds.EnsorcelledFungus_BG28_555:
+		case CardIds.EnsorcelledFungus_BG28_555_G:
+			const multiplierFungus = entity.cardId === CardIds.EnsorcelledFungus_BG28_555_G ? 2 : 1;
+			const statsBonusFungus = multiplierFungus * boardHero.globalInfo.TavernSpellsCastThisGame;
+			entity.attack = Math.max(0, entity.attack - statsBonusFungus);
+			entity.health = Math.max(1, entity.health - 2 * statsBonusFungus);
+			break;
+		case CardIds.FlourishingFrostling_BG26_537:
+		case CardIds.FlourishingFrostling_BG26_537_G:
+			const multiplierFrostling = entity.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
+			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
+			entity.attack = Math.max(0, entity.attack - statsBonusFrostling);
+			entity.health = Math.max(1, entity.health - statsBonusFrostling);
+			break;
+		case CardIds.RotHideGnoll_BG25_013:
+		case CardIds.RotHideGnoll_BG25_013_G:
+			const multiplierGnoll = entity.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
+			const statsBonusGnoll =
+				multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === entity.friendly).length;
+			entity.attack = Math.max(0, entity.attack - statsBonusGnoll);
 			break;
 	}
 };

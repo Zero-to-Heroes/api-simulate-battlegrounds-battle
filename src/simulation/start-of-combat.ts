@@ -14,6 +14,7 @@ import {
 	modifyHealth,
 	updateDivineShield,
 } from '../utils';
+import { removeAurasFromSelf } from './add-minion-to-board';
 import {
 	dealDamageToEnemy,
 	dealDamageToRandomEnemy,
@@ -952,10 +953,12 @@ const handleTeronForPlayer = (
 	if (minionThatWillDie) {
 		const minionIndexFromRight = playerBoard.length - 1 - playerBoard.indexOf(minionThatWillDie);
 		playerEntity.rapidReanimationIndexFromRight = minionIndexFromRight;
-		playerEntity.rapidReanimationMinion = {
+		const minionToCopy = {
 			...minionThatWillDie,
 			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
 		} as BoardEntity;
+		removeAurasFromSelf(minionToCopy, playerBoard, playerEntity, allCards, sharedState, spectator);
+		playerEntity.rapidReanimationMinion = minionToCopy;
 		minionThatWillDie.definitelyDead = true;
 		spectator.registerPowerTarget(playerEntity, minionThatWillDie, playerBoard);
 	}
