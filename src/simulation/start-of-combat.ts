@@ -12,7 +12,6 @@ import {
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
-	stringifySimple,
 	updateDivineShield,
 } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
@@ -107,12 +106,6 @@ export const handleStartOfCombat = (
 	// Because start of combat powers like Red Whelp's use the board composition before Illidan's strike to know the amount of damage
 	const playerBoardBefore = playerBoard.map((e) => ({ ...e }));
 	const opponentBoardBefore = opponentBoard.map((e) => ({ ...e }));
-	console.debug(
-		'before illidan',
-		stringifySimple(playerBoard, allCards),
-		'\n',
-		stringifySimple(opponentBoard, allCards),
-	);
 	currentAttacker = handleIllidanHeroPowers(
 		playerEntity,
 		playerBoard,
