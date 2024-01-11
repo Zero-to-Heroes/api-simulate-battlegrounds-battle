@@ -21,10 +21,13 @@ export const onMinionKill = (
 		case CardIds.Murcules_BG27_023_G:
 			const murculesTarget = pickRandom(killerHero.hand.filter((e) => !!e?.cardId));
 			if (murculesTarget) {
-				const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
-				modifyAttack(murculesTarget, murculesStats, killerBoard, allCards);
-				modifyHealth(murculesTarget, murculesStats, killerBoard, allCards);
-				afterStatsUpdate(murculesTarget, killerBoard, allCards);
+				// When it's the opponent, the game state already contains all the buffs
+				if (murculesTarget?.friendly) {
+					const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
+					modifyAttack(murculesTarget, murculesStats, killerBoard, allCards);
+					modifyHealth(murculesTarget, murculesStats, killerBoard, allCards);
+					afterStatsUpdate(murculesTarget, killerBoard, allCards);
+				}
 				spectator.registerPowerTarget(killer, murculesTarget, killerBoard);
 			}
 			break;

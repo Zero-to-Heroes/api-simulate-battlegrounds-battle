@@ -40,6 +40,7 @@ export const applyAfterDeathEffects = (
 			(secret) => !secret.triggered && secret?.cardId === CardIds.Redemption_TB_Bacon_Secrets_10,
 		)) != null
 	) {
+		secretTriggered.triggered = true;
 		// TODO: avenge / charges
 		const newSpawn: BoardEntity = {
 			...deadEntity,
@@ -70,6 +71,7 @@ export const applyAfterDeathEffects = (
 			(secret) => !secret.triggered && secret?.cardId === CardIds.Effigy_TB_Bacon_Secrets_05,
 		)) != null
 	) {
+		secretTriggered.triggered = true;
 		const minionTier = cardsData.getTavernLevel(deadEntity.cardId);
 		const newMinion = cardsData.getRandomMinionForTavernTier(minionTier);
 		const spawns = spawnEntities(

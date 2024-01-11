@@ -1557,11 +1557,14 @@ export const performStartOfCombatMinionsForPlayer = (
 		const potentialTargets = attackingBoardHero.hand.filter((e) => !!e.cardId).filter((e) => !e.summonedFromHand);
 		if (potentialTargets.length > 0) {
 			const target = pickRandom(potentialTargets);
-			const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
-			modifyAttack(target, diremuckBuff, attackingBoard, allCards);
-			modifyHealth(target, diremuckBuff, attackingBoard, allCards);
-			afterStatsUpdate(target, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, target, attackingBoard);
+			// When it's the opponent, the game state already contains all the buffs
+			if (target?.friendly) {
+				const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
+				modifyAttack(target, diremuckBuff, attackingBoard, allCards);
+				modifyHealth(target, diremuckBuff, attackingBoard, allCards);
+				afterStatsUpdate(target, attackingBoard, allCards);
+				spectator.registerPowerTarget(attacker, target, attackingBoard);
+			}
 			if (attackingBoard.length < 7) {
 				target.summonedFromHand = true;
 				const newMinions = spawnEntities(
@@ -1606,7 +1609,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
 		for (const entity of attackingBoard) {
 			for (let i = 0; i < multiplier; i++) {
-				// spectator.registerPowerTarget(attacker, entity, attackingBoard);
+				spectator.registerPowerTarget(attacker, entity, attackingBoard);
 				handleDeathrattles(
 					attackingBoard,
 					attackingBoardHero,

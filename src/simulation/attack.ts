@@ -981,8 +981,11 @@ export const bumpEntities = (
 				entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008 ||
 				entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G
 			) {
-				const buff = entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
-				grantRandomStats(entityBoard[i], entityBoardHero.hand, buff, buff, null, true, allCards, null);
+				// When it's the opponent, the game state already contains all the buffs
+				if (entityBoard[i]?.friendly) {
+					const buff = entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
+					grantRandomStats(entityBoard[i], entityBoardHero.hand, buff, buff, null, true, allCards, null);
+				}
 			}
 
 			// So that self-buffs from Bolvar are taken into account

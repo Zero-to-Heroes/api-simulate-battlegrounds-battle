@@ -656,18 +656,21 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.Scourfin_BG26_360:
 			case CardIds.Scourfin_BG26_360_G:
-				const statsScourfin = deadEntityCardId === CardIds.Scourfin_BG26_360_G ? 10 : 5;
-				for (let i = 0; i < multiplier; i++) {
-					grantRandomStats(
-						deadEntity,
-						boardWithDeadEntityHero.hand,
-						statsScourfin,
-						statsScourfin,
-						null,
-						true,
-						allCards,
-						null,
-					);
+				// When it's the opponent, the game state already contains all the buffs
+				if (deadEntity?.friendly) {
+					const statsScourfin = deadEntityCardId === CardIds.Scourfin_BG26_360_G ? 10 : 5;
+					for (let i = 0; i < multiplier; i++) {
+						grantRandomStats(
+							deadEntity,
+							boardWithDeadEntityHero.hand,
+							statsScourfin,
+							statsScourfin,
+							null,
+							true,
+							allCards,
+							null,
+						);
+					}
 				}
 				break;
 			case CardIds.SanguineChampion_BG23_017:
