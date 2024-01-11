@@ -1554,7 +1554,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.DiremuckForager_BG27_556 ||
 		attacker.cardId === CardIds.DiremuckForager_BG27_556_G
 	) {
-		const potentialTargets = attackingBoardHero.hand.filter((e) => !!e.cardId).filter((e) => !e.summonedFromHand);
+		const potentialTargets = attackingBoardHero.hand.filter((e) => !!e.cardId).filter((e) => !e.locked);
 		if (potentialTargets.length > 0) {
 			const target = pickRandom(potentialTargets);
 			// When it's the opponent, the game state already contains all the buffs
@@ -1566,7 +1566,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				spectator.registerPowerTarget(attacker, target, attackingBoard);
 			}
 			if (attackingBoard.length < 7) {
-				target.summonedFromHand = true;
+				target.locked = true;
 				const newMinions = spawnEntities(
 					target.cardId,
 					1,
@@ -1585,7 +1585,7 @@ export const performStartOfCombatMinionsForPlayer = (
 					{ ...target } as BoardEntity,
 				);
 				for (const s of newMinions) {
-					s.onCanceledSummon = () => (target.summonedFromHand = false);
+					s.onCanceledSummon = () => (target.locked = false);
 				}
 				performEntitySpawns(
 					newMinions,

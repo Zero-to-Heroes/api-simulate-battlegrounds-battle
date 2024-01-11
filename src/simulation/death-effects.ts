@@ -96,7 +96,7 @@ export const applyAfterDeathEffects = (
 	if (hasCorrectTribe(deadEntity, Race.BEAST, allCards)) {
 		const feathermanes =
 			boardWithDeadEntityHero.hand
-				?.filter((e) => !e.summonedFromHand)
+				?.filter((e) => !e.locked)
 				.filter(
 					(e) =>
 						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014 ||
@@ -107,7 +107,7 @@ export const applyAfterDeathEffects = (
 			if (allSpawns.length >= maxSpawns) {
 				break;
 			}
-			feathermaneSpawn.summonedFromHand = true;
+			feathermaneSpawn.locked = true;
 			const spawns = spawnEntities(
 				feathermaneSpawn.cardId,
 				1,
@@ -128,7 +128,7 @@ export const applyAfterDeathEffects = (
 
 			// So that it can be flagged as "unspawned" if it is not spawned in the end
 			for (const spawn of spawns) {
-				spawn.onCanceledSummon = () => (feathermaneSpawn.summonedFromHand = false);
+				spawn.onCanceledSummon = () => (feathermaneSpawn.locked = false);
 				// spawn.backRef = feathermaneSpawn;
 			}
 			// console.log(

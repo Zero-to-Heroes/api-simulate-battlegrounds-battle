@@ -66,11 +66,21 @@ export const simulateBattle = (
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 	);
 	const playerHand = playerInfo.player.hand?.map(
-		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
+		(entity) =>
+			({
+				...addImpliedMechanics(entity, cardsData),
+				friendly: true,
+				locked: cardsData.getTavernLevel(entity.cardId) > playerInfo.player.tavernTier,
+			} as BoardEntity),
 	);
 	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId);
 	const opponentBoard = opponentInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
+		(entity) =>
+			({
+				...addImpliedMechanics(entity, cardsData),
+				friendly: false,
+				locked: cardsData.getTavernLevel(entity.cardId) > playerInfo.player.tavernTier,
+			} as BoardEntity),
 	);
 	const opponentHand = opponentInfo.player.hand?.map(
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),

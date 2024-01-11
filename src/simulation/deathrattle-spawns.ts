@@ -1278,7 +1278,7 @@ export const spawnEntitiesFromDeathrattle = (
 							boardWithDeadEntityHero.hand
 								?.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
 								.filter((e) => !!e?.cardId)
-								.filter((e) => !e.summonedFromHand) ?? [];
+								.filter((e) => !e.locked) ?? [];
 						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
 						const highestHealthMinions = highestHealth
 							? hand.filter((c) => c.health === highestHealth)
@@ -1289,10 +1289,10 @@ export const spawnEntitiesFromDeathrattle = (
 							? pickRandom(hand.filter((c) => c.cardId))
 							: null;
 						if (spawn) {
-							spawn.summonedFromHand = true;
+							spawn.locked = true;
 							// Technically it should not be removed from hand, but rather flagged
 							// Probably very low impact doing it like this
-							// spawn.summonedFromHand = true;
+							// spawn.locked = true;
 							// removeCardFromHand(boardWithDeadEntityHero, spawn);
 							const bassgillSpawns = spawnEntities(
 								spawn.cardId,
@@ -1312,7 +1312,7 @@ export const spawnEntitiesFromDeathrattle = (
 								{ ...spawn } as BoardEntity,
 							);
 							for (const s of bassgillSpawns) {
-								s.onCanceledSummon = () => (spawn.summonedFromHand = false);
+								s.onCanceledSummon = () => (spawn.locked = false);
 								// s.backRef = spawn;
 							}
 							spawnedEntities.push(...bassgillSpawns);
