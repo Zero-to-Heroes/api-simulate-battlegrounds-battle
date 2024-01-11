@@ -84,7 +84,7 @@ export const simulateBattle = (
 			} as BoardEntity),
 	);
 	const opponentHand = opponentInfo.player.hand?.map(
-		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
+		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
 	);
 	opponentInfo.player.secrets = opponentInfo.secrets?.filter((e) => !!e?.cardId);
 	opponentInfo.player.friendly = false;
