@@ -58,10 +58,18 @@ export const simulateAttack = (
 		return;
 	}
 
+	// console.debug('\n');
 	const attackingEntity =
 		forceAttackingEntityIndex != null
 			? attackingBoard[forceAttackingEntityIndex]
 			: getAttackingEntity(attackingBoard, lastAttackerEntityId, allCards);
+	// console.debug('attacking entity', stringifySimpleCard(attackingEntity, allCards));
+	// console.debug(
+	// 	'atttaacking board',
+	// 	lastAttackerEntityId,
+	// 	forceAttackingEntityIndex,
+	// 	stringifySimple(attackingBoard, allCards),
+	// );
 	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
@@ -745,6 +753,7 @@ const getAttackingEntity = (
 	allCards: AllCardsService,
 ): BoardEntity => {
 	lastAttackerIndex = Math.max(0, lastAttackerIndex);
+	// console.debug('lastAttackerIndex', lastAttackerIndex);
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
@@ -753,17 +762,20 @@ const getAttackingEntity = (
 	if (validAttackers.some((entity) => entity.attackImmediately)) {
 		validAttackers = validAttackers.filter((entity) => entity.attackImmediately);
 	}
-
 	// Once an entity has attacked, no entity to the left of it can attack until all entities
 	// on the board have attacked
 	// Once the last attacker index is the last entity on the board, we cycle back to the start
-	if (lastAttackerIndex != null && lastAttackerIndex < validAttackers.length - 1) {
+	else if (lastAttackerIndex != null && lastAttackerIndex < validAttackers.length - 1) {
 		// This doesn't work if any entity that appears before the attacked index died in-between
 		const candidates = validAttackers.slice(lastAttackerIndex);
 		if (candidates.length > 0) {
 			validAttackers = candidates;
 		}
+	} else {
+		lastAttackerIndex = 0;
+		attackingBoard.forEach((e) => (e.attacksPerformed = 0));
 	}
+
 	// console.debug(
 	// 	'picking attacker',
 	// 	lastAttackerIndex,
@@ -783,11 +795,14 @@ const getAttackingEntity = (
 			index = i;
 		}
 	}
+	// console.log('minNumberOfAttacks', minNumberOfAttacks, index);
 
 	// Flag all entities to its left as "can't attack until cycled through"
-	for (let i = 0; i < index; i++) {
-		validAttackers[i].attacksPerformed = (validAttackers[i].attacksPerformed || 0) + 1;
-	}
+	// Not sure why this is needed: we're already picking the left-most valid attacker, so why increase the
+	// attacks of the entities that have already been skipped?
+	// for (let i = 0; i < index; i++) {
+	// 	validAttackers[i].attacksPerformed = (validAttackers[i].attacksPerformed || 0) + 1;
+	// }
 
 	if (!attackingEntity.attackImmediately) {
 		attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
