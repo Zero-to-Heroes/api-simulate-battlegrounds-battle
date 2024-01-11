@@ -557,7 +557,7 @@ export const handleDeathrattleEffects = (
 			case CardIds.LighterFighter_BG28_968_G:
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 				// could be spawned between the shots firing), but let's say it's good enough for now
-				const lighterFighterDamage = deadEntity.cardId === CardIds.LighterFighter_BG28_968_G ? 10 : 5;
+				const lighterFighterDamage = deadEntity.cardId === CardIds.LighterFighter_BG28_968_G ? 8 : 4;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < 2; j++) {
 						const target = pickRandomLowestHealth(otherBoard);

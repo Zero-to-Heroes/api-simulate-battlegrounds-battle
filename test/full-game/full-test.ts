@@ -27,9 +27,10 @@ const test = async () => {
 		outcomeSamples: undefined,
 	});
 
-	const sample = simulationResult.outcomeSamples.tied[0];
+	const sample = simulationResult.outcomeSamples.won[0];
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
+	console.log('original sample length', JSON.stringify(sample).length);
 	console.log('result', {
 		...simulationResult,
 		outcomeSamples: undefined,
