@@ -208,8 +208,8 @@ export class Spectator {
 		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
 		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
 		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
-		const friendlyHero = hero1?.hand?.every((entity) => entity.friendly) ? hero1 : hero2;
-		const opponentHero = friendlyHero === hero1 ? hero2 : hero1;
+		const friendlyHero = hero1?.friendly ? hero1 : hero2?.friendly ? hero2 : null;
+		const opponentHero = hero1?.friendly ? hero2 : hero2?.friendly ? hero1 : null;
 		const action: GameAction = {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
