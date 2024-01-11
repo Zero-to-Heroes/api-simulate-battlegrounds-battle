@@ -35,7 +35,7 @@ export class Simulator {
 		spectator: Spectator,
 	): SingleSimulationResult {
 		this.sharedState.anomalies = gameState.anomalies ?? [];
-		spectator.registerStartOfCombat(playerBoard, opponentBoard);
+		spectator.registerStartOfCombat(playerBoard, opponentBoard, playerEntity, opponentEntity);
 		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
 		// is sent tothe simulator
 		// But in fact, the first player decision takes into account that additional minion. See
@@ -314,6 +314,6 @@ const handleRapidReanimationForPlayer = (
 		spectator,
 		false,
 	);
-	spectator.registerPowerTarget(playerEntity, newMinion, playerBoard);
+	spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
 	playerEntity.rapidReanimationMinion = null;
 };

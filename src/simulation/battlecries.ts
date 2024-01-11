@@ -74,7 +74,7 @@ export const triggerBattlecry = (
 				modifyAttack(rockPoolTarget, rockpoolStats, board, allCards);
 				modifyHealth(rockPoolTarget, rockpoolStats, board, allCards);
 				afterStatsUpdate(rockPoolTarget, board, allCards);
-				spectator.registerPowerTarget(entity, rockPoolTarget, board);
+				spectator.registerPowerTarget(entity, rockPoolTarget, board, hero, otherHero);
 				break;
 			case CardIds.ShellCollector_BG23_002:
 			case CardIds.ShellCollector_BG23_002_G:
@@ -132,7 +132,7 @@ export const triggerBattlecry = (
 				modifyAttack(twilightEmissaryTarget, twilightEmissaryStats, board, allCards);
 				modifyHealth(twilightEmissaryTarget, twilightEmissaryStats, board, allCards);
 				afterStatsUpdate(twilightEmissaryTarget, board, allCards);
-				spectator.registerPowerTarget(entity, twilightEmissaryTarget, board);
+				spectator.registerPowerTarget(entity, twilightEmissaryTarget, board, hero, otherHero);
 				break;
 			case CardIds.BloodsailCannoneer_BGS_053:
 			case CardIds.BloodsailCannoneer_TB_BaconUps_138:
@@ -185,7 +185,7 @@ export const triggerBattlecry = (
 					modifyAttack(smoggerTarget, smoggerStats, board, allCards);
 					modifyHealth(smoggerTarget, smoggerStats, board, allCards);
 					afterStatsUpdate(smoggerTarget, board, allCards);
-					spectator.registerPowerTarget(entity, smoggerTarget, board);
+					spectator.registerPowerTarget(entity, smoggerTarget, board, hero, otherHero);
 				}
 				break;
 			case CardIds.AnnihilanBattlemaster_BGS_010:
@@ -196,7 +196,7 @@ export const triggerBattlecry = (
 				const annihilanStats = (entity.cardId === CardIds.AnnihilanBattlemaster_BGS_010 ? 2 : 4) * hpMissing;
 				modifyHealth(entity, annihilanStats, board, allCards);
 				afterStatsUpdate(entity, board, allCards);
-				spectator.registerPowerTarget(entity, entity, board);
+				spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
 				break;
 			case CardIds.ElectricSynthesizer_BG26_963:
 			case CardIds.ElectricSynthesizer_BG26_963_G:
@@ -215,7 +215,7 @@ export const triggerBattlecry = (
 				const necrolyteBloodGems = entity.cardId === CardIds.Necrolyte_BG20_202 ? 2 : 4;
 				const necrolyteTarget = pickRandom(board);
 				playBloodGemsOn(necrolyteTarget, necrolyteBloodGems, board, hero, allCards, spectator);
-				spectator.registerPowerTarget(entity, necrolyteTarget, board);
+				spectator.registerPowerTarget(entity, necrolyteTarget, board, hero, otherHero);
 				break;
 			case CardIds.PrimalfinLookout_BGS_020:
 			case CardIds.PrimalfinLookout_TB_BaconUps_089:
@@ -238,7 +238,7 @@ export const triggerBattlecry = (
 					modifyAttack(target, strongshellScavengerStats, board, allCards);
 					modifyHealth(target, strongshellScavengerStats, board, allCards);
 					afterStatsUpdate(target, board, allCards);
-					spectator.registerPowerTarget(entity, target, board);
+					spectator.registerPowerTarget(entity, target, board, hero, otherHero);
 				});
 				break;
 			case CardIds.VigilantStoneborn_BG24_023:
@@ -248,7 +248,7 @@ export const triggerBattlecry = (
 				vigilantStonebornTarget.taunt = true;
 				modifyHealth(vigilantStonebornTarget, vigilantStonebornStats, board, allCards);
 				afterStatsUpdate(vigilantStonebornTarget, board, allCards);
-				spectator.registerPowerTarget(entity, vigilantStonebornTarget, board);
+				spectator.registerPowerTarget(entity, vigilantStonebornTarget, board, hero, otherHero);
 				break;
 			case CardIds.Bonemare_BG26_ICC_705:
 			case CardIds.Bonemare_BG26_ICC_705_G:
@@ -258,7 +258,7 @@ export const triggerBattlecry = (
 				modifyAttack(bonemareTarget, bonemareStats, board, allCards);
 				modifyHealth(bonemareTarget, bonemareStats, board, allCards);
 				afterStatsUpdate(bonemareTarget, board, allCards);
-				spectator.registerPowerTarget(entity, bonemareTarget, board);
+				spectator.registerPowerTarget(entity, bonemareTarget, board, hero, otherHero);
 				break;
 			case CardIds.GeneralDrakkisath_BG25_309:
 			case CardIds.GeneralDrakkisath_BG25_309_G:
@@ -339,7 +339,7 @@ export const triggerBattlecry = (
 				modifyAttack(livingConstellationTarget, livingConstellationStats, board, allCards);
 				modifyHealth(livingConstellationTarget, livingConstellationStats, board, allCards);
 				afterStatsUpdate(livingConstellationTarget, board, allCards);
-				spectator.registerPowerTarget(entity, livingConstellationTarget, board);
+				spectator.registerPowerTarget(entity, livingConstellationTarget, board, hero, otherHero);
 				break;
 			case CardIds.FairyTaleCaroler_BG26_001:
 			case CardIds.FairyTaleCaroler_BG26_001_G:
@@ -420,7 +420,7 @@ export const triggerBattlecry = (
 				if (balladistTarget) {
 					modifyHealth(balladistTarget, balladistStats, board, allCards);
 					afterStatsUpdate(balladistTarget, board, allCards);
-					spectator.registerPowerTarget(entity, balladistTarget, board);
+					spectator.registerPowerTarget(entity, balladistTarget, board, hero, otherHero);
 				}
 				break;
 			case CardIds.Amalgadon_BGS_069:

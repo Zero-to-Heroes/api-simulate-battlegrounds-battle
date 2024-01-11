@@ -118,8 +118,15 @@ export const doFullAttack = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ) => {
-	applyOnAttackBuffs(attackingEntity, attackingBoard, allCards, spectator);
-	spectator.registerAttack(attackingEntity, defendingEntity, attackingBoard, defendingBoard);
+	applyOnAttackBuffs(attackingEntity, attackingBoard, attackingBoardHero, defendingBoardHero, allCards, spectator);
+	spectator.registerAttack(
+		attackingEntity,
+		defendingEntity,
+		attackingBoard,
+		defendingBoard,
+		attackingBoardHero,
+		defendingBoardHero,
+	);
 	applyOnBeingAttackedBuffs(
 		attackingEntity,
 		attackingBoard,
@@ -233,7 +240,13 @@ const performAttack = (
 					e.cardId === CardIds.PrestorsPyrospawn_BG21_012_G,
 			);
 		prestors.forEach((prestor) => {
-			spectator.registerPowerTarget(prestor, defendingEntity, defendingBoard);
+			spectator.registerPowerTarget(
+				prestor,
+				defendingEntity,
+				defendingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
 			dealDamageToEnemy(
 				defendingEntity,
 				defendingBoard,
@@ -258,7 +271,13 @@ const performAttack = (
 
 		for (let i = 0; i < multiplier; i++) {
 			targets.forEach((target) => {
-				spectator.registerPowerTarget(attackingEntity, target, defendingBoard);
+				spectator.registerPowerTarget(
+					attackingEntity,
+					target,
+					defendingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 				dealDamageToEnemy(
 					target,
 					defendingBoard,
@@ -282,7 +301,13 @@ const performAttack = (
 		for (let i = 0; i < multiplier; i++) {
 			const target = pickRandom(defendingBoard.filter((e) => e.entityId != defendingEntity.entityId));
 			if (target) {
-				spectator.registerPowerTarget(attackingEntity, target, defendingBoard);
+				spectator.registerPowerTarget(
+					attackingEntity,
+					target,
+					defendingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 				dealDamageToEnemy(
 					target,
 					defendingBoard,
@@ -306,7 +331,13 @@ const performAttack = (
 		const targets =
 			attackingEntity.cardId === CardIds.ObsidianRavager_BG27_017_G ? neighbours : [pickRandom(neighbours)];
 		targets.forEach((target) => {
-			spectator.registerPowerTarget(attackingEntity, target, defendingBoard);
+			spectator.registerPowerTarget(
+				attackingEntity,
+				target,
+				defendingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
 			dealDamageToEnemy(
 				target,
 				defendingBoard,
@@ -616,7 +647,7 @@ const triggerRandomDeathrattle = (
 			stringifySimpleCard(sourceEntity, allCards),
 		);
 	}
-	spectator.registerPowerTarget(sourceEntity, targetEntity, attackingBoard);
+	spectator.registerPowerTarget(sourceEntity, targetEntity, attackingBoard, attackingBoardHero, defendingBoardHero);
 	const indexFromRight = attackingBoard.length - (attackingBoard.indexOf(targetEntity) + 1);
 	buildBoardAfterDeathrattleSpawns(
 		attackingBoard,
@@ -799,7 +830,13 @@ export const dealDamageToRandomEnemy = (
 	const validTargets = boardToBeDamaged.filter((e) => e.health > 0 && !e.definitelyDead);
 	const defendingEntity: BoardEntity = pickRandom(validTargets);
 	if (defendingEntity) {
-		spectator.registerPowerTarget(damageSource, defendingEntity, boardToBeDamaged);
+		spectator.registerPowerTarget(
+			damageSource,
+			defendingEntity,
+			boardToBeDamaged,
+			boardToBeDamagedHero,
+			boardWithAttackOriginHero,
+		);
 		dealDamageToEnemy(
 			defendingEntity,
 			boardToBeDamaged,
@@ -952,21 +989,21 @@ export const bumpEntities = (
 			if (entityBoard[i].cardId === CardIds.BolvarFireblood_ICC_858) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
-				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
+				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard, entityBoardHero, otherHero);
 			} else if (entityBoard[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
-				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
+				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard, entityBoardHero, otherHero);
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
 				modifyAttack(entityBoard[i], 2, entityBoard, allCards);
 				modifyHealth(entityBoard[i], 2, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
-				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
+				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard, entityBoardHero, otherHero);
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
 				modifyAttack(entityBoard[i], 4, entityBoard, allCards);
 				modifyHealth(entityBoard[i], 4, entityBoard, allCards);
 				afterStatsUpdate(entityBoard[i], entityBoard, allCards);
-				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard);
+				spectator.registerPowerTarget(entityBoard[i], entityBoard[i], entityBoard, entityBoardHero, otherHero);
 			} else if (
 				entityBoard[i].entityId !== entity.entityId &&
 				(entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401 ||
@@ -998,12 +1035,12 @@ export const bumpEntities = (
 		greaseBots.forEach((bot) => {
 			modifyAttack(entity, 2, entityBoard, allCards);
 			modifyHealth(entity, 2, entityBoard, allCards);
-			spectator.registerPowerTarget(bot, entity, entityBoard);
+			spectator.registerPowerTarget(bot, entity, entityBoard, entityBoardHero, otherHero);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
 			modifyAttack(entity, 4, entityBoard, allCards);
 			modifyHealth(entity, 4, entityBoard, allCards);
-			spectator.registerPowerTarget(bot, entity, entityBoard);
+			spectator.registerPowerTarget(bot, entity, entityBoard, entityBoardHero, otherHero);
 		});
 
 		spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);
@@ -1665,6 +1702,8 @@ const handleAfterDeathEffectsForFirstBoard = (
 export const applyOnAttackBuffs = (
 	attacker: BoardEntity,
 	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
@@ -1684,11 +1723,11 @@ export const applyOnAttackBuffs = (
 		);
 		ripsnarls.forEach((captain) => {
 			modifyAttack(attacker, 3, attackingBoard, allCards);
-			spectator.registerPowerTarget(captain, attacker, attackingBoard);
+			spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
 		});
 		ripsnarlsTB.forEach((captain) => {
 			modifyAttack(attacker, 6, attackingBoard, allCards);
-			spectator.registerPowerTarget(captain, attacker, attackingBoard);
+			spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
 		});
 	}
 
@@ -1708,14 +1747,14 @@ export const applyOnAttackBuffs = (
 			attackingBoard.forEach((entity) => {
 				modifyAttack(entity, 3, attackingBoard, allCards);
 				modifyHealth(entity, 1, attackingBoard, allCards);
-				spectator.registerPowerTarget(eliza, entity, attackingBoard);
+				spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
 		elizasTB.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
 				modifyAttack(entity, 4, attackingBoard, allCards);
 				modifyHealth(entity, 2, attackingBoard, allCards);
-				spectator.registerPowerTarget(eliza, entity, attackingBoard);
+				spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
 	}
@@ -1738,7 +1777,7 @@ export const applyOnAttackBuffs = (
 					attackingBoard,
 					allCards,
 				);
-				spectator.registerPowerTarget(attacker, e, attackingBoard);
+				spectator.registerPowerTarget(attacker, e, attackingBoard, attackingBoardHero, otherHero);
 			});
 	}
 
@@ -1889,23 +1928,23 @@ export const applyOnBeingAttackedBuffs = (
 		champions.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
 			modifyHealth(entity, 2, defendingBoard, allCards);
-			spectator.registerPowerTarget(entity, entity, defendingBoard);
+			spectator.registerPowerTarget(entity, entity, defendingBoard, attackerHero, defendingPlayerEntity);
 		});
 		goldenChampions.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
 			modifyHealth(entity, 4, defendingBoard, allCards);
-			spectator.registerPowerTarget(entity, entity, defendingBoard);
+			spectator.registerPowerTarget(entity, entity, defendingBoard, attackerHero, defendingPlayerEntity);
 		});
 
 		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_BGS_110);
 		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_TB_BaconUps_302);
 		arms.forEach((arm) => {
 			modifyAttack(defendingEntity, 2, defendingBoard, allCards);
-			spectator.registerPowerTarget(arm, defendingEntity, defendingBoard);
+			spectator.registerPowerTarget(arm, defendingEntity, defendingBoard, attackerHero, defendingPlayerEntity);
 		});
 		goldenArms.forEach((arm) => {
 			modifyAttack(defendingEntity, 4, defendingBoard, allCards);
-			spectator.registerPowerTarget(arm, defendingEntity, defendingBoard);
+			spectator.registerPowerTarget(arm, defendingEntity, defendingBoard, attackerHero, defendingPlayerEntity);
 		});
 	}
 
@@ -1915,14 +1954,14 @@ export const applyOnBeingAttackedBuffs = (
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 1, defendingBoard, allCards);
 			modifyHealth(entity, 1, defendingBoard, allCards);
-			spectator.registerPowerTarget(defendingEntity, entity, defendingBoard);
+			spectator.registerPowerTarget(defendingEntity, entity, defendingBoard, attackerHero, defendingPlayerEntity);
 		});
 	} else if (defendingEntity.cardId === CardIds.TormentedRitualist_TB_BaconUps_257) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		neighbours.forEach((entity) => {
 			modifyAttack(entity, 2, defendingBoard, allCards);
 			modifyHealth(entity, 2, defendingBoard, allCards);
-			spectator.registerPowerTarget(defendingEntity, entity, defendingBoard);
+			spectator.registerPowerTarget(defendingEntity, entity, defendingBoard, attackerHero, defendingPlayerEntity);
 		});
 	} else if (
 		defendingEntity.cardId === CardIds.DozyWhelp_BG24_300 ||
@@ -1934,7 +1973,13 @@ export const applyOnBeingAttackedBuffs = (
 			defendingBoard,
 			allCards,
 		);
-		spectator.registerPowerTarget(defendingEntity, defendingEntity, defendingBoard);
+		spectator.registerPowerTarget(
+			defendingEntity,
+			defendingEntity,
+			defendingBoard,
+			attackerHero,
+			defendingPlayerEntity,
+		);
 	} else if (
 		[CardIds.AdaptableBarricade_BG27_022, CardIds.AdaptableBarricade_BG27_022_G].includes(
 			defendingEntity.cardId as CardIds,
@@ -2243,7 +2288,13 @@ const buildBoardAfterRebornSpawns = (
 				modifyAttack(e, multiplier * 3, boardWithKilledMinion, allCards);
 				modifyHealth(e, multiplier * 3, boardWithKilledMinion, allCards);
 				afterStatsUpdate(e, boardWithKilledMinion, allCards);
-				spectator.registerPowerTarget(e, e, boardWithKilledMinion);
+				spectator.registerPowerTarget(
+					e,
+					e,
+					boardWithKilledMinion,
+					boardWithKilledMinionHero,
+					opponentBoardHero,
+				);
 			});
 	}
 };

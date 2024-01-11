@@ -107,7 +107,7 @@ const handleSpawnEffect = (
 					}
 					modifyAttack(entity, 2, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
 			case CardIds.DeflectOBot_BGS_071:
@@ -119,7 +119,7 @@ const handleSpawnEffect = (
 					}
 					modifyAttack(entity, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
 			case CardIds.Bigfernal_BGS_204:
@@ -129,7 +129,7 @@ const handleSpawnEffect = (
 					modifyAttack(entity, statsBonus, board, allCards);
 					modifyHealth(entity, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
 			case CardIds.MamaBear_BGS_021:
@@ -139,7 +139,7 @@ const handleSpawnEffect = (
 					modifyAttack(spawned, statsBonus, board, allCards);
 					modifyHealth(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
 			case CardIds.PackLeader_BGS_017:
@@ -148,7 +148,7 @@ const handleSpawnEffect = (
 					const statsBonus = entity.cardId === CardIds.PackLeader_TB_BaconUps_086 ? 4 : 2;
 					modifyAttack(spawned, statsBonus, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
 		}
@@ -231,7 +231,7 @@ export const applyAurasToSelf = (
 			modifyAttack(spawned, boardHero.globalInfo.GoldrinnBuffAtk, board, allCards);
 			modifyHealth(spawned, boardHero.globalInfo.GoldrinnBuffHealth, board, allCards);
 			afterStatsUpdate(spawned, board, allCards);
-			spectator.registerPowerTarget(boardHero, spawned, board);
+			spectator.registerPowerTarget(boardHero, spawned, board, null, null);
 		}
 	}
 
@@ -582,7 +582,7 @@ const handleAfterSpawnEffect = (
 					if (buffAmount2 > 0) {
 						modifyAttack(entity, buffAmount2, board, allCards);
 						afterStatsUpdate(entity, board, allCards);
-						spectator.registerPowerTarget(entity, entity, board);
+						spectator.registerPowerTarget(entity, entity, board, null, null);
 					}
 				}
 				break;
@@ -594,7 +594,7 @@ const handleAfterSpawnEffect = (
 					board.forEach((e) => {
 						modifyAttack(e, felstomperBuff, board, allCards);
 						afterStatsUpdate(e, board, allCards);
-						spectator.registerPowerTarget(entity, e, board);
+						spectator.registerPowerTarget(entity, e, board, null, null);
 					});
 				}
 				break;
@@ -604,7 +604,7 @@ const handleAfterSpawnEffect = (
 					const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 6 : 3;
 					modifyHealth(entity, xylobonesBuff, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, null, null);
 				}
 				break;
 			case CardIds.OctosariWrapGod_BG26_804:
@@ -626,7 +626,7 @@ const handleAfterSpawnEffect = (
 						sharedState,
 						spectator,
 					);
-					spectator.registerPowerTarget(entity, spawned, board);
+					spectator.registerPowerTarget(entity, spawned, board, null, null);
 				}
 				break;
 			case CardIds.HungrySnapjaw_BG26_370:
@@ -650,7 +650,7 @@ const handleAfterSpawnEffect = (
 				if (hasCorrectTribe(spawned, Race.UNDEAD, allCards) && entity.entityId !== spawned.entityId) {
 					modifyAttack(spawned, 1, board, allCards);
 					afterStatsUpdate(entity, board, allCards);
-					spectator.registerPowerTarget(entity, entity, board);
+					spectator.registerPowerTarget(entity, entity, board, null, null);
 				}
 				break;
 		}

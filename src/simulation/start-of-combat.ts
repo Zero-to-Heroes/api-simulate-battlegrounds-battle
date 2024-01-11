@@ -662,7 +662,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						sharedState,
 						spectator,
 					);
-					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
+					spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
 				}
 				// Recompute first attacker
 				// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
@@ -676,7 +676,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					modifyAttack(entity, 15, playerBoard, allCards);
 					modifyHealth(entity, 15, playerBoard, allCards);
 					afterStatsUpdate(entity, playerBoard, allCards);
-					spectator.registerPowerTarget(playerEntity, entity, playerBoard);
+					spectator.registerPowerTarget(playerEntity, entity, playerBoard, null, null);
 				});
 				break;
 			case CardIds.StolenGold:
@@ -731,7 +731,7 @@ const handleStartOfCombatSpellsForPlayer = (
 					const target = pickRandom(opponentBoard);
 					target.health = 1;
 					target.maxHealth = 1;
-					spectator.registerPowerTarget(playerEntity, target, opponentBoard);
+					spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
 				}
 				break;
 		}
@@ -803,7 +803,7 @@ const handleStartOfCombatAnomaliesForPlayer = (
 						sharedState,
 						spectator,
 					);
-					spectator.registerPowerTarget(playerEntity, copy, playerBoard);
+					spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
 				}
 				// Recompute first attacker
 				// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
@@ -935,7 +935,7 @@ const handleIllidanForPlayer = (
 	modifyAttack(firstAttacker, 2, playerBoard, allCards);
 	modifyHealth(firstAttacker, 1, playerBoard, allCards);
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
-	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard);
+	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
 	simulateAttack(
 		playerBoard,
 		playerEntity,
@@ -953,7 +953,7 @@ const handleIllidanForPlayer = (
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
 		modifyHealth(secondAttacker, 1, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
-		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard);
+		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard, playerEntity, opponentEntity);
 		simulateAttack(
 			playerBoard,
 			playerEntity,
@@ -985,7 +985,7 @@ const handleAlakirForPlayer = (
 		updateDivineShield(firstEntity, playerBoard, true, allCards);
 	}
 	firstEntity.taunt = true;
-	spectator.registerPowerTarget(firstEntity, firstEntity, playerBoard);
+	spectator.registerPowerTarget(firstEntity, firstEntity, playerBoard, playerEntity, opponentEntity);
 };
 
 const handleTamsinForPlayer = (
@@ -1010,7 +1010,7 @@ const handleTamsinForPlayer = (
 		modifyAttack(e, chosenEntity.attack, newBoard, allCards);
 		modifyHealth(e, chosenEntity.health, newBoard, allCards);
 		afterStatsUpdate(e, newBoard, allCards);
-		spectator.registerPowerTarget(chosenEntity, e, newBoard);
+		spectator.registerPowerTarget(chosenEntity, e, newBoard, playerEntity, opponentEntity);
 	});
 };
 
@@ -1037,7 +1037,7 @@ const handleTeronForPlayer = (
 		removeAurasFromSelf(minionToCopy, playerBoard, playerEntity, allCards, sharedState, spectator);
 		playerEntity.rapidReanimationMinion = minionToCopy;
 		minionThatWillDie.definitelyDead = true;
-		spectator.registerPowerTarget(playerEntity, minionThatWillDie, playerBoard);
+		spectator.registerPowerTarget(playerEntity, minionThatWillDie, playerBoard, playerEntity, opponentEntity);
 	}
 };
 
@@ -1065,7 +1065,7 @@ const handleWaxWarbandForPlayer = (
 			modifyAttack(e, cardsData.getTavernLevel(e.cardId), playerBoard, allCards);
 			modifyHealth(e, cardsData.getTavernLevel(e.cardId), playerBoard, allCards);
 			afterStatsUpdate(e, playerBoard, allCards);
-			spectator.registerPowerTarget(playerEntity, e, playerBoard);
+			spectator.registerPowerTarget(playerEntity, e, playerBoard, playerEntity, opponentEntity);
 		});
 	}
 };
@@ -1157,7 +1157,7 @@ const handleOzumatForPlayer = (
 			sharedState,
 			spectator,
 		);
-		spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard);
+		spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
 	}
 };
 
@@ -1375,7 +1375,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			modifyAttack(entity, multiplier * numberOfDragons, attackingBoard, allCards);
 			modifyHealth(entity, multiplier * numberOfDragons, attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, entity, attackingBoard);
+			spectator.registerPowerTarget(attacker, entity, attackingBoard, attackingBoardHero, defendingBoardHero);
 		});
 	} else if (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
@@ -1385,7 +1385,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		modifyAttack(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff, attackingBoard, allCards);
 		modifyHealth(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
-		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
+		spectator.registerPowerTarget(attacker, attacker, attackingBoard, attackingBoardHero, defendingBoardHero);
 	} else if (
 		attacker.cardId === CardIds.AmberGuardian_BG24_500 ||
 		attacker.cardId === CardIds.AmberGuardian_BG24_500_G
@@ -1406,7 +1406,13 @@ export const performStartOfCombatMinionsForPlayer = (
 				modifyAttack(otherDragon, 2, attackingBoard, allCards);
 				modifyHealth(otherDragon, 2, attackingBoard, allCards);
 				afterStatsUpdate(otherDragon, attackingBoard, allCards);
-				spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
+				spectator.registerPowerTarget(
+					attacker,
+					otherDragon,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 				dragonsToConsider.splice(dragonsToConsider.indexOf(otherDragon), 1);
 			}
 		}
@@ -1422,7 +1428,13 @@ export const performStartOfCombatMinionsForPlayer = (
 		otherDragons.forEach((otherDragon) => {
 			modifyHealth(otherDragon, buff, attackingBoard, allCards);
 			afterStatsUpdate(otherDragon, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, otherDragon, attackingBoard);
+			spectator.registerPowerTarget(
+				attacker,
+				otherDragon,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
 		});
 	} else if (
 		attacker.cardId === CardIds.Soulsplitter_BG25_023 ||
@@ -1436,7 +1448,13 @@ export const performStartOfCombatMinionsForPlayer = (
 			const chosenUndead = pickRandom(undeadsWithoutReborn);
 			if (chosenUndead) {
 				chosenUndead.reborn = true;
-				spectator.registerPowerTarget(attacker, chosenUndead, attackingBoard);
+				spectator.registerPowerTarget(
+					attacker,
+					chosenUndead,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 			}
 		}
 	} else if (
@@ -1449,7 +1467,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			modifyAttack(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
 			modifyHealth(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
 			afterStatsUpdate(entity, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, entity, attackingBoard);
+			spectator.registerPowerTarget(attacker, entity, attackingBoard, attackingBoardHero, defendingBoardHero);
 		});
 	} else if (
 		attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012 ||
@@ -1459,7 +1477,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
 		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
 		afterStatsUpdate(attacker, attackingBoard, allCards);
-		spectator.registerPowerTarget(attacker, attacker, attackingBoard);
+		spectator.registerPowerTarget(attacker, attacker, attackingBoard, attackingBoardHero, defendingBoardHero);
 	} else if (
 		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704 ||
 		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G
@@ -1502,7 +1520,13 @@ export const performStartOfCombatMinionsForPlayer = (
 						attacker.windfury = true;
 						break;
 				}
-				spectator.registerPowerTarget(attacker, attacker, attackingBoard);
+				spectator.registerPowerTarget(
+					attacker,
+					attacker,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 			}
 		}
 	} else if (
@@ -1547,7 +1571,7 @@ export const performStartOfCombatMinionsForPlayer = (
 					sharedState,
 					spectator,
 				);
-				spectator.registerPowerTarget(attacker, copy, attackingBoard);
+				spectator.registerPowerTarget(attacker, copy, attackingBoard, attackingBoardHero, defendingBoardHero);
 			}
 		}
 	} else if (
@@ -1563,7 +1587,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				modifyAttack(target, diremuckBuff, attackingBoard, allCards);
 				modifyHealth(target, diremuckBuff, attackingBoard, allCards);
 				afterStatsUpdate(target, attackingBoard, allCards);
-				spectator.registerPowerTarget(attacker, target, attackingBoard);
+				spectator.registerPowerTarget(attacker, target, attackingBoard, attackingBoardHero, defendingBoardHero);
 			}
 			if (attackingBoard.length < 7) {
 				target.locked = true;
@@ -1609,7 +1633,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
 		for (const entity of attackingBoard) {
 			for (let i = 0; i < multiplier; i++) {
-				spectator.registerPowerTarget(attacker, entity, attackingBoard);
+				spectator.registerPowerTarget(attacker, entity, attackingBoard, attackingBoardHero, defendingBoardHero);
 				handleDeathrattles(
 					attackingBoard,
 					attackingBoardHero,
@@ -1691,12 +1715,12 @@ const applyAllWillBurn = (
 	for (const entity of board1) {
 		modifyAttack(entity, 2, board1, allCards);
 		afterStatsUpdate(entity, board1, allCards);
-		spectator.registerPowerTarget(sourceEntity, entity, board1);
+		spectator.registerPowerTarget(sourceEntity, entity, board1, null, null);
 	}
 	for (const entity of board2) {
 		modifyAttack(entity, 2, board2, allCards);
 		afterStatsUpdate(entity, board2, allCards);
-		spectator.registerPowerTarget(sourceEntity, entity, board2);
+		spectator.registerPowerTarget(sourceEntity, entity, board2, null, null);
 	}
 };
 
@@ -1708,7 +1732,7 @@ const castImpure = (entity: BoardEntity, source: BoardEntity, board: BoardEntity
 	entity.taunt = true;
 	entity.damageMultiplier = entity.damageMultiplier ?? 1;
 	entity.damageMultiplier *= multiplier;
-	spectator.registerPowerTarget(source, entity, board);
+	spectator.registerPowerTarget(source, entity, board, null, null);
 };
 
 const getRandomMantidQueenBuffType = (entity: BoardEntity): 'stats' | 'reborn' | 'windfury' | 'taunt' => {

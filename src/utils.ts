@@ -354,7 +354,7 @@ export const makeMinionGolden = (
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, allCards, spectator, sharedState);
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 
-	spectator.registerPowerTarget(source, target, targetBoard);
+	spectator.registerPowerTarget(source, target, targetBoard, null, null);
 };
 
 export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): boolean => {
@@ -379,7 +379,7 @@ export const grantRandomAttack = (
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
 		modifyAttack(target, additionalAttack, candidateBoard, allCards);
 		afterStatsUpdate(target, candidateBoard, allCards);
-		spectator.registerPowerTarget(source, target, board);
+		spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
 
@@ -398,7 +398,7 @@ export const grantRandomHealth = (
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
 		modifyHealth(target, health, board, allCards);
 		afterStatsUpdate(target, board, allCards);
-		spectator.registerPowerTarget(source, target, board);
+		spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
 
@@ -423,7 +423,7 @@ export const grantRandomStats = (
 			modifyHealth(target, health, board, allCards);
 			afterStatsUpdate(target, board, allCards);
 			if (spectator) {
-				spectator.registerPowerTarget(source, target, board);
+				spectator.registerPowerTarget(source, target, board, null, null);
 			}
 			return target;
 		}
@@ -479,7 +479,7 @@ export const addCardsInHand = (
 				modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1, board, allCards);
 				modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1, board, allCards);
 				afterStatsUpdate(pirate, board, allCards);
-				spectator.registerPowerTarget(peggy, pirate, board);
+				spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
 			}
 		});
 
@@ -489,7 +489,7 @@ export const addCardsInHand = (
 		thornCaptains.forEach((captain) => {
 			modifyHealth(captain, captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1, board, allCards);
 			afterStatsUpdate(captain, board, allCards);
-			spectator.registerPowerTarget(captain, captain, board);
+			spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
 		});
 	}
 };
@@ -524,7 +524,7 @@ export const grantRandomDivineShield = (
 	if (elligibleEntities.length > 0) {
 		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
 		updateDivineShield(chosen, board, true, allCards);
-		spectator.registerPowerTarget(source, chosen, board);
+		spectator.registerPowerTarget(source, chosen, board, null, null);
 	}
 	// return board;
 };
@@ -603,7 +603,7 @@ export const addStatsToBoard = (
 			modifyAttack(entity, attack, board, allCards);
 			modifyHealth(entity, health, board, allCards);
 			afterStatsUpdate(entity, board, allCards);
-			spectator?.registerPowerTarget(sourceEntity, entity, board);
+			spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
 		}
 	}
 };
@@ -631,7 +631,7 @@ export const grantStatsToMinionsOfEachType = (
 				modifyAttack(validMinion, attack, board, allCards);
 				modifyHealth(validMinion, health, board, allCards);
 				afterStatsUpdate(validMinion, board, allCards);
-				spectator.registerPowerTarget(source, validMinion, board);
+				spectator.registerPowerTarget(source, validMinion, board, null, null);
 				boardCopy = boardCopy.filter((e) => e !== validMinion);
 				typesBuffed++;
 			}

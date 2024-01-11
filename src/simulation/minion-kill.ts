@@ -28,7 +28,7 @@ export const onMinionKill = (
 					modifyHealth(murculesTarget, murculesStats, killerBoard, allCards);
 					afterStatsUpdate(murculesTarget, killerBoard, allCards);
 				}
-				spectator.registerPowerTarget(killer, murculesTarget, killerBoard);
+				spectator.registerPowerTarget(killer, murculesTarget, killerBoard, killerHero, victimHero);
 			}
 			break;
 		case CardIds.Mannoroth_BG27_507:
@@ -37,7 +37,7 @@ export const onMinionKill = (
 				modifyAttack(killer, victim.attack, killerBoard, allCards);
 				modifyHealth(killer, victim.maxHealth, killerBoard, allCards);
 				afterStatsUpdate(killer, killerBoard, allCards);
-				spectator.registerPowerTarget(killer, killer, killerBoard);
+				spectator.registerPowerTarget(killer, killer, killerBoard, killerHero, victimHero);
 				killer.abiityChargesLeft--;
 			}
 			break;
@@ -60,7 +60,7 @@ export const onMinionKill = (
 						allCards,
 					);
 					afterStatsUpdate(tideOracleMorgleTarget, killerBoard, allCards);
-					spectator.registerPowerTarget(killer, tideOracleMorgleTarget, killerBoard);
+					spectator.registerPowerTarget(killer, tideOracleMorgleTarget, killerBoard, killerHero, victimHero);
 				}
 			}
 	}

@@ -178,7 +178,13 @@ const handleAvenge = (
 					allCards,
 				);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(avenger, entity, boardWithDeadEntity);
+				spectator.registerPowerTarget(
+					avenger,
+					entity,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
 			});
 			break;
 		// case CardIds.FrostwolfLieutenant:
@@ -206,7 +212,13 @@ const handleAvenge = (
 		case CardIds.PalescaleCrocolisk_BG21_001:
 			const target1 = grantRandomStats(avenger, boardWithDeadEntity, 6, 6, Race.BEAST, true, allCards, spectator);
 			if (!!target1) {
-				spectator.registerPowerTarget(avenger, target1, boardWithDeadEntity);
+				spectator.registerPowerTarget(
+					avenger,
+					target1,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
 			}
 			break;
 		case CardIds.PalescaleCrocolisk_BG21_001_G:
@@ -221,7 +233,13 @@ const handleAvenge = (
 				spectator,
 			);
 			if (!!target2) {
-				spectator.registerPowerTarget(avenger, target2, boardWithDeadEntity);
+				spectator.registerPowerTarget(
+					avenger,
+					target2,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
 			}
 			break;
 		case CardIds.ImpatientDoomsayer_BG21_007:
@@ -268,7 +286,13 @@ const handleAvenge = (
 				const murloc = getRandomAliveMinion(validTargets, Race.MURLOC, allCards);
 				if (murloc) {
 					murloc.venomous = true;
-					spectator.registerPowerTarget(avenger, murloc, boardWithDeadEntity);
+					spectator.registerPowerTarget(
+						avenger,
+						murloc,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
 				}
 			}
 			break;
@@ -284,7 +308,7 @@ const handleAvenge = (
 		case CardIds.MechanoTank_BG21_023:
 			// This can be null if the avenge triggers when the last enemy minion dies as well
 			const target = getRandomMinionWithHighestHealth(otherBoard);
-			spectator.registerPowerTarget(avenger, target, otherBoard);
+			spectator.registerPowerTarget(avenger, target, otherBoard, boardWithDeadEntityHero, otherBoardHero);
 			dealDamageToEnemy(
 				target,
 				otherBoard,
@@ -302,7 +326,7 @@ const handleAvenge = (
 		case CardIds.MechanoTank_BG21_023_G:
 			for (let i = 0; i < 2; i++) {
 				const target = getRandomMinionWithHighestHealth(otherBoard);
-				spectator.registerPowerTarget(avenger, target, otherBoard);
+				spectator.registerPowerTarget(avenger, target, otherBoard, boardWithDeadEntityHero, otherBoardHero);
 				dealDamageToEnemy(
 					target,
 					otherBoard,
@@ -379,7 +403,13 @@ const handleAvenge = (
 			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
 			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, allCards);
 			afterStatsUpdate(avenger, boardWithDeadEntity, allCards);
-			spectator.registerPowerTarget(avenger, avenger, boardWithDeadEntity);
+			spectator.registerPowerTarget(
+				avenger,
+				avenger,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				otherBoardHero,
+			);
 			break;
 		case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
 		case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
@@ -389,7 +419,13 @@ const handleAvenge = (
 				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, allCards);
 				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, allCards);
 				afterStatsUpdate(neighbour, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(avenger, neighbour, boardWithDeadEntity);
+				spectator.registerPowerTarget(
+					avenger,
+					neighbour,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
 			});
 			break;
 		case CardIds.IceSickle:
@@ -410,7 +446,13 @@ const handleAvenge = (
 				sharedState,
 				spectator,
 			);
-			spectator.registerPowerTarget(avenger, highestHealthMinion, otherBoard);
+			spectator.registerPowerTarget(
+				avenger,
+				highestHealthMinion,
+				otherBoard,
+				boardWithDeadEntityHero,
+				otherBoardHero,
+			);
 			break;
 		case CardIds.RelentlessSentry_BG25_003:
 		case CardIds.RelentlessSentry_BG25_003_G:
@@ -487,14 +529,26 @@ const handleHeroAvenge = (
 				.forEach((entity) => {
 					modifyHealth(entity, 1, boardWithDeadEntity, allCards);
 					afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-					spectator.registerPowerTarget(boardWithDeadEntityHero, entity, boardWithDeadEntity);
+					spectator.registerPowerTarget(
+						boardWithDeadEntityHero,
+						entity,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
 				});
 			break;
 		case CardIds.Drekthar_LeadTheFrostwolves:
 			boardWithDeadEntity.forEach((entity) => {
 				modifyAttack(entity, 1, boardWithDeadEntity, allCards);
 				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(boardWithDeadEntityHero, entity, boardWithDeadEntity);
+				spectator.registerPowerTarget(
+					boardWithDeadEntityHero,
+					entity,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
 			});
 			break;
 	}

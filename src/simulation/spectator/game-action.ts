@@ -1,9 +1,19 @@
 import { BoardEntity } from '../../board-entity';
 
 export interface GameAction {
-	type: 'damage' | 'attack' | 'spawn' | 'minion-death' | 'power-target' | 'start-of-combat' | 'player-attack' | 'opponent-attack';
+	type:
+		| 'damage'
+		| 'attack'
+		| 'spawn'
+		| 'minion-death'
+		| 'power-target'
+		| 'start-of-combat'
+		| 'player-attack'
+		| 'opponent-attack';
 	playerBoard: readonly BoardEntity[];
+	playerHand: readonly BoardEntity[];
 	opponentBoard: readonly BoardEntity[];
+	opponentHand: readonly BoardEntity[];
 	sourceEntityId?: number;
 	/** @deprecated */
 	targetEntityId?: number;

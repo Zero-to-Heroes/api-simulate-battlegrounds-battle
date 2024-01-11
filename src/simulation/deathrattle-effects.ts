@@ -196,7 +196,13 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
 					for (const neighbour of neighbours) {
-						spectator.registerPowerTarget(deadEntity, neighbour, boardWithDeadEntity);
+						spectator.registerPowerTarget(
+							deadEntity,
+							neighbour,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
 						for (let j = 0; j < rylakMutltiplier; j++) {
 							triggerBattlecry(
 								boardWithDeadEntity,
@@ -237,7 +243,13 @@ export const handleDeathrattleEffects = (
 						if (possibleBelcherTargets.length > 0) {
 							const chosen = pickRandom(possibleBelcherTargets);
 							chosen.venomous = true;
-							spectator.registerPowerTarget(deadEntity, chosen, boardWithDeadEntity);
+							spectator.registerPowerTarget(
+								deadEntity,
+								chosen,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+							);
 						}
 					}
 				}
@@ -261,7 +273,13 @@ export const handleDeathrattleEffects = (
 							}
 							target.taunt = true;
 							target.windfury = true;
-							spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+							spectator.registerPowerTarget(
+								deadEntity,
+								target,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+							);
 						}
 					}
 				}
@@ -277,7 +295,13 @@ export const handleDeathrattleEffects = (
 						const target = pickRandom(validTargets);
 						if (target) {
 							updateDivineShield(target, boardWithDeadEntity, true, allCards);
-							spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+							spectator.registerPowerTarget(
+								deadEntity,
+								target,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+							);
 						}
 					}
 				}
@@ -381,7 +405,13 @@ export const handleDeathrattleEffects = (
 						spectator,
 					);
 					if (!!target) {
-						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+						spectator.registerPowerTarget(
+							deadEntity,
+							target,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
 					}
 				}
 				break;
@@ -398,7 +428,13 @@ export const handleDeathrattleEffects = (
 						spectator,
 					);
 					if (!!target) {
-						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+						spectator.registerPowerTarget(
+							deadEntity,
+							target,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
 					}
 				}
 				break;
@@ -417,7 +453,13 @@ export const handleDeathrattleEffects = (
 						spectator,
 					);
 					if (!!target) {
-						spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+						spectator.registerPowerTarget(
+							deadEntity,
+							target,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
 					}
 				}
 				break;
@@ -519,7 +561,13 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < 2; j++) {
 						const target = pickRandomLowestHealth(otherBoard);
-						spectator.registerPowerTarget(deadEntity, target, otherBoard);
+						spectator.registerPowerTarget(
+							deadEntity,
+							target,
+							otherBoard,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
 						dealDamageToEnemy(
 							target,
 							otherBoard,
@@ -798,7 +846,13 @@ export const handleDeathrattleEffects = (
 						const target = pickRandom(targets);
 						if (target) {
 							target.reborn = true;
-							spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+							spectator.registerPowerTarget(
+								deadEntity,
+								target,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+							);
 						}
 					}
 				}
@@ -953,7 +1007,7 @@ export const applyWaterInvocationEnchantment = (
 			modifyHealth(target, 3, boardWithDeadEntity, allCards);
 			target.taunt = true;
 			afterStatsUpdate(target, boardWithDeadEntity, allCards);
-			spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity);
+			spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity, null, null);
 		}
 	}
 };
@@ -971,7 +1025,7 @@ export const applyFireInvocationEnchantment = (
 		if (!!target) {
 			modifyAttack(target, target.attack, boardWithDeadEntity, allCards);
 			afterStatsUpdate(target, boardWithDeadEntity, allCards);
-			spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity);
+			spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity, null, null);
 		}
 	}
 };
@@ -993,7 +1047,7 @@ export const applyEarthInvocationEnchantment = (
 				originEntityId: deadEntity?.entityId,
 				timing: sharedState.currentEntityId++,
 			});
-			spectator.registerPowerTarget(sourceEntity, minion, boardWithDeadEntity);
+			spectator.registerPowerTarget(sourceEntity, minion, boardWithDeadEntity, null, null);
 		});
 	}
 };
@@ -1063,7 +1117,7 @@ const applyRecurringNightmareDeathrattleEffect = (
 			repeats: multiplier > 1 ? multiplier : 1,
 			timing: sharedState.currentEntityId++,
 		});
-		spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity);
+		spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity, null, null);
 	}
 };
 
@@ -1250,7 +1304,7 @@ export const applyMinionDeathEffect = (
 				modifyAttack(pirate, 2, boardWithDeadEntity, allCards);
 				modifyHealth(pirate, 2, boardWithDeadEntity, allCards);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
+				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard, null, null);
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_TB_BaconUps_142) {
 			const otherPirates = otherBoard
@@ -1260,7 +1314,7 @@ export const applyMinionDeathEffect = (
 				modifyAttack(pirate, 4, boardWithDeadEntity, allCards);
 				modifyHealth(pirate, 4, boardWithDeadEntity, allCards);
 				afterStatsUpdate(pirate, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard);
+				spectator.registerPowerTarget(deadEntity.lastAffectedByEntity, pirate, otherBoard, null, null);
 			});
 		}
 	}
@@ -1388,12 +1442,12 @@ const applyScavengingHyenaEffect = (board: BoardEntity[], allCards: AllCardsServ
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 1, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		} else if (board[i].cardId === CardIds.ScavengingHyenaLegacy_TB_BaconUps_043) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 2, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
 };
@@ -1408,7 +1462,7 @@ const applyEternalKnightEffect = (board: BoardEntity[], allCards: AllCardsServic
 			modifyAttack(board[i], multiplier * 1, board, allCards);
 			modifyHealth(board[i], multiplier * 1, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
 };
@@ -1419,7 +1473,7 @@ const applyRotHideGnollEffect = (board: BoardEntity[], allCards: AllCardsService
 			const multiplier = board[i].cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
 			modifyAttack(board[i], multiplier * 1, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
 };
@@ -1437,7 +1491,7 @@ const applyBristlemaneScrapsmithEffect = (
 		) {
 			const cardsToAdd = Array(CardIds.BristlemaneScrapsmith_BG24_707_G ? 2 : 1).fill(CardIds.BloodGem);
 			addCardsInHand(boardPlayerEntity, board, allCards, spectator, cardsToAdd);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, boardPlayerEntity, null);
 		}
 	}
 };
@@ -1448,12 +1502,12 @@ const applyJunkbotEffect = (board: BoardEntity[], allCards: AllCardsService, spe
 			modifyAttack(board[i], 2, board, allCards);
 			modifyHealth(board[i], 2, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		} else if (board[i].cardId === CardIds.Junkbot_TB_BaconUps_046) {
 			modifyAttack(board[i], 4, board, allCards);
 			modifyHealth(board[i], 4, board, allCards);
 			afterStatsUpdate(board[i], board, allCards);
-			spectator.registerPowerTarget(board[i], board[i], board);
+			spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
 };

@@ -90,24 +90,36 @@ export class Spectator {
 		defendingEntity: BoardEntity,
 		attackingBoard: readonly BoardEntity[],
 		defendingBoard: readonly BoardEntity[],
+		attackingBoardHero: BgsPlayerEntity,
+		defendingBoardHero: BgsPlayerEntity,
 	): void {
-		const friendlyBoard = attackingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
-		const opponentBoard = defendingBoard.every((entity) => entity.friendly) ? attackingBoard : defendingBoard;
+		const isAttackerFriendly = attackingBoard.every((entity) => entity.friendly);
+		const friendlyBoard = isAttackerFriendly ? attackingBoard : defendingBoard;
+		const opponentBoard = isAttackerFriendly ? defendingBoard : attackingBoard;
 		const action: GameAction = {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
 			targetEntityId: defendingEntity.entityId,
 			playerBoard: this.sanitize(friendlyBoard),
+			playerHand: this.sanitize(isAttackerFriendly ? attackingBoardHero.hand : defendingBoardHero.hand),
 			opponentBoard: this.sanitize(opponentBoard),
+			opponentHand: this.sanitize(isAttackerFriendly ? defendingBoardHero.hand : attackingBoardHero.hand),
 		};
 		this.addAction(action);
 	}
 
-	public registerStartOfCombat(friendlyBoard: readonly BoardEntity[], opponentBoard: readonly BoardEntity[]): void {
+	public registerStartOfCombat(
+		friendlyBoard: readonly BoardEntity[],
+		opponentBoard: readonly BoardEntity[],
+		friendlyHero: BgsPlayerEntity,
+		opponentHero: BgsPlayerEntity,
+	): void {
 		const action: GameAction = {
 			type: 'start-of-combat',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: this.sanitize(friendlyHero.hand),
+			opponentHand: this.sanitize(opponentHero.hand),
 		};
 		this.addAction(action);
 	}
@@ -121,6 +133,8 @@ export class Spectator {
 			type: 'player-attack',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: null,
+			opponentHand: null,
 			damages: [
 				{
 					damage: damage,
@@ -139,6 +153,8 @@ export class Spectator {
 			type: 'opponent-attack',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: null,
+			opponentHand: null,
 			damages: [
 				{
 					damage: damage,
@@ -170,6 +186,8 @@ export class Spectator {
 			],
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: null,
+			opponentHand: null,
 		};
 		this.addAction(action);
 	}
@@ -178,6 +196,8 @@ export class Spectator {
 		sourceEntity: BoardEntity | BgsPlayerEntity,
 		targetEntity: BoardEntity,
 		targetBoard: BoardEntity[],
+		hero1: BgsPlayerEntity,
+		hero2: BgsPlayerEntity,
 	): void {
 		if (!targetEntity) {
 			return;
@@ -188,12 +208,16 @@ export class Spectator {
 		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
 		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
 		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
+		const friendlyHero = hero1?.hand?.every((entity) => entity.friendly) ? hero1 : hero2;
+		const opponentHero = friendlyHero === hero1 ? hero2 : hero1;
 		const action: GameAction = {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
 			targetEntityId: targetEntity.entityId,
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: this.sanitize(friendlyHero?.hand),
+			opponentHand: this.sanitize(opponentHero?.hand),
 		};
 		this.addAction(action);
 	}
@@ -218,6 +242,8 @@ export class Spectator {
 			sourceEntityId: sourceEntity?.entityId,
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: null,
+			opponentHand: null,
 		};
 		this.addAction(action);
 	}
@@ -243,6 +269,8 @@ export class Spectator {
 			],
 			playerBoard: undefined,
 			opponentBoard: undefined,
+			playerHand: null,
+			opponentHand: null,
 		};
 		this.addAction(action);
 	}
@@ -274,6 +302,12 @@ export class Spectator {
 			if (lastAction && !action.opponentBoard) {
 				action.opponentBoard = lastAction.opponentBoard;
 			}
+			if (lastAction && !action.playerHand) {
+				action.playerHand = lastAction.playerHand;
+			}
+			if (lastAction && !action.opponentHand) {
+				action.opponentHand = lastAction.opponentHand;
+			}
 
 			if (lastAction && action.type === 'damage' && lastAction.type === 'attack') {
 				lastAction.damages = lastAction.damages || [];
@@ -284,6 +318,8 @@ export class Spectator {
 				});
 				lastAction.playerBoard = action.playerBoard;
 				lastAction.opponentBoard = action.opponentBoard;
+				lastAction.playerHand = action.playerHand;
+				lastAction.opponentHand = action.opponentHand;
 			} else if (lastAction && action.type === 'damage' && lastAction.type === 'damage') {
 				lastAction.damages = lastAction.damages || [];
 				lastAction.damages.push({
@@ -293,6 +329,8 @@ export class Spectator {
 				});
 				lastAction.playerBoard = action.playerBoard;
 				lastAction.opponentBoard = action.opponentBoard;
+				lastAction.playerHand = action.playerHand;
+				lastAction.opponentHand = action.opponentHand;
 			} else if (
 				lastAction &&
 				action.type === 'power-target' &&
@@ -309,6 +347,8 @@ export class Spectator {
 				// lastAction.targetEntityIds = [...new Set(lastAction.targetEntityIds)];
 				lastAction.playerBoard = action.playerBoard;
 				lastAction.opponentBoard = action.opponentBoard;
+				lastAction.playerHand = action.playerHand;
+				lastAction.opponentHand = action.opponentHand;
 			} else {
 				result.push(action);
 			}
