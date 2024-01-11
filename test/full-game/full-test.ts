@@ -29,10 +29,10 @@ const test = async () => {
 
 	const sample = simulationResult.outcomeSamples.lost[0];
 	const base64 = encode(JSON.stringify(sample));
-	console.log(base64);
-	console.log('result', {
-		...simulationResult,
-		outcomeSamples: undefined,
-	});
+	// console.log(base64);
+	// console.log('result', {
+	// 	...simulationResult,
+	// 	outcomeSamples: undefined,
+	// });
 };
 test();

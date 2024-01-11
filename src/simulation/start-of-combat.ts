@@ -329,7 +329,6 @@ const handlePreCombatHeroPowersForPlayer = (
 		spectator,
 	);
 	if (shouldRecomputeCurrentAttacker) {
-		const previousCurrentAttacker = currentAttacker;
 		currentAttacker =
 			playerBoard.length > opponentBoard.length
 				? friendly
@@ -339,7 +338,7 @@ const handlePreCombatHeroPowersForPlayer = (
 				? friendly
 					? 1
 					: 0
-				: currentAttacker;
+				: Math.round(Math.random());
 	}
 
 	return currentAttacker;
