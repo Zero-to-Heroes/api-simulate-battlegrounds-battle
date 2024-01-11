@@ -87,7 +87,7 @@ export const simulateBattle = (
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 	);
 	opponentInfo.player.secrets = opponentInfo.secrets?.filter((e) => !!e?.cardId);
-	opponentInfo.player.friendly = true;
+	opponentInfo.player.friendly = false;
 
 	// When using the simulator, the aura is not applied when receiving the board state. When
 	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player, cards);

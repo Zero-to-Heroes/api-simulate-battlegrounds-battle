@@ -1,5 +1,6 @@
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
+import { BoardSecret } from '../../board-secret';
 import { GameAction } from './game-action';
 import { GameSample } from './game-sample';
 
@@ -96,6 +97,8 @@ export class Spectator {
 		const isAttackerFriendly = attackingBoard.every((entity) => entity.friendly);
 		const friendlyBoard = isAttackerFriendly ? attackingBoard : defendingBoard;
 		const opponentBoard = isAttackerFriendly ? defendingBoard : attackingBoard;
+		const playerSecrets = isAttackerFriendly ? attackingBoardHero.secrets : defendingBoardHero.secrets;
+		const opponentSecrets = isAttackerFriendly ? defendingBoardHero.secrets : attackingBoardHero.secrets;
 		const action: GameAction = {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
@@ -104,6 +107,8 @@ export class Spectator {
 			playerHand: this.sanitize(isAttackerFriendly ? attackingBoardHero.hand : defendingBoardHero.hand),
 			opponentBoard: this.sanitize(opponentBoard),
 			opponentHand: this.sanitize(isAttackerFriendly ? defendingBoardHero.hand : attackingBoardHero.hand),
+			playerSecrets: (playerSecrets ?? []).filter((s) => !s.triggered),
+			opponentSecrets: (opponentSecrets ?? []).filter((s) => !s.triggered),
 		};
 		this.addAction(action);
 	}
@@ -114,12 +119,16 @@ export class Spectator {
 		friendlyHero: BgsPlayerEntity,
 		opponentHero: BgsPlayerEntity,
 	): void {
+		const playerSecrets = friendlyHero.secrets;
+		const opponentSecrets = opponentHero.secrets;
 		const action: GameAction = {
 			type: 'start-of-combat',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: this.sanitize(friendlyHero.hand),
 			opponentHand: this.sanitize(opponentHero.hand),
+			playerSecrets: playerSecrets ?? [],
+			opponentSecrets: opponentSecrets ?? [],
 		};
 		this.addAction(action);
 	}
@@ -135,6 +144,8 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
+			playerSecrets: null,
+			opponentSecrets: null,
 			damages: [
 				{
 					damage: damage,
@@ -155,6 +166,8 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
+			playerSecrets: null,
+			opponentSecrets: null,
 			damages: [
 				{
 					damage: damage,
@@ -188,12 +201,14 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
+			playerSecrets: null,
+			opponentSecrets: null,
 		};
 		this.addAction(action);
 	}
 
 	public registerPowerTarget(
-		sourceEntity: BoardEntity | BgsPlayerEntity,
+		sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret,
 		targetEntity: BoardEntity,
 		targetBoard: BoardEntity[],
 		hero1: BgsPlayerEntity,
@@ -206,8 +221,8 @@ export class Spectator {
 			console.error('missing damaging entity id', sourceEntity.cardId);
 		}
 		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
-		const friendlyBoard = targetBoard.every((entity) => entity.friendly) ? targetBoard : null;
-		const opponentBoard = targetBoard.every((entity) => !entity.friendly) ? targetBoard : null;
+		const friendlyBoard = targetBoard?.every((entity) => entity.friendly) ? targetBoard : null;
+		const opponentBoard = targetBoard?.every((entity) => !entity.friendly) ? targetBoard : null;
 		const friendlyHero = hero1?.friendly ? hero1 : hero2?.friendly ? hero2 : null;
 		const opponentHero = hero1?.friendly ? hero2 : hero2?.friendly ? hero1 : null;
 		const action: GameAction = {
@@ -218,6 +233,8 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: this.sanitize(friendlyHero?.hand),
 			opponentHand: this.sanitize(opponentHero?.hand),
+			playerSecrets: (friendlyHero?.secrets ?? []).filter((s) => !s.triggered),
+			opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
 		};
 		this.addAction(action);
 	}
@@ -244,6 +261,8 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
+			playerSecrets: null,
+			opponentSecrets: null,
 		};
 		this.addAction(action);
 	}
@@ -271,6 +290,8 @@ export class Spectator {
 			opponentBoard: undefined,
 			playerHand: null,
 			opponentHand: null,
+			playerSecrets: null,
+			opponentSecrets: null,
 		};
 		this.addAction(action);
 	}
@@ -308,6 +329,12 @@ export class Spectator {
 			if (lastAction && !action.opponentHand) {
 				action.opponentHand = lastAction.opponentHand;
 			}
+			if (lastAction && !action.playerSecrets) {
+				action.playerSecrets = lastAction.playerSecrets;
+			}
+			if (lastAction && !action.opponentSecrets) {
+				action.opponentSecrets = lastAction.opponentSecrets;
+			}
 
 			if (lastAction && action.type === 'damage' && lastAction.type === 'attack') {
 				lastAction.damages = lastAction.damages || [];
@@ -320,6 +347,8 @@ export class Spectator {
 				lastAction.opponentBoard = action.opponentBoard;
 				lastAction.playerHand = action.playerHand;
 				lastAction.opponentHand = action.opponentHand;
+				lastAction.playerSecrets = action.playerSecrets;
+				lastAction.opponentSecrets = action.opponentSecrets;
 			} else if (lastAction && action.type === 'damage' && lastAction.type === 'damage') {
 				lastAction.damages = lastAction.damages || [];
 				lastAction.damages.push({
@@ -331,6 +360,8 @@ export class Spectator {
 				lastAction.opponentBoard = action.opponentBoard;
 				lastAction.playerHand = action.playerHand;
 				lastAction.opponentHand = action.opponentHand;
+				lastAction.playerSecrets = action.playerSecrets;
+				lastAction.opponentSecrets = action.opponentSecrets;
 			} else if (
 				lastAction &&
 				action.type === 'power-target' &&
@@ -349,6 +380,8 @@ export class Spectator {
 				lastAction.opponentBoard = action.opponentBoard;
 				lastAction.playerHand = action.playerHand;
 				lastAction.opponentHand = action.opponentHand;
+				lastAction.playerSecrets = action.playerSecrets;
+				lastAction.opponentSecrets = action.opponentSecrets;
 			} else {
 				result.push(action);
 			}

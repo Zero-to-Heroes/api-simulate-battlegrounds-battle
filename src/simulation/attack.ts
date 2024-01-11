@@ -139,7 +139,7 @@ export const doFullAttack = (
 		sharedState,
 		spectator,
 	);
-	performAttack(
+	const { damageDoneByAttacker, damageDoneByDefender } = performAttack(
 		attackingEntity,
 		defendingEntity,
 		attackingBoard,
@@ -151,7 +151,17 @@ export const doFullAttack = (
 		sharedState,
 		spectator,
 	);
-	applyAfterAttackEffects(attackingEntity, attackingBoard, attackingBoardHero, allCards, spectator);
+	applyAfterAttackEffects(
+		attackingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingEntity,
+		defendingBoardHero,
+		damageDoneByAttacker,
+		damageDoneByDefender,
+		allCards,
+		spectator,
+	);
 	processMinionDeath(
 		attackingBoard,
 		attackingBoardHero,
@@ -189,9 +199,61 @@ const applyAfterAttackEffects = (
 	attackingEntity: BoardEntity,
 	attackingBoard: BoardEntity[],
 	attackingBoardHero: BgsPlayerEntity,
+	defendingEntity: BoardEntity,
+	defendingBoardHero: BgsPlayerEntity,
+	damageDoneByAttacker: number,
+	damageDoneByDefender: number,
 	allCards: AllCardsService,
 	spectator: Spectator,
 ): void => {
+	let secretTriggered = null;
+	// console.log(
+	// 	'after attack secret?',
+	// 	stringifySimpleCard(attackingEntity, allCards),
+	// 	attackingBoardHero.secrets?.map((secret) => secret.cardId),
+	// 	defendingBoardHero.secrets?.map((secret) => secret.cardId),
+	// );
+	if (
+		(secretTriggered = defendingBoardHero.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.Reckoning_TB_Bacon_Secrets_14,
+		)) != null
+	) {
+		// console.log('triggering secret?', damageDoneByAttacker, stringifySimpleCard(attackingEntity, allCards));
+		if (damageDoneByAttacker >= 3 && !(attackingEntity.health <= 0 || attackingEntity.definitelyDead)) {
+			secretTriggered.triggered = true;
+			attackingEntity.definitelyDead = true;
+			spectator.registerPowerTarget(
+				secretTriggered,
+				attackingEntity,
+				attackingBoard,
+				defendingBoardHero,
+				attackingBoardHero,
+			);
+		}
+	}
+	if (
+		(secretTriggered = attackingBoardHero.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.Reckoning_TB_Bacon_Secrets_14,
+		)) != null
+	) {
+		// console.log(
+		// 	'triggering secret by defender?',
+		// 	damageDoneByDefender,
+		// 	stringifySimpleCard(defendingEntity, allCards),
+		// );
+		if (damageDoneByDefender >= 3 && !(defendingEntity.health <= 0 || defendingEntity.definitelyDead)) {
+			secretTriggered.triggered = true;
+			defendingEntity.definitelyDead = true;
+			spectator.registerPowerTarget(
+				secretTriggered,
+				defendingEntity,
+				null,
+				defendingBoardHero,
+				attackingBoardHero,
+			);
+		}
+	}
+
 	if (attackingEntity.cardId === CardIds.Bonker_BG20_104 || attackingEntity.cardId === CardIds.Bonker_BG20_104_G) {
 		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
 		const cards = quantity === 1 ? [CardIds.BloodGem] : [CardIds.BloodGem, CardIds.BloodGem];
@@ -230,7 +292,10 @@ const performAttack = (
 	cardsData: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): void => {
+): { damageDoneByAttacker: number; damageDoneByDefender: number } => {
+	let damageDoneByAttacker = 0;
+	let damageDoneByDefender = 0;
+
 	if (hasCorrectTribe(attackingEntity, Race.DRAGON, allCards)) {
 		const prestors = attackingBoard
 			.filter((e) => e.entityId !== attackingEntity.entityId)
@@ -411,7 +476,7 @@ const performAttack = (
 	if (defenderAliveBeforeAttack) {
 		if (!attackingEntity.immuneWhenAttackCharges) {
 			// TODO: this bumpEntities approach doesn't work well, as it leads to code duplication
-			bumpEntities(
+			damageDoneByDefender += bumpEntities(
 				attackingEntity,
 				defendingEntity,
 				attackingBoard,
@@ -424,7 +489,7 @@ const performAttack = (
 				spectator,
 			);
 		}
-		bumpEntities(
+		damageDoneByAttacker += bumpEntities(
 			defendingEntity,
 			attackingEntity,
 			defendingBoard,
@@ -475,7 +540,7 @@ const performAttack = (
 	if (attackingEntity.cleave) {
 		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		for (const neighbour of defenderNeighbours) {
-			bumpEntities(
+			damageDoneByAttacker += bumpEntities(
 				neighbour,
 				attackingEntity,
 				defendingBoard,
@@ -517,7 +582,7 @@ const performAttack = (
 		if (neighbours.length > 0) {
 			if (attackingEntity.cardId === CardIds.WildfireElemental_BGS_126) {
 				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
-				dealDamageToEnemy(
+				damageDoneByAttacker += dealDamageToEnemy(
 					randomTarget,
 					defendingBoard,
 					defendingBoardHero,
@@ -531,21 +596,23 @@ const performAttack = (
 					spectator,
 				);
 			} else {
-				neighbours.forEach((neighbour) =>
-					dealDamageToEnemy(
-						neighbour,
-						defendingBoard,
-						defendingBoardHero,
-						defendingEntity.lastAffectedByEntity,
-						excessDamage,
-						attackingBoard,
-						attackingBoardHero,
-						allCards,
-						cardsData,
-						sharedState,
-						spectator,
-					),
-				);
+				damageDoneByAttacker += neighbours
+					.map((neighbour) =>
+						dealDamageToEnemy(
+							neighbour,
+							defendingBoard,
+							defendingBoardHero,
+							defendingEntity.lastAffectedByEntity,
+							excessDamage,
+							attackingBoard,
+							attackingBoardHero,
+							allCards,
+							cardsData,
+							sharedState,
+							spectator,
+						),
+					)
+					.reduce((a, b) => a + b, 0);
 			}
 		}
 	}
@@ -598,6 +665,7 @@ const performAttack = (
 		spectator,
 	);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
+	return { damageDoneByAttacker, damageDoneByDefender };
 };
 
 const triggerRandomDeathrattle = (
@@ -1067,14 +1135,18 @@ export const bumpEntities = (
 			spectator,
 		);
 	}
-	entity.health = entity.health - (entity.damageMultiplier || 1) * bumpInto.attack;
+
+	const damageDealt = (entity.damageMultiplier || 1) * bumpInto.attack;
+	entity.health = entity.health - damageDealt;
+	// FIXME: This will likely be incorrect in terms of timings, e.g. if the entity ends up
+	// surviving following a buff like Spawn.
+	spectator.registerDamageDealt(bumpInto, entity, damageDealt, entityBoard);
 
 	if (entity.cardId === CardIds.Bubblette_BG_TID_713 && bumpInto.attack === 1) {
 		entity.definitelyDead = true;
 	} else if (entity.cardId === CardIds.Bubblette_BG_TID_713_G && bumpInto.attack === 2) {
 		entity.definitelyDead = true;
 	}
-
 	// Do it last, so that other effects are still processed
 	if (bumpInto.poisonous) {
 		// So that further buffs don't revive it
@@ -1087,9 +1159,10 @@ export const bumpEntities = (
 		entity.definitelyDead = true;
 		bumpInto.venomous = false;
 	}
-	// FIXME: This will likely be incorrect in terms of timings, e.g. if the entity ends up
-	// surviving following a buff like Spawn.
-	spectator.registerDamageDealt(bumpInto, entity, (entity.damageMultiplier || 1) * bumpInto.attack, entityBoard);
+	// Ideally we should do the Reckoning stuff here. However, at this point we only have half the damage
+	// information, so it is possible that the entity deals more than 3 (which should trigger Reckoning)
+	// but dies during the exchange (and Reckoning doesn't trigger then)
+
 	entity.lastAffectedByEntity = bumpInto;
 	if (entity.frenzyChargesLeft > 0 && entity.health > 0 && !entity.definitelyDead) {
 		applyFrenzy(entity, entityBoard, entityBoardHero, allCards, cardsData, sharedState, spectator);

@@ -1,4 +1,5 @@
 import { BoardEntity } from '../../board-entity';
+import { BoardSecret } from '../../board-secret';
 
 export interface GameAction {
 	type:
@@ -12,8 +13,10 @@ export interface GameAction {
 		| 'opponent-attack';
 	playerBoard: readonly BoardEntity[];
 	playerHand: readonly BoardEntity[];
+	playerSecrets: readonly BoardSecret[];
 	opponentBoard: readonly BoardEntity[];
 	opponentHand: readonly BoardEntity[];
+	opponentSecrets: readonly BoardSecret[];
 	sourceEntityId?: number;
 	/** @deprecated */
 	targetEntityId?: number;
