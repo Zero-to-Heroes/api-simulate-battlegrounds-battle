@@ -2279,7 +2279,7 @@ export const performEntitySpawns = (
 		// the same time, but here we want to be able to attack after each spawn, which in turn
 		// means that the minion can die before the other one spawns)
 		// In boardWithKilledMinion, the dead minion has already been removed
-		const indexToSpawnAt = boardWithKilledMinion.length - spawnSourceEntityIndexFromRight;
+		const indexToSpawnAt = Math.max(0, boardWithKilledMinion.length - spawnSourceEntityIndexFromRight);
 		addMinionToBoard(
 			boardWithKilledMinion,
 			boardWithKilledMinionHero,

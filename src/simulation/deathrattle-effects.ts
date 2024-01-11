@@ -102,7 +102,9 @@ export const handleDeathrattles = (
 		spectator,
 	);
 
-	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
+	// Not sure about the order. http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1
+	// shows the token spawned first, but I don't know if this is reliable
+	const candidateEntities: readonly BoardEntity[] = [...entitiesFromEnchantments, ...entitiesFromNativeDeathrattle];
 	performEntitySpawns(
 		candidateEntities,
 		boardWithKilledMinion,
