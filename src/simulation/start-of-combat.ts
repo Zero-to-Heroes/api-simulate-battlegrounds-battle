@@ -1668,19 +1668,14 @@ export const performStartOfCombatMinionsForPlayer = (
 			}
 
 			const target = targets[0];
-			let battleAttacker = attacker;
-			let battleDefender = target;
-			while (
-				battleAttacker.health > 0 &&
-				battleDefender.health > 0 &&
-				!battleAttacker.definitelyDead &&
-				!battleDefender.definitelyDead
-			) {
+			while (attacker.health > 0 && target.health > 0 && !attacker.definitelyDead && !target.definitelyDead) {
+				// Attackers don't alternate
+				// See http://replays.firestoneapp.com/?reviewId=f9f6bf62-db73-49ad-8187-d2f8848b7f36&turn=17&action=0
 				doFullAttack(
-					battleAttacker,
+					attacker,
 					attackingBoard,
 					attackingBoardHero,
-					battleDefender,
+					target,
 					defendingBoard,
 					defendingBoardHero,
 					allCards,
@@ -1688,8 +1683,6 @@ export const performStartOfCombatMinionsForPlayer = (
 					sharedState,
 					spectator,
 				);
-				battleAttacker = target;
-				battleDefender = attacker;
 			}
 		}
 	}
