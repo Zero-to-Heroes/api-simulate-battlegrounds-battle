@@ -207,12 +207,6 @@ const applyAfterAttackEffects = (
 	spectator: Spectator,
 ): void => {
 	let secretTriggered = null;
-	// console.log(
-	// 	'after attack secret?',
-	// 	stringifySimpleCard(attackingEntity, allCards),
-	// 	attackingBoardHero.secrets?.map((secret) => secret.cardId),
-	// 	defendingBoardHero.secrets?.map((secret) => secret.cardId),
-	// );
 	if (
 		(secretTriggered = defendingBoardHero.secrets?.find(
 			(secret) => !secret.triggered && secret?.cardId === CardIds.Reckoning_TB_Bacon_Secrets_14,
@@ -1652,6 +1646,50 @@ const handleAfterMinionsDeathsForBoard = (
 			}
 		}
 	}
+
+	const candidateEntities = [];
+	let secretTriggered = null;
+	if (
+		(secretTriggered = friendlyHeroEntity.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.MagicBlackSoulstone,
+		)) != null
+	) {
+		if (friendlyBoard.length === 0) {
+			secretTriggered.triggered = true;
+			for (let i = 0; i < 2; i++) {
+				const toSummon = pickRandom(cardsData.demonSpawns);
+				candidateEntities.push(
+					...spawnEntities(
+						toSummon,
+						1,
+						friendlyBoard,
+						friendlyHeroEntity,
+						otherBoard,
+						otherHeroEntity,
+						allCards,
+						cardsData,
+						sharedState,
+						spectator,
+						friendlyHeroEntity.friendly,
+						false,
+					),
+				);
+			}
+		}
+	}
+	performEntitySpawns(
+		candidateEntities,
+		friendlyBoard,
+		friendlyHeroEntity,
+		secretTriggered,
+		0,
+		otherBoard,
+		otherHeroEntity,
+		allCards,
+		cardsData,
+		sharedState,
+		spectator,
+	);
 };
 
 const handleDeathrattlesForFirstBoard = (
