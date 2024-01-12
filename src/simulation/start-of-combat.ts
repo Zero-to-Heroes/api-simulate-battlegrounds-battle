@@ -266,6 +266,7 @@ const handlePreCombatHeroPowersForPlayer = (
 			sharedState,
 			spectator,
 		);
+		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
 		handleTamsinForPlayer(
 			playerBoard,
