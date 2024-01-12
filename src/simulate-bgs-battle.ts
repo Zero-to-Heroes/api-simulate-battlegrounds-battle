@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
+import { BgsBoardInfo } from './bgs-board-info';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
@@ -37,11 +38,10 @@ export const simulateBattle = (
 	cards: AllCardsService,
 	cardsData: CardsData,
 ): SimulationResult => {
+	!battleInput.options?.skipInfoLogs && console.time('full-sim');
 	const start = Date.now();
-
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 5000;
-
 	const simulationResult: SimulationResult = {
 		wonLethal: 0,
 		won: 0,
@@ -59,6 +59,107 @@ export const simulateBattle = (
 		averageDamageLost: undefined,
 	};
 
+	const spectator = new Spectator(
+		battleInput.playerBoard.player.cardId,
+		battleInput.playerBoard.player.heroPowerId,
+		battleInput.opponentBoard.player.cardId,
+		battleInput.opponentBoard.player.heroPowerId,
+	);
+	const inputReady = buildFinalInput(battleInput, cards, cardsData);
+	// const inputStr = JSON.stringify(inputReady);
+	!battleInput.options?.skipInfoLogs && console.time('simulation');
+	const outcomes = {};
+	for (let i = 0; i < numberOfSimulations; i++) {
+		// const input: BgsBattleInfo = cloneInput(inputReady);
+		// const input: BgsBattleInfo = cloneInput2(inputStr);
+		const input: BgsBattleInfo = cloneInput3(inputReady);
+		const simulator = new Simulator(cards, cardsData);
+		const battleResult = simulator.simulateSingleBattle(
+			input.playerBoard.board,
+			input.playerBoard.player,
+			input.opponentBoard.board,
+			input.opponentBoard.player,
+			input.gameState,
+			spectator,
+		);
+		if (Date.now() - start > maxAcceptableDuration) {
+			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
+			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
+			break;
+		}
+		if (!battleResult) {
+			continue;
+		}
+		if (battleResult.result === 'won') {
+			simulationResult.won++;
+			simulationResult.damageWon += battleResult.damageDealt;
+			if (battleResult.damageDealt >= battleInput.opponentBoard.player.hpLeft) {
+				simulationResult.wonLethal++;
+			}
+		} else if (battleResult.result === 'lost') {
+			simulationResult.lost++;
+			simulationResult.damageLost += battleResult.damageDealt;
+			outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
+			if (
+				battleInput.playerBoard.player.hpLeft &&
+				battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft
+			) {
+				simulationResult.lostLethal++;
+			}
+		} else if (battleResult.result === 'tied') {
+			simulationResult.tied++;
+		}
+		spectator.commitBattleResult(battleResult.result);
+	}
+	updateSimulationResult(simulationResult, inputReady);
+	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
+	spectator.prune();
+	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
+	!battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
+	return simulationResult;
+};
+
+const cloneInput = (input: BgsBattleInfo): BgsBattleInfo => {
+	return structuredClone(input);
+};
+const cloneInput2 = (input: string): BgsBattleInfo => {
+	return JSON.parse(input);
+};
+const cloneInput3 = (input: BgsBattleInfo): BgsBattleInfo => {
+	const result: BgsBattleInfo = {
+		gameState: {
+			currentTurn: input.gameState.currentTurn,
+			anomalies: input.gameState.anomalies,
+			validTribes: input.gameState.validTribes,
+		},
+		heroHasDied: input.heroHasDied,
+		playerBoard: cloneBoard(input.playerBoard),
+		opponentBoard: cloneBoard(input.opponentBoard),
+		options: null,
+	};
+	return result;
+};
+const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
+	const result: BgsBoardInfo = {
+		player: {
+			...board.player,
+			hand: board.player.hand?.map((entity) => cloneEntity(entity)),
+			secrets: board.player.secrets?.map((secret) => ({ ...secret })),
+			globalInfo: { ...board.player.globalInfo },
+		},
+		board: board.board.map((entity) => cloneEntity(entity)),
+	};
+	return result;
+};
+const cloneEntity = (entity: BoardEntity): BoardEntity => {
+	const result: BoardEntity = {
+		...entity,
+		enchantments: entity.enchantments?.map((enchant) => ({ ...enchant })),
+	};
+	return result;
+};
+
+const buildFinalInput = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): BgsBattleInfo => {
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
@@ -118,55 +219,10 @@ export const simulateBattle = (
 		},
 		gameState: battleInput.gameState,
 	} as BgsBattleInfo;
-	const inputStr = JSON.stringify(inputReady);
-	const spectator = new Spectator(
-		battleInput.playerBoard.player.cardId,
-		battleInput.playerBoard.player.heroPowerId,
-		battleInput.opponentBoard.player.cardId,
-		battleInput.opponentBoard.player.heroPowerId,
-	);
-	!battleInput.options?.skipInfoLogs && console.time('simulation');
-	const outcomes = {};
-	for (let i = 0; i < numberOfSimulations; i++) {
-		const simulator = new Simulator(cards, cardsData);
-		const input: BgsBattleInfo = JSON.parse(inputStr);
-		const battleResult = simulator.simulateSingleBattle(
-			input.playerBoard.board,
-			input.playerBoard.player,
-			input.opponentBoard.board,
-			input.opponentBoard.player,
-			input.gameState,
-			spectator,
-		);
-		if (Date.now() - start > maxAcceptableDuration) {
-			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
-			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
-			break;
-		}
-		if (!battleResult) {
-			continue;
-		}
-		if (battleResult.result === 'won') {
-			simulationResult.won++;
-			simulationResult.damageWon += battleResult.damageDealt;
-			if (battleResult.damageDealt >= battleInput.opponentBoard.player.hpLeft) {
-				simulationResult.wonLethal++;
-			}
-		} else if (battleResult.result === 'lost') {
-			simulationResult.lost++;
-			simulationResult.damageLost += battleResult.damageDealt;
-			outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
-			if (
-				battleInput.playerBoard.player.hpLeft &&
-				battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft
-			) {
-				simulationResult.lostLethal++;
-			}
-		} else if (battleResult.result === 'tied') {
-			simulationResult.tied++;
-		}
-		spectator.commitBattleResult(battleResult.result);
-	}
+	return inputReady;
+};
+
+const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBattleInfo) => {
 	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
 	simulationResult.wonPercent = checkRounding(
 		Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10,
@@ -201,16 +257,18 @@ export const simulateBattle = (
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost
 		: 0;
-	if (simulationResult.averageDamageWon > 0 && simulationResult.averageDamageWon < playerInfo.player.tavernTier) {
-		console.warn('average damage won issue', simulationResult, playerInfo);
+	if (
+		simulationResult.averageDamageWon > 0 &&
+		simulationResult.averageDamageWon < input.playerBoard.player.tavernTier
+	) {
+		console.warn('average damage won issue');
 	}
-	if (simulationResult.averageDamageLost > 0 && simulationResult.averageDamageLost < opponentInfo.player.tavernTier) {
-		console.warn('average damage lost issue', simulationResult, opponentInfo);
+	if (
+		simulationResult.averageDamageLost > 0 &&
+		simulationResult.averageDamageLost < input.opponentBoard.player.tavernTier
+	) {
+		console.warn('average damage lost issue', simulationResult);
 	}
-	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
-	spectator.prune();
-	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
-	return simulationResult;
 };
 
 const checkRounding = (roundedValue: number, initialValue: number, totalValue: number): number => {
