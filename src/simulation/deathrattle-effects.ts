@@ -102,9 +102,10 @@ export const handleDeathrattles = (
 		spectator,
 	);
 
-	// Not sure about the order. http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1
-	// shows the token spawned first, but I don't know if this is reliable
-	const candidateEntities: readonly BoardEntity[] = [...entitiesFromEnchantments, ...entitiesFromNativeDeathrattle];
+	// First main DR, then enchantments: http://replays.firestoneapp.com/?reviewId=ea9503c9-2795-49f0-866b-9ea856cec7df&turn=11&action=2
+	// http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1 is a trap: the enchantment is on the first
+	// minion, but the DR is on the second one.
+	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
 	performEntitySpawns(
 		candidateEntities,
 		boardWithKilledMinion,
