@@ -1260,9 +1260,24 @@ export const processMinionDeath = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
-	// console.debug('processing minions death', stringifySimple(board1, allCards), stringifySimple(board2, allCards));
+	// const debug = board1.some((e) => e.health <= 0) || board2.some((e) => e.health <= 0);
+	// debug && console.debug('\nprocessing minions death');
+	// debug && console.debug(stringifySimple(board1, allCards));
+	// debug && console.debug(stringifySimple(board2, allCards));
 	const [deadMinionIndexesFromRights1, deadEntities1] = makeMinionsDie(board1, board1Hero, allCards, spectator);
 	const [deadMinionIndexesFromRights2, deadEntities2] = makeMinionsDie(board2, board2Hero, allCards, spectator);
+	// debug && console.debug('after processing minions death');
+	// debug && console.debug(stringifySimple(board1, allCards));
+	// debug && console.debug(stringifySimple(board2, allCards));
+	// debug && console.debug(deadMinionIndexesFromRights1);
+	// debug && console.debug(deadMinionIndexesFromRights2);
+	// console.debug('dead entities', stringifySimple(deadEntities1, allCards), stringifySimple(deadEntities2, allCards));
+	// No death to process, we can return
+	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
+		return;
+		// return [board1, board2];
+	}
+
 	spectator.registerDeadEntities(
 		deadMinionIndexesFromRights1,
 		deadEntities1,
@@ -1271,13 +1286,6 @@ export const processMinionDeath = (
 		deadEntities2,
 		board2,
 	);
-	// console.debug('dead entities', stringifySimple(deadEntities1, allCards), stringifySimple(deadEntities2, allCards));
-	// No death to process, we can return
-	if (deadEntities1.length === 0 && deadEntities2.length === 0) {
-		return;
-		// return [board1, board2];
-	}
-
 	sharedState.deaths.push(
 		...deadEntities1.map((e) =>
 			addImpliedMechanics({ ...e, health: e.maxHealth, definitelyDead: false }, cardsData),
@@ -1650,15 +1658,29 @@ const handleDeathrattlesForFirstBoard = (
 	sharedState: SharedState,
 	spectator: Spectator,
 ): void => {
+	// TODO: this can be buggy, in case multiple minions die, both at a 0 or negative final index from left
+	// In that case, the first minion will spawn at the left, then the next one will spawn again at the left
+	// thus inverting the expected order
+	// We still want to process the minions from left to right, but maybe we need to decrease the index from
+	// the right in case of multiple minions dying and dpawning at the same time
+	let boardSizeBeforeDrSpawn = firstBoard.length;
+	let totalSpawned = 0;
 	for (let i = 0; i < deadMinionIndexesFromRight.length; i++) {
 		const entity = deadEntities[i];
 		const indexFromRight = deadMinionIndexesFromRight[i];
 		if (entity.health <= 0 || entity.definitelyDead) {
+			// console.log('\ndead entity', stringifySimpleCard(entity, allCards), indexFromRight);
+			// console.log(deadMinionIndexesFromRight);
+			// console.log(stringifySimple(firstBoard, allCards));
+			// Because we use the index from right, and spawn minions from left to right, we actually
+			// don't need to update the index after a minion has spawned
+			const modifiedIndexFromRight = Math.min(firstBoard.length, indexFromRight);
+			// console.log('spawning at', modifiedIndexFromRight, indexFromRight, totalSpawned, firstBoard.length);
 			buildBoardAfterDeathrattleSpawns(
 				firstBoard,
 				firstBoardHero,
 				entity,
-				indexFromRight,
+				modifiedIndexFromRight,
 				otherBoard,
 				otherBoardHero,
 				deadEntities,
@@ -1667,11 +1689,13 @@ const handleDeathrattlesForFirstBoard = (
 				sharedState,
 				spectator,
 			);
+			totalSpawned += firstBoard.length - boardSizeBeforeDrSpawn;
 		} else if (firstBoard.length > 0) {
 			// const newBoardD = [...firstBoard];
 			firstBoard.splice(firstBoard.length - indexFromRight, 1, entity);
 			// firstBoard = newBoardD;
 		}
+		boardSizeBeforeDrSpawn = firstBoard.length;
 	}
 	// return [firstBoard, otherBoard];
 };
@@ -2096,28 +2120,43 @@ const makeMinionsDie = (
 	// Because entities spawn to the left, so the right index is unchanged
 	const deadMinionIndexesFromRight: number[] = [];
 	const deadEntities: BoardEntity[] = [];
+	const initialBoardLength = board.length;
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].health <= 0 || board[i].definitelyDead) {
-			deadMinionIndexesFromRight.push(board.length - (i + 1));
+			deadMinionIndexesFromRight.push(initialBoardLength - (i + 1));
 			deadEntities.push(board[i]);
+			// console.log(
+			// 	'\tflagging dead minion 0',
+			// 	stringifySimpleCard(board[i], allCards),
+			// 	stringifySimple(board, allCards),
+			// 	initialBoardLength,
+			// 	i,
+			// 	deadMinionIndexesFromRight,
+			// );
+		}
+	}
+
+	// These will always be processed from left to right afterwards
+	// We compute the indexes as they will be once the new board is effective. For a
+	// board of length N, having an indexFromRight at N means it will spawn at the very left
+	// of the board (first minion)
+	let indexesFromRightAfterDeath = [];
+	for (let i = deadMinionIndexesFromRight.length - 1; i >= 0; i--) {
+		const newIndex = deadMinionIndexesFromRight[i] - indexesFromRightAfterDeath.length;
+		indexesFromRightAfterDeath.push(newIndex);
+	}
+	indexesFromRightAfterDeath = indexesFromRightAfterDeath.reverse();
+
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].health <= 0 || board[i].definitelyDead) {
+			// console.log('\tflagging dead minion', stringifySimpleCard(board[i], allCards), deadMinionIndexesFromRight);
 			removeMinionFromBoard(board, boardHero, i, allCards, spectator);
 			// We modify the original array, so we need to update teh current index accordingly
 			i--;
 		}
 	}
-	// Treat all dead entities as a single block
-	const blockIndexesFromRight = [...deadMinionIndexesFromRight];
-	for (let i = deadMinionIndexesFromRight.length - 1; i >= 0; i--) {
-		if (i === deadMinionIndexesFromRight.length - 1) {
-			continue;
-		}
-		if (Math.abs(deadMinionIndexesFromRight[i] - deadMinionIndexesFromRight[i + 1]) <= 1) {
-			blockIndexesFromRight[i] = blockIndexesFromRight[i + 1];
-		} else {
-			// blockIndexesFromRight[i] = blockIndexesFromRight[i];
-		}
-	}
-	return [blockIndexesFromRight, deadEntities];
+
+	return [indexesFromRightAfterDeath, deadEntities];
 };
 
 // const handleKillEffects = (

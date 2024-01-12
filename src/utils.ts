@@ -718,7 +718,7 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? ''}/attacks=${entity.hasAttacked}` : null;
+	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? ''}/hp=${entity.health}` : null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {
