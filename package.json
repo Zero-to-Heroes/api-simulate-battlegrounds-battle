@@ -5,6 +5,7 @@
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
 		"test-board": "ts-node test/full-game/full-test.ts",
+		"test-board-prof": "node --inspect-brk -r ts-node/register test/full-game/full-test.ts",
 		"build": "webpack --color",
 		"build-tsc": "rm -rf dist && tsc",
 		"package": "sam package --template-file template.yaml --s3-bucket com.zerotoheroes.artifact --output-template-file template.packaged.yaml",

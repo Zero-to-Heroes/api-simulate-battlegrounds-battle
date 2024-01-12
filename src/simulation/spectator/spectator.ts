@@ -36,10 +36,19 @@ export class Spectator {
 		tied: readonly GameSample[];
 	} {
 		return {
-			won: this.wonBattles,
-			lost: this.lostBattles,
-			tied: this.tiedBattles,
+			won: this.wonBattles?.map((battle) => this.cleanUpActions(battle)),
+			lost: this.lostBattles?.map((battle) => this.cleanUpActions(battle)),
+			tied: this.tiedBattles?.map((battle) => this.cleanUpActions(battle)),
 		};
+	}
+
+	private cleanUpActions(battle: GameSample): GameSample {
+		const collapsed = this.collapseActions(battle.actions);
+		const result: GameSample = {
+			...battle,
+			actions: collapsed,
+		};
+		return result;
 	}
 
 	public commitBattleResult(result: 'won' | 'lost' | 'tied'): void {
@@ -297,15 +306,7 @@ export class Spectator {
 	}
 
 	private addAction(action: GameAction) {
-		if (!this.actionsForCurrentBattle.length) {
-			this.actionsForCurrentBattle.push(action);
-			return;
-		}
-		const collapsed = this.collapseActions([
-			this.actionsForCurrentBattle[this.actionsForCurrentBattle.length - 1],
-			action,
-		]);
-		this.actionsForCurrentBattle.splice(this.actionsForCurrentBattle.length - 1, 1, ...collapsed);
+		this.actionsForCurrentBattle.push(action);
 	}
 
 	private collapseActions(actions: readonly GameAction[]): readonly GameAction[] {

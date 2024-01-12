@@ -39,6 +39,26 @@ rm -rf dist && tsc && rm -rf dist/node_modules && 'cp' -rf dist/ /e/Source/zerot
 rm -rf dist && tsc && rm -rf dist/node_modules && npm publish
 ```
 
+# Profiling
+
+To profile a Node.js application using Chrome's DevTools, you can use the `--inspect` and `--inspect-brk` flags when running your script. Here's how you can do it:
+
+1. Run your script with the `--inspect-brk` flag. This will start the inspector and pause execution until you connect with the debugger.
+
+```bash
+node --inspect-brk -r ts-node/register full-test.ts
+```
+
+2. Open Chrome and navigate to `chrome://inspect`.
+3. Click on the "Open dedicated DevTools for Node" link. This will open a new DevTools window.
+4. In the DevTools window, click on the "Profiler" tab.
+5. Click on the "Start" button to start profiling.
+6. Go back to your terminal and press `Enter` to continue script execution.
+7. Once your script finishes executing, go back to the DevTools window and click on the "Stop" button to stop profiling.
+8. You can now analyze the CPU profile in the DevTools window.
+
+Remember to replace `node` with `npx ts-node` if you're using TypeScript without compiling to JavaScript first.
+
 # Reference
 
 Used this project as template: https://github.com/alukach/aws-sam-typescript-boilerplate
