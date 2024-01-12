@@ -315,7 +315,15 @@ export class Spectator {
 		}
 		const result: GameAction[] = [];
 		for (let i = 0; i < actions.length; i++) {
-			const action = actions[i];
+			const action: GameAction = {
+				...actions[i],
+				playerBoard: this.sanitize(actions[i].playerBoard),
+				opponentBoard: this.sanitize(actions[i].opponentBoard),
+				playerHand: this.sanitize(actions[i].playerHand),
+				opponentHand: this.sanitize(actions[i].opponentHand),
+				// spawns: this.sanitize(actions[i].spawns),
+				deaths: this.sanitize(actions[i].deaths),
+			};
 			const lastAction = result.length > 0 ? result[result.length - 1] : null;
 
 			if (lastAction && !action.playerBoard) {
@@ -399,15 +407,33 @@ export class Spectator {
 		return board.map(
 			(entity) =>
 				({
-					...entity,
-					enchantments: undefined,
-					cantAttack: undefined,
-					hasAttacked: undefined,
-					attackImmediately: undefined,
-					previousAttack: undefined,
-					lastAffectedByEntity: undefined,
-					attacking: undefined,
+					entityId: entity.entityId,
+					cardId: entity.cardId,
+					friendly: entity.friendly,
+					attack: entity.attack,
+					health: entity.health,
+					maxHealth: entity.maxHealth,
+					taunt: entity.taunt,
+					divineShield: entity.divineShield,
+					poisonous: entity.poisonous,
+					venomous: entity.venomous,
+					reborn: entity.reborn,
+					windfury: entity.windfury,
+					stealth: entity.stealth,
 				} as BoardEntity),
 		);
+		// return board.map(
+		// 	(entity) =>
+		// 		({
+		// 			...entity,
+		// 			enchantments: undefined,
+		// 			cantAttack: undefined,
+		// 			hasAttacked: undefined,
+		// 			attackImmediately: undefined,
+		// 			previousAttack: undefined,
+		// 			lastAffectedByEntity: undefined,
+		// 			attacking: undefined,
+		// 		} as BoardEntity),
+		// );
 	}
 }
