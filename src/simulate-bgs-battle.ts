@@ -38,7 +38,7 @@ export const simulateBattle = (
 	cards: AllCardsService,
 	cardsData: CardsData,
 ): SimulationResult => {
-	!battleInput.options?.skipInfoLogs && console.time('full-sim');
+	// !battleInput.options?.skipInfoLogs && console.time('full-sim');
 	const start = Date.now();
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 5000;
@@ -115,7 +115,7 @@ export const simulateBattle = (
 	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
 	spectator.prune();
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
-	!battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
+	// !battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
 	return simulationResult;
 };
 

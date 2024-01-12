@@ -51,21 +51,12 @@ export const simulateAttack = (
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-): number => {
+): void => {
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
 
-	// console.debug('\n');
 	const attackingEntity = getAttackingEntity(attackingBoard, allCards);
-	// console.debug('attacking entity', stringifySimpleCard(attackingEntity, allCards));
-	// console.debug(
-	// 	'atttaacking board',
-	// 	lastAttackIndexFromLeft,
-	// 	forceAttackingEntityIndex,
-	// 	stringifySimple(attackingBoard, allCards),
-	// );
-	const attackingEntityIndex = attackingBoard.map((e) => e.entityId).indexOf(attackingEntity?.entityId);
 	if (attackingEntity) {
 		attackingEntity.attacking = true;
 		const numberOfAttacks = attackingEntity.windfury ? 2 : 1;
@@ -74,12 +65,6 @@ export const simulateAttack = (
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 				return;
 			}
-			// console.log(
-			// 	'\nattack by',
-			// 	stringifySimpleCard(attackingEntity, allCards),
-			// 	stringifySimple(defendingBoard, allCards),
-			// 	stringifySimple(attackingBoard, allCards),
-			// );
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
 				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
@@ -106,7 +91,6 @@ export const simulateAttack = (
 		attackingEntity.attacking = false;
 		attackingEntity.hasAttacked = true;
 	}
-	return attackingEntityIndex;
 };
 
 export const doFullAttack = (
@@ -742,8 +726,6 @@ const triggerRandomDeathrattle = (
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsService): BoardEntity => {
-	// lastAttackerIndex = Math.max(0, lastAttackerIndex);
-	// console.debug('lastAttackerIndex', lastAttackerIndex);
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
@@ -758,54 +740,6 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 	}
 	const attacker = validAttackers[0];
 	return attacker;
-
-	// Once an entity has attacked, no entity to the left of it can attack until all entities
-	// on the board have attacked
-	// Once the last attacker index is the last entity on the board, we cycle back to the start
-	// else if (lastAttackerIndex != null && lastAttackerIndex < validAttackers.length - 1) {
-	// 	// This doesn't work if any entity that appears before the attacked index died in-between
-	// 	const candidates = validAttackers.slice(lastAttackerIndex);
-	// 	if (candidates.length > 0) {
-	// 		validAttackers = candidates;
-	// 	}
-	// } else {
-	// 	lastAttackerIndex = 0;
-	// 	attackingBoard.forEach((e) => (e.attacksPerformed = 0));
-	// }
-
-	// console.debug(
-	// 	'picking attacker',
-	// 	lastAttackerIndex,
-	// 	stringifySimple(validAttackers, allCards),
-	// 	'\n',
-	// 	stringifySimple(attackingBoard, allCards),
-	// );
-
-	// let attackingEntity = validAttackers[0];
-	// let minNumberOfAttacks: number = attackingEntity.attacksPerformed || 0;
-	// let index = 0;
-	// for (let i = 0; i < validAttackers.length; i++) {
-	// 	const entity = validAttackers[i];
-	// 	if ((entity.attacksPerformed || 0) < minNumberOfAttacks) {
-	// 		attackingEntity = entity;
-	// 		minNumberOfAttacks = entity.attacksPerformed;
-	// 		index = i;
-	// 	}
-	// }
-	// console.log('minNumberOfAttacks', minNumberOfAttacks, index);
-
-	// // Flag all entities to its left as "can't attack until cycled through"
-	// // Not sure why this is needed: we're already picking the left-most valid attacker, so why increase the
-	// // attacks of the entities that have already been skipped?
-	// // for (let i = 0; i < index; i++) {
-	// // 	validAttackers[i].attacksPerformed = (validAttackers[i].attacksPerformed || 0) + 1;
-	// // }
-
-	// if (!attackingEntity.attackImmediately) {
-	// 	attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
-	// }
-	// console.debug('chose attackingEntity', stringifySimple(attackingBoard, allCards));
-	// return attackingEntity;
 };
 
 export const findNearestEnemies = (
