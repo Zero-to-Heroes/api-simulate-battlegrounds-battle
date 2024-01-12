@@ -29,7 +29,7 @@ export interface BoardEntity {
 	locked?: boolean;
 	friendly?: boolean;
 	cantAttack?: boolean;
-	attacksPerformed?: number;
+	hasAttacked?: boolean;
 	immuneWhenAttackCharges?: number;
 	attackImmediately?: boolean;
 	// Used only to handle murkeye aura?

@@ -15,8 +15,6 @@ import { handleStartOfCombat } from './start-of-combat';
 export class Simulator {
 	private currentAttacker: number;
 	private currentSpeedAttacker = -1;
-	private lastPlayerAttackerEntityIndex: number;
-	private lastOpponentAttackerEntityIndex: number;
 	private sharedState: SharedState;
 
 	// It should come already initialized
@@ -135,50 +133,27 @@ export class Simulator {
 
 			// console.log('this.currentSpeedAttacker 2', this.currentAttacker, this.currentSpeedAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
-				const opponentEntitiesBeforeAttack = opponentBoard
-					.map((e) => e.entityId)
-					.slice(0, this.lastOpponentAttackerEntityIndex);
-				const outputAttacker = simulateAttack(
+				simulateAttack(
 					playerBoard,
 					playerEntity,
 					opponentBoard,
 					opponentEntity,
-					this.lastPlayerAttackerEntityIndex,
 					this.allCards,
 					this.spawns,
 					this.sharedState,
 					spectator,
 				);
-				// The "attack immediately" doesn't change the next attacker
-				this.lastPlayerAttackerEntityIndex =
-					this.currentSpeedAttacker === -1 ? outputAttacker : this.lastPlayerAttackerEntityIndex;
-				const opponentEntitiesAfterAttack = opponentBoard.map((e) => e.entityId);
-				const opponentEntitiesThatDied = opponentEntitiesBeforeAttack.filter(
-					(e) => !opponentEntitiesAfterAttack.includes(e),
-				);
-				this.lastOpponentAttackerEntityIndex -= opponentEntitiesThatDied.length;
 			} else {
-				const playerEntitiesBeforeAttack = playerBoard
-					.map((e) => e.entityId)
-					.slice(0, this.lastPlayerAttackerEntityIndex);
-				const outputAttacker = simulateAttack(
+				simulateAttack(
 					opponentBoard,
 					opponentEntity,
 					playerBoard,
 					playerEntity,
-					this.lastOpponentAttackerEntityIndex,
 					this.allCards,
 					this.spawns,
 					this.sharedState,
 					spectator,
 				);
-				this.lastOpponentAttackerEntityIndex =
-					this.currentSpeedAttacker === -1 ? outputAttacker : this.lastOpponentAttackerEntityIndex;
-				const playerEntitiesAfterAttack = playerBoard.map((e) => e.entityId);
-				const playerEntitiesThatDied = playerEntitiesBeforeAttack.filter(
-					(e) => !playerEntitiesAfterAttack.includes(e),
-				);
-				this.lastPlayerAttackerEntityIndex -= playerEntitiesThatDied.length;
 			}
 
 			// Update the attacker indices in case there were some deaths

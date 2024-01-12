@@ -401,7 +401,7 @@ export class Spectator {
 					...entity,
 					enchantments: undefined,
 					cantAttack: undefined,
-					attacksPerformed: undefined,
+					hasAttacked: undefined,
 					attackImmediately: undefined,
 					previousAttack: undefined,
 					lastAffectedByEntity: undefined,

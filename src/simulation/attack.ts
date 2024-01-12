@@ -47,26 +47,21 @@ export const simulateAttack = (
 	attackingBoardHero: BgsPlayerEntity,
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
-	lastAttackerEntityId: number,
 	allCards: AllCardsService,
 	spawns: CardsData,
 	sharedState: SharedState,
 	spectator: Spectator,
-	forceAttackingEntityIndex?: number,
 ): number => {
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
 
 	// console.debug('\n');
-	const attackingEntity =
-		forceAttackingEntityIndex != null
-			? attackingBoard[forceAttackingEntityIndex]
-			: getAttackingEntity(attackingBoard, lastAttackerEntityId, allCards);
+	const attackingEntity = getAttackingEntity(attackingBoard, allCards);
 	// console.debug('attacking entity', stringifySimpleCard(attackingEntity, allCards));
 	// console.debug(
 	// 	'atttaacking board',
-	// 	lastAttackerEntityId,
+	// 	lastAttackIndexFromLeft,
 	// 	forceAttackingEntityIndex,
 	// 	stringifySimple(attackingBoard, allCards),
 	// );
@@ -109,8 +104,8 @@ export const simulateAttack = (
 			}
 		}
 		attackingEntity.attacking = false;
+		attackingEntity.hasAttacked = true;
 	}
-	// If entities that were before the attacker died, we need to update the attacker index
 	return attackingEntityIndex;
 };
 
@@ -193,7 +188,6 @@ export const doFullAttack = (
 				defendingBoardHero,
 				attackingBoard,
 				attackingBoardHero,
-				null,
 				allCards,
 				spawns,
 				sharedState,
@@ -747,12 +741,8 @@ const triggerRandomDeathrattle = (
 	// );
 };
 
-const getAttackingEntity = (
-	attackingBoard: BoardEntity[],
-	lastAttackerIndex: number,
-	allCards: AllCardsService,
-): BoardEntity => {
-	lastAttackerIndex = Math.max(0, lastAttackerIndex);
+const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsService): BoardEntity => {
+	// lastAttackerIndex = Math.max(0, lastAttackerIndex);
 	// console.debug('lastAttackerIndex', lastAttackerIndex);
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
@@ -761,20 +751,27 @@ const getAttackingEntity = (
 
 	if (validAttackers.some((entity) => entity.attackImmediately)) {
 		validAttackers = validAttackers.filter((entity) => entity.attackImmediately);
+	} else if (validAttackers.every((e) => e.hasAttacked)) {
+		attackingBoard.forEach((e) => (e.hasAttacked = false));
+	} else {
+		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
 	}
+	const attacker = validAttackers[0];
+	return attacker;
+
 	// Once an entity has attacked, no entity to the left of it can attack until all entities
 	// on the board have attacked
 	// Once the last attacker index is the last entity on the board, we cycle back to the start
-	else if (lastAttackerIndex != null && lastAttackerIndex < validAttackers.length - 1) {
-		// This doesn't work if any entity that appears before the attacked index died in-between
-		const candidates = validAttackers.slice(lastAttackerIndex);
-		if (candidates.length > 0) {
-			validAttackers = candidates;
-		}
-	} else {
-		lastAttackerIndex = 0;
-		attackingBoard.forEach((e) => (e.attacksPerformed = 0));
-	}
+	// else if (lastAttackerIndex != null && lastAttackerIndex < validAttackers.length - 1) {
+	// 	// This doesn't work if any entity that appears before the attacked index died in-between
+	// 	const candidates = validAttackers.slice(lastAttackerIndex);
+	// 	if (candidates.length > 0) {
+	// 		validAttackers = candidates;
+	// 	}
+	// } else {
+	// 	lastAttackerIndex = 0;
+	// 	attackingBoard.forEach((e) => (e.attacksPerformed = 0));
+	// }
 
 	// console.debug(
 	// 	'picking attacker',
@@ -784,31 +781,31 @@ const getAttackingEntity = (
 	// 	stringifySimple(attackingBoard, allCards),
 	// );
 
-	let attackingEntity = validAttackers[0];
-	let minNumberOfAttacks: number = attackingEntity.attacksPerformed || 0;
-	let index = 0;
-	for (let i = 0; i < validAttackers.length; i++) {
-		const entity = validAttackers[i];
-		if ((entity.attacksPerformed || 0) < minNumberOfAttacks) {
-			attackingEntity = entity;
-			minNumberOfAttacks = entity.attacksPerformed;
-			index = i;
-		}
-	}
+	// let attackingEntity = validAttackers[0];
+	// let minNumberOfAttacks: number = attackingEntity.attacksPerformed || 0;
+	// let index = 0;
+	// for (let i = 0; i < validAttackers.length; i++) {
+	// 	const entity = validAttackers[i];
+	// 	if ((entity.attacksPerformed || 0) < minNumberOfAttacks) {
+	// 		attackingEntity = entity;
+	// 		minNumberOfAttacks = entity.attacksPerformed;
+	// 		index = i;
+	// 	}
+	// }
 	// console.log('minNumberOfAttacks', minNumberOfAttacks, index);
 
-	// Flag all entities to its left as "can't attack until cycled through"
-	// Not sure why this is needed: we're already picking the left-most valid attacker, so why increase the
-	// attacks of the entities that have already been skipped?
-	// for (let i = 0; i < index; i++) {
-	// 	validAttackers[i].attacksPerformed = (validAttackers[i].attacksPerformed || 0) + 1;
-	// }
+	// // Flag all entities to its left as "can't attack until cycled through"
+	// // Not sure why this is needed: we're already picking the left-most valid attacker, so why increase the
+	// // attacks of the entities that have already been skipped?
+	// // for (let i = 0; i < index; i++) {
+	// // 	validAttackers[i].attacksPerformed = (validAttackers[i].attacksPerformed || 0) + 1;
+	// // }
 
-	if (!attackingEntity.attackImmediately) {
-		attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
-	}
+	// if (!attackingEntity.attackImmediately) {
+	// 	attackingEntity.attacksPerformed = (attackingEntity.attacksPerformed || 0) + 1;
+	// }
 	// console.debug('chose attackingEntity', stringifySimple(attackingBoard, allCards));
-	return attackingEntity;
+	// return attackingEntity;
 };
 
 export const findNearestEnemies = (
@@ -2332,6 +2329,7 @@ const buildBoardAfterRebornSpawns = (
 	) {
 		entityToSpawn = {
 			...deadEntity,
+			hasAttacked: false,
 			health: deadEntity.maxHealth,
 			divineShield: deadEntity.hadDivineShield,
 			reborn: false,
@@ -2474,7 +2472,6 @@ export const performEntitySpawns = (
 				boardWithKilledMinionHero,
 				opponentBoard,
 				opponentBoardHero,
-				null,
 				allCards,
 				cardsData,
 				sharedState,

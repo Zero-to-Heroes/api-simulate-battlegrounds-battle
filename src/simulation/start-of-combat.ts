@@ -935,35 +935,24 @@ const handleIllidanForPlayer = (
 	modifyHealth(firstAttacker, 1, playerBoard, allCards);
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
 	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
-	simulateAttack(
-		playerBoard,
-		playerEntity,
-		opponentBoard,
-		opponentEntity,
-		undefined,
-		allCards,
-		spawns,
-		sharedState,
-		spectator,
-		0,
-	);
+	firstAttacker.attackImmediately = true;
+	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
 
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
 		modifyHealth(secondAttacker, 1, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard, playerEntity, opponentEntity);
+		secondAttacker.attackImmediately = true;
 		simulateAttack(
 			playerBoard,
 			playerEntity,
 			opponentBoard,
 			opponentEntity,
-			undefined,
 			allCards,
 			spawns,
 			sharedState,
 			spectator,
-			playerBoard.length - 1,
 		);
 	}
 };
