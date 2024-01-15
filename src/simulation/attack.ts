@@ -1933,7 +1933,8 @@ export const applyOnBeingAttackedBuffs = (
 			sharedState,
 			spectator,
 		);
-	} else if (
+	}
+	if (
 		(secretTriggered = defendingPlayerEntity.secrets?.find(
 			(secret) => !secret.triggered && secret?.cardId === CardIds.SnakeTrap_TB_Bacon_Secrets_02,
 		)) != null
@@ -1966,7 +1967,8 @@ export const applyOnBeingAttackedBuffs = (
 			sharedState,
 			spectator,
 		);
-	} else if (
+	}
+	if (
 		(secretTriggered = defendingPlayerEntity.secrets?.find(
 			(secret) => !secret.triggered && secret?.cardId === CardIds.VenomstrikeTrap_TB_Bacon_Secrets_01,
 		)) != null
