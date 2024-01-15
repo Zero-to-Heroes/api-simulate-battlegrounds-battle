@@ -1,6 +1,7 @@
 import {
 	AllCardsService,
 	CardIds,
+	CardType,
 	GameTag,
 	isBattlegroundsCard,
 	NON_BUYABLE_MINION_IDS,
@@ -212,7 +213,8 @@ export class CardsData {
 
 	public getRandomMinionForTribe(tribe: Race, tavernLimitUpper: number): string {
 		const pool = this.pool
-			.filter((m) => this.isValidTribe([tribe], m.races))
+			.filter((m) => this.isValidTribe([tribe], m.races, false))
+			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((m) => m.techLevel <= tavernLimitUpper);
 		return pickRandom(pool)?.id;
 	}
@@ -221,12 +223,11 @@ export class CardsData {
 		return !!card.battlegroundsNormalDbfId;
 	}
 
-	private isValidTribe(validTribes: readonly Race[], cardRaces: readonly string[]): boolean {
-		// Blank races are always ok
-		if (!cardRaces?.length) {
+	private isValidTribe(validTribes: readonly Race[], cardRaces: readonly string[], allowEmptyRaces = true): boolean {
+		if (!cardRaces?.length && allowEmptyRaces) {
 			return true;
 		}
-		return cardRaces
+		return (cardRaces ?? [])
 			.map((race) => getRaceEnum(race))
 			.some((raceEnum) => raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum));
 	}

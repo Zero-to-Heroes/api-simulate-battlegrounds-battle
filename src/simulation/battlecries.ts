@@ -14,7 +14,6 @@ import {
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
-	stringifySimple,
 } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
 import { InternalGameState } from './internal-game-state';
@@ -242,7 +241,6 @@ export const triggerBattlecry = (
 						  ];
 				addCardsInHand(hero, board, primalfinLookoutCardsToAdd, gameState);
 				gameState.spectator.registerPowerTarget(entity, hero, board, hero, otherHero);
-				console.debug('hand', stringifySimple(hero.hand, gameState.allCards));
 				break;
 			case CardIds.StrongshellScavenger_BG_ICC_807:
 			case CardIds.StrongshellScavenger_TB_BaconUps_072:
