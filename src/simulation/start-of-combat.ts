@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
-import { BgsGameState } from '../bgs-battle-info';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData, START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
+import { START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
 import {
 	afterStatsUpdate,
@@ -33,7 +32,7 @@ import {
 	handleDeathrattles,
 } from './deathrattle-effects';
 import { spawnEntities } from './deathrattle-spawns';
-import { SharedState } from './shared-state';
+import { InternalGameState } from './internal-game-state';
 import { Spectator } from './spectator/spectator';
 
 export const handleStartOfCombat = (
@@ -42,11 +41,7 @@ export const handleStartOfCombat = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	// https://twitter.com/DCalkosz/status/1564705111850434561
 	currentAttacker = handleStartOfCombatQuestRewards(
@@ -55,11 +50,7 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatSpells(
 		playerEntity,
@@ -67,11 +58,7 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatAnomalies(
 		playerEntity,
@@ -79,11 +66,7 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	// https://twitter.com/DCalkosz/status/1488361384320528388?s=20&t=1ECxRZFdjqwEa2fRsXk32Q
 	// There’s a certain order for Start of Combat hero powers, rather than “coin flips” where
@@ -97,11 +80,7 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	// Because start of combat powers like Red Whelp's use the board composition before Illidan's strike to know the amount of damage
 	const playerBoardBefore = playerBoard.map((e) => ({ ...e }));
@@ -112,11 +91,7 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatHeroPowers(
 		playerEntity,
@@ -124,11 +99,7 @@ export const handleStartOfCombat = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatMinions(
 		playerEntity,
@@ -138,11 +109,7 @@ export const handleStartOfCombat = (
 		currentAttacker,
 		playerBoardBefore,
 		opponentBoardBefore,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	return currentAttacker;
 };
@@ -153,11 +120,7 @@ const handlePreCombatHeroPowers = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	if (Math.random() < 0.5) {
 		currentAttacker = handlePreCombatHeroPowersForPlayer(
@@ -167,11 +130,7 @@ const handlePreCombatHeroPowers = (
 			opponentBoard,
 			currentAttacker,
 			true,
-			allCards,
-			spawns,
-			sharedState,
 			gameState,
-			spectator,
 		);
 		currentAttacker = handlePreCombatHeroPowersForPlayer(
 			opponentEntity,
@@ -180,11 +139,7 @@ const handlePreCombatHeroPowers = (
 			playerBoard,
 			currentAttacker,
 			false,
-			allCards,
-			spawns,
-			sharedState,
 			gameState,
-			spectator,
 		);
 	} else {
 		currentAttacker = handlePreCombatHeroPowersForPlayer(
@@ -194,11 +149,7 @@ const handlePreCombatHeroPowers = (
 			playerBoard,
 			currentAttacker,
 			false,
-			allCards,
-			spawns,
-			sharedState,
 			gameState,
-			spectator,
 		);
 		currentAttacker = handlePreCombatHeroPowersForPlayer(
 			playerEntity,
@@ -207,11 +158,7 @@ const handlePreCombatHeroPowers = (
 			opponentBoard,
 			currentAttacker,
 			true,
-			allCards,
-			spawns,
-			sharedState,
 			gameState,
-			spectator,
 		);
 	}
 	return currentAttacker;
@@ -224,11 +171,7 @@ const handlePreCombatHeroPowersForPlayer = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	friendly: boolean,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	let shouldRecomputeCurrentAttacker = false;
 	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
@@ -236,99 +179,34 @@ const handlePreCombatHeroPowersForPlayer = (
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.SwattingInsects && playerBoard.length > 0) {
 		// Should be sent by the app, but it is an idempotent operation, so we can just reapply it here
-		handleAlakirForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		handleAlakirForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EarthInvocationToken) {
-		applyEarthInvocationEnchantment(playerBoard, null, playerEntity, allCards, sharedState, spectator);
+		applyEarthInvocationEnchantment(playerBoard, null, playerEntity, gameState);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaterInvocationToken) {
-		applyWaterInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
+		applyWaterInvocationEnchantment(playerBoard, null, playerEntity, gameState);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.FireInvocationToken) {
-		applyFireInvocationEnchantment(playerBoard, null, playerEntity, allCards, spectator);
+		applyFireInvocationEnchantment(playerBoard, null, playerEntity, gameState);
 	} else if (playerHeroPowerId === CardIds.AllWillBurn) {
-		applyAllWillBurn(playerBoard, opponentBoard, playerEntity, allCards, spectator);
+		applyAllWillBurn(playerBoard, opponentBoard, playerEntity, gameState);
 	} else if (playerHeroPowerId === CardIds.Ozumat_Tentacular) {
-		handleOzumatForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			friendly,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		handleOzumatForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, friendly, gameState);
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
-		handleTamsinForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		// Tamsin's hero power somehow happens before the current attacker is chosen.
 		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
 		// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
-		handleTeronForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		handleTeronForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		// Same as Tamsin? No, because the new minion should repop automatically
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarband) {
-		handleWaxWarbandForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		handleWaxWarbandForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.LightningInvocationToken) {
-		applyLightningInvocationEnchantment(
-			playerBoard,
-			playerEntity,
-			null,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-		);
+		applyLightningInvocationEnchantment(playerBoard, playerEntity, null, opponentBoard, opponentEntity, gameState);
 	}
 
-	processMinionDeath(
-		playerBoard,
-		playerEntity,
-		opponentBoard,
-		opponentEntity,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	if (shouldRecomputeCurrentAttacker) {
 		currentAttacker =
 			playerBoard.length > opponentBoard.length
@@ -351,11 +229,7 @@ export const handleIllidanHeroPowers = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	// console.log('current attacker before', currentAttacker);
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
@@ -368,10 +242,7 @@ export const handleIllidanHeroPowers = (
 			opponentBoard,
 			currentAttacker,
 			true,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		currentAttacker = handlePlayerIllidanHeroPowers(
 			opponentEntity,
@@ -380,10 +251,7 @@ export const handleIllidanHeroPowers = (
 			playerBoard,
 			currentAttacker,
 			false,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 	} else {
 		currentAttacker = handlePlayerIllidanHeroPowers(
@@ -393,10 +261,7 @@ export const handleIllidanHeroPowers = (
 			playerBoard,
 			currentAttacker,
 			false,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		currentAttacker = handlePlayerIllidanHeroPowers(
 			playerEntity,
@@ -405,22 +270,10 @@ export const handleIllidanHeroPowers = (
 			opponentBoard,
 			currentAttacker,
 			true,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 	}
-	processMinionDeath(
-		playerBoard,
-		playerEntity,
-		opponentBoard,
-		opponentEntity,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	// console.log('current attacker after', currentAttacker);
 	return currentAttacker;
 };
@@ -433,11 +286,7 @@ const handleStartOfCombatMinions = (
 	currentAttacker: number,
 	playerBoardBefore: BoardEntity[],
 	opponentBoardBefore: BoardEntity[],
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	let attackerForStart = currentAttacker;
 	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
@@ -459,11 +308,7 @@ const handleStartOfCombatMinions = (
 				opponentEntity,
 				playerBoardBefore,
 				opponentBoardBefore,
-				allCards,
-				spawns,
-				sharedState,
 				gameState,
-				spectator,
 			);
 		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
@@ -478,11 +323,7 @@ const handleStartOfCombatMinions = (
 				playerEntity,
 				opponentBoardBefore,
 				playerBoardBefore,
-				allCards,
-				spawns,
-				sharedState,
 				gameState,
-				spectator,
 			);
 		}
 		attackerForStart = (attackerForStart + 1) % 2;
@@ -496,11 +337,7 @@ const handleStartOfCombatQuestRewards = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
 		playerEntity,
@@ -508,11 +345,7 @@ const handleStartOfCombatQuestRewards = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
 		opponentEntity,
@@ -520,11 +353,7 @@ const handleStartOfCombatQuestRewards = (
 		playerEntity,
 		playerBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	return currentAttacker;
 };
@@ -535,11 +364,7 @@ const handleStartOfCombatSpells = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatSpellsForPlayer(
 		playerEntity,
@@ -547,11 +372,7 @@ const handleStartOfCombatSpells = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatSpellsForPlayer(
 		opponentEntity,
@@ -559,11 +380,7 @@ const handleStartOfCombatSpells = (
 		playerEntity,
 		playerBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	return currentAttacker;
 };
@@ -574,11 +391,7 @@ const handleStartOfCombatAnomalies = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatAnomaliesForPlayer(
 		playerEntity,
@@ -586,11 +399,7 @@ const handleStartOfCombatAnomalies = (
 		opponentEntity,
 		opponentBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	currentAttacker = handleStartOfCombatAnomaliesForPlayer(
 		opponentEntity,
@@ -598,11 +407,7 @@ const handleStartOfCombatAnomalies = (
 		playerEntity,
 		playerBoard,
 		currentAttacker,
-		allCards,
-		spawns,
-		sharedState,
 		gameState,
-		spectator,
 	);
 	return currentAttacker;
 };
@@ -613,11 +418,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	if (!playerEntity.questRewards?.length) {
 		return currentAttacker;
@@ -638,10 +439,10 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						playerEntity,
 						opponentBoard,
 						opponentEntity,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
 						highestHealthMinion.friendly,
 						true,
 						false,
@@ -657,12 +458,9 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						indexFromRight,
 						opponentBoard,
 						opponentEntity,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
+						gameState,
 					);
-					spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
+					gameState.spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
 				}
 				// Recompute first attacker
 				// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
@@ -673,10 +471,10 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					: Math.round(Math.random());
 			case CardIds.StaffOfOrigination_BG24_Reward_312:
 				playerBoard.forEach((entity) => {
-					modifyAttack(entity, 15, playerBoard, allCards);
-					modifyHealth(entity, 15, playerBoard, allCards);
-					afterStatsUpdate(entity, playerBoard, allCards);
-					spectator.registerPowerTarget(playerEntity, entity, playerBoard, null, null);
+					modifyAttack(entity, 15, playerBoard, gameState.allCards);
+					modifyHealth(entity, 15, playerBoard, gameState.allCards);
+					afterStatsUpdate(entity, playerBoard, gameState.allCards);
+					gameState.spectator.registerPowerTarget(playerEntity, entity, playerBoard, null, null);
 				});
 				break;
 			case CardIds.StolenGold:
@@ -686,9 +484,9 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						playerEntity,
 						playerBoard,
 						playerEntity,
-						allCards,
-						spectator,
-						sharedState,
+						gameState.allCards,
+						gameState.spectator,
+						gameState.sharedState,
 					);
 				}
 				if (playerBoard.length > 1) {
@@ -697,9 +495,9 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						playerEntity,
 						playerBoard,
 						playerEntity,
-						allCards,
-						spectator,
-						sharedState,
+						gameState.allCards,
+						gameState.spectator,
+						gameState.sharedState,
 					);
 				}
 				break;
@@ -715,11 +513,7 @@ const handleStartOfCombatSpellsForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	if (!playerEntity.secrets?.length) {
 		return currentAttacker;
@@ -731,7 +525,7 @@ const handleStartOfCombatSpellsForPlayer = (
 					const target = pickRandom(opponentBoard);
 					target.health = 1;
 					target.maxHealth = 1;
-					spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
+					gameState.spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
 				}
 				break;
 		}
@@ -746,11 +540,7 @@ const handleStartOfCombatAnomaliesForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	if (!gameState.anomalies?.length) {
 		return currentAttacker;
@@ -760,7 +550,7 @@ const handleStartOfCombatAnomaliesForPlayer = (
 			case CardIds.BlessedOrBlighted_BG27_Anomaly_726:
 				if (playerBoard.length > 0) {
 					const dsTarget = playerBoard[0];
-					updateDivineShield(dsTarget, playerBoard, true, allCards);
+					updateDivineShield(dsTarget, playerBoard, true, gameState.allCards);
 					const rebornTarget = playerBoard[playerBoard.length - 1];
 					rebornTarget.reborn = true;
 				}
@@ -779,10 +569,10 @@ const handleStartOfCombatAnomaliesForPlayer = (
 						playerEntity,
 						opponentBoard,
 						opponentEntity,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
 						highestHealthMinion.friendly,
 						true,
 						false,
@@ -798,12 +588,9 @@ const handleStartOfCombatAnomaliesForPlayer = (
 						indexFromRight,
 						opponentBoard,
 						opponentEntity,
-						allCards,
-						spawns,
-						sharedState,
-						spectator,
+						gameState,
 					);
-					spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
+					gameState.spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
 				}
 				// Recompute first attacker
 				// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
@@ -824,11 +611,7 @@ export const handleStartOfCombatHeroPowers = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
@@ -840,10 +623,7 @@ export const handleStartOfCombatHeroPowers = (
 			opponentBoard,
 			currentAttacker,
 			true,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			opponentEntity,
@@ -852,10 +632,7 @@ export const handleStartOfCombatHeroPowers = (
 			playerBoard,
 			currentAttacker,
 			false,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 	} else {
 		currentAttacker = handlePlayerStartOfCombatHeroPowers(
@@ -865,10 +642,7 @@ export const handleStartOfCombatHeroPowers = (
 			playerBoard,
 			currentAttacker,
 			false,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		currentAttacker = handlePlayerStartOfCombatHeroPowers(
 			playerEntity,
@@ -877,10 +651,7 @@ export const handleStartOfCombatHeroPowers = (
 			opponentBoard,
 			currentAttacker,
 			true,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 	}
 	return currentAttacker;
@@ -893,23 +664,11 @@ const handlePlayerIllidanHeroPowers = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	friendly: boolean,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
-		handleIllidanForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		currentAttacker = (currentAttacker + 1) % 2;
 	}
 	return currentAttacker;
@@ -921,10 +680,7 @@ const handleIllidanForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
@@ -933,34 +689,31 @@ const handleIllidanForPlayer = (
 	const secondAttacker = minionsAtStart > 1 ? playerBoard[playerBoard.length - 1] : null;
 
 	// Stats updates
-	modifyAttack(firstAttacker, 2, playerBoard, allCards);
-	modifyHealth(firstAttacker, 1, playerBoard, allCards);
-	afterStatsUpdate(firstAttacker, playerBoard, allCards);
-	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
+	modifyAttack(firstAttacker, 2, playerBoard, gameState.allCards);
+	modifyHealth(firstAttacker, 1, playerBoard, gameState.allCards);
+	afterStatsUpdate(firstAttacker, playerBoard, gameState.allCards);
+	gameState.spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
-		modifyAttack(secondAttacker, 2, playerBoard, allCards);
-		modifyHealth(secondAttacker, 1, playerBoard, allCards);
-		afterStatsUpdate(secondAttacker, playerBoard, allCards);
-		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard, playerEntity, opponentEntity);
+		modifyAttack(secondAttacker, 2, playerBoard, gameState.allCards);
+		modifyHealth(secondAttacker, 1, playerBoard, gameState.allCards);
+		afterStatsUpdate(secondAttacker, playerBoard, gameState.allCards);
+		gameState.spectator.registerPowerTarget(
+			secondAttacker,
+			secondAttacker,
+			playerBoard,
+			playerEntity,
+			opponentEntity,
+		);
 	}
 
 	// Attacks
 	firstAttacker.attackImmediately = true;
-	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	// See http://replays.firestoneapp.com/?reviewId=f16b7a49-c2a2-4ac5-a9eb-a75f83246f70&turn=6&action=8
 	firstAttacker.hasAttacked = false;
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		secondAttacker.attackImmediately = true;
-		simulateAttack(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		secondAttacker.hasAttacked = false;
 	}
 };
@@ -970,18 +723,15 @@ const handleAlakirForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	const firstEntity = playerBoard[0];
 	firstEntity.windfury = true;
 	if (!firstEntity.divineShield) {
-		updateDivineShield(firstEntity, playerBoard, true, allCards);
+		updateDivineShield(firstEntity, playerBoard, true, gameState.allCards);
 	}
 	firstEntity.taunt = true;
-	spectator.registerPowerTarget(firstEntity, firstEntity, playerBoard, playerEntity, opponentEntity);
+	gameState.spectator.registerPowerTarget(firstEntity, firstEntity, playerBoard, playerEntity, opponentEntity);
 };
 
 const handleTamsinForPlayer = (
@@ -989,10 +739,7 @@ const handleTamsinForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	const chosenEntity = pickRandomLowestHealth(playerBoard);
 	if (!chosenEntity) {
@@ -1003,10 +750,10 @@ const handleTamsinForPlayer = (
 	// How to mark the minion as dead
 	chosenEntity.definitelyDead = true;
 	newBoard.forEach((e) => {
-		modifyAttack(e, chosenEntity.attack, newBoard, allCards);
-		modifyHealth(e, chosenEntity.health, newBoard, allCards);
-		afterStatsUpdate(e, newBoard, allCards);
-		spectator.registerPowerTarget(chosenEntity, e, newBoard, playerEntity, opponentEntity);
+		modifyAttack(e, chosenEntity.attack, newBoard, gameState.allCards);
+		modifyHealth(e, chosenEntity.health, newBoard, gameState.allCards);
+		afterStatsUpdate(e, newBoard, gameState.allCards);
+		gameState.spectator.registerPowerTarget(chosenEntity, e, newBoard, playerEntity, opponentEntity);
 	});
 };
 
@@ -1015,10 +762,7 @@ const handleTeronForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	// The board state is snapshot after the minion dies
 	const deadMinionEntityId = playerEntity.heroPowerInfo;
@@ -1030,10 +774,23 @@ const handleTeronForPlayer = (
 			...minionThatWillDie,
 			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
 		} as BoardEntity;
-		removeAurasFromSelf(minionToCopy, playerBoard, playerEntity, allCards, sharedState, spectator);
+		removeAurasFromSelf(
+			minionToCopy,
+			playerBoard,
+			playerEntity,
+			gameState.allCards,
+			gameState.sharedState,
+			gameState.spectator,
+		);
 		playerEntity.rapidReanimationMinion = minionToCopy;
 		minionThatWillDie.definitelyDead = true;
-		spectator.registerPowerTarget(playerEntity, minionThatWillDie, playerBoard, playerEntity, opponentEntity);
+		gameState.spectator.registerPowerTarget(
+			playerEntity,
+			minionThatWillDie,
+			playerBoard,
+			playerEntity,
+			opponentEntity,
+		);
 	}
 };
 
@@ -1042,26 +799,23 @@ const handleWaxWarbandForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	if (playerBoard.length > 0) {
-		const boardWithTribes = playerBoard.filter((e) => !!allCards.getCard(e.cardId)?.races?.length);
+		const boardWithTribes = playerBoard.filter((e) => !!gameState.allCards.getCard(e.cardId)?.races?.length);
 		const boardWithoutAll = boardWithTribes.filter(
-			(e) => !allCards.getCard(e.cardId).races.includes(Race[Race.ALL]),
+			(e) => !gameState.allCards.getCard(e.cardId).races.includes(Race[Race.ALL]),
 		);
-		const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, allCards);
+		const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, gameState.allCards);
 		const allMinions = [
 			...selectedMinions,
-			...boardWithTribes.filter((e) => allCards.getCard(e.cardId).races.includes(Race[Race.ALL])),
+			...boardWithTribes.filter((e) => gameState.allCards.getCard(e.cardId).races.includes(Race[Race.ALL])),
 		];
 		allMinions.forEach((e) => {
-			modifyAttack(e, cardsData.getTavernLevel(e.cardId), playerBoard, allCards);
-			modifyHealth(e, cardsData.getTavernLevel(e.cardId), playerBoard, allCards);
-			afterStatsUpdate(e, playerBoard, allCards);
-			spectator.registerPowerTarget(playerEntity, e, playerBoard, playerEntity, opponentEntity);
+			modifyAttack(e, gameState.cardsData.getTavernLevel(e.cardId), playerBoard, gameState.allCards);
+			modifyHealth(e, gameState.cardsData.getTavernLevel(e.cardId), playerBoard, gameState.allCards);
+			afterStatsUpdate(e, playerBoard, gameState.allCards);
+			gameState.spectator.registerPowerTarget(playerEntity, e, playerBoard, playerEntity, opponentEntity);
 		});
 	}
 };
@@ -1109,10 +863,7 @@ const handleOzumatForPlayer = (
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	friendly: boolean,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	// Because of some interactions between start of combat hero powers, it can happen that Ozumat is already present
 	// on the board when we receive the board state
@@ -1128,10 +879,10 @@ const handleOzumatForPlayer = (
 			playerEntity,
 			opponentBoard,
 			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState.allCards,
+			gameState.cardsData,
+			gameState.sharedState,
+			gameState.spectator,
 			friendly,
 			true,
 			false,
@@ -1148,12 +899,9 @@ const handleOzumatForPlayer = (
 			indexFromRight,
 			opponentBoard,
 			opponentEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
-		spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
+		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
 	}
 };
 
@@ -1164,10 +912,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	friendly: boolean,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): number => {
 	// eslint-disable-next-line prefer-const
 	let shouldRecomputeCurrentAttacker = false;
@@ -1183,10 +928,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 			playerEntity.heroPowerInfo2 ?? 0,
 			playerBoard,
 			playerEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
@@ -1200,10 +942,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 			playerEntity.heroPowerInfo2 ?? 0,
 			playerBoard,
 			playerEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
@@ -1218,10 +957,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 			playerEntity.heroPowerInfo2 ?? 0,
 			playerBoard,
 			playerEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
@@ -1236,24 +972,12 @@ const handlePlayerStartOfCombatHeroPowers = (
 			playerEntity.heroPowerInfo2 ?? 0,
 			playerBoard,
 			playerEntity,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		// processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, cardsData, sharedState, spectator);
 		playerEntity.deadEyeDamageDone = damageDone;
 	}
-	processMinionDeath(
-		playerBoard,
-		playerEntity,
-		opponentBoard,
-		opponentEntity,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	if (shouldRecomputeCurrentAttacker) {
 		const previousCurrentAttacker = currentAttacker;
 		currentAttacker =
@@ -1307,16 +1031,12 @@ export const performStartOfCombatMinionsForPlayer = (
 	// Tamsin's Phylactery.
 	attackingBoardBefore: BoardEntity[],
 	defendingBoardBefore: BoardEntity[],
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	gameState: BgsGameState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
 		const damage = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).races)
+			.map((entity) => gameState.allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		dealDamageToRandomEnemy(
 			defendingBoard,
@@ -1325,14 +1045,11 @@ export const performStartOfCombatMinionsForPlayer = (
 			damage,
 			attackingBoard,
 			attackingBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 	} else if (attacker.cardId === CardIds.RedWhelp_TB_BaconUps_102) {
 		const damage = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).races)
+			.map((entity) => gameState.allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		dealDamageToRandomEnemy(
 			defendingBoard,
@@ -1341,10 +1058,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			damage,
 			attackingBoard,
 			attackingBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 		dealDamageToRandomEnemy(
 			defendingBoard,
@@ -1353,42 +1067,61 @@ export const performStartOfCombatMinionsForPlayer = (
 			damage,
 			attackingBoard,
 			attackingBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState,
 		);
 	} else if (
 		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014 ||
 		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G
 	) {
 		const numberOfDragons = attackingBoardBefore
-			.map((entity) => allCards.getCard(entity.cardId).races)
+			.map((entity) => gameState.allCards.getCard(entity.cardId).races)
 			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		const multiplier = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 2 : 1;
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, multiplier * numberOfDragons, attackingBoard, allCards);
-			modifyHealth(entity, multiplier * numberOfDragons, attackingBoard, allCards);
-			afterStatsUpdate(entity, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, entity, attackingBoard, attackingBoardHero, defendingBoardHero);
+			modifyAttack(entity, multiplier * numberOfDragons, attackingBoard, gameState.allCards);
+			modifyHealth(entity, multiplier * numberOfDragons, attackingBoard, gameState.allCards);
+			afterStatsUpdate(entity, attackingBoard, gameState.allCards);
+			gameState.spectator.registerPowerTarget(
+				attacker,
+				entity,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
 		});
 	} else if (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
 	) {
 		const multiplier = attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;
-		modifyAttack(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff, attackingBoard, allCards);
-		modifyHealth(attacker, multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff, attackingBoard, allCards);
-		afterStatsUpdate(attacker, attackingBoard, allCards);
-		spectator.registerPowerTarget(attacker, attacker, attackingBoard, attackingBoardHero, defendingBoardHero);
+		modifyAttack(
+			attacker,
+			multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff,
+			attackingBoard,
+			gameState.allCards,
+		);
+		modifyHealth(
+			attacker,
+			multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff,
+			attackingBoard,
+			gameState.allCards,
+		);
+		afterStatsUpdate(attacker, attackingBoard, gameState.allCards);
+		gameState.spectator.registerPowerTarget(
+			attacker,
+			attacker,
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoardHero,
+		);
 	} else if (
 		attacker.cardId === CardIds.AmberGuardian_BG24_500 ||
 		attacker.cardId === CardIds.AmberGuardian_BG24_500_G
 	) {
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard
-			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
+			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
 		const loops = attacker.cardId === CardIds.AmberGuardian_BG24_500_G ? 2 : 1;
 		const dragonsToConsider = otherDragons;
@@ -1397,12 +1130,12 @@ export const performStartOfCombatMinionsForPlayer = (
 				pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
 			if (otherDragon) {
 				if (!otherDragon.divineShield) {
-					updateDivineShield(otherDragon, attackingBoard, true, allCards);
+					updateDivineShield(otherDragon, attackingBoard, true, gameState.allCards);
 				}
-				modifyAttack(otherDragon, 2, attackingBoard, allCards);
-				modifyHealth(otherDragon, 2, attackingBoard, allCards);
-				afterStatsUpdate(otherDragon, attackingBoard, allCards);
-				spectator.registerPowerTarget(
+				modifyAttack(otherDragon, 2, attackingBoard, gameState.allCards);
+				modifyHealth(otherDragon, 2, attackingBoard, gameState.allCards);
+				afterStatsUpdate(otherDragon, attackingBoard, gameState.allCards);
+				gameState.spectator.registerPowerTarget(
 					attacker,
 					otherDragon,
 					attackingBoard,
@@ -1419,12 +1152,12 @@ export const performStartOfCombatMinionsForPlayer = (
 		const buff = attacker.cardId === CardIds.SanctumRester_BG26_356_G ? 16 : 8;
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard
-			.filter((e) => hasCorrectTribe(e, Race.DRAGON, allCards))
+			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
 		otherDragons.forEach((otherDragon) => {
-			modifyHealth(otherDragon, buff, attackingBoard, allCards);
-			afterStatsUpdate(otherDragon, attackingBoard, allCards);
-			spectator.registerPowerTarget(
+			modifyHealth(otherDragon, buff, attackingBoard, gameState.allCards);
+			afterStatsUpdate(otherDragon, attackingBoard, gameState.allCards);
+			gameState.spectator.registerPowerTarget(
 				attacker,
 				otherDragon,
 				attackingBoard,
@@ -1439,12 +1172,12 @@ export const performStartOfCombatMinionsForPlayer = (
 		const numberOfTargets = attacker.cardId === CardIds.Soulsplitter_BG25_023_G ? 2 : 1;
 		for (let i = 0; i < numberOfTargets; i++) {
 			const undeadsWithoutReborn = attackingBoard
-				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, gameState.allCards))
 				.filter((e) => !e.reborn);
 			const chosenUndead = pickRandom(undeadsWithoutReborn);
 			if (chosenUndead) {
 				chosenUndead.reborn = true;
-				spectator.registerPowerTarget(
+				gameState.spectator.registerPowerTarget(
 					attacker,
 					chosenUndead,
 					attackingBoard,
@@ -1460,20 +1193,42 @@ export const performStartOfCombatMinionsForPlayer = (
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		const multiplier = attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy_G ? 2 : 1;
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
-			modifyHealth(entity, multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0), attackingBoard, allCards);
-			afterStatsUpdate(entity, attackingBoard, allCards);
-			spectator.registerPowerTarget(attacker, entity, attackingBoard, attackingBoardHero, defendingBoardHero);
+			modifyAttack(
+				entity,
+				multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0),
+				attackingBoard,
+				gameState.allCards,
+			);
+			modifyHealth(
+				entity,
+				multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0),
+				attackingBoard,
+				gameState.allCards,
+			);
+			afterStatsUpdate(entity, attackingBoard, gameState.allCards);
+			gameState.spectator.registerPowerTarget(
+				attacker,
+				entity,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
 		});
 	} else if (
 		attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012 ||
 		attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012_G
 	) {
 		const multiplier = attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012_G ? 2 : 1;
-		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, allCards);
-		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, allCards);
-		afterStatsUpdate(attacker, attackingBoard, allCards);
-		spectator.registerPowerTarget(attacker, attacker, attackingBoard, attackingBoardHero, defendingBoardHero);
+		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, gameState.allCards);
+		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, gameState.allCards);
+		afterStatsUpdate(attacker, attackingBoard, gameState.allCards);
+		gameState.spectator.registerPowerTarget(
+			attacker,
+			attacker,
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoardHero,
+		);
 	} else if (
 		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704 ||
 		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G
@@ -1482,17 +1237,17 @@ export const performStartOfCombatMinionsForPlayer = (
 			const attackerIndex = attackingBoard.indexOf(attacker);
 			const defenderPosition = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
 			if (Math.round(defenderPosition) === defenderPosition) {
-				castImpure(defendingBoard[defenderPosition], attacker, attackingBoard, spectator);
+				castImpure(defendingBoard[defenderPosition], attacker, attackingBoard, gameState.spectator);
 			} else {
-				castImpure(defendingBoard[defenderPosition - 0.5], attacker, attackingBoard, spectator);
-				castImpure(defendingBoard[defenderPosition + 0.5], attacker, attackingBoard, spectator);
+				castImpure(defendingBoard[defenderPosition - 0.5], attacker, attackingBoard, gameState.spectator);
+				castImpure(defendingBoard[defenderPosition + 0.5], attacker, attackingBoard, gameState.spectator);
 			}
 		}
 	} else if (attacker.cardId === CardIds.MantidQueen_BG22_402 || attacker.cardId === CardIds.MantidQueen_BG22_402_G) {
 		const multiplier = attacker.cardId === CardIds.MantidQueen_BG22_402_G ? 2 : 1;
 		const allRaces = attackingBoardBefore
 			.map((entity) => entity.cardId)
-			.flatMap((cardId) => allCards.getCard(cardId).races)
+			.flatMap((cardId) => gameState.allCards.getCard(cardId).races)
 			.filter((race) => !!race && race !== Race[Race.BLANK]);
 		const totalRaces =
 			[...new Set(allRaces.filter((race) => race !== Race[Race.ALL]))].length +
@@ -1502,9 +1257,9 @@ export const performStartOfCombatMinionsForPlayer = (
 				const buffType = getRandomMantidQueenBuffType(attacker);
 				switch (buffType) {
 					case 'stats':
-						modifyAttack(attacker, 5, attackingBoard, allCards);
-						modifyHealth(attacker, 5, attackingBoard, allCards);
-						afterStatsUpdate(attacker, attackingBoard, allCards);
+						modifyAttack(attacker, 5, attackingBoard, gameState.allCards);
+						modifyHealth(attacker, 5, attackingBoard, gameState.allCards);
+						afterStatsUpdate(attacker, attackingBoard, gameState.allCards);
 						break;
 					case 'reborn':
 						attacker.reborn = true;
@@ -1516,7 +1271,7 @@ export const performStartOfCombatMinionsForPlayer = (
 						attacker.windfury = true;
 						break;
 				}
-				spectator.registerPowerTarget(
+				gameState.spectator.registerPowerTarget(
 					attacker,
 					attacker,
 					attackingBoard,
@@ -1543,10 +1298,10 @@ export const performStartOfCombatMinionsForPlayer = (
 					attackingBoardHero,
 					defendingBoard,
 					defendingBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState.allCards,
+					gameState.cardsData,
+					gameState.sharedState,
+					gameState.spectator,
 					attacker.friendly,
 					true,
 					false,
@@ -1562,12 +1317,15 @@ export const performStartOfCombatMinionsForPlayer = (
 					indexFromRight,
 					defendingBoard,
 					defendingBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState,
 				);
-				spectator.registerPowerTarget(attacker, copy, attackingBoard, attackingBoardHero, defendingBoardHero);
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					copy,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 			}
 		}
 	} else if (
@@ -1580,10 +1338,16 @@ export const performStartOfCombatMinionsForPlayer = (
 			// When it's the opponent, the game state already contains all the buffs
 			if (target?.friendly) {
 				const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
-				modifyAttack(target, diremuckBuff, attackingBoard, allCards);
-				modifyHealth(target, diremuckBuff, attackingBoard, allCards);
-				afterStatsUpdate(target, attackingBoard, allCards);
-				spectator.registerPowerTarget(attacker, target, attackingBoard, attackingBoardHero, defendingBoardHero);
+				modifyAttack(target, diremuckBuff, attackingBoard, gameState.allCards);
+				modifyHealth(target, diremuckBuff, attackingBoard, gameState.allCards);
+				afterStatsUpdate(target, attackingBoard, gameState.allCards);
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					target,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 			}
 			if (attackingBoard.length < 7) {
 				target.locked = true;
@@ -1594,10 +1358,10 @@ export const performStartOfCombatMinionsForPlayer = (
 					attackingBoardHero,
 					defendingBoard,
 					defendingBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState.allCards,
+					gameState.cardsData,
+					gameState.sharedState,
+					gameState.spectator,
 					attacker.friendly,
 					false,
 					false,
@@ -1615,10 +1379,7 @@ export const performStartOfCombatMinionsForPlayer = (
 					attackingBoard.length - (attackingBoard.indexOf(attacker) + 1),
 					defendingBoard,
 					defendingBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState,
 				);
 			}
 		}
@@ -1629,7 +1390,13 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
 		for (const entity of attackingBoard) {
 			for (let i = 0; i < multiplier; i++) {
-				spectator.registerPowerTarget(attacker, entity, attackingBoard, attackingBoardHero, defendingBoardHero);
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					entity,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 				handleDeathrattles(
 					attackingBoard,
 					attackingBoardHero,
@@ -1638,10 +1405,7 @@ export const performStartOfCombatMinionsForPlayer = (
 					defendingBoard,
 					defendingBoardHero,
 					[],
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState,
 				);
 			}
 		}
@@ -1657,7 +1421,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				attackingBoard.length - 1 - attackingBoard.indexOf(attacker),
 				defendingBoard,
 				1,
-				allCards,
+				gameState.allCards,
 			);
 			if (!targets.length) {
 				break;
@@ -1674,42 +1438,29 @@ export const performStartOfCombatMinionsForPlayer = (
 					target,
 					defendingBoard,
 					defendingBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState,
 				);
 			}
 		}
 	}
-	processMinionDeath(
-		attackingBoard,
-		attackingBoardHero,
-		defendingBoard,
-		defendingBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
-	);
+	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
 };
 
 const applyAllWillBurn = (
 	board1: BoardEntity[],
 	board2: BoardEntity[],
 	sourceEntity: BgsPlayerEntity | BoardEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ): void => {
 	for (const entity of board1) {
-		modifyAttack(entity, 2, board1, allCards);
-		afterStatsUpdate(entity, board1, allCards);
-		spectator.registerPowerTarget(sourceEntity, entity, board1, null, null);
+		modifyAttack(entity, 2, board1, gameState.allCards);
+		afterStatsUpdate(entity, board1, gameState.allCards);
+		gameState.spectator.registerPowerTarget(sourceEntity, entity, board1, null, null);
 	}
 	for (const entity of board2) {
-		modifyAttack(entity, 2, board2, allCards);
-		afterStatsUpdate(entity, board2, allCards);
-		spectator.registerPowerTarget(sourceEntity, entity, board2, null, null);
+		modifyAttack(entity, 2, board2, gameState.allCards);
+		afterStatsUpdate(entity, board2, gameState.allCards);
+		gameState.spectator.registerPowerTarget(sourceEntity, entity, board2, null, null);
 	}
 };
 

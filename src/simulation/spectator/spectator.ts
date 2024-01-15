@@ -218,7 +218,7 @@ export class Spectator {
 
 	public registerPowerTarget(
 		sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret,
-		targetEntity: BoardEntity,
+		targetEntity: BoardEntity | BgsPlayerEntity,
 		targetBoard: BoardEntity[],
 		hero1: BgsPlayerEntity,
 		hero2: BgsPlayerEntity,

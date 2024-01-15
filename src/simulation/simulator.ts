@@ -1,26 +1,20 @@
-import { AllCardsService, getEffectiveTechLevel } from '@firestone-hs/reference-data';
-import { BgsGameState } from '../bgs-battle-info';
+import { getEffectiveTechLevel } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { buildSingleBoardEntity, stringifySimple } from '../utils';
 import { performEntitySpawns, simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
-import { SharedState } from './shared-state';
-import { Spectator } from './spectator/spectator';
+import { InternalGameState } from './internal-game-state';
 import { handleStartOfCombat } from './start-of-combat';
 
 // New simulator should be instantiated for each match
 export class Simulator {
 	private currentAttacker: number;
 	private currentSpeedAttacker = -1;
-	private sharedState: SharedState;
 
 	// It should come already initialized
-	constructor(private readonly allCards: AllCardsService, private readonly spawns: CardsData) {
-		this.sharedState = new SharedState();
-	}
+	constructor(private readonly gameState: InternalGameState) {}
 
 	// Here we suppose that the BoardEntity only contain at most the enchantments that are linked
 	// to auras (so we probably should hand-filter that, since there are actually few auras)
@@ -29,11 +23,8 @@ export class Simulator {
 		playerEntity: BgsPlayerEntity,
 		opponentBoard: BoardEntity[],
 		opponentEntity: BgsPlayerEntity,
-		gameState: BgsGameState,
-		spectator: Spectator,
 	): SingleSimulationResult {
-		this.sharedState.anomalies = gameState.anomalies ?? [];
-		spectator.registerStartOfCombat(playerBoard, opponentBoard, playerEntity, opponentEntity);
+		this.gameState.spectator.registerStartOfCombat(playerBoard, opponentBoard, playerEntity, opponentEntity);
 		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
 		// is sent tothe simulator
 		// But in fact, the first player decision takes into account that additional minion. See
@@ -54,7 +45,7 @@ export class Simulator {
 				: effectiveOpponentBoardLength > effectivePlayerBoardLength
 				? 1
 				: Math.round(Math.random());
-		this.sharedState.currentEntityId =
+		this.gameState.sharedState.currentEntityId =
 			Math.max(
 				...playerBoard.map((entity) => entity.entityId),
 				...opponentBoard.map((entity) => entity.entityId),
@@ -65,11 +56,7 @@ export class Simulator {
 			opponentEntity,
 			opponentBoard,
 			this.currentAttacker,
-			this.allCards,
-			this.spawns,
-			this.sharedState,
-			gameState,
-			spectator,
+			this.gameState,
 		);
 		// handleRapidReanimation(
 		// 	playerBoard,
@@ -95,16 +82,7 @@ export class Simulator {
 		// }
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
-			handleRapidReanimation(
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				this.allCards,
-				this.spawns,
-				this.sharedState,
-				spectator,
-			);
+			handleRapidReanimation(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			clearStealthIfNeeded(playerBoard, opponentBoard);
 			// console.log('this.currentSpeedAttacker', this.currentAttacker);
 			// If there are "attack immediately" minions, we keep the same player
@@ -133,27 +111,9 @@ export class Simulator {
 
 			// console.log('this.currentSpeedAttacker 2', this.currentAttacker, this.currentSpeedAttacker);
 			if (this.currentSpeedAttacker === 0 || (this.currentSpeedAttacker === -1 && this.currentAttacker === 0)) {
-				simulateAttack(
-					playerBoard,
-					playerEntity,
-					opponentBoard,
-					opponentEntity,
-					this.allCards,
-					this.spawns,
-					this.sharedState,
-					spectator,
-				);
+				simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			} else {
-				simulateAttack(
-					opponentBoard,
-					opponentEntity,
-					playerBoard,
-					playerEntity,
-					this.allCards,
-					this.spawns,
-					this.sharedState,
-					spectator,
-				);
+				simulateAttack(opponentBoard, opponentEntity, playerBoard, playerEntity, this.gameState);
 			}
 
 			// Update the attacker indices in case there were some deaths
@@ -171,9 +131,9 @@ export class Simulator {
 					'short-circuiting simulation, too many iterations',
 					counter,
 					'\n',
-					stringifySimple(playerBoard, this.allCards),
+					stringifySimple(playerBoard, this.gameState.allCards),
 					'\n',
-					stringifySimple(opponentBoard, this.allCards),
+					stringifySimple(opponentBoard, this.gameState.allCards),
 				);
 				break;
 				// return null;
@@ -190,14 +150,14 @@ export class Simulator {
 		}
 		if (playerBoard.length === 0) {
 			const damage = this.buildBoardTotalDamage(opponentBoard) + opponentEntity.tavernTier;
-			spectator.registerOpponentAttack(playerBoard, opponentBoard, damage);
+			this.gameState.spectator.registerOpponentAttack(playerBoard, opponentBoard, damage);
 			return {
 				result: 'lost',
 				damageDealt: damage,
 			};
 		}
 		const damage = this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier;
-		spectator.registerPlayerAttack(playerBoard, opponentBoard, damage);
+		this.gameState.spectator.registerPlayerAttack(playerBoard, opponentBoard, damage);
 		return {
 			result: 'won',
 			damageDealt: damage,
@@ -206,7 +166,9 @@ export class Simulator {
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]): number {
 		return playerBoard
-			.map((entity) => getEffectiveTechLevel(this.allCards.getCard(entity.cardId), this.allCards))
+			.map((entity) =>
+				getEffectiveTechLevel(this.gameState.allCards.getCard(entity.cardId), this.gameState.allCards),
+			)
 			.reduce((a, b) => a + b, 0);
 	}
 }
@@ -216,34 +178,13 @@ export const handleRapidReanimation = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ) => {
 	if (playerEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
 	if (opponentEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(
-			opponentBoard,
-			opponentEntity,
-			playerBoard,
-			playerEntity,
-			allCards,
-			spawns,
-			sharedState,
-			spectator,
-		);
+		handleRapidReanimationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
 	}
 };
 
@@ -252,10 +193,7 @@ const handleRapidReanimationForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ) => {
 	if (playerBoard.length >= 7) {
 		return;
@@ -264,12 +202,12 @@ const handleRapidReanimationForPlayer = (
 		playerEntity.rapidReanimationMinion.cardId,
 		playerEntity,
 		playerBoard,
-		allCards,
+		gameState.allCards,
 		playerEntity.rapidReanimationMinion.friendly,
-		sharedState.currentEntityId++,
+		gameState.sharedState.currentEntityId++,
 		false,
-		cardsData,
-		sharedState,
+		gameState.cardsData,
+		gameState.sharedState,
 		playerEntity.rapidReanimationMinion,
 		null,
 	);
@@ -283,12 +221,9 @@ const handleRapidReanimationForPlayer = (
 		indexFromRight,
 		opponentBoard,
 		opponentEntity,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
+		gameState,
 		false,
 	);
-	spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
+	gameState.spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
 	playerEntity.rapidReanimationMinion = null;
 };

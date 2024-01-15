@@ -6,6 +6,7 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
 import { applyAurasToSelf, handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
+import { InternalGameState } from './simulation/internal-game-state';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
 
@@ -434,20 +435,30 @@ export const grantRandomStats = (
 export const addCardsInHand = (
 	playerEntity: BgsPlayerEntity,
 	board: BoardEntity[],
-	allCards: AllCardsService,
-	spectator: Spectator,
 	cardsAdded: readonly any[],
+	gameState: InternalGameState,
 ): void => {
 	const previousCardsInHand = playerEntity.hand?.length ?? 0;
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy);
 	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy_G);
 	const multiplier = sages.length + 2 * sagesGolden.length;
 
-	const cardsThatWillBeAdded = [];
+	const cardsThatWillBeAdded: BoardEntity[] = [];
 	for (const cardAdded of cardsAdded) {
-		const cardToAdd: { cardId: string } = (cardAdded as BoardEntity)?.cardId
+		const cardToAdd: BoardEntity = (cardAdded as BoardEntity)?.cardId
 			? (cardAdded as BoardEntity)
-			: ({ cardId: cardAdded as string } as BoardEntity);
+			: buildSingleBoardEntity(
+					cardAdded as string,
+					playerEntity,
+					board,
+					gameState.allCards,
+					playerEntity.friendly,
+					gameState.sharedState.currentEntityId++,
+					false,
+					gameState.cardsData,
+					gameState.sharedState,
+					null,
+			  );
 		cardsThatWillBeAdded.push(cardToAdd);
 		if (cardToAdd.cardId === CardIds.BloodGem) {
 			for (let i = 0; i < multiplier; i++) {
@@ -473,13 +484,23 @@ export const addCardsInHand = (
 			const pirate = getRandomAliveMinion(
 				board.filter((e) => e.entityId !== peggy.entityId),
 				Race.PIRATE,
-				allCards,
+				gameState.allCards,
 			);
 			if (pirate) {
-				modifyAttack(pirate, peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1, board, allCards);
-				modifyHealth(pirate, peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1, board, allCards);
-				afterStatsUpdate(pirate, board, allCards);
-				spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
+				modifyAttack(
+					pirate,
+					peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
+					board,
+					gameState.allCards,
+				);
+				modifyHealth(
+					pirate,
+					peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
+					board,
+					gameState.allCards,
+				);
+				afterStatsUpdate(pirate, board, gameState.allCards);
+				gameState.spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
 			}
 		});
 
@@ -487,9 +508,14 @@ export const addCardsInHand = (
 			(e) => e.cardId === CardIds.Thorncaptain_BG25_045 || e.cardId === CardIds.Thorncaptain_BG25_045_G,
 		);
 		thornCaptains.forEach((captain) => {
-			modifyHealth(captain, captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1, board, allCards);
-			afterStatsUpdate(captain, board, allCards);
-			spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
+			modifyHealth(
+				captain,
+				captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1,
+				board,
+				gameState.allCards,
+			);
+			afterStatsUpdate(captain, board, gameState.allCards);
+			gameState.spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
 		});
 	}
 };
@@ -718,7 +744,7 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? ''}/hp=${entity.health}` : null;
+	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/hp=${entity.health}` : null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {

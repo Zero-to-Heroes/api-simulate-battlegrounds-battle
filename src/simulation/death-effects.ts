@@ -6,6 +6,7 @@ import { pickRandomAlive } from '../services/utils';
 import { afterStatsUpdate, hasCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
+import { InternalGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -16,10 +17,7 @@ export const applyAfterDeathEffects = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: InternalGameState,
 ) => {
 	const maxSpawns = 7 - boardWithDeadEntity.length;
 	const allSpawns = [];
@@ -32,9 +30,9 @@ export const applyAfterDeathEffects = (
 	) {
 		secretTriggered.triggered = true;
 		const target = pickRandomAlive(boardWithDeadEntity);
-		modifyAttack(target, 3, boardWithDeadEntity, allCards);
-		modifyHealth(target, 2, boardWithDeadEntity, allCards);
-		afterStatsUpdate(target, boardWithDeadEntity, allCards);
+		modifyAttack(target, 3, boardWithDeadEntity, gameState.allCards);
+		modifyHealth(target, 2, boardWithDeadEntity, gameState.allCards);
+		afterStatsUpdate(target, boardWithDeadEntity, gameState.allCards);
 	} else if (
 		(secretTriggered = boardWithDeadEntityHero.secrets?.find(
 			(secret) => !secret.triggered && secret?.cardId === CardIds.Redemption_TB_Bacon_Secrets_10,
@@ -55,10 +53,10 @@ export const applyAfterDeathEffects = (
 			boardWithDeadEntityHero,
 			otherBoard,
 			otherBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState.allCards,
+			gameState.cardsData,
+			gameState.sharedState,
+			gameState.spectator,
 			deadEntity.friendly,
 			false,
 			false,
@@ -72,8 +70,8 @@ export const applyAfterDeathEffects = (
 		)) != null
 	) {
 		secretTriggered.triggered = true;
-		const minionTier = cardsData.getTavernLevel(deadEntity.cardId);
-		const newMinion = cardsData.getRandomMinionForTavernTier(minionTier);
+		const minionTier = gameState.cardsData.getTavernLevel(deadEntity.cardId);
+		const newMinion = gameState.cardsData.getRandomMinionForTavernTier(minionTier);
 		const spawns = spawnEntities(
 			newMinion,
 			1,
@@ -81,10 +79,10 @@ export const applyAfterDeathEffects = (
 			boardWithDeadEntityHero,
 			otherBoard,
 			otherBoardHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
+			gameState.allCards,
+			gameState.cardsData,
+			gameState.sharedState,
+			gameState.spectator,
 			deadEntity.friendly,
 			false,
 			false,
@@ -93,7 +91,7 @@ export const applyAfterDeathEffects = (
 		allSpawns.push(...spawns);
 	}
 
-	if (hasCorrectTribe(deadEntity, Race.BEAST, allCards)) {
+	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
 		const feathermanes =
 			boardWithDeadEntityHero.hand
 				?.filter((e) => !e.locked)
@@ -115,10 +113,10 @@ export const applyAfterDeathEffects = (
 				boardWithDeadEntityHero,
 				otherBoard,
 				otherBoardHero,
-				allCards,
-				cardsData,
-				sharedState,
-				spectator,
+				gameState.allCards,
+				gameState.cardsData,
+				gameState.sharedState,
+				gameState.spectator,
 				deadEntity.friendly,
 				false,
 				false,
@@ -148,10 +146,7 @@ export const applyAfterDeathEffects = (
 		deadEntityIndexFromRight,
 		otherBoard,
 		otherBoardHero,
-		allCards,
-		cardsData,
-		sharedState,
-		spectator,
+		gameState,
 	);
 };
 

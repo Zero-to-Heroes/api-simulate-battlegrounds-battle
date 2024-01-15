@@ -6,6 +6,8 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
 import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
+import { InternalGameState } from './simulation/internal-game-state';
+import { SharedState } from './simulation/shared-state';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
 import { addImpliedMechanics } from './utils';
@@ -73,14 +75,21 @@ export const simulateBattle = (
 		// const input: BgsBattleInfo = cloneInput(inputReady);
 		// const input: BgsBattleInfo = cloneInput2(inputStr);
 		const input: BgsBattleInfo = cloneInput3(inputReady);
-		const simulator = new Simulator(cards, cardsData);
+		const gameState: InternalGameState = {
+			allCards: cards,
+			cardsData: cardsData,
+			spectator: spectator,
+			sharedState: new SharedState(),
+			currentTurn: input.gameState.currentTurn,
+			validTribes: input.gameState.validTribes,
+			anomalies: input.gameState.anomalies,
+		};
+		const simulator = new Simulator(gameState);
 		const battleResult = simulator.simulateSingleBattle(
 			input.playerBoard.board,
 			input.playerBoard.player,
 			input.opponentBoard.board,
 			input.opponentBoard.player,
-			input.gameState,
-			spectator,
 		);
 		if (Date.now() - start > maxAcceptableDuration) {
 			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
