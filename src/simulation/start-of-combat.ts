@@ -932,18 +932,24 @@ const handleIllidanForPlayer = (
 	const firstAttacker = playerBoard[0];
 	const secondAttacker = minionsAtStart > 1 ? playerBoard[playerBoard.length - 1] : null;
 
+	// Stats updates
 	modifyAttack(firstAttacker, 2, playerBoard, allCards);
 	modifyHealth(firstAttacker, 1, playerBoard, allCards);
 	afterStatsUpdate(firstAttacker, playerBoard, allCards);
 	spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
-	firstAttacker.attackImmediately = true;
-	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
-
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		modifyAttack(secondAttacker, 2, playerBoard, allCards);
 		modifyHealth(secondAttacker, 1, playerBoard, allCards);
 		afterStatsUpdate(secondAttacker, playerBoard, allCards);
 		spectator.registerPowerTarget(secondAttacker, secondAttacker, playerBoard, playerEntity, opponentEntity);
+	}
+
+	// Attacks
+	firstAttacker.attackImmediately = true;
+	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, allCards, spawns, sharedState, spectator);
+	// See http://replays.firestoneapp.com/?reviewId=f16b7a49-c2a2-4ac5-a9eb-a75f83246f70&turn=6&action=8
+	firstAttacker.hasAttacked = false;
+	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		secondAttacker.attackImmediately = true;
 		simulateAttack(
 			playerBoard,
@@ -955,6 +961,7 @@ const handleIllidanForPlayer = (
 			sharedState,
 			spectator,
 		);
+		secondAttacker.hasAttacked = false;
 	}
 };
 
