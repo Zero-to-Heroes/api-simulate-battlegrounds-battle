@@ -101,6 +101,13 @@ export const handleDeathrattles = (
 	// http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1 is a trap: the enchantment is on the first
 	// minion, but the DR is on the second one.
 	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
+	const entityRightToSpawns =
+		deadMinionIndexFromRight2 === 0
+			? null
+			: boardWithKilledMinion[boardWithKilledMinion.length - deadMinionIndexFromRight2];
+	candidateEntities.forEach((entity) => {
+		entity.hasAttacked = entityRightToSpawns?.hasAttacked ?? false;
+	});
 	performEntitySpawns(
 		candidateEntities,
 		boardWithKilledMinion,

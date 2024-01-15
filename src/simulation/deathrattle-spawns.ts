@@ -1520,9 +1520,9 @@ export const spawnEntitiesFromDeathrattle = (
 		}
 	}
 	// For minion token attack order
-	spawnedEntities.forEach((e) => {
-		e.hasAttacked = deadEntity.hasAttacked;
-	});
+	// spawnedEntities.forEach((e) => {
+	// 	e.hasAttacked = deadEntity.hasAttacked;
+	// });
 	return spawnedEntities;
 };
 
