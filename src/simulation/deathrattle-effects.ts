@@ -75,6 +75,13 @@ export const handleDeathrattles = (
 	entitiesDeadThisAttack: readonly BoardEntity[],
 	gameState: InternalGameState,
 ) => {
+	// Natural Deathrattles
+	// First main DR, then enchantments:
+	// - http://replays.firestoneapp.com/?reviewId=ea9503c9-2795-49f0-866b-9ea856cec7df&turn=11&action=2
+	// - http://replays.firestoneapp.com/?reviewId=f32e734a-d5a2-4fa4-ad10-94019969cdd7&turn=6&action=22 (the trickster doesn't buff th
+	// spawned crab)
+	// http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1 is a trap: the enchantment is on the first
+	// minion, but the DR is on the second one.
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
 		boardWithKilledMinion,
@@ -84,7 +91,28 @@ export const handleDeathrattles = (
 		entitiesDeadThisAttack,
 		gameState,
 	);
+	performEntitySpawns(
+		entitiesFromNativeDeathrattle,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndexFromRight2,
+		opponentBoard,
+		opponentBoardHero,
+		gameState,
+	);
+	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
+	handleDeathrattleEffects(
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndexFromRight2,
+		opponentBoard,
+		opponentBoardHero,
+		gameState,
+	);
 
+	// Enchantments
 	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
 		deadEntity,
 		boardWithKilledMinion,
@@ -96,39 +124,28 @@ export const handleDeathrattles = (
 		gameState.sharedState,
 		gameState.spectator,
 	);
-
-	// First main DR, then enchantments: http://replays.firestoneapp.com/?reviewId=ea9503c9-2795-49f0-866b-9ea856cec7df&turn=11&action=2
-	// http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1 is a trap: the enchantment is on the first
-	// minion, but the DR is on the second one.
-	const candidateEntities: readonly BoardEntity[] = [...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments];
+	performEntitySpawns(
+		entitiesFromEnchantments,
+		boardWithKilledMinion,
+		boardWithKilledMinionHero,
+		deadEntity,
+		deadMinionIndexFromRight2,
+		opponentBoard,
+		opponentBoardHero,
+		gameState,
+	);
 	const entityRightToSpawns =
 		deadMinionIndexFromRight2 === 0
 			? null
 			: boardWithKilledMinion[boardWithKilledMinion.length - deadMinionIndexFromRight2];
-	candidateEntities.forEach((entity) => {
+	// To handle minions attack tokens
+	// See http://replays.firestoneapp.com/?reviewId=0583d6a4-6ed0-4b20-894e-4ceb560894fe&turn=6&action=11
+	// When a minion dies, the spawn are either elligible to attack next turn or not
+	// If the minion right to the spawned minion has already attacked, then the spawned
+	// minion cannot attack
+	[...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments].forEach((entity) => {
 		entity.hasAttacked = entityRightToSpawns?.hasAttacked ?? false;
 	});
-	performEntitySpawns(
-		candidateEntities,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		gameState,
-	);
-
-	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
-	handleDeathrattleEffects(
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		gameState,
-	);
 
 	// eslint-disable-next-line prettier/prettier
 	if (deadEntity.rememberedDeathrattles?.length) {
