@@ -2,9 +2,9 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { addStatsToBoard, afterStatsUpdate, modifyAttack, modifyHealth } from '../utils';
-import { performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
+import { performEntitySpawns } from './spawns';
 
 export const handleRebornForEntity = (
 	boardWithKilledMinion: BoardEntity[],

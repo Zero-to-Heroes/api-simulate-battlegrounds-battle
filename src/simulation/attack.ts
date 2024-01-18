@@ -22,7 +22,7 @@ import {
 	stringifySimpleCard,
 	updateDivineShield,
 } from '../utils';
-import { addMinionToBoard, addMinionsToBoard } from './add-minion-to-board';
+import { addMinionsToBoard } from './add-minion-to-board';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
 import { handleDeathrattles, orchestrateMinionDeathEffects } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
@@ -32,6 +32,7 @@ import { onMinionKill } from './minion-kill';
 import { removeMinionFromBoard } from './remove-minion-from-board';
 import { SharedState } from './shared-state';
 import { handleRapidReanimation } from './simulator';
+import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
 import { canAttack } from './utils/entity-utils';
 
@@ -43,6 +44,12 @@ export const simulateAttack = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	// console.debug(
+	// 	'\nsimulating attack',
+	// 	stringifySimple(attackingBoard, gameState.allCards),
+	// 	'\n',
+	// 	stringifySimple(defendingBoard, gameState.allCards),
+	// );
 	if (attackingBoard.length === 0 || defendingBoard.length === 0) {
 		return;
 	}
@@ -1201,8 +1208,8 @@ export const processMinionDeath = (
 ): void => {
 	// const debug = board1.some((e) => e.health <= 0) || board2.some((e) => e.health <= 0);
 	// debug && console.debug('\nprocessing minions death');
-	// debug && console.debug(stringifySimple(board1, allCards));
-	// debug && console.debug(stringifySimple(board2, allCards));
+	// debug && console.debug(stringifySimple(board1, gameState.allCards));
+	// debug && console.debug(stringifySimple(board2, gameState.allCards));
 	const [deadMinionIndexesFromRights1, deadEntities1] = makeMinionsDie(
 		board1,
 		board1Hero,
@@ -1216,8 +1223,8 @@ export const processMinionDeath = (
 		gameState.spectator,
 	);
 	// debug && console.debug('after processing minions death');
-	// debug && console.debug(stringifySimple(board1, allCards));
-	// debug && console.debug(stringifySimple(board2, allCards));
+	// debug && console.debug(stringifySimple(board1, gameState.allCards));
+	// debug && console.debug(stringifySimple(board2, gameState.allCards));
 	// debug && console.debug(deadMinionIndexesFromRights1);
 	// debug && console.debug(deadMinionIndexesFromRights2);
 	// console.debug('dead entities', stringifySimple(deadEntities1, allCards), stringifySimple(deadEntities2, allCards));
@@ -1941,65 +1948,4 @@ const makeMinionsDie = (
 	}
 
 	return [indexesFromRightAfterDeath, deadEntities];
-};
-
-export const performEntitySpawns = (
-	candidateEntities: readonly BoardEntity[],
-	boardWithKilledMinion: BoardEntity[],
-	boardWithKilledMinionHero: BgsPlayerEntity,
-	spawnSourceEntity: BoardEntity | BgsPlayerEntity,
-	spawnSourceEntityIndexFromRight: number,
-	opponentBoard: BoardEntity[],
-	opponentBoardHero: BgsPlayerEntity,
-	gameState: FullGameState,
-	applySelfAuras = true,
-): readonly BoardEntity[] => {
-	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
-	const spawnedEntities = [];
-	for (let i = 0; i < aliveEntites.length; i++) {
-		const newMinion = aliveEntites[i];
-		// All entities have been spawned
-		if (boardWithKilledMinion.length >= 7) {
-			for (let j = i; j < aliveEntites.length; j++) {
-				if (aliveEntites[j]?.onCanceledSummon) {
-					aliveEntites[j].onCanceledSummon();
-				}
-			}
-			break;
-		}
-		// Avoid minions spawning backwards (we don't have this issue if we add all elements at
-		// the same time, but here we want to be able to attack after each spawn, which in turn
-		// means that the minion can die before the other one spawns)
-		// In boardWithKilledMinion, the dead minion has already been removed
-		const indexToSpawnAt = Math.max(0, boardWithKilledMinion.length - spawnSourceEntityIndexFromRight);
-		addMinionToBoard(
-			boardWithKilledMinion,
-			boardWithKilledMinionHero,
-			opponentBoardHero,
-			indexToSpawnAt,
-			newMinion,
-			gameState.allCards,
-			gameState.spectator,
-			gameState.sharedState,
-		);
-		if (newMinion.attackImmediately) {
-			// Whenever we are already in a combat phase, we need to first clean up the state
-			simulateAttack(
-				boardWithKilledMinion,
-				boardWithKilledMinionHero,
-				opponentBoard,
-				opponentBoardHero,
-				gameState,
-			);
-			// So that, even if the opponent's board is temporarily empty (e.g. no minion, but a token will
-			// spawn in the enchantments resolution phase), the minion won't attack right away again
-			newMinion.attackImmediately = false;
-		}
-		if (newMinion.health > 0 && !newMinion.definitelyDead) {
-			spawnedEntities.push(newMinion);
-		}
-	}
-
-	gameState.spectator.registerMinionsSpawn(spawnSourceEntity, boardWithKilledMinion, spawnedEntities);
-	return spawnedEntities;
 };

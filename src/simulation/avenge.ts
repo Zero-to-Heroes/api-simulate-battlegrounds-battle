@@ -18,11 +18,12 @@ import {
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
-import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
+import { dealDamageToEnemy, getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
+import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
 
 export const applyAvengeEffects = (

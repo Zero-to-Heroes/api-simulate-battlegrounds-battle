@@ -20,7 +20,6 @@ import {
 	doFullAttack,
 	findNearestEnemies,
 	getNeighbours,
-	performEntitySpawns,
 	processMinionDeath,
 	simulateAttack,
 } from './attack';
@@ -33,6 +32,7 @@ import {
 import { handleDeathrattles } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
+import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
 
 export const handleStartOfCombat = (

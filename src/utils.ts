@@ -745,8 +745,8 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
 	return entity
-		? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/hasAttacked=${entity.hasAttacked}/atkImm=${
-				entity.attackImmediately
+		? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/entityId=${entity.entityId}/friendly=${
+				entity.friendly
 		  }`
 		: null;
 };

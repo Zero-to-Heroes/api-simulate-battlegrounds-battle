@@ -103,6 +103,16 @@ export class Spectator {
 		attackingBoardHero: BgsPlayerEntity,
 		defendingBoardHero: BgsPlayerEntity,
 	): void {
+		// console.debug(
+		// 	'\n register attack',
+		// 	stringifySimple(attackingBoard),
+		// 	'\n',
+		// 	stringifySimple(defendingBoard),
+		// 	'\n',
+		// 	attackingBoard.find((e) => e.entityId === 2441),
+		// 	'\n',
+		// 	attackingBoard.find((e) => e.entityId === 2442),
+		// );
 		const isAttackerFriendly = attackingBoard.every((entity) => entity.friendly);
 		const friendlyBoard = isAttackerFriendly ? attackingBoard : defendingBoard;
 		const opponentBoard = isAttackerFriendly ? defendingBoard : attackingBoard;
@@ -324,6 +334,7 @@ export class Spectator {
 				// spawns: this.sanitize(actions[i].spawns),
 				deaths: this.sanitize(actions[i].deaths),
 			};
+			// action.playerBoard && console.debug('\naction playerboard', stringifySimple(action.playerBoard));
 			const lastAction = result.length > 0 ? result[result.length - 1] : null;
 
 			if (lastAction && !action.playerBoard) {
@@ -395,6 +406,7 @@ export class Spectator {
 				result.push(action);
 			}
 		}
+
 		return result;
 	}
 

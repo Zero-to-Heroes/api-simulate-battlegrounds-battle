@@ -1,11 +1,11 @@
 import { BoardEntity } from '../board-entity';
-import { performEntitySpawns } from './attack';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
 import { applyMinionDeathEffect, handleDeathrattleEffects } from './deathrattle-effects';
 import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { handleRebornForEntity } from './reborn';
+import { performEntitySpawns } from './spawns';
 
 export const orchestrateMinionDeathEffects = (deathrattleInput: DeathrattleInput) => {
 	handleDeathrattles(deathrattleInput);
