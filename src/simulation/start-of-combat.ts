@@ -198,7 +198,13 @@ const handlePreCombatHeroPowersForPlayer = (
 		// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
-		handleTeronForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		shouldRecomputeCurrentAttacker = handleTeronForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+		);
 		// Same as Tamsin? No, because the new minion should repop automatically
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.WaxWarband) {
 		handleWaxWarbandForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
@@ -765,7 +771,7 @@ const handleTeronForPlayer = (
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	gameState: InternalGameState,
-): void => {
+): boolean => {
 	// The board state is snapshot after the minion dies
 	const deadMinionEntityId = playerEntity.heroPowerInfo;
 	const minionThatWillDie = playerBoard.find((e) => e.entityId === deadMinionEntityId);
@@ -793,7 +799,9 @@ const handleTeronForPlayer = (
 			playerEntity,
 			opponentEntity,
 		);
+		return true;
 	}
+	return false;
 };
 
 const handleWaxWarbandForPlayer = (
