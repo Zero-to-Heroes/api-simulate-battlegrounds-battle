@@ -16,7 +16,7 @@ import {
 	modifyHealth,
 } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
-import { InternalGameState } from './internal-game-state';
+import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -50,7 +50,7 @@ export const triggerBattlecry = (
 	entity: BoardEntity,
 	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ) => {
 	const allMinions = [...board, ...otherBoard];
 	const totalTriggers = computeBattlecryMultiplier(board, hero, gameState.sharedState);

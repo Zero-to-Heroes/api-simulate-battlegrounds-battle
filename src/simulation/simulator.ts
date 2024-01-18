@@ -5,7 +5,7 @@ import { SingleSimulationResult } from '../single-simulation-result';
 import { buildSingleBoardEntity, stringifySimple } from '../utils';
 import { performEntitySpawns, simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
-import { InternalGameState } from './internal-game-state';
+import { FullGameState } from './internal-game-state';
 import { handleStartOfCombat } from './start-of-combat';
 
 // New simulator should be instantiated for each match
@@ -14,7 +14,7 @@ export class Simulator {
 	private currentSpeedAttacker = -1;
 
 	// It should come already initialized
-	constructor(private readonly gameState: InternalGameState) {}
+	constructor(private readonly gameState: FullGameState) {}
 
 	// Here we suppose that the BoardEntity only contain at most the enchantments that are linked
 	// to auras (so we probably should hand-filter that, since there are actually few auras)
@@ -178,7 +178,7 @@ export const handleRapidReanimation = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ) => {
 	if (playerEntity.rapidReanimationMinion) {
 		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
@@ -193,7 +193,7 @@ const handleRapidReanimationForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ) => {
 	if (playerBoard.length >= 7) {
 		return;

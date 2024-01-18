@@ -13,7 +13,7 @@ import {
 	stringifySimple,
 } from '../utils';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
-import { InternalGameState } from './internal-game-state';
+import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -83,7 +83,7 @@ export const spawnEntitiesFromDeathrattle = (
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	entitiesDeadThisAttack: readonly BoardEntity[],
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): readonly BoardEntity[] => {
 	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
 	const multiplier = computeDeathrattleMultiplier(
@@ -1532,16 +1532,13 @@ export const spawnEntitiesFromEnchantments = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spawns: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: FullGameState,
 ): readonly BoardEntity[] => {
 	const multiplier = computeDeathrattleMultiplier(
 		boardWithDeadEntity,
 		boardWithDeadEntityHero,
 		deadEntity,
-		sharedState,
+		gameState.sharedState,
 	);
 	const spawnedEntities: BoardEntity[] = [];
 	for (const enchantment of deadEntity.enchantments || []) {
@@ -1559,10 +1556,10 @@ export const spawnEntitiesFromEnchantments = (
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),
@@ -1578,10 +1575,10 @@ export const spawnEntitiesFromEnchantments = (
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),
@@ -1596,10 +1593,10 @@ export const spawnEntitiesFromEnchantments = (
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),
@@ -1614,10 +1611,10 @@ export const spawnEntitiesFromEnchantments = (
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),
@@ -1632,10 +1629,10 @@ export const spawnEntitiesFromEnchantments = (
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),
@@ -1644,18 +1641,18 @@ export const spawnEntitiesFromEnchantments = (
 				case CardIds.SneedsReplicator_ReplicateEnchantment:
 					spawnedEntities.push(
 						...spawnEntities(
-							spawns.getRandomMinionForTavernTier(
-								Math.max(1, spawns.getTavernLevel(deadEntity.cardId) - 1),
+							gameState.cardsData.getRandomMinionForTavernTier(
+								Math.max(1, gameState.cardsData.getTavernLevel(deadEntity.cardId) - 1),
 							),
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),
@@ -1673,10 +1670,10 @@ export const spawnEntitiesFromEnchantments = (
 							boardWithDeadEntityHero,
 							otherBoard,
 							otherBoardHero,
-							allCards,
-							spawns,
-							sharedState,
-							spectator,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
 							deadEntity.friendly,
 							false,
 						),

@@ -29,10 +29,10 @@ import {
 	applyFireInvocationEnchantment,
 	applyLightningInvocationEnchantment,
 	applyWaterInvocationEnchantment,
-	handleDeathrattles,
 } from './deathrattle-effects';
+import { handleDeathrattles } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
-import { InternalGameState } from './internal-game-state';
+import { FullGameState } from './internal-game-state';
 import { Spectator } from './spectator/spectator';
 
 export const handleStartOfCombat = (
@@ -41,7 +41,7 @@ export const handleStartOfCombat = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	// https://twitter.com/DCalkosz/status/1564705111850434561
 	currentAttacker = handleStartOfCombatQuestRewards(
@@ -120,7 +120,7 @@ const handlePreCombatHeroPowers = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	if (Math.random() < 0.5) {
 		currentAttacker = handlePreCombatHeroPowersForPlayer(
@@ -171,7 +171,7 @@ const handlePreCombatHeroPowersForPlayer = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	friendly: boolean,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	let shouldRecomputeCurrentAttacker = false;
 	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
@@ -235,7 +235,7 @@ export const handleIllidanHeroPowers = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	// console.log('current attacker before', currentAttacker);
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
@@ -292,7 +292,7 @@ const handleStartOfCombatMinions = (
 	currentAttacker: number,
 	playerBoardBefore: BoardEntity[],
 	opponentBoardBefore: BoardEntity[],
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	let attackerForStart = currentAttacker;
 	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
@@ -343,7 +343,7 @@ const handleStartOfCombatQuestRewards = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
 		playerEntity,
@@ -370,7 +370,7 @@ const handleStartOfCombatSpells = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatSpellsForPlayer(
 		playerEntity,
@@ -397,7 +397,7 @@ const handleStartOfCombatAnomalies = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatAnomaliesForPlayer(
 		playerEntity,
@@ -424,7 +424,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	if (!playerEntity.questRewards?.length) {
 		return currentAttacker;
@@ -519,7 +519,7 @@ const handleStartOfCombatSpellsForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	if (!playerEntity.secrets?.length) {
 		return currentAttacker;
@@ -546,7 +546,7 @@ const handleStartOfCombatAnomaliesForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	if (!gameState.anomalies?.length) {
 		return currentAttacker;
@@ -617,7 +617,7 @@ export const handleStartOfCombatHeroPowers = (
 	opponentEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
@@ -670,7 +670,7 @@ const handlePlayerIllidanHeroPowers = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	friendly: boolean,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
@@ -688,7 +688,7 @@ const handleIllidanForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
@@ -731,7 +731,7 @@ const handleAlakirForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const firstEntity = playerBoard[0];
 	firstEntity.windfury = true;
@@ -747,7 +747,7 @@ const handleTamsinForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const chosenEntity = pickRandomLowestHealth(playerBoard);
 	if (!chosenEntity) {
@@ -770,7 +770,7 @@ const handleTeronForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): boolean => {
 	// The board state is snapshot after the minion dies
 	const deadMinionEntityId = playerEntity.heroPowerInfo;
@@ -809,7 +809,7 @@ const handleWaxWarbandForPlayer = (
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	if (playerBoard.length > 0) {
 		const boardWithTribes = playerBoard.filter((e) => !!gameState.allCards.getCard(e.cardId)?.races?.length);
@@ -873,7 +873,7 @@ const handleOzumatForPlayer = (
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	friendly: boolean,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	// Because of some interactions between start of combat hero powers, it can happen that Ozumat is already present
 	// on the board when we receive the board state
@@ -922,7 +922,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	friendly: boolean,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): number => {
 	// eslint-disable-next-line prefer-const
 	let shouldRecomputeCurrentAttacker = false;
@@ -1041,7 +1041,7 @@ export const performStartOfCombatMinionsForPlayer = (
 	// Tamsin's Phylactery.
 	attackingBoardBefore: BoardEntity[],
 	defendingBoardBefore: BoardEntity[],
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
@@ -1407,16 +1407,17 @@ export const performStartOfCombatMinionsForPlayer = (
 					attackingBoardHero,
 					defendingBoardHero,
 				);
-				handleDeathrattles(
-					attackingBoard,
-					attackingBoardHero,
-					entity,
-					attackingBoard.length - 1 - attackingBoard.indexOf(entity),
-					defendingBoard,
-					defendingBoardHero,
-					[],
-					gameState,
-				);
+				handleDeathrattles({
+					gameState: gameState,
+					playerDeadEntities: attackingBoardHero.friendly ? [entity] : [],
+					playerDeadEntityIndexesFromRight: attackingBoardHero.friendly
+						? [attackingBoard.length - 1 - attackingBoard.indexOf(entity)]
+						: [],
+					opponentDeadEntities: attackingBoardHero.friendly ? [] : [entity],
+					opponentDeadEntityIndexesFromRight: attackingBoardHero.friendly
+						? []
+						: [attackingBoard.length - 1 - attackingBoard.indexOf(entity)],
+				});
 			}
 		}
 	} else if (
@@ -1460,7 +1461,7 @@ const applyAllWillBurn = (
 	board1: BoardEntity[],
 	board2: BoardEntity[],
 	sourceEntity: BgsPlayerEntity | BoardEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	for (const entity of board1) {
 		modifyAttack(entity, 2, board1, gameState.allCards);

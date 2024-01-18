@@ -21,7 +21,7 @@ import {
 import { dealDamageToEnemy, getNeighbours, performEntitySpawns } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { spawnEntities } from './deathrattle-spawns';
-import { InternalGameState } from './internal-game-state';
+import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -32,7 +32,7 @@ export const applyAvengeEffects = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const candidatesEntitiesSpawnedFromAvenge: BoardEntity[] = [];
 	updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
@@ -137,7 +137,7 @@ const handleAvenge = (
 	avenger: BoardEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ) => {
 	// Don't forget to update the avenge data in cards-data
 	switch (avenger.cardId) {

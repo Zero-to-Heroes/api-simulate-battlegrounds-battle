@@ -3,13 +3,13 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { addCardsInHand, updateDivineShield } from '../utils';
-import { InternalGameState } from './internal-game-state';
+import { FullGameState } from './internal-game-state';
 
 export const applyFrenzy = (
 	entityWithFrenzy: BoardEntity,
 	entityWithFrenzyBoard: BoardEntity[],
 	entityWithFrenzyBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	if (
 		entityWithFrenzy.cardId === CardIds.BristlebackKnight_BG20_204 ||

@@ -6,7 +6,7 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
 import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
-import { InternalGameState } from './simulation/internal-game-state';
+import { FullGameState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
@@ -72,10 +72,8 @@ export const simulateBattle = (
 	!battleInput.options?.skipInfoLogs && console.time('simulation');
 	const outcomes = {};
 	for (let i = 0; i < numberOfSimulations; i++) {
-		// const input: BgsBattleInfo = cloneInput(inputReady);
-		// const input: BgsBattleInfo = cloneInput2(inputStr);
 		const input: BgsBattleInfo = cloneInput3(inputReady);
-		const gameState: InternalGameState = {
+		const gameState: FullGameState = {
 			allCards: cards,
 			cardsData: cardsData,
 			spectator: spectator,
@@ -83,6 +81,16 @@ export const simulateBattle = (
 			currentTurn: input.gameState.currentTurn,
 			validTribes: input.gameState.validTribes,
 			anomalies: input.gameState.anomalies,
+			gameState: {
+				player: {
+					player: input.playerBoard.player,
+					board: input.playerBoard.board,
+				},
+				opponent: {
+					player: input.opponentBoard.player,
+					board: input.opponentBoard.board,
+				},
+			},
 		};
 		const simulator = new Simulator(gameState);
 		const battleResult = simulator.simulateSingleBattle(
@@ -128,12 +136,12 @@ export const simulateBattle = (
 	return simulationResult;
 };
 
-const cloneInput = (input: BgsBattleInfo): BgsBattleInfo => {
-	return structuredClone(input);
-};
-const cloneInput2 = (input: string): BgsBattleInfo => {
-	return JSON.parse(input);
-};
+// const cloneInput = (input: BgsBattleInfo): BgsBattleInfo => {
+// 	return structuredClone(input);
+// };
+// const cloneInput2 = (input: string): BgsBattleInfo => {
+// 	return JSON.parse(input);
+// };
 const cloneInput3 = (input: BgsBattleInfo): BgsBattleInfo => {
 	const result: BgsBattleInfo = {
 		gameState: {

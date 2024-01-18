@@ -22,17 +22,10 @@ import {
 	modifyHealth,
 	updateDivineShield,
 } from '../utils';
-import {
-	buildBoardAfterDeathrattleSpawns,
-	dealDamageToEnemy,
-	dealDamageToRandomEnemy,
-	findNearestEnemies,
-	getNeighbours,
-	performEntitySpawns,
-} from './attack';
+import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
 import { triggerBattlecry } from './battlecries';
-import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
-import { InternalGameState } from './internal-game-state';
+import { spawnEntities } from './deathrattle-spawns';
+import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
@@ -65,123 +58,16 @@ export const computeDeathrattleMultiplier = (
 	return multiplier;
 };
 
-export const handleDeathrattles = (
-	boardWithKilledMinion: BoardEntity[],
-	boardWithKilledMinionHero: BgsPlayerEntity,
-	deadEntity: BoardEntity,
-	deadMinionIndexFromRight2: number,
-	opponentBoard: BoardEntity[],
-	opponentBoardHero: BgsPlayerEntity,
-	entitiesDeadThisAttack: readonly BoardEntity[],
-	gameState: InternalGameState,
-) => {
-	// Natural Deathrattles
-	// First main DR, then enchantments:
-	// - http://replays.firestoneapp.com/?reviewId=ea9503c9-2795-49f0-866b-9ea856cec7df&turn=11&action=2
-	// - http://replays.firestoneapp.com/?reviewId=f32e734a-d5a2-4fa4-ad10-94019969cdd7&turn=6&action=22 (the trickster doesn't buff th
-	// spawned crab)
-	// http://replays.firestoneapp.com/?reviewId=1ff37e17-704c-4a73-8c78-377c52b6cb42&turn=13&action=1 is a trap: the enchantment is on the first
-	// minion, but the DR is on the second one.
-	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
-		deadEntity,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		opponentBoard,
-		opponentBoardHero,
-		entitiesDeadThisAttack,
-		gameState,
-	);
-	performEntitySpawns(
-		entitiesFromNativeDeathrattle,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		gameState,
-	);
-	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
-	handleDeathrattleEffects(
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		gameState,
-	);
-
-	// Enchantments
-	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
-		deadEntity,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		opponentBoard,
-		opponentBoardHero,
-		gameState.allCards,
-		gameState.cardsData,
-		gameState.sharedState,
-		gameState.spectator,
-	);
-	performEntitySpawns(
-		entitiesFromEnchantments,
-		boardWithKilledMinion,
-		boardWithKilledMinionHero,
-		deadEntity,
-		deadMinionIndexFromRight2,
-		opponentBoard,
-		opponentBoardHero,
-		gameState,
-	);
-	// This doesn't work if the entity that was to the right died.
-	const entityRightToSpawns =
-		deadMinionIndexFromRight2 === 0
-			? null
-			: boardWithKilledMinion[boardWithKilledMinion.length - deadMinionIndexFromRight2];
-	// To handle minions attack tokens
-	// See http://replays.firestoneapp.com/?reviewId=0583d6a4-6ed0-4b20-894e-4ceb560894fe&turn=6&action=11
-	// When a minion dies, the spawn are either elligible to attack next turn or not
-	// If the minion right to the spawned minion has already attacked, then the spawned
-	// minion cannot attack
-	[...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments].forEach((entity) => {
-		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
-	});
-	// console.debug(
-	// 	'spawned entities',
-	// 	stringifySimple(spawnedEntities, allCards),
-	// 	stringifySimpleCard(deadEntity, allCards),
-	// );
-
-	// eslint-disable-next-line prettier/prettier
-	if (deadEntity.rememberedDeathrattles?.length) {
-		for (const deathrattle of deadEntity.rememberedDeathrattles) {
-			const entityToProcess: BoardEntity = {
-				...deadEntity,
-				rememberedDeathrattles: undefined,
-				cardId: deathrattle.cardId,
-				enchantments: [
-					{
-						cardId: deathrattle.cardId,
-						originEntityId: deadEntity.entityId,
-						repeats: deathrattle.repeats ?? 1,
-						timing: deathrattle.timing,
-					},
-				],
-			};
-			buildBoardAfterDeathrattleSpawns(
-				boardWithKilledMinion,
-				boardWithKilledMinionHero,
-				entityToProcess,
-				deadMinionIndexFromRight2,
-				opponentBoard,
-				opponentBoardHero,
-				entitiesDeadThisAttack,
-				gameState,
-			);
-		}
-	}
-};
+// export const handleDeathrattles = (
+// 	boardWithKilledMinion: BoardEntity[],
+// 	boardWithKilledMinionHero: BgsPlayerEntity,
+// 	deadEntity: BoardEntity,
+// 	deadMinionIndexFromRight2: number,
+// 	opponentBoard: BoardEntity[],
+// 	opponentBoardHero: BgsPlayerEntity,
+// 	entitiesDeadThisAttack: readonly BoardEntity[],
+// 	gameState: InternalGameState,
+// ) => {};
 
 export const handleDeathrattleEffects = (
 	boardWithDeadEntity: BoardEntity[],
@@ -190,7 +76,7 @@ export const handleDeathrattleEffects = (
 	deadEntityIndexFromRight: number,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const multiplier = computeDeathrattleMultiplier(
 		boardWithDeadEntity,
@@ -1025,7 +911,7 @@ export const applyLightningInvocationEnchantment = (
 	deadEntity: BoardEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	// Because the golden version doubles all the remembered effects
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
@@ -1050,7 +936,7 @@ export const applyWaterInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	sourceEntity: BgsPlayerEntity | BoardEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
@@ -1068,7 +954,7 @@ export const applyFireInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	sourceEntity: BgsPlayerEntity | BoardEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
@@ -1085,7 +971,7 @@ export const applyEarthInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	deadEntity: BoardEntity,
 	sourceEntity: BgsPlayerEntity | BoardEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
@@ -1177,7 +1063,7 @@ export const applyMinionDeathEffect = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	// console.log('applying minion death effect', stringifySimpleCard(deadEntity, allCards));
 	if (isCorrectTribe(gameState.allCards.getCard(deadEntity.cardId).races, Race.BEAST)) {
@@ -1375,7 +1261,7 @@ export const dealDamageToAllMinions = (
 	board2Hero: BgsPlayerEntity,
 	damageSource: BoardEntity,
 	damageDealt: number,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	if (board1.length === 0 && board2.length === 0) {
 		return;
@@ -1393,7 +1279,7 @@ const applySoulJugglerEffect = (
 	boardWithJugglersHero: BgsPlayerEntity,
 	boardToAttack: BoardEntity[],
 	boardToAttackHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	if (boardWithJugglers.length === 0 && boardToAttack.length === 0) {
 		return;
@@ -1490,7 +1376,7 @@ const applyRotHideGnollEffect = (board: BoardEntity[], allCards: AllCardsService
 const applyBristlemaneScrapsmithEffect = (
 	board: BoardEntity[],
 	boardPlayerEntity: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	for (let i = 0; i < board.length; i++) {
 		if (

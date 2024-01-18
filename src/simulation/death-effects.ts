@@ -1,14 +1,11 @@
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
 import { pickRandomAlive } from '../services/utils';
 import { afterStatsUpdate, hasCorrectTribe, modifyAttack, modifyHealth } from '../utils';
 import { performEntitySpawns } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
-import { InternalGameState } from './internal-game-state';
-import { SharedState } from './shared-state';
-import { Spectator } from './spectator/spectator';
+import { FullGameState } from './internal-game-state';
 
 export const applyAfterDeathEffects = (
 	deadEntity: BoardEntity,
@@ -17,7 +14,7 @@ export const applyAfterDeathEffects = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ) => {
 	const maxSpawns = 7 - boardWithDeadEntity.length;
 	const allSpawns = [];
@@ -157,10 +154,7 @@ export const applyOnDeathEffects = (
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: FullGameState,
 ) => {
 	// Nothing yet
 	return [];

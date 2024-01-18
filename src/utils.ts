@@ -6,7 +6,7 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
 import { applyAurasToSelf, handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
-import { InternalGameState } from './simulation/internal-game-state';
+import { FullGameState } from './simulation/internal-game-state';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
 
@@ -437,7 +437,7 @@ export const addCardsInHand = (
 	playerEntity: BgsPlayerEntity,
 	board: BoardEntity[],
 	cardsAdded: readonly any[],
-	gameState: InternalGameState,
+	gameState: FullGameState,
 ): void => {
 	const previousCardsInHand = playerEntity.hand?.length ?? 0;
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy);
@@ -744,7 +744,11 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/attacked=${entity.hasAttacked}` : null;
+	return entity
+		? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/attacked=${entity.hasAttacked}/atkImm=${
+				entity.attackImmediately
+		  }`
+		: null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {
