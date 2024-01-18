@@ -669,7 +669,9 @@ const handlePlayerIllidanHeroPowers = (
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
-		currentAttacker = (currentAttacker + 1) % 2;
+		// Apparently we don't recompute the first attacker after Illidan triggers
+		// http://replays.firestoneapp.com/?reviewId=5a49ae16-58d7-451c-939d-4f619d055b8f&turn=7&action=0
+		// currentAttacker = (currentAttacker + 1) % 2;
 	}
 	return currentAttacker;
 };
