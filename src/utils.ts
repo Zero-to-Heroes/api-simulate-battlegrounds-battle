@@ -86,6 +86,7 @@ export const buildSingleBoardEntity = (
 				newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
 				newEntity.divineShield =
 					newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
+				newEntity.hadDivineShield = newEntity.hadDivineShield || newEntity.divineShield;
 				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
 				newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
 				newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
@@ -564,10 +565,8 @@ export const updateDivineShield = (
 	// if ((entity.divineShield ?? false) === newValue) {
 	// 	return;
 	// }
+	entity.hadDivineShield = newValue || entity.divineShield || entity.hadDivineShield;
 	entity.divineShield = newValue;
-	if (entity.divineShield) {
-		entity.hadDivineShield = true;
-	}
 	if (entity.divineShield) {
 		const boardForDrake = board;
 		const statsBonus =
@@ -694,6 +693,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 			...entity,
 			cleave: cleave,
 			cantAttack: cantAttack,
+			divineShield: entity.divineShield || entity.hadDivineShield,
 			immuneWhenAttackCharges:
 				entity.cardId === CardIds.Warpwing_BG24_004 || entity.cardId === CardIds.Warpwing_BG24_004_G
 					? 99999
