@@ -55,7 +55,7 @@ export const buildSingleBoardEntity = (
 				{
 					entityId: entityId,
 					attack: card.attack,
-					hasAttacked: false,
+					hasAttacked: 0,
 					cardId: cardId,
 					divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
 					health: card.health,
@@ -744,7 +744,7 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/hp=${entity.health}` : null;
+	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/attacked=${entity.hasAttacked}` : null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {

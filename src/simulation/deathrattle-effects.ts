@@ -134,6 +134,7 @@ export const handleDeathrattles = (
 		opponentBoardHero,
 		gameState,
 	);
+	// This doesn't work if the entity that was to the right died.
 	const entityRightToSpawns =
 		deadMinionIndexFromRight2 === 0
 			? null
@@ -144,8 +145,13 @@ export const handleDeathrattles = (
 	// If the minion right to the spawned minion has already attacked, then the spawned
 	// minion cannot attack
 	[...entitiesFromNativeDeathrattle, ...entitiesFromEnchantments].forEach((entity) => {
-		entity.hasAttacked = entityRightToSpawns?.hasAttacked ?? false;
+		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
 	});
+	// console.debug(
+	// 	'spawned entities',
+	// 	stringifySimple(spawnedEntities, allCards),
+	// 	stringifySimpleCard(deadEntity, allCards),
+	// );
 
 	// eslint-disable-next-line prettier/prettier
 	if (deadEntity.rememberedDeathrattles?.length) {

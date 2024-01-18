@@ -1685,8 +1685,8 @@ export const spawnEntitiesFromEnchantments = (
 			}
 		}
 	}
-	spawnedEntities.forEach((e) => {
-		e.hasAttacked = deadEntity.hasAttacked;
-	});
+	// spawnedEntities.forEach((e) => {
+	// 	e.hasAttacked = deadEntity.hasAttacked;
+	// });
 	return spawnedEntities;
 };

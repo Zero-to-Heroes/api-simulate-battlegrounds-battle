@@ -84,7 +84,12 @@ export const simulateAttack = (
 			}
 		}
 		attackingEntity.attacking = false;
-		attackingEntity.hasAttacked = true;
+		attackingEntity.hasAttacked = 1;
+		const attackingEntityIndex = attackingBoard.indexOf(attackingEntity);
+		const attackingEntitiesToTheLeft = attackingBoard.slice(0, attackingEntityIndex);
+		// Make sure they won't be able to attack until everyone has attacked
+		// See http://replays.firestoneapp.com/?reviewId=a1b3066d-e806-44c1-ab4b-7ef9dbf9b5b9&turn=5&action=4
+		attackingEntitiesToTheLeft.forEach((entity) => (entity.hasAttacked = 2));
 	}
 };
 
@@ -660,11 +665,16 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 	if (validAttackers.length === 0) {
 		return null;
 	}
+	// console.debug(
+	// 	'validAttackers',
+	// 	stringifySimple(validAttackers, allCards),
+	// 	stringifySimple(attackingBoard, allCards),
+	// );
 
 	if (validAttackers.some((entity) => entity.attackImmediately)) {
 		validAttackers = validAttackers.filter((entity) => entity.attackImmediately);
 	} else if (validAttackers.every((e) => e.hasAttacked)) {
-		attackingBoard.forEach((e) => (e.hasAttacked = false));
+		attackingBoard.forEach((e) => (e.hasAttacked = 0));
 	} else {
 		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
 	}
@@ -2191,7 +2201,7 @@ const buildBoardAfterRebornSpawns = (
 	) {
 		entityToSpawn = {
 			...deadEntity,
-			hasAttacked: false,
+			hasAttacked: 0,
 			health: deadEntity.maxHealth,
 			divineShield: deadEntity.hadDivineShield,
 			reborn: false,
