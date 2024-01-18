@@ -831,9 +831,9 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.WitheredSpearhide_BG27_006:
 			case CardIds.WitheredSpearhide_BG27_006_G:
-				const witheredSpearhideCardsToAdd = Array(CardIds.WitheredSpearhide_BG27_006_G ? 2 : 1).fill(
-					CardIds.BloodGem,
-				);
+				const witheredSpearhideCardsToAdd = Array(
+					deadEntity.cardId === CardIds.WitheredSpearhide_BG27_006_G ? 2 : 1,
+				).fill(CardIds.BloodGem);
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, witheredSpearhideCardsToAdd, gameState);
 				break;
 			case CardIds.RecurringNightmare_BG26_055:
