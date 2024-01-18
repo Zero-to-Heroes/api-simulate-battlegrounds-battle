@@ -387,8 +387,9 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.EmergentFlame_BG27_018:
 			case CardIds.EmergentFlame_BG27_018_G:
+				const allBoards = [...board, ...otherBoard];
 				const emergentFlameTarget = pickRandom(
-					board.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
+					allBoards.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
 				);
 				const emergentFlameStats = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
 				modifyAttack(emergentFlameTarget, emergentFlameStats, board, gameState.allCards);
