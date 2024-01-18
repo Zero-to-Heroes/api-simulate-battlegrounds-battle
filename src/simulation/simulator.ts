@@ -3,9 +3,10 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { buildSingleBoardEntity, stringifySimple } from '../utils';
-import { performEntitySpawns, simulateAttack } from './attack';
+import { simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
 import { FullGameState } from './internal-game-state';
+import { performEntitySpawns } from './spawns';
 import { handleStartOfCombat } from './start-of-combat';
 
 // New simulator should be instantiated for each match
@@ -49,6 +50,8 @@ export class Simulator {
 			Math.max(
 				...playerBoard.map((entity) => entity.entityId),
 				...opponentBoard.map((entity) => entity.entityId),
+				...(playerEntity.hand?.map((entity) => entity.entityId) ?? []),
+				...(opponentEntity.hand?.map((entity) => entity.entityId) ?? []),
 			) + 1;
 		const suggestedNewCurrentAttacker = handleStartOfCombat(
 			playerEntity,
