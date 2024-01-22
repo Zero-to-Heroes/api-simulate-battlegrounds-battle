@@ -183,27 +183,19 @@ const buildFinalInput = (battleInput: BgsBattleInfo, cards: AllCardsService, car
 	const playerBoard = playerInfo.board.map(
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 	);
-	const playerHand = playerInfo.player.hand?.map(
-		(entity) =>
-			({
-				...addImpliedMechanics(entity, cardsData),
-				friendly: true,
-				// locked: cardsData.getTavernLevel(entity.cardId) > playerInfo.player.tavernTier,
-			} as BoardEntity),
-	);
+	const playerHand =
+		playerInfo.player.hand?.map(
+			(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
+		) ?? [];
 	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId);
 	playerInfo.player.friendly = true;
 	const opponentBoard = opponentInfo.board.map(
-		(entity) =>
-			({
-				...addImpliedMechanics(entity, cardsData),
-				friendly: false,
-				// locked: cardsData.getTavernLevel(entity.cardId) > playerInfo.player.tavernTier,
-			} as BoardEntity),
-	);
-	const opponentHand = opponentInfo.player.hand?.map(
 		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
 	);
+	const opponentHand =
+		opponentInfo.player.hand?.map(
+			(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
+		) ?? [];
 	opponentInfo.player.secrets = opponentInfo.secrets?.filter((e) => !!e?.cardId);
 	opponentInfo.player.friendly = false;
 
