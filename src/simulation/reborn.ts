@@ -61,6 +61,13 @@ export const handleRebornForEntity = (
 		opponentBoardHero,
 		gameState,
 	);
+	const entityRightToSpawns =
+		deadMinionIndexFromRight === 0
+			? null
+			: boardWithKilledMinion[boardWithKilledMinion.length - deadMinionIndexFromRight];
+	entitiesThatWereReborn.forEach((entity) => {
+		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
+	});
 
 	const arfus = boardWithKilledMinion
 		.filter((e) => e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy)
