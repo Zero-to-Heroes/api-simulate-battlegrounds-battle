@@ -187,14 +187,15 @@ const handleAvenge = (
 		// 	break;
 		case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
 		case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				0,
-				avenger.cardId === CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G ? 2 : 1,
-				gameState.allCards,
-				gameState.spectator,
-			);
+			// Only for Tavern
+			// addStatsToBoard(
+			// 	avenger,
+			// 	boardWithDeadEntity,
+			// 	0,
+			// 	avenger.cardId === CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G ? 2 : 1,
+			// 	gameState.allCards,
+			// 	gameState.spectator,
+			// );
 			break;
 		case CardIds.PalescaleCrocolisk_BG21_001:
 			const target1 = grantRandomStats(
