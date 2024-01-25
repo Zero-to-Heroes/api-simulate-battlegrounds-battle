@@ -197,6 +197,9 @@ const handlePreCombatHeroPowersForPlayer = (
 		// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
 		// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
 		shouldRecomputeCurrentAttacker = true;
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EmbraceYourRage) {
+		handleEmbraceYourRageForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
 		shouldRecomputeCurrentAttacker = handleTeronForPlayer(
 			playerBoard,
@@ -765,6 +768,48 @@ const handleTamsinForPlayer = (
 	});
 };
 
+const handleEmbraceYourRageForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	const createdCardId = playerEntity.heroPowerInfo as string;
+	if (!createdCardId?.length) {
+		console.warn('no card id for embrace your rage');
+		return;
+	}
+	const spawn = spawnEntities(
+		createdCardId,
+		1,
+		playerBoard,
+		playerEntity,
+		opponentBoard,
+		opponentEntity,
+		gameState.allCards,
+		gameState.cardsData,
+		gameState.sharedState,
+		gameState.spectator,
+		playerEntity.friendly,
+		true,
+		false,
+		false,
+	);
+	const indexFromRight = 0;
+	performEntitySpawns(
+		spawn,
+		playerBoard,
+		playerEntity,
+		playerEntity,
+		indexFromRight,
+		opponentBoard,
+		opponentEntity,
+		gameState,
+	);
+	gameState.spectator.registerPowerTarget(playerEntity, spawn[0], playerBoard, playerEntity, opponentEntity);
+};
+
 const handleTeronForPlayer = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
@@ -773,7 +818,7 @@ const handleTeronForPlayer = (
 	gameState: FullGameState,
 ): boolean => {
 	// The board state is snapshot after the minion dies
-	const deadMinionEntityId = playerEntity.heroPowerInfo;
+	const deadMinionEntityId = +playerEntity.heroPowerInfo;
 	const minionThatWillDie = playerBoard.find((e) => e.entityId === deadMinionEntityId);
 	if (minionThatWillDie) {
 		const minionIndexFromRight = playerBoard.length - 1 - playerBoard.indexOf(minionThatWillDie);
@@ -881,7 +926,7 @@ const handleOzumatForPlayer = (
 		playerBoard.length < 7 &&
 		!playerBoard.some((e) => e.cardId === CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt)
 	) {
-		const tentacularSize = playerEntity.heroPowerInfo;
+		const tentacularSize = +playerEntity.heroPowerInfo;
 		const tentacular = spawnEntities(
 			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
 			1,

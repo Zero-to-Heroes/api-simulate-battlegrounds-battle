@@ -8,7 +8,7 @@ export interface BgsPlayerEntity {
 	readonly tavernTier: number;
 	readonly heroPowerId?: string | undefined | null;
 	readonly heroPowerUsed: boolean;
-	readonly heroPowerInfo?: number;
+	readonly heroPowerInfo?: number | string;
 	readonly heroPowerInfo2?: number;
 	friendly?: boolean;
 	entityId?: number;
