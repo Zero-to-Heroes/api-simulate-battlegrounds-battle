@@ -139,6 +139,12 @@ export const handleDeathrattles = (deathrattleInput: DeathrattleInput) => {
 		const deadEntities = playerDeadEntities[i];
 		if (deadEntities.length >= 0) {
 			// Entities are processed left to right
+			// TODO: in fact, the processing order is summoning order, so maybe we can just use the entityId
+			// to determine the order? https://x.com/LoewenMitchell/status/1750792974383173676?s=20
+			// "It should be summoned order (which is most cases would be left to right but mid-combat that could change)."
+			// This doesn't actually work: http://replays.firestoneapp.com/?reviewId=ec5428bf-a599-4f4c-bea9-8acad5075cb8&turn=11&action=6
+			// deadEntities.sort((a, b) => a.entityId - b.entityId);
+			// So we would need to find another proxy for the order
 			for (let j = 0; j < deadEntities.length; j++) {
 				const deadEntity = deadEntities[j];
 				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
