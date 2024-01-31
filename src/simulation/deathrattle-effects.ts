@@ -249,28 +249,28 @@ export const handleDeathrattleEffects = (
 				boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += multiplier * 6;
 				boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += multiplier * 4;
 				break;
-			case CardIds.KingBagurgle_BGS_030:
-				addStatsToBoard(
-					deadEntity,
-					boardWithDeadEntity,
-					multiplier * 2,
-					multiplier * 3,
-					gameState.allCards,
-					gameState.spectator,
-					'MURLOC',
-				);
-				break;
-			case CardIds.KingBagurgle_TB_BaconUps_100:
-				addStatsToBoard(
-					deadEntity,
-					boardWithDeadEntity,
-					multiplier * 4,
-					multiplier * 6,
-					gameState.allCards,
-					gameState.spectator,
-					'MURLOC',
-				);
-				break;
+			// case CardIds.KingBagurgle_BGS_030:
+			// 	addStatsToBoard(
+			// 		deadEntity,
+			// 		boardWithDeadEntity,
+			// 		multiplier * 2,
+			// 		multiplier * 3,
+			// 		gameState.allCards,
+			// 		gameState.spectator,
+			// 		'MURLOC',
+			// 	);
+			// 	break;
+			// case CardIds.KingBagurgle_TB_BaconUps_100:
+			// 	addStatsToBoard(
+			// 		deadEntity,
+			// 		boardWithDeadEntity,
+			// 		multiplier * 4,
+			// 		multiplier * 6,
+			// 		gameState.allCards,
+			// 		gameState.spectator,
+			// 		'MURLOC',
+			// 	);
+			// 	break;
 			case CardIds.FiendishServant_YOD_026:
 				for (let i = 0; i < multiplier; i++) {
 					grantRandomAttack(
