@@ -1587,7 +1587,7 @@ export const spawnEntitiesFromEnchantments = (
 				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e,
+							CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
 							3,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
