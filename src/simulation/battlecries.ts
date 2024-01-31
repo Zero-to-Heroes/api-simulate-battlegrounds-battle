@@ -7,6 +7,7 @@ import {
 	addCardsInHand,
 	addStatsToBoard,
 	afterStatsUpdate,
+	buildSingleBoardEntity,
 	getRandomAliveMinion,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
@@ -448,6 +449,40 @@ export const triggerBattlecry = (
 					modifyHealth(balladistTarget, balladistStats, board, gameState.allCards);
 					afterStatsUpdate(balladistTarget, board, gameState.allCards);
 					gameState.spectator.registerPowerTarget(entity, balladistTarget, board, hero, otherHero);
+				}
+				break;
+			case CardIds.FacelessDisciple_BG24_719:
+			case CardIds.FacelessDisciple_BG24_719_G:
+				const target = pickRandom(allMinions.filter((e) => !e.definitelyDead && e.health > 0));
+				if (target) {
+					gameState.spectator.registerPowerTarget(entity, target, board, hero, otherHero);
+					const minionTier = gameState.cardsData.getTavernLevel(target.cardId);
+					const targetTier =
+						entity.cardId === CardIds.FacelessDisciple_BG24_719 ? minionTier + 1 : minionTier + 2;
+					const maxTier = !!gameState.anomalies?.includes(CardIds.SecretsOfNorgannon_BG27_Anomaly_504)
+						? 7
+						: 6;
+					const newMinionId = gameState.cardsData.getRandomMinionForTavernTier(Math.min(maxTier, targetTier));
+					const targetBoard = board.includes(target) ? board : otherBoard;
+					const targetHero = board.includes(target) ? hero : otherHero;
+					const newMinion = buildSingleBoardEntity(
+						newMinionId,
+						hero,
+						board,
+						gameState.allCards,
+						targetHero.friendly,
+						gameState.sharedState.currentEntityId++,
+						false,
+						gameState.cardsData,
+						gameState.sharedState,
+						null,
+					);
+					// Replace the target with the new minion
+					const index = targetBoard.indexOf(target);
+					// console.debug('board before disciple', stringifySimple(targetBoard, gameState.allCards));
+					targetBoard.splice(index, 1, newMinion);
+					// console.debug('board after disciple', stringifySimple(targetBoard, gameState.allCards));
+					gameState.spectator.registerPowerTarget(entity, newMinion, targetBoard, hero, otherHero);
 				}
 				break;
 			case CardIds.Amalgadon_BGS_069:

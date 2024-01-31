@@ -83,6 +83,7 @@ export class CardsData {
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
 			.filter((card) => !!card.techLevel)
+			.filter((card) => card.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla')
 			.filter((card) =>
