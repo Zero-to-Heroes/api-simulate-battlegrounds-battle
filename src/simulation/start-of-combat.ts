@@ -677,18 +677,10 @@ const handlePlayerIllidanHeroPowers = (
 ): number => {
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
-		// Apparently we don't recompute the first attacker after Illidan triggers
-		// http://replays.firestoneapp.com/?reviewId=5a49ae16-58d7-451c-939d-4f619d055b8f&turn=7&action=0
-		// UPDATE: we do if the first attacker dies, see comment inside handleIllidanForPlayer
-		// currentAttacker = (currentAttacker + 1) % 2;
-		currentAttacker = handleIllidanForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			gameState,
-			currentAttacker,
-		);
+		// After Illidan triggers, it's always the other opponent's turn
+		// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
+		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState, currentAttacker);
+		currentAttacker = (currentAttacker + 1) % 2;
 	}
 	return currentAttacker;
 };
@@ -701,7 +693,7 @@ const handleIllidanForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 	currentAttacker: number,
-): number => {
+): void => {
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
 	const minionsAtStart = playerBoard.length;
@@ -737,11 +729,11 @@ const handleIllidanForPlayer = (
 		secondAttacker.hasAttacked = 0;
 	}
 
-	// See http://replays.firestoneapp.com/?reviewId=7e9ec42c-a8f6-43d2-9f39-cc486dfa2395&turn=6&action=5
-	if (firstAttacker.definitelyDead || firstAttacker.health <= 0) {
-		currentAttacker = (currentAttacker + 1) % 2;
-	}
-	return currentAttacker;
+	// // See http://replays.firestoneapp.com/?reviewId=7e9ec42c-a8f6-43d2-9f39-cc486dfa2395&turn=6&action=5
+	// if (firstAttacker.definitelyDead || firstAttacker.health <= 0) {
+	// 	currentAttacker = (currentAttacker + 1) % 2;
+	// }
+	// return currentAttacker;
 };
 
 const handleAlakirForPlayer = (
