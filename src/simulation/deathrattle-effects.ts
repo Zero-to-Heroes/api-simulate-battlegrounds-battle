@@ -621,24 +621,13 @@ export const handleDeathrattleEffects = (
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, radioEntities, gameState);
 				break;
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy:
-				for (let i = 0; i < Math.min(1, boardWithDeadEntity.length); i++) {
-					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
-					if (rightMostMinion) {
-						makeMinionGolden(
-							rightMostMinion,
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							gameState.allCards,
-							gameState.spectator,
-							gameState.sharedState,
-						);
-					}
-				}
-				break;
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy_G:
-				for (let i = 0; i < Math.min(2, boardWithDeadEntity.length); i++) {
-					const rightMostMinion = boardWithDeadEntity[boardWithDeadEntity.length - 1 - i];
+				const numberToGild = deadEntityCardId === CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy_G ? 2 : 1;
+				const targetBoard = boardWithDeadEntity
+					.filter((e) => !e.definitelyDead && e.health > 0)
+					.filter((e) => !gameState.cardsData.isGolden(gameState.allCards.getCard(e.cardId)));
+				for (let i = 0; i < Math.min(numberToGild, boardWithDeadEntity.length); i++) {
+					const rightMostMinion = targetBoard[targetBoard.length - 1 - i];
 					if (rightMostMinion) {
 						makeMinionGolden(
 							rightMostMinion,

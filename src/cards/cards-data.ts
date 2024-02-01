@@ -220,7 +220,7 @@ export class CardsData {
 		return pickRandom(pool)?.id;
 	}
 
-	private isGolden(card: ReferenceCard): boolean {
+	public isGolden(card: ReferenceCard): boolean {
 		return !!card.battlegroundsNormalDbfId;
 	}
 
