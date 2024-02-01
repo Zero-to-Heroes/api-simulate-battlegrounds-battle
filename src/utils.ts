@@ -447,7 +447,18 @@ export const addCardsInHand = (
 	const cardsThatWillBeAdded: BoardEntity[] = [];
 	for (const cardAdded of cardsAdded) {
 		const cardToAdd: BoardEntity = (cardAdded as BoardEntity)?.cardId
-			? (cardAdded as BoardEntity)
+			? buildSingleBoardEntity(
+					cardAdded as string,
+					playerEntity,
+					board,
+					gameState.allCards,
+					playerEntity.friendly,
+					gameState.sharedState.currentEntityId++,
+					false,
+					gameState.cardsData,
+					gameState.sharedState,
+					cardAdded,
+			  )
 			: buildSingleBoardEntity(
 					cardAdded as string,
 					playerEntity,

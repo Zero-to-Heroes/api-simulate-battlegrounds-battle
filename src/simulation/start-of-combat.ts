@@ -5,6 +5,7 @@ import { BoardEntity } from '../board-entity';
 import { START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
 import {
+	addCardsInHand,
 	afterStatsUpdate,
 	hasCorrectTribe,
 	isCorrectTribe,
@@ -787,7 +788,7 @@ const handleEmbraceYourRageForPlayer = (
 		console.warn('no card id for embrace your rage');
 		return;
 	}
-	const spawn = spawnEntities(
+	const spawns = spawnEntities(
 		createdCardId,
 		1,
 		playerBoard,
@@ -805,7 +806,7 @@ const handleEmbraceYourRageForPlayer = (
 	);
 	const indexFromRight = 0;
 	performEntitySpawns(
-		spawn,
+		spawns,
 		playerBoard,
 		playerEntity,
 		playerEntity,
@@ -814,7 +815,9 @@ const handleEmbraceYourRageForPlayer = (
 		opponentEntity,
 		gameState,
 	);
-	gameState.spectator.registerPowerTarget(playerEntity, spawn[0], playerBoard, playerEntity, opponentEntity);
+	gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+	addCardsInHand(playerEntity, playerBoard, spawns, gameState);
+	gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 };
 
 const handleTeronForPlayer = (
