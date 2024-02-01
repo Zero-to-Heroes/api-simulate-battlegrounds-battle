@@ -681,7 +681,7 @@ const handlePlayerIllidanHeroPowers = (
 		// After Illidan triggers, it's always the other opponent's turn
 		// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
 		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState, currentAttacker);
-		currentAttacker = (currentAttacker + 1) % 2;
+		currentAttacker = friendly ? 1 : 0;
 	}
 	return currentAttacker;
 };
