@@ -827,9 +827,10 @@ const handleTeronForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): boolean => {
-	// The board state is snapshot after the minion dies
-	const deadMinionEntityId = +playerEntity.heroPowerInfo;
-	const minionThatWillDie = playerBoard.find((e) => e.entityId === deadMinionEntityId);
+	// const deadMinionEntityId = +playerEntity.heroPowerInfo;
+	const minionThatWillDie = playerBoard.find((m) =>
+		m.enchantments.some((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment),
+	);
 	if (minionThatWillDie) {
 		const minionIndexFromRight = playerBoard.length - 1 - playerBoard.indexOf(minionThatWillDie);
 		playerEntity.rapidReanimationIndexFromRight = minionIndexFromRight;
