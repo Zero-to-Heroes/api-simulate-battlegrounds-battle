@@ -9,8 +9,10 @@ import { performEntitySpawns } from './spawns';
 
 export const orchestrateMinionDeathEffects = (deathrattleInput: DeathrattleInput) => {
 	handleDeathrattles(deathrattleInput);
-	handleReborn(deathrattleInput);
+	// Avenge trigger before reborn
+	// http://replays.firestoneapp.com/?reviewId=5bb20eb8-e0ca-47ab-adc7-13134716d568&turn=7&action=6
 	handleAvenge(deathrattleInput);
+	handleReborn(deathrattleInput);
 	handleAfterDeathEffects(deathrattleInput);
 };
 
