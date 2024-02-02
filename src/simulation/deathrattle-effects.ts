@@ -672,6 +672,11 @@ export const handleDeathrattleEffects = (
 				boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += sanguineChampionStats;
 				boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += sanguineChampionStats;
 				break;
+			case CardIds.PricklyPiper_BG26_160:
+			case CardIds.PricklyPiper_BG26_160_G:
+				const piperBuff = deadEntityCardId === CardIds.PricklyPiper_BG26_160 ? 1 : 2;
+				boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += piperBuff;
+				break;
 
 			// Putricide-only
 			case CardIds.Banshee_BG_RLK_957:

@@ -411,6 +411,13 @@ const handleAvenge = (
 							gameState.allCards,
 							gameState.spectator,
 						);
+						gameState.spectator.registerPowerTarget(
+							avenger,
+							entity,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
 					}
 				}
 			}

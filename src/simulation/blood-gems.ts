@@ -23,8 +23,10 @@ export const playBloodGemsOn = (
 	switch (target.cardId) {
 		case CardIds.ToughTusk_BG20_102:
 		case CardIds.ToughTusk_BG20_102_G:
-			updateDivineShield(target, board, true, allCards);
-			spectator.registerPowerTarget(target, target, board, null, null);
+			if (!target.divineShield) {
+				updateDivineShield(target, board, true, allCards);
+				spectator.registerPowerTarget(target, target, board, null, null);
+			}
 			break;
 		case CardIds.GeomagusRoogug_BG28_583:
 		case CardIds.GeomagusRoogug_BG28_583_G:
