@@ -547,7 +547,7 @@ const handleHeroAvenge = (
 			break;
 		case CardIds.VanndarStormpike_LeadTheStormpikes:
 			boardWithDeadEntity
-				.filter((entity) => !entity.definitelyDead && entity.health > 0)
+				// .filter((entity) => !entity.definitelyDead && entity.health > 0)
 				.forEach((entity) => {
 					modifyHealth(entity, 1, boardWithDeadEntity, allCards);
 					afterStatsUpdate(entity, boardWithDeadEntity, allCards);
