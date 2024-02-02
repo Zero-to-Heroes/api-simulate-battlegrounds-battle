@@ -13,7 +13,7 @@ const test = async () => {
 		options: {
 			numberOfSimulations: 10000,
 			skipInfoLogs: false,
-			maxAcceptableDuration: 20000,
+			maxAcceptableDuration: 200000,
 		},
 		gameState: {
 			currentTurn: 0,
@@ -27,7 +27,7 @@ const test = async () => {
 		outcomeSamples: undefined,
 	});
 
-	const sample = simulationResult.outcomeSamples.tied[0];
+	const sample = simulationResult.outcomeSamples.won[0];
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
 	console.log('original sample length', JSON.stringify(sample).length);

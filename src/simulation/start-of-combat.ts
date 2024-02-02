@@ -1495,8 +1495,11 @@ export const performStartOfCombatMinionsForPlayer = (
 			if (!targets.length) {
 				break;
 			}
+			if (targets.length > 2) {
+				console.error('Invalid number of targets', targets.length);
+			}
 
-			const target = targets[0];
+			const target = pickRandom(targets);
 			while (attacker.health > 0 && target.health > 0 && !attacker.definitelyDead && !target.definitelyDead) {
 				// Attackers don't alternate
 				// See http://replays.firestoneapp.com/?reviewId=f9f6bf62-db73-49ad-8187-d2f8848b7f36&turn=17&action=0

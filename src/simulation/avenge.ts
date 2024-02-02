@@ -36,7 +36,7 @@ export const applyAvengeEffects = (
 	gameState: FullGameState,
 ): void => {
 	const candidatesEntitiesSpawnedFromAvenge: BoardEntity[] = [];
-	updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
+	// updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
 	const avengers = boardWithDeadEntity
 		.filter((e) => !!e.avengeDefault && e.avengeCurrent <= 0)
 		// Get Tony to be processed first, because of the "when turned golden, the minion ignores the death for the avenge counter"
@@ -113,7 +113,7 @@ export const applyAvengeEffects = (
 	);
 };
 
-const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDeadEntityHero: BgsPlayerEntity) => {
+export const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDeadEntityHero: BgsPlayerEntity) => {
 	for (const entity of board) {
 		if (!!entity.avengeDefault) {
 			entity.avengeCurrent -= 1;

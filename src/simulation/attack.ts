@@ -28,8 +28,8 @@ import { handleDeathrattles, orchestrateMinionDeathEffects } from './deathrattle
 import { spawnEntities } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
+import { makeMinionsDie } from './minion-death';
 import { onMinionKill } from './minion-kill';
-import { removeMinionFromBoard } from './remove-minion-from-board';
 import { SharedState } from './shared-state';
 import { handleRapidReanimation } from './simulator';
 import { performEntitySpawns } from './spawns';
@@ -1909,52 +1909,4 @@ export const applyOnBeingAttackedBuffs = (
 		);
 		attackerEntity.abiityChargesLeft--;
 	}
-};
-
-const makeMinionsDie = (
-	board: BoardEntity[],
-	boardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
-): [number[], BoardEntity[]] => {
-	// Because entities spawn to the left, so the right index is unchanged
-	const deadMinionIndexesFromRight: number[] = [];
-	const deadEntities: BoardEntity[] = [];
-	const initialBoardLength = board.length;
-	for (let i = 0; i < board.length; i++) {
-		if (board[i].health <= 0 || board[i].definitelyDead) {
-			deadMinionIndexesFromRight.push(initialBoardLength - (i + 1));
-			deadEntities.push(board[i]);
-			// console.log(
-			// 	'\tflagging dead minion 0',
-			// 	stringifySimpleCard(board[i], allCards),
-			// 	stringifySimple(board, allCards),
-			// 	initialBoardLength,
-			// 	i,
-			// 	deadMinionIndexesFromRight,
-			// );
-		}
-	}
-
-	// These will always be processed from left to right afterwards
-	// We compute the indexes as they will be once the new board is effective. For a
-	// board of length N, having an indexFromRight at N means it will spawn at the very left
-	// of the board (first minion)
-	let indexesFromRightAfterDeath = [];
-	for (let i = deadMinionIndexesFromRight.length - 1; i >= 0; i--) {
-		const newIndex = deadMinionIndexesFromRight[i] - indexesFromRightAfterDeath.length;
-		indexesFromRightAfterDeath.push(newIndex);
-	}
-	indexesFromRightAfterDeath = indexesFromRightAfterDeath.reverse();
-
-	for (let i = 0; i < board.length; i++) {
-		if (board[i].health <= 0 || board[i].definitelyDead) {
-			// console.log('\tflagging dead minion', stringifySimpleCard(board[i], allCards), deadMinionIndexesFromRight);
-			removeMinionFromBoard(board, boardHero, i, allCards, spectator);
-			// We modify the original array, so we need to update teh current index accordingly
-			i--;
-		}
-	}
-
-	return [indexesFromRightAfterDeath, deadEntities];
 };
