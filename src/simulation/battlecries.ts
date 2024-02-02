@@ -16,6 +16,7 @@ import {
 	modifyAttack,
 	modifyHealth,
 } from '../utils';
+import { getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
@@ -219,6 +220,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.Necrolyte_BG20_202:
 			case CardIds.Necrolyte_BG20_202_G:
+				// console.debug('triggering necrolyte', entity.entityId);
 				const necrolyteBloodGems = entity.cardId === CardIds.Necrolyte_BG20_202 ? 2 : 4;
 				const necrolyteTarget = pickRandom(board);
 				playBloodGemsOn(
@@ -230,6 +232,24 @@ export const triggerBattlecry = (
 					gameState.spectator,
 				);
 				gameState.spectator.registerPowerTarget(entity, necrolyteTarget, board, hero, otherHero);
+
+				const necrolyteTargetNeighbours = getNeighbours(board, necrolyteTarget);
+				for (const neighbour of necrolyteTargetNeighbours) {
+					const bloodGemStatsEnchantment = neighbour.enchantments?.find(
+						(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
+					);
+					if (bloodGemStatsEnchantment) {
+						const atk = bloodGemStatsEnchantment.tagScriptDataNum1 ?? 0;
+						const heath = bloodGemStatsEnchantment.tagScriptDataNum2 ?? 0;
+						neighbour.attack = Math.max(0, neighbour.attack - atk);
+						neighbour.health = Math.max(1, neighbour.health - heath);
+						neighbour.maxHealth = Math.max(1, neighbour.maxHealth - heath);
+						necrolyteTarget.attack += atk;
+						necrolyteTarget.health += heath;
+						necrolyteTarget.maxHealth += heath;
+						gameState.spectator.registerPowerTarget(necrolyteTarget, neighbour, board, hero, otherHero);
+					}
+				}
 				break;
 			case CardIds.PrimalfinLookout_BGS_020:
 			case CardIds.PrimalfinLookout_TB_BaconUps_089:

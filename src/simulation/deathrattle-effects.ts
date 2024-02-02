@@ -94,7 +94,13 @@ export const handleDeathrattleEffects = (
 			case CardIds.RylakMetalhead_BG26_801_G:
 				const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
-					const neighbours = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
+					const neighbours = getNeighbours(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight);
+					// console.debug(
+					// 	'neighbours',
+					// 	deadEntityIndexFromRight,
+					// 	neighbours?.map((entity) => entity.cardId + ', ' + entity.entityId),
+					// 	stringifySimple(boardWithDeadEntity, gameState.allCards),
+					// );
 					for (const neighbour of neighbours) {
 						gameState.spectator.registerPowerTarget(
 							deadEntity,

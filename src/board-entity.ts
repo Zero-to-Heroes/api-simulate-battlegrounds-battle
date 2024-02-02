@@ -17,7 +17,15 @@ export interface BoardEntity {
 	cleave?: boolean;
 	windfury?: boolean;
 	stealth?: boolean;
-	enchantments?: { cardId: string; originEntityId?: number; timing: number; repeats?: number; value?: number }[];
+	enchantments?: {
+		cardId: string;
+		originEntityId?: number;
+		tagScriptDataNum1?: number;
+		tagScriptDataNum2?: number;
+		timing: number;
+		repeats?: number;
+		value?: number;
+	}[];
 	scriptDataNum1?: number;
 	// For Build-An-Undead
 	additionalCards?: readonly string[] | null;

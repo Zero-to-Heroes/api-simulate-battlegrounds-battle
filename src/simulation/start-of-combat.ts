@@ -1456,6 +1456,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
 		for (const entity of attackingBoard) {
 			for (let i = 0; i < multiplier; i++) {
+				// console.debug('triggering hawkstrider', entity.entityId, entity.cardId);
 				gameState.spectator.registerPowerTarget(
 					attacker,
 					entity,
@@ -1476,6 +1477,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				});
 			}
 		}
+		// console.debug('done triggering hawkstrider\n\n\n');
 	} else if (
 		attacker.cardId === CardIds.AudaciousAnchor_BG28_904 ||
 		attacker.cardId === CardIds.AudaciousAnchor_BG28_904_G

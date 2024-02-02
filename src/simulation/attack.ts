@@ -742,7 +742,8 @@ export const getNeighbours = (
 	deadEntityIndexFromRight?: number,
 ): readonly BoardEntity[] => {
 	const neighbours = [];
-	if (deadEntityIndexFromRight != null) {
+	// When triggering DR with Hawkstrider, the entity is still on the board
+	if (deadEntityIndexFromRight != null && !board.includes(entity)) {
 		// If the deadEntityIndexFromRight === 0 (right-most minion), no neighbour will be found
 		const rightNeighbourIndex = board.length - 1 - (deadEntityIndexFromRight - 1);
 		const rightNeighbour = board[rightNeighbourIndex];
