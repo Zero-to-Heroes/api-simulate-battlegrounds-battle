@@ -17,6 +17,7 @@ import {
 	isCorrectTribe,
 	isFish,
 	isGolden,
+	isPilotedWhirlOTron,
 	makeMinionGolden,
 	modifyAttack,
 	modifyHealth,
@@ -1445,7 +1446,10 @@ export const rememberDeathrattles = (
 	sharedState: SharedState,
 ): void => {
 	const validDeathrattles = deadEntities
-		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId) || isFish(entity))
+		.filter(
+			(entity) =>
+				cardsData.validDeathrattles.includes(entity.cardId) || isFish(entity) || isPilotedWhirlOTron(entity),
+		)
 		.map((entity) => ({ cardId: entity.cardId, repeats: 1, timing: sharedState.currentEntityId++ }));
 	const validEnchantments = deadEntities
 		.filter((entity) => entity.enchantments?.length)

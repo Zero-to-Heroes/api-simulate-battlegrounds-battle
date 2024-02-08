@@ -768,6 +768,10 @@ export const isFish = (entity: BoardEntity): boolean => {
 	);
 };
 
+export const isPilotedWhirlOTron = (entity: BoardEntity): boolean => {
+	return entity.cardId.startsWith(CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy);
+};
+
 export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {
 	return !!allCards.getCard(cardId).battlegroundsNormalDbfId;
 };

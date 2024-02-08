@@ -41,6 +41,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.DiremuckForager_BG27_556,
 	CardIds.DiremuckForager_BG27_556_G,
 	CardIds.UpperHand_BG28_573,
+	CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy,
+	CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,

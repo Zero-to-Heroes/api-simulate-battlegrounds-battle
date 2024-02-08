@@ -29,6 +29,7 @@ import {
 	applyFireInvocationEnchantment,
 	applyLightningInvocationEnchantment,
 	applyWaterInvocationEnchantment,
+	rememberDeathrattles,
 } from './deathrattle-effects';
 import { handleDeathrattles } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
@@ -1514,6 +1515,19 @@ export const performStartOfCombatMinionsForPlayer = (
 				);
 			}
 		}
+	} else if (
+		attacker.cardId === CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy ||
+		attacker.cardId === CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G
+	) {
+		// const iterations = attacker.cardId === CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G ? 2 : 1;
+		rememberDeathrattles(attacker, attackingBoard, gameState.cardsData, gameState.allCards, gameState.sharedState);
+		gameState.spectator.registerPowerTarget(
+			attacker,
+			attacker,
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoardHero,
+		);
 	}
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
 };
