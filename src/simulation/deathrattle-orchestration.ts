@@ -174,7 +174,7 @@ export const handleDeathrattles = (deathrattleInput: DeathrattleInput) => {
 					playerStates[1 - i],
 					deathrattleInput.gameState,
 					[...drEntities, ...enchEntities],
-					i === 0,
+					playerStates[i].player.friendly,
 					deathrattleInput,
 				);
 			}

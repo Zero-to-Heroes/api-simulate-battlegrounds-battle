@@ -817,7 +817,6 @@ export const handleDeathrattleEffects = (
 
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
-
 	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
 		...(deadEntity.enchantments ?? []),
 		...(deadEntity.rememberedDeathrattles ?? []),
