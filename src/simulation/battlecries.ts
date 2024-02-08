@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -573,7 +573,11 @@ export const triggerBattlecry = (
 				addCardsInHand(hero, board, rodeoPerformerCardsToAdd, gameState);
 				break;
 			default:
-				hasTriggered = false;
+				// All hte Battlecry minions that arent implemented / have no effect on the board state
+				const hasBattlecry = gameState.allCards
+					.getCard(entity.cardId)
+					?.mechanics?.includes(GameTag[GameTag.BATTLECRY]);
+				hasTriggered = hasBattlecry;
 				break;
 		}
 		if (hasTriggered) {
