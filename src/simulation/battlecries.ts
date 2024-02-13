@@ -40,9 +40,11 @@ export const computeBattlecryMultiplier = (
 			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
 	);
 	const goldenBrannBonus = !!goldenBrann ? 3 : 0;
+	const gilneanWarHorns =
+		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.GilneanWarHorn)?.length ?? 0;
 	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
 
-	const multiplier = echoesOfArgus + Math.max(goldenBrannBonus, brannBonus, 1);
+	const multiplier = echoesOfArgus + Math.max(goldenBrannBonus, brannBonus, 1) + gilneanWarHorns;
 	return multiplier;
 };
 
@@ -572,6 +574,24 @@ export const triggerBattlecry = (
 					entity.cardId === CardIds.RodeoPerformer_BG28_550_G ? [null] : [null, null];
 				addCardsInHand(hero, board, rodeoPerformerCardsToAdd, gameState);
 				break;
+			case CardIds.Eagill_BG28_630:
+			case CardIds.Eagill_BG28_630_G:
+				const eagillMultiplier = entity.cardId === CardIds.Eagill_BG28_630 ? 1 : 2;
+				const eagillBoardTarget = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
+				if (eagillBoardTarget) {
+					modifyAttack(eagillBoardTarget, 2 * eagillMultiplier, board, gameState.allCards);
+					modifyHealth(eagillBoardTarget, 3 * eagillMultiplier, board, gameState.allCards);
+					afterStatsUpdate(eagillBoardTarget, board, gameState.allCards);
+					gameState.spectator.registerPowerTarget(entity, eagillBoardTarget, board, hero, otherHero);
+				}
+				const eagillHandTarget = pickRandom(hero.hand);
+				if (eagillHandTarget) {
+					modifyAttack(eagillHandTarget, 2 * eagillMultiplier, board, gameState.allCards);
+					modifyHealth(eagillHandTarget, 3 * eagillMultiplier, board, gameState.allCards);
+					afterStatsUpdate(eagillHandTarget, board, gameState.allCards);
+					gameState.spectator.registerPowerTarget(entity, eagillHandTarget, board, hero, otherHero);
+				}
+				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state
 				const hasBattlecry = gameState.allCards
@@ -606,14 +626,22 @@ const afterBattlecryTriggered = (
 	spectator: Spectator,
 ) => {
 	board
-		.filter((e) => e.cardId === CardIds.KalecgosArcaneAspect_BGS_041)
+		.filter(
+			(e) =>
+				e.cardId === CardIds.KalecgosArcaneAspect_BGS_041 ||
+				e.cardId === CardIds.KalecgosArcaneAspect_TB_BaconUps_109,
+		)
 		.forEach((e) => {
-			addStatsToBoard(entity, board, 1, 1, allCards, spectator, Race[Race.DRAGON]);
+			const buff = entity.cardId === CardIds.KalecgosArcaneAspect_BGS_041 ? 1 : 2;
+			addStatsToBoard(entity, board, buff, buff, allCards, spectator, Race[Race.DRAGON]);
 		});
 	board
-		.filter((e) => e.cardId === CardIds.KalecgosArcaneAspect_TB_BaconUps_109)
+		.filter((e) => e.cardId === CardIds.BlazingSkyfin_BG25_040 || e.cardId === CardIds.BlazingSkyfin_BG25_040_G)
 		.forEach((e) => {
-			addStatsToBoard(entity, board, 2, 2, allCards, spectator, Race[Race.DRAGON]);
+			const buff = entity.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
+			modifyAttack(entity, buff, board, allCards);
+			modifyHealth(entity, buff, board, allCards);
+			afterStatsUpdate(entity, board, allCards);
 		});
 };
 

@@ -185,16 +185,22 @@ export class CardsData {
 			case CardIds.Sisefin_BG21_009_G:
 			case CardIds.TonyTwoTusk_BG21_031:
 			case CardIds.TonyTwoTusk_BG21_031_G:
-			case CardIds.ScrapScraper_BG26_148:
-			case CardIds.ScrapScraper_BG26_148_G:
+			// case CardIds.ScrapScraper_BG26_148:
+			// case CardIds.ScrapScraper_BG26_148_G:
 			case CardIds.RelentlessSentry_BG25_003:
 			case CardIds.RelentlessSentry_BG25_003_G:
 			case CardIds.PhaerixWrathOfTheSun_BG28_403:
 			case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
+			case CardIds.TumblingDisaster_BG28_Reward_505:
+			case CardIds.CycleOfEnergy_BG28_Reward_504:
+			case CardIds.AugmentedLaborer_BG28_740:
+			case CardIds.AugmentedLaborer_BG28_740_G:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 				return 5;
+			case CardIds.StableAmalgamation_BG28_Reward_518:
+				return 7;
 		}
 		return 0;
 	}

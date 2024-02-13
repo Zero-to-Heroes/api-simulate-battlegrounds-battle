@@ -539,6 +539,46 @@ const handleStartOfCombatSpellsForPlayer = (
 					gameState.spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
 				}
 				break;
+			case CardIds.BoonOfBeetles_BG28_603:
+				playerBoard.forEach((e) => {
+					e.enchantments = e.enchantments || [];
+					e.enchantments.push({
+						cardId: CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
+						originEntityId: secret.entityId,
+						timing: gameState.sharedState.currentEntityId++,
+					});
+				});
+				break;
+			case CardIds.ToxicTumbleweed_BG28_641:
+				if (playerBoard.length < 7) {
+					const newMinions = spawnEntities(
+						CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						playerEntity.friendly,
+						true,
+						false,
+						false,
+					);
+					performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						null,
+						0,
+						opponentBoard,
+						opponentEntity,
+						gameState,
+					);
+				}
+				break;
 		}
 	}
 

@@ -186,11 +186,17 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 
 	// Because Denathrius can send a quest reward as its hero power (I think)
 	hero.questRewards = [...(hero.questRewards ?? []), hero.heroPowerId].filter((e) => !!e);
-	hero.questRewardEntities = hero.questRewards.map((reward) => ({
-		cardId: reward,
-		avengeCurrent: 0,
-		avengeDefault: cardsData.avengeValue(reward),
-	}));
+	hero.questRewardEntities = hero.questRewardEntities
+		? hero.questRewardEntities.map((reward) => ({
+				...reward,
+				avengeDefault: cardsData.avengeValue(reward.cardId),
+		  }))
+		: hero.questRewards.map((reward) => ({
+				cardId: reward,
+				avengeCurrent: 0,
+				avengeDefault: cardsData.avengeValue(reward),
+				scriptDataNum1: 0,
+		  }));
 	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
 	hero.hand = hero.hand ?? [];
 	if (!hero.globalInfo) {

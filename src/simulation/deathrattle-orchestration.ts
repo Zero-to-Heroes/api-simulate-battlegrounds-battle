@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
@@ -306,6 +307,17 @@ const handlePostDeathrattleEffects = (
 	spawnedEntities.forEach((entity) => {
 		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
 	});
+
+	if (
+		deadEntityPlayerState.player.questRewards?.includes(CardIds.RitualDagger_BG24_Reward_113) ||
+		deadEntityPlayerState.player.questRewards?.includes(CardIds.RitualDagger_BG24_Reward_113_ALT)
+	) {
+		const ogDeadEntity = gameState.sharedState.deaths.find((entity) => entity.entityId === deadEntity.entityId);
+		if (ogDeadEntity) {
+			ogDeadEntity.attack += 4;
+			ogDeadEntity.health += 4;
+		}
+	}
 
 	// eslint-disable-next-line prettier/prettier
 	if (deadEntity.rememberedDeathrattles?.length) {

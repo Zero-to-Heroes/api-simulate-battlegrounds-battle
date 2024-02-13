@@ -22,6 +22,7 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
 	CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 	CardIds.Onyxia_OnyxianWhelpToken,
+	CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
 ];
 const CANT_ATTACK_IDS = [CardIds.ArcaneCannon_BGS_077, CardIds.ArcaneCannon_TB_BaconUps_128];
 

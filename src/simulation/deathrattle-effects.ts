@@ -53,6 +53,7 @@ export const computeDeathrattleMultiplier = (
 		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.TurbulentTombs)?.length ?? 0;
 	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
 	const scourgeMultiplier = deadEntity.additionalCards?.includes(CardIds.ScourgeTroll) ? 2 : 1;
+
 	const multiplier =
 		scourgeMultiplier *
 		((goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus + tombs + echoesOfArgus);
@@ -812,6 +813,15 @@ export const handleDeathrattleEffects = (
 						}
 					}
 				}
+				break;
+			case CardIds.ScrapScraper_BG26_148:
+			case CardIds.ScrapScraper_BG26_148_G:
+				const scraperToAddQuantity = deadEntity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
+				const scraperCardsToAdd = [];
+				for (let i = 0; i < scraperToAddQuantity; i++) {
+					scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
+				}
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, scraperCardsToAdd, gameState);
 				break;
 		}
 	}

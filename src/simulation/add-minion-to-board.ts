@@ -182,6 +182,15 @@ export const handleAddedMinionAuraEffect = (
 			break;
 	}
 
+	if (boardHero.questRewards?.includes(CardIds.TumblingDisaster_BG28_Reward_505)) {
+		const tumblingDisasterBonus =
+			boardHero.questRewardEntities?.find((e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505)
+				?.scriptDataNum1 ?? 1;
+		modifyAttack(spawned, tumblingDisasterBonus, board, allCards);
+		modifyHealth(spawned, tumblingDisasterBonus, board, allCards);
+		afterStatsUpdate(spawned, board, allCards);
+	}
+
 	// The board here already contains the new minion
 	// TODO: what if the additional part is a potential target for the aura effect?
 	applyAurasToSelf(spawned, board, boardHero, allCards, sharedState, spectator);
@@ -588,6 +597,8 @@ const handleAfterSpawnEffect = (
 				break;
 			case CardIds.Felstomper_BG25_042:
 			case CardIds.Felstomper_BG25_042_G:
+			case CardIds.Deadstomper_BG28_634:
+			case CardIds.Deadstomper_BG28_634_G:
 				// console.debug('felstomper');
 				if (entity.entityId !== spawned.entityId) {
 					const felstomperBuff = entity.cardId === CardIds.Felstomper_BG25_042_G ? 6 : 3;

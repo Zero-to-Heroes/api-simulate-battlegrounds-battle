@@ -1638,6 +1638,24 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
+				case CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 				case CardIds.SneedsReplicator_ReplicateEnchantment:
 					spawnedEntities.push(
 						...spawnEntities(

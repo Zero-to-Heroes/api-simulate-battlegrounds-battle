@@ -31,9 +31,9 @@ import { FullGameState } from './internal-game-state';
 import { makeMinionsDie } from './minion-death';
 import { onMinionKill } from './minion-kill';
 import { SharedState } from './shared-state';
-import { handleRapidReanimation } from './simulator';
 import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
+import { handleSummonWhenSpace } from './summon-when-space';
 import { canAttack } from './utils/entity-utils';
 
 // Only use it to simulate actual attack. To simulate damage, or something similar, use bumpInto
@@ -110,14 +110,7 @@ export const doFullAttack = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	applyOnAttackBuffs(
-		attackingEntity,
-		attackingBoard,
-		attackingBoardHero,
-		defendingBoardHero,
-		gameState.allCards,
-		gameState.spectator,
-	);
+	applyOnAttackBuffs(attackingEntity, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 	gameState.spectator.registerAttack(
 		attackingEntity,
 		defendingEntity,
@@ -1321,7 +1314,7 @@ export const processMinionDeath = (
 	processMinionDeath(board1, board1Hero, board2, board2Hero, gameState);
 
 	// Not sure about the timing here, but I have bothered Mitchell quite a lot already recently :)
-	handleRapidReanimation(board1, board1Hero, board2, board2Hero, gameState);
+	handleSummonWhenSpace(board1, board1Hero, board2, board2Hero, gameState);
 
 	// Apply "after minion death" effects
 	handleAfterMinionsDeaths(board1, deadEntities1, board1Hero, board2, deadEntities2, board2Hero, gameState);
@@ -1548,35 +1541,34 @@ export const applyOnAttackBuffs = (
 	attackingBoard: BoardEntity[],
 	attackingBoardHero: BgsPlayerEntity,
 	otherHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 ): void => {
 	if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
 		// For now the utility method only works additively, so we hack around it
-		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, allCards);
+		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, gameState.allCards);
 	}
 	if (attacker.cardId === CardIds.GlyphGuardian_TB_BaconUps_115) {
-		modifyAttack(attacker, 3 * attacker.attack - attacker.attack, attackingBoard, allCards);
+		modifyAttack(attacker, 3 * attacker.attack - attacker.attack, attackingBoard, gameState.allCards);
 	}
 
 	// Ripsnarl Captain
-	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
+	if (isCorrectTribe(gameState.allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
 		const ripsnarls = attackingBoard.filter((e) => e.cardId === CardIds.RipsnarlCaptain_BGS_056);
 		const ripsnarlsTB = attackingBoard.filter(
 			(entity) => entity.cardId === CardIds.RipsnarlCaptain_TB_BaconUps_139,
 		);
 		ripsnarls.forEach((captain) => {
-			modifyAttack(attacker, 3, attackingBoard, allCards);
-			spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
+			modifyAttack(attacker, 3, attackingBoard, gameState.allCards);
+			gameState.spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
 		});
 		ripsnarlsTB.forEach((captain) => {
-			modifyAttack(attacker, 6, attackingBoard, allCards);
-			spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
+			modifyAttack(attacker, 6, attackingBoard, gameState.allCards);
+			gameState.spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
 		});
 	}
 
 	// Dread Admiral Eliza
-	if (isCorrectTribe(allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
+	if (isCorrectTribe(gameState.allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
 		const elizas = attackingBoard.filter(
 			(e) =>
 				e.cardId === CardIds.DreadAdmiralEliza_BGS_047 || e.cardId === CardIds.AdmiralElizaGoreblade_BG27_555,
@@ -1589,16 +1581,16 @@ export const applyOnAttackBuffs = (
 
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
-				modifyAttack(entity, 3, attackingBoard, allCards);
-				modifyHealth(entity, 1, attackingBoard, allCards);
-				spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
+				modifyAttack(entity, 3, attackingBoard, gameState.allCards);
+				modifyHealth(entity, 1, attackingBoard, gameState.allCards);
+				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
 		elizasTB.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
-				modifyAttack(entity, 4, attackingBoard, allCards);
-				modifyHealth(entity, 2, attackingBoard, allCards);
-				spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
+				modifyAttack(entity, 4, attackingBoard, gameState.allCards);
+				modifyHealth(entity, 2, attackingBoard, gameState.allCards);
+				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
 	}
@@ -1607,22 +1599,29 @@ export const applyOnAttackBuffs = (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708_G
 	) {
 		attackingBoard
-			.filter((e) => isCorrectTribe(allCards.getCard(e.cardId).races, Race.PIRATE))
+			.filter((e) => isCorrectTribe(gameState.allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {
 				modifyAttack(
 					e,
 					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attackingBoard,
-					allCards,
+					gameState.allCards,
 				);
 				modifyHealth(
 					e,
 					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attackingBoard,
-					allCards,
+					gameState.allCards,
 				);
-				spectator.registerPowerTarget(attacker, e, attackingBoard, attackingBoardHero, otherHero);
+				gameState.spectator.registerPowerTarget(attacker, e, attackingBoard, attackingBoardHero, otherHero);
 			});
+	} else if (
+		attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635 ||
+		attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635_G
+	) {
+		const numberOfCardsToAdd = attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635_G ? 2 : 1;
+		const cardsToAdd = Array.from({ length: numberOfCardsToAdd }).map(() => null);
+		addCardsInHand(attackingBoardHero, attackingBoard, cardsToAdd, gameState);
 	}
 
 	const eclipsion = attackingBoard.find(

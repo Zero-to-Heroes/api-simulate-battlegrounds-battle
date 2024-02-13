@@ -17,6 +17,7 @@ export interface BgsPlayerEntity {
 		cardId: string;
 		avengeDefault?: number;
 		avengeCurrent?: number;
+		scriptDataNum1: number;
 	}[];
 	hand?: BoardEntity[];
 	secrets?: BoardSecret[];

@@ -2,12 +2,12 @@ import { getEffectiveTechLevel } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { SingleSimulationResult } from '../single-simulation-result';
-import { buildSingleBoardEntity, stringifySimple } from '../utils';
+import { stringifySimple } from '../utils';
 import { simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
 import { FullGameState } from './internal-game-state';
-import { performEntitySpawns } from './spawns';
 import { handleStartOfCombat } from './start-of-combat';
+import { handleSummonWhenSpace as handleSummonsWhenSpace } from './summon-when-space';
 
 // New simulator should be instantiated for each match
 export class Simulator {
@@ -85,7 +85,7 @@ export class Simulator {
 		// }
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
-			handleRapidReanimation(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
+			handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			clearStealthIfNeeded(playerBoard, opponentBoard);
 			// console.log('this.currentSpeedAttacker', this.currentAttacker);
 			// If there are "attack immediately" minions, we keep the same player
@@ -175,58 +175,3 @@ export class Simulator {
 			.reduce((a, b) => a + b, 0);
 	}
 }
-
-export const handleRapidReanimation = (
-	playerBoard: BoardEntity[],
-	playerEntity: BgsPlayerEntity,
-	opponentBoard: BoardEntity[],
-	opponentEntity: BgsPlayerEntity,
-	gameState: FullGameState,
-) => {
-	if (playerEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
-	}
-	if (opponentEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
-	}
-};
-
-const handleRapidReanimationForPlayer = (
-	playerBoard: BoardEntity[],
-	playerEntity: BgsPlayerEntity,
-	opponentBoard: BoardEntity[],
-	opponentEntity: BgsPlayerEntity,
-	gameState: FullGameState,
-) => {
-	if (playerBoard.length >= 7) {
-		return;
-	}
-	const newMinion = buildSingleBoardEntity(
-		playerEntity.rapidReanimationMinion.cardId,
-		playerEntity,
-		playerBoard,
-		gameState.allCards,
-		playerEntity.rapidReanimationMinion.friendly,
-		gameState.sharedState.currentEntityId++,
-		false,
-		gameState.cardsData,
-		gameState.sharedState,
-		playerEntity.rapidReanimationMinion,
-		null,
-	);
-	const indexFromRight = Math.min(playerBoard.length, playerEntity.rapidReanimationIndexFromRight ?? 0);
-	// Don't reapply auras in this particular case? See https://x.com/ZerotoHeroes_HS/status/1737422727118487808?s=20
-	performEntitySpawns(
-		[newMinion],
-		playerBoard,
-		playerEntity,
-		playerEntity,
-		indexFromRight,
-		opponentBoard,
-		opponentEntity,
-		gameState,
-		false,
-	);
-	gameState.spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
-	playerEntity.rapidReanimationMinion = null;
-};

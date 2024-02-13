@@ -293,15 +293,6 @@ const handleAvenge = (
 				}
 			}
 			break;
-		case CardIds.ScrapScraper_BG26_148:
-		case CardIds.ScrapScraper_BG26_148_G:
-			const scraperToAddQuantity = avenger.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
-			const scraperCardsToAdd = [];
-			for (let i = 0; i < scraperToAddQuantity; i++) {
-				scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
-			}
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, scraperCardsToAdd, gameState);
-			break;
 		case CardIds.MechanoTank_BG21_023:
 			// This can be null if the avenge triggers when the last enemy minion dies as well
 			const target = getRandomMinionWithHighestHealth(otherBoard);
@@ -454,7 +445,7 @@ const handleAvenge = (
 			});
 			break;
 		case CardIds.IceSickle:
-			grantRandomStats(avenger, boardWithDeadEntityHero.hand, 3, 0, null, true, gameState.allCards, null);
+			grantRandomStats(avenger, boardWithDeadEntityHero.hand, 4, 0, null, true, gameState.allCards, null);
 			break;
 		case CardIds.BoomSquad_BG27_Reward_502:
 			const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
@@ -505,6 +496,24 @@ const handleAvenge = (
 			for (let i = 0; i < phaerixLoops; i++) {
 				grantRandomDivineShield(avenger, boardWithDeadEntity, gameState.allCards, gameState.spectator);
 			}
+			break;
+		case CardIds.AugmentedLaborer_BG28_740:
+		case CardIds.AugmentedLaborer_BG28_740_G:
+			const AugmentedLaborerLoops = avenger.cardId === CardIds.AugmentedLaborer_BG28_740_G ? 2 : 1;
+			for (let i = 0; i < AugmentedLaborerLoops; i++) {
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+			}
+			break;
+		case CardIds.TumblingDisaster_BG28_Reward_505:
+			const tumblingDisasterEntity = boardWithDeadEntityHero.questRewardEntities?.find(
+				(e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505,
+			);
+			if (tumblingDisasterEntity) {
+				tumblingDisasterEntity.scriptDataNum1++;
+			}
+			break;
+		case CardIds.CycleOfEnergy_BG28_Reward_504:
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;
