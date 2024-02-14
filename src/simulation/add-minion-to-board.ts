@@ -185,7 +185,7 @@ export const handleAddedMinionAuraEffect = (
 	if (boardHero.questRewards?.includes(CardIds.TumblingDisaster_BG28_Reward_505)) {
 		const tumblingDisasterBonus =
 			boardHero.questRewardEntities?.find((e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505)
-				?.scriptDataNum1 ?? 1;
+				?.scriptDataNum1 || 1;
 		modifyAttack(spawned, tumblingDisasterBonus, board, allCards);
 		modifyHealth(spawned, tumblingDisasterBonus, board, allCards);
 		afterStatsUpdate(spawned, board, allCards);
