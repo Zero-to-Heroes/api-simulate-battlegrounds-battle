@@ -33,16 +33,23 @@ const handleStableAmalgamationForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	handleSummon(
-		playerBoard,
-		playerEntity,
-		opponentBoard,
-		opponentEntity,
-		gameState,
-		CardIds.StableAmalgamation_TotallyNormalHorseToken_BG28_Reward_518t,
-		0,
+	const rewardEntity = playerEntity.questRewardEntities.find(
+		(entity) => entity.cardId === CardIds.StableAmalgamation_BG28_Reward_518,
 	);
-	playerEntity.rapidReanimationMinion = null;
+	if (rewardEntity && rewardEntity.scriptDataNum1 > 0) {
+		while (rewardEntity.scriptDataNum1 > 0) {
+			handleSummon(
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+				CardIds.StableAmalgamation_TotallyNormalHorseToken_BG28_Reward_518t,
+				0,
+			);
+			rewardEntity.scriptDataNum1--;
+		}
+	}
 };
 
 const handleRapidReanimationForPlayer = (

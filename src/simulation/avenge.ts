@@ -515,6 +515,9 @@ const handleAvenge = (
 		case CardIds.CycleOfEnergy_BG28_Reward_504:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 			break;
+		case CardIds.StableAmalgamation_BG28_Reward_518:
+			avenger.scriptDataNum1++;
+			break;
 	}
 	avenger.avengeCurrent = avenger.avengeDefault;
 };
