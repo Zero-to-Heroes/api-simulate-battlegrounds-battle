@@ -38,7 +38,7 @@ const handleStableAmalgamationForPlayer = (
 	);
 	if (rewardEntity && rewardEntity.scriptDataNum1 > 0) {
 		while (rewardEntity.scriptDataNum1 > 0) {
-			handleSummon(
+			const hasSummoned = handleSummon(
 				playerBoard,
 				playerEntity,
 				opponentBoard,
@@ -47,7 +47,9 @@ const handleStableAmalgamationForPlayer = (
 				CardIds.StableAmalgamation_TotallyNormalHorseToken_BG28_Reward_518t,
 				0,
 			);
-			rewardEntity.scriptDataNum1--;
+			if (hasSummoned) {
+				rewardEntity.scriptDataNum1--;
+			}
 		}
 	}
 };
@@ -59,7 +61,7 @@ const handleRapidReanimationForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	handleSummon(
+	const hasSummoned = handleSummon(
 		playerBoard,
 		playerEntity,
 		opponentBoard,
@@ -69,7 +71,9 @@ const handleRapidReanimationForPlayer = (
 		Math.min(playerBoard.length, playerEntity.rapidReanimationIndexFromRight ?? 0),
 		playerEntity.rapidReanimationMinion,
 	);
-	playerEntity.rapidReanimationMinion = null;
+	if (hasSummoned) {
+		playerEntity.rapidReanimationMinion = null;
+	}
 };
 
 const handleSummon = (
@@ -81,9 +85,9 @@ const handleSummon = (
 	cardId: string,
 	indexFromRight: number,
 	minion: BoardEntity = null,
-) => {
+): boolean => {
 	if (playerBoard.length >= 7) {
-		return;
+		return false;
 	}
 	const newMinion = buildSingleBoardEntity(
 		cardId,
@@ -99,7 +103,7 @@ const handleSummon = (
 		null,
 	);
 	// Don't reapply auras in this particular case? See https://x.com/ZerotoHeroes_HS/status/1737422727118487808?s=20
-	performEntitySpawns(
+	const spawned = performEntitySpawns(
 		[newMinion],
 		playerBoard,
 		playerEntity,
@@ -111,4 +115,5 @@ const handleSummon = (
 		false,
 	);
 	gameState.spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
+	return spawned.length > 0;
 };
