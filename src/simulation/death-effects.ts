@@ -2,10 +2,11 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandomAlive } from '../services/utils';
-import { afterStatsUpdate, hasCorrectTribe, modifyAttack, modifyHealth } from '../utils';
+import { hasCorrectTribe } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
+import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
 
 export const applyAfterDeathEffects = (
 	deadEntity: BoardEntity,
@@ -27,9 +28,9 @@ export const applyAfterDeathEffects = (
 	) {
 		secretTriggered.triggered = true;
 		const target = pickRandomAlive(boardWithDeadEntity);
-		modifyAttack(target, 3, boardWithDeadEntity, gameState.allCards);
-		modifyHealth(target, 2, boardWithDeadEntity, gameState.allCards);
-		afterStatsUpdate(target, boardWithDeadEntity, gameState.allCards);
+		modifyAttack(target, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+		modifyHealth(target, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+		afterStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 	} else if (
 		(secretTriggered = boardWithDeadEntityHero.secrets?.find(
 			(secret) => !secret.triggered && secret?.cardId === CardIds.Redemption_TB_Bacon_Secrets_10,

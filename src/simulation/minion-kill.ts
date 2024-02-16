@@ -1,9 +1,9 @@
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from '../utils';
-import { Spectator } from './spectator/spectator';
+import { FullGameState } from './internal-game-state';
+import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
 
 export const onMinionKill = (
 	killer: BoardEntity,
@@ -12,8 +12,7 @@ export const onMinionKill = (
 	killerHero: BgsPlayerEntity,
 	victimBoard: BoardEntity[],
 	victimHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 ): void => {
 	// Can be null if killed by a hero power for instance
 	switch (killer?.cardId) {
@@ -24,20 +23,20 @@ export const onMinionKill = (
 				// When it's the opponent, the game state already contains all the buffs
 				if (murculesTarget?.friendly) {
 					const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
-					modifyAttack(murculesTarget, murculesStats, killerBoard, allCards);
-					modifyHealth(murculesTarget, murculesStats, killerBoard, allCards);
-					afterStatsUpdate(murculesTarget, killerBoard, allCards);
+					modifyAttack(murculesTarget, murculesStats, killerBoard, killerHero, gameState);
+					modifyHealth(murculesTarget, murculesStats, killerBoard, killerHero, gameState);
+					afterStatsUpdate(murculesTarget, killerBoard, killerHero, gameState);
 				}
-				spectator.registerPowerTarget(killer, murculesTarget, killerBoard, killerHero, victimHero);
+				gameState.spectator.registerPowerTarget(killer, murculesTarget, killerBoard, killerHero, victimHero);
 			}
 			break;
 		case CardIds.Mannoroth_BG27_507:
 		case CardIds.Mannoroth_BG27_507_G:
 			if (killer.health > 0 && !killer.definitelyDead && killer.abiityChargesLeft > 0) {
-				modifyAttack(killer, victim.attack, killerBoard, allCards);
-				modifyHealth(killer, victim.maxHealth, killerBoard, allCards);
-				afterStatsUpdate(killer, killerBoard, allCards);
-				spectator.registerPowerTarget(killer, killer, killerBoard, killerHero, victimHero);
+				modifyAttack(killer, victim.attack, killerBoard, killerHero, gameState);
+				modifyHealth(killer, victim.maxHealth, killerBoard, killerHero, gameState);
+				afterStatsUpdate(killer, killerBoard, killerHero, gameState);
+				gameState.spectator.registerPowerTarget(killer, killer, killerBoard, killerHero, victimHero);
 				killer.abiityChargesLeft--;
 			}
 			break;
@@ -51,16 +50,24 @@ export const onMinionKill = (
 						tideOracleMorgleTarget,
 						tideOracleMorgleMultiplier * victim.attack,
 						killerBoard,
-						allCards,
+						killerHero,
+						gameState,
 					);
 					modifyHealth(
 						tideOracleMorgleTarget,
 						tideOracleMorgleMultiplier * victim.maxHealth,
 						killerBoard,
-						allCards,
+						killerHero,
+						gameState,
 					);
-					afterStatsUpdate(tideOracleMorgleTarget, killerBoard, allCards);
-					spectator.registerPowerTarget(killer, tideOracleMorgleTarget, killerBoard, killerHero, victimHero);
+					afterStatsUpdate(tideOracleMorgleTarget, killerBoard, killerHero, gameState);
+					gameState.spectator.registerPowerTarget(
+						killer,
+						tideOracleMorgleTarget,
+						killerBoard,
+						killerHero,
+						victimHero,
+					);
 				}
 			}
 	}

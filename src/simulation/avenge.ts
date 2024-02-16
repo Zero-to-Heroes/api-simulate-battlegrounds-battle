@@ -1,12 +1,9 @@
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
 import { pickRandom } from '../services/utils';
 import {
-	addCardsInHand,
 	addStatsToBoard,
-	afterStatsUpdate,
 	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
 	grantRandomDivineShield,
@@ -15,16 +12,14 @@ import {
 	hasCorrectTribe,
 	isMinionGolden,
 	makeMinionGolden,
-	modifyAttack,
-	modifyHealth,
 } from '../utils';
 import { dealDamageToEnemy, getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
+import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
-import { SharedState } from './shared-state';
 import { performEntitySpawns } from './spawns';
-import { Spectator } from './spectator/spectator';
+import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
 
 export const applyAvengeEffects = (
 	deadEntity: BoardEntity,
@@ -78,10 +73,7 @@ export const applyAvengeEffects = (
 			otherBoard,
 			otherBoardHero,
 			candidatesEntitiesSpawnedFromAvenge,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			gameState.allCards,
+			gameState,
 		);
 	}
 
@@ -143,10 +135,10 @@ const handleAvenge = (
 	// Don't forget to update the avenge data in cards-data
 	switch (avenger.cardId) {
 		case CardIds.BirdBuddy_BG21_002:
-			addStatsToBoard(avenger, boardWithDeadEntity, 1, 1, gameState.allCards, gameState.spectator, 'BEAST');
+			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 1, 1, gameState, 'BEAST');
 			break;
 		case CardIds.BirdBuddy_BG21_002_G:
-			addStatsToBoard(avenger, boardWithDeadEntity, 2, 2, gameState.allCards, gameState.spectator, 'BEAST');
+			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 2, 2, gameState, 'BEAST');
 			break;
 		case CardIds.BuddingGreenthumb_BG21_030:
 		case CardIds.BuddingGreenthumb_BG21_030_G:
@@ -156,15 +148,17 @@ const handleAvenge = (
 					entity,
 					avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2,
 					boardWithDeadEntity,
-					gameState.allCards,
+					boardWithDeadEntityHero,
+					gameState,
 				);
 				modifyHealth(
 					entity,
 					avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1,
 					boardWithDeadEntity,
-					gameState.allCards,
+					boardWithDeadEntityHero,
+					gameState,
 				);
-				afterStatsUpdate(entity, boardWithDeadEntity, gameState.allCards);
+				afterStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					avenger,
 					entity,
@@ -201,12 +195,12 @@ const handleAvenge = (
 			const target1 = grantRandomStats(
 				avenger,
 				boardWithDeadEntity,
+				boardWithDeadEntityHero,
 				6,
 				6,
 				Race.BEAST,
 				true,
-				gameState.allCards,
-				gameState.spectator,
+				gameState,
 			);
 			if (!!target1) {
 				gameState.spectator.registerPowerTarget(
@@ -222,12 +216,12 @@ const handleAvenge = (
 			const target2 = grantRandomStats(
 				avenger,
 				boardWithDeadEntity,
+				boardWithDeadEntityHero,
 				12,
 				12,
 				Race.BEAST,
 				true,
-				gameState.allCards,
-				gameState.spectator,
+				gameState,
 			);
 			if (!!target2) {
 				gameState.spectator.registerPowerTarget(
@@ -348,15 +342,7 @@ const handleAvenge = (
 				});
 			const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, gameState.allCards);
 			if (pirate) {
-				makeMinionGolden(
-					pirate,
-					avenger,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					gameState.allCards,
-					gameState.spectator,
-					gameState.sharedState,
-				);
+				makeMinionGolden(pirate, avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			}
 			break;
 		case CardIds.TonyTwoTusk_BG21_031_G:
@@ -364,15 +350,7 @@ const handleAvenge = (
 				const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, gameState.allCards));
 				const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, gameState.allCards);
 				if (pirate) {
-					makeMinionGolden(
-						pirate,
-						avenger,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						gameState.allCards,
-						gameState.spectator,
-						gameState.sharedState,
-					);
+					makeMinionGolden(pirate, avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				}
 			}
 			break;
@@ -382,10 +360,10 @@ const handleAvenge = (
 			grantStatsToMinionsOfEachType(
 				avenger,
 				boardWithDeadEntity,
+				boardWithDeadEntityHero,
 				ghoulMultiplier * 3,
 				0,
-				gameState.allCards,
-				gameState.spectator,
+				gameState,
 			);
 			break;
 		case CardIds.Bristlebach_BG26_157:
@@ -394,14 +372,7 @@ const handleAvenge = (
 			for (let i = 0; i < bristlebachMultiplier; i++) {
 				for (const entity of boardWithDeadEntity) {
 					if (hasCorrectTribe(entity, Race.QUILBOAR, gameState.allCards)) {
-						playBloodGemsOn(
-							entity,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							gameState.allCards,
-							gameState.spectator,
-						);
+						playBloodGemsOn(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 						gameState.spectator.registerPowerTarget(
 							avenger,
 							entity,
@@ -416,9 +387,9 @@ const handleAvenge = (
 		case CardIds.HungeringAbomination_BG25_014:
 		case CardIds.HungeringAbomination_BG25_014_G:
 			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
-			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, gameState.allCards);
-			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, gameState.allCards);
-			afterStatsUpdate(avenger, boardWithDeadEntity, gameState.allCards);
+			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			afterStatsUpdate(avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				avenger,
 				avenger,
@@ -432,9 +403,9 @@ const handleAvenge = (
 			const neighboursShadowy = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
 			const multiplierShadowy = avenger.cardId === CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G ? 2 : 1;
 			neighboursShadowy.forEach((neighbour) => {
-				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, gameState.allCards);
-				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, gameState.allCards);
-				afterStatsUpdate(neighbour, boardWithDeadEntity, gameState.allCards);
+				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				afterStatsUpdate(neighbour, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					avenger,
 					neighbour,
@@ -445,7 +416,16 @@ const handleAvenge = (
 			});
 			break;
 		case CardIds.IceSickle:
-			grantRandomStats(avenger, boardWithDeadEntityHero.hand, 4, 0, null, true, gameState.allCards, null);
+			grantRandomStats(
+				avenger,
+				boardWithDeadEntityHero.hand,
+				boardWithDeadEntityHero,
+				4,
+				0,
+				null,
+				true,
+				gameState,
+			);
 			break;
 		case CardIds.BoomSquad_BG27_Reward_502:
 			const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
@@ -483,10 +463,10 @@ const handleAvenge = (
 			addStatsToBoard(
 				avenger,
 				boardWithDeadEntity,
+				boardWithDeadEntityHero,
 				championPrimusStat,
 				0,
-				gameState.allCards,
-				gameState.spectator,
+				gameState,
 				Race[Race.UNDEAD],
 			);
 			break;
@@ -529,10 +509,7 @@ const handleHeroAvenge = (
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	candidatesEntitiesSpawnedFromAvenge: BoardEntity[],
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
-	allCards: AllCardsService,
+	gameState: FullGameState,
 ) => {
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
 	// Not affected by Khadgar
@@ -546,10 +523,10 @@ const handleHeroAvenge = (
 					boardWithDeadEntityHero,
 					otherBoard,
 					otherBoardHero,
-					allCards,
-					cardsData,
-					sharedState,
-					spectator,
+					gameState.allCards,
+					gameState.cardsData,
+					gameState.sharedState,
+					gameState.spectator,
 					deadEntity.friendly,
 					false,
 					false,
@@ -561,9 +538,9 @@ const handleHeroAvenge = (
 			boardWithDeadEntity
 				// .filter((entity) => !entity.definitelyDead && entity.health > 0)
 				.forEach((entity) => {
-					modifyHealth(entity, 1, boardWithDeadEntity, allCards);
-					afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-					spectator.registerPowerTarget(
+					modifyHealth(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+					afterStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+					gameState.spectator.registerPowerTarget(
 						boardWithDeadEntityHero,
 						entity,
 						boardWithDeadEntity,
@@ -574,9 +551,9 @@ const handleHeroAvenge = (
 			break;
 		case CardIds.Drekthar_LeadTheFrostwolves:
 			boardWithDeadEntity.forEach((entity) => {
-				modifyAttack(entity, 1, boardWithDeadEntity, allCards);
-				afterStatsUpdate(entity, boardWithDeadEntity, allCards);
-				spectator.registerPowerTarget(
+				modifyAttack(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				afterStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				gameState.spectator.registerPowerTarget(
 					boardWithDeadEntityHero,
 					entity,
 					boardWithDeadEntity,

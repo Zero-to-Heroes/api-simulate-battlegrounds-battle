@@ -2,7 +2,8 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { addCardsInHand, updateDivineShield } from '../utils';
+import { updateDivineShield } from '../utils';
+import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 
 export const applyFrenzy = (

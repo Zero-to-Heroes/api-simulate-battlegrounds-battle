@@ -32,6 +32,7 @@ export class Spectator {
 			battleInput.playerBoard.player.questRewardEntities?.[0]?.cardId ??
 			battleInput.playerBoard.player.questRewards?.[0];
 		this.playerRewardData = battleInput.playerBoard.player.questRewardEntities?.[0]?.scriptDataNum1;
+
 		this.opponentCardId = battleInput.opponentBoard.player.cardId;
 		this.opponentHeroPowerCardId = battleInput.opponentBoard.player.heroPowerId;
 		this.opponentHeroPowerUsed = battleInput.opponentBoard.player.heroPowerUsed;

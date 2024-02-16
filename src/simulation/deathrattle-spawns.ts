@@ -4,7 +4,6 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { pickRandom } from '../services/utils';
 import {
-	addCardsInHand,
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
@@ -12,7 +11,9 @@ import {
 	isCorrectTribe,
 	stringifySimple,
 } from '../utils';
+import { addCardsInHand } from './cards-in-hand';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
+import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
 import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
@@ -92,10 +93,21 @@ export const spawnEntitiesFromDeathrattle = (
 		deadEntity,
 		gameState.sharedState,
 	);
+
+	const deathrattleTriggeredInput: DeathrattleTriggeredInput = {
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		deadEntity,
+		otherBoard,
+		otherBoardHero,
+		gameState,
+	};
+
 	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
 		const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
+		let hasTriggered = false;
 		for (const deadEntityCardId of cardIds) {
 			switch (deadEntityCardId) {
 				case CardIds.Mecharoo_BOT_445:
@@ -992,20 +1004,20 @@ export const spawnEntitiesFromDeathrattle = (
 					addStatsToBoard(
 						deadEntity,
 						boardWithDeadEntity,
+						boardWithDeadEntityHero,
 						buffAmount,
 						buffAmount,
-						gameState.allCards,
-						gameState.spectator,
+						gameState,
 						Race[Race.MECH],
 					);
 					// when the buster triggers multiple times because of Baron for instance
 					addStatsToBoard(
 						deadEntity,
 						spawnedEntities,
+						boardWithDeadEntityHero,
 						buffAmount,
 						buffAmount,
-						gameState.allCards,
-						gameState.spectator,
+						gameState,
 						Race[Race.MECH],
 					);
 					break;
@@ -1515,7 +1527,12 @@ export const spawnEntitiesFromDeathrattle = (
 				// 	);
 				// 	break;
 				default:
+					hasTriggered = false;
 					break;
+			}
+
+			if (hasTriggered) {
+				onDeathrattleTriggered(deathrattleTriggeredInput);
 			}
 		}
 	}

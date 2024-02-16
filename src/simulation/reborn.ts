@@ -1,10 +1,11 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { addStatsToBoard, afterStatsUpdate, modifyAttack, modifyHealth } from '../utils';
+import { addStatsToBoard } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
+import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
 
 export const handleRebornForEntity = (
 	boardWithKilledMinion: BoardEntity[],
@@ -79,8 +80,8 @@ export const handleRebornForEntity = (
 		.reduce((a, b) => a + b, 0);
 	if (arfus + goldenArfus > 0) {
 		entitiesThatWereReborn.forEach((e) => {
-			modifyAttack(e, arfus + goldenArfus, boardWithKilledMinion, gameState.allCards);
-			afterStatsUpdate(e, boardWithKilledMinion, gameState.allCards);
+			modifyAttack(e, arfus + goldenArfus, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+			afterStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 		});
 	}
 
@@ -97,10 +98,10 @@ export const handleRebornForEntity = (
 				addStatsToBoard(
 					e,
 					boardWithKilledMinion,
+					boardWithKilledMinionHero,
 					multiplier * 1,
 					multiplier * 3,
-					gameState.allCards,
-					gameState.spectator,
+					gameState,
 					Race[Race.UNDEAD],
 				);
 			});
@@ -108,9 +109,9 @@ export const handleRebornForEntity = (
 			.filter((e) => e.cardId === CardIds.JellyBelly_BG25_005 || e.cardId === CardIds.JellyBelly_BG25_005_G)
 			.forEach((e) => {
 				const multiplier = e.cardId === CardIds.JellyBelly_BG25_005_G ? 2 : 1;
-				modifyAttack(e, multiplier * 3, boardWithKilledMinion, gameState.allCards);
-				modifyHealth(e, multiplier * 3, boardWithKilledMinion, gameState.allCards);
-				afterStatsUpdate(e, boardWithKilledMinion, gameState.allCards);
+				modifyAttack(e, multiplier * 3, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+				modifyHealth(e, multiplier * 3, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+				afterStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					e,
 					e,

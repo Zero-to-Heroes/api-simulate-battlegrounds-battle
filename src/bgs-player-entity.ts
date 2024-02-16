@@ -12,8 +12,9 @@ export interface BgsPlayerEntity {
 	readonly heroPowerInfo2?: number;
 	friendly?: boolean;
 	entityId?: number;
-	questRewards?: readonly string[];
-	questRewardEntities?: readonly {
+	questEntities: BgsQuestEntity[];
+	questRewards?: string[];
+	questRewardEntities?: {
 		cardId: string;
 		avengeDefault?: number;
 		avengeCurrent?: number;
@@ -41,4 +42,11 @@ export interface BgsPlayerGlobalInfo {
 	GoldrinnBuffAtk?: number;
 	GoldrinnBuffHealth?: number;
 	TavernSpellsCastThisGame?: number;
+}
+
+export interface BgsQuestEntity {
+	CardId: string;
+	RewardDbfId: number;
+	ProgressCurrent: number;
+	ProgressTotal: number;
 }

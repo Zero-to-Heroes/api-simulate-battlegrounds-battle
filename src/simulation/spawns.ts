@@ -39,9 +39,7 @@ export const performEntitySpawns = (
 			opponentBoardHero,
 			indexToSpawnAt,
 			newMinion,
-			gameState.allCards,
-			gameState.spectator,
-			gameState.sharedState,
+			gameState,
 		);
 		if (newMinion.attackImmediately) {
 			// console.debug(

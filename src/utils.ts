@@ -5,10 +5,11 @@ import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
-import { applyAurasToSelf, handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
+import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
 import { FullGameState } from './simulation/internal-game-state';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
+import { afterStatsUpdate, modifyAttack, modifyHealth } from './simulation/stats';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
@@ -141,223 +142,37 @@ export const buildRandomUndeadCreation = (
 	return newEntity;
 };
 
-export const setEntityStats = (
-	entity: BoardEntity,
-	attack: number | null,
-	health: number | null,
-	board: BoardEntity[],
-	boardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	sharedState: SharedState,
-	spectator: Spectator,
-): void => {
-	if (attack !== null) {
-		entity.attack = attack;
-	}
-	if (health !== null) {
-		entity.health = health;
-		entity.maxHealth = health;
-	}
-	applyAurasToSelf(entity, board, boardHero, allCards, sharedState, spectator);
-};
-
-export const modifyAttack = (
-	entity: BoardEntity,
-	amount: number,
-	friendlyBoard: BoardEntity[],
-	allCards: AllCardsService,
-	spectator: Spectator = null,
-): void => {
-	if (amount === 0) {
-		return;
-	}
-
-	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
-	entity.attack = Math.max(0, entity.attack + realAmount);
-	entity.previousAttack = entity.attack;
-	if (isCorrectTribe(allCards.getCard(entity.cardId).races, Race.DRAGON)) {
-		const whelpSmugglers = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
-		);
-		whelpSmugglers.forEach((smuggler) => {
-			const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
-			modifyHealth(entity, buff, friendlyBoard, allCards);
-		});
-
-		if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
-			const stormbringers = friendlyBoard.filter(
-				(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
-			);
-			stormbringers.forEach((stormbringer) => {
-				const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
-				(e) => modifyAttack(e, multiplier * amount, friendlyBoard, allCards);
-			});
-		}
-	}
-	if (
-		entity.cardId === CardIds.Menagerist_AmalgamToken ||
-		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A_G ||
-		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D ||
-		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D_G
-	) {
-		const mishmashes = friendlyBoard.filter(
-			(e) =>
-				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy ||
-				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
-		);
-		mishmashes.forEach((mishmash) => {
-			modifyAttack(
-				mishmash,
-				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
-				friendlyBoard,
-				allCards,
-			);
-		});
-	}
-
-	if ([CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(entity.cardId as CardIds)) {
-		addStatsToBoard(
-			entity,
-			friendlyBoard,
-			0,
-			entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
-			allCards,
-			null,
-		);
-	}
-};
-
-export const modifyHealth = (
-	entity: BoardEntity,
-	amount: number,
-	friendlyBoard: BoardEntity[],
-	allCards: AllCardsService,
-): void => {
-	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015 ? 2 * amount : amount;
-	entity.health += realAmount;
-	if (realAmount > 0) {
-		entity.maxHealth += realAmount;
-	}
-	if (
-		entity.cardId === CardIds.Menagerist_AmalgamToken ||
-		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A_G ||
-		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D ||
-		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D_G
-	) {
-		const mishmashes = friendlyBoard.filter(
-			(e) =>
-				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy ||
-				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
-		);
-		mishmashes.forEach((mishmash) => {
-			modifyHealth(
-				mishmash,
-				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
-				friendlyBoard,
-				allCards,
-			);
-		});
-	}
-
-	const titanicGuardians = friendlyBoard
-		.filter((e) => e.entityId !== entity.entityId)
-		.filter(
-			(e) =>
-				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy ||
-				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G,
-		);
-	titanicGuardians.forEach((guardian) => {
-		modifyHealth(
-			guardian,
-			(guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount,
-			friendlyBoard,
-			allCards,
-		);
-	});
-};
-
-export const afterStatsUpdate = (
-	entity: BoardEntity,
-	friendlyBoard: BoardEntity[],
-	allCards: AllCardsService,
-): void => {
-	if (hasCorrectTribe(entity, Race.ELEMENTAL, allCards)) {
-		const masterOfRealities = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
-		);
-		masterOfRealities.forEach((master) => {
-			modifyAttack(
-				master,
-				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
-				friendlyBoard,
-				allCards,
-			);
-			modifyHealth(
-				master,
-				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
-				friendlyBoard,
-				allCards,
-			);
-		});
-	}
-	const tentaclesOfCthun = friendlyBoard
-		.filter((e) => e.entityId !== entity.entityId)
-		.filter(
-			(e) =>
-				e.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy ||
-				e.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G,
-		);
-	tentaclesOfCthun.forEach((tentacle) => {
-		modifyAttack(
-			tentacle,
-			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
-			friendlyBoard,
-			allCards,
-		);
-		modifyHealth(
-			tentacle,
-			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
-			friendlyBoard,
-			allCards,
-		);
-	});
-};
-
 export const makeMinionGolden = (
 	target: BoardEntity,
 	source: BoardEntity | BgsPlayerEntity,
 	targetBoard: BoardEntity[],
 	targetBoardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
-	sharedState: SharedState,
+	gameState: FullGameState,
 ): void => {
 	// Typically, we are already golden
-	if (isMinionGolden(target, allCards)) {
+	if (isMinionGolden(target, gameState.allCards)) {
 		return;
 	}
 
 	// console.log('before transforming minion', stringifySimple(targetBoard, allCards));
-	handleMinionRemovedAuraEffect(targetBoard, target, targetBoardHero, allCards, spectator);
+	handleMinionRemovedAuraEffect(targetBoard, target, targetBoardHero, gameState.allCards, gameState.spectator);
 	// console.log('after removed effect', stringifySimple(targetBoard, allCards));
-	const refCard = allCards.getCard(target.cardId);
-	const goldenCard = allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+	const refCard = gameState.allCards.getCard(target.cardId);
+	const goldenCard = gameState.allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 	target.cardId = goldenCard.id;
 	// A minion becoming golden ignore the current death.
 	// This way of handling it is not ideal, since it will still trigger if both avenges trigger at the same time, but
 	// should solve the other cases
 	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
-	modifyAttack(target, refCard.attack, targetBoard, allCards);
-	modifyHealth(target, refCard.health, targetBoard, allCards);
-	afterStatsUpdate(target, targetBoard, allCards);
+	modifyAttack(target, refCard.attack, targetBoard, targetBoardHero, gameState);
+	modifyHealth(target, refCard.health, targetBoard, targetBoardHero, gameState);
+	afterStatsUpdate(target, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
-	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, allCards, spectator, sharedState);
+	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 
-	spectator.registerPowerTarget(source, target, targetBoard, null, null);
+	gameState.spectator.registerPowerTarget(source, target, targetBoard, null, null);
 };
 
 export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): boolean => {
@@ -370,9 +185,9 @@ export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): 
 export const grantRandomAttack = (
 	source: BoardEntity,
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	additionalAttack: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 	excludeSource = false,
 ): void => {
 	const candidateBoard = board
@@ -380,18 +195,18 @@ export const grantRandomAttack = (
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyAttack(target, additionalAttack, candidateBoard, allCards);
-		afterStatsUpdate(target, candidateBoard, allCards);
-		spectator.registerPowerTarget(source, target, board, null, null);
+		modifyAttack(target, additionalAttack, candidateBoard, hero, gameState);
+		afterStatsUpdate(target, candidateBoard, hero, gameState);
+		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
 
 export const grantRandomHealth = (
 	source: BoardEntity,
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	health: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 	excludeSource = false,
 ): void => {
 	const candidateBoard = board
@@ -399,156 +214,39 @@ export const grantRandomHealth = (
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyHealth(target, health, board, allCards);
-		afterStatsUpdate(target, board, allCards);
-		spectator.registerPowerTarget(source, target, board, null, null);
+		modifyHealth(target, health, board, hero, gameState);
+		afterStatsUpdate(target, board, hero, gameState);
+		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
 
 export const grantRandomStats = (
 	source: BoardEntity,
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	attack: number,
 	health: number,
 	race: Race,
 	excludeSource: boolean,
-	allCards: AllCardsService,
-	spectator?: Spectator,
+	gameState: FullGameState,
 ): BoardEntity => {
 	if (board.length > 0) {
 		const target: BoardEntity = getRandomAliveMinion(
 			board.filter((e) => !!e.cardId).filter((e) => (excludeSource ? e.entityId !== source.entityId : true)),
 			race,
-			allCards,
+			gameState.allCards,
 		);
 		if (target) {
-			modifyAttack(target, attack, board, allCards);
-			modifyHealth(target, health, board, allCards);
-			afterStatsUpdate(target, board, allCards);
-			if (spectator) {
-				spectator.registerPowerTarget(source, target, board, null, null);
+			modifyAttack(target, attack, board, hero, gameState);
+			modifyHealth(target, health, board, hero, gameState);
+			afterStatsUpdate(target, board, hero, gameState);
+			if (gameState.spectator) {
+				gameState.spectator.registerPowerTarget(source, target, board, null, null);
 			}
 			return target;
 		}
 	}
 	return null;
-};
-
-export const addCardsInHand = (
-	playerEntity: BgsPlayerEntity,
-	board: BoardEntity[],
-	cardsAdded: readonly any[],
-	gameState: FullGameState,
-): void => {
-	const previousCardsInHand = playerEntity.hand?.length ?? 0;
-	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy);
-	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy_G);
-	const multiplier = sages.length + 2 * sagesGolden.length;
-
-	const cardsThatWillBeAdded: BoardEntity[] = [];
-	for (const cardAdded of cardsAdded) {
-		const cardToAdd: BoardEntity = (cardAdded as BoardEntity)?.cardId
-			? buildSingleBoardEntity(
-					cardAdded as string,
-					playerEntity,
-					board,
-					gameState.allCards,
-					playerEntity.friendly,
-					gameState.sharedState.currentEntityId++,
-					false,
-					gameState.cardsData,
-					gameState.sharedState,
-					cardAdded,
-			  )
-			: buildSingleBoardEntity(
-					cardAdded as string,
-					playerEntity,
-					board,
-					gameState.allCards,
-					playerEntity.friendly,
-					gameState.sharedState.currentEntityId++,
-					false,
-					gameState.cardsData,
-					gameState.sharedState,
-					null,
-			  );
-		cardsThatWillBeAdded.push(cardToAdd);
-		if (cardToAdd.cardId === CardIds.BloodGem) {
-			for (let i = 0; i < multiplier; i++) {
-				cardsThatWillBeAdded.push({ ...cardToAdd });
-			}
-		}
-	}
-
-	for (let i = 0; i < cardsThatWillBeAdded.length; i++) {
-		if (playerEntity.hand.length >= 10) {
-			break;
-		}
-		playerEntity.hand.push(cardsThatWillBeAdded[i]);
-	}
-
-	const numCardsAdded = playerEntity.hand.length - previousCardsInHand;
-
-	for (let i = 0; i < numCardsAdded; i++) {
-		const peggys = board.filter(
-			(e) => e.cardId === CardIds.PeggySturdybone_BG25_032 || e.cardId === CardIds.PeggySturdybone_BG25_032_G,
-		);
-		peggys.forEach((peggy) => {
-			const pirate = getRandomAliveMinion(
-				board.filter((e) => e.entityId !== peggy.entityId),
-				Race.PIRATE,
-				gameState.allCards,
-			);
-			if (pirate) {
-				modifyAttack(
-					pirate,
-					peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
-					board,
-					gameState.allCards,
-				);
-				modifyHealth(
-					pirate,
-					peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
-					board,
-					gameState.allCards,
-				);
-				afterStatsUpdate(pirate, board, gameState.allCards);
-				gameState.spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
-			}
-		});
-
-		const thornCaptains = board.filter(
-			(e) => e.cardId === CardIds.Thorncaptain_BG25_045 || e.cardId === CardIds.Thorncaptain_BG25_045_G,
-		);
-		thornCaptains.forEach((captain) => {
-			modifyHealth(
-				captain,
-				captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1,
-				board,
-				gameState.allCards,
-			);
-			afterStatsUpdate(captain, board, gameState.allCards);
-			gameState.spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
-		});
-	}
-};
-
-export const removeCardFromHand = (playerEntity: BgsPlayerEntity, card: BoardEntity): void => {
-	let cardToRemove: BoardEntity;
-	if (card?.entityId) {
-		cardToRemove = playerEntity.hand.find((c) => c?.entityId !== card.entityId);
-	} else if (card?.cardId) {
-		cardToRemove = playerEntity.hand.find((c) => c?.cardId === card.cardId);
-	} else {
-		// Remove a single random card in hand that doesn't have an entityId
-		cardToRemove =
-			pickRandom(playerEntity.hand.filter((c) => !c?.entityId && !c?.cardId)) ?? pickRandom(playerEntity.hand);
-	}
-	// Remove the first occurrence of the card from playerEntity.cardsInHand, even if it is null
-	const index = playerEntity.hand.indexOf(cardToRemove);
-	if (index !== -1) {
-		playerEntity.hand.splice(index, 1);
-	}
 };
 
 export const grantRandomDivineShield = (
@@ -629,18 +327,18 @@ export const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEnt
 export const addStatsToBoard = (
 	sourceEntity: BoardEntity | BgsPlayerEntity,
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	attack: number,
 	health: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 	tribe?: string,
 ): void => {
 	for (const entity of board) {
-		if (!tribe || hasCorrectTribe(entity, Race[tribe], allCards)) {
-			modifyAttack(entity, attack, board, allCards);
-			modifyHealth(entity, health, board, allCards);
-			afterStatsUpdate(entity, board, allCards);
-			spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
+		if (!tribe || hasCorrectTribe(entity, Race[tribe], gameState.allCards)) {
+			modifyAttack(entity, attack, board, hero, gameState);
+			modifyHealth(entity, health, board, hero, gameState);
+			afterStatsUpdate(entity, board, hero, gameState);
+			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
 		}
 	}
 };
@@ -648,10 +346,10 @@ export const addStatsToBoard = (
 export const grantStatsToMinionsOfEachType = (
 	source: BoardEntity,
 	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	attack: number,
 	health: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 	numberOfDifferentTypes = 99,
 ): void => {
 	if (board.length > 0) {
@@ -663,12 +361,12 @@ export const grantStatsToMinionsOfEachType = (
 				return;
 			}
 
-			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, allCards);
+			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
 			if (validMinion) {
-				modifyAttack(validMinion, attack, board, allCards);
-				modifyHealth(validMinion, health, board, allCards);
-				afterStatsUpdate(validMinion, board, allCards);
-				spectator.registerPowerTarget(source, validMinion, board, null, null);
+				modifyAttack(validMinion, attack, board, hero, gameState);
+				modifyHealth(validMinion, health, board, hero, gameState);
+				afterStatsUpdate(validMinion, board, hero, gameState);
+				gameState.spectator.registerPowerTarget(source, validMinion, board, null, null);
 				boardCopy = boardCopy.filter((e) => e !== validMinion);
 				typesBuffed++;
 			}
