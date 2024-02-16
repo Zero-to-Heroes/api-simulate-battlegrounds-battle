@@ -61,12 +61,7 @@ export const simulateBattle = (
 		averageDamageLost: undefined,
 	};
 
-	const spectator = new Spectator(
-		battleInput.playerBoard.player.cardId,
-		battleInput.playerBoard.player.heroPowerId,
-		battleInput.opponentBoard.player.cardId,
-		battleInput.opponentBoard.player.heroPowerId,
-	);
+	const spectator = new Spectator(battleInput);
 	const inputReady = buildFinalInput(battleInput, cards, cardsData);
 	// const inputStr = JSON.stringify(inputReady);
 	!battleInput.options?.skipInfoLogs && console.time('simulation');

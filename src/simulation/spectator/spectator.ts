@@ -1,4 +1,5 @@
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
+import { BgsBattleInfo } from '../../bgs-battle-info';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
 import { GameAction } from './game-action';
@@ -12,12 +13,33 @@ export class Spectator {
 	private tiedBattles: GameSample[];
 	private lostBattles: GameSample[];
 
-	constructor(
-		private readonly playerCardId?: string,
-		private readonly playerHeroPowerCardId?: string,
-		private readonly opponentCardId?: string,
-		private readonly opponentHeroPowerCardId?: string,
-	) {
+	private readonly playerCardId?: string;
+	private readonly playerHeroPowerCardId: string;
+	private readonly playerHeroPowerUsed: boolean;
+	private readonly playerRewardCardId: string;
+	private readonly playerRewardData: number;
+	private readonly opponentCardId: string;
+	private readonly opponentHeroPowerCardId: string;
+	private readonly opponentHeroPowerUsed: boolean;
+	private readonly opponentRewardCardId: string;
+	private readonly opponentRewardData: number;
+
+	constructor(battleInput: BgsBattleInfo) {
+		this.playerCardId = battleInput.playerBoard.player.cardId;
+		this.playerHeroPowerCardId = battleInput.playerBoard.player.heroPowerId;
+		this.playerHeroPowerUsed = battleInput.playerBoard.player.heroPowerUsed;
+		this.playerRewardCardId =
+			battleInput.playerBoard.player.questRewardEntities?.[0]?.cardId ??
+			battleInput.playerBoard.player.questRewards?.[0];
+		this.playerRewardData = battleInput.playerBoard.player.questRewardEntities?.[0]?.scriptDataNum1;
+		this.opponentCardId = battleInput.opponentBoard.player.cardId;
+		this.opponentHeroPowerCardId = battleInput.opponentBoard.player.heroPowerId;
+		this.opponentHeroPowerUsed = battleInput.opponentBoard.player.heroPowerUsed;
+		this.opponentRewardCardId =
+			battleInput.opponentBoard.player.questRewardEntities?.[0]?.cardId ??
+			battleInput.opponentBoard.player.questRewards?.[0];
+		this.opponentRewardData = battleInput.opponentBoard.player.questRewardEntities?.[0]?.scriptDataNum1;
+
 		this.actionsForCurrentBattle = [];
 		this.wonBattles = [];
 		this.tiedBattles = [];
@@ -64,33 +86,28 @@ export class Spectator {
 		const actionsForBattle = this.actionsForCurrentBattle;
 		this.actionsForCurrentBattle = [];
 
+		const battle: GameSample = {
+			actions: actionsForBattle,
+			playerCardId: this.playerCardId,
+			playerHeroPowerCardId: this.playerHeroPowerCardId,
+			playerHeroPowerUsed: this.playerHeroPowerUsed,
+			playerRewardCardId: this.playerRewardCardId,
+			playerRewardData: this.playerRewardData,
+			opponentCardId: this.opponentCardId,
+			opponentHeroPowerCardId: this.opponentHeroPowerCardId,
+			opponentHeroPowerUsed: this.opponentHeroPowerUsed,
+			opponentRewardCardId: this.opponentRewardCardId,
+			opponentRewardData: this.opponentRewardData,
+		};
 		switch (result) {
 			case 'won':
-				this.wonBattles.push({
-					actions: actionsForBattle,
-					playerCardId: this.playerCardId,
-					playerHeroPowerCardId: this.playerHeroPowerCardId,
-					opponentCardId: this.opponentCardId,
-					opponentHeroPowerCardId: this.opponentHeroPowerCardId,
-				});
+				this.wonBattles.push(battle);
 				break;
 			case 'lost':
-				this.lostBattles.push({
-					actions: actionsForBattle,
-					playerCardId: this.playerCardId,
-					playerHeroPowerCardId: this.playerHeroPowerCardId,
-					opponentCardId: this.opponentCardId,
-					opponentHeroPowerCardId: this.opponentHeroPowerCardId,
-				});
+				this.lostBattles.push(battle);
 				break;
 			case 'tied':
-				this.tiedBattles.push({
-					actions: actionsForBattle,
-					playerCardId: this.playerCardId,
-					playerHeroPowerCardId: this.playerHeroPowerCardId,
-					opponentCardId: this.opponentCardId,
-					opponentHeroPowerCardId: this.opponentHeroPowerCardId,
-				});
+				this.tiedBattles.push(battle);
 				break;
 		}
 	}
