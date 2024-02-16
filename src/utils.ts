@@ -419,6 +419,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 				CardIds.TransmutedBramblewitch_BG27_013_G,
 				CardIds.Mannoroth_BG27_507_G,
 				CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G,
+				CardIds.MadMatador_BG28_404,
 			].includes(entity.cardId as CardIds)
 				? 2
 				: 1,
