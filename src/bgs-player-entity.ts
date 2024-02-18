@@ -16,6 +16,7 @@ export interface BgsPlayerEntity {
 	questRewards?: string[];
 	questRewardEntities?: {
 		cardId: string;
+		entityId: number;
 		avengeDefault?: number;
 		avengeCurrent?: number;
 		scriptDataNum1: number;

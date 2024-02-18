@@ -155,6 +155,9 @@ const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
 	const result: BgsBoardInfo = {
 		player: {
 			...board.player,
+			questEntities: board.player.questEntities?.map((quest) => ({ ...quest })),
+			questRewardEntities: board.player.questRewardEntities?.map((reward) => ({ ...reward })),
+			questRewards: board.player.questRewards?.map((reward) => reward),
 			hand: board.player.hand?.map((entity) => cloneEntity(entity)),
 			secrets: board.player.secrets?.map((secret) => ({ ...secret })),
 			globalInfo: { ...board.player.globalInfo },
@@ -201,8 +204,9 @@ const buildFinalInput = (battleInput: BgsBattleInfo, cards: AllCardsService, car
 	// setImplicitData(playerBoard, cardsData);
 	// setImplicitData(opponentBoard, cardsData);
 	// Avenge, globalInfo
-	setImplicitDataHero(playerInfo.player, cardsData, true);
-	setImplicitDataHero(opponentInfo.player, cardsData, false);
+	const entityIdContainer = { entityId: 999_999_999 };
+	setImplicitDataHero(playerInfo.player, cardsData, true, entityIdContainer);
+	setImplicitDataHero(opponentInfo.player, cardsData, false, entityIdContainer);
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation

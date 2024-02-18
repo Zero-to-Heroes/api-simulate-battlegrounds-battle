@@ -8,6 +8,7 @@ import jsonEvent3 from './game.json';
 console.log('starting test');
 const test = async () => {
 	console.log('preparing to run simulation');
+	const start = Date.now();
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
@@ -26,8 +27,9 @@ const test = async () => {
 		...simulationResult,
 		outcomeSamples: undefined,
 	});
+	console.log('simulation took', Date.now() - start, 'ms');
 
-	const sample = simulationResult.outcomeSamples.lost[0];
+	const sample = simulationResult.outcomeSamples.won[0];
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
 	console.log('original sample length', JSON.stringify(sample).length);

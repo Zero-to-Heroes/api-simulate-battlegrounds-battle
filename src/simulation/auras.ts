@@ -173,7 +173,12 @@ const setMissingAura = (
 	}
 };
 
-export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData, isPlayer: boolean): void => {
+export const setImplicitDataHero = (
+	hero: BgsPlayerEntity,
+	cardsData: CardsData,
+	isPlayer: boolean,
+	entityIdContainer: { entityId: number },
+): void => {
 	const avengeValue = cardsData.avengeValue(hero.heroPowerId);
 	if (avengeValue > 0) {
 		hero.avengeCurrent = avengeValue;
@@ -189,15 +194,17 @@ export const setImplicitDataHero = (hero: BgsPlayerEntity, cardsData: CardsData,
 	hero.questRewardEntities = hero.questRewardEntities
 		? hero.questRewardEntities.map((reward) => ({
 				...reward,
+				entityId: entityIdContainer.entityId--,
 				avengeDefault: cardsData.avengeValue(reward.cardId),
 		  }))
 		: hero.questRewards.map((reward) => ({
 				cardId: reward,
+				entityId: entityIdContainer.entityId--,
 				avengeCurrent: 0,
 				avengeDefault: cardsData.avengeValue(reward),
 				scriptDataNum1: 0,
 		  }));
-	hero.entityId = hero.entityId ?? (isPlayer ? 999_999_998 : 999_999_999);
+	hero.entityId = hero.entityId ?? entityIdContainer.entityId--;
 	hero.hand = hero.hand ?? [];
 	if (!hero.globalInfo) {
 		hero.globalInfo = {};

@@ -17,7 +17,8 @@ export const onQuestProgressUpdated = (
 	playerEntity.questRewards.push(rewardCardId);
 	playerEntity.questRewardEntities.push({
 		cardId: rewardCardId,
-		avengeDefault: 0,
+		entityId: gameState.sharedState.currentEntityId++,
+		avengeDefault: gameState.cardsData.avengeValue(rewardCardId),
 		avengeCurrent: 0,
 		scriptDataNum1: 0,
 	});

@@ -221,7 +221,7 @@ export class Spectator {
 		damagedEntityBoard: BoardEntity[],
 	): void {
 		if (!damagingEntity.entityId) {
-			console.error('missing damaging entity id', damagingEntity.cardId);
+			// console.error('missing damaging entity id', damagingEntity.cardId);
 		}
 		const friendlyBoard = damagedEntityBoard.every((entity) => entity.friendly) ? damagedEntityBoard : null;
 		const opponentBoard = damagedEntityBoard.every((entity) => !entity.friendly) ? damagedEntityBoard : null;
@@ -255,7 +255,7 @@ export class Spectator {
 			return;
 		}
 		if (!sourceEntity.entityId && !(sourceEntity as BgsPlayerEntity).heroPowerId) {
-			console.error('missing damaging entity id', sourceEntity.cardId);
+			// console.error('missing damaging entity id', sourceEntity.cardId);
 		}
 		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
 		const friendlyBoard = targetBoard?.every((entity) => entity.friendly) ? targetBoard : null;

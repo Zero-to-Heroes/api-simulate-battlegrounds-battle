@@ -10,6 +10,14 @@
             "heroPowerUsed": false,
             "heroPowerInfo": 2,
             "heroPowerInfo2": 2,
+            "questEntities": [
+                {
+                    "CardId": "BG24_Quest_124",
+                    "RewardDbfId": 104697,
+                    "ProgressCurrent": 11,
+                    "ProgressTotal": 15
+                }
+            ],
             "questRewards": [],
             "hand": [],
             "globalInfo": {
