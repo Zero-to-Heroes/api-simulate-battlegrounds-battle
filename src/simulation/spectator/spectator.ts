@@ -16,30 +16,21 @@ export class Spectator {
 	private readonly playerCardId?: string;
 	private readonly playerHeroPowerCardId: string;
 	private readonly playerHeroPowerUsed: boolean;
-	private readonly playerRewardCardId: string;
-	private readonly playerRewardData: number;
+	// private readonly playerRewardCardId: string;
+	// private readonly playerRewardData: number;
 	private readonly opponentCardId: string;
 	private readonly opponentHeroPowerCardId: string;
 	private readonly opponentHeroPowerUsed: boolean;
-	private readonly opponentRewardCardId: string;
-	private readonly opponentRewardData: number;
+	// private readonly opponentRewardCardId: string;
+	// private readonly opponentRewardData: number;
 
 	constructor(battleInput: BgsBattleInfo) {
 		this.playerCardId = battleInput.playerBoard.player.cardId;
 		this.playerHeroPowerCardId = battleInput.playerBoard.player.heroPowerId;
 		this.playerHeroPowerUsed = battleInput.playerBoard.player.heroPowerUsed;
-		this.playerRewardCardId =
-			battleInput.playerBoard.player.questRewardEntities?.[0]?.cardId ??
-			battleInput.playerBoard.player.questRewards?.[0];
-		this.playerRewardData = battleInput.playerBoard.player.questRewardEntities?.[0]?.scriptDataNum1;
-
 		this.opponentCardId = battleInput.opponentBoard.player.cardId;
 		this.opponentHeroPowerCardId = battleInput.opponentBoard.player.heroPowerId;
 		this.opponentHeroPowerUsed = battleInput.opponentBoard.player.heroPowerUsed;
-		this.opponentRewardCardId =
-			battleInput.opponentBoard.player.questRewardEntities?.[0]?.cardId ??
-			battleInput.opponentBoard.player.questRewards?.[0];
-		this.opponentRewardData = battleInput.opponentBoard.player.questRewardEntities?.[0]?.scriptDataNum1;
 
 		this.actionsForCurrentBattle = [];
 		this.wonBattles = [];
@@ -92,13 +83,13 @@ export class Spectator {
 			playerCardId: this.playerCardId,
 			playerHeroPowerCardId: this.playerHeroPowerCardId,
 			playerHeroPowerUsed: this.playerHeroPowerUsed,
-			playerRewardCardId: this.playerRewardCardId,
-			playerRewardData: this.playerRewardData,
+			// playerRewardCardId: this.playerRewardCardId,
+			// playerRewardData: this.playerRewardData,
 			opponentCardId: this.opponentCardId,
 			opponentHeroPowerCardId: this.opponentHeroPowerCardId,
 			opponentHeroPowerUsed: this.opponentHeroPowerUsed,
-			opponentRewardCardId: this.opponentRewardCardId,
-			opponentRewardData: this.opponentRewardData,
+			// opponentRewardCardId: this.opponentRewardCardId,
+			// opponentRewardData: this.opponentRewardData,
 		};
 		switch (result) {
 			case 'won':
@@ -136,16 +127,23 @@ export class Spectator {
 		const opponentBoard = isAttackerFriendly ? defendingBoard : attackingBoard;
 		const playerSecrets = isAttackerFriendly ? attackingBoardHero.secrets : defendingBoardHero.secrets;
 		const opponentSecrets = isAttackerFriendly ? defendingBoardHero.secrets : attackingBoardHero.secrets;
+		const playerHero = isAttackerFriendly ? attackingBoardHero : defendingBoardHero;
+		const opponentHero = isAttackerFriendly ? defendingBoardHero : attackingBoardHero;
 		const action: GameAction = {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
 			targetEntityId: defendingEntity.entityId,
 			playerBoard: this.sanitize(friendlyBoard),
-			playerHand: this.sanitize(isAttackerFriendly ? attackingBoardHero.hand : defendingBoardHero.hand),
+			playerHand: this.sanitize(playerHero.hand),
 			opponentBoard: this.sanitize(opponentBoard),
-			opponentHand: this.sanitize(isAttackerFriendly ? defendingBoardHero.hand : attackingBoardHero.hand),
+			opponentHand: this.sanitize(opponentHero.hand),
 			playerSecrets: (playerSecrets ?? []).filter((s) => !s.triggered),
 			opponentSecrets: (opponentSecrets ?? []).filter((s) => !s.triggered),
+
+			playerRewardCardId: playerHero.questRewardEntities?.[0]?.cardId ?? playerHero.questRewards?.[0],
+			playerRewardData: playerHero.questRewardEntities?.[0]?.scriptDataNum1,
+			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
+			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
 	}
@@ -166,6 +164,10 @@ export class Spectator {
 			opponentHand: this.sanitize(opponentHero.hand),
 			playerSecrets: playerSecrets ?? [],
 			opponentSecrets: opponentSecrets ?? [],
+			playerRewardCardId: friendlyHero.questRewardEntities?.[0]?.cardId ?? friendlyHero.questRewards?.[0],
+			playerRewardData: friendlyHero.questRewardEntities?.[0]?.scriptDataNum1,
+			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
+			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
 	}
@@ -183,6 +185,10 @@ export class Spectator {
 			opponentHand: null,
 			playerSecrets: null,
 			opponentSecrets: null,
+			playerRewardCardId: null,
+			playerRewardData: null,
+			opponentRewardCardId: null,
+			opponentRewardData: null,
 			damages: [
 				{
 					damage: damage,
@@ -205,6 +211,10 @@ export class Spectator {
 			opponentHand: null,
 			playerSecrets: null,
 			opponentSecrets: null,
+			playerRewardCardId: null,
+			playerRewardData: null,
+			opponentRewardCardId: null,
+			opponentRewardData: null,
 			damages: [
 				{
 					damage: damage,
@@ -240,6 +250,10 @@ export class Spectator {
 			opponentHand: null,
 			playerSecrets: null,
 			opponentSecrets: null,
+			playerRewardCardId: null,
+			playerRewardData: null,
+			opponentRewardCardId: null,
+			opponentRewardData: null,
 		};
 		this.addAction(action);
 	}
@@ -272,6 +286,10 @@ export class Spectator {
 			opponentHand: this.sanitize(opponentHero?.hand),
 			playerSecrets: (friendlyHero?.secrets ?? []).filter((s) => !s.triggered),
 			opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
+			playerRewardCardId: friendlyHero.questRewardEntities?.[0]?.cardId ?? friendlyHero.questRewards?.[0],
+			playerRewardData: friendlyHero.questRewardEntities?.[0]?.scriptDataNum1,
+			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
+			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
 	}
@@ -300,6 +318,10 @@ export class Spectator {
 			opponentHand: null,
 			playerSecrets: null,
 			opponentSecrets: null,
+			playerRewardCardId: null,
+			playerRewardData: null,
+			opponentRewardCardId: null,
+			opponentRewardData: null,
 		};
 		this.addAction(action);
 	}
@@ -329,6 +351,10 @@ export class Spectator {
 			opponentHand: null,
 			playerSecrets: null,
 			opponentSecrets: null,
+			playerRewardCardId: null,
+			playerRewardData: null,
+			opponentRewardCardId: null,
+			opponentRewardData: null,
 		};
 		this.addAction(action);
 	}
@@ -372,6 +398,18 @@ export class Spectator {
 			}
 			if (lastAction && !action.opponentSecrets) {
 				action.opponentSecrets = lastAction.opponentSecrets;
+			}
+			if (lastAction && !action.playerRewardCardId) {
+				action.playerRewardCardId = lastAction.playerRewardCardId;
+			}
+			if (lastAction && !action.playerRewardData) {
+				action.playerRewardData = lastAction.playerRewardData;
+			}
+			if (lastAction && !action.opponentRewardCardId) {
+				action.opponentRewardCardId = lastAction.opponentRewardCardId;
+			}
+			if (lastAction && !action.opponentRewardData) {
+				action.opponentRewardData = lastAction.opponentRewardData;
 			}
 
 			if (lastAction && action.type === 'damage' && lastAction.type === 'attack') {

@@ -17,6 +17,10 @@ export interface GameAction {
 	opponentBoard: readonly BoardEntity[];
 	opponentHand: readonly BoardEntity[];
 	opponentSecrets: readonly BoardSecret[];
+	playerRewardCardId: string;
+	playerRewardData: number;
+	opponentRewardCardId: string;
+	opponentRewardData: number;
 	sourceEntityId?: number;
 	/** @deprecated */
 	targetEntityId?: number;
