@@ -190,7 +190,8 @@ export const setImplicitDataHero = (
 	}
 
 	// Because Denathrius can send a quest reward as its hero power (I think)
-	hero.questRewards = [...(hero.questRewards ?? []), hero.heroPowerId].filter((e) => !!e);
+	const heroPowerAsReward = hero.cardId === CardIds.SireDenathrius_BG24_HERO_100 ? hero.heroPowerId : null;
+	hero.questRewards = [...(hero.questRewards ?? []), heroPowerAsReward].filter((e) => !!e);
 	hero.questRewardEntities = hero.questRewardEntities
 		? hero.questRewardEntities.map((reward) => ({
 				...reward,

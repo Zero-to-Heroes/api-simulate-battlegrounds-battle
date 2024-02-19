@@ -141,8 +141,10 @@ export class Spectator {
 			opponentSecrets: (opponentSecrets ?? []).filter((s) => !s.triggered),
 
 			playerRewardCardId: playerHero.questRewardEntities?.[0]?.cardId ?? playerHero.questRewards?.[0],
+			playerRewardEntityId: playerHero.questRewardEntities?.[0]?.entityId,
 			playerRewardData: playerHero.questRewardEntities?.[0]?.scriptDataNum1,
 			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
+			opponentRewardEntityId: opponentHero.questRewardEntities?.[0]?.entityId,
 			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
@@ -165,8 +167,10 @@ export class Spectator {
 			playerSecrets: playerSecrets ?? [],
 			opponentSecrets: opponentSecrets ?? [],
 			playerRewardCardId: friendlyHero.questRewardEntities?.[0]?.cardId ?? friendlyHero.questRewards?.[0],
+			playerRewardEntityId: friendlyHero.questRewardEntities?.[0]?.entityId,
 			playerRewardData: friendlyHero.questRewardEntities?.[0]?.scriptDataNum1,
 			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
+			opponentRewardEntityId: opponentHero.questRewardEntities?.[0]?.entityId,
 			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
@@ -186,8 +190,10 @@ export class Spectator {
 			playerSecrets: null,
 			opponentSecrets: null,
 			playerRewardCardId: null,
+			playerRewardEntityId: null,
 			playerRewardData: null,
 			opponentRewardCardId: null,
+			opponentRewardEntityId: null,
 			opponentRewardData: null,
 			damages: [
 				{
@@ -212,8 +218,10 @@ export class Spectator {
 			playerSecrets: null,
 			opponentSecrets: null,
 			playerRewardCardId: null,
+			playerRewardEntityId: null,
 			playerRewardData: null,
 			opponentRewardCardId: null,
+			opponentRewardEntityId: null,
 			opponentRewardData: null,
 			damages: [
 				{
@@ -251,8 +259,10 @@ export class Spectator {
 			playerSecrets: null,
 			opponentSecrets: null,
 			playerRewardCardId: null,
+			playerRewardEntityId: null,
 			playerRewardData: null,
 			opponentRewardCardId: null,
+			opponentRewardEntityId: null,
 			opponentRewardData: null,
 		};
 		this.addAction(action);
@@ -287,8 +297,10 @@ export class Spectator {
 			playerSecrets: (friendlyHero?.secrets ?? []).filter((s) => !s.triggered),
 			opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
 			playerRewardCardId: friendlyHero.questRewardEntities?.[0]?.cardId ?? friendlyHero.questRewards?.[0],
+			playerRewardEntityId: friendlyHero.questRewardEntities?.[0]?.entityId,
 			playerRewardData: friendlyHero.questRewardEntities?.[0]?.scriptDataNum1,
 			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
+			opponentRewardEntityId: opponentHero.questRewardEntities?.[0]?.entityId,
 			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
@@ -319,8 +331,10 @@ export class Spectator {
 			playerSecrets: null,
 			opponentSecrets: null,
 			playerRewardCardId: null,
+			playerRewardEntityId: null,
 			playerRewardData: null,
 			opponentRewardCardId: null,
+			opponentRewardEntityId: null,
 			opponentRewardData: null,
 		};
 		this.addAction(action);
@@ -352,8 +366,10 @@ export class Spectator {
 			playerSecrets: null,
 			opponentSecrets: null,
 			playerRewardCardId: null,
+			playerRewardEntityId: null,
 			playerRewardData: null,
 			opponentRewardCardId: null,
+			opponentRewardEntityId: null,
 			opponentRewardData: null,
 		};
 		this.addAction(action);
@@ -402,11 +418,17 @@ export class Spectator {
 			if (lastAction && !action.playerRewardCardId) {
 				action.playerRewardCardId = lastAction.playerRewardCardId;
 			}
+			if (lastAction && !action.playerRewardEntityId) {
+				action.playerRewardEntityId = lastAction.playerRewardEntityId;
+			}
 			if (lastAction && !action.playerRewardData) {
 				action.playerRewardData = lastAction.playerRewardData;
 			}
 			if (lastAction && !action.opponentRewardCardId) {
 				action.opponentRewardCardId = lastAction.opponentRewardCardId;
+			}
+			if (lastAction && !action.opponentRewardEntityId) {
+				action.opponentRewardEntityId = lastAction.opponentRewardEntityId;
 			}
 			if (lastAction && !action.opponentRewardData) {
 				action.opponentRewardData = lastAction.opponentRewardData;
