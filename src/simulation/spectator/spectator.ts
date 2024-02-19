@@ -140,12 +140,12 @@ export class Spectator {
 			playerSecrets: (playerSecrets ?? []).filter((s) => !s.triggered),
 			opponentSecrets: (opponentSecrets ?? []).filter((s) => !s.triggered),
 
-			playerRewardCardId: playerHero.questRewardEntities?.[0]?.cardId ?? playerHero.questRewards?.[0],
-			playerRewardEntityId: playerHero.questRewardEntities?.[0]?.entityId,
-			playerRewardData: playerHero.questRewardEntities?.[0]?.scriptDataNum1,
-			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
-			opponentRewardEntityId: opponentHero.questRewardEntities?.[0]?.entityId,
-			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
+			playerRewardCardId: playerHero?.questRewardEntities?.[0]?.cardId ?? playerHero?.questRewards?.[0],
+			playerRewardEntityId: playerHero?.questRewardEntities?.[0]?.entityId,
+			playerRewardData: playerHero?.questRewardEntities?.[0]?.scriptDataNum1,
+			opponentRewardCardId: opponentHero?.questRewardEntities?.[0]?.cardId ?? opponentHero?.questRewards?.[0],
+			opponentRewardEntityId: opponentHero?.questRewardEntities?.[0]?.entityId,
+			opponentRewardData: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
 	}
@@ -296,12 +296,12 @@ export class Spectator {
 			opponentHand: this.sanitize(opponentHero?.hand),
 			playerSecrets: (friendlyHero?.secrets ?? []).filter((s) => !s.triggered),
 			opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
-			playerRewardCardId: friendlyHero.questRewardEntities?.[0]?.cardId ?? friendlyHero.questRewards?.[0],
-			playerRewardEntityId: friendlyHero.questRewardEntities?.[0]?.entityId,
-			playerRewardData: friendlyHero.questRewardEntities?.[0]?.scriptDataNum1,
-			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
-			opponentRewardEntityId: opponentHero.questRewardEntities?.[0]?.entityId,
-			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
+			playerRewardCardId: friendlyHero?.questRewardEntities?.[0]?.cardId ?? friendlyHero?.questRewards?.[0],
+			playerRewardEntityId: friendlyHero?.questRewardEntities?.[0]?.entityId,
+			playerRewardData: friendlyHero?.questRewardEntities?.[0]?.scriptDataNum1,
+			opponentRewardCardId: opponentHero?.questRewardEntities?.[0]?.cardId ?? opponentHero?.questRewards?.[0],
+			opponentRewardEntityId: opponentHero?.questRewardEntities?.[0]?.entityId,
+			opponentRewardData: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1,
 		};
 		this.addAction(action);
 	}
