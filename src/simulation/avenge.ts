@@ -250,10 +250,6 @@ const handleAvenge = (
 		case CardIds.TremblingTrolley_BG28_967_G:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 			break;
-		case CardIds.MysticSporebat_BG28_900:
-		case CardIds.MysticSporebat_BG28_900_G:
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-			break;
 		case CardIds.WitchwingNestmatron_BG21_038:
 		case CardIds.WitchwingNestmatron_BG21_038_G:
 			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
