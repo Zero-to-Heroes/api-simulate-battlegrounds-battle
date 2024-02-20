@@ -235,16 +235,16 @@ export const handleDeathrattleEffects = (
 			case CardIds.GoldrinnTheGreatWolf_BGS_018:
 				for (let i = 0; i < multiplier; i++) {
 					addStatsToBoard(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, 3, 2, gameState, 'BEAST');
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += multiplier * 3;
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += multiplier * 2;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += 3;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += 2;
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
 			case CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085:
 				for (let i = 0; i < multiplier; i++) {
 					addStatsToBoard(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, 6, 4, gameState, 'BEAST');
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += multiplier * 6;
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += multiplier * 4;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += 6;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += 4;
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
