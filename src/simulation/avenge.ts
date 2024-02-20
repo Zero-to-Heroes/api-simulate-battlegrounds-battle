@@ -499,7 +499,7 @@ const handleAvenge = (
 			avenger.scriptDataNum1++;
 			break;
 	}
-	avenger.avengeCurrent = avenger.avengeDefault;
+	avenger.avengeCurrent += avenger.avengeDefault;
 };
 
 const handleHeroAvenge = (
@@ -563,5 +563,5 @@ const handleHeroAvenge = (
 			});
 			break;
 	}
-	boardWithDeadEntityHero.avengeCurrent = boardWithDeadEntityHero.avengeDefault;
+	boardWithDeadEntityHero.avengeCurrent += boardWithDeadEntityHero.avengeDefault;
 };

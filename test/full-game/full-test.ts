@@ -29,13 +29,12 @@ const test = async () => {
 	});
 	console.log('simulation took', Date.now() - start, 'ms');
 
-	const sample = simulationResult.outcomeSamples.tied?.[0];
+	const sample = simulationResult.outcomeSamples.won?.[0];
 	const base64 = encode(JSON.stringify(sample));
 	// console.log(base64);
-	// console.log('original sample length', JSON.stringify(sample).length);
-	console.log('result', {
-		...simulationResult,
-		outcomeSamples: undefined,
-	});
+	// console.log('result', {
+	// 	...simulationResult,
+	// 	outcomeSamples: undefined,
+	// });
 };
 test();

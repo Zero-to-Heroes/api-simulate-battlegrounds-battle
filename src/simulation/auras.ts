@@ -193,10 +193,12 @@ export const setImplicitDataHero = (
 	const heroPowerAsReward = hero.cardId === CardIds.SireDenathrius_BG24_HERO_100 ? hero.heroPowerId : null;
 	hero.questRewards = [...(hero.questRewards ?? []), heroPowerAsReward].filter((e) => !!e);
 	hero.questRewardEntities = hero.questRewardEntities
-		? hero.questRewardEntities.map((reward) => ({
-				...reward,
+		? hero.questRewardEntities.map((reward: any) => ({
+				cardId: reward.CardId,
+				scriptDataNum1: reward.ScriptDataNum1,
 				entityId: entityIdContainer.entityId--,
-				avengeDefault: cardsData.avengeValue(reward.cardId),
+				avengeDefault: cardsData.avengeValue(reward.CardId),
+				avengeCurrent: 0,
 		  }))
 		: hero.questRewards.map((reward) => ({
 				cardId: reward,
