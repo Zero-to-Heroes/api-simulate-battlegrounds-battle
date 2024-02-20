@@ -314,6 +314,17 @@ export const getRandomAliveMinion = (board: BoardEntity[], race: Race, allCards:
 	return validTribes[randomIndex];
 };
 
+export const getRandomRevivableMinion = (board: BoardEntity[], race: Race, allCards: AllCardsService): BoardEntity => {
+	const validTribes = board
+		.filter((e) => !race || isCorrectTribe(allCards.getCard(e?.cardId).races, race))
+		.filter((e) => !e.definitelyDead);
+	if (!validTribes.length) {
+		return null;
+	}
+	const randomIndex = Math.floor(Math.random() * validTribes.length);
+	return validTribes[randomIndex];
+};
+
 export const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEntity => {
 	if (!board.length) {
 		return null;
@@ -351,6 +362,7 @@ export const grantStatsToMinionsOfEachType = (
 	health: number,
 	gameState: FullGameState,
 	numberOfDifferentTypes = 99,
+	canRevive = true,
 ): void => {
 	if (board.length > 0) {
 		let boardCopy = [...board];
@@ -361,7 +373,9 @@ export const grantStatsToMinionsOfEachType = (
 				return;
 			}
 
-			const validMinion: BoardEntity = getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
+			const validMinion: BoardEntity = canRevive
+				? getRandomRevivableMinion(boardCopy, tribe, gameState.allCards)
+				: getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
 			if (validMinion) {
 				modifyAttack(validMinion, attack, board, hero, gameState);
 				modifyHealth(validMinion, health, board, hero, gameState);

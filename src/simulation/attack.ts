@@ -146,6 +146,7 @@ export const doFullAttack = (
 		gameState,
 	);
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
+	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 	if (
 		defendingEntity.health > 0 &&
 		!defendingEntity.definitelyDead &&
@@ -428,6 +429,9 @@ const performAttack = (
 						defendingBoardHero,
 						gameState,
 					);
+					// Not sure if we'll need this
+					// processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
+					// attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 				}
 			}
 		}
@@ -595,8 +599,6 @@ const performAttack = (
 	if (attackingEntity.enchantments.some((e) => e.cardId === CardIds.VolatileVenom_VolatileEnchantment)) {
 		attackingEntity.definitelyDead = true;
 	}
-	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
-	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 	return { damageDoneByAttacker, damageDoneByDefender };
 };
 
