@@ -20,7 +20,7 @@ export const onQuestProgressUpdated = (
 		entityId: gameState.sharedState.currentEntityId++,
 		avengeDefault: gameState.cardsData.avengeValue(rewardCardId),
 		avengeCurrent: gameState.cardsData.avengeValue(rewardCardId),
-		scriptDataNum1: 0,
+		scriptDataNum1: gameState.cardsData.defaultScriptDataNum(rewardCardId),
 	});
 
 	// Remove the quest from the list of quests

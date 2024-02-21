@@ -205,6 +205,15 @@ export class CardsData {
 		return 0;
 	}
 
+	public defaultScriptDataNum(cardId: string): number {
+		switch (cardId) {
+			case CardIds.TumblingDisaster_BG28_Reward_505:
+				return 1;
+			default:
+				return 0;
+		}
+	}
+
 	public getTavernLevel(cardId: string): number {
 		return this.allCards.getCard(cardId).techLevel ?? 1;
 	}

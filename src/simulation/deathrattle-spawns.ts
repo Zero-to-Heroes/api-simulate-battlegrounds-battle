@@ -1485,7 +1485,11 @@ export const spawnEntitiesFromDeathrattle = (
 							false,
 							false,
 							true,
-						).map((e) => ({ ...e, attack: harmlessBoneheadStats, health: harmlessBoneheadStats })),
+						).map((e) => ({
+							...e,
+							attack: harmlessBoneheadStats,
+							health: harmlessBoneheadStats,
+						})),
 					);
 					break;
 
