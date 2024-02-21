@@ -49,14 +49,6 @@ export const handleStartOfCombat = (
 		currentAttacker,
 		gameState,
 	);
-	currentAttacker = handleStartOfCombatSpells(
-		playerEntity,
-		playerBoard,
-		opponentEntity,
-		opponentBoard,
-		currentAttacker,
-		gameState,
-	);
 	currentAttacker = handleStartOfCombatAnomalies(
 		playerEntity,
 		playerBoard,
@@ -91,6 +83,14 @@ export const handleStartOfCombat = (
 		gameState,
 	);
 	currentAttacker = handleStartOfCombatHeroPowers(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		gameState,
+	);
+	currentAttacker = handleStartOfCombatSpells(
 		playerEntity,
 		playerBoard,
 		opponentEntity,
