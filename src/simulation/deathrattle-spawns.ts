@@ -107,8 +107,8 @@ export const spawnEntitiesFromDeathrattle = (
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
 		const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
-		let hasTriggered = false;
 		for (const deadEntityCardId of cardIds) {
+			let hasTriggered = true;
 			switch (deadEntityCardId) {
 				case CardIds.Mecharoo_BOT_445:
 					spawnedEntities.push(

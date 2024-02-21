@@ -49,6 +49,9 @@ const handleStableAmalgamationForPlayer = (
 			);
 			if (hasSummoned) {
 				rewardEntity.scriptDataNum1--;
+			} else {
+				// No room to summon, we stop here
+				break;
 			}
 		}
 	}
