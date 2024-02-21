@@ -39,6 +39,8 @@ export const handleStartOfCombat = (
 	gameState: FullGameState,
 ): number => {
 	// https://twitter.com/DCalkosz/status/1564705111850434561
+	// UPDATE 21/02/2024: looks like this isn't valid anymore
+	// http://replays.firestoneapp.com/?reviewId=8ed968b6-b08d-4987-ba2e-56db4cb34b5d&turn=27&action=0
 	currentAttacker = handleStartOfCombatQuestRewards(
 		playerEntity,
 		playerBoard,
@@ -525,11 +527,15 @@ const handleStartOfCombatSpellsForPlayer = (
 			case CardIds.BoonOfBeetles_BG28_603:
 				playerBoard.forEach((e) => {
 					e.enchantments = e.enchantments || [];
-					e.enchantments.push({
-						cardId: CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
-						originEntityId: secret.entityId,
-						timing: gameState.sharedState.currentEntityId++,
-					});
+					if (
+						!e.enchantments.some((e) => e.cardId === CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e)
+					) {
+						e.enchantments.push({
+							cardId: CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
+							originEntityId: secret.entityId,
+							timing: gameState.sharedState.currentEntityId++,
+						});
+					}
 				});
 				break;
 			case CardIds.ToxicTumbleweed_BG28_641:
