@@ -36,6 +36,8 @@ export const addMinionToBoard = (
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
 	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, gameState);
+	// Important to do this here, so that "attack immediately" minions can be taken into account by the quests
+	onMinionSummoned(boardHero, board, gameState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, gameState);
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, boardHero, [minionToAdd], gameState);
@@ -548,11 +550,10 @@ const handleAfterSpawnEffects = (
 ): void => {
 	for (const spawned of allSpawned) {
 		handleAfterSpawnEffect(board, hero, spawned, gameState);
-		handleMinionSpawnQuest(hero, board, gameState);
 	}
 };
 
-const handleMinionSpawnQuest = (hero: BgsPlayerEntity, board: BoardEntity[], gameState: FullGameState): void => {
+export const onMinionSummoned = (hero: BgsPlayerEntity, board: BoardEntity[], gameState: FullGameState): void => {
 	const quests = hero.questEntities ?? [];
 	if (!quests.length) {
 		return;

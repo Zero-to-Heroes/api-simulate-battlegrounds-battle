@@ -55,6 +55,12 @@ export const makeMinionsDie = (
 	// console.debug('dead entities', stringifySimple(deadEntities, allCards));
 	// Update the avenge counters as soon as minions die. If we wait until the "avenge" phase, we might
 	// update the counters for entities that have been spawned after the death of the original entity
+	// ISSUE:
+	// - Scallywag && another minion die at the same time
+	// - Scallywag spawns a Sky Pirate
+	// - This causes the Assemble a Lineup quest to complete with the Stable Amalgamation reward
+	// - We need to count the other minion's death for the Avenge of reward, but NOT the Scallywag's?
+	// See http://replays.firestoneapp.com/?reviewId=0ce4db9c-3269-4704-b662-8a8c31f5afe1&turn=16&action=27
 	for (const deadEntity of deadEntities) {
 		updateAvengeCounters(board, boardHero);
 		onMinionDeadQuest(board, boardHero, otherBoard, otherBoardHero, gameState);
