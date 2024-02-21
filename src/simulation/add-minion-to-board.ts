@@ -362,20 +362,20 @@ export const removeAurasFromSelf = (
 		}
 	}
 
-	for (const entity of board) {
-		switch (entity.cardId) {
+	for (const boardEntity of board) {
+		switch (boardEntity.cardId) {
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
-				if (hasCorrectTribe(entity, Race.MURLOC, allCards) && entity.entityId !== entity.entityId) {
+				if (hasCorrectTribe(entity, Race.MURLOC, allCards) && entity.entityId !== boardEntity.entityId) {
 					entity.attack = Math.max(
 						0,
-						entity.attack - (entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2),
+						entity.attack - (boardEntity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2),
 					);
 				}
 				break;
 			case CardIds.HummingBird_BG26_805:
 			case CardIds.HummingBird_BG26_805_G:
-				if (hasCorrectTribe(entity, Race.BEAST, allCards) && entity.entityId !== entity.entityId) {
+				if (hasCorrectTribe(entity, Race.BEAST, allCards) && entity.entityId !== boardEntity.entityId) {
 					entity.attack = Math.max(
 						0,
 						entity.attack - (entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2),
@@ -384,14 +384,14 @@ export const removeAurasFromSelf = (
 				break;
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
-				if (hasCorrectTribe(entity, Race.PIRATE, allCards) && entity.entityId !== entity.entityId) {
+				if (hasCorrectTribe(entity, Race.PIRATE, allCards) && entity.entityId !== boardEntity.entityId) {
 					entity.attack = Math.max(
 						0,
-						entity.attack - (entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1),
+						entity.attack - (boardEntity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1),
 					);
 					entity.health = Math.max(
 						1,
-						entity.health - (entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1),
+						entity.health - (boardEntity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1),
 					);
 				}
 				break;
@@ -399,15 +399,15 @@ export const removeAurasFromSelf = (
 			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
 				entity.attack = Math.max(
 					0,
-					entity.attack - (entity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3),
+					entity.attack - (boardEntity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3),
 				);
 				break;
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
-				if (hasCorrectTribe(entity, Race.DEMON, allCards) && entity.entityId !== entity.entityId) {
+				if (hasCorrectTribe(entity, Race.DEMON, allCards) && entity.entityId !== boardEntity.entityId) {
 					entity.attack = Math.max(
 						0,
-						entity.attack - (entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1),
+						entity.attack - (boardEntity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1),
 					);
 				}
 				break;
@@ -416,16 +416,17 @@ export const removeAurasFromSelf = (
 				if (entity.divineShield) {
 					entity.attack = Math.max(
 						0,
-						entity.attack - (entity.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6),
+						entity.attack - (boardEntity.cardId === CardIds.CyborgDrake_BG25_043_G ? 12 : 6),
 					);
 				}
 				break;
 			case CardIds.SoreLoser_BG27_030:
 			case CardIds.SoreLoser_BG27_030_G:
-				if (hasCorrectTribe(entity, Race.UNDEAD, allCards) && entity.entityId !== entity.entityId) {
+				if (hasCorrectTribe(entity, Race.UNDEAD, allCards) && entity.entityId !== boardEntity.entityId) {
 					entity.attack = Math.max(
 						0,
-						entity.attack - (entity.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier,
+						entity.attack -
+							(boardEntity.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier,
 					);
 				}
 				break;
