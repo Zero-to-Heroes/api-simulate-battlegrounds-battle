@@ -87,8 +87,14 @@ export const spawnEntitiesFromDeathrattle = (
 	gameState: FullGameState,
 ): readonly BoardEntity[] => {
 	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
+	// TOOD: I need a replay for this
+	// If the Titus dies, its effect doesn't apply to the other deathrattle effects that die at the same time
+	// e.g. Tunnel Blaster + Omega Buster + Titus, if the titus dies, then the omega buster DR isn't applied multiple
+	// times
+	// http://replays.firestoneapp.com/?reviewId=fb739cc8-bf3b-4003-ab99-031ee1aa0ea1&turn=25&action=1
 	const multiplier = computeDeathrattleMultiplier(
-		[...boardWithDeadEntity, ...entitiesDeadThisAttack],
+		// [...boardWithDeadEntity, ...entitiesDeadThisAttack],
+		[...boardWithDeadEntity],
 		boardWithDeadEntityHero,
 		deadEntity,
 		gameState.sharedState,
