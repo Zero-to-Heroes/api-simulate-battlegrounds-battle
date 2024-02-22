@@ -579,15 +579,15 @@ const afterBattlecryTriggered = (
 		)
 		.forEach((e) => {
 			const buff = entity.cardId === CardIds.KalecgosArcaneAspect_BGS_041 ? 1 : 2;
-			addStatsToBoard(entity, board, hero, buff, buff, gameState, Race[Race.DRAGON]);
+			addStatsToBoard(e, board, hero, buff, buff, gameState, Race[Race.DRAGON]);
 		});
 	board
 		.filter((e) => e.cardId === CardIds.BlazingSkyfin_BG25_040 || e.cardId === CardIds.BlazingSkyfin_BG25_040_G)
 		.forEach((e) => {
 			const buff = entity.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
-			modifyAttack(entity, buff, board, hero, gameState);
-			modifyHealth(entity, buff, board, hero, gameState);
-			afterStatsUpdate(entity, board, hero, gameState);
+			modifyAttack(e, buff, board, hero, gameState);
+			modifyHealth(e, buff, board, hero, gameState);
+			afterStatsUpdate(e, board, hero, gameState);
 		});
 };
 

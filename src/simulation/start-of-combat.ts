@@ -39,8 +39,6 @@ export const handleStartOfCombat = (
 	gameState: FullGameState,
 ): number => {
 	// https://twitter.com/DCalkosz/status/1564705111850434561
-	// UPDATE 21/02/2024: looks like this isn't valid anymore
-	// http://replays.firestoneapp.com/?reviewId=8ed968b6-b08d-4987-ba2e-56db4cb34b5d&turn=27&action=0
 	currentAttacker = handleStartOfCombatQuestRewards(
 		playerEntity,
 		playerBoard,
@@ -90,6 +88,7 @@ export const handleStartOfCombat = (
 		currentAttacker,
 		gameState,
 	);
+	// Timing confirmed by Mitchell on Discord on 2024-02-21
 	currentAttacker = handleStartOfCombatSpells(
 		playerEntity,
 		playerBoard,
