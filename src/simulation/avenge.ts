@@ -60,12 +60,6 @@ export const applyAvengeEffects = (
 	// console.log('updating dead entity avenge counter', boardWithDeadEntityHero.avengeCurrent, stringifySimpleCard(deadEntity, allCards));
 	const heroAvenger = !!boardWithDeadEntityHero.avengeDefault && boardWithDeadEntityHero.avengeCurrent <= 0;
 	if (heroAvenger) {
-		// console.log(
-		// 	'Hero is an avenger',
-		// 	boardWithDeadEntityHero.avengeCurrent,
-		// 	boardWithDeadEntityHero.avengeDefault,
-		// 	boardWithDeadEntityHero.heroPowerId,
-		// );
 		handleHeroAvenge(
 			deadEntity,
 			boardWithDeadEntity,

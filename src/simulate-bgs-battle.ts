@@ -6,6 +6,7 @@ import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { SimulationResult } from './simulation-result';
 import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
+import { fixEnchantments } from './simulation/enchantments';
 import { FullGameState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { Simulator } from './simulation/simulator';
@@ -178,18 +179,19 @@ const buildFinalInput = (battleInput: BgsBattleInfo, cards: AllCardsService, car
 	const playerInfo = battleInput.playerBoard;
 	const opponentInfo = battleInput.opponentBoard;
 
-	const playerBoard = playerInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
-	);
+	const playerBoard = playerInfo.board
+		.map((entity) => fixEnchantments(entity, cards))
+		.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity));
 	const playerHand =
 		playerInfo.player.hand?.map(
 			(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity),
 		) ?? [];
 	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId);
 	playerInfo.player.friendly = true;
-	const opponentBoard = opponentInfo.board.map(
-		(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
-	);
+
+	const opponentBoard = opponentInfo.board
+		.map((entity) => fixEnchantments(entity, cards))
+		.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity));
 	const opponentHand =
 		opponentInfo.player.hand?.map(
 			(entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity),
@@ -289,13 +291,13 @@ const checkRounding = (roundedValue: number, initialValue: number, totalValue: n
 	return roundedValue;
 };
 
-const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
-	const entityIds = board.map((entity) => entity.entityId);
-	return board.map((entity) => ({
-		...entity,
-		enchantments: cleanEnchantmentsForEntity(entity.enchantments, entityIds),
-	}));
-};
+// const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
+// 	const entityIds = board.map((entity) => entity.entityId);
+// 	return board.map((entity) => ({
+// 		...entity,
+// 		enchantments: cleanEnchantmentsForEntity(entity.enchantments, entityIds),
+// 	}));
+// };
 
 export const validEnchantments = [
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
@@ -319,13 +321,13 @@ export const validEnchantments = [
 	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge,
 ];
 
-const cleanEnchantmentsForEntity = (
-	enchantments: { cardId: string; originEntityId?: number; timing: number }[],
-	entityIds: readonly number[],
-): { cardId: string; originEntityId?: number; timing: number }[] => {
-	return enchantments.filter(
-		(enchant) =>
-			entityIds.indexOf(enchant.originEntityId) !== -1 ||
-			validEnchantments.indexOf(enchant.cardId as CardIds) !== -1,
-	);
-};
+// const cleanEnchantmentsForEntity = (
+// 	enchantments: { cardId: string; originEntityId?: number; timing: number }[],
+// 	entityIds: readonly number[],
+// ): { cardId: string; originEntityId?: number; timing: number }[] => {
+// 	return enchantments.filter(
+// 		(enchant) =>
+// 			entityIds.indexOf(enchant.originEntityId) !== -1 ||
+// 			validEnchantments.indexOf(enchant.cardId as CardIds) !== -1,
+// 	);
+// };
