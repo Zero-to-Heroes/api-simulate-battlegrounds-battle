@@ -929,6 +929,7 @@ export const bumpEntities = (
 	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
+	applyVenomous = true,
 ): number => {
 	// No attack has no impact
 	if (bumpInto.attack === 0) {
@@ -1039,7 +1040,7 @@ export const bumpEntities = (
 	) {
 		entity.abiityChargesLeft--;
 		const newTarget = pickRandom(otherBoard);
-		return bumpEntities(newTarget, bumpInto, otherBoard, otherHero, entityBoard, entityBoardHero, gameState);
+		return bumpEntities(newTarget, bumpInto, otherBoard, otherHero, entityBoard, entityBoardHero, gameState, false);
 	}
 
 	const damageDealt = (entity.damageMultiplier || 1) * bumpInto.attack;
@@ -1059,7 +1060,7 @@ export const bumpEntities = (
 		// And we don't just set the health to avoid applying overkill effects
 		entity.definitelyDead = true;
 	}
-	if (bumpInto.venomous) {
+	if (bumpInto.venomous && applyVenomous) {
 		// So that further buffs don't revive it
 		// And we don't just set the health to avoid applying overkill effects
 		entity.definitelyDead = true;
