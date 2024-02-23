@@ -379,7 +379,8 @@ export const triggerBattlecry = (
 				const emergentFlameTarget = pickRandom(
 					allBoards.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
 				);
-				const emergentFlameStats = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
+				const emergentFlameMultiplier = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
+				const emergentFlameStats = (entity.scriptDataNum1 ?? 1) * emergentFlameMultiplier;
 				modifyAttack(emergentFlameTarget, emergentFlameStats, board, hero, gameState);
 				modifyHealth(emergentFlameTarget, emergentFlameStats, board, hero, gameState);
 				afterStatsUpdate(emergentFlameTarget, board, hero, gameState);
