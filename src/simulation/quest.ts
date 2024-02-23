@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BgsQuestEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { FullGameState } from './internal-game-state';
@@ -25,4 +26,23 @@ export const onQuestProgressUpdated = (
 
 	// Remove the quest from the list of quests
 	playerEntity.questEntities = playerEntity.questEntities.filter((quest) => quest.CardId !== quest.CardId);
+
+	updateStateAfterQuestCreated(rewardCardId, board, playerEntity, gameState);
+};
+
+const updateStateAfterQuestCreated = (
+	rewardCardId: string,
+	board: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+) => {
+	switch (rewardCardId) {
+		case CardIds.TheSmokingGun:
+			board.forEach((e) => {
+				e.attack += 4;
+			});
+			break;
+		default:
+			break;
+	}
 };
