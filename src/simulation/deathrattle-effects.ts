@@ -633,9 +633,8 @@ export const handleDeathrattleEffects = (
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy_G:
 				for (let i = 0; i < multiplier; i++) {
 					const numberToGild = deadEntityCardId === CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy_G ? 2 : 1;
-					const targetBoard = boardWithDeadEntity
-						.filter((e) => !e.definitelyDead && e.health > 0)
-						.filter((e) => !gameState.cardsData.isGolden(gameState.allCards.getCard(e.cardId)));
+					const targetBoard = boardWithDeadEntity.filter((e) => !e.definitelyDead && e.health > 0);
+					// .filter((e) => !gameState.cardsData.isGolden(gameState.allCards.getCard(e.cardId)));
 					for (let i = 0; i < Math.min(numberToGild, boardWithDeadEntity.length); i++) {
 						const rightMostMinion = targetBoard[targetBoard.length - 1 - i];
 						if (rightMostMinion) {
