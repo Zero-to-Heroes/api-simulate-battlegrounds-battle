@@ -627,7 +627,9 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.MysticSporebat_BG28_900:
 			case CardIds.MysticSporebat_BG28_900_G:
-				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				for (let i = 0; i < multiplier; i++) {
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				}
 				break;
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy:
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy_G:
