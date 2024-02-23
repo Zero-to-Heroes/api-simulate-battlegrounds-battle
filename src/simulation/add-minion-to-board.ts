@@ -465,6 +465,14 @@ export const removeAurasFromSelf = (
 			entity.attack = Math.max(0, entity.attack - statsBonusGnoll);
 			break;
 	}
+
+	for (const enchantment of entity.enchantments ?? []) {
+		switch (enchantment?.cardId) {
+			case CardIds.TavernLighting_TavernLightsEnchantment:
+				entity.attack = Math.max(0, entity.attack - enchantment.tagScriptDataNum1);
+				break;
+		}
+	}
 };
 
 const handleMinionAddedAuraEffect = (
