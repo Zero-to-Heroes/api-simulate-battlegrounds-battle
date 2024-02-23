@@ -616,7 +616,11 @@ const handleAfterSpawnEffect = (
 			case CardIds.Deadstomper_BG28_634_G:
 				// console.debug('felstomper');
 				if (entity.entityId !== spawned.entityId) {
-					const felstomperBuff = entity.cardId === CardIds.Felstomper_BG25_042_G ? 6 : 3;
+					const felstomperBuff =
+						entity.cardId === CardIds.Felstomper_BG25_042_G ||
+						entity.cardId === CardIds.Deadstomper_BG28_634_G
+							? 6
+							: 3;
 					board.forEach((e) => {
 						modifyAttack(e, felstomperBuff, board, hero, gameState);
 						afterStatsUpdate(e, board, hero, gameState);
