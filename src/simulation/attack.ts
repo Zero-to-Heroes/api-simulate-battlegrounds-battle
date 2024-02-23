@@ -1599,7 +1599,7 @@ export const applyOnAttackBuffs = (
 		});
 		elizasTB.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
-				modifyAttack(entity, 4, attackingBoard, attackingBoardHero, gameState);
+				modifyAttack(entity, 6, attackingBoard, attackingBoardHero, gameState);
 				modifyHealth(entity, 2, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
