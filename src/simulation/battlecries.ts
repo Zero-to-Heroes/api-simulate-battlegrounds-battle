@@ -550,6 +550,20 @@ export const triggerBattlecry = (
 					gameState.spectator.registerPowerTarget(entity, eagillHandTarget, board, hero, otherHero);
 				}
 				break;
+			case CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy:
+			case CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy_G:
+				const weebominationMultiplier =
+					entity.cardId === CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy ? 1 : 2;
+				const weebominationTarget = pickRandom(allMinions);
+				if (weebominationTarget) {
+					const heroMaxHealth = gameState.allCards.getCard(hero.cardId)?.health ?? 40;
+					const heroMissingHealth = heroMaxHealth - hero.hpLeft;
+					const weebominationBuff = weebominationMultiplier * heroMissingHealth;
+					modifyHealth(weebominationTarget, weebominationBuff, board, hero, gameState);
+					afterStatsUpdate(weebominationTarget, board, hero, gameState);
+					gameState.spectator.registerPowerTarget(entity, weebominationTarget, board, hero, otherHero);
+				}
+				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state
 				const hasBattlecry = gameState.allCards

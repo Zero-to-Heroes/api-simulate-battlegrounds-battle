@@ -1040,6 +1040,8 @@ export const bumpEntities = (
 	) {
 		entity.abiityChargesLeft--;
 		const newTarget = pickRandom(otherBoard);
+		// TODO: here the MadMatador is the source of the damage, not the initial attacker
+		// Not sure exactly what the impact would be, as there is no counter
 		return bumpEntities(newTarget, bumpInto, otherBoard, otherHero, entityBoard, entityBoardHero, gameState, false);
 	}
 
