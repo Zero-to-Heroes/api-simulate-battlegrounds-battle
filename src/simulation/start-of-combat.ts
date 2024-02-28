@@ -857,9 +857,14 @@ const handleTeronForPlayer = (
 	gameState: FullGameState,
 ): boolean => {
 	// const deadMinionEntityId = +playerEntity.heroPowerInfo;
-	const minionThatWillDie = playerBoard.find((m) =>
-		m.enchantments.some((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment),
-	);
+	// Getting the right enchantment can be tricky. The RapidReanimation enchantment can sometimes be
+	// in the Graveyard zone, so we can't filter them out. In that case, we can have multiple
+	// enchantments
+	// However, because of how things are handled in the logs, we should be able to always take the one *
+	// with the biggest entityId
+	const minionThatWillDie = playerBoard
+		.filter((m) => m.enchantments.some((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment))
+		.sort((a, b) => b.entityId - a.entityId)[0];
 	if (minionThatWillDie) {
 		const minionIndexFromRight = playerBoard.length - 1 - playerBoard.indexOf(minionThatWillDie);
 		playerEntity.rapidReanimationIndexFromRight = minionIndexFromRight;
