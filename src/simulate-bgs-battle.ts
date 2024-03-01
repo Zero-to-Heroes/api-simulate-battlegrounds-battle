@@ -44,7 +44,7 @@ export const simulateBattle = (
 	// !battleInput.options?.skipInfoLogs && console.time('full-sim');
 	const start = Date.now();
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
-	const numberOfSimulations = battleInput.options?.numberOfSimulations || 5000;
+	const numberOfSimulations = battleInput.options?.numberOfSimulations || 8000;
 	const simulationResult: SimulationResult = {
 		wonLethal: 0,
 		won: 0,

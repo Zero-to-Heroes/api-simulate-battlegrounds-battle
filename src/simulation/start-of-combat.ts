@@ -814,7 +814,7 @@ const handleEmbraceYourRageForPlayer = (
 ): void => {
 	const createdCardId = playerEntity.heroPowerInfo as string;
 	if (!createdCardId?.length) {
-		console.warn('no card id for embrace your rage');
+		// console.warn('no card id for embrace your rage');
 		return;
 	}
 	const spawns = spawnEntities(
