@@ -1440,7 +1440,9 @@ export const performStartOfCombatMinionsForPlayer = (
 		if (potentialTargets.length > 0) {
 			const target = pickRandom(potentialTargets);
 			// When it's the opponent, the game state already contains all the buffs
-			if (target?.friendly) {
+			// It can happen that, for the opponent, a card is first added to their hand (eg with Embrace Your Rage)
+			// and then summoned by Diremuck. In that case, the stats need to be buffed
+			if (target?.friendly || !target?.inInitialState) {
 				const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
 				modifyAttack(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
 				modifyHealth(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);

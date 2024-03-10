@@ -27,6 +27,7 @@ export interface BoardEntity {
 		value?: number;
 	}[];
 	scriptDataNum1?: number;
+	inInitialState?: boolean;
 	// For Build-An-Undead
 	additionalCards?: readonly string[] | null;
 
