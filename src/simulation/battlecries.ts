@@ -140,6 +140,18 @@ export const triggerBattlecry = (
 					Race[Race.MURLOC],
 				);
 				break;
+			case CardIds.FelfinNavigator_BG_BT_010:
+			case CardIds.FelfinNavigator_TB_BaconUps_124:
+				addStatsToBoard(
+					entity,
+					board.filter((e) => e.entityId != entity.entityId),
+					hero,
+					entity.cardId === CardIds.FelfinNavigator_TB_BaconUps_124 ? 2 : 1,
+					entity.cardId === CardIds.FelfinNavigator_TB_BaconUps_124 ? 2 : 1,
+					gameState,
+					Race[Race.MURLOC],
+				);
+				break;
 			case CardIds.KeyboardIgniter_BG26_522:
 			case CardIds.KeyboardIgniter_BG26_522_G:
 				addStatsToBoard(
