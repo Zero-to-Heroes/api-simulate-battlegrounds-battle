@@ -936,6 +936,38 @@ export const bumpEntities = (
 		return 0;
 	}
 
+	// Matador effect has priority
+	if (
+		entity.abiityChargesLeft > 0 &&
+		(entity.cardId === CardIds.MadMatador_BG28_404 || entity.cardId === CardIds.MadMatador_BG28_404_G)
+	) {
+		entity.abiityChargesLeft--;
+		const newTarget = pickRandom(otherBoard);
+		gameState.spectator.registerPowerTarget(entity, newTarget, otherBoard, entityBoardHero, otherHero);
+		// TODO: here the MadMatador is the source of the damage, not the initial attacker
+		// Not sure exactly what the impact would be, as there is no counter
+		const newSource = {
+			...entity,
+			attack: bumpInto.attack,
+			attacking: true,
+		} as BoardEntity;
+		const defenderHadDivineShield = newTarget.divineShield;
+		const damageDone = bumpEntities(
+			newTarget,
+			newSource,
+			otherBoard,
+			otherHero,
+			entityBoard,
+			entityBoardHero,
+			gameState,
+			false,
+		);
+		if (newSource.attack > 0 && defenderHadDivineShield) {
+			updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
+		}
+		return damageDone;
+	}
+
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
 		for (let i = 0; i < entityBoard.length; i++) {
@@ -1032,37 +1064,6 @@ export const bumpEntities = (
 		gameState.spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);
 		return 0;
 		// return entity;
-	}
-
-	if (
-		entity.abiityChargesLeft > 0 &&
-		(entity.cardId === CardIds.MadMatador_BG28_404 || entity.cardId === CardIds.MadMatador_BG28_404_G)
-	) {
-		entity.abiityChargesLeft--;
-		const newTarget = pickRandom(otherBoard);
-		gameState.spectator.registerPowerTarget(entity, newTarget, otherBoard, entityBoardHero, otherHero);
-		// TODO: here the MadMatador is the source of the damage, not the initial attacker
-		// Not sure exactly what the impact would be, as there is no counter
-		const newSource = {
-			...entity,
-			attack: bumpInto.attack,
-			attacking: true,
-		} as BoardEntity;
-		const defenderHadDivineShield = newTarget.divineShield;
-		const damageDone = bumpEntities(
-			newTarget,
-			newSource,
-			otherBoard,
-			otherHero,
-			entityBoard,
-			entityBoardHero,
-			gameState,
-			false,
-		);
-		if (newSource.attack > 0 && defenderHadDivineShield) {
-			updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
-		}
-		return damageDone;
 	}
 
 	const damageDealt = (entity.damageMultiplier || 1) * bumpInto.attack;
