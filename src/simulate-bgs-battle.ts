@@ -301,6 +301,7 @@ const checkRounding = (roundedValue: number, initialValue: number, totalValue: n
 // 	}));
 // };
 
+// Used when triggering random deathrattles
 export const validEnchantments = [
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e,
@@ -321,6 +322,7 @@ export const validEnchantments = [
 	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
 	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
 	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge,
+	CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
 ];
 
 // const cleanEnchantmentsForEntity = (
