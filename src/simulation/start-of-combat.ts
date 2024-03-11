@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { ALL_BG_RACES, AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { ALL_BG_RACES, AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
@@ -1436,7 +1436,10 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.DiremuckForager_BG27_556 ||
 		attacker.cardId === CardIds.DiremuckForager_BG27_556_G
 	) {
-		const potentialTargets = attackingBoardHero.hand.filter((e) => !!e.cardId).filter((e) => !e.locked);
+		const potentialTargets = attackingBoardHero.hand
+			.filter((e) => !!e.cardId)
+			.filter((e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION])
+			.filter((e) => !e.locked);
 		if (potentialTargets.length > 0) {
 			const target = pickRandom(potentialTargets);
 			// When it's the opponent, the game state already contains all the buffs

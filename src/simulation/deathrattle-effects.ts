@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -661,7 +661,11 @@ export const handleDeathrattleEffects = (
 					for (let i = 0; i < multiplier; i++) {
 						grantRandomStats(
 							deadEntity,
-							boardWithDeadEntityHero.hand,
+							boardWithDeadEntityHero.hand.filter(
+								(e) =>
+									gameState.allCards.getCard(e.cardId).type?.toUpperCase() ===
+									CardType[CardType.MINION],
+							),
 							boardWithDeadEntityHero,
 							statsScourfin,
 							statsScourfin,

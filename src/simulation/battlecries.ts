@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, GameTag, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
@@ -554,7 +554,11 @@ export const triggerBattlecry = (
 					afterStatsUpdate(eagillBoardTarget, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, eagillBoardTarget, board, hero, otherHero);
 				}
-				const eagillHandTarget = pickRandom(hero.hand);
+				const eagillHandTarget = pickRandom(
+					hero.hand.filter(
+						(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+					),
+				);
 				if (eagillHandTarget) {
 					modifyAttack(eagillHandTarget, 2 * eagillMultiplier, board, hero, gameState);
 					modifyHealth(eagillHandTarget, 3 * eagillMultiplier, board, hero, gameState);

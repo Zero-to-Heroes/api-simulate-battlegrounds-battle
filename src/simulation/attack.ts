@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -1032,7 +1032,10 @@ export const bumpEntities = (
 					const buff = entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
 					grantRandomStats(
 						entityBoard[i],
-						entityBoardHero.hand,
+						entityBoardHero.hand.filter(
+							(e) =>
+								gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+						),
 						entityBoardHero,
 						buff,
 						buff,

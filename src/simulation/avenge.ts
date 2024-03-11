@@ -1,4 +1,4 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
@@ -408,7 +408,9 @@ const handleAvenge = (
 		case CardIds.IceSickle:
 			grantRandomStats(
 				avenger,
-				boardWithDeadEntityHero.hand,
+				boardWithDeadEntityHero.hand.filter(
+					(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+				),
 				boardWithDeadEntityHero,
 				4,
 				0,

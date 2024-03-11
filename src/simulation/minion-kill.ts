@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, CardType } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
@@ -18,7 +18,13 @@ export const onMinionKill = (
 	switch (killer?.cardId) {
 		case CardIds.Murcules_BG27_023:
 		case CardIds.Murcules_BG27_023_G:
-			const murculesTarget = pickRandom(killerHero.hand.filter((e) => !!e?.cardId));
+			const murculesTarget = pickRandom(
+				killerHero.hand
+					.filter((e) => !!e?.cardId)
+					.filter(
+						(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+					),
+			);
 			if (murculesTarget) {
 				// When it's the opponent, the game state already contains all the buffs
 				if (murculesTarget?.friendly) {
@@ -43,7 +49,14 @@ export const onMinionKill = (
 		case CardIds.TideOracleMorgl_BG27_513:
 		case CardIds.TideOracleMorgl_BG27_513_G:
 			if (killer.attacking) {
-				const tideOracleMorgleTarget = pickRandom(killerHero.hand.filter((e) => !!e?.cardId));
+				const tideOracleMorgleTarget = pickRandom(
+					killerHero.hand
+						.filter((e) => !!e?.cardId)
+						.filter(
+							(e) =>
+								gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+						),
+				);
 				if (tideOracleMorgleTarget) {
 					const tideOracleMorgleMultiplier = killer.cardId === CardIds.TideOracleMorgl_BG27_513 ? 1 : 2;
 					modifyAttack(
