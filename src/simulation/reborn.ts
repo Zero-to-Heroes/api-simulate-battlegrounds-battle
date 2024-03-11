@@ -18,7 +18,6 @@ export const handleRebornForEntity = (
 ): void => {
 	const numberOfReborns = 1;
 	let entityToSpawn: BoardEntity = null;
-	// TODO: test
 	if (
 		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005 ||
 		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005_G
@@ -62,6 +61,7 @@ export const handleRebornForEntity = (
 		opponentBoardHero,
 		gameState,
 	);
+	entitiesThatWereReborn.forEach((e) => (e.rebornFromEntityId = deadEntity.entityId));
 	const entityRightToSpawns =
 		deadMinionIndexFromRight === 0
 			? null

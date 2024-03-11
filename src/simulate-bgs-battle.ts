@@ -302,7 +302,7 @@ const checkRounding = (roundedValue: number, initialValue: number, totalValue: n
 // };
 
 // Used when triggering random deathrattles
-export const validEnchantments = [
+export const VALID_ENCHANTMENTS = [
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e,
 	CardIds.LivingSpores_LivingSporesEnchantment,

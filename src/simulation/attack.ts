@@ -4,7 +4,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { validEnchantments } from '../simulate-bgs-battle';
+import { VALID_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
 	addImpliedMechanics,
 	grantRandomStats,
@@ -624,7 +624,7 @@ const triggerRandomDeathrattle = (
 				entity.enchantments &&
 				entity.enchantments
 					.map((enchantment) => enchantment.cardId)
-					.some((enchantmentId) => validEnchantments.includes(enchantmentId as CardIds))
+					.some((enchantmentId) => VALID_ENCHANTMENTS.includes(enchantmentId as CardIds))
 			) {
 				return true;
 			}

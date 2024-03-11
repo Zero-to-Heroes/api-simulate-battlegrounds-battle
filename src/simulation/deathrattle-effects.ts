@@ -4,6 +4,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { groupByFunction, pickMultipleRandomDifferent, pickRandom, pickRandomLowestHealth } from '../services/utils';
+import { VALID_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
 	grantRandomAttack,
@@ -1508,36 +1509,16 @@ export const rememberDeathrattles = (
 			repeats: enchantment.repeats ?? 1,
 			timing: sharedState.currentEntityId++,
 		}))
-		.filter((enchantment) =>
-			[
-				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
-				CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e,
-				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
-				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
-				CardIds.LivingSpores_LivingSporesEnchantment,
-				CardIds.SneedsReplicator_ReplicateEnchantment,
-				CardIds.EarthInvocation_ElementEarthEnchantment,
-				CardIds.FireInvocation_ElementFireEnchantment,
-				CardIds.WaterInvocation_ElementWaterEnchantment,
-				CardIds.LightningInvocation,
-				CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e,
-				CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
-			].includes(enchantment.cardId as CardIds),
-		);
+		.filter((enchantment) => VALID_ENCHANTMENTS.includes(enchantment.cardId as CardIds));
 	// Multiple fish
 	const deadEntityRememberedDeathrattles =
-		deadEntities.filter((e) => !!e.rememberedDeathrattles?.length).flatMap((e) => e.rememberedDeathrattles) ?? [];
+		deadEntities
+			.filter((e) => !!e.rememberedDeathrattles?.length)
+			// If the fish has reborn, it will inherit its own Deathrattles, and we don't want that
+			.filter((e) => e.entityId !== fish.rebornFromEntityId)
+			.flatMap((e) => e.rememberedDeathrattles) ?? [];
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments, ...deadEntityRememberedDeathrattles];
 	// Order is important - the DR are triggered in the ordered the minions have died
-	// console.log(
-	// 	'remembering deathrattle',
-	// 	'\n',
-	// 	stringifySimpleCard(fish, allCards),
-	// 	'\n',
-	// 	stringifySimple(deadEntities, allCards),
-	// 	'\n',
-	// 	fish.rememberedDeathrattles,
-	// );
 	if (isGolden(fish.cardId, allCards)) {
 		// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
 		const doubleDr = newDeathrattles.reduce((res, current) => res.concat([current, current]), []);
@@ -1545,12 +1526,6 @@ export const rememberDeathrattles = (
 	} else {
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 	}
-	// console.log(
-	// 	'remembering deathrattle after',
-	// 	stringifySimple(deadEntities, allCards),
-	// 	'\n',
-	// 	fish.rememberedDeathrattles,
-	// );
 };
 
 const removeOldMurkEyeAttack = (

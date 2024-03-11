@@ -14,6 +14,7 @@ export interface BoardEntity {
 	poisonous?: boolean;
 	venomous?: boolean;
 	reborn?: boolean;
+	rebornFromEntityId?: number;
 	cleave?: boolean;
 	windfury?: boolean;
 	stealth?: boolean;
