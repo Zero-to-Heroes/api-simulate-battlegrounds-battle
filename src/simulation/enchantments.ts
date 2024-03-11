@@ -1,14 +1,27 @@
-import { AllCardsService } from '@firestone-hs/reference-data';
+import { AllCardsService, CardType } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 
 export const fixEnchantments = (entity: BoardEntity, allCards: AllCardsService): BoardEntity => {
 	const newEnchantments = (entity.enchantments ?? []).map((enchantment) =>
 		isNaN(+enchantment.cardId)
 			? enchantment
-			: { ...enchantment, cardId: allCards.getCard(+enchantment.cardId)?.id },
+			: {
+					...enchantment,
+					cardId: getEnchantmentForDbfId(+enchantment.cardId, allCards),
+			  },
 	);
 	return {
 		...entity,
 		enchantments: newEnchantments,
 	};
+};
+
+const getEnchantmentForDbfId = (dbfId: number, allCards: AllCardsService): string => {
+	const refCard = allCards.getCard(dbfId);
+	if (refCard.type?.toUpperCase() === CardType[CardType.ENCHANTMENT]) {
+		return refCard.id;
+	}
+
+	// Otherwise, we need to figure out the root
+	return allCards.getCard(refCard.enchantmentDbfId)?.id ?? allCards.getCard(dbfId)?.id;
 };
