@@ -135,6 +135,7 @@ export const doFullAttack = (
 		defendingBoardHero,
 		gameState,
 	);
+	// console.debug('damageDoneByAttacker', attackingEntity.cardId, damageDoneByAttacker);
 	applyAfterAttackEffects(
 		attackingEntity,
 		attackingBoard,
@@ -295,7 +296,7 @@ const performAttack = (
 				attackingBoardHero,
 				defendingBoardHero,
 			);
-			dealDamageToEnemy(
+			damageDoneByAttacker += dealDamageToEnemy(
 				defendingEntity,
 				defendingBoard,
 				defendingBoardHero,
@@ -323,7 +324,7 @@ const performAttack = (
 					attackingBoardHero,
 					defendingBoardHero,
 				);
-				dealDamageToEnemy(
+				damageDoneByAttacker += dealDamageToEnemy(
 					target,
 					defendingBoard,
 					defendingBoardHero,
@@ -350,7 +351,7 @@ const performAttack = (
 					attackingBoardHero,
 					defendingBoardHero,
 				);
-				dealDamageToEnemy(
+				damageDoneByAttacker += dealDamageToEnemy(
 					target,
 					defendingBoard,
 					defendingBoardHero,
@@ -378,7 +379,7 @@ const performAttack = (
 				attackingBoardHero,
 				defendingBoardHero,
 			);
-			dealDamageToEnemy(
+			damageDoneByAttacker += dealDamageToEnemy(
 				target,
 				defendingBoard,
 				defendingBoardHero,
