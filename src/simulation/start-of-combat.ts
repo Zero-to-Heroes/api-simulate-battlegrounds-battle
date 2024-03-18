@@ -555,6 +555,7 @@ const handleStartOfCombatSpellsForPlayer = (
 						false,
 						false,
 					);
+					newMinions[0].attackImmediately = true;
 					performEntitySpawns(
 						newMinions,
 						playerBoard,

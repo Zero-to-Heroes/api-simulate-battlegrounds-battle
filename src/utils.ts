@@ -23,7 +23,9 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
 	CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 	CardIds.Onyxia_OnyxianWhelpToken,
-	CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
+	// The token doesn't attack immediately natively, only when spawned by the spell
+	// See http://replays.firestoneapp.com/?reviewId=8924452a-540a-4324-8306-46900c3f9f35&turn=22&action=38
+	// CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
 ];
 const CANT_ATTACK_IDS = [CardIds.ArcaneCannon_BGS_077, CardIds.ArcaneCannon_TB_BaconUps_128];
 
