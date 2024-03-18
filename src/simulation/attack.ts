@@ -943,29 +943,31 @@ export const bumpEntities = (
 	) {
 		entity.abiityChargesLeft--;
 		const newTarget = pickRandom(otherBoard);
-		gameState.spectator.registerPowerTarget(entity, newTarget, otherBoard, entityBoardHero, otherHero);
-		// TODO: here the MadMatador is the source of the damage, not the initial attacker
-		// Not sure exactly what the impact would be, as there is no counter
-		const newSource = {
-			...entity,
-			attack: bumpInto.attack,
-			attacking: true,
-		} as BoardEntity;
-		const defenderHadDivineShield = newTarget.divineShield;
-		const damageDone = bumpEntities(
-			newTarget,
-			newSource,
-			otherBoard,
-			otherHero,
-			entityBoard,
-			entityBoardHero,
-			gameState,
-			false,
-		);
-		if (newSource.attack > 0 && defenderHadDivineShield) {
-			updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
+		if (newTarget) {
+			gameState.spectator.registerPowerTarget(entity, newTarget, otherBoard, entityBoardHero, otherHero);
+			// TODO: here the MadMatador is the source of the damage, not the initial attacker
+			// Not sure exactly what the impact would be, as there is no counter
+			const newSource = {
+				...entity,
+				attack: bumpInto.attack,
+				attacking: true,
+			} as BoardEntity;
+			const defenderHadDivineShield = newTarget.divineShield;
+			const damageDone = bumpEntities(
+				newTarget,
+				newSource,
+				otherBoard,
+				otherHero,
+				entityBoard,
+				entityBoardHero,
+				gameState,
+				false,
+			);
+			if (newSource.attack > 0 && defenderHadDivineShield) {
+				updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
+			}
+			return damageDone;
 		}
-		return damageDone;
 	}
 
 	if (entity.divineShield) {
