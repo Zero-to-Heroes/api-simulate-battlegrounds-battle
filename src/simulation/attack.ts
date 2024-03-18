@@ -20,7 +20,7 @@ import {
 import { addMinionsToBoard } from './add-minion-to-board';
 import { addCardsInHand } from './cards-in-hand';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
-import { handleDeathrattles, orchestrateMinionDeathEffects } from './deathrattle-orchestration';
+import { handleDeathrattle, orchestrateMinionDeathEffects } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
@@ -655,13 +655,20 @@ const triggerRandomDeathrattle = (
 	);
 	const indexFromRight = attackingBoard.length - (attackingBoard.indexOf(targetEntity) + 1);
 
-	handleDeathrattles({
-		gameState: gameState,
-		playerDeadEntities: targetEntity.friendly ? [targetEntity] : [],
-		playerDeadEntityIndexesFromRight: targetEntity.friendly ? [indexFromRight] : [],
-		opponentDeadEntities: targetEntity.friendly ? [] : [targetEntity],
-		opponentDeadEntityIndexesFromRight: targetEntity.friendly ? [] : [indexFromRight],
-	});
+	handleDeathrattle(
+		targetEntity,
+		indexFromRight,
+		[targetEntity],
+		targetEntity.friendly ? gameState.gameState.player : gameState.gameState.opponent,
+		targetEntity.friendly ? gameState.gameState.opponent : gameState.gameState.player,
+		{
+			gameState: gameState,
+			playerDeadEntities: targetEntity.friendly ? [targetEntity] : [],
+			playerDeadEntityIndexesFromRight: targetEntity.friendly ? [indexFromRight] : [],
+			opponentDeadEntities: targetEntity.friendly ? [] : [targetEntity],
+			opponentDeadEntityIndexesFromRight: targetEntity.friendly ? [] : [indexFromRight],
+		},
+	);
 	// The reborn minion spawns to the right of the DR spawns
 	// buildBoardAfterRebornSpawns(
 	// 	attackingBoard,

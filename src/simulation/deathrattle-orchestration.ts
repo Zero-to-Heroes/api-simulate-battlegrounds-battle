@@ -8,117 +8,13 @@ import { FullGameState, PlayerState } from './internal-game-state';
 import { handleRebornForEntity } from './reborn';
 import { performEntitySpawns } from './spawns';
 
-export const orchestrateMinionDeathEffects = (deathrattleInput: DeathrattleInput) => {
-	handleDeathrattles(deathrattleInput);
-	// Avenge trigger before reborn
-	// http://replays.firestoneapp.com/?reviewId=5bb20eb8-e0ca-47ab-adc7-13134716d568&turn=7&action=6
-	handleAvenge(deathrattleInput);
-	handleReborn(deathrattleInput);
-};
-
-// const handleAfterDeathEffects = (deathrattleInput: DeathrattleInput) => {
-// 	const processPlayerFirst = Math.random() > 0.5;
-// 	const playerStates = processPlayerFirst
-// 		? [deathrattleInput.gameState.gameState.player, deathrattleInput.gameState.gameState.opponent]
-// 		: [deathrattleInput.gameState.gameState.opponent, deathrattleInput.gameState.gameState.player];
-// 	const playerDeadEntities = processPlayerFirst
-// 		? [deathrattleInput.playerDeadEntities, deathrattleInput.opponentDeadEntities]
-// 		: [deathrattleInput.opponentDeadEntities, deathrattleInput.playerDeadEntities];
-// 	const playerDeadEntityIndexesFromRight = processPlayerFirst
-// 		? [deathrattleInput.playerDeadEntityIndexesFromRight, deathrattleInput.opponentDeadEntityIndexesFromRight]
-// 		: [deathrattleInput.opponentDeadEntityIndexesFromRight, deathrattleInput.playerDeadEntityIndexesFromRight];
-// 	// const spawnedEntities: BoardEntity[] = [];
-// 	for (let i = 0; i < 2; i++) {
-// 		const deadEntities = playerDeadEntities[i];
-// 		if (deadEntities.length >= 0) {
-// 			for (let j = 0; j < deadEntities.length; j++) {
-// 				const deadEntity = deadEntities[j];
-// 				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
-// 				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
-// 				applyAfterDeathEffects(
-// 					deadEntity,
-// 					modifiedIndexFromRight,
-// 					playerStates[i].board,
-// 					playerStates[i].player,
-// 					playerStates[1 - i].board,
-// 					playerStates[1 - i].player,
-// 					deathrattleInput.gameState,
-// 				);
-// 			}
-// 		}
-// 	}
-// };
-
-const handleAvenge = (deathrattleInput: DeathrattleInput) => {
-	const processPlayerFirst = Math.random() > 0.5;
-	const playerStates = processPlayerFirst
-		? [deathrattleInput.gameState.gameState.player, deathrattleInput.gameState.gameState.opponent]
-		: [deathrattleInput.gameState.gameState.opponent, deathrattleInput.gameState.gameState.player];
-	const playerDeadEntities = processPlayerFirst
-		? [deathrattleInput.playerDeadEntities, deathrattleInput.opponentDeadEntities]
-		: [deathrattleInput.opponentDeadEntities, deathrattleInput.playerDeadEntities];
-	const playerDeadEntityIndexesFromRight = processPlayerFirst
-		? [deathrattleInput.playerDeadEntityIndexesFromRight, deathrattleInput.opponentDeadEntityIndexesFromRight]
-		: [deathrattleInput.opponentDeadEntityIndexesFromRight, deathrattleInput.playerDeadEntityIndexesFromRight];
-	// const spawnedEntities: BoardEntity[] = [];
-	for (let i = 0; i < 2; i++) {
-		const deadEntities = playerDeadEntities[i];
-		if (deadEntities.length >= 0) {
-			for (let j = 0; j < deadEntities.length; j++) {
-				const deadEntity = deadEntities[j];
-				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
-				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
-				applyAvengeEffects(
-					deadEntity,
-					modifiedIndexFromRight,
-					playerStates[i].board,
-					playerStates[i].player,
-					playerStates[1 - i].board,
-					playerStates[1 - i].player,
-					deathrattleInput.gameState,
-				);
-			}
-		}
-	}
-};
-
-const handleReborn = (deathrattleInput: DeathrattleInput) => {
-	const processPlayerFirst = Math.random() > 0.5;
-	const playerStates = processPlayerFirst
-		? [deathrattleInput.gameState.gameState.player, deathrattleInput.gameState.gameState.opponent]
-		: [deathrattleInput.gameState.gameState.opponent, deathrattleInput.gameState.gameState.player];
-	const playerDeadEntities = processPlayerFirst
-		? [deathrattleInput.playerDeadEntities, deathrattleInput.opponentDeadEntities]
-		: [deathrattleInput.opponentDeadEntities, deathrattleInput.playerDeadEntities];
-	const playerDeadEntityIndexesFromRight = processPlayerFirst
-		? [deathrattleInput.playerDeadEntityIndexesFromRight, deathrattleInput.opponentDeadEntityIndexesFromRight]
-		: [deathrattleInput.opponentDeadEntityIndexesFromRight, deathrattleInput.playerDeadEntityIndexesFromRight];
-	// const spawnedEntities: BoardEntity[] = [];
-	for (let i = 0; i < 2; i++) {
-		const deadEntities = playerDeadEntities[i];
-		if (deadEntities.length >= 0) {
-			for (let j = 0; j < deadEntities.length; j++) {
-				const deadEntity = deadEntities[j];
-				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
-				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
-				handleRebornForEntity(
-					playerStates[i].board,
-					playerStates[i].player,
-					deadEntity,
-					modifiedIndexFromRight,
-					playerStates[1 - i].board,
-					playerStates[1 - i].player,
-					deathrattleInput.gameState,
-				);
-				// spawnedEntities.push(...entitiesFromNativeDeathrattle);
-			}
-		}
-	}
-	// return spawnedEntities;
-};
-
-export const handleDeathrattles = (deathrattleInput: DeathrattleInput) => {
+export const orchestrateMinionDeathEffects = (
+	deathrattleInput: DeathrattleInput,
+	processAvenge = true,
+	processReborn = true,
+) => {
 	handlePreDeathrattleEffects(deathrattleInput);
+
 	// Deathrattles are handled left to right
 	// Then for each minion, natural deathrattles are processed first, then enchantments
 	// http://replays.firestoneapp.com/?reviewId=ec5428bf-a599-4f4c-bea9-8acad5075cb8&turn=11&action=1
@@ -151,45 +47,115 @@ export const handleDeathrattles = (deathrattleInput: DeathrattleInput) => {
 				const deadEntity = deadEntities[j];
 				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
 				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
-				const drEntities = handleNaturalDeathrattle(
+				handleMinionDeathEffect(
 					deadEntity,
-					indexFromRight,
 					deadEntities,
 					playerStates[i],
 					playerStates[1 - i],
-					deathrattleInput.gameState,
-				);
-				const enchEntities = handleEnchantmentsDeathrattle(
-					deadEntity,
-					indexFromRight,
-					deadEntities,
-					playerStates[i],
-					playerStates[1 - i],
-					deathrattleInput.gameState,
-				);
-				const afterDeathEntities = applyAfterDeathEffects(
-					deadEntity,
-					modifiedIndexFromRight,
-					playerStates[i].board,
-					playerStates[i].player,
-					playerStates[1 - i].board,
-					playerStates[1 - i].player,
-					deathrattleInput.gameState,
-				);
-				handlePostDeathrattleEffects(
-					deadEntity,
-					modifiedIndexFromRight,
-					deadEntities,
-					playerStates[i],
-					playerStates[1 - i],
-					deathrattleInput.gameState,
-					[...drEntities, ...enchEntities, ...afterDeathEntities],
-					playerStates[i].player.friendly,
 					deathrattleInput,
+					modifiedIndexFromRight,
+					processAvenge,
+					processReborn,
 				);
 			}
 		}
 	}
+};
+
+const handleMinionDeathEffect = (
+	deadEntity: BoardEntity,
+	deadEntities: BoardEntity[],
+	deadEntityPlayerState: PlayerState,
+	otherPlayerState: PlayerState,
+	deathrattleInput: DeathrattleInput,
+	indexFromRight: number,
+	processAvenge = true,
+	processReborn = true,
+) => {
+	const drEntities = handleNaturalDeathrattle(
+		deadEntity,
+		indexFromRight,
+		deadEntities,
+		deadEntityPlayerState,
+		otherPlayerState,
+		deathrattleInput.gameState,
+	);
+	const enchEntities = handleEnchantmentsDeathrattle(
+		deadEntity,
+		indexFromRight,
+		deadEntities,
+		deadEntityPlayerState,
+		otherPlayerState,
+		deathrattleInput.gameState,
+	);
+	// Avenge trigger before reborn
+	// http://replays.firestoneapp.com/?reviewId=5bb20eb8-e0ca-47ab-adc7-13134716d568&turn=7&action=6
+	if (processAvenge) {
+		applyAvengeEffects(
+			deadEntity,
+			indexFromRight,
+			deadEntityPlayerState.board,
+			deadEntityPlayerState.player,
+			otherPlayerState.board,
+			otherPlayerState.player,
+			deathrattleInput.gameState,
+		);
+	}
+	if (processReborn) {
+		handleRebornForEntity(
+			deadEntityPlayerState.board,
+			deadEntityPlayerState.player,
+			deadEntity,
+			indexFromRight,
+			otherPlayerState.board,
+			otherPlayerState.player,
+			deathrattleInput.gameState,
+		);
+	}
+	const afterDeathEntities = applyAfterDeathEffects(
+		deadEntity,
+		indexFromRight,
+		deadEntityPlayerState.board,
+		deadEntityPlayerState.player,
+		otherPlayerState.board,
+		otherPlayerState.player,
+		deathrattleInput.gameState,
+	);
+	handlePostDeathrattleEffects(
+		deadEntity,
+		indexFromRight,
+		deadEntities,
+		deadEntityPlayerState,
+		otherPlayerState,
+		deathrattleInput.gameState,
+		[...drEntities, ...enchEntities, ...afterDeathEntities],
+		deadEntityPlayerState.player.friendly,
+		deathrattleInput,
+	);
+};
+
+export const handleDeathrattles = (deathrattleInput: DeathrattleInput) => {
+	orchestrateMinionDeathEffects(deathrattleInput, false, false);
+};
+
+export const handleDeathrattle = (
+	deadEntity: BoardEntity,
+	indexFromRight: number,
+	deadEntities: BoardEntity[],
+	deadEntityPlayerState: PlayerState,
+	otherPlayerState: PlayerState,
+	deathrattleInput: DeathrattleInput,
+) => {
+	handleMinionDeathEffect(
+		deadEntity,
+		deadEntities,
+		deadEntityPlayerState,
+		otherPlayerState,
+		deathrattleInput,
+		indexFromRight,
+		false,
+		false,
+	);
 };
 
 const handlePreDeathrattleEffects = (deathrattleInput: DeathrattleInput) => {
