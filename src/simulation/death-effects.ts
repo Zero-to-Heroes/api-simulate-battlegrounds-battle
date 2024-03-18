@@ -17,7 +17,7 @@ export const applyAfterDeathEffects = (
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
-) => {
+): BoardEntity[] => {
 	const maxSpawns = 7 - boardWithDeadEntity.length;
 	const allSpawns = [];
 
@@ -154,6 +154,8 @@ export const applyAfterDeathEffects = (
 		otherBoardHero,
 		gameState,
 	);
+
+	return allSpawns;
 };
 
 export const applyOnDeathEffects = (

@@ -477,7 +477,7 @@ export const handleDeathrattleEffects = (
 						.filter((entity) =>
 							isCorrectTribe(gameState.allCards.getCard(entity.cardId)?.races, Race.MECH),
 						).length;
-					for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
+					for (let j = 0; j < numberOfDeadMechsThisCombat; j++) {
 						dealDamageToRandomEnemy(
 							otherBoard,
 							otherBoardHero,
