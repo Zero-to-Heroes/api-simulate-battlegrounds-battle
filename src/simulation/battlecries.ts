@@ -349,11 +349,18 @@ export const triggerBattlecry = (
 				const differentTypes = extractUniqueTribes(board, gameState.allCards);
 				const livingConstellationStats =
 					(entity.cardId === CardIds.LivingConstellation_BG27_001 ? 1 : 2) * differentTypes.length;
-				const livingConstellationTarget = pickRandom(board);
-				modifyAttack(livingConstellationTarget, livingConstellationStats, board, hero, gameState);
-				modifyHealth(livingConstellationTarget, livingConstellationStats, board, hero, gameState);
-				afterStatsUpdate(livingConstellationTarget, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(entity, livingConstellationTarget, board, hero, otherHero);
+				const livingConstellationTarget = pickRandom(allMinions);
+				const boardForTarget = board.includes(livingConstellationTarget) ? board : otherBoard;
+				modifyAttack(livingConstellationTarget, livingConstellationStats, boardForTarget, hero, gameState);
+				modifyHealth(livingConstellationTarget, livingConstellationStats, boardForTarget, hero, gameState);
+				afterStatsUpdate(livingConstellationTarget, boardForTarget, hero, gameState);
+				gameState.spectator.registerPowerTarget(
+					entity,
+					livingConstellationTarget,
+					boardForTarget,
+					hero,
+					otherHero,
+				);
 				break;
 			case CardIds.FairyTaleCaroler_BG26_001:
 			case CardIds.FairyTaleCaroler_BG26_001_G:
