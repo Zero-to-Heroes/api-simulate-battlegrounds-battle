@@ -19,6 +19,11 @@ const cards = new AllCardsService();
 // the more traditional callback-style handler.
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
 export default async (event): Promise<any> => {
+	if (!event.body?.length) {
+		console.warn('missing event body', event);
+		return;
+	}
+
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
 	await cards.initializeCardsDb();
 	const cardsData = new CardsData(cards, false);
