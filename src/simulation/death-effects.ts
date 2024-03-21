@@ -20,6 +20,89 @@ export const applyAfterDeathEffects = (
 	const maxSpawns = 7 - boardWithDeadEntity.length;
 	const allSpawns = [];
 
+	const spawnsFromSecrets = handleSecrets(
+		deadEntity,
+		deadEntityIndexFromRight,
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		otherBoard,
+		otherBoardHero,
+		gameState,
+	);
+	allSpawns.push(...spawnsFromSecrets);
+
+	// Feathermane
+	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
+		const feathermanes =
+			boardWithDeadEntityHero.hand
+				?.filter((e) => !e.locked)
+				.filter(
+					(e) =>
+						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014 ||
+						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014_G,
+				) ?? [];
+		// removeCardFromHand(boardWithDeadEntityHero, spawn);
+		for (const feathermaneSpawn of feathermanes) {
+			if (allSpawns.length >= maxSpawns) {
+				break;
+			}
+			feathermaneSpawn.locked = true;
+			const spawns = spawnEntities(
+				feathermaneSpawn.cardId,
+				1,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				otherBoard,
+				otherBoardHero,
+				gameState.allCards,
+				gameState.cardsData,
+				gameState.sharedState,
+				gameState.spectator,
+				deadEntity.friendly,
+				false,
+				false,
+				true,
+				{ ...feathermaneSpawn } as BoardEntity,
+			);
+
+			// So that it can be flagged as "unspawned" if it is not spawned in the end
+			for (const spawn of spawns) {
+				spawn.onCanceledSummon = () => (feathermaneSpawn.locked = false);
+				// spawn.backRef = feathermaneSpawn;
+			}
+			// console.log(
+			// 	'\tspawning feathermane',
+			// 	stringifySimpleCard(feathermaneSpawn, allCards),
+			// 	stringifySimple(spawns, allCards),
+			// );
+			allSpawns.push(...spawns);
+		}
+	}
+
+	performEntitySpawns(
+		allSpawns,
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		deadEntity,
+		deadEntityIndexFromRight,
+		otherBoard,
+		otherBoardHero,
+		gameState,
+	);
+
+	return allSpawns;
+};
+
+const handleSecrets = (
+	deadEntity: BoardEntity,
+	deadEntityIndexFromRight: number,
+	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): BoardEntity[] => {
+	const allSpawns = [];
 	let secretTriggered = null;
 	if (
 		(secretTriggered = boardWithDeadEntityHero.secrets?.find(
@@ -101,65 +184,6 @@ export const applyAfterDeathEffects = (
 		);
 		allSpawns.push(...spawns);
 	}
-
-	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
-		const feathermanes =
-			boardWithDeadEntityHero.hand
-				?.filter((e) => !e.locked)
-				.filter(
-					(e) =>
-						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014 ||
-						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014_G,
-				) ?? [];
-		// removeCardFromHand(boardWithDeadEntityHero, spawn);
-		for (const feathermaneSpawn of feathermanes) {
-			if (allSpawns.length >= maxSpawns) {
-				break;
-			}
-			feathermaneSpawn.locked = true;
-			const spawns = spawnEntities(
-				feathermaneSpawn.cardId,
-				1,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				otherBoard,
-				otherBoardHero,
-				gameState.allCards,
-				gameState.cardsData,
-				gameState.sharedState,
-				gameState.spectator,
-				deadEntity.friendly,
-				false,
-				false,
-				true,
-				{ ...feathermaneSpawn } as BoardEntity,
-			);
-
-			// So that it can be flagged as "unspawned" if it is not spawned in the end
-			for (const spawn of spawns) {
-				spawn.onCanceledSummon = () => (feathermaneSpawn.locked = false);
-				// spawn.backRef = feathermaneSpawn;
-			}
-			// console.log(
-			// 	'\tspawning feathermane',
-			// 	stringifySimpleCard(feathermaneSpawn, allCards),
-			// 	stringifySimple(spawns, allCards),
-			// );
-			allSpawns.push(...spawns);
-		}
-	}
-
-	performEntitySpawns(
-		allSpawns,
-		boardWithDeadEntity,
-		boardWithDeadEntityHero,
-		deadEntity,
-		deadEntityIndexFromRight,
-		otherBoard,
-		otherBoardHero,
-		gameState,
-	);
-
 	return allSpawns;
 };
 
