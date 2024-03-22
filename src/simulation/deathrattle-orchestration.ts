@@ -155,8 +155,8 @@ export const processDeathrattleForMinion = (
 		);
 	}
 
-	// TODO: this should be applied after Reborn is processed, but today HS is buggy and processes it
-	// at deathrattle speed. At least that's the case for Feathermane, I'm not sure about the secrets
+	// TODO: Feathermane should be applied after the Reborn effects have all been processed
+	// Secrets should be processed here ("at Avenge speed")
 	const afterDeathEntities = applyAfterDeathEffects(
 		deadEntity,
 		indexFromRight,
