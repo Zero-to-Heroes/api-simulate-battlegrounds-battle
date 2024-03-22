@@ -95,9 +95,13 @@ export class CardsData {
 					? card.techLevel <= 4
 					: true,
 			);
-		this.pool = poolWithoutGolden.filter((card) =>
-			anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801) ? this.isGolden(card) : !this.isGolden(card),
-		);
+		this.pool = poolWithoutGolden
+			.filter((card) => this.isValidTribe(validTribes, card.races))
+			.filter((card) =>
+				anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801)
+					? this.isGolden(card)
+					: !this.isGolden(card),
+			);
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(this.pool);
 		this.ghastcoilerSpawns = this.pool
 			.filter((card) => card.id !== 'BGS_008')
