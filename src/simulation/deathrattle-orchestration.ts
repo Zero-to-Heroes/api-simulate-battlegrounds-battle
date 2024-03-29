@@ -1,9 +1,10 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
+import { hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
 import { applyMinionDeathEffect, handleDeathrattleEffects } from './deathrattle-effects';
-import { spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
+import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { handleRebornForEntity } from './reborn';
 import { performEntitySpawns } from './spawns';
@@ -30,7 +31,8 @@ export const orchestrateMinionDeathEffects = (
 		processReborns(deathrattleInput);
 	}
 
-	handlePostDeathrattleEffects(deathrattleInput, entitiesFromDeathrattles);
+	const entitiesFromFeathermanes = processFeathermaneEffects(deathrattleInput);
+	handlePostDeathrattleEffects(deathrattleInput, [...entitiesFromDeathrattles, ...entitiesFromFeathermanes]);
 };
 
 const handlePreDeathrattleEffects = (deathrattleInput: DeathrattleInput) => {
@@ -114,6 +116,118 @@ const processDeathrattles = (deathrattleInput: DeathrattleInput, processAvenge =
 		}
 	}
 	return entitiesFromDeathrattles;
+};
+
+const processFeathermaneEffects = (deathrattleInput: DeathrattleInput, processAvenge = true): BoardEntity[] => {
+	const entitiesFromDeathrattles: BoardEntity[] = [];
+	const processPlayerFirst = Math.random() > 0.5;
+	const playerStates = processPlayerFirst
+		? [deathrattleInput.gameState.gameState.player, deathrattleInput.gameState.gameState.opponent]
+		: [deathrattleInput.gameState.gameState.opponent, deathrattleInput.gameState.gameState.player];
+	const playerDeadEntities = processPlayerFirst
+		? [deathrattleInput.playerDeadEntities, deathrattleInput.opponentDeadEntities]
+		: [deathrattleInput.opponentDeadEntities, deathrattleInput.playerDeadEntities];
+	const playerDeadEntityIndexesFromRight = processPlayerFirst
+		? [deathrattleInput.playerDeadEntityIndexesFromRight, deathrattleInput.opponentDeadEntityIndexesFromRight]
+		: [deathrattleInput.opponentDeadEntityIndexesFromRight, deathrattleInput.playerDeadEntityIndexesFromRight];
+	// Process one player first, then the other
+	for (let i = 0; i < 2; i++) {
+		const deadEntities = playerDeadEntities[i];
+		if (deadEntities.length >= 0) {
+			// Entities are processed left to right
+			// TODO: in fact, the processing order is summoning order, so maybe we can just use the entityId
+			// to determine the order? https://x.com/LoewenMitchell/status/1750792974383173676?s=20
+			// "It should be summoned order (which is most cases would be left to right but mid-combat that could change)."
+			// This doesn't actually work: http://replays.firestoneapp.com/?reviewId=ec5428bf-a599-4f4c-bea9-8acad5075cb8&turn=11&action=6
+			// deadEntities.sort((a, b) => a.entityId - b.entityId);
+			// So we would need to find another proxy for the order
+			for (let j = 0; j < deadEntities.length; j++) {
+				const deadEntity = deadEntities[j];
+				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
+				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
+				const deadEntityPlayerState = playerStates[i];
+				const otherPlayerState = playerStates[1 - i];
+				const spawns = processFeathermaneForMinion(
+					deadEntity,
+					indexFromRight,
+					deadEntities,
+					deadEntityPlayerState,
+					otherPlayerState,
+					deathrattleInput.gameState,
+					processAvenge,
+				);
+				entitiesFromDeathrattles.push(...spawns);
+			}
+		}
+	}
+	return entitiesFromDeathrattles;
+};
+
+const processFeathermaneForMinion = (
+	deadEntity: BoardEntity,
+	indexFromRight: number,
+	deadEntities: BoardEntity[],
+	deadEntityPlayerState: PlayerState,
+	otherPlayerState: PlayerState,
+	gameState: FullGameState,
+	processAvenge = true,
+) => {
+	const maxSpawns = 7 - deadEntityPlayerState.board.length;
+	const allSpawns = [];
+
+	// Feathermane
+	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
+		const feathermanes =
+			deadEntityPlayerState.player.hand
+				?.filter((e) => !e.locked)
+				.filter(
+					(e) =>
+						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014 ||
+						e.cardId === CardIds.FreeFlyingFeathermane_BG27_014_G,
+				) ?? [];
+		for (const feathermaneSpawn of feathermanes) {
+			if (allSpawns.length >= maxSpawns) {
+				break;
+			}
+			feathermaneSpawn.locked = true;
+			const spawns = spawnEntities(
+				feathermaneSpawn.cardId,
+				1,
+				deadEntityPlayerState.board,
+				deadEntityPlayerState.player,
+				otherPlayerState.board,
+				otherPlayerState.player,
+				gameState.allCards,
+				gameState.cardsData,
+				gameState.sharedState,
+				gameState.spectator,
+				deadEntity.friendly,
+				false,
+				false,
+				true,
+				{ ...feathermaneSpawn } as BoardEntity,
+			);
+
+			// So that it can be flagged as "unspawned" if it is not spawned in the end
+			for (const spawn of spawns) {
+				spawn.onCanceledSummon = () => (feathermaneSpawn.locked = false);
+				// spawn.backRef = feathermaneSpawn;
+			}
+			allSpawns.push(...spawns);
+		}
+	}
+
+	performEntitySpawns(
+		allSpawns,
+		deadEntityPlayerState.board,
+		deadEntityPlayerState.player,
+		deadEntity,
+		indexFromRight,
+		otherPlayerState.board,
+		otherPlayerState.player,
+		gameState,
+	);
+	return allSpawns;
 };
 
 export const processDeathrattleForMinion = (
