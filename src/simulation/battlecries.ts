@@ -397,11 +397,30 @@ export const triggerBattlecry = (
 				const emergentFlameTarget = pickRandom(
 					allMinions.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
 				);
-				const emergentFlameMultiplier = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
-				const emergentFlameStats = (entity.scriptDataNum1 ?? 1) * emergentFlameMultiplier;
-				modifyAttack(emergentFlameTarget, emergentFlameStats, board, hero, gameState);
-				modifyHealth(emergentFlameTarget, emergentFlameStats, board, hero, gameState);
-				afterStatsUpdate(emergentFlameTarget, board, hero, gameState);
+				if (!!emergentFlameTarget) {
+					const targetBoard = board.includes(emergentFlameTarget) ? board : otherBoard;
+					const targetHero = board.includes(emergentFlameTarget) ? hero : otherHero;
+					const emergentFlameMultiplier = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
+					const emergentFlameStats = (entity.scriptDataNum1 ?? 1) * emergentFlameMultiplier;
+					modifyAttack(emergentFlameTarget, emergentFlameStats, targetBoard, targetHero, gameState);
+					modifyHealth(emergentFlameTarget, emergentFlameStats, targetBoard, targetHero, gameState);
+					afterStatsUpdate(emergentFlameTarget, targetBoard, targetHero, gameState);
+				}
+				break;
+			case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t:
+			case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309_Gt:
+				const smolderwingTarget = pickRandom(
+					allMinions.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards)),
+				);
+				if (!!smolderwingTarget) {
+					const targetBoard = board.includes(emergentFlameTarget) ? board : otherBoard;
+					const targetHero = board.includes(emergentFlameTarget) ? hero : otherHero;
+					const smolderwingMultiplier =
+						entity.cardId === CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t ? 1 : 2;
+					const smolderwingStats = 5 * smolderwingMultiplier;
+					modifyAttack(smolderwingTarget, smolderwingStats, targetBoard, targetHero, gameState);
+					afterStatsUpdate(smolderwingTarget, targetBoard, targetHero, gameState);
+				}
 				break;
 			case CardIds.ArgentBraggart_BG_SCH_149:
 			case CardIds.ArgentBraggart_TB_BaconUps_308:
@@ -443,9 +462,17 @@ export const triggerBattlecry = (
 				const balladistTargets = allMinions.filter((e) => hasCorrectTribe(e, Race.PIRATE, gameState.allCards));
 				const balladistTarget = pickRandom(balladistTargets);
 				if (balladistTarget) {
-					modifyHealth(balladistTarget, balladistStats, board, hero, gameState);
-					afterStatsUpdate(balladistTarget, board, hero, gameState);
-					gameState.spectator.registerPowerTarget(entity, balladistTarget, board, hero, otherHero);
+					const targetBoard = board.includes(balladistTarget) ? board : otherBoard;
+					const targetHero = board.includes(balladistTarget) ? hero : otherHero;
+					modifyHealth(balladistTarget, balladistStats, targetBoard, targetHero, gameState);
+					afterStatsUpdate(balladistTarget, targetBoard, targetHero, gameState);
+					gameState.spectator.registerPowerTarget(
+						entity,
+						balladistTarget,
+						targetBoard,
+						targetHero,
+						otherHero,
+					);
 				}
 				break;
 			case CardIds.FacelessDisciple_BG24_719:
