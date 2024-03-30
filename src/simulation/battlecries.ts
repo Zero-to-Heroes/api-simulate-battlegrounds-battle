@@ -394,9 +394,8 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.EmergentFlame_BG27_018:
 			case CardIds.EmergentFlame_BG27_018_G:
-				const allBoards = [...board, ...otherBoard];
 				const emergentFlameTarget = pickRandom(
-					allBoards.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
+					allMinions.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
 				);
 				const emergentFlameMultiplier = entity.cardId === CardIds.EmergentFlame_BG27_018 ? 1 : 2;
 				const emergentFlameStats = (entity.scriptDataNum1 ?? 1) * emergentFlameMultiplier;
@@ -441,9 +440,8 @@ export const triggerBattlecry = (
 			case CardIds.LovesickBalladist_BG26_814_G:
 				const balladistMultiplier = entity.cardId === CardIds.LovesickBalladist_BG26_814 ? 1 : 2;
 				const balladistStats = balladistMultiplier * (entity.scriptDataNum1 ?? 0);
-				const balladistTarget = pickRandom(
-					board.filter((e) => hasCorrectTribe(e, Race.PIRATE, gameState.allCards)),
-				);
+				const balladistTargets = allMinions.filter((e) => hasCorrectTribe(e, Race.PIRATE, gameState.allCards));
+				const balladistTarget = pickRandom(balladistTargets);
 				if (balladistTarget) {
 					modifyHealth(balladistTarget, balladistStats, board, hero, gameState);
 					afterStatsUpdate(balladistTarget, board, hero, gameState);
