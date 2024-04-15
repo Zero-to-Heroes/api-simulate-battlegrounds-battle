@@ -490,6 +490,24 @@ const handleAvenge = (
 		case CardIds.StableAmalgamation_BG28_Reward_518:
 			avenger.scriptDataNum1++;
 			break;
+		case CardIds.MurglMkIi_BG29_991:
+		case CardIds.MurglMkIi_BG29_991_G:
+			const murglMkStats = avenger.cardId === CardIds.MurglMkIi_BG29_991_G ? 2 : 1;
+			addStatsToBoard(
+				avenger,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				murglMkStats,
+				murglMkStats,
+				gameState,
+			);
+			// Don't use utility methods, as we don't want triggers to proc
+			for (const e of boardWithDeadEntityHero.hand ?? []) {
+				e.attack += murglMkStats;
+				e.health += murglMkStats;
+				e.maxHealth += murglMkStats;
+			}
+			break;
 	}
 	avenger.avengeCurrent += avenger.avengeDefault;
 };

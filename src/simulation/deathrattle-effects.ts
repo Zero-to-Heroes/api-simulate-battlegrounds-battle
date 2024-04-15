@@ -3,7 +3,13 @@ import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/referenc
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
-import { groupByFunction, pickMultipleRandomDifferent, pickRandom, pickRandomLowestHealth } from '../services/utils';
+import {
+	groupByFunction,
+	pickMultipleRandomDifferent,
+	pickRandom,
+	pickRandomAlive,
+	pickRandomLowestHealth,
+} from '../services/utils';
 import { VALID_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
@@ -249,6 +255,22 @@ export const handleDeathrattleEffects = (
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
+			case CardIds.SilithidBurrower_BG29_871:
+			case CardIds.SilithidBurrower_BG29_871_G:
+				const silithidStats = deadEntity.cardId === CardIds.SilithidBurrower_BG29_871_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					addStatsToBoard(
+						deadEntity,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						silithidStats,
+						silithidStats,
+						gameState,
+						Race[Race.BEAST],
+					);
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
 			// case CardIds.KingBagurgle_BGS_030:
 			// 	addStatsToBoard(
 			// 		deadEntity,
@@ -333,6 +355,39 @@ export const handleDeathrattleEffects = (
 						gameState,
 						true,
 					);
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
+			case CardIds.NightbaneIgnited_BG29_815:
+			case CardIds.NightbaneIgnited_BG29_815_G:
+				const nightbaneLoops = deadEntityCardId === CardIds.NightbaneIgnited_BG29_815_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < nightbaneLoops; j++) {
+						const pickedTargetEntityIds = [];
+						for (let k = 0; k < 2; k++) {
+							const target = pickRandomAlive(
+								boardWithDeadEntity.filter((e) => !pickedTargetEntityIds.includes(e.entityId)),
+							);
+							if (!!target) {
+								pickedTargetEntityIds.push(target.entityId);
+								modifyAttack(
+									target,
+									deadEntity.attack,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									gameState,
+								);
+								afterStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+								gameState.spectator.registerPowerTarget(
+									deadEntity,
+									target,
+									boardWithDeadEntity,
+									null,
+									null,
+								);
+							}
+						}
+					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
@@ -505,6 +560,24 @@ export const handleDeathrattleEffects = (
 							4,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
+							gameState,
+						);
+					}
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
+			case CardIds.FireDancer_BG29_843:
+			case CardIds.FireDancer_BG29_843_G:
+				const fireDancerLoops = deadEntity.cardId === CardIds.FireDancer_BG29_843_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < fireDancerLoops; j++) {
+						dealDamageToAllMinions(
+							otherBoard,
+							otherBoardHero,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							deadEntity,
+							1,
 							gameState,
 						);
 					}
@@ -846,6 +919,25 @@ export const handleDeathrattleEffects = (
 						scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
 					}
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, scraperCardsToAdd, gameState);
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
+			case CardIds.SpikedSavior_BG29_808:
+			case CardIds.SpikedSavior_BG29_808_G:
+				const spikedSaviorLoops = deadEntity.cardId === CardIds.SpikedSavior_BG29_808_G ? 2 : 1;
+				for (let i = 0; i < multiplier; i++) {
+					for (let j = 0; j < spikedSaviorLoops; j++) {
+						dealDamageToAllMinions(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							[],
+							otherBoardHero,
+							deadEntity,
+							1,
+							gameState,
+						);
+						addStatsToBoard(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, 0, 1, gameState);
+					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;

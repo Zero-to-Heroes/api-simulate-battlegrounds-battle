@@ -43,6 +43,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.UpperHand_BG28_573,
 	CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy,
 	CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G,
+	CardIds.IrateRooster_BG29_990,
+	CardIds.IrateRooster_BG29_990_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,
@@ -182,6 +184,8 @@ export class CardsData {
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
+			case CardIds.MurglMkIi_BG29_991:
+			case CardIds.MurglMkIi_BG29_991_G:
 				return 3;
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:

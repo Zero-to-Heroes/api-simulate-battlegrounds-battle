@@ -40,6 +40,7 @@ export const modifyAttack = (
 	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
+
 	if (isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.DRAGON)) {
 		const whelpSmugglers = friendlyBoard.filter(
 			(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
@@ -80,6 +81,12 @@ export const modifyAttack = (
 				gameState,
 			);
 		});
+	} else if (
+		entity.cardId === CardIds.DefiantShipwright_BG21_018 ||
+		entity.cardId === CardIds.DefiantShipwright_BG21_018_G
+	) {
+		const stat = entity.cardId === CardIds.DefiantShipwright_BG21_018_G ? 2 : 1;
+		entity.health += stat;
 	}
 
 	if ([CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(entity.cardId as CardIds)) {

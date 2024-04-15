@@ -198,7 +198,7 @@ export const triggerBattlecry = (
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
-					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 2 : 4,
+					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 3 : 6,
 					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 1 : 2,
 					gameState,
 					Race[Race.DRAGON],
@@ -610,6 +610,62 @@ export const triggerBattlecry = (
 					modifyHealth(weebominationTarget, weebominationBuff, board, hero, gameState);
 					afterStatsUpdate(weebominationTarget, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, weebominationTarget, board, hero, otherHero);
+				}
+				break;
+			case CardIds.AssistantGuard_BG29_845:
+			case CardIds.AssistantGuard_BG29_845_G:
+				const assistantGuardMultiplier = entity.cardId === CardIds.AssistantGuard_BG29_845 ? 1 : 2;
+				const assistantGuardTarget = pickRandom(allMinions);
+				if (assistantGuardTarget) {
+					assistantGuardTarget.taunt = true;
+					gameState.spectator.registerPowerTarget(entity, assistantGuardTarget, board, hero, otherHero);
+				}
+				addStatsToBoard(
+					entity,
+					board.filter((e) => !!e.taunt),
+					hero,
+					assistantGuardMultiplier * 2,
+					assistantGuardMultiplier * 3,
+					gameState,
+				);
+				break;
+			case CardIds.GoldshellWarden_BG29_803:
+			case CardIds.GoldshellWarden_BG29_803_G:
+				const goldshellMultiplier = entity.cardId === CardIds.GoldshellWarden_BG29_803_G ? 2 : 1;
+				addStatsToBoard(
+					entity,
+					board.filter((e) => e.entityId != entity.entityId),
+					hero,
+					goldshellMultiplier * 1,
+					goldshellMultiplier * 4,
+					gameState,
+					Race[Race.BEAST],
+				);
+				break;
+			case CardIds.ShellWhistler_BG26_045:
+			case CardIds.ShellWhistler_BG26_045_G:
+				const shellWhistlerCardsToAdd =
+					entity.cardId === CardIds.ShellWhistler_BG26_045_G ? [null] : [null, null];
+				addCardsInHand(hero, board, shellWhistlerCardsToAdd, gameState);
+				break;
+			case CardIds.GemSmuggler_BG25_155:
+			case CardIds.GemSmuggler_BG25_155_G:
+				const gemSmugglerBloodGems = entity.cardId === CardIds.GemSmuggler_BG25_155 ? 2 : 4;
+				board
+					.filter((e) => e.entityId !== entity.entityId)
+					.forEach((e) => playBloodGemsOn(e, gemSmugglerBloodGems, board, hero, gameState));
+				break;
+			case CardIds.DisguisedGraverobber_BG28_303:
+			case CardIds.DisguisedGraverobber_BG28_303_G:
+				const disguisedGraverobberTarget = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
+				if (disguisedGraverobberTarget) {
+					const disguisedGraverobberNumberOfCopies =
+						entity.cardId === CardIds.DisguisedGraverobber_BG28_303 ? 1 : 2;
+					disguisedGraverobberTarget.definitelyDead = true;
+					const copies = Array.from({ length: disguisedGraverobberNumberOfCopies }).map(
+						(_) => disguisedGraverobberTarget.cardId,
+					);
+					addCardsInHand(hero, board, copies, gameState);
 				}
 				break;
 			default:

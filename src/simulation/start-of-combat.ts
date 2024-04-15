@@ -4,7 +4,15 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
-import { hasCorrectTribe, isCorrectTribe, makeMinionGolden, updateDivineShield } from '../utils';
+import {
+	addStatsToBoard,
+	getRandomMinionWithHighestHealth,
+	hasCorrectTribe,
+	isCorrectTribe,
+	isGolden,
+	makeMinionGolden,
+	updateDivineShield,
+} from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
 import {
 	dealDamageToEnemy,
@@ -1182,23 +1190,8 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014 ||
 		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G
 	) {
-		const numberOfDragons = attackingBoardBefore
-			.map((entity) => gameState.allCards.getCard(entity.cardId).races)
-			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
-		const neighbours = getNeighbours(attackingBoard, attacker);
-		const multiplier = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 2 : 1;
-		neighbours.forEach((entity) => {
-			modifyAttack(entity, multiplier * numberOfDragons, attackingBoard, attackingBoardHero, gameState);
-			modifyHealth(entity, multiplier * numberOfDragons, attackingBoard, attackingBoardHero, gameState);
-			afterStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(
-				attacker,
-				entity,
-				attackingBoard,
-				attackingBoardHero,
-				defendingBoardHero,
-			);
-		});
+		const stats = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
+		addStatsToBoard(attacker, attackingBoard, attackingBoardHero, stats, stats, gameState, Race[Race.DRAGON]);
 	} else if (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
@@ -1578,6 +1571,135 @@ export const performStartOfCombatMinionsForPlayer = (
 			attackingBoardHero,
 			defendingBoardHero,
 		);
+	} else if (
+		attacker.cardId === CardIds.IrateRooster_BG29_990 ||
+		attacker.cardId === CardIds.IrateRooster_BG29_990_G
+	) {
+		const loops = attacker.cardId === CardIds.IrateRooster_BG29_990_G ? 2 : 1;
+		for (let i = 0; i < loops; i++) {
+			const neighbours = getNeighbours(attackingBoard, attacker);
+			for (const neighbour of neighbours) {
+				dealDamageToEnemy(
+					neighbour,
+					attackingBoard,
+					attackingBoardHero,
+					attacker,
+					1,
+					attackingBoard,
+					attackingBoardHero,
+					gameState,
+				);
+				modifyAttack(neighbour, 4, attackingBoard, attackingBoardHero, gameState);
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					neighbour,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
+			}
+		}
+	} else if (
+		attacker.cardId === CardIds.MisfitDragonling_BG29_814 ||
+		attacker.cardId === CardIds.MisfitDragonling_BG29_814_G
+	) {
+		const multiplier = attacker.cardId === CardIds.MisfitDragonling_BG29_814_G ? 2 : 1;
+		const tier = attackingBoardHero.tavernTier;
+		const stats = multiplier * tier;
+		modifyAttack(attacker, stats, attackingBoard, attackingBoardHero, gameState);
+		modifyHealth(attacker, stats, attackingBoard, attackingBoardHero, gameState);
+		afterStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+		gameState.spectator.registerPowerTarget(
+			attacker,
+			attacker,
+			attackingBoard,
+			attackingBoardHero,
+			defendingBoardHero,
+		);
+	} else if (
+		attacker.cardId === CardIds.ThousandthPaperDrake_BG29_810 ||
+		attacker.cardId === CardIds.ThousandthPaperDrake_BG29_810_G
+	) {
+		const loops = attacker.cardId === CardIds.ThousandthPaperDrake_BG29_810_G ? 2 : 1;
+		const pickedTargets = [];
+		const dragons = attackingBoard.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards));
+		for (let i = 0; i < loops; i++) {
+			const target = dragons.filter((e) => !pickedTargets.includes(e))[0];
+			if (!!target) {
+				modifyAttack(target, 1, attackingBoard, attackingBoardHero, gameState);
+				modifyHealth(target, 2, attackingBoard, attackingBoardHero, gameState);
+				afterStatsUpdate(target, attackingBoard, attackingBoardHero, gameState);
+				target.windfury = true;
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					target,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
+				pickedTargets.push(target);
+			}
+		}
+	} else if (
+		attacker.cardId === CardIds.YulonFortuneGranter_BG29_811 ||
+		attacker.cardId === CardIds.YulonFortuneGranter_BG29_811_G
+	) {
+		const loops = attacker.cardId === CardIds.YulonFortuneGranter_BG29_811_G ? 2 : 1;
+		for (let i = 0; i < loops; i++) {
+			// Because we pick one at random from all the ones that have the lowest tier
+			const randomBoard = shuffleArray([...attackingBoard]);
+			const candidates = randomBoard
+				.filter((e) => !isGolden(e.cardId, gameState.allCards))
+				.sort(
+					(a, b) =>
+						gameState.cardsData.getTavernLevel(a.cardId) - gameState.cardsData.getTavernLevel(b.cardId),
+				);
+			const target = candidates[0];
+			if (!!target) {
+				makeMinionGolden(target, attacker, attackingBoard, attackingBoardHero, gameState);
+			}
+		}
+	} else if (
+		attacker.cardId === CardIds.HoardingHatespawn_BG29_872 ||
+		attacker.cardId === CardIds.HoardingHatespawn_BG29_872_G
+	) {
+		const stats = attacker.cardId === CardIds.HoardingHatespawn_BG29_872_G ? 20 : 10;
+		const target = getRandomMinionWithHighestHealth(defendingBoard);
+		if (!!target) {
+			const previousAttack = target.attack;
+			const previousHealth = target.health;
+			target.attack = Math.max(0, target.attack - stats);
+			target.health = Math.max(0, target.health - stats);
+			target.maxHealth = Math.max(0, target.maxHealth - stats);
+			modifyAttack(attacker, previousAttack - attacker.attack, attackingBoard, attackingBoardHero, gameState);
+			modifyHealth(attacker, previousHealth - attacker.health, attackingBoard, attackingBoardHero, gameState);
+			afterStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+			gameState.spectator.registerPowerTarget(
+				attacker,
+				target,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
+		}
+	} else if (
+		attacker.cardId === CardIds.TheUninvitedGuest_BG29_875 ||
+		attacker.cardId === CardIds.TheUninvitedGuest_BG29_875_G
+	) {
+		const targetEnchantment =
+			attacker.cardId === CardIds.TheUninvitedGuest_BG29_875_G
+				? CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875_Ge
+				: CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875e;
+		attackingBoard.forEach((e) => {
+			e.enchantments = e.enchantments || [];
+			if (!e.enchantments.some((e) => e.cardId === targetEnchantment)) {
+				e.enchantments.push({
+					cardId: targetEnchantment,
+					originEntityId: attacker.entityId,
+					timing: gameState.sharedState.currentEntityId++,
+				});
+			}
+		});
 	}
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
 };

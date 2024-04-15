@@ -152,6 +152,27 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
+				case CardIds.CordPuller_BG29_611:
+				case CardIds.CordPuller_BG29_611_G:
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntity.cardId === CardIds.CordPuller_BG29_611_G
+								? CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t
+								: CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 				case CardIds.Manasaber_BG26_800:
 				case CardIds.Manasaber_BG26_800_G:
 					const cublingId =
@@ -441,10 +462,10 @@ export const spawnEntitiesFromDeathrattle = (
 						);
 					}
 					break;
-				case CardIds.KindlyGrandmother_KAR_005:
+				case CardIds.KindlyGrandmother_BG_KAR_005:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.KindlyGrandmother_BigBadWolf,
+							CardIds.KindlyGrandmother_BigBadWolf_BG_KAR_005a,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -462,7 +483,7 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.KindlyGrandmother_TB_BaconUps_004:
 					spawnedEntities.push(
 						...spawnEntities(
-							CardIds.KindlyGrandmother_BigBadWolf,
+							CardIds.KindlyGrandmother_BigBadWolfToken,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -1669,6 +1690,42 @@ export const spawnEntitiesFromEnchantments = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875e:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.TheUninvitedGuest_ShadowToken_BG29_875t,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875_Ge:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.TheUninvitedGuest_ShadowToken_BG29_875_Gt,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
