@@ -19,12 +19,17 @@ export const cloneInput3 = (input: BgsBattleInfo): BgsBattleInfo => {
 		heroHasDied: input.heroHasDied,
 		playerBoard: cloneBoard(input.playerBoard),
 		opponentBoard: cloneBoard(input.opponentBoard),
+		playerTeammateBoard: cloneBoard(input.playerTeammateBoard),
+		opponentTeammateBoard: cloneBoard(input.opponentTeammateBoard),
 		options: null,
 	};
 	return result;
 };
 
 const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
+	if (!board) {
+		return null;
+	}
 	const result: BgsBoardInfo = {
 		player: {
 			...board.player,
