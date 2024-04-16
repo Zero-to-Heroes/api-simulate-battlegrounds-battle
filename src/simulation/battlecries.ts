@@ -5,6 +5,7 @@ import { pickRandom } from '../services/utils';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
+	getPlayerState,
 	getRandomAliveMinion,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
@@ -405,6 +406,7 @@ export const triggerBattlecry = (
 					modifyAttack(emergentFlameTarget, emergentFlameStats, targetBoard, targetHero, gameState);
 					modifyHealth(emergentFlameTarget, emergentFlameStats, targetBoard, targetHero, gameState);
 					afterStatsUpdate(emergentFlameTarget, targetBoard, targetHero, gameState);
+					gameState.spectator.registerPowerTarget(entity, emergentFlameTarget, targetBoard, hero, otherHero);
 				}
 				break;
 			case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t:
@@ -666,6 +668,54 @@ export const triggerBattlecry = (
 						(_) => disguisedGraverobberTarget.cardId,
 					);
 					addCardsInHand(hero, board, copies, gameState);
+				}
+				break;
+			case CardIds.FriendlySaloonkeeper_BGDUO_104:
+			case CardIds.FriendlySaloonkeeper_BGDUO_104_G:
+				const playerState = getPlayerState(gameState.gameState, hero);
+				if (playerState) {
+					const cardsToAdd =
+						entity.cardId === CardIds.FriendlySaloonkeeper_BGDUO_104
+							? [CardIds.TheCoinCore]
+							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
+					addCardsInHand(playerState.player, playerState.board, cardsToAdd, gameState);
+				}
+				break;
+			case CardIds.GenerousGeomancer_BGDUO_111:
+			case CardIds.GenerousGeomancer_BGDUO_111_G:
+				const cardsToAdd =
+					entity.cardId === CardIds.GenerousGeomancer_BGDUO_111
+						? [CardIds.BloodGem]
+						: [CardIds.BloodGem, CardIds.BloodGem];
+				addCardsInHand(
+					gameState.gameState.player.player,
+					gameState.gameState.player.board,
+					cardsToAdd,
+					gameState,
+				);
+				if (gameState.gameState.player.teammate) {
+					addCardsInHand(
+						gameState.gameState.player.teammate.player,
+						gameState.gameState.player.teammate.board,
+						cardsToAdd,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.OrcEstraConductor_BGDUO_119:
+			case CardIds.OrcEstraConductor_BGDUO_119_G:
+				const conductorTarget = pickRandom(
+					allMinions.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
+				);
+				if (!!conductorTarget) {
+					const targetBoard = board.includes(conductorTarget) ? board : otherBoard;
+					const targetHero = board.includes(conductorTarget) ? hero : otherHero;
+					const multiplier = entity.cardId === CardIds.OrcEstraConductor_BGDUO_119 ? 1 : 2;
+					const stats = (entity.scriptDataNum1 ?? 2) * multiplier;
+					modifyAttack(conductorTarget, stats, targetBoard, targetHero, gameState);
+					modifyHealth(conductorTarget, stats, targetBoard, targetHero, gameState);
+					afterStatsUpdate(conductorTarget, targetBoard, targetHero, gameState);
+					gameState.spectator.registerPowerTarget(entity, conductorTarget, targetBoard, hero, otherHero);
 				}
 				break;
 			default:

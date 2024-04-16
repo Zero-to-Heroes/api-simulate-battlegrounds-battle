@@ -7,7 +7,7 @@ import { BoardSecret } from './board-secret';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
 import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
-import { FullGameState } from './simulation/internal-game-state';
+import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
 import { afterStatsUpdate, modifyAttack, modifyHealth } from './simulation/stats';
@@ -500,4 +500,28 @@ export const isPilotedWhirlOTron = (entity: BoardEntity): boolean => {
 
 export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {
 	return !!allCards.getCard(cardId).battlegroundsNormalDbfId;
+};
+
+export const getPlayerState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {
+	return gameState.player.player === hero
+		? gameState.player
+		: gameState.player.teammate?.player === hero
+		? gameState.player.teammate
+		: gameState.opponent.player === hero
+		? gameState.opponent
+		: gameState.opponent.teammate?.player === hero
+		? gameState.opponent.teammate
+		: null;
+};
+
+export const getTeammateState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {
+	return gameState.player.player === hero
+		? gameState.player.teammate
+		: gameState.player.teammate?.player === hero
+		? gameState.player
+		: gameState.opponent.player === hero
+		? gameState.opponent.teammate
+		: gameState.opponent.teammate?.player === hero
+		? gameState.opponent
+		: null;
 };

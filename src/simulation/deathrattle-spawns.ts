@@ -7,6 +7,7 @@ import {
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
+	getTeammateState,
 	hasCorrectTribe,
 	isCorrectTribe,
 	stringifySimple,
@@ -1518,6 +1519,42 @@ export const spawnEntitiesFromDeathrattle = (
 							health: harmlessBoneheadStats,
 						})),
 					);
+					break;
+				case CardIds.Magnanimoose_BGDUO_105:
+				case CardIds.Magnanimoose_BGDUO_105_G:
+					const magnanimooseCopies = deadEntity.cardId === CardIds.Magnanimoose_BGDUO_105_G ? 2 : 1;
+					for (let i = 0; i < magnanimooseCopies; i++) {
+						const teammateState = getTeammateState(gameState.gameState, boardWithDeadEntityHero);
+						const teammateBoard = teammateState?.board ?? [];
+						const minionToCopy = pickRandom(teammateBoard);
+						if (minionToCopy) {
+							const copy: BoardEntity = {
+								...minionToCopy,
+								health: 1,
+								maxHealth: 1,
+								enchantments: [...minionToCopy.enchantments],
+							};
+							spawnedEntities.push(
+								...spawnEntities(
+									copy.cardId,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+									false,
+									true,
+									copy,
+								),
+							);
+						}
+					}
 					break;
 
 				// Putricide-only

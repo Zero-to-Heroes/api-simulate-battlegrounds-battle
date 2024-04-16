@@ -7,6 +7,7 @@ import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/ut
 import {
 	addStatsToBoard,
 	getRandomMinionWithHighestHealth,
+	getTeammateState,
 	hasCorrectTribe,
 	isCorrectTribe,
 	isGolden,
@@ -1722,6 +1723,19 @@ export const performStartOfCombatMinionsForPlayer = (
 				});
 			}
 		});
+	} else if (attacker.cardId === CardIds.Sandy_BGDUO_125 || attacker.cardId === CardIds.Sandy_BGDUO_125_G) {
+		const teammateState = getTeammateState(gameState.gameState, attackingBoardHero);
+		if (teammateState?.board?.length) {
+			const isGolden = attacker.cardId === CardIds.Sandy_BGDUO_125_G;
+			const minionToCopy = getRandomMinionWithHighestHealth(teammateState.board);
+			const copy: BoardEntity = { ...minionToCopy, enchantments: [...minionToCopy.enchantments] };
+			const attackerIndex = attackingBoard.indexOf(attacker);
+			// Insert the copy in its place
+			attackingBoard.splice(attackerIndex, 0, copy);
+			if (isGolden) {
+				makeMinionGolden(copy, copy, attackingBoard, attackingBoardHero, gameState);
+			}
+		}
 	}
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
 };
