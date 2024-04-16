@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
-import { BgsBoardInfo } from './bgs-board-info';
-import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { cloneInput3 } from './input-clone';
+import { buildFinalInput } from './input-sanitation';
 import { SimulationResult } from './simulation-result';
-import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
-import { fixEnchantments } from './simulation/enchantments';
 import { FullGameState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
-import { addImpliedMechanics } from './utils';
 
 const cards = new AllCardsService();
 
@@ -69,7 +66,6 @@ export const simulateBattle = (
 
 	const spectator = new Spectator(battleInput);
 	const inputReady = buildFinalInput(battleInput, cards, cardsData);
-	// const inputStr = JSON.stringify(inputReady);
 	!battleInput.options?.skipInfoLogs && console.time('simulation');
 	const outcomes = {};
 	for (let i = 0; i < numberOfSimulations; i++) {
@@ -86,20 +82,17 @@ export const simulateBattle = (
 				player: {
 					player: input.playerBoard.player,
 					board: input.playerBoard.board,
+					teammate: input.playerTeammateBoard,
 				},
 				opponent: {
 					player: input.opponentBoard.player,
 					board: input.opponentBoard.board,
+					teammate: input.opponentTeammateBoard,
 				},
 			},
 		};
 		const simulator = new Simulator(gameState);
-		const battleResult = simulator.simulateSingleBattle(
-			input.playerBoard.board,
-			input.playerBoard.player,
-			input.opponentBoard.board,
-			input.opponentBoard.player,
-		);
+		const battleResult = simulator.simulateSingleBattle(gameState.gameState.player, gameState.gameState.opponent);
 		if (Date.now() - start > maxAcceptableDuration) {
 			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
 			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
@@ -135,108 +128,6 @@ export const simulateBattle = (
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
 	// !battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
 	return simulationResult;
-};
-
-// const cloneInput = (input: BgsBattleInfo): BgsBattleInfo => {
-// 	return structuredClone(input);
-// };
-// const cloneInput2 = (input: string): BgsBattleInfo => {
-// 	return JSON.parse(input);
-// };
-const cloneInput3 = (input: BgsBattleInfo): BgsBattleInfo => {
-	const result: BgsBattleInfo = {
-		gameState: {
-			currentTurn: input.gameState.currentTurn,
-			anomalies: input.gameState.anomalies,
-			validTribes: input.gameState.validTribes,
-		},
-		heroHasDied: input.heroHasDied,
-		playerBoard: cloneBoard(input.playerBoard),
-		opponentBoard: cloneBoard(input.opponentBoard),
-		options: null,
-	};
-	return result;
-};
-const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
-	const result: BgsBoardInfo = {
-		player: {
-			...board.player,
-			questEntities: board.player.questEntities?.map((quest) => ({ ...quest })),
-			questRewardEntities: board.player.questRewardEntities?.map((reward) => ({ ...reward })),
-			questRewards: board.player.questRewards?.map((reward) => reward),
-			hand: board.player.hand?.map((entity) => cloneEntity(entity)),
-			secrets: board.player.secrets?.map((secret) => ({ ...secret })),
-			globalInfo: { ...board.player.globalInfo },
-		},
-		board: board.board.map((entity) => cloneEntity(entity)),
-	};
-	return result;
-};
-const cloneEntity = (entity: BoardEntity): BoardEntity => {
-	const result: BoardEntity = {
-		...entity,
-		enchantments: entity.enchantments?.map((enchant) => ({ ...enchant })),
-	};
-	return result;
-};
-
-const buildFinalInput = (battleInput: BgsBattleInfo, cards: AllCardsService, cardsData: CardsData): BgsBattleInfo => {
-	const playerInfo = battleInput.playerBoard;
-	const opponentInfo = battleInput.opponentBoard;
-
-	const playerBoard = playerInfo.board
-		.map((entity) => fixEnchantments(entity, cards))
-		.map((entity) => ({ ...entity, inInitialState: true }))
-		.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity));
-	const playerHand =
-		playerInfo.player.hand
-			?.map((entity) => ({ ...entity, inInitialState: true }))
-			.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: true } as BoardEntity)) ?? [];
-	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId);
-	playerInfo.player.friendly = true;
-
-	const opponentBoard = opponentInfo.board
-		.map((entity) => fixEnchantments(entity, cards))
-		.map((entity) => ({ ...entity, inInitialState: true }))
-		.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity));
-	const opponentHand =
-		opponentInfo.player.hand
-			?.map((entity) => ({ ...entity, inInitialState: true }))
-			.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: false } as BoardEntity)) ?? [];
-	opponentInfo.player.secrets = opponentInfo.secrets?.filter((e) => !!e?.cardId);
-	opponentInfo.player.friendly = false;
-
-	// When using the simulator, the aura is not applied when receiving the board state. When
-	setMissingAuras(playerBoard, playerInfo.player, opponentInfo.player, cards);
-	setMissingAuras(opponentBoard, opponentInfo.player, playerInfo.player, cards);
-	// Avenge, maxHealth, etc.
-	// setImplicitData(playerBoard, cardsData);
-	// setImplicitData(opponentBoard, cardsData);
-	// Avenge, globalInfo
-	const entityIdContainer = { entityId: 999_999_999 };
-	setImplicitDataHero(playerInfo.player, cardsData, true, entityIdContainer);
-	setImplicitDataHero(opponentInfo.player, cardsData, false, entityIdContainer);
-
-	// We do this so that we can have mutated objects inside the simulation and still
-	// be able to start from a fresh copy for each simulation
-	const inputReady: BgsBattleInfo = {
-		playerBoard: {
-			board: playerBoard,
-			player: {
-				...playerInfo.player,
-				hand: playerHand,
-			},
-		},
-		opponentBoard: {
-			board: opponentBoard,
-			player: {
-				...opponentInfo.player,
-				hand: opponentHand,
-			},
-		},
-		gameState: battleInput.gameState,
-	} as BgsBattleInfo;
-	return inputReady;
 };
 
 const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBattleInfo) => {

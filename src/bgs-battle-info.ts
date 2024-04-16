@@ -4,7 +4,9 @@ import { BgsBoardInfo } from './bgs-board-info';
 
 export interface BgsBattleInfo {
 	readonly playerBoard: BgsBoardInfo;
+	readonly playerTeammateBoard?: BgsBoardInfo;
 	readonly opponentBoard: BgsBoardInfo;
+	readonly opponentTeammateBoard?: BgsBoardInfo;
 	readonly options: BgsBattleOptions;
 	readonly gameState: BgsGameState;
 	readonly heroHasDied?: boolean;

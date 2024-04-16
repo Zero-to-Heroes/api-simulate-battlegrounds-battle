@@ -115,6 +115,8 @@ export const handleStartOfCombat = (
 		opponentBoardBefore,
 		gameState,
 	);
+	playerEntity.startOfCombatDone = true;
+	opponentEntity.startOfCombatDone = true;
 	return currentAttacker;
 };
 
@@ -177,6 +179,10 @@ const handlePreCombatHeroPowersForPlayer = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
+	}
+
 	let shouldRecomputeCurrentAttacker = false;
 	// Some are part of the incoming board: Y'Shaarj, Lich King, Ozumat
 	// Since the order is not important here, we just always do the player first
@@ -301,6 +307,9 @@ const handleStartOfCombatMinions = (
 	opponentBoardBefore: BoardEntity[],
 	gameState: FullGameState,
 ): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
+	}
 	let attackerForStart = currentAttacker;
 	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
 	const opponentAttackers = opponentBoard.filter((entity) =>
@@ -436,7 +445,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 	gameState: FullGameState,
 	playerIsFriendly: boolean,
 ): number => {
-	if (!playerEntity.questRewards?.length) {
+	if (!playerEntity.questRewards?.length || playerEntity.startOfCombatDone) {
 		return currentAttacker;
 	}
 	for (const reward of playerEntity.questRewards) {
@@ -526,6 +535,9 @@ const handleStartOfCombatSpellsForPlayer = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
+	}
 	if (!playerEntity.secrets?.length) {
 		return currentAttacker;
 	}
@@ -602,7 +614,7 @@ const handleStartOfCombatAnomaliesForPlayer = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	if (!gameState.anomalies?.length) {
+	if (!gameState.anomalies?.length || playerEntity.startOfCombatDone) {
 		return currentAttacker;
 	}
 	for (const anomaly of gameState.anomalies) {
@@ -726,6 +738,9 @@ const handlePlayerIllidanHeroPowers = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
+	}
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
 		// After Illidan triggers, it's always the other opponent's turn
@@ -1035,6 +1050,9 @@ const handlePlayerStartOfCombatHeroPowers = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
+	}
 	// eslint-disable-next-line prefer-const
 	let shouldRecomputeCurrentAttacker = false;
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);

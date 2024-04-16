@@ -5,21 +5,12 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { hasCorrectTribe } from '../utils';
 
-export const setMissingAuras = (
-	board: BoardEntity[],
-	boardHero: BgsPlayerEntity,
-	otherHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-): void => {
+export const setMissingAuras = (board: BoardEntity[], boardHero: BgsPlayerEntity, allCards: AllCardsService): void => {
 	setMissingMinionsAura(board, boardHero, allCards);
-	setMissingHeroPowerAura(board, boardHero, otherHero);
+	setMissingHeroPowerAura(board, boardHero);
 };
 
-export const setMissingHeroPowerAura = (
-	board: BoardEntity[],
-	boardHero: BgsPlayerEntity,
-	otherHero: BgsPlayerEntity,
-): void => {
+export const setMissingHeroPowerAura = (board: BoardEntity[], boardHero: BgsPlayerEntity): void => {
 	if (boardHero.heroPowerId === CardIds.TheSmokingGun) {
 		board
 			.filter(

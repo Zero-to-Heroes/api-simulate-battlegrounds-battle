@@ -5,7 +5,7 @@ import { SingleSimulationResult } from '../single-simulation-result';
 import { stringifySimple } from '../utils';
 import { simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
-import { FullGameState } from './internal-game-state';
+import { FullGameState, PlayerState } from './internal-game-state';
 import { handleStartOfCombat } from './start-of-combat';
 import { handleSummonWhenSpace as handleSummonsWhenSpace } from './summon-when-space';
 
@@ -19,25 +19,63 @@ export class Simulator {
 
 	// Here we suppose that the BoardEntity only contain at most the enchantments that are linked
 	// to auras (so we probably should hand-filter that, since there are actually few auras)
-	public simulateSingleBattle(
+	public simulateSingleBattle(playerState: PlayerState, opponentState: PlayerState): SingleSimulationResult {
+		let playerBoard: BoardEntity[] =
+			playerState.board.length === 0 ? playerState.teammate?.board : playerState.board;
+		let playerEntity: BgsPlayerEntity =
+			playerState.board.length === 0 ? playerState.teammate?.player : playerState.player;
+		let opponentBoard: BoardEntity[] =
+			opponentState.board.length === 0 ? opponentState.teammate?.board : opponentState.board;
+		let opponentEntity: BgsPlayerEntity =
+			opponentState.board.length === 0 ? opponentState.teammate?.player : opponentState.player;
+		while (playerBoard?.length > 0 && opponentBoard?.length > 0) {
+			this.simulateSingleBattlePass(playerBoard, playerEntity, opponentBoard, opponentEntity);
+
+			playerBoard = playerState.board.length === 0 ? playerState.teammate?.board : playerState.board;
+			playerEntity = playerState.board.length === 0 ? playerState.teammate?.player : playerState.player;
+			opponentBoard = opponentState.board.length === 0 ? opponentState.teammate?.board : opponentState.board;
+			opponentEntity = opponentState.board.length === 0 ? opponentState.teammate?.player : opponentState.player;
+		}
+
+		if (
+			(!playerBoard?.length && !opponentBoard?.length) ||
+			// E.g. when both players have a 0-attack minion
+			(playerBoard?.length > 0 && opponentBoard?.length > 0)
+		) {
+			return {
+				result: 'tied',
+			} as SingleSimulationResult;
+		}
+		if (!playerBoard?.length) {
+			const damage = this.buildBoardTotalDamage(opponentBoard) + opponentEntity.tavernTier;
+			this.gameState.spectator.registerOpponentAttack(playerBoard, opponentBoard, damage);
+			return {
+				result: 'lost',
+				damageDealt: damage,
+			};
+		}
+		const damage = this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier;
+		this.gameState.spectator.registerPlayerAttack(playerBoard, opponentBoard, damage);
+		return {
+			result: 'won',
+			damageDealt: damage,
+		};
+	}
+
+	private simulateSingleBattlePass(
 		playerBoard: BoardEntity[],
 		playerEntity: BgsPlayerEntity,
 		opponentBoard: BoardEntity[],
 		opponentEntity: BgsPlayerEntity,
-	): SingleSimulationResult {
+	) {
+		// Start of combat happens only once, so we need to flag whether it has already happened for a
+		// given player
 		this.gameState.spectator.registerStartOfCombat(playerBoard, opponentBoard, playerEntity, opponentEntity);
+
 		// Who attacks first is decided by the game before the hero power comes into effect. However, the full board (with the generated minion)
 		// is sent tothe simulator
 		// But in fact, the first player decision takes into account that additional minion. See
 		// https://replays.firestoneapp.com/?reviewId=ddbbbe93-464b-4400-8e8d-4abca8680a2e
-		// const effectivePlayerBoardLength =
-		// 	playerEntity.heroPowerId === CardIds.heroPowerUsed
-		// 		? playerBoard.length - 1
-		// 		: playerBoard.length;
-		// const effectiveOpponentBoardLength =
-		// 	opponentEntity.heroPowerId === CardIds.heroPowerUsed
-		// 		? opponentBoard.length - 1
-		// 		: opponentBoard.length;
 		const effectivePlayerBoardLength = playerBoard.length;
 		const effectiveOpponentBoardLength = opponentBoard.length;
 		this.currentAttacker =
@@ -61,28 +99,7 @@ export class Simulator {
 			this.currentAttacker,
 			this.gameState,
 		);
-		// handleRapidReanimation(
-		// 	playerBoard,
-		// 	playerEntity,
-		// 	opponentBoard,
-		// 	opponentEntity,
-		// 	this.allCards,
-		// 	this.spawns,
-		// 	this.sharedState,
-		// 	spectator,
-		// );
-		// console.log('suggestedNewCurrentAttacker', suggestedNewCurrentAttacker);
-		// When both players have the same amount of minions, it's possible that Illidan's Start of Combat
-		// ability causes the same player to attack twice in a row, which is not the case in real life
-		// So when Illidan attacks first, we then look at the expected first attacker. If it was Illidan
-		// once more, we switch. Otherwise, we just keep the attacker as planned
-		// FIXME: this is probably bogus when both players have Illidan's hero power?
-		// if (effectivePlayerBoardLength === effectiveOpponentBoardLength) {
-		// Looking at some recent data (2022/05/29), there was one board with 5 entities + Illidan, and another with 3
-		// The 5 entities attacked (because of Illidan), and then the other board attacked
-		// So this means that Illidan made the attack turn pass over to the other player
 		this.currentAttacker = suggestedNewCurrentAttacker;
-		// }
 		let counter = 0;
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
@@ -142,29 +159,6 @@ export class Simulator {
 				// return null;
 			}
 		}
-		if (
-			(playerBoard.length === 0 && opponentBoard.length === 0) ||
-			// E.g. when both players have a 0-attack minion
-			(playerBoard.length > 0 && opponentBoard.length > 0)
-		) {
-			return {
-				result: 'tied',
-			} as SingleSimulationResult;
-		}
-		if (playerBoard.length === 0) {
-			const damage = this.buildBoardTotalDamage(opponentBoard) + opponentEntity.tavernTier;
-			this.gameState.spectator.registerOpponentAttack(playerBoard, opponentBoard, damage);
-			return {
-				result: 'lost',
-				damageDealt: damage,
-			};
-		}
-		const damage = this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier;
-		this.gameState.spectator.registerPlayerAttack(playerBoard, opponentBoard, damage);
-		return {
-			result: 'won',
-			damageDealt: damage,
-		};
 	}
 
 	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]): number {

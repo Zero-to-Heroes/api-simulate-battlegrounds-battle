@@ -24,4 +24,5 @@ export interface GameState {
 export interface PlayerState {
 	board: BoardEntity[];
 	player: BgsPlayerEntity;
+	teammate?: PlayerState;
 }

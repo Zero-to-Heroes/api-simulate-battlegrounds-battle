@@ -26,6 +26,7 @@ export interface BgsPlayerEntity {
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	globalInfo?: BgsPlayerGlobalInfo;
+	startOfCombatDone?: boolean;
 
 	deadEyeDamageDone?: number;
 	rapidReanimationMinion?: BoardEntity;
