@@ -24,8 +24,42 @@ export const handleSummonWhenSpace = (
 	if (opponentEntity.questRewards?.includes(CardIds.StableAmalgamation_BG28_Reward_518)) {
 		handleStableAmalgamationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
 	}
+	if (playerEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
+		handleBoonOfBeetlesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	}
+	if (opponentEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
+		handleBoonOfBeetlesForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
+	}
 };
 
+const handleBoonOfBeetlesForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+) => {
+	const secretEntity = playerEntity.secrets.find((entity) => entity.cardId === CardIds.BoonOfBeetles_BG28_603);
+	if (secretEntity && secretEntity.chargesLeft > 0) {
+		while (secretEntity.chargesLeft > 0) {
+			const hasSummoned = handleSummon(
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+				CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
+				0,
+			);
+			if (hasSummoned) {
+				secretEntity.chargesLeft--;
+			} else {
+				// No room to summon, we stop here
+				break;
+			}
+		}
+	}
+};
 const handleStableAmalgamationForPlayer = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,

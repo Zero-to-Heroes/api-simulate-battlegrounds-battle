@@ -3,6 +3,7 @@ import { ALL_BG_RACES, AllCardsService, CardIds, GameTag, Race, ReferenceCard } 
 import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
+import { BoardSecret } from './board-secret';
 import { CardsData } from './cards/cards-data';
 import { pickRandom, shuffleArray } from './services/utils';
 import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
@@ -338,7 +339,7 @@ export const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEnt
 };
 
 export const addStatsToBoard = (
-	sourceEntity: BoardEntity | BgsPlayerEntity,
+	sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret,
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
 	attack: number,

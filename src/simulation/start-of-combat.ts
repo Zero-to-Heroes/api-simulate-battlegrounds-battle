@@ -540,18 +540,22 @@ const handleStartOfCombatSpellsForPlayer = (
 				}
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
-				playerBoard.forEach((e) => {
-					e.enchantments = e.enchantments || [];
-					if (
-						!e.enchantments.some((e) => e.cardId === CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e)
-					) {
-						e.enchantments.push({
-							cardId: CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
-							originEntityId: secret.entityId,
-							timing: gameState.sharedState.currentEntityId++,
-						});
-					}
-				});
+				secret.chargesLeft = 3;
+				// playerBoard.forEach((e) => {
+				// 	e.enchantments = e.enchantments || [];
+				// 	if (
+				// 		!e.enchantments.some((e) => e.cardId === CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e)
+				// 	) {
+				// 		e.enchantments.push({
+				// 			cardId: CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
+				// 			originEntityId: secret.entityId,
+				// 			timing: gameState.sharedState.currentEntityId++,
+				// 		});
+				// 	}
+				// });
+				break;
+			case CardIds.FleetingVigor_BG28_519:
+				addStatsToBoard(secret, playerBoard, playerEntity, 2, 1, gameState);
 				break;
 			case CardIds.ToxicTumbleweed_BG28_641:
 				if (playerBoard.length < 7) {
