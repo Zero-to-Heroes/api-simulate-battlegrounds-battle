@@ -2,7 +2,6 @@
 import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { CardsData } from '../cards/cards-data';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { VALID_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
@@ -16,7 +15,6 @@ import {
 	stringifySimpleCard,
 	updateDivineShield,
 } from '../utils';
-import { addMinionsToBoard } from './add-minion-to-board';
 import { addCardsInHand } from './cards-in-hand';
 import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
@@ -29,9 +27,7 @@ import { onMinionKill } from './minion-kill';
 import { applyOnAttackBuffs } from './on-attack';
 import { applyOnBeingAttackedBuffs } from './on-being-attacked';
 import { onQuestProgressUpdated } from './quest';
-import { SharedState } from './shared-state';
 import { performEntitySpawns } from './spawns';
-import { Spectator } from './spectator/spectator';
 import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
 import { handleSummonWhenSpace } from './summon-when-space';
 import { canAttack } from './utils/entity-utils';
@@ -1113,134 +1109,135 @@ export const bumpEntities = (
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current
 	// implementation could spawn minions above the max board size. Fringe case though, so leaving it
 	// like this for now
-	const entitySpawns = getWheneverEntitySpawns(
-		entity,
-		entityBoard,
-		entityBoardHero,
-		otherBoard,
-		otherHero,
-		gameState.allCards,
-		gameState.cardsData,
-		gameState.sharedState,
-		gameState.spectator,
-	);
+	// const entitySpawns = getWheneverEntitySpawns(
+	// 	entity,
+	// 	entityBoard,
+	// 	entityBoardHero,
+	// 	otherBoard,
+	// 	otherHero,
+	// 	gameState.allCards,
+	// 	gameState.cardsData,
+	// 	gameState.sharedState,
+	// 	gameState.spectator,
+	// );
 	onEntityDamaged(entity, entityBoard, entityBoardHero, otherBoard, otherHero, bumpInto.attack, gameState);
-	if (!!entitySpawns?.length) {
-		const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId);
-		addMinionsToBoard(entityBoard, entityBoardHero, otherHero, index, entitySpawns, gameState);
-		gameState.spectator.registerMinionsSpawn(entity, entityBoard, entitySpawns);
-	}
+	// if (!!entitySpawns?.length) {
+	// 	// Spawn to the right
+	// 	const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId) + 1;
+	// 	addMinionsToBoard(entityBoard, entityBoardHero, otherHero, index, entitySpawns, gameState);
+	// 	gameState.spectator.registerMinionsSpawn(entity, entityBoard, entitySpawns);
+	// }
 	return bumpInto.attack;
 };
 
-const getWheneverEntitySpawns = (
-	entity: BoardEntity,
-	entityBoard: BoardEntity[],
-	entityBoardHero: BgsPlayerEntity,
-	otherBoard: BoardEntity[],
-	otherHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	cardsData: CardsData,
-	sharedState: SharedState,
-	spectator: Spectator,
-): readonly BoardEntity[] => {
-	if (entityBoard.length === 7) {
-		return null;
-	}
+// const getWheneverEntitySpawns = (
+// 	entity: BoardEntity,
+// 	entityBoard: BoardEntity[],
+// 	entityBoardHero: BgsPlayerEntity,
+// 	otherBoard: BoardEntity[],
+// 	otherHero: BgsPlayerEntity,
+// 	allCards: AllCardsService,
+// 	cardsData: CardsData,
+// 	sharedState: SharedState,
+// 	spectator: Spectator,
+// ): readonly BoardEntity[] => {
+// 	if (entityBoard.length === 7) {
+// 		return null;
+// 	}
 
-	if (entity.cardId === CardIds.ImpGangBoss_BRM_006) {
-		return spawnEntities(
-			CardIds.ImpGangBoss_ImpToken_BRM_006t,
-			1,
-			entityBoard,
-			entityBoardHero,
-			otherBoard,
-			otherHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-			entity.friendly,
-			true,
-		);
-	} else if (entity.cardId === CardIds.ImpGangBoss_TB_BaconUps_030) {
-		return spawnEntities(
-			CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
-			1,
-			entityBoard,
-			entityBoardHero,
-			otherBoard,
-			otherHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-			entity.friendly,
-			true,
-		);
-	} else if (entity.cardId === CardIds.ImpMama_BGS_044) {
-		return spawnEntities(
-			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
-			1,
-			entityBoard,
-			entityBoardHero,
-			otherBoard,
-			otherHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-			entity.friendly,
-			true,
-		).map((entity) => ({ ...entity, taunt: true }));
-	} else if (entity.cardId === CardIds.ImpMama_TB_BaconUps_116) {
-		return spawnEntities(
-			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
-			2,
-			entityBoard,
-			entityBoardHero,
-			otherBoard,
-			otherHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-			entity.friendly,
-			true,
-		).map((entity) => ({ ...entity, taunt: true }));
-	} else if (entity.cardId === CardIds.SecurityRover_BOT_218) {
-		return spawnEntities(
-			CardIds.SecurityRover_GuardBotToken_BOT_218t,
-			1,
-			entityBoard,
-			entityBoardHero,
-			otherBoard,
-			otherHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-			entity.friendly,
-			true,
-		);
-	} else if (entity.cardId === CardIds.SecurityRover_TB_BaconUps_041) {
-		return spawnEntities(
-			CardIds.SecurityRover_GuardBotToken_TB_BaconUps_041t,
-			1,
-			entityBoard,
-			entityBoardHero,
-			otherBoard,
-			otherHero,
-			allCards,
-			cardsData,
-			sharedState,
-			spectator,
-			entity.friendly,
-			true,
-		);
-	}
-	return null;
-};
+// 	if (entity.cardId === CardIds.ImpGangBoss_BRM_006) {
+// 		return spawnEntities(
+// 			CardIds.ImpGangBoss_ImpToken_BRM_006t,
+// 			1,
+// 			entityBoard,
+// 			entityBoardHero,
+// 			otherBoard,
+// 			otherHero,
+// 			allCards,
+// 			cardsData,
+// 			sharedState,
+// 			spectator,
+// 			entity.friendly,
+// 			true,
+// 		);
+// 	} else if (entity.cardId === CardIds.ImpGangBoss_TB_BaconUps_030) {
+// 		return spawnEntities(
+// 			CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
+// 			1,
+// 			entityBoard,
+// 			entityBoardHero,
+// 			otherBoard,
+// 			otherHero,
+// 			allCards,
+// 			cardsData,
+// 			sharedState,
+// 			spectator,
+// 			entity.friendly,
+// 			true,
+// 		);
+// 	} else if (entity.cardId === CardIds.ImpMama_BGS_044) {
+// 		return spawnEntities(
+// 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
+// 			1,
+// 			entityBoard,
+// 			entityBoardHero,
+// 			otherBoard,
+// 			otherHero,
+// 			allCards,
+// 			cardsData,
+// 			sharedState,
+// 			spectator,
+// 			entity.friendly,
+// 			true,
+// 		).map((entity) => ({ ...entity, taunt: true }));
+// 	} else if (entity.cardId === CardIds.ImpMama_TB_BaconUps_116) {
+// 		return spawnEntities(
+// 			cardsData.impMamaSpawns[Math.floor(Math.random() * cardsData.impMamaSpawns.length)],
+// 			2,
+// 			entityBoard,
+// 			entityBoardHero,
+// 			otherBoard,
+// 			otherHero,
+// 			allCards,
+// 			cardsData,
+// 			sharedState,
+// 			spectator,
+// 			entity.friendly,
+// 			true,
+// 		).map((entity) => ({ ...entity, taunt: true }));
+// 	} else if (entity.cardId === CardIds.SecurityRover_BOT_218) {
+// 		return spawnEntities(
+// 			CardIds.SecurityRover_GuardBotToken_BOT_218t,
+// 			1,
+// 			entityBoard,
+// 			entityBoardHero,
+// 			otherBoard,
+// 			otherHero,
+// 			allCards,
+// 			cardsData,
+// 			sharedState,
+// 			spectator,
+// 			entity.friendly,
+// 			true,
+// 		);
+// 	} else if (entity.cardId === CardIds.SecurityRover_TB_BaconUps_041) {
+// 		return spawnEntities(
+// 			CardIds.SecurityRover_GuardBotToken_TB_BaconUps_041t,
+// 			1,
+// 			entityBoard,
+// 			entityBoardHero,
+// 			otherBoard,
+// 			otherHero,
+// 			allCards,
+// 			cardsData,
+// 			sharedState,
+// 			spectator,
+// 			entity.friendly,
+// 			true,
+// 		);
+// 	}
+// 	return null;
+// };
 
 export const processMinionDeath = (
 	board1: BoardEntity[],

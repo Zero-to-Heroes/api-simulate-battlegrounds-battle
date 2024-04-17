@@ -132,7 +132,16 @@ export const onEntityDamaged = (
 	}
 
 	handleOtherEntityEffects(entity, board, hero, otherBoard, otherHero, spawnedEntities, gameState);
-	performEntitySpawns(spawnedEntities, board, hero, entity, board.indexOf(entity), otherBoard, otherHero, gameState);
+	performEntitySpawns(
+		spawnedEntities,
+		board,
+		hero,
+		entity,
+		board.length - (board.indexOf(entity) + 1),
+		otherBoard,
+		otherHero,
+		gameState,
+	);
 };
 
 const handleOtherEntityEffects = (

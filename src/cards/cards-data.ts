@@ -45,6 +45,18 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G,
 	CardIds.IrateRooster_BG29_990,
 	CardIds.IrateRooster_BG29_990_G,
+	CardIds.MisfitDragonling_BG29_814,
+	CardIds.MisfitDragonling_BG29_814_G,
+	CardIds.ThousandthPaperDrake_BG29_810,
+	CardIds.ThousandthPaperDrake_BG29_810_G,
+	CardIds.YulonFortuneGranter_BG29_811,
+	CardIds.YulonFortuneGranter_BG29_811_G,
+	CardIds.HoardingHatespawn_BG29_872,
+	CardIds.HoardingHatespawn_BG29_872_G,
+	CardIds.TheUninvitedGuest_BG29_875,
+	CardIds.TheUninvitedGuest_BG29_875_G,
+	CardIds.Sandy_BGDUO_125,
+	CardIds.Sandy_BGDUO_125_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,

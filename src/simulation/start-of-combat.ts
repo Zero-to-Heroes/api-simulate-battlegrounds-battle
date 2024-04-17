@@ -1602,6 +1602,13 @@ export const performStartOfCombatMinionsForPlayer = (
 		for (let i = 0; i < loops; i++) {
 			const neighbours = getNeighbours(attackingBoard, attacker);
 			for (const neighbour of neighbours) {
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					neighbour,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
 				dealDamageToEnemy(
 					neighbour,
 					attackingBoard,
@@ -1613,13 +1620,6 @@ export const performStartOfCombatMinionsForPlayer = (
 					gameState,
 				);
 				modifyAttack(neighbour, 4, attackingBoard, attackingBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					attacker,
-					neighbour,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
 			}
 		}
 	} else if (

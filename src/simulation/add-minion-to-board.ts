@@ -17,7 +17,7 @@ export const addMinionsToBoard = (
 	minionsToAdd: readonly BoardEntity[],
 	gameState: FullGameState,
 ): void => {
-	board.splice(index, 0, ...minionsToAdd);
+	// board.splice(index, 0, ...minionsToAdd);
 	for (const minionToAdd of [...minionsToAdd].reverse()) {
 		addMinionToBoard(board, boardHero, otherHero, index, minionToAdd, gameState, false);
 	}
