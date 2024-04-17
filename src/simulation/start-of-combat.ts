@@ -1214,7 +1214,15 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G
 	) {
 		const stats = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
-		addStatsToBoard(attacker, attackingBoard, attackingBoardHero, stats, stats, gameState, Race[Race.DRAGON]);
+		addStatsToBoard(
+			attacker,
+			attackingBoard.filter((e) => e.entityId !== attacker.entityId),
+			attackingBoardHero,
+			stats,
+			stats,
+			gameState,
+			Race[Race.DRAGON],
+		);
 	} else if (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
