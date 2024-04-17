@@ -1702,8 +1702,8 @@ export const performStartOfCombatMinionsForPlayer = (
 			target.attack = Math.max(0, target.attack - stats);
 			target.health = Math.max(0, target.health - stats);
 			target.maxHealth = Math.max(0, target.maxHealth - stats);
-			modifyAttack(attacker, previousAttack - attacker.attack, attackingBoard, attackingBoardHero, gameState);
-			modifyHealth(attacker, previousHealth - attacker.health, attackingBoard, attackingBoardHero, gameState);
+			modifyAttack(attacker, previousAttack - target.attack, attackingBoard, attackingBoardHero, gameState);
+			modifyHealth(attacker, previousHealth - target.health, attackingBoard, attackingBoardHero, gameState);
 			afterStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				attacker,
