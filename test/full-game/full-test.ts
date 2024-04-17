@@ -29,7 +29,10 @@ const test = async () => {
 	});
 	console.log('simulation took', Date.now() - start, 'ms');
 
-	const sample = simulationResult.outcomeSamples.won?.[0];
+	const sample =
+		simulationResult.outcomeSamples.won?.[0] ??
+		simulationResult.outcomeSamples.tied?.[0] ??
+		simulationResult.outcomeSamples.lost?.[0];
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
 	console.log('result', {

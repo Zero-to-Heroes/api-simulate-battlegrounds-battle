@@ -157,7 +157,7 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.CordPuller_BG29_611_G:
 					spawnedEntities.push(
 						...spawnEntities(
-							deadEntity.cardId === CardIds.CordPuller_BG29_611_G
+							deadEntity.cardId === CardIds.CordPuller_BG29_611
 								? CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t
 								: CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
 							1,
