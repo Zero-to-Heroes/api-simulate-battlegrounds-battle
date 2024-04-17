@@ -20,21 +20,25 @@ export class Simulator {
 	// Here we suppose that the BoardEntity only contain at most the enchantments that are linked
 	// to auras (so we probably should hand-filter that, since there are actually few auras)
 	public simulateSingleBattle(playerState: PlayerState, opponentState: PlayerState): SingleSimulationResult {
-		let playerBoard: BoardEntity[] =
-			playerState.board.length === 0 ? playerState.teammate?.board : playerState.board;
-		let playerEntity: BgsPlayerEntity =
-			playerState.board.length === 0 ? playerState.teammate?.player : playerState.player;
-		let opponentBoard: BoardEntity[] =
-			opponentState.board.length === 0 ? opponentState.teammate?.board : opponentState.board;
-		let opponentEntity: BgsPlayerEntity =
-			opponentState.board.length === 0 ? opponentState.teammate?.player : opponentState.player;
-		while (playerBoard?.length > 0 && opponentBoard?.length > 0) {
+		let playerBoard: BoardEntity[] = playerState.board;
+		let playerEntity: BgsPlayerEntity = playerState.player;
+		let opponentBoard: BoardEntity[] = opponentState.board;
+		let opponentEntity: BgsPlayerEntity = opponentState.player;
+		while (
+			!playerEntity.startOfCombatDone ||
+			!opponentEntity.startOfCombatDone ||
+			(playerBoard?.length > 0 && opponentBoard?.length > 0)
+		) {
 			this.simulateSingleBattlePass(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
 			playerBoard = playerState.board.length === 0 ? playerState.teammate?.board : playerState.board;
 			playerEntity = playerState.board.length === 0 ? playerState.teammate?.player : playerState.player;
 			opponentBoard = opponentState.board.length === 0 ? opponentState.teammate?.board : opponentState.board;
 			opponentEntity = opponentState.board.length === 0 ? opponentState.teammate?.player : opponentState.player;
+
+			if (!playerEntity || !opponentEntity) {
+				break;
+			}
 		}
 
 		if (
