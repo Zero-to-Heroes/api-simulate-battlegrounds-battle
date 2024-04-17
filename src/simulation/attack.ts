@@ -466,6 +466,28 @@ const performAttack = (
 		// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 		// cause wrong results to happen
 		// This whole logic is a MEEEEESSSSSSSSSSSSSSS
+		if (damageDoneByDefender > 0) {
+			onEntityDamaged(
+				attackingEntity,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoard,
+				defendingBoardHero,
+				damageDoneByDefender,
+				gameState,
+			);
+		}
+		if (damageDoneByAttacker > 0) {
+			onEntityDamaged(
+				defendingEntity,
+				defendingBoard,
+				defendingBoardHero,
+				attackingBoard,
+				attackingBoardHero,
+				damageDoneByAttacker,
+				gameState,
+			);
+		}
 		if (defendingEntity.attack > 0 && attackerHadDivineShield && !attackingEntity.immuneWhenAttackCharges) {
 			updateDivineShield(attackingEntity, attackingBoard, false, gameState.allCards);
 		}
@@ -852,6 +874,17 @@ export const dealDamageToEnemy = (
 	);
 	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 	// cause wrong results to happen
+	if (actualDamageDone > 0) {
+		onEntityDamaged(
+			defendingEntity,
+			defendingBoard,
+			defendingBoardHero,
+			boardWithAttackOrigin,
+			boardWithAttackOriginHero,
+			actualDamageDone,
+			gameState,
+		);
+	}
 	if (fakeAttacker.attack > 0 && defendingEntity.divineShield) {
 		updateDivineShield(defendingEntity, defendingBoard, false, gameState.allCards);
 	}
@@ -964,6 +997,9 @@ export const bumpEntities = (
 				gameState,
 				false,
 			);
+			if (damageDone > 0) {
+				onEntityDamaged(newTarget, otherBoard, otherHero, entityBoard, entityBoardHero, damageDone, gameState);
+			}
 			if (newSource.attack > 0 && defenderHadDivineShield) {
 				updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
 			}
@@ -1120,7 +1156,6 @@ export const bumpEntities = (
 	// 	gameState.sharedState,
 	// 	gameState.spectator,
 	// );
-	onEntityDamaged(entity, entityBoard, entityBoardHero, otherBoard, otherHero, bumpInto.attack, gameState);
 	// if (!!entitySpawns?.length) {
 	// 	// Spawn to the right
 	// 	const index = entityBoard.map((e) => e.entityId).indexOf(entity.entityId) + 1;
