@@ -31,10 +31,16 @@ export class Simulator {
 		) {
 			this.simulateSingleBattlePass(playerBoard, playerEntity, opponentBoard, opponentEntity);
 
-			playerBoard = playerState.board.length === 0 ? playerState.teammate?.board : playerState.board;
-			playerEntity = playerState.board.length === 0 ? playerState.teammate?.player : playerState.player;
-			opponentBoard = opponentState.board.length === 0 ? opponentState.teammate?.board : opponentState.board;
-			opponentEntity = opponentState.board.length === 0 ? opponentState.teammate?.player : opponentState.player;
+			// The only case where there can only 0-attack minions on a board is when both boards
+			// are that way (otherwise one side would kill the other)
+			const isPlayerBoardEmpty =
+				playerState.board.length === 0 || playerState.board.every((entity) => entity.attack === 0);
+			const isOpponentBoardEmpty =
+				opponentState.board.length === 0 || opponentState.board.every((entity) => entity.attack === 0);
+			playerBoard = isPlayerBoardEmpty ? playerState.teammate?.board : playerState.board;
+			playerEntity = isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
+			opponentBoard = isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
+			opponentEntity = isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
 
 			if (!playerEntity || !opponentEntity) {
 				break;
