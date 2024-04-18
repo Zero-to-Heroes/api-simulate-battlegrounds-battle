@@ -5,7 +5,7 @@ import { addStatsToBoard } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const handleRebornForEntity = (
 	boardWithKilledMinion: BoardEntity[],
@@ -81,7 +81,7 @@ export const handleRebornForEntity = (
 	if (arfus + goldenArfus > 0) {
 		entitiesThatWereReborn.forEach((e) => {
 			modifyAttack(e, arfus + goldenArfus, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-			afterStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+			onStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 		});
 	}
 
@@ -111,7 +111,7 @@ export const handleRebornForEntity = (
 				const multiplier = e.cardId === CardIds.JellyBelly_BG25_005_G ? 2 : 1;
 				modifyAttack(e, multiplier * 3, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 				modifyHealth(e, multiplier * 3, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-				afterStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+				onStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					e,
 					e,

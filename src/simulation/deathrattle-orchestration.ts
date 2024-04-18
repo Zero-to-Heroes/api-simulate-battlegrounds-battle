@@ -480,6 +480,7 @@ const handlePostDeathrattleEffect = (
 						timing: deathrattle.timing,
 					},
 				],
+				pendingAttackBuffs: [],
 			};
 			handleDeathrattles({
 				...deathrattleInput,

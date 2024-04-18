@@ -49,6 +49,9 @@ const cloneEntity = (entity: BoardEntity): BoardEntity => {
 	const result: BoardEntity = {
 		...entity,
 		enchantments: entity.enchantments?.map((enchant) => ({ ...enchant })),
+		pendingAttackBuffs: [],
+		additionalCards: entity.additionalCards?.map((card) => card),
+		rememberedDeathrattles: [],
 	};
 	return result;
 };

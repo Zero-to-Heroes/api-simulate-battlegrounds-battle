@@ -8,7 +8,7 @@ import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const onEntityDamaged = (
 	entity: BoardEntity,
@@ -47,7 +47,7 @@ export const onEntityDamaged = (
 		case CardIds.TrustyPup_BG29_800_G:
 			const trustyPupStats = entity.cardId === CardIds.TrustyPup_BG29_800_G ? 2 : 1;
 			modifyAttack(entity, trustyPupStats, board, hero, gameState);
-			afterStatsUpdate(entity, board, hero, gameState);
+			onStatsUpdate(entity, board, hero, gameState);
 			gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
 			break;
 		case CardIds.SilverGoose_BG29_801:
@@ -165,7 +165,7 @@ const handleOtherEntityEffects = (
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
 				modifyAttack(target, stats, board, hero, gameState);
 				modifyHealth(target, stats, board, hero, gameState);
-				afterStatsUpdate(target, board, hero, gameState);
+				onStatsUpdate(target, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
 			});
 		board
@@ -177,7 +177,7 @@ const handleOtherEntityEffects = (
 			.forEach((e) => {
 				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 4 : 2;
 				modifyHealth(e, stats, board, hero, gameState);
-				afterStatsUpdate(e, board, hero, gameState);
+				onStatsUpdate(e, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);
 			});
 	}

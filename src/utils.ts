@@ -10,7 +10,7 @@ import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
 import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { Spectator } from './simulation/spectator/spectator';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './simulation/stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './simulation/stats';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
@@ -73,6 +73,7 @@ export const buildSingleBoardEntity = (
 						hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
 						card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
 					enchantments: [],
+					pendingAttackBuffs: [],
 					friendly: friendly,
 					attackImmediately: attackImmediately,
 					avengeCurrent: cardsData.avengeValue(cardId),
@@ -169,7 +170,7 @@ export const makeMinionGolden = (
 	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
 	modifyAttack(target, refCard.attack, targetBoard, targetBoardHero, gameState);
 	modifyHealth(target, refCard.health, targetBoard, targetBoardHero, gameState);
-	afterStatsUpdate(target, targetBoard, targetBoardHero, gameState);
+	onStatsUpdate(target, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
@@ -199,7 +200,7 @@ export const grantRandomAttack = (
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
 		modifyAttack(target, additionalAttack, candidateBoard, hero, gameState);
-		afterStatsUpdate(target, candidateBoard, hero, gameState);
+		onStatsUpdate(target, candidateBoard, hero, gameState);
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
@@ -218,7 +219,7 @@ export const grantRandomHealth = (
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
 		modifyHealth(target, health, board, hero, gameState);
-		afterStatsUpdate(target, board, hero, gameState);
+		onStatsUpdate(target, board, hero, gameState);
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
@@ -242,7 +243,7 @@ export const grantRandomStats = (
 		if (target) {
 			modifyAttack(target, attack, board, hero, gameState);
 			modifyHealth(target, health, board, hero, gameState);
-			afterStatsUpdate(target, board, hero, gameState);
+			onStatsUpdate(target, board, hero, gameState);
 			if (gameState.spectator) {
 				gameState.spectator.registerPowerTarget(source, target, board, null, null);
 			}
@@ -351,7 +352,7 @@ export const addStatsToBoard = (
 		if (!tribe || hasCorrectTribe(entity, Race[tribe], gameState.allCards)) {
 			modifyAttack(entity, attack, board, hero, gameState);
 			modifyHealth(entity, health, board, hero, gameState);
-			afterStatsUpdate(entity, board, hero, gameState);
+			onStatsUpdate(entity, board, hero, gameState);
 			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
 		}
 	}
@@ -382,7 +383,7 @@ export const grantStatsToMinionsOfEachType = (
 			if (validMinion) {
 				modifyAttack(validMinion, attack, board, hero, gameState);
 				modifyHealth(validMinion, health, board, hero, gameState);
-				afterStatsUpdate(validMinion, board, hero, gameState);
+				onStatsUpdate(validMinion, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(source, validMinion, board, null, null);
 				boardCopy = boardCopy.filter((e) => e !== validMinion);
 				typesBuffed++;

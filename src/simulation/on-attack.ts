@@ -5,7 +5,7 @@ import { isCorrectTribe } from '../utils';
 import { addCardsInHand } from './cards-in-hand';
 import { dealDamageToAllMinions } from './deathrattle-effects';
 import { FullGameState } from './internal-game-state';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const applyOnAttackBuffs = (
 	attacker: BoardEntity,
@@ -46,7 +46,7 @@ export const applyOnAttackBuffs = (
 			attackingBoard.forEach((entity) => {
 				modifyAttack(entity, 3, attackingBoard, attackingBoardHero, gameState);
 				modifyHealth(entity, 1, attackingBoard, attackingBoardHero, gameState);
-				afterStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
+				onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
@@ -54,7 +54,7 @@ export const applyOnAttackBuffs = (
 			attackingBoard.forEach((entity) => {
 				modifyAttack(entity, 6, attackingBoard, attackingBoardHero, gameState);
 				modifyHealth(entity, 2, attackingBoard, attackingBoardHero, gameState);
-				afterStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
+				onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
@@ -70,7 +70,7 @@ export const applyOnAttackBuffs = (
 				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 4 : 2;
 				modifyAttack(attacker, stats, attackingBoard, attackingBoardHero, gameState);
 				modifyHealth(attacker, stats, attackingBoard, attackingBoardHero, gameState);
-				afterStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+				onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					rallier,
 					attacker,
@@ -93,7 +93,7 @@ export const applyOnAttackBuffs = (
 		const multiplier = attacker.cardId === CardIds.GlimGuardian_BG29_888_G ? 2 : 1;
 		modifyAttack(attacker, 2 * multiplier, attackingBoard, attackingBoardHero, gameState);
 		modifyHealth(attacker, 1 * multiplier, attackingBoard, attackingBoardHero, gameState);
-		afterStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+		onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
 		gameState.spectator.registerPowerTarget(attacker, attacker, attackingBoard, attackingBoardHero, otherHero);
 	} else if (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708 ||

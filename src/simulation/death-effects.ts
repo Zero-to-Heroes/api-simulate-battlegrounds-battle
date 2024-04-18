@@ -5,7 +5,7 @@ import { pickRandomAlive } from '../services/utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const applyAfterDeathEffects = (
 	deadEntity: BoardEntity,
@@ -59,7 +59,7 @@ const handleSecrets = (
 				const avengeTarget = pickRandomAlive(boardWithDeadEntity);
 				modifyAttack(avengeTarget, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				modifyHealth(avengeTarget, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				afterStatsUpdate(avengeTarget, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				onStatsUpdate(avengeTarget, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				break;
 			case CardIds.Redemption_TB_Bacon_Secrets_10:
 				secret.triggered = true;

@@ -13,6 +13,7 @@ export const fixEnchantments = (entity: BoardEntity, allCards: AllCardsService):
 	return {
 		...entity,
 		enchantments: newEnchantments,
+		pendingAttackBuffs: [],
 	};
 };
 

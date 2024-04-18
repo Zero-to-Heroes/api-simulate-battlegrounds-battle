@@ -5,7 +5,7 @@ import { pickRandom } from '../services/utils';
 import { buildSingleBoardEntity, getRandomAliveMinion } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const addCardsInHand = (
 	playerEntity: BgsPlayerEntity,
@@ -118,7 +118,7 @@ const onCardAddedToHandMinion = (
 				playerEntity,
 				gameState,
 			);
-			afterStatsUpdate(pirate, board, playerEntity, gameState);
+			onStatsUpdate(pirate, board, playerEntity, gameState);
 			gameState.spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
 		}
 	});
@@ -133,7 +133,7 @@ const onCardAddedToHandMinion = (
 			playerEntity,
 			gameState,
 		);
-		afterStatsUpdate(captain, board, playerEntity, gameState);
+		onStatsUpdate(captain, board, playerEntity, gameState);
 		gameState.spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
 	});
 };

@@ -28,7 +28,7 @@ import { applyOnAttackBuffs } from './on-attack';
 import { applyOnBeingAttackedBuffs } from './on-being-attacked';
 import { onQuestProgressUpdated } from './quest';
 import { performEntitySpawns } from './spawns';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { applyAfterStatsUpdate, modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 import { handleSummonWhenSpace } from './summon-when-space';
 import { canAttack } from './utils/entity-utils';
 
@@ -133,7 +133,6 @@ export const doFullAttack = (
 		defendingBoardHero,
 		gameState,
 	);
-	// console.debug('damageDoneByAttacker', attackingEntity.cardId, damageDoneByAttacker);
 	applyAfterAttackEffects(
 		attackingEntity,
 		attackingBoard,
@@ -145,6 +144,7 @@ export const doFullAttack = (
 		gameState,
 	);
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
+	applyAfterStatsUpdate(gameState);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, attackingEntity.immuneWhenAttackCharges - 1);
 	if (
 		defendingEntity.health > 0 &&
@@ -217,7 +217,7 @@ const applyAfterAttackEffects = (
 		.filter((e) => e.additionalCards?.includes(CardIds.FesterootHulk_BG_GIL_655))
 		.forEach((e) => {
 			modifyAttack(e, 1, attackingBoard, attackingBoardHero, gameState);
-			afterStatsUpdate(e, attackingBoard, attackingBoardHero, gameState);
+			onStatsUpdate(e, attackingBoard, attackingBoardHero, gameState);
 		});
 
 	attackingEntity.stealth = false;
@@ -990,7 +990,7 @@ export const bumpEntities = (
 		for (let i = 0; i < entityBoard.length; i++) {
 			if (entityBoard[i].cardId === CardIds.BolvarFireblood_ICC_858) {
 				modifyAttack(entityBoard[i], 2, entityBoard, entityBoardHero, gameState);
-				afterStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1000,7 +1000,7 @@ export const bumpEntities = (
 				);
 			} else if (entityBoard[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
 				modifyAttack(entityBoard[i], 4, entityBoard, entityBoardHero, gameState);
-				afterStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1011,7 +1011,7 @@ export const bumpEntities = (
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
 				modifyAttack(entityBoard[i], 2, entityBoard, entityBoardHero, gameState);
 				modifyHealth(entityBoard[i], 2, entityBoard, entityBoardHero, gameState);
-				afterStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1022,7 +1022,7 @@ export const bumpEntities = (
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
 				modifyAttack(entityBoard[i], 4, entityBoard, entityBoardHero, gameState);
 				modifyHealth(entityBoard[i], 4, entityBoard, entityBoardHero, gameState);
-				afterStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1423,7 +1423,7 @@ const handleAfterMinionsDeathsForBoard = (
 		if (killer.friendly !== deadEntity.friendly) {
 			if (otherHeroEntity.heroPowerId === CardIds.Rokara_GloryOfCombat) {
 				modifyAttack(killer, 1, otherBoard, otherHeroEntity, gameState);
-				afterStatsUpdate(killer, otherBoard, otherHeroEntity, gameState);
+				onStatsUpdate(killer, otherBoard, otherHeroEntity, gameState);
 				// Icesnarl the Mighty
 				otherBoard
 					.filter(
@@ -1439,7 +1439,7 @@ const handleAfterMinionsDeathsForBoard = (
 							friendlyHeroEntity,
 							gameState,
 						);
-						afterStatsUpdate(icesnarl, friendlyBoard, friendlyHeroEntity, gameState);
+						onStatsUpdate(icesnarl, friendlyBoard, friendlyHeroEntity, gameState);
 					});
 			}
 		}

@@ -7,7 +7,7 @@ import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
-import { afterStatsUpdate, modifyAttack, modifyHealth, setEntityStats } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate, setEntityStats } from './stats';
 
 export const addMinionsToBoard = (
 	board: BoardEntity[],
@@ -60,12 +60,12 @@ const handleSpawnEffect = (
 		manyWhelps.forEach((entity) => {
 			modifyAttack(entity, 2, board, boardHero, gameState);
 			modifyHealth(entity, 2, board, boardHero, gameState);
-			afterStatsUpdate(entity, board, boardHero, gameState);
+			onStatsUpdate(entity, board, boardHero, gameState);
 		});
 		goldenManyWhelps.forEach((entity) => {
 			modifyAttack(entity, 4, board, boardHero, gameState);
 			modifyHealth(entity, 4, board, boardHero, gameState);
-			afterStatsUpdate(entity, board, boardHero, gameState);
+			onStatsUpdate(entity, board, boardHero, gameState);
 		});
 	}
 
@@ -77,7 +77,7 @@ const handleSpawnEffect = (
 					const statsBonus = entity.cardId === CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
 					modifyAttack(spawned, statsBonus, board, boardHero, gameState);
 					modifyHealth(spawned, statsBonus, board, boardHero, gameState);
-					afterStatsUpdate(spawned, board, boardHero, gameState);
+					onStatsUpdate(spawned, board, boardHero, gameState);
 				}
 				break;
 			// This has to happen after greybough's hero power kicks in
@@ -87,7 +87,7 @@ const handleSpawnEffect = (
 					const statsBonus = entity.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G ? 4 : 2;
 					modifyAttack(spawned, statsBonus, board, boardHero, gameState);
 					modifyHealth(spawned, statsBonus, board, boardHero, gameState);
-					afterStatsUpdate(spawned, board, boardHero, gameState);
+					onStatsUpdate(spawned, board, boardHero, gameState);
 				}
 				break;
 			case CardIds.CobaltGuardian:
@@ -96,7 +96,7 @@ const handleSpawnEffect = (
 						updateDivineShield(entity, board, true, gameState.allCards);
 					}
 					modifyAttack(entity, 2, board, boardHero, gameState);
-					afterStatsUpdate(entity, board, boardHero, gameState);
+					onStatsUpdate(entity, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -108,7 +108,7 @@ const handleSpawnEffect = (
 						updateDivineShield(entity, board, true, gameState.allCards);
 					}
 					modifyAttack(entity, statsBonus, board, boardHero, gameState);
-					afterStatsUpdate(entity, board, boardHero, gameState);
+					onStatsUpdate(entity, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -118,7 +118,7 @@ const handleSpawnEffect = (
 					const statsBonus = entity.cardId === CardIds.Bigfernal_TB_BaconUps_304 ? 2 : 1;
 					modifyAttack(entity, statsBonus, board, boardHero, gameState);
 					modifyHealth(entity, statsBonus, board, boardHero, gameState);
-					afterStatsUpdate(entity, board, boardHero, gameState);
+					onStatsUpdate(entity, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -128,7 +128,7 @@ const handleSpawnEffect = (
 					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 6 : 3;
 					modifyAttack(spawned, statsBonus, board, boardHero, gameState);
 					modifyHealth(spawned, statsBonus, board, boardHero, gameState);
-					afterStatsUpdate(entity, board, boardHero, gameState);
+					onStatsUpdate(entity, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -137,7 +137,7 @@ const handleSpawnEffect = (
 				if (hasCorrectTribe(spawned, Race.BEAST, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.PackLeader_TB_BaconUps_086 ? 4 : 2;
 					modifyAttack(spawned, statsBonus, board, boardHero, gameState);
-					afterStatsUpdate(entity, board, boardHero, gameState);
+					onStatsUpdate(entity, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -155,17 +155,17 @@ export const handleAddedMinionAuraEffect = (
 			spawned.taunt = true;
 			modifyAttack(spawned, 1, board, boardHero, gameState);
 			modifyHealth(spawned, 2, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;
 		case CardIds.KurtrusAshfallen_CloseThePortal:
 			modifyAttack(spawned, 2, board, boardHero, gameState);
 			modifyHealth(spawned, 2, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;
 		case CardIds.Tinker_TB_BaconShop_HP_015:
 			if (hasCorrectTribe(spawned, Race.MECH, gameState.allCards)) {
 				modifyAttack(spawned, 2, board, boardHero, gameState);
-				afterStatsUpdate(spawned, board, boardHero, gameState);
+				onStatsUpdate(spawned, board, boardHero, gameState);
 			}
 			break;
 	}
@@ -176,7 +176,7 @@ export const handleAddedMinionAuraEffect = (
 				?.scriptDataNum1 || 1;
 		modifyAttack(spawned, tumblingDisasterBonus, board, boardHero, gameState);
 		modifyHealth(spawned, tumblingDisasterBonus, board, boardHero, gameState);
-		afterStatsUpdate(spawned, board, boardHero, gameState);
+		onStatsUpdate(spawned, board, boardHero, gameState);
 	}
 
 	// The board here already contains the new minion
@@ -226,14 +226,14 @@ export const applyAurasToSelf = (
 	if (hasCorrectTribe(spawned, Race.UNDEAD, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			modifyAttack(spawned, boardHero.globalInfo.UndeadAttackBonus, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 		}
 	}
 	if (hasCorrectTribe(spawned, Race.BEAST, gameState.allCards)) {
 		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
 			modifyAttack(spawned, boardHero.globalInfo.GoldrinnBuffAtk, board, boardHero, gameState);
 			modifyHealth(spawned, boardHero.globalInfo.GoldrinnBuffHealth, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			gameState.spectator.registerPowerTarget(boardHero, spawned, board, null, null);
 		}
 	}
@@ -296,7 +296,7 @@ export const applyAurasToSelf = (
 			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
 			modifyAttack(spawned, statsBonusKnight, board, boardHero, gameState);
 			modifyHealth(spawned, statsBonusKnight, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;
 		case CardIds.EnsorcelledFungus_BG28_555:
 		case CardIds.EnsorcelledFungus_BG28_555_G:
@@ -304,7 +304,7 @@ export const applyAurasToSelf = (
 			const statsBonusFungus = multiplierFungus * boardHero.globalInfo.TavernSpellsCastThisGame;
 			modifyAttack(spawned, statsBonusFungus, board, boardHero, gameState);
 			modifyHealth(spawned, 2 * statsBonusFungus, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;
 		case CardIds.FlourishingFrostling_BG26_537:
 		case CardIds.FlourishingFrostling_BG26_537_G:
@@ -312,7 +312,7 @@ export const applyAurasToSelf = (
 			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
 			modifyAttack(spawned, statsBonusFrostling, board, boardHero, gameState);
 			modifyHealth(spawned, statsBonusFrostling, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -320,7 +320,7 @@ export const applyAurasToSelf = (
 			const statsBonusGnoll =
 				multiplierGnoll * gameState.sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
 			modifyAttack(spawned, statsBonusGnoll, board, boardHero, gameState);
-			afterStatsUpdate(spawned, board, boardHero, gameState);
+			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;
 	}
 };
@@ -605,7 +605,7 @@ const handleAfterSpawnEffect = (
 						(isCorrectTribe(gameState.allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
 					if (buffAmount2 > 0) {
 						modifyAttack(entity, buffAmount2, board, hero, gameState);
-						afterStatsUpdate(entity, board, hero, gameState);
+						onStatsUpdate(entity, board, hero, gameState);
 						gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
 					}
 				}
@@ -623,7 +623,7 @@ const handleAfterSpawnEffect = (
 							: 3;
 					board.forEach((e) => {
 						modifyAttack(e, felstomperBuff, board, hero, gameState);
-						afterStatsUpdate(e, board, hero, gameState);
+						onStatsUpdate(e, board, hero, gameState);
 						gameState.spectator.registerPowerTarget(entity, e, board, null, null);
 					});
 				}
@@ -633,7 +633,7 @@ const handleAfterSpawnEffect = (
 				if (entity.entityId !== spawned.entityId) {
 					const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 6 : 3;
 					modifyHealth(entity, xylobonesBuff, board, hero, gameState);
-					afterStatsUpdate(entity, board, hero, gameState);
+					onStatsUpdate(entity, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
 				}
 				break;
@@ -662,7 +662,7 @@ const handleAfterSpawnEffect = (
 				if (hasCorrectTribe(spawned, Race.BEAST, gameState.allCards) && entity.entityId !== spawned.entityId) {
 					const snapjawBuff = entity.cardId === CardIds.HungrySnapjaw_BG26_370_G ? 2 : 1;
 					modifyHealth(entity, snapjawBuff, board, hero, gameState);
-					afterStatsUpdate(entity, board, hero, gameState);
+					onStatsUpdate(entity, board, hero, gameState);
 				}
 				break;
 			case CardIds.ObserverOfMyths_BG_TTN_078:
@@ -677,7 +677,7 @@ const handleAfterSpawnEffect = (
 			case CardIds.ArmsDealer_BG26_RLK_824:
 				if (hasCorrectTribe(spawned, Race.UNDEAD, gameState.allCards) && entity.entityId !== spawned.entityId) {
 					modifyAttack(spawned, 1, board, hero, gameState);
-					afterStatsUpdate(entity, board, hero, gameState);
+					onStatsUpdate(entity, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
 				}
 				break;

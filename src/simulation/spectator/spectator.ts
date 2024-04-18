@@ -512,18 +512,5 @@ export class Spectator {
 					stealth: entity.stealth,
 				} as BoardEntity),
 		);
-		// return board.map(
-		// 	(entity) =>
-		// 		({
-		// 			...entity,
-		// 			enchantments: undefined,
-		// 			cantAttack: undefined,
-		// 			hasAttacked: undefined,
-		// 			attackImmediately: undefined,
-		// 			previousAttack: undefined,
-		// 			lastAffectedByEntity: undefined,
-		// 			attacking: undefined,
-		// 		} as BoardEntity),
-		// );
 	}
 }

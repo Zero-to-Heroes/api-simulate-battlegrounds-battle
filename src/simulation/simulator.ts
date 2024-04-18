@@ -41,6 +41,23 @@ export class Simulator {
 			playerEntity = isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
 			opponentBoard = isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
 			opponentEntity = isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
+			// So that gameState.player always refers to the active player
+			if (isPlayerBoardEmpty) {
+				this.gameState.gameState.player.teammate = {
+					board: this.gameState.gameState.player.board,
+					player: this.gameState.gameState.player.player,
+				};
+				this.gameState.gameState.player.player = playerEntity;
+				this.gameState.gameState.player.board = playerBoard;
+			}
+			if (isOpponentBoardEmpty) {
+				this.gameState.gameState.opponent.teammate = {
+					board: this.gameState.gameState.opponent.board,
+					player: this.gameState.gameState.opponent.player,
+				};
+				this.gameState.gameState.opponent.player = opponentEntity;
+				this.gameState.gameState.opponent.board = opponentBoard;
+			}
 
 			if (!playerEntity || !opponentEntity) {
 				break;

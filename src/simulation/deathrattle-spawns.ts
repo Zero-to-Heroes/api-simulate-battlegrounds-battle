@@ -1533,6 +1533,7 @@ export const spawnEntitiesFromDeathrattle = (
 								health: 1,
 								maxHealth: 1,
 								enchantments: [...minionToCopy.enchantments],
+								pendingAttackBuffs: [],
 							};
 							spawnedEntities.push(
 								...spawnEntities(

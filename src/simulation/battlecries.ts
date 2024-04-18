@@ -17,7 +17,7 @@ import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const computeBattlecryMultiplier = (
 	board: BoardEntity[],
@@ -72,7 +72,7 @@ export const triggerBattlecry = (
 				const rockpoolStats = entity.cardId === CardIds.RockpoolHunter_BG_UNG_073 ? 1 : 2;
 				modifyAttack(rockPoolTarget, rockpoolStats, board, hero, gameState);
 				modifyHealth(rockPoolTarget, rockpoolStats, board, hero, gameState);
-				afterStatsUpdate(rockPoolTarget, board, hero, gameState);
+				onStatsUpdate(rockPoolTarget, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(entity, rockPoolTarget, board, hero, otherHero);
 				break;
 			case CardIds.ShellCollector_BG23_002:
@@ -114,7 +114,7 @@ export const triggerBattlecry = (
 				const twilightEmissaryStats = entity.cardId === CardIds.TwilightEmissary_BGS_038 ? 2 : 4;
 				modifyAttack(twilightEmissaryTarget, twilightEmissaryStats, board, hero, gameState);
 				modifyHealth(twilightEmissaryTarget, twilightEmissaryStats, board, hero, gameState);
-				afterStatsUpdate(twilightEmissaryTarget, board, hero, gameState);
+				onStatsUpdate(twilightEmissaryTarget, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(entity, twilightEmissaryTarget, board, hero, otherHero);
 				break;
 			case CardIds.BloodsailCannoneer_BGS_053:
@@ -179,7 +179,7 @@ export const triggerBattlecry = (
 					const smoggerStats = hero.tavernTier ?? 3;
 					modifyAttack(smoggerTarget, smoggerStats, board, hero, gameState);
 					modifyHealth(smoggerTarget, smoggerStats, board, hero, gameState);
-					afterStatsUpdate(smoggerTarget, board, hero, gameState);
+					onStatsUpdate(smoggerTarget, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, smoggerTarget, board, hero, otherHero);
 				}
 				break;
@@ -190,7 +190,7 @@ export const triggerBattlecry = (
 				const hpMissing = startingHp - hero.hpLeft;
 				const annihilanStats = (entity.cardId === CardIds.AnnihilanBattlemaster_BGS_010 ? 2 : 4) * hpMissing;
 				modifyHealth(entity, annihilanStats, board, hero, gameState);
-				afterStatsUpdate(entity, board, hero, gameState);
+				onStatsUpdate(entity, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
 				break;
 			case CardIds.ElectricSynthesizer_BG26_963:
@@ -252,7 +252,7 @@ export const triggerBattlecry = (
 				strongshellScavengerTargets.forEach((target) => {
 					modifyAttack(target, strongshellScavengerStats, board, hero, gameState);
 					modifyHealth(target, strongshellScavengerStats, board, hero, gameState);
-					afterStatsUpdate(target, board, hero, gameState);
+					onStatsUpdate(target, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, target, board, hero, otherHero);
 				});
 				break;
@@ -262,7 +262,7 @@ export const triggerBattlecry = (
 				const vigilantStonebornStats = entity.cardId === CardIds.VigilantStoneborn_BG24_023 ? 6 : 12;
 				vigilantStonebornTarget.taunt = true;
 				modifyHealth(vigilantStonebornTarget, vigilantStonebornStats, board, hero, gameState);
-				afterStatsUpdate(vigilantStonebornTarget, board, hero, gameState);
+				onStatsUpdate(vigilantStonebornTarget, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(entity, vigilantStonebornTarget, board, hero, otherHero);
 				break;
 			case CardIds.Bonemare_BG26_ICC_705:
@@ -272,7 +272,7 @@ export const triggerBattlecry = (
 				bonemareTarget.taunt = true;
 				modifyAttack(bonemareTarget, bonemareStats, board, hero, gameState);
 				modifyHealth(bonemareTarget, bonemareStats, board, hero, gameState);
-				afterStatsUpdate(bonemareTarget, board, hero, gameState);
+				onStatsUpdate(bonemareTarget, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(entity, bonemareTarget, board, hero, otherHero);
 				break;
 			case CardIds.GeneralDrakkisath_BG25_309:
@@ -354,7 +354,7 @@ export const triggerBattlecry = (
 				const boardForTarget = board.includes(livingConstellationTarget) ? board : otherBoard;
 				modifyAttack(livingConstellationTarget, livingConstellationStats, boardForTarget, hero, gameState);
 				modifyHealth(livingConstellationTarget, livingConstellationStats, boardForTarget, hero, gameState);
-				afterStatsUpdate(livingConstellationTarget, boardForTarget, hero, gameState);
+				onStatsUpdate(livingConstellationTarget, boardForTarget, hero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entity,
 					livingConstellationTarget,
@@ -405,7 +405,7 @@ export const triggerBattlecry = (
 					const emergentFlameStats = (entity.scriptDataNum1 ?? 1) * emergentFlameMultiplier;
 					modifyAttack(emergentFlameTarget, emergentFlameStats, targetBoard, targetHero, gameState);
 					modifyHealth(emergentFlameTarget, emergentFlameStats, targetBoard, targetHero, gameState);
-					afterStatsUpdate(emergentFlameTarget, targetBoard, targetHero, gameState);
+					onStatsUpdate(emergentFlameTarget, targetBoard, targetHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, emergentFlameTarget, targetBoard, hero, otherHero);
 				}
 				break;
@@ -421,7 +421,7 @@ export const triggerBattlecry = (
 						entity.cardId === CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t ? 1 : 2;
 					const smolderwingStats = 5 * smolderwingMultiplier;
 					modifyAttack(smolderwingTarget, smolderwingStats, targetBoard, targetHero, gameState);
-					afterStatsUpdate(smolderwingTarget, targetBoard, targetHero, gameState);
+					onStatsUpdate(smolderwingTarget, targetBoard, targetHero, gameState);
 				}
 				break;
 			case CardIds.ArgentBraggart_BG_SCH_149:
@@ -455,7 +455,7 @@ export const triggerBattlecry = (
 				);
 				modifyAttack(murkyTarget, murkyStats, board, hero, gameState);
 				modifyHealth(murkyTarget, murkyStats, board, hero, gameState);
-				afterStatsUpdate(murkyTarget, board, hero, gameState);
+				onStatsUpdate(murkyTarget, board, hero, gameState);
 				break;
 			case CardIds.LovesickBalladist_BG26_814:
 			case CardIds.LovesickBalladist_BG26_814_G:
@@ -467,7 +467,7 @@ export const triggerBattlecry = (
 					const targetBoard = board.includes(balladistTarget) ? board : otherBoard;
 					const targetHero = board.includes(balladistTarget) ? hero : otherHero;
 					modifyHealth(balladistTarget, balladistStats, targetBoard, targetHero, gameState);
-					afterStatsUpdate(balladistTarget, targetBoard, targetHero, gameState);
+					onStatsUpdate(balladistTarget, targetBoard, targetHero, gameState);
 					gameState.spectator.registerPowerTarget(
 						entity,
 						balladistTarget,
@@ -539,7 +539,7 @@ export const triggerBattlecry = (
 					switch (adapt) {
 						case CardIds.FlamingClawsToken:
 							modifyAttack(entity, 3, board, hero, gameState);
-							afterStatsUpdate(entity, board, hero, gameState);
+							onStatsUpdate(entity, board, hero, gameState);
 							break;
 						case CardIds.LivingSporesToken:
 							entity.enchantments = entity.enchantments ?? [];
@@ -559,7 +559,7 @@ export const triggerBattlecry = (
 							break;
 						case CardIds.RockyCarapaceToken:
 							modifyHealth(entity, 3, board, hero, gameState);
-							afterStatsUpdate(entity, board, hero, gameState);
+							onStatsUpdate(entity, board, hero, gameState);
 							break;
 						case CardIds.CracklingShieldToken:
 							entity.divineShield = true;
@@ -567,7 +567,7 @@ export const triggerBattlecry = (
 						case CardIds.VolcanicMightToken:
 							modifyAttack(entity, 1, board, hero, gameState);
 							modifyHealth(entity, 1, board, hero, gameState);
-							afterStatsUpdate(entity, board, hero, gameState);
+							onStatsUpdate(entity, board, hero, gameState);
 							break;
 					}
 				}
@@ -585,7 +585,7 @@ export const triggerBattlecry = (
 				if (eagillBoardTarget) {
 					modifyAttack(eagillBoardTarget, 2 * eagillMultiplier, board, hero, gameState);
 					modifyHealth(eagillBoardTarget, 3 * eagillMultiplier, board, hero, gameState);
-					afterStatsUpdate(eagillBoardTarget, board, hero, gameState);
+					onStatsUpdate(eagillBoardTarget, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, eagillBoardTarget, board, hero, otherHero);
 				}
 				const eagillHandTarget = pickRandom(
@@ -596,7 +596,7 @@ export const triggerBattlecry = (
 				if (eagillHandTarget) {
 					modifyAttack(eagillHandTarget, 2 * eagillMultiplier, board, hero, gameState);
 					modifyHealth(eagillHandTarget, 3 * eagillMultiplier, board, hero, gameState);
-					afterStatsUpdate(eagillHandTarget, board, hero, gameState);
+					onStatsUpdate(eagillHandTarget, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, eagillHandTarget, board, hero, otherHero);
 				}
 				break;
@@ -610,7 +610,7 @@ export const triggerBattlecry = (
 					const heroMissingHealth = heroMaxHealth - hero.hpLeft;
 					const weebominationBuff = weebominationMultiplier * heroMissingHealth;
 					modifyHealth(weebominationTarget, weebominationBuff, board, hero, gameState);
-					afterStatsUpdate(weebominationTarget, board, hero, gameState);
+					onStatsUpdate(weebominationTarget, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, weebominationTarget, board, hero, otherHero);
 				}
 				break;
@@ -714,7 +714,7 @@ export const triggerBattlecry = (
 					const stats = (entity.scriptDataNum1 ?? 2) * multiplier;
 					modifyAttack(conductorTarget, stats, targetBoard, targetHero, gameState);
 					modifyHealth(conductorTarget, stats, targetBoard, targetHero, gameState);
-					afterStatsUpdate(conductorTarget, targetBoard, targetHero, gameState);
+					onStatsUpdate(conductorTarget, targetBoard, targetHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, conductorTarget, targetBoard, hero, otherHero);
 				}
 				break;
@@ -756,7 +756,7 @@ const afterBattlecryTriggered = (
 			const buff = entity.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
 			modifyAttack(e, buff, board, hero, gameState);
 			modifyHealth(e, buff, board, hero, gameState);
-			afterStatsUpdate(e, board, hero, gameState);
+			onStatsUpdate(e, board, hero, gameState);
 		});
 };
 

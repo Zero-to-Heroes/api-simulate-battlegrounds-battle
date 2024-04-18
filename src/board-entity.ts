@@ -27,6 +27,7 @@ export interface BoardEntity {
 		repeats?: number;
 		value?: number;
 	}[];
+	pendingAttackBuffs?: number[];
 	scriptDataNum1?: number;
 	inInitialState?: boolean;
 	// For Build-An-Undead

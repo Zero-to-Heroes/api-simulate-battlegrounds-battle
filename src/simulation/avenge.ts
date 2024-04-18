@@ -19,7 +19,7 @@ import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const applyAvengeEffects = (
 	deadEntity: BoardEntity,
@@ -152,7 +152,7 @@ const handleAvenge = (
 					boardWithDeadEntityHero,
 					gameState,
 				);
-				afterStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					avenger,
 					entity,
@@ -379,7 +379,7 @@ const handleAvenge = (
 			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
 			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-			afterStatsUpdate(avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			onStatsUpdate(avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				avenger,
 				avenger,
@@ -395,7 +395,7 @@ const handleAvenge = (
 			neighboursShadowy.forEach((neighbour) => {
 				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				afterStatsUpdate(neighbour, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				onStatsUpdate(neighbour, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					avenger,
 					neighbour,
@@ -549,7 +549,7 @@ const handleHeroAvenge = (
 				// .filter((entity) => !entity.definitelyDead && entity.health > 0)
 				.forEach((entity) => {
 					modifyHealth(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-					afterStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+					onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 					gameState.spectator.registerPowerTarget(
 						boardWithDeadEntityHero,
 						entity,
@@ -562,7 +562,7 @@ const handleHeroAvenge = (
 		case CardIds.Drekthar_LeadTheFrostwolves:
 			boardWithDeadEntity.forEach((entity) => {
 				modifyAttack(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				afterStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					boardWithDeadEntityHero,
 					entity,

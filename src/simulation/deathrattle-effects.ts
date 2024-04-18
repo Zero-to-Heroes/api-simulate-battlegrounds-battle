@@ -34,7 +34,7 @@ import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
-import { afterStatsUpdate, modifyAttack, modifyHealth } from './stats';
+import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
 export const computeDeathrattleMultiplier = (
 	board: BoardEntity[],
@@ -377,7 +377,7 @@ export const handleDeathrattleEffects = (
 									boardWithDeadEntityHero,
 									gameState,
 								);
-								afterStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+								onStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 								gameState.spectator.registerPowerTarget(
 									deadEntity,
 									target,
@@ -1089,7 +1089,7 @@ export const applyWaterInvocationEnchantment = (
 		if (!!target) {
 			modifyHealth(target, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			target.taunt = true;
-			afterStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			onStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity, null, null);
 		}
 	}
@@ -1107,7 +1107,7 @@ export const applyFireInvocationEnchantment = (
 		const target: BoardEntity = boardWithDeadEntity[0];
 		if (!!target) {
 			modifyAttack(target, target.attack, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-			afterStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			onStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity, null, null);
 		}
 	}
@@ -1241,7 +1241,7 @@ export const applyMinionDeathEffect = (
 		.filter((e) => e.additionalCards?.includes(CardIds.FlesheatingGhoulLegacy_BG26_tt_004))
 		.forEach((e) => {
 			modifyAttack(e, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-			afterStatsUpdate(e, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			onStatsUpdate(e, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 		});
 
 	applyRotHideGnollEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
@@ -1365,7 +1365,7 @@ export const applyMinionDeathEffect = (
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				modifyHealth(pirate, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				afterStatsUpdate(pirate, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				onStatsUpdate(pirate, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					deadEntity.lastAffectedByEntity,
 					pirate,
@@ -1381,7 +1381,7 @@ export const applyMinionDeathEffect = (
 			otherPirates.forEach((pirate) => {
 				modifyAttack(pirate, 4, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				modifyHealth(pirate, 4, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				afterStatsUpdate(pirate, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				onStatsUpdate(pirate, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					deadEntity.lastAffectedByEntity,
 					pirate,
@@ -1480,12 +1480,12 @@ const applyScavengingHyenaEffect = (
 		if (board[i].cardId === CardIds.ScavengingHyenaLegacy_BG_EX1_531) {
 			modifyAttack(board[i], 2, board, boardWithDeadEntityHero, gameState);
 			modifyHealth(board[i], 1, board, boardWithDeadEntityHero, gameState);
-			afterStatsUpdate(board[i], board, boardWithDeadEntityHero, gameState);
+			onStatsUpdate(board[i], board, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		} else if (board[i].cardId === CardIds.ScavengingHyenaLegacy_TB_BaconUps_043) {
 			modifyAttack(board[i], 4, board, boardWithDeadEntityHero, gameState);
 			modifyHealth(board[i], 2, board, boardWithDeadEntityHero, gameState);
-			afterStatsUpdate(board[i], board, boardWithDeadEntityHero, gameState);
+			onStatsUpdate(board[i], board, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
@@ -1500,7 +1500,7 @@ const applyEternalKnightEffect = (board: BoardEntity[], hero: BgsPlayerEntity, g
 			const multiplier = board[i].cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
 			modifyAttack(board[i], multiplier * 1, board, hero, gameState);
 			modifyHealth(board[i], multiplier * 1, board, hero, gameState);
-			afterStatsUpdate(board[i], board, hero, gameState);
+			onStatsUpdate(board[i], board, hero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
@@ -1511,7 +1511,7 @@ const applyRotHideGnollEffect = (board: BoardEntity[], hero: BgsPlayerEntity, ga
 		if (board[i].cardId === CardIds.RotHideGnoll_BG25_013 || board[i].cardId === CardIds.RotHideGnoll_BG25_013_G) {
 			const multiplier = board[i].cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
 			modifyAttack(board[i], multiplier * 1, board, hero, gameState);
-			afterStatsUpdate(board[i], board, hero, gameState);
+			onStatsUpdate(board[i], board, hero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
@@ -1539,12 +1539,12 @@ const applyJunkbotEffect = (board: BoardEntity[], hero: BgsPlayerEntity, gameSta
 		if (board[i].cardId === CardIds.Junkbot_GVG_106) {
 			modifyAttack(board[i], 2, board, hero, gameState);
 			modifyHealth(board[i], 2, board, hero, gameState);
-			afterStatsUpdate(board[i], board, hero, gameState);
+			onStatsUpdate(board[i], board, hero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		} else if (board[i].cardId === CardIds.Junkbot_TB_BaconUps_046) {
 			modifyAttack(board[i], 4, board, hero, gameState);
 			modifyHealth(board[i], 4, board, hero, gameState);
-			afterStatsUpdate(board[i], board, hero, gameState);
+			onStatsUpdate(board[i], board, hero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}
@@ -1564,7 +1564,7 @@ const applyQirajiHarbringerEffect = (
 	neighbours.forEach((entity) => {
 		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, hero, gameState);
 		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, hero, gameState);
-		afterStatsUpdate(entity, board, hero, gameState);
+		onStatsUpdate(entity, board, hero, gameState);
 	});
 };
 
@@ -1635,10 +1635,10 @@ const removeOldMurkEyeAttack = (
 	const goldenMurkeyes = boardWithDeadEntity.filter((entity) => entity.cardId === CardIds.OldMurkEye);
 	murkeyes.forEach((entity) => {
 		modifyAttack(entity, -1, boardWithDeadEntity, hero, gameState);
-		afterStatsUpdate(entity, boardWithDeadEntity, hero, gameState);
+		onStatsUpdate(entity, boardWithDeadEntity, hero, gameState);
 	});
 	goldenMurkeyes.forEach((entity) => {
 		modifyAttack(entity, -2, boardWithDeadEntity, hero, gameState);
-		afterStatsUpdate(entity, boardWithDeadEntity, hero, gameState);
+		onStatsUpdate(entity, boardWithDeadEntity, hero, gameState);
 	});
 };
