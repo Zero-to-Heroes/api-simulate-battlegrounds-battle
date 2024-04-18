@@ -4,6 +4,7 @@ import { BoardEntity } from '../board-entity';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
+import { setEntityStats } from './stats';
 
 export const handleSplittingImage = (
 	defendingEntity: BoardEntity,
@@ -75,7 +76,7 @@ export const handlePackTactics = (
 		{ ...defendingEntity },
 	);
 	const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
-	performEntitySpawns(
+	const spawned = performEntitySpawns(
 		candidateEntities,
 		defendingBoard,
 		defendingPlayerEntity,
@@ -85,6 +86,7 @@ export const handlePackTactics = (
 		attackerHero,
 		gameState,
 	);
+	spawned.forEach((e) => setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
 };
 
 export const handleSnakeTrap = (
