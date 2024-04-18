@@ -33,14 +33,20 @@ export class Simulator {
 
 			// The only case where there can only 0-attack minions on a board is when both boards
 			// are that way (otherwise one side would kill the other)
-			const isPlayerBoardEmpty =
-				playerState.board.length === 0 || playerState.board.every((entity) => entity.attack === 0);
-			const isOpponentBoardEmpty =
-				opponentState.board.length === 0 || opponentState.board.every((entity) => entity.attack === 0);
-			playerBoard = isPlayerBoardEmpty ? playerState.teammate?.board : playerState.board;
-			playerEntity = isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
-			opponentBoard = isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
-			opponentEntity = isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
+			const areBothBoards0Attack =
+				playerState.board.length > 0 &&
+				playerState.board.every((entity) => entity.attack === 0) &&
+				opponentState.board.length > 0 &&
+				opponentState.board.every((entity) => entity.attack === 0);
+			const isPlayerBoardEmpty = playerState.board.length === 0;
+			const isOpponentBoardEmpty = opponentState.board.length === 0;
+			playerBoard = areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.board : playerState.board;
+			playerEntity =
+				areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
+			opponentBoard =
+				areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
+			opponentEntity =
+				areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
 			// So that gameState.player always refers to the active player
 			if (isPlayerBoardEmpty) {
 				this.gameState.gameState.player.teammate = {
