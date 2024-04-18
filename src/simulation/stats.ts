@@ -125,7 +125,7 @@ export const modifyHealth = (
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015 ? 2 * amount : amount;
+	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
 	entity.health += realAmount;
 	if (realAmount > 0) {
 		entity.maxHealth += realAmount;
