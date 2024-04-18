@@ -37,7 +37,7 @@ const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
 			questRewardEntities: board.player.questRewardEntities?.map((reward) => ({ ...reward })),
 			questRewards: board.player.questRewards?.map((reward) => reward),
 			hand: board.player.hand?.map((entity) => cloneEntity(entity)),
-			secrets: board.player.secrets?.map((secret) => ({ ...secret })),
+			secrets: board.player.secrets?.map((secret) => ({ ...secret })).sort((a, b) => a.entityId - b.entityId),
 			globalInfo: { ...board.player.globalInfo },
 		},
 		board: board.board.map((entity) => cloneEntity(entity)),

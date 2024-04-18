@@ -3,9 +3,8 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateDivineShield } from '../utils';
 import { getNeighbours } from './attack';
-import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
-import { performEntitySpawns } from './spawns';
+import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
 import { modifyAttack, modifyHealth, setEntityStats } from './stats';
 
 export const applyOnBeingAttackedBuffs = (
@@ -17,156 +16,66 @@ export const applyOnBeingAttackedBuffs = (
 	defendingPlayerEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	let secretTriggered = null;
-	if (
-		(secretTriggered = defendingPlayerEntity.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.AutodefenseMatrix_TB_Bacon_Secrets_07,
-		)) != null
-	) {
-		secretTriggered.triggered = true;
-		updateDivineShield(defendingEntity, defendingBoard, true, gameState.allCards);
-	}
-	if (
-		(secretTriggered = defendingPlayerEntity.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.SplittingImage_TB_Bacon_Secrets_04,
-		)) != null &&
-		defendingBoard.length < 7
-	) {
-		secretTriggered.triggered = true;
-		const copy: BoardEntity = {
-			...defendingEntity,
-			attack: 3,
-			health: 3,
-			maxHealth: 3,
-		};
-		const candidateEntities = spawnEntities(
-			defendingEntity.cardId,
-			1,
-			defendingBoard,
-			defendingPlayerEntity,
-			attackerBoard,
-			attackerHero,
-			gameState.allCards,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			defendingEntity.friendly,
-			false,
-			false,
-			true,
-			copy,
-		);
-		const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
-		performEntitySpawns(
-			candidateEntities,
-			defendingBoard,
-			defendingPlayerEntity,
-			defendingEntity,
-			indexFromRight,
-			attackerBoard,
-			attackerHero,
-			gameState,
-		);
-	}
-	if (
-		(secretTriggered = defendingPlayerEntity.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.PackTactics_TB_Bacon_Secrets_15,
-		)) != null &&
-		defendingBoard.length < 7
-	) {
-		secretTriggered.triggered = true;
-		const candidateEntities = spawnEntities(
-			defendingEntity.cardId,
-			1,
-			defendingBoard,
-			defendingPlayerEntity,
-			attackerBoard,
-			attackerHero,
-			gameState.allCards,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			defendingEntity.friendly,
-			false,
-			false,
-			true,
-			{ ...defendingEntity },
-		);
-		const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
-		performEntitySpawns(
-			candidateEntities,
-			defendingBoard,
-			defendingPlayerEntity,
-			defendingEntity,
-			indexFromRight,
-			attackerBoard,
-			attackerHero,
-			gameState,
-		);
-	}
-	if (
-		(secretTriggered = defendingPlayerEntity.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.SnakeTrap_TB_Bacon_Secrets_02,
-		)) != null &&
-		defendingBoard.length < 7
-	) {
-		secretTriggered.triggered = true;
-		const candidateEntities: readonly BoardEntity[] = spawnEntities(
-			CardIds.SnakeTrap_SnakeLegacyToken,
-			3,
-			defendingBoard,
-			defendingPlayerEntity,
-			attackerBoard,
-			attackerHero,
-			gameState.allCards,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			defendingEntity.friendly,
-			false,
-		);
-		performEntitySpawns(
-			candidateEntities,
-			defendingBoard,
-			defendingPlayerEntity,
-			defendingEntity,
-			0,
-			attackerBoard,
-			attackerHero,
-			gameState,
-		);
-	}
-	if (
-		(secretTriggered = defendingPlayerEntity.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.VenomstrikeTrap_TB_Bacon_Secrets_01,
-		)) != null &&
-		defendingBoard.length < 7
-	) {
-		secretTriggered.triggered = true;
-		const candidateEntities: readonly BoardEntity[] = spawnEntities(
-			CardIds.EmperorCobraLegacy_BG_EX1_170,
-			1,
-			defendingBoard,
-			defendingPlayerEntity,
-			attackerBoard,
-			attackerHero,
-			gameState.allCards,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			defendingEntity.friendly,
-			false,
-		);
-		performEntitySpawns(
-			candidateEntities,
-			defendingBoard,
-			defendingPlayerEntity,
-			defendingEntity,
-			0,
-			attackerBoard,
-			attackerHero,
-			gameState,
-		);
+	// We need to respect the order of the secrets
+	for (const secret of (defendingPlayerEntity.secrets ?? []).filter((s) => !s.triggered)) {
+		switch (secret.cardId) {
+			case CardIds.AutodefenseMatrix_TB_Bacon_Secrets_07:
+				secret.triggered = true;
+				updateDivineShield(defendingEntity, defendingBoard, true, gameState.allCards);
+				break;
+			case CardIds.SplittingImage_TB_Bacon_Secrets_04:
+				if (defendingBoard.length < 7) {
+					secret.triggered = true;
+					handleSplittingImage(
+						defendingEntity,
+						defendingBoard,
+						defendingPlayerEntity,
+						attackerBoard,
+						attackerHero,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.PackTactics_TB_Bacon_Secrets_15:
+				if (defendingBoard.length < 7) {
+					secret.triggered = true;
+					handlePackTactics(
+						defendingEntity,
+						defendingBoard,
+						defendingPlayerEntity,
+						attackerBoard,
+						attackerHero,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.SnakeTrap_TB_Bacon_Secrets_02:
+				if (defendingBoard.length < 7) {
+					secret.triggered = true;
+					handleSnakeTrap(
+						defendingEntity,
+						defendingBoard,
+						defendingPlayerEntity,
+						attackerBoard,
+						attackerHero,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.VenomstrikeTrap_TB_Bacon_Secrets_01:
+				if (defendingBoard.length < 7) {
+					secret.triggered = true;
+					handleVenomstrikeTrap(
+						defendingEntity,
+						defendingBoard,
+						defendingPlayerEntity,
+						attackerBoard,
+						attackerHero,
+						gameState,
+					);
+				}
+				break;
+		}
 	}
 
 	if (defendingEntity.taunt) {

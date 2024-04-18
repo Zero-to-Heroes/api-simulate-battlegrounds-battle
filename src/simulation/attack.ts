@@ -188,28 +188,6 @@ const applyAfterAttackEffects = (
 			);
 		}
 	}
-	if (
-		(secretTriggered = attackingBoardHero.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.Reckoning_TB_Bacon_Secrets_14,
-		)) != null
-	) {
-		// console.log(
-		// 	'triggering secret by defender?',
-		// 	damageDoneByDefender,
-		// 	stringifySimpleCard(defendingEntity, allCards),
-		// );
-		if (damageDoneByDefender >= 3 && !(defendingEntity.health <= 0 || defendingEntity.definitelyDead)) {
-			secretTriggered.triggered = true;
-			defendingEntity.definitelyDead = true;
-			gameState.spectator.registerPowerTarget(
-				secretTriggered,
-				defendingEntity,
-				null,
-				defendingBoardHero,
-				attackingBoardHero,
-			);
-		}
-	}
 
 	if (attackingEntity.cardId === CardIds.Bonker_BG20_104 || attackingEntity.cardId === CardIds.Bonker_BG20_104_G) {
 		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
