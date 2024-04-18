@@ -55,6 +55,7 @@ export const buildSingleBoardEntity = (
 				damageMultiplier: 1,
 				frenzyChargesLeft: 1,
 				friendly: friendly,
+				hasAttacked: 0,
 		  } as BoardEntity)
 		: addImpliedMechanics(
 				{
