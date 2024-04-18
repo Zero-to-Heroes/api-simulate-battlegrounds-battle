@@ -1480,19 +1480,21 @@ export const performStartOfCombatMinionsForPlayer = (
 			// When it's the opponent, the game state already contains all the buffs
 			// It can happen that, for the opponent, a card is first added to their hand (eg with Embrace Your Rage)
 			// and then summoned by Diremuck. In that case, the stats need to be buffed
-			if (target?.friendly || !target?.inInitialState) {
-				const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
-				modifyAttack(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(target, attackingBoard, attackingBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					attacker,
-					target,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
-			}
+			// Update 29.2 18/04/2024: this is no longer the case, and the minions passed in the initial state should
+			// reflect the values they have in hand
+			// if (target?.friendly || !target?.inInitialState) {
+			const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
+			modifyAttack(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
+			modifyHealth(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
+			onStatsUpdate(target, attackingBoard, attackingBoardHero, gameState);
+			gameState.spectator.registerPowerTarget(
+				attacker,
+				target,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
+			// }
 			if (attackingBoard.length < 7) {
 				target.locked = true;
 				const newMinions = spawnEntities(
