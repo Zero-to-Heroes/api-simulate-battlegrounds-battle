@@ -2,8 +2,8 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { isCorrectTribe } from '../utils';
+import { dealDamageToEnemy } from './attack';
 import { addCardsInHand } from './cards-in-hand';
-import { dealDamageToAllMinions } from './deathrattle-effects';
 import { FullGameState } from './internal-game-state';
 import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
@@ -128,15 +128,22 @@ export const applyOnAttackBuffs = (
 	} else if (attacker.cardId === CardIds.Rampager_BG29_809 || attacker.cardId === CardIds.Rampager_BG29_809_G) {
 		const loops = attacker.cardId === CardIds.Rampager_BG29_809_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
-			dealDamageToAllMinions(
-				attackingBoard.filter((e) => e.entityId !== attacker.entityId),
-				attackingBoardHero,
-				[],
-				otherHero,
-				attacker,
-				1,
-				gameState,
-			);
+			// Don't include new spawns
+			for (const entity of [...attackingBoard]) {
+				if (entity.entityId === attacker.entityId) {
+					continue;
+				}
+				dealDamageToEnemy(
+					entity,
+					attackingBoard,
+					attackingBoardHero,
+					attacker,
+					1,
+					attackingBoard,
+					attackingBoardHero,
+					gameState,
+				);
+			}
 		}
 	} else if (attacker.cardId === CardIds.HatefulHag_BG29_120 || attacker.cardId === CardIds.HatefulHag_BG29_120_G) {
 		const loops = attacker.cardId === CardIds.HatefulHag_BG29_120_G ? 2 : 1;
