@@ -58,6 +58,20 @@ export const simulateAttack = (
 		const attackingEntityIndex = attackingBoard.indexOf(attackingEntity);
 		const attackingEntitiesToTheLeft = attackingBoard.slice(0, attackingEntityIndex);
 		const isAttackingImmediately = attackingEntity.attackImmediately;
+		// In case of Broodmother spawn, it spawns where the dead minion was, and has no influence on the
+		// attack order
+		// Situation this is trying to resolve by putting this right at the top of the loop:
+		// - One scallywag attacks into another one, both die
+		// - The first one attacks. To its left is a Harmless Bonehead with 1 HP. The scallywag attacks, and both scallys die
+		// - The *other* sky pirate attacks first, and kills the bonehead. Two minions are spawned
+		// - The first sy pirate attacks
+		// - The initial loop is resolved. If this is at the end, the Harmless Bonehead is already dead, and not flagged
+		// While having this right away, we immediately flag all minions to the left
+		if (!isAttackingImmediately) {
+			// Make sure they won't be able to attack until everyone has attacked
+			// See http://replays.firestoneapp.com/?reviewId=a1b3066d-e806-44c1-ab4b-7ef9dbf9b5b9&turn=5&action=4
+			attackingEntitiesToTheLeft.forEach((entity) => (entity.hasAttacked = 2));
+		}
 
 		const numberOfAttacks = attackingEntity.windfury ? 2 : 1;
 		for (let i = 0; i < numberOfAttacks; i++) {
@@ -87,13 +101,13 @@ export const simulateAttack = (
 		}
 		attackingEntity.attacking = false;
 		attackingEntity.hasAttacked = 1;
-		// In case of Broodmother spawn, it spawns where the dead minion was, and has no influence on the
-		// attack order
-		if (!isAttackingImmediately) {
-			// Make sure they won't be able to attack until everyone has attacked
-			// See http://replays.firestoneapp.com/?reviewId=a1b3066d-e806-44c1-ab4b-7ef9dbf9b5b9&turn=5&action=4
-			attackingEntitiesToTheLeft.forEach((entity) => (entity.hasAttacked = 2));
-		}
+		// // In case of Broodmother spawn, it spawns where the dead minion was, and has no influence on the
+		// // attack order
+		// if (!isAttackingImmediately) {
+		// 	// Make sure they won't be able to attack until everyone has attacked
+		// 	// See http://replays.firestoneapp.com/?reviewId=a1b3066d-e806-44c1-ab4b-7ef9dbf9b5b9&turn=5&action=4
+		// 	attackingEntitiesToTheLeft.forEach((entity) => (entity.hasAttacked = 2));
+		// }
 	}
 };
 
