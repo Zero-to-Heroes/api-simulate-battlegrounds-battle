@@ -290,8 +290,27 @@ const handleNaturalDeathrattle = (
 	deadEntityPlayerState: PlayerState,
 	otherPlayerState: PlayerState,
 	gameState: FullGameState,
-) => {
+): readonly BoardEntity[] => {
 	const modifiedIndexFromRight = Math.min(deadEntityPlayerState.board.length, indexFromRight);
+	const result = [];
+	for (const dr of deadEntity.rememberedDeathrattles ?? []) {
+		const entityToProcess: BoardEntity = {
+			...deadEntity,
+			rememberedDeathrattles: undefined,
+			cardId: dr.cardId,
+			pendingAttackBuffs: [],
+		};
+		const spawns = handleNaturalDeathrattle(
+			entityToProcess,
+			indexFromRight,
+			deadEntities,
+			deadEntityPlayerState,
+			otherPlayerState,
+			gameState,
+		);
+		result.push(...spawns);
+	}
+
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
 		deadEntityPlayerState.board,
@@ -301,8 +320,9 @@ const handleNaturalDeathrattle = (
 		deadEntities,
 		gameState,
 	);
+	result.push(...entitiesFromNativeDeathrattle);
 	performEntitySpawns(
-		entitiesFromNativeDeathrattle,
+		result,
 		deadEntityPlayerState.board,
 		deadEntityPlayerState.player,
 		deadEntity,
@@ -321,7 +341,8 @@ const handleNaturalDeathrattle = (
 		otherPlayerState.player,
 		gameState,
 	);
-	return entitiesFromNativeDeathrattle;
+
+	return result;
 };
 
 const handleEnchantmentsDeathrattle = (
@@ -333,6 +354,32 @@ const handleEnchantmentsDeathrattle = (
 	gameState: FullGameState,
 ) => {
 	const modifiedIndexFromRight = Math.min(deadEntityPlayerState.board.length, indexFromRight);
+	const result = [];
+	for (const dr of deadEntity.rememberedDeathrattles ?? []) {
+		const entityToProcess: BoardEntity = {
+			...deadEntity,
+			rememberedDeathrattles: undefined,
+			cardId: dr.cardId,
+			enchantments: [
+				{
+					cardId: dr.cardId,
+					originEntityId: deadEntity.entityId,
+					repeats: dr.repeats ?? 1,
+					timing: dr.timing,
+				},
+			],
+			pendingAttackBuffs: [],
+		};
+		const spawns = handleEnchantmentsDeathrattle(
+			entityToProcess,
+			indexFromRight,
+			deadEntities,
+			deadEntityPlayerState,
+			otherPlayerState,
+			gameState,
+		);
+		result.push(...spawns);
+	}
 	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
 		deadEntity,
 		deadEntityPlayerState.board,
@@ -341,8 +388,9 @@ const handleEnchantmentsDeathrattle = (
 		otherPlayerState.player,
 		gameState,
 	);
+	result.push(...entitiesFromEnchantments);
 	performEntitySpawns(
-		entitiesFromEnchantments,
+		result,
 		deadEntityPlayerState.board,
 		deadEntityPlayerState.player,
 		deadEntity,
@@ -351,7 +399,7 @@ const handleEnchantmentsDeathrattle = (
 		otherPlayerState.player,
 		gameState,
 	);
-	return entitiesFromEnchantments;
+	return result;
 };
 
 const processReborns = (deathrattleInput: DeathrattleInput) => {
@@ -462,33 +510,6 @@ const handlePostDeathrattleEffect = (
 		if (ogDeadEntity) {
 			ogDeadEntity.attack += 4;
 			ogDeadEntity.health += 4;
-		}
-	}
-
-	// eslint-disable-next-line prettier/prettier
-	if (deadEntity.rememberedDeathrattles?.length) {
-		for (const deathrattle of deadEntity.rememberedDeathrattles) {
-			const entityToProcess: BoardEntity = {
-				...deadEntity,
-				rememberedDeathrattles: undefined,
-				cardId: deathrattle.cardId,
-				enchantments: [
-					{
-						cardId: deathrattle.cardId,
-						originEntityId: deadEntity.entityId,
-						repeats: deathrattle.repeats ?? 1,
-						timing: deathrattle.timing,
-					},
-				],
-				pendingAttackBuffs: [],
-			};
-			handleDeathrattles({
-				...deathrattleInput,
-				playerDeadEntities: isPlayer ? [entityToProcess] : [],
-				playerDeadEntityIndexesFromRight: isPlayer ? [indexFromRight] : [],
-				opponentDeadEntities: !isPlayer ? [entityToProcess] : [],
-				opponentDeadEntityIndexesFromRight: !isPlayer ? [indexFromRight] : [],
-			});
 		}
 	}
 };

@@ -1670,6 +1670,18 @@ export const rememberDeathrattles = (
 	} else {
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 	}
+	if (fish.rememberedDeathrattles?.length) {
+		fish.rememberedDeathrattles.sort((a, b) => a.timing - b.timing);
+	}
+	// console.debug(
+	// 	'remembered',
+	// 	fish.rememberedDeathrattles.map((d) => ({
+	// 		cardId: d.cardId,
+	// 		name: allCards.getCard(d.cardId)?.name,
+	// 		// repeats: d.repeats,
+	// 		timing: d.timing,
+	// 	})),
+	// );
 };
 
 const removeOldMurkEyeAttack = (

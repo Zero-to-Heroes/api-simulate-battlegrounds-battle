@@ -114,6 +114,12 @@ export const spawnEntitiesFromDeathrattle = (
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	for (let i = 0; i < multiplier; i++) {
 		const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
+		// console.debug(
+		// 	'spawn triggers',
+		// 	gameState.allCards.getCard(deadEntity.cardId).name,
+		// 	cardIds.map((c) => gameState.allCards.getCard(c).name),
+		// 	cardIds,
+		// );
 		for (const deadEntityCardId of cardIds) {
 			let hasTriggered = true;
 			switch (deadEntityCardId) {
