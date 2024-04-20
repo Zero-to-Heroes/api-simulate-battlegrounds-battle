@@ -13,7 +13,7 @@ import {
 	isMinionGolden,
 	makeMinionGolden,
 } from '../utils';
-import { dealDamageToEnemy, getNeighbours } from './attack';
+import { dealDamageToMinion, getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
@@ -287,7 +287,7 @@ const handleAvenge = (
 				boardWithDeadEntityHero,
 				otherBoardHero,
 			);
-			dealDamageToEnemy(
+			dealDamageToMinion(
 				target,
 				otherBoard,
 				otherBoardHero,
@@ -308,7 +308,7 @@ const handleAvenge = (
 					boardWithDeadEntityHero,
 					otherBoardHero,
 				);
-				dealDamageToEnemy(
+				dealDamageToMinion(
 					target,
 					otherBoard,
 					otherBoardHero,
@@ -421,7 +421,7 @@ const handleAvenge = (
 			break;
 		case CardIds.BoomSquad_BG27_Reward_502:
 			const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
-			dealDamageToEnemy(
+			dealDamageToMinion(
 				highestHealthMinion,
 				otherBoard,
 				otherBoardHero,

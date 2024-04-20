@@ -16,7 +16,7 @@ import {
 } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
 import {
-	dealDamageToEnemy,
+	dealDamageToMinion,
 	dealDamageToRandomEnemy,
 	doFullAttack,
 	findNearestEnemies,
@@ -1064,7 +1064,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	// TODO: should this recompute the first attack order?
 	if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLeftToken) {
 		const target = opponentBoard[0];
-		const damageDone = dealDamageToEnemy(
+		const damageDone = dealDamageToMinion(
 			target,
 			opponentBoard,
 			opponentEntity,
@@ -1078,7 +1078,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 		playerEntity.deadEyeDamageDone = damageDone;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimRightToken) {
 		const target = opponentBoard[opponentBoard.length - 1];
-		const damageDone = dealDamageToEnemy(
+		const damageDone = dealDamageToMinion(
 			target,
 			opponentBoard,
 			opponentEntity,
@@ -1093,7 +1093,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimLowToken) {
 		const smallestHealthMinion = [...opponentBoard].sort((a, b) => a.health - b.health)[0];
 		const target = pickRandom(opponentBoard.filter((e) => e.health === smallestHealthMinion.health));
-		const damageDone = dealDamageToEnemy(
+		const damageDone = dealDamageToMinion(
 			target,
 			opponentBoard,
 			opponentEntity,
@@ -1108,7 +1108,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.AimHighToken) {
 		const highestHealthMinion = [...opponentBoard].sort((a, b) => b.health - a.health)[0];
 		const target = pickRandom(opponentBoard.filter((e) => e.health === highestHealthMinion.health));
-		const damageDone = dealDamageToEnemy(
+		const damageDone = dealDamageToMinion(
 			target,
 			opponentBoard,
 			opponentEntity,
@@ -1623,14 +1623,14 @@ export const performStartOfCombatMinionsForPlayer = (
 					attackingBoardHero,
 					defendingBoardHero,
 				);
-				dealDamageToEnemy(
+				dealDamageToMinion(
 					neighbour,
 					attackingBoard,
 					attackingBoardHero,
 					attacker,
 					1,
-					attackingBoard,
-					attackingBoardHero,
+					defendingBoard,
+					defendingBoardHero,
 					gameState,
 				);
 				modifyAttack(neighbour, 4, attackingBoard, attackingBoardHero, gameState);

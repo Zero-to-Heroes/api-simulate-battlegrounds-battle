@@ -26,7 +26,7 @@ import {
 	makeMinionGolden,
 	updateDivineShield,
 } from '../utils';
-import { dealDamageToEnemy, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
+import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
 import { triggerBattlecry } from './battlecries';
 import { addCardsInHand } from './cards-in-hand';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
@@ -577,7 +577,7 @@ export const handleDeathrattleEffects = (
 							const isSameSide = target.friendly === deadEntity.friendly;
 							const board = isSameSide ? boardWithDeadEntity : otherBoard;
 							const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
-							dealDamageToEnemy(
+							dealDamageToMinion(
 								target,
 								board,
 								hero,
@@ -607,7 +607,7 @@ export const handleDeathrattleEffects = (
 							boardWithDeadEntityHero,
 							otherBoardHero,
 						);
-						dealDamageToEnemy(
+						dealDamageToMinion(
 							target,
 							otherBoard,
 							otherBoardHero,
@@ -643,7 +643,7 @@ export const handleDeathrattleEffects = (
 					);
 					targets.forEach((target) => {
 						// console.debug('dealing damage to', stringifySimpleCard(target));
-						dealDamageToEnemy(
+						dealDamageToMinion(
 							target,
 							otherBoard,
 							otherBoardHero,
@@ -667,7 +667,7 @@ export const handleDeathrattleEffects = (
 						const isSameSide = target.friendly === deadEntity.friendly;
 						const board = isSameSide ? boardWithDeadEntity : otherBoard;
 						const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
-						dealDamageToEnemy(
+						dealDamageToMinion(
 							target,
 							board,
 							hero,
@@ -692,7 +692,7 @@ export const handleDeathrattleEffects = (
 							const isSameSide = target.friendly === deadEntity.friendly;
 							const board = isSameSide ? boardWithDeadEntity : otherBoard;
 							const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
-							dealDamageToEnemy(
+							dealDamageToMinion(
 								target,
 								board,
 								hero,
@@ -816,7 +816,7 @@ export const handleDeathrattleEffects = (
 			case CardIds.TickingAbomination_BG_ICC_099:
 				for (let i = 0; i < multiplier; i++) {
 					for (const entity of boardWithDeadEntity) {
-						dealDamageToEnemy(
+						dealDamageToMinion(
 							entity,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -962,7 +962,7 @@ export const handleDeathrattleEffects = (
 							// by looking up the position changes of other minions?
 							// Not sure how this could work without creating a giant mess, so for now it will probably
 							// stay as a bug
-							dealDamageToEnemy(
+							dealDamageToMinion(
 								entity,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -1109,7 +1109,7 @@ export const applyLightningInvocationEnchantment = (
 	for (let i = 0; i < multiplier; i++) {
 		const targets = pickMultipleRandomDifferent(otherBoard, 5);
 		for (const target of targets) {
-			dealDamageToEnemy(
+			dealDamageToMinion(
 				target,
 				otherBoard,
 				otherBoardHero,
@@ -1299,7 +1299,7 @@ export const applyMinionDeathEffect = (
 			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 			if (targets.length > 0) {
 				const target = targets[0];
-				dealDamageToEnemy(
+				dealDamageToMinion(
 					target,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
@@ -1314,7 +1314,7 @@ export const applyMinionDeathEffect = (
 			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 			if (targets.length > 0) {
 				const target = targets[0];
-				dealDamageToEnemy(
+				dealDamageToMinion(
 					target,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
@@ -1455,10 +1455,10 @@ export const dealDamageToAllMinions = (
 		return;
 	}
 	for (let i = 0; i < board1.length; i++) {
-		dealDamageToEnemy(board1[i], board1, board1Hero, damageSource, damageDealt, board2, board2Hero, gameState);
+		dealDamageToMinion(board1[i], board1, board1Hero, damageSource, damageDealt, board2, board2Hero, gameState);
 	}
 	for (let i = 0; i < board2.length; i++) {
-		dealDamageToEnemy(board2[i], board2, board2Hero, damageSource, damageDealt, board1, board1Hero, gameState);
+		dealDamageToMinion(board2[i], board2, board2Hero, damageSource, damageDealt, board1, board1Hero, gameState);
 	}
 };
 

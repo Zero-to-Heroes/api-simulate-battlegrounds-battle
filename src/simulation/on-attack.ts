@@ -2,7 +2,7 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { isCorrectTribe } from '../utils';
-import { dealDamageToEnemy } from './attack';
+import { dealDamageToMinion } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
@@ -133,7 +133,7 @@ export const applyOnAttackBuffs = (
 				if (entity.entityId === attacker.entityId) {
 					continue;
 				}
-				dealDamageToEnemy(
+				dealDamageToMinion(
 					entity,
 					attackingBoard,
 					attackingBoardHero,

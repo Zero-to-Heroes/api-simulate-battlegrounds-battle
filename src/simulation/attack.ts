@@ -286,7 +286,7 @@ const performAttack = (
 				attackingBoardHero,
 				defendingBoardHero,
 			);
-			damageDoneByAttacker += dealDamageToEnemy(
+			damageDoneByAttacker += dealDamageToMinion(
 				defendingEntity,
 				defendingBoard,
 				defendingBoardHero,
@@ -314,7 +314,7 @@ const performAttack = (
 					attackingBoardHero,
 					defendingBoardHero,
 				);
-				damageDoneByAttacker += dealDamageToEnemy(
+				damageDoneByAttacker += dealDamageToMinion(
 					target,
 					defendingBoard,
 					defendingBoardHero,
@@ -341,7 +341,7 @@ const performAttack = (
 					attackingBoardHero,
 					defendingBoardHero,
 				);
-				damageDoneByAttacker += dealDamageToEnemy(
+				damageDoneByAttacker += dealDamageToMinion(
 					target,
 					defendingBoard,
 					defendingBoardHero,
@@ -369,7 +369,7 @@ const performAttack = (
 				attackingBoardHero,
 				defendingBoardHero,
 			);
-			damageDoneByAttacker += dealDamageToEnemy(
+			damageDoneByAttacker += dealDamageToMinion(
 				target,
 				defendingBoard,
 				defendingBoardHero,
@@ -552,7 +552,7 @@ const performAttack = (
 		if (neighbours.length > 0) {
 			if (attackingEntity.cardId === CardIds.WildfireElemental_BGS_126) {
 				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
-				damageDoneByAttacker += dealDamageToEnemy(
+				damageDoneByAttacker += dealDamageToMinion(
 					randomTarget,
 					defendingBoard,
 					defendingBoardHero,
@@ -565,7 +565,7 @@ const performAttack = (
 			} else {
 				damageDoneByAttacker += neighbours
 					.map((neighbour) =>
-						dealDamageToEnemy(
+						dealDamageToMinion(
 							neighbour,
 							defendingBoard,
 							defendingBoardHero,
@@ -817,7 +817,7 @@ export const dealDamageToRandomEnemy = (
 			boardToBeDamagedHero,
 			boardWithAttackOriginHero,
 		);
-		dealDamageToEnemy(
+		dealDamageToMinion(
 			defendingEntity,
 			boardToBeDamaged,
 			boardToBeDamagedHero,
@@ -830,22 +830,22 @@ export const dealDamageToRandomEnemy = (
 	}
 };
 
-export const dealDamageToEnemy = (
-	defendingEntity: BoardEntity,
-	defendingBoard: BoardEntity[],
-	defendingBoardHero: BgsPlayerEntity,
+export const dealDamageToMinion = (
+	target: BoardEntity,
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
 	damageSource: BoardEntity,
 	damage: number,
-	boardWithAttackOrigin: BoardEntity[],
-	boardWithAttackOriginHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): number => {
 	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity, allCards));
-	if (!defendingEntity) {
+	if (!target) {
 		return 0;
 	}
 
-	const isDeadBeforeDamage = defendingEntity.definitelyDead || defendingEntity.health <= 0;
+	const isDeadBeforeDamage = target.definitelyDead || target.health <= 0;
 	// Why do we use a fakeAttacker? Is that for the "attacking" prop?
 	// That prop is only used for Overkill, and even in that case it looks like it would work
 	// without it
@@ -855,48 +855,24 @@ export const dealDamageToEnemy = (
 		attack: damage,
 		attacking: true,
 	} as BoardEntity;
-	const actualDamageDone = bumpEntities(
-		defendingEntity,
-		fakeAttacker,
-		defendingBoard,
-		defendingBoardHero,
-		boardWithAttackOrigin,
-		boardWithAttackOriginHero,
-		gameState,
-	);
+	const actualDamageDone = bumpEntities(target, fakeAttacker, board, hero, otherBoard, otherHero, gameState);
 	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 	// cause wrong results to happen
 	if (actualDamageDone > 0) {
-		onEntityDamaged(
-			defendingEntity,
-			defendingBoard,
-			defendingBoardHero,
-			boardWithAttackOrigin,
-			boardWithAttackOriginHero,
-			actualDamageDone,
-			gameState,
-		);
+		onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
 	}
-	if (fakeAttacker.attack > 0 && defendingEntity.divineShield) {
-		updateDivineShield(defendingEntity, defendingBoard, false, gameState.allCards);
+	if (fakeAttacker.attack > 0 && target.divineShield) {
+		updateDivineShield(target, board, false, gameState.allCards);
 	}
 	if (!isDeadBeforeDamage && actualDamageDone > 0) {
-		defendingEntity.lastAffectedByEntity = damageSource;
+		target.lastAffectedByEntity = damageSource;
 
-		if (defendingEntity.health <= 0 || defendingEntity.definitelyDead) {
-			onMinionKill(
-				damageSource,
-				defendingEntity,
-				boardWithAttackOrigin,
-				boardWithAttackOriginHero,
-				defendingBoard,
-				defendingBoardHero,
-				gameState,
-			);
+		if (target.health <= 0 || target.definitelyDead) {
+			onMinionKill(damageSource, target, otherBoard, otherHero, board, hero, gameState);
 		}
 	}
-	const defendingEntityIndex = defendingBoard.map((entity) => entity.entityId).indexOf(defendingEntity.entityId);
-	defendingBoard[defendingEntityIndex] = defendingEntity;
+	const defendingEntityIndex = board.map((entity) => entity.entityId).indexOf(target.entityId);
+	board[defendingEntityIndex] = target;
 	return actualDamageDone;
 };
 
