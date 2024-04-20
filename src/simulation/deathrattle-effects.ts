@@ -571,15 +571,23 @@ export const handleDeathrattleEffects = (
 				const fireDancerLoops = deadEntity.cardId === CardIds.FireDancer_BG29_843_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < fireDancerLoops; j++) {
-						dealDamageToAllMinions(
-							otherBoard,
-							otherBoardHero,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							deadEntity,
-							1,
-							gameState,
-						);
+						// In case there are spawns, don't target them
+						const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
+						for (const target of minionsToDamage) {
+							const isSameSide = target.friendly === deadEntity.friendly;
+							const board = isSameSide ? boardWithDeadEntity : otherBoard;
+							const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
+							dealDamageToEnemy(
+								target,
+								board,
+								hero,
+								deadEntity,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								gameState,
+							);
+						}
 					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
@@ -653,15 +661,23 @@ export const handleDeathrattleEffects = (
 			case CardIds.UnstableGhoul_TB_BaconUps_118:
 				const damage = deadEntityCardId === CardIds.UnstableGhoul_TB_BaconUps_118 ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
-					dealDamageToAllMinions(
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						deadEntity,
-						damage,
-						gameState,
-					);
+					// In case there are spawns, don't target them
+					const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
+					for (const target of minionsToDamage) {
+						const isSameSide = target.friendly === deadEntity.friendly;
+						const board = isSameSide ? boardWithDeadEntity : otherBoard;
+						const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
+						dealDamageToEnemy(
+							target,
+							board,
+							hero,
+							deadEntity,
+							damage,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							gameState,
+						);
+					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
@@ -670,15 +686,23 @@ export const handleDeathrattleEffects = (
 				const loops = deadEntityCardId === CardIds.TunnelBlaster_BG_DAL_775_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < loops; j++) {
-						dealDamageToAllMinions(
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							deadEntity,
-							3,
-							gameState,
-						);
+						// In case there are spawns, don't target them
+						const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
+						for (const target of minionsToDamage) {
+							const isSameSide = target.friendly === deadEntity.friendly;
+							const board = isSameSide ? boardWithDeadEntity : otherBoard;
+							const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
+							dealDamageToEnemy(
+								target,
+								board,
+								hero,
+								deadEntity,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								gameState,
+							);
+						}
 					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
@@ -1417,6 +1441,7 @@ export const applyMinionDeathEffect = (
 	}
 };
 
+/** @deprecated */
 export const dealDamageToAllMinions = (
 	board1: BoardEntity[],
 	board1Hero: BgsPlayerEntity,

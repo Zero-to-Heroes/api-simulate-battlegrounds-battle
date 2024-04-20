@@ -106,7 +106,9 @@ export const handleStartOfCombat = (
 		currentAttacker,
 		gameState,
 	);
-	currentAttacker = handleStartOfCombatMinions(
+	// Not sure if this can change who the first player will be
+	// I don't have any official source on it at the moment, but there are some simulation
+	handleStartOfCombatMinions(
 		playerEntity,
 		playerBoard,
 		opponentEntity,
