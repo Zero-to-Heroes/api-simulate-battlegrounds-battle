@@ -927,16 +927,39 @@ export const handleDeathrattleEffects = (
 				const spikedSaviorLoops = deadEntity.cardId === CardIds.SpikedSavior_BG29_808_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < spikedSaviorLoops; j++) {
-						dealDamageToAllMinions(
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							[],
-							otherBoardHero,
-							deadEntity,
-							1,
-							gameState,
-						);
-						addStatsToBoard(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, 0, 1, gameState);
+						const targetBoard = [...boardWithDeadEntity];
+						for (const entity of targetBoard) {
+							// Issue: because this can spawn a new minion, the entity indices can be incorrect
+							// See sim.sample.1.txt
+							// Ideally, I should probably move the minion spawn index to another paradigm: keep the dead minions
+							// until there are new spawns, and delete them afterwards, so I can easily refer to their index
+							// by just looking them up, and spawning to the right
+							// However, since this doesn't work, maybe I can look for entity indices adjustments needed
+							// by looking up the position changes of other minions?
+							// Not sure how this could work without creating a giant mess, so for now it will probably
+							// stay as a bug
+							dealDamageToEnemy(
+								entity,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								deadEntity,
+								1,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+							);
+						}
+						for (const entity of targetBoard) {
+							modifyHealth(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							gameState.spectator?.registerPowerTarget(
+								deadEntity,
+								entity,
+								boardWithDeadEntity,
+								null,
+								null,
+							);
+						}
 					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
