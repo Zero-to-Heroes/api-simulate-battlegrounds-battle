@@ -3,6 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { addStatsToBoard, hasCorrectTribe, isCorrectTribe } from '../utils';
 import { applyAurasToSelf } from './add-minion-to-board';
+import { getNeighbours } from './attack';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { Spectator } from './spectator/spectator';
@@ -41,7 +42,10 @@ export const modifyAttack = (
 		gameState.gameState.player.player === friendlyBoardHero
 			? gameState.gameState.opponent.player
 			: gameState.gameState.player.player;
-	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
+	const neighbours = getNeighbours(friendlyBoard, entity);
+	const poetMultipliers = neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1;
+	const tarecgosaMultiplier = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
+	const realAmount = amount * poetMultipliers * tarecgosaMultiplier;
 	entity.attack = Math.max(0, entity.attack + realAmount);
 	entity.previousAttack = entity.attack;
 	entity.pendingAttackBuffs.push(realAmount);

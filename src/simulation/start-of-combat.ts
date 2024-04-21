@@ -1218,15 +1218,21 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G
 	) {
 		const stats = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
-		addStatsToBoard(
-			attacker,
-			attackingBoard.filter((e) => e.entityId !== attacker.entityId),
-			attackingBoardHero,
-			stats,
-			stats,
-			gameState,
-			Race[Race.DRAGON],
-		);
+		const targets = attackingBoard
+			.filter((e) => e.entityId !== attacker.entityId)
+			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards));
+		for (const entity of targets) {
+			modifyAttack(entity, stats, attackingBoard, attackingBoardHero, gameState);
+			modifyHealth(entity, stats, attackingBoard, attackingBoardHero, gameState);
+			onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
+			gameState.spectator.registerPowerTarget(
+				attacker,
+				entity,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
+		}
 	} else if (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354 ||
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
