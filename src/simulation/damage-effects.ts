@@ -20,8 +20,14 @@ export const onEntityDamaged = (
 	gameState: FullGameState,
 ) => {
 	const spawnedEntities: BoardEntity[] = [];
-	const friendlyBoard = board?.[0]?.friendly ? board : otherBoard?.[0]?.friendly ? otherBoard : [];
-	const enemyBoard = board?.[0]?.friendly ? otherBoard : board?.[0]?.friendly ? board : [];
+	const friendlyBoard =
+		board?.[0]?.friendly === entity.friendly
+			? board
+			: otherBoard?.[0]?.friendly === entity.friendly
+			? otherBoard
+			: [];
+	const enemyBoard =
+		board?.[0]?.friendly === entity.friendly ? otherBoard : board?.[0]?.friendly === entity.friendly ? board : [];
 	const friendlyHero = friendlyBoard === board ? hero : otherHero;
 	const enemyHero = friendlyBoard === board ? otherHero : hero;
 	switch (entity.cardId) {
