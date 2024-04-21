@@ -583,8 +583,8 @@ export const handleDeathrattleEffects = (
 								hero,
 								deadEntity,
 								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
+								isSameSide ? otherBoard : boardWithDeadEntity,
+								isSameSide ? otherBoardHero : boardWithDeadEntityHero,
 								gameState,
 							);
 						}

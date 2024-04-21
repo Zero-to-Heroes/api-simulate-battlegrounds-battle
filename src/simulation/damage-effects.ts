@@ -20,6 +20,10 @@ export const onEntityDamaged = (
 	gameState: FullGameState,
 ) => {
 	const spawnedEntities: BoardEntity[] = [];
+	const friendlyBoard = board?.[0]?.friendly ? board : otherBoard?.[0]?.friendly ? otherBoard : [];
+	const enemyBoard = board?.[0]?.friendly ? otherBoard : board?.[0]?.friendly ? board : [];
+	const friendlyHero = friendlyBoard === board ? hero : otherHero;
+	const enemyHero = friendlyBoard === board ? otherHero : hero;
 	switch (entity.cardId) {
 		case CardIds.WingedChimera_BG29_844:
 		case CardIds.WingedChimera_BG29_844_G:
@@ -75,7 +79,7 @@ export const onEntityDamaged = (
 		case CardIds.CraftyAranasi_BG29_821_G:
 			const aranasiLoops = entity.cardId === CardIds.CraftyAranasi_BG29_821_G ? 2 : 1;
 			for (let i = 0; i < aranasiLoops; i++) {
-				dealDamageToRandomEnemy(otherBoard, otherHero, entity, 5, board, hero, gameState);
+				dealDamageToRandomEnemy(enemyBoard, enemyHero, entity, 5, friendlyBoard, friendlyHero, gameState);
 			}
 			break;
 		case CardIds.MarineMatriarch_BG29_610:
