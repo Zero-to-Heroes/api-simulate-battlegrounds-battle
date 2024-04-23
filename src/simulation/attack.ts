@@ -881,6 +881,10 @@ export const getDefendingEntity = (
 	attackingEntity: BoardEntity,
 	ignoreTaunts = false,
 ): BoardEntity => {
+	// if (attackingEntity.entityId === 5417) {
+	// 	return defendingBoard.find((e) => e.entityId === 6272);
+	// }
+
 	let possibleDefenders: readonly BoardEntity[];
 	if (
 		attackingEntity.cardId === CardIds.ZappSlywick_BGS_022 ||

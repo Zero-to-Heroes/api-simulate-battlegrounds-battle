@@ -1733,16 +1733,18 @@ export const performStartOfCombatMinionsForPlayer = (
 			attacker.cardId === CardIds.TheUninvitedGuest_BG29_875_G
 				? CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875_Ge
 				: CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875e;
-		attackingBoard.forEach((e) => {
-			e.enchantments = e.enchantments || [];
-			if (!e.enchantments.some((e) => e.cardId === targetEnchantment)) {
-				e.enchantments.push({
-					cardId: targetEnchantment,
-					originEntityId: attacker.entityId,
-					timing: gameState.sharedState.currentEntityId++,
-				});
-			}
-		});
+		attackingBoard
+			.filter((e) => e.entityId != attacker.entityId)
+			.forEach((e) => {
+				e.enchantments = e.enchantments || [];
+				if (!e.enchantments.some((e) => e.cardId === targetEnchantment)) {
+					e.enchantments.push({
+						cardId: targetEnchantment,
+						originEntityId: attacker.entityId,
+						timing: gameState.sharedState.currentEntityId++,
+					});
+				}
+			});
 	} else if (attacker.cardId === CardIds.Sandy_BGDUO_125 || attacker.cardId === CardIds.Sandy_BGDUO_125_G) {
 		const teammateState = getTeammateState(gameState.gameState, attackingBoardHero);
 		if (teammateState?.board?.length) {
