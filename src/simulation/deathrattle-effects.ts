@@ -26,7 +26,13 @@ import {
 	makeMinionGolden,
 	updateDivineShield,
 } from '../utils';
-import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies, getNeighbours } from './attack';
+import {
+	dealDamageToMinion,
+	dealDamageToRandomEnemy,
+	findNearestEnemies,
+	getNeighbours,
+	processMinionDeath,
+} from './attack';
 import { triggerBattlecry } from './battlecries';
 import { addCardsInHand } from './cards-in-hand';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
@@ -588,6 +594,16 @@ export const handleDeathrattleEffects = (
 								gameState,
 							);
 						}
+
+						// Most likely there is a death loop after each round of damage, see
+						// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
+						processMinionDeath(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState,
+						);
 					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
@@ -973,7 +989,17 @@ export const handleDeathrattleEffects = (
 								gameState,
 							);
 						}
-						for (const entity of targetBoard) {
+
+						// Minions can't be revived here
+						// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
+						processMinionDeath(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState,
+						);
+						for (const entity of targetBoard.filter((e) => e.health > 0 && !e.definitelyDead)) {
 							modifyHealth(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 							onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 							gameState.spectator?.registerPowerTarget(
