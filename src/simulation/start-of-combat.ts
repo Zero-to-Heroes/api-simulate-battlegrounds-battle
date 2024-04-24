@@ -556,7 +556,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				}
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
-				secret.chargesLeft = 3;
+				secret.chargesLeft = 4;
 				// playerBoard.forEach((e) => {
 				// 	e.enchantments = e.enchantments || [];
 				// 	if (

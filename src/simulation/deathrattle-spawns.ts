@@ -1532,7 +1532,8 @@ export const spawnEntitiesFromDeathrattle = (
 					for (let i = 0; i < magnanimooseCopies; i++) {
 						const teammateState = getTeammateState(gameState.gameState, boardWithDeadEntityHero);
 						const teammateBoard = teammateState?.board ?? [];
-						const minionToCopy = pickRandom(teammateBoard);
+						const copied: number[] = [];
+						const minionToCopy = pickRandom(teammateBoard.filter((e) => !copied.includes(e.entityId)));
 						if (minionToCopy) {
 							const copy: BoardEntity = {
 								...minionToCopy,
@@ -1560,6 +1561,7 @@ export const spawnEntitiesFromDeathrattle = (
 									copy,
 								),
 							);
+							copied.push(copy.entityId);
 						}
 					}
 					break;

@@ -443,6 +443,8 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 				CardIds.LongJohnCopper_BG29_831_G,
 				CardIds.BristlingBuffoon_BG29_160,
 				CardIds.BristlingBuffoon_BG29_160_G,
+				CardIds.WingedChimera_BG29_844,
+				CardIds.WingedChimera_BG29_844_G,
 			].includes(entity.cardId as CardIds)
 				? 3
 				: [

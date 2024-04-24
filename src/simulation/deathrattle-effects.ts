@@ -116,9 +116,13 @@ export const handleDeathrattleEffects = (
 		switch (deadEntityCardId) {
 			case CardIds.RylakMetalhead_BG26_801:
 			case CardIds.RylakMetalhead_BG26_801_G:
-				const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
+				// const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
-					const neighbours = getNeighbours(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight);
+					const allNeighbours = getNeighbours(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight);
+					const neighbours =
+						deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G
+							? allNeighbours
+							: [allNeighbours[0]].filter((entity) => !!entity);
 					for (const neighbour of neighbours) {
 						gameState.spectator.registerPowerTarget(
 							deadEntity,
@@ -127,16 +131,16 @@ export const handleDeathrattleEffects = (
 							boardWithDeadEntityHero,
 							otherBoardHero,
 						);
-						for (let j = 0; j < rylakMutltiplier; j++) {
-							triggerBattlecry(
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								neighbour,
-								otherBoard,
-								otherBoardHero,
-								gameState,
-							);
-						}
+						// for (let j = 0; j < rylakMutltiplier; j++) {
+						triggerBattlecry(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							neighbour,
+							otherBoard,
+							otherBoardHero,
+							gameState,
+						);
+						// }
 					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
@@ -248,16 +252,16 @@ export const handleDeathrattleEffects = (
 			case CardIds.GoldrinnTheGreatWolf_BGS_018:
 				for (let i = 0; i < multiplier; i++) {
 					addStatsToBoard(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, 3, 2, gameState, 'BEAST');
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += 3;
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += 2;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += 4;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += 4;
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
 			case CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085:
 				for (let i = 0; i < multiplier; i++) {
 					addStatsToBoard(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, 6, 4, gameState, 'BEAST');
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += 6;
-					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += 4;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += 8;
+					boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += 8;
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
@@ -893,7 +897,7 @@ export const handleDeathrattleEffects = (
 			case CardIds.MoroesStewardOfDeath_BG28_304:
 			case CardIds.MoroesStewardOfDeath_BG28_304_G:
 				const moroesBuffAtk = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 4 : 2;
-				const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 10 : 5;
+				const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 8 : 4;
 				for (let i = 0; i < multiplier; i++) {
 					addStatsToBoard(
 						deadEntity,
@@ -969,6 +973,17 @@ export const handleDeathrattleEffects = (
 					for (let j = 0; j < spikedSaviorLoops; j++) {
 						const targetBoard = [...boardWithDeadEntity];
 						for (const entity of targetBoard) {
+							modifyHealth(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							gameState.spectator?.registerPowerTarget(
+								deadEntity,
+								entity,
+								boardWithDeadEntity,
+								null,
+								null,
+							);
+						}
+						for (const entity of targetBoard) {
 							// Issue: because this can spawn a new minion, the entity indices can be incorrect
 							// See sim.sample.1.txt
 							// Ideally, I should probably move the minion spawn index to another paradigm: keep the dead minions
@@ -987,27 +1002,6 @@ export const handleDeathrattleEffects = (
 								otherBoard,
 								otherBoardHero,
 								gameState,
-							);
-						}
-
-						// Minions can't be revived here
-						// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
-						processMinionDeath(
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-						);
-						for (const entity of targetBoard.filter((e) => e.health > 0 && !e.definitelyDead)) {
-							modifyHealth(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-							onStatsUpdate(entity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-							gameState.spectator?.registerPowerTarget(
-								deadEntity,
-								entity,
-								boardWithDeadEntity,
-								null,
-								null,
 							);
 						}
 					}

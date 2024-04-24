@@ -33,20 +33,23 @@ export const onEntityDamaged = (
 	switch (entity.cardId) {
 		case CardIds.WingedChimera_BG29_844:
 		case CardIds.WingedChimera_BG29_844_G:
-			const wingedChimeraModifier = entity.cardId === CardIds.WingedChimera_BG29_844_G ? 2 : 1;
-			grantStatsToMinionsOfEachType(
-				entity,
-				board,
-				hero,
-				wingedChimeraModifier * 2,
-				wingedChimeraModifier * 1,
-				gameState,
-			);
+			if (entity.abiityChargesLeft > 0) {
+				const wingedChimeraModifier = entity.cardId === CardIds.WingedChimera_BG29_844_G ? 1 : 1;
+				grantStatsToMinionsOfEachType(
+					entity,
+					board,
+					hero,
+					wingedChimeraModifier * 2,
+					wingedChimeraModifier * 1,
+					gameState,
+				);
+				entity.abiityChargesLeft--;
+			}
 			break;
 		case CardIds.UnforgivingTreant_BG29_846:
 		case CardIds.UnforgivingTreant_BG29_846_G:
 			const treantModifier = entity.cardId === CardIds.UnforgivingTreant_BG29_846_G ? 2 : 1;
-			addStatsToBoard(entity, board, hero, treantModifier * 1, 0, gameState);
+			addStatsToBoard(entity, board, hero, treantModifier * 2, 0, gameState);
 			break;
 		case CardIds.Untameabull_BG29_878:
 		case CardIds.Untameabull_BG29_878_G:
@@ -106,7 +109,7 @@ export const onEntityDamaged = (
 				),
 			);
 			if (!!minionInHand) {
-				minionInHand.attack += winterfinnerStats;
+				minionInHand.attack += 2 * winterfinnerStats;
 				minionInHand.health += winterfinnerStats;
 				minionInHand.maxHealth += winterfinnerStats;
 				gameState.spectator.registerPowerTarget(entity, minionInHand, board, hero, otherHero);
@@ -186,7 +189,7 @@ const handleOtherEntityEffects = (
 			)
 			.filter((e) => e.entityId !== entity.entityId)
 			.forEach((e) => {
-				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 4 : 2;
+				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 2 : 1;
 				modifyHealth(e, stats, board, hero, gameState);
 				onStatsUpdate(e, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);

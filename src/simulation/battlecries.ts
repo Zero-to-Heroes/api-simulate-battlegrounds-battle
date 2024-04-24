@@ -638,7 +638,7 @@ export const triggerBattlecry = (
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
-					goldshellMultiplier * 1,
+					goldshellMultiplier * 2,
 					goldshellMultiplier * 4,
 					gameState,
 					Race[Race.BEAST],
@@ -650,9 +650,18 @@ export const triggerBattlecry = (
 					entity.cardId === CardIds.ShellWhistler_BG26_045_G ? [null] : [null, null];
 				addCardsInHand(hero, board, shellWhistlerCardsToAdd, gameState);
 				break;
+			case CardIds.ScrapScraper_BG26_148:
+			case CardIds.ScrapScraper_BG26_148_G:
+				const scraperToAddQuantity = entity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
+				const scraperCardsToAdd = [];
+				for (let i = 0; i < scraperToAddQuantity; i++) {
+					scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
+				}
+				addCardsInHand(hero, board, scraperCardsToAdd, gameState);
+				break;
 			case CardIds.GemSmuggler_BG25_155:
 			case CardIds.GemSmuggler_BG25_155_G:
-				const gemSmugglerBloodGems = entity.cardId === CardIds.GemSmuggler_BG25_155 ? 2 : 4;
+				const gemSmugglerBloodGems = entity.cardId === CardIds.GemSmuggler_BG25_155 ? 1 : 2;
 				board
 					.filter((e) => e.entityId !== entity.entityId)
 					.forEach((e) => playBloodGemsOn(e, gemSmugglerBloodGems, board, hero, gameState));
@@ -711,9 +720,10 @@ export const triggerBattlecry = (
 					const targetBoard = board.includes(conductorTarget) ? board : otherBoard;
 					const targetHero = board.includes(conductorTarget) ? hero : otherHero;
 					const multiplier = entity.cardId === CardIds.OrcEstraConductor_BGDUO_119 ? 1 : 2;
-					const stats = (entity.scriptDataNum1 ?? 2) * multiplier;
-					modifyAttack(conductorTarget, stats, targetBoard, targetHero, gameState);
-					modifyHealth(conductorTarget, stats, targetBoard, targetHero, gameState);
+					const attackStats = (entity.scriptDataNum1 ?? 2) * multiplier;
+					const healthStats = (entity.scriptDataNum1 ?? 1) * multiplier;
+					modifyAttack(conductorTarget, attackStats, targetBoard, targetHero, gameState);
+					modifyHealth(conductorTarget, healthStats, targetBoard, targetHero, gameState);
 					onStatsUpdate(conductorTarget, targetBoard, targetHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, conductorTarget, targetBoard, hero, otherHero);
 				}

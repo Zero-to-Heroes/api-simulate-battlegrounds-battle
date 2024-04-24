@@ -196,8 +196,6 @@ export class CardsData {
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
-			case CardIds.MurglMkIi_BG29_991:
-			case CardIds.MurglMkIi_BG29_991_G:
 				return 3;
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
@@ -215,6 +213,8 @@ export class CardsData {
 			case CardIds.CycleOfEnergy_BG28_Reward_504:
 			case CardIds.AugmentedLaborer_BG28_740:
 			case CardIds.AugmentedLaborer_BG28_740_G:
+			case CardIds.MurglMkIi_BG29_991:
+			case CardIds.MurglMkIi_BG29_991_G:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
