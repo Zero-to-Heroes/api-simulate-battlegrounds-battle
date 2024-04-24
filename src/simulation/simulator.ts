@@ -80,14 +80,18 @@ export class Simulator {
 			} as SingleSimulationResult;
 		}
 		if (!playerBoard?.length) {
-			const damage = this.buildBoardTotalDamage(opponentBoard) + opponentEntity.tavernTier;
+			const damage =
+				this.buildBoardTotalDamage(opponentBoard, this.gameState.gameState.opponent?.teammate?.board) +
+				opponentEntity.tavernTier;
 			this.gameState.spectator.registerOpponentAttack(playerBoard, opponentBoard, damage);
 			return {
 				result: 'lost',
 				damageDealt: damage,
 			};
 		}
-		const damage = this.buildBoardTotalDamage(playerBoard) + playerEntity.tavernTier;
+		const damage =
+			this.buildBoardTotalDamage(playerBoard, this.gameState.gameState.player?.teammate?.board) +
+			playerEntity.tavernTier;
 		this.gameState.spectator.registerPlayerAttack(playerBoard, opponentBoard, damage);
 		return {
 			result: 'won',
@@ -194,11 +198,20 @@ export class Simulator {
 		}
 	}
 
-	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[]): number {
-		return playerBoard
+	private buildBoardTotalDamage(playerBoard: readonly BoardEntity[], teammateBoard?: BoardEntity[]): number {
+		const damageFromPlayerBoard = playerBoard
 			.map((entity) =>
 				getEffectiveTechLevel(this.gameState.allCards.getCard(entity.cardId), this.gameState.allCards),
 			)
 			.reduce((a, b) => a + b, 0);
+		const numberOfTeamateMinionsToSummnon = 7 - playerBoard.length;
+		const damageFromTeammateBoard =
+			teammateBoard
+				?.slice(0, numberOfTeamateMinionsToSummnon)
+				.map((entity) =>
+					getEffectiveTechLevel(this.gameState.allCards.getCard(entity.cardId), this.gameState.allCards),
+				)
+				.reduce((a, b) => a + b, 0) ?? 0;
+		return damageFromPlayerBoard + damageFromTeammateBoard;
 	}
 }
