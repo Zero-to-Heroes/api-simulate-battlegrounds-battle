@@ -167,6 +167,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.MoonBaconJazzer_BG26_159:
 			case CardIds.MoonBaconJazzer_BG26_159_G:
+				// console.debug('triggering moonbaconjazzer');
 				const moonBaconJazzerStats = entity.cardId === CardIds.MoonBaconJazzer_BG26_159 ? 1 : 2;
 				hero.globalInfo.BloodGemHealthBonus =
 					(hero.globalInfo?.BloodGemHealthBonus ?? 0) + moonBaconJazzerStats;
@@ -661,6 +662,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.GemSmuggler_BG25_155:
 			case CardIds.GemSmuggler_BG25_155_G:
+				// console.debug('triggering gem smuggler');
 				const gemSmugglerBloodGems = entity.cardId === CardIds.GemSmuggler_BG25_155 ? 1 : 2;
 				board
 					.filter((e) => e.entityId !== entity.entityId)

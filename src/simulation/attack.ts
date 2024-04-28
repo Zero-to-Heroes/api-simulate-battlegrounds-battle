@@ -770,17 +770,17 @@ export const getNeighbours = (
 	const neighbours = [];
 	// When triggering DR with Hawkstrider, the entity is still on the board
 	if (deadEntityIndexFromRight != null && !board.includes(entity)) {
+		const leftNeighbourIndex = board.length - 1 - deadEntityIndexFromRight;
+		const leftNeighbour = board[leftNeighbourIndex];
+		if (leftNeighbour) {
+			neighbours.push(leftNeighbour);
+		}
+
 		// If the deadEntityIndexFromRight === 0 (right-most minion), no neighbour will be found
 		const rightNeighbourIndex = board.length - 1 - (deadEntityIndexFromRight - 1);
 		const rightNeighbour = board[rightNeighbourIndex];
 		if (rightNeighbour) {
 			neighbours.push(rightNeighbour);
-		}
-
-		const leftNeighbourIndex = board.length - 1 - deadEntityIndexFromRight;
-		const leftNeighbour = board[leftNeighbourIndex];
-		if (leftNeighbour) {
-			neighbours.push(leftNeighbour);
 		}
 	} else {
 		const index = board.map((e) => e.entityId).indexOf(entity.entityId);

@@ -123,7 +123,13 @@ export const handleDeathrattleEffects = (
 						deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G
 							? allNeighbours
 							: [allNeighbours[0]].filter((entity) => !!entity);
+					// console.debug(
+					// 	'triggering neighbours',
+					// 	stringifySimple(neighbours, gameState.allCards),
+					// 	stringifySimple(allNeighbours, gameState.allCards),
+					// );
 					for (const neighbour of neighbours) {
+						// console.debug('\ttriggering neighbour', stringifySimpleCard(neighbour, gameState.allCards));
 						gameState.spectator.registerPowerTarget(
 							deadEntity,
 							neighbour,

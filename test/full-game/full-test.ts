@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import { AllCardsService } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';
 import runSimulation from '../../src/simulate-bgs-battle';
@@ -21,7 +22,11 @@ const test = async () => {
 		},
 	} as any;
 	SharedState.debugEnabled = false;
-	const result = await runSimulation({ body: JSON.stringify(input) });
+	const allCards = new AllCardsService();
+
+	await allCards.initializeCardsDb(`${new Date().getTime()}`, 'test/full-game/cards_enUS.json', true);
+	console.log('cards initialized', allCards.getCards().length);
+	const result = await runSimulation({ body: JSON.stringify(input) }, allCards);
 	const simulationResult = JSON.parse(result.body);
 	console.log('result', {
 		...simulationResult,
