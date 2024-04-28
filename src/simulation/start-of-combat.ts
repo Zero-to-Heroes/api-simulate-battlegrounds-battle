@@ -39,6 +39,13 @@ import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
 import { applyAfterStatsUpdate, modifyAttack, modifyHealth, onStatsUpdate } from './stats';
 
+// TODO 20/04/2024: I'm not too sure about some ordering. The way I understand it, the Start of Combat has
+// multiple phases, and in each phase the player order is random
+// However, looking at http://replays.firestoneapp.com/?reviewId=a577602e-06f3-4c4b-928d-36ea98c2e6d5&turn=5&action=0,
+// it feels that a "start of combat" minion effect could trigger before an opponent's hero power effect
+// Or is that limited to Bru'kan?
+// I feel that I've asked a lot of questions recently, so I don't want to add that one to the list, as the interaction
+// is for now pretty marginal
 export const handleStartOfCombat = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
