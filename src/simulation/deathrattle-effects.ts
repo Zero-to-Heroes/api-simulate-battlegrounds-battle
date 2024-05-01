@@ -699,8 +699,8 @@ export const handleDeathrattleEffects = (
 							hero,
 							deadEntity,
 							damage,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
+							isSameSide ? otherBoard : boardWithDeadEntity,
+							isSameSide ? otherBoardHero : boardWithDeadEntityHero,
 							gameState,
 						);
 					}
@@ -724,8 +724,8 @@ export const handleDeathrattleEffects = (
 								hero,
 								deadEntity,
 								3,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
+								isSameSide ? otherBoard : boardWithDeadEntity,
+								isSameSide ? otherBoardHero : boardWithDeadEntityHero,
 								gameState,
 							);
 						}
