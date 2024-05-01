@@ -455,6 +455,12 @@ const performAttack = (
 			attackingBoardHero,
 			gameState,
 		);
+		if (defendingEntity.attack > 0 && attackerHadDivineShield && !attackingEntity.immuneWhenAttackCharges) {
+			updateDivineShield(attackingEntity, attackingBoard, false, gameState.allCards);
+		}
+		if (attackingEntity.attack > 0 && defenderHadDivineShield) {
+			updateDivineShield(defendingEntity, defendingBoard, false, gameState.allCards);
+		}
 		// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 		// cause wrong results to happen
 		// This whole logic is a MEEEEESSSSSSSSSSSSSSS
@@ -479,12 +485,6 @@ const performAttack = (
 				damageDoneByAttacker,
 				gameState,
 			);
-		}
-		if (defendingEntity.attack > 0 && attackerHadDivineShield && !attackingEntity.immuneWhenAttackCharges) {
-			updateDivineShield(attackingEntity, attackingBoard, false, gameState.allCards);
-		}
-		if (attackingEntity.attack > 0 && defenderHadDivineShield) {
-			updateDivineShield(defendingEntity, defendingBoard, false, gameState.allCards);
 		}
 
 		if (defendingEntity.health <= 0 || defendingEntity.definitelyDead) {
@@ -858,11 +858,11 @@ export const dealDamageToMinion = (
 	const actualDamageDone = bumpEntities(target, fakeAttacker, board, hero, otherBoard, otherHero, gameState);
 	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 	// cause wrong results to happen
-	if (actualDamageDone > 0) {
-		onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
-	}
 	if (fakeAttacker.attack > 0 && target.divineShield) {
 		updateDivineShield(target, board, false, gameState.allCards);
+	}
+	if (actualDamageDone > 0) {
+		onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
 	}
 	if (!isDeadBeforeDamage && actualDamageDone > 0) {
 		target.lastAffectedByEntity = damageSource;
@@ -969,11 +969,11 @@ export const bumpEntities = (
 				gameState,
 				false,
 			);
-			if (damageDone > 0) {
-				onEntityDamaged(newTarget, otherBoard, otherHero, entityBoard, entityBoardHero, damageDone, gameState);
-			}
 			if (newSource.attack > 0 && defenderHadDivineShield) {
 				updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
+			}
+			if (damageDone > 0) {
+				onEntityDamaged(newTarget, otherBoard, otherHero, entityBoard, entityBoardHero, damageDone, gameState);
 			}
 			return damageDone;
 		}
