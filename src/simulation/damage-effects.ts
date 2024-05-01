@@ -39,7 +39,7 @@ export const onEntityDamaged = (
 					entity,
 					board,
 					hero,
-					wingedChimeraModifier * 2,
+					wingedChimeraModifier * 1,
 					wingedChimeraModifier * 1,
 					gameState,
 				);
