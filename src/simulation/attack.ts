@@ -433,6 +433,9 @@ const performAttack = (
 	// Because of Bristleback Knight, which changes its divine shield status during bumpEntities
 	const attackerHadDivineShield = attackingEntity.divineShield;
 	const defenderHadDivineShield = defendingEntity.divineShield;
+	// For cleave
+	// We do that now so that we don't include entities that spawn on entity damaged
+	const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 	if (defenderAliveBeforeAttack) {
 		if (!attackingEntity.immuneWhenAttackCharges) {
 			// TODO: this bumpEntities approach doesn't work well, as it leads to code duplication
@@ -512,7 +515,6 @@ const performAttack = (
 	}
 	// Cleave
 	if (attackingEntity.cleave) {
-		const defenderNeighbours: readonly BoardEntity[] = getNeighbours(defendingBoard, defendingEntity);
 		for (const neighbour of defenderNeighbours) {
 			damageDoneByAttacker += bumpEntities(
 				neighbour,
