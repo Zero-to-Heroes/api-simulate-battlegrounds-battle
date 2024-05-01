@@ -11,6 +11,7 @@ export const applyOnAttackBuffs = (
 	attacker: BoardEntity,
 	attackingBoard: BoardEntity[],
 	attackingBoardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
@@ -133,14 +134,17 @@ export const applyOnAttackBuffs = (
 				if (entity.entityId === attacker.entityId) {
 					continue;
 				}
+				const isSameSide = entity.friendly === attacker.friendly;
+				const board = isSameSide ? attackingBoard : otherBoard;
+				const hero = isSameSide ? attackingBoardHero : otherHero;
 				dealDamageToMinion(
 					entity,
-					attackingBoard,
-					attackingBoardHero,
+					board,
+					hero,
 					attacker,
 					1,
-					attackingBoard,
-					attackingBoardHero,
+					isSameSide ? otherBoard : attackingBoard,
+					isSameSide ? otherHero : attackingBoardHero,
 					gameState,
 				);
 			}

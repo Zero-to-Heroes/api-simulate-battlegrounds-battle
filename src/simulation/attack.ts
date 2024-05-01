@@ -120,7 +120,14 @@ export const doFullAttack = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	applyOnAttackBuffs(attackingEntity, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
+	applyOnAttackBuffs(
+		attackingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		gameState,
+	);
 	gameState.spectator.registerAttack(
 		attackingEntity,
 		defendingEntity,
