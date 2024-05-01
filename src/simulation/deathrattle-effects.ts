@@ -735,7 +735,11 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.LeeroyTheReckless_BG23_318:
 			case CardIds.LeeroyTheReckless_BG23_318_G:
-				if (deadEntity.lastAffectedByEntity) {
+				if (
+					deadEntity.lastAffectedByEntity &&
+					// http://replays.firestoneapp.com/?reviewId=c6121cdd-5cb6-4321-807e-4ff644568a8c&turn=25&action=7
+					deadEntity.friendly !== deadEntity.lastAffectedByEntity.friendly
+				) {
 					deadEntity.lastAffectedByEntity.definitelyDead = true;
 				}
 				onDeathrattleTriggered(deathrattleTriggeredInput);
