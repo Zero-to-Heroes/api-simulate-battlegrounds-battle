@@ -85,7 +85,7 @@ export const handleRebornForEntity = (
 		});
 	}
 
-	const numberOfTriggersForDeathwhisper = Math.min(entitiesFromReborn.length, 1);
+	const numberOfTriggersForDeathwhisper = Math.min(entitiesThatWereReborn.length, 1);
 	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
 		boardWithKilledMinion
 			.filter(
