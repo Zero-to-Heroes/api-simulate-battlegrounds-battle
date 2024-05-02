@@ -855,6 +855,7 @@ export const dealDamageToMinion = (
 	}
 
 	const isDeadBeforeDamage = target.definitelyDead || target.health <= 0;
+	const spawns = [];
 	// Why do we use a fakeAttacker? Is that for the "attacking" prop?
 	// That prop is only used for Overkill, and even in that case it looks like it would work
 	// without it
@@ -871,7 +872,8 @@ export const dealDamageToMinion = (
 		updateDivineShield(target, board, false, gameState.allCards);
 	}
 	if (actualDamageDone > 0) {
-		onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
+		// TODO: handle entities that have been spawned here to adjust the dead entity index from parent stack
+		const newSpawns = onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
 	}
 	if (!isDeadBeforeDamage && actualDamageDone > 0) {
 		target.lastAffectedByEntity = damageSource;

@@ -26,7 +26,44 @@ export const orchestrateMinionDeathEffects = (
 	// Not sure about this
 	handlePreDeathrattleEffects(deathrattleInput);
 
+	const playerBoardBefore = [...deathrattleInput.gameState.gameState.player.board];
+	const opponentBoardBefore = [...deathrattleInput.gameState.gameState.opponent.board];
+
 	const entitiesFromDeathrattles = processDeathrattles(deathrattleInput, processAvenge);
+
+	// Hack to try and fix how reborn indices are handled when there are spawns during the deathrattle phase
+	// Ideally, this should probably be rewritten completely to keep the dead entities in the board itself
+	// so we can use that as a source for the spawn index. However this is a big rewrite with lots of
+	// potential side-effects
+	const playerBoardAfter = [...deathrattleInput.gameState.gameState.player.board];
+	const opponentBoardAfter = [...deathrattleInput.gameState.gameState.opponent.board];
+	const opponentIndexOfSpawnedEntities = opponentBoardAfter
+		.filter((entity) => !opponentBoardBefore.includes(entity))
+		.map((entity) => opponentBoardAfter.length - opponentBoardAfter.indexOf(entity) - 1);
+	const playerIndexOfSpawnedEntities = playerBoardAfter
+		.filter((entity) => !playerBoardBefore.includes(entity))
+		.map((entity) => playerBoardAfter.length - playerBoardAfter.indexOf(entity) - 1);
+	deathrattleInput.opponentDeadEntityIndexesFromRight = deathrattleInput.opponentDeadEntityIndexesFromRight.map(
+		(previousIndex) => {
+			opponentIndexOfSpawnedEntities.forEach((index) => {
+				if (index < previousIndex) {
+					previousIndex++;
+				}
+			});
+			return previousIndex;
+		},
+	);
+	deathrattleInput.playerDeadEntityIndexesFromRight = deathrattleInput.playerDeadEntityIndexesFromRight.map(
+		(previousIndex) => {
+			playerIndexOfSpawnedEntities.forEach((index) => {
+				if (index < previousIndex) {
+					previousIndex++;
+				}
+			});
+			return previousIndex;
+		},
+	);
+
 	if (processReborn) {
 		processReborns(deathrattleInput);
 	}

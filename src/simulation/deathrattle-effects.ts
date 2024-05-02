@@ -736,9 +736,10 @@ export const handleDeathrattleEffects = (
 			case CardIds.LeeroyTheReckless_BG23_318:
 			case CardIds.LeeroyTheReckless_BG23_318_G:
 				if (
-					deadEntity.lastAffectedByEntity &&
+					deadEntity.lastAffectedByEntity
 					// http://replays.firestoneapp.com/?reviewId=c6121cdd-5cb6-4321-807e-4ff644568a8c&turn=25&action=7
-					deadEntity.friendly !== deadEntity.lastAffectedByEntity.friendly
+					// Update 02/05/2024: this is a bug, and friendly units should be killed
+					// deadEntity.friendly !== deadEntity.lastAffectedByEntity.friendly
 				) {
 					deadEntity.lastAffectedByEntity.definitelyDead = true;
 				}

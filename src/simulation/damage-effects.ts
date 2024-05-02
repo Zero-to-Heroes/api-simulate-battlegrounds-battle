@@ -18,7 +18,7 @@ export const onEntityDamaged = (
 	otherHero: BgsPlayerEntity,
 	damage: number,
 	gameState: FullGameState,
-) => {
+): readonly BoardEntity[] => {
 	const spawnedEntities: BoardEntity[] = [];
 	const friendlyBoard =
 		board?.[0]?.friendly === entity.friendly
