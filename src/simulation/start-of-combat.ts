@@ -318,9 +318,6 @@ const handleStartOfCombatMinions = (
 	opponentBoardBefore: BoardEntity[],
 	gameState: FullGameState,
 ): number => {
-	if (playerEntity.startOfCombatDone) {
-		return currentAttacker;
-	}
 	let attackerForStart = currentAttacker;
 	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
 	const opponentAttackers = opponentBoard.filter((entity) =>
@@ -749,9 +746,6 @@ const handlePlayerIllidanHeroPowers = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
-	if (playerEntity.startOfCombatDone) {
-		return currentAttacker;
-	}
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
 		// After Illidan triggers, it's always the other opponent's turn
@@ -771,6 +765,9 @@ const handleIllidanForPlayer = (
 	gameState: FullGameState,
 	currentAttacker: number,
 ): void => {
+	if (playerEntity.startOfCombatDone) {
+		return;
+	}
 	// Otherwise, if the first minion dies on the attack, and the board has only 2 minions, we
 	// miss the second one
 	const minionsAtStart = playerBoard.length;
@@ -1184,6 +1181,9 @@ export const performStartOfCombatMinionsForPlayer = (
 	defendingBoardBefore: BoardEntity[],
 	gameState: FullGameState,
 ): void => {
+	if (attackingBoardHero.startOfCombatDone) {
+		return;
+	}
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
 		const damage = attackingBoardBefore
