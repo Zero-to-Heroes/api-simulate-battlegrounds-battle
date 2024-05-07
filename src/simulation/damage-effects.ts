@@ -177,10 +177,12 @@ const handleOtherEntityEffects = (
 			.forEach((e) => {
 				const stats = e.cardId === CardIds.IridescentSkyblazer_BG29_806_G ? 2 : 1;
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
-				modifyAttack(target, stats, board, hero, gameState);
-				modifyHealth(target, stats, board, hero, gameState);
-				onStatsUpdate(target, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
+				if (!!target) {
+					modifyAttack(target, stats, board, hero, gameState);
+					modifyHealth(target, stats, board, hero, gameState);
+					onStatsUpdate(target, board, hero, gameState);
+					gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
+				}
 			});
 		board
 			.filter(

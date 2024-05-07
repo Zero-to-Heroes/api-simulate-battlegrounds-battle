@@ -190,14 +190,6 @@ const checkRounding = (roundedValue: number, initialValue: number, totalValue: n
 	return roundedValue;
 };
 
-// const cleanEnchantments = (board: readonly BoardEntity[]): readonly BoardEntity[] => {
-// 	const entityIds = board.map((entity) => entity.entityId);
-// 	return board.map((entity) => ({
-// 		...entity,
-// 		enchantments: cleanEnchantmentsForEntity(entity.enchantments, entityIds),
-// 	}));
-// };
-
 // Used when triggering random deathrattles
 export const VALID_ENCHANTMENTS = [
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
