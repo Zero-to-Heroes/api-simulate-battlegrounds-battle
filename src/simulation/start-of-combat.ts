@@ -234,6 +234,11 @@ const handlePreCombatHeroPowersForPlayer = (
 		handleWaxWarbandForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.LightningInvocationToken) {
 		applyLightningInvocationEnchantment(playerBoard, playerEntity, null, opponentBoard, opponentEntity, gameState);
+	} else if (
+		playerEntity.heroPowerUsed &&
+		playerHeroPowerId === CardIds.FlobbidinousFloop_GloriousGloop_BGDUO_HERO_101p
+	) {
+		applyGloriousGloop(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
 
 	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
@@ -847,6 +852,47 @@ const handleTamsinForPlayer = (
 		onStatsUpdate(e, newBoard, playerEntity, gameState);
 		gameState.spectator.registerPowerTarget(chosenEntity, e, newBoard, playerEntity, opponentEntity);
 	});
+};
+
+const applyGloriousGloop = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	if (!playerBoard?.length) {
+		return;
+	}
+	const target = playerBoard.find((m) =>
+		m.enchantments?.some((e) => e.cardId === CardIds.GloriousGloop_InTheGloopEnchantment_BGDUO_HERO_101pe2),
+	);
+	if (!target) {
+		return;
+	}
+
+	const teammateState = getTeammateState(gameState.gameState, playerEntity);
+	if (!teammateState?.board?.length) {
+		return;
+	}
+	const highestTier = Math.max(
+		...teammateState.board.map((entity) => gameState.allCards.getCard(entity.cardId).techLevel),
+	);
+	const candidates = teammateState.board.filter(
+		(entity) => gameState.allCards.getCard(entity.cardId).techLevel === highestTier,
+	);
+	if (!candidates.length) {
+		return;
+	}
+	const highestTierMinion = pickRandom(candidates);
+	const clone = {
+		...highestTierMinion,
+		lastAffectedByEntity: null,
+	};
+	gameState.spectator.registerPowerTarget(playerEntity, target, playerBoard, playerEntity, opponentEntity);
+	// Replace the "target" minion with the "clone"
+	const index = playerBoard.indexOf(target);
+	playerBoard.splice(index, 1, clone);
 };
 
 const handleEmbraceYourRageForPlayer = (
