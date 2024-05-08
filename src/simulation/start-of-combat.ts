@@ -5,6 +5,7 @@ import { BoardEntity } from '../board-entity';
 import { START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
 import {
+	addImpliedMechanics,
 	addStatsToBoard,
 	getRandomMinionWithHighestHealth,
 	getTeammateState,
@@ -885,10 +886,15 @@ const applyGloriousGloop = (
 		return;
 	}
 	const highestTierMinion = pickRandom(candidates);
-	const clone = {
-		...highestTierMinion,
-		lastAffectedByEntity: null,
-	};
+	const clone: BoardEntity = addImpliedMechanics(
+		{
+			...highestTierMinion,
+			lastAffectedByEntity: null,
+			definitelyDead: false,
+			attackImmediately: false,
+		},
+		gameState.cardsData,
+	);
 	gameState.spectator.registerPowerTarget(playerEntity, target, playerBoard, playerEntity, opponentEntity);
 	// Replace the "target" minion with the "clone"
 	const index = playerBoard.indexOf(target);
