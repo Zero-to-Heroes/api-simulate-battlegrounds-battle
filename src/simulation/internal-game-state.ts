@@ -19,6 +19,8 @@ export interface FullGameState {
 export interface GameState {
 	player: PlayerState;
 	opponent: PlayerState;
+	playerInitial: PlayerState;
+	opponentInitial: PlayerState;
 }
 
 export interface PlayerState {

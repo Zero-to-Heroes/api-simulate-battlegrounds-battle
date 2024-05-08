@@ -55,6 +55,9 @@ export class Simulator {
 				};
 				this.gameState.gameState.player.player = playerEntity;
 				this.gameState.gameState.player.board = playerBoard;
+
+				const initialPlayer = this.gameState.gameState.playerInitial;
+				const initialPlayerTeammate = initialPlayer.teammate;
 			}
 			if (isOpponentBoardEmpty) {
 				this.gameState.gameState.opponent.teammate = {

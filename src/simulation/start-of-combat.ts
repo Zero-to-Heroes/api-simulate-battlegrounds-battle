@@ -8,7 +8,7 @@ import {
 	addImpliedMechanics,
 	addStatsToBoard,
 	getRandomMinionWithHighestHealth,
-	getTeammateState,
+	getTeammateInitialState,
 	hasCorrectTribe,
 	isCorrectTribe,
 	isGolden,
@@ -872,7 +872,7 @@ const applyGloriousGloop = (
 		return;
 	}
 
-	const teammateState = getTeammateState(gameState.gameState, playerEntity);
+	const teammateState = getTeammateInitialState(gameState.gameState, playerEntity);
 	if (!teammateState?.board?.length) {
 		return;
 	}
@@ -1805,7 +1805,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				}
 			});
 	} else if (attacker.cardId === CardIds.Sandy_BGDUO_125 || attacker.cardId === CardIds.Sandy_BGDUO_125_G) {
-		const teammateState = getTeammateState(gameState.gameState, attackingBoardHero);
+		const teammateState = getTeammateInitialState(gameState.gameState, attackingBoardHero);
 		if (teammateState?.board?.length) {
 			const isGolden = attacker.cardId === CardIds.Sandy_BGDUO_125_G;
 			const minionToCopy = getRandomMinionWithHighestHealth(teammateState.board);

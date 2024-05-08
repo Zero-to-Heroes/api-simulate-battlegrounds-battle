@@ -26,7 +26,7 @@ export const cloneInput3 = (input: BgsBattleInfo): BgsBattleInfo => {
 	return result;
 };
 
-const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
+export const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
 	if (!board) {
 		return null;
 	}

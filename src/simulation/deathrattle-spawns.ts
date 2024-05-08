@@ -7,7 +7,7 @@ import {
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
-	getTeammateState,
+	getTeammateInitialState,
 	hasCorrectTribe,
 	isCorrectTribe,
 	stringifySimple,
@@ -1530,7 +1530,7 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.Magnanimoose_BGDUO_105_G:
 					const magnanimooseCopies = deadEntity.cardId === CardIds.Magnanimoose_BGDUO_105_G ? 2 : 1;
 					for (let i = 0; i < magnanimooseCopies; i++) {
-						const teammateState = getTeammateState(gameState.gameState, boardWithDeadEntityHero);
+						const teammateState = getTeammateInitialState(gameState.gameState, boardWithDeadEntityHero);
 						const teammateBoard = teammateState?.board ?? [];
 						const copied: number[] = [];
 						const minionToCopy = pickRandom(teammateBoard.filter((e) => !copied.includes(e.entityId)));

@@ -518,14 +518,14 @@ export const getPlayerState = (gameState: GameState, hero: BgsPlayerEntity): Pla
 		: null;
 };
 
-export const getTeammateState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {
-	return gameState.player.player === hero
-		? gameState.player.teammate
-		: gameState.player.teammate?.player === hero
-		? gameState.player
-		: gameState.opponent.player === hero
-		? gameState.opponent.teammate
-		: gameState.opponent.teammate?.player === hero
-		? gameState.opponent
+export const getTeammateInitialState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {
+	return gameState.playerInitial.player?.entityId === hero?.entityId
+		? gameState.playerInitial.teammate
+		: gameState.playerInitial.teammate?.player?.entityId === hero?.entityId
+		? gameState.playerInitial
+		: gameState.opponentInitial.player?.entityId === hero?.entityId
+		? gameState.opponentInitial.teammate
+		: gameState.opponentInitial.teammate?.player?.entityId === hero?.entityId
+		? gameState.opponentInitial
 		: null;
 };

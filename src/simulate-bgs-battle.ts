@@ -71,6 +71,7 @@ export const simulateBattle = (
 	const outcomes = {};
 	for (let i = 0; i < numberOfSimulations; i++) {
 		const input: BgsBattleInfo = cloneInput3(inputReady);
+		const inputClone: BgsBattleInfo = cloneInput3(inputReady);
 		const gameState: FullGameState = {
 			allCards: cards,
 			cardsData: cardsData,
@@ -89,6 +90,16 @@ export const simulateBattle = (
 					player: input.opponentBoard.player,
 					board: input.opponentBoard.board,
 					teammate: input.opponentTeammateBoard,
+				},
+				playerInitial: {
+					player: inputClone.playerBoard.player,
+					board: inputClone.playerBoard.board,
+					teammate: inputClone.playerTeammateBoard,
+				},
+				opponentInitial: {
+					player: inputClone.opponentBoard.player,
+					board: inputClone.opponentBoard.board,
+					teammate: inputClone.opponentTeammateBoard,
 				},
 			},
 		};
