@@ -3,13 +3,11 @@ import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/referenc
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { VALID_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
 	addImpliedMechanics,
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
-	hasMechanic,
 	isFish,
 	stringifySimple,
 	stringifySimpleCard,
@@ -20,6 +18,7 @@ import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
 import { orchestrateMinionDeathEffects, processDeathrattleForMinion } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
+import { getValidDeathrattles } from './deathrattle-utils';
 import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
 import { makeMinionsDie } from './minion-death';
@@ -593,27 +592,33 @@ const performAttack = (
 	// After attack hooks
 	// Arcane Cannon
 	// Monstrous Macaw
-	if (attackingEntity.cardId === CardIds.MonstrousMacaw_BGS_078) {
-		triggerRandomDeathrattle(
-			attackingEntity,
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoard,
-			defendingBoardHero,
-			gameState,
-			true,
-		);
-	} else if (attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135) {
-		for (let i = 0; i < 2; i++) {
-			triggerRandomDeathrattle(
-				attackingEntity,
-				attackingBoard,
-				attackingBoardHero,
-				defendingBoard,
-				defendingBoardHero,
-				gameState,
-				true,
-			);
+	if (
+		attackingEntity.cardId === CardIds.MonstrousMacaw_BGS_078 ||
+		attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135
+	) {
+		const loops = attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
+		const validDeathrattles = getValidDeathrattles(attackingBoard, gameState);
+		const leftMost = validDeathrattles[0];
+		if (!!leftMost) {
+			for (let i = 0; i < loops; i++) {
+				gameState.spectator.registerPowerTarget(
+					attackingEntity,
+					leftMost,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
+				const indexFromRight = attackingBoard.length - (attackingBoard.indexOf(leftMost) + 1);
+				processDeathrattleForMinion(
+					leftMost,
+					indexFromRight,
+					[leftMost],
+					leftMost.friendly ? gameState.gameState.player : gameState.gameState.opponent,
+					leftMost.friendly ? gameState.gameState.opponent : gameState.gameState.player,
+					gameState,
+					false,
+				);
+			}
 		}
 	}
 
@@ -633,25 +638,9 @@ const triggerRandomDeathrattle = (
 	gameState: FullGameState,
 	excludeSource = false,
 ): void => {
-	const validDeathrattles = attackingBoard
-		.filter((entity) => !excludeSource || entity.entityId !== sourceEntity.entityId)
-		.filter((entity) => {
-			if (hasMechanic(gameState.allCards.getCard(entity.cardId), 'DEATHRATTLE')) {
-				return true;
-			}
-			if (entity.rememberedDeathrattles?.length) {
-				return true;
-			}
-			if (
-				entity.enchantments &&
-				entity.enchantments
-					.map((enchantment) => enchantment.cardId)
-					.some((enchantmentId) => VALID_ENCHANTMENTS.includes(enchantmentId as CardIds))
-			) {
-				return true;
-			}
-			return false;
-		});
+	const validDeathrattles = getValidDeathrattles(attackingBoard, gameState).filter(
+		(entity) => !excludeSource || entity.entityId !== sourceEntity.entityId,
+	);
 	if (validDeathrattles.length === 0) {
 		return;
 	}
