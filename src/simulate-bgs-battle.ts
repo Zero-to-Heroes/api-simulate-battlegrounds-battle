@@ -10,19 +10,23 @@ import { SharedState } from './simulation/shared-state';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
 
-const globalCards = new AllCardsService();
+let globalCards = new AllCardsService();
+
+export const assignCards = (cards: AllCardsService) => {
+	globalCards = cards;
+};
 
 // This example demonstrates a NodeJS 8.10 async handler[1], however of course you could use
 // the more traditional callback-style handler.
 // [1]: https://aws.amazon.com/blogs/compute/node-js-8-10-runtime-now-available-in-aws-lambda/
-export default async (event, localCards?: AllCardsService): Promise<any> => {
+export default async (event): Promise<any> => {
 	if (!event.body?.length) {
 		console.warn('missing event body', event);
 		return;
 	}
 
 	const battleInput: BgsBattleInfo = JSON.parse(event.body);
-	const cards = localCards ?? globalCards;
+	const cards = globalCards;
 	await cards.initializeCardsDb();
 	const cardsData = new CardsData(cards, false);
 	cardsData.inititialize(

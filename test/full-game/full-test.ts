@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService } from '@firestone-hs/reference-data';
+import { AllCardsLocalService } from '@firestone-hs/reference-data';
+import { readFileSync } from 'fs';
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';
-import runSimulation from '../../src/simulate-bgs-battle';
+import runSimulation, { assignCards } from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
 import jsonEvent3 from './game.json';
 
@@ -22,11 +23,14 @@ const test = async () => {
 		},
 	} as any;
 	SharedState.debugEnabled = false;
-	const allCards = new AllCardsService();
 
-	await allCards.initializeCardsDb(`${new Date().getTime()}`, 'test/full-game/cards_enUS.json', true);
+	const cardsStr = readFileSync('test/full-game/cards_enUS.json').toString();
+	const allCards = new AllCardsLocalService(cardsStr);
+	await allCards.initializeCardsDb();
 	console.log('cards initialized', allCards.getCards().length);
-	const result = await runSimulation({ body: JSON.stringify(input) }, allCards);
+	assignCards(allCards);
+
+	const result = await runSimulation({ body: JSON.stringify(input) });
 	const simulationResult = JSON.parse(result.body);
 	console.log('result', {
 		...simulationResult,
