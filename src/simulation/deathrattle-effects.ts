@@ -604,17 +604,19 @@ export const handleDeathrattleEffects = (
 								gameState,
 							);
 						}
-
-						// Most likely there is a death loop after each round of damage, see
-						// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
-						processMinionDeath(
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-						);
 					}
+					// Most likely there is a death loop after each round of damage, see
+					// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
+					// Update 13/05/2024: the death process is probably between each deathrattle proc, but not each
+					// individual tick. See
+					// http://replays.firestoneapp.com/?reviewId=6d66b90d-5678-4a68-a45f-7ddb887f9450&turn=17&action=11
+					processMinionDeath(
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						gameState,
+					);
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
