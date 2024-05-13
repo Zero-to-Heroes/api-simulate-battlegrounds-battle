@@ -49,6 +49,10 @@ export class Simulator {
 				areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
 			// So that gameState.player always refers to the active player
 			if (isPlayerBoardEmpty) {
+				// Reset deaths
+				this.gameState.sharedState.deaths = this.gameState.sharedState.deaths.filter(
+					(e) => e.friendly !== this.gameState.gameState.player.player.friendly,
+				);
 				this.gameState.gameState.player.teammate = {
 					board: this.gameState.gameState.player.board,
 					player: this.gameState.gameState.player.player,
@@ -56,10 +60,14 @@ export class Simulator {
 				this.gameState.gameState.player.player = playerEntity;
 				this.gameState.gameState.player.board = playerBoard;
 
-				const initialPlayer = this.gameState.gameState.playerInitial;
-				const initialPlayerTeammate = initialPlayer.teammate;
+				// const initialPlayer = this.gameState.gameState.playerInitial;
+				// const initialPlayerTeammate = initialPlayer.teammate;
 			}
 			if (isOpponentBoardEmpty) {
+				// Reset deaths
+				this.gameState.sharedState.deaths = this.gameState.sharedState.deaths.filter(
+					(e) => e.friendly !== this.gameState.gameState.opponent.player.friendly,
+				);
 				this.gameState.gameState.opponent.teammate = {
 					board: this.gameState.gameState.opponent.board,
 					player: this.gameState.gameState.opponent.player,
