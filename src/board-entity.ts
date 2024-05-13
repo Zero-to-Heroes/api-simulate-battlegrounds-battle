@@ -30,7 +30,7 @@ export interface BoardEntity {
 	pendingAttackBuffs?: number[];
 	scriptDataNum1?: number;
 	inInitialState?: boolean;
-	// For Build-An-Undead
+	// For Build-An-Undead and Zilliax
 	additionalCards?: readonly string[] | null;
 
 	// We only store the card id, because we want all the attack and other data to be computed at runtime, based on the

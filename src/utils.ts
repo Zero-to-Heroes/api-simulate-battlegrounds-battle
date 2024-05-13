@@ -100,6 +100,22 @@ export const buildSingleBoardEntity = (
 				newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 				newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
 			}
+		} else if (
+			cardId === CardIds.ZilliaxAssembled_BG29_100_G &&
+			!!originalEntity.additionalCards?.filter((c) => !!c).length
+		) {
+			// In this case, the base stats are still correct (the golden stats of Zilliax), but the keywords
+			// can change
+			for (const moduleCardId of originalEntity.additionalCards) {
+				const moduleCard = allCards.getCard(moduleCardId);
+				newEntity.taunt = newEntity.taunt || hasMechanic(moduleCard, GameTag[GameTag.TAUNT]);
+				newEntity.divineShield =
+					newEntity.divineShield || hasMechanic(moduleCard, GameTag[GameTag.DIVINE_SHIELD]);
+				newEntity.hadDivineShield = newEntity.hadDivineShield || newEntity.divineShield;
+				newEntity.poisonous = newEntity.poisonous || hasMechanic(moduleCard, GameTag[GameTag.POISONOUS]);
+				newEntity.venomous = newEntity.venomous || hasMechanic(moduleCard, GameTag[GameTag.VENOMOUS]);
+				newEntity.windfury = newEntity.windfury || hasMechanic(moduleCard, GameTag[GameTag.WINDFURY]);
+			}
 		}
 		newEntity.health = 1;
 		newEntity.reborn = false;
