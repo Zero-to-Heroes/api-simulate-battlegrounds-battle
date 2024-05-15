@@ -76,7 +76,9 @@ export const simulateAttack = (
 		for (let i = 0; i < numberOfAttacks; i++) {
 			// We refresh the entity in case of windfury
 			if (attackingBoard.length === 0 || defendingBoard.length === 0) {
-				return;
+				// We still want to flag the entity as having attacked, so that it doesn't attack again
+				// after teammate switch in Duos
+				break;
 			}
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
