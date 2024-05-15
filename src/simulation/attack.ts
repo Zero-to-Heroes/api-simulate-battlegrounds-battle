@@ -795,6 +795,27 @@ export const getNeighbours = (
 	return neighbours;
 };
 
+export const getLeftNeighbour = (
+	board: BoardEntity[],
+	entity: BoardEntity,
+	deadEntityIndexFromRight?: number,
+): BoardEntity => {
+	// When triggering DR with Hawkstrider, the entity is still on the board
+	if (deadEntityIndexFromRight != null && !board.includes(entity)) {
+		const leftNeighbourIndex = board.length - 1 - deadEntityIndexFromRight;
+		const leftNeighbour = board[leftNeighbourIndex];
+		if (leftNeighbour) {
+			return leftNeighbour;
+		}
+	} else {
+		const index = board.map((e) => e.entityId).indexOf(entity.entityId);
+		if (index - 1 >= 0) {
+			return board[index - 1];
+		}
+	}
+	return null;
+};
+
 export const dealDamageToRandomEnemy = (
 	boardToBeDamaged: BoardEntity[],
 	boardToBeDamagedHero: BgsPlayerEntity,
