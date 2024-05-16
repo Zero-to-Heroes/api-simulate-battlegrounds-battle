@@ -962,8 +962,12 @@ const handleTeronForPlayer = (
 		.filter((m) => m.enchantments.some((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment))
 		.sort((a, b) => b.entityId - a.entityId)[0];
 	if (minionThatWillDie) {
-		const minionIndexFromRight = playerBoard.length - 1 - playerBoard.indexOf(minionThatWillDie);
-		playerEntity.rapidReanimationIndexFromRight = minionIndexFromRight;
+		// So this is a bit tricky (as all the stuff with indices...). Because in practice it's more likely that players use Rapid Reanimation
+		// on minions that they want to die quickly, most of the time they will be placed
+		// to the left of the board
+		// So using a left-based index (usually 0) is more likely to be correct after minions spawn on the board
+		const minionIndexFromLeft = playerBoard.indexOf(minionThatWillDie);
+		playerEntity.rapidReanimationIndexFromLeft = minionIndexFromLeft;
 		const minionToCopy = {
 			...minionThatWillDie,
 			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],

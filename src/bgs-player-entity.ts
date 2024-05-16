@@ -30,7 +30,7 @@ export interface BgsPlayerEntity {
 
 	deadEyeDamageDone?: number;
 	rapidReanimationMinion?: BoardEntity;
-	rapidReanimationIndexFromRight?: number;
+	rapidReanimationIndexFromLeft?: number;
 }
 
 export interface BgsPlayerGlobalInfo {

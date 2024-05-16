@@ -98,6 +98,7 @@ const handleRapidReanimationForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
+	const indexFromRight = Math.max(0, playerBoard.length - playerEntity.rapidReanimationIndexFromLeft);
 	const hasSummoned = handleSummon(
 		playerBoard,
 		playerEntity,
@@ -105,7 +106,7 @@ const handleRapidReanimationForPlayer = (
 		opponentEntity,
 		gameState,
 		playerEntity.rapidReanimationMinion.cardId,
-		Math.min(playerBoard.length, playerEntity.rapidReanimationIndexFromRight ?? 0),
+		indexFromRight,
 		playerEntity.rapidReanimationMinion,
 	);
 	if (hasSummoned) {
