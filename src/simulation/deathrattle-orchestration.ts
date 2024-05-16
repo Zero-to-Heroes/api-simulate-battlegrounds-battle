@@ -329,7 +329,8 @@ const handleNaturalDeathrattle = (
 	gameState: FullGameState,
 ): readonly BoardEntity[] => {
 	const modifiedIndexFromRight = Math.min(deadEntityPlayerState.board.length, indexFromRight);
-	const result = [];
+	const allSpawns = [];
+	const spawnsToSpawn = [];
 	for (const dr of deadEntity.rememberedDeathrattles ?? []) {
 		const entityToProcess: BoardEntity = {
 			...deadEntity,
@@ -345,7 +346,9 @@ const handleNaturalDeathrattle = (
 			otherPlayerState,
 			gameState,
 		);
-		result.push(...spawns);
+		// The spawns have already been processed in the "handleNaturalDeathrattle" method
+		// spawnsToSpawn.push(...spawns);
+		allSpawns.push(...spawns);
 	}
 
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
@@ -357,9 +360,10 @@ const handleNaturalDeathrattle = (
 		deadEntities,
 		gameState,
 	);
-	result.push(...entitiesFromNativeDeathrattle);
+	allSpawns.push(...entitiesFromNativeDeathrattle);
+	spawnsToSpawn.push(...entitiesFromNativeDeathrattle);
 	performEntitySpawns(
-		result,
+		spawnsToSpawn,
 		deadEntityPlayerState.board,
 		deadEntityPlayerState.player,
 		deadEntity,
@@ -379,7 +383,7 @@ const handleNaturalDeathrattle = (
 		gameState,
 	);
 
-	return result;
+	return allSpawns;
 };
 
 const handleEnchantmentsDeathrattle = (
