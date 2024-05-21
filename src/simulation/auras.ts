@@ -198,7 +198,8 @@ export const setImplicitDataHero = (
 				avengeDefault: cardsData.avengeValue(reward),
 				scriptDataNum1: cardsData.defaultScriptDataNum(reward),
 		  }));
-	hero.entityId = hero.entityId ?? entityIdContainer.entityId--;
+	// 0 is not a valid entityId
+	hero.entityId = hero.entityId || entityIdContainer.entityId--;
 	hero.hand = hero.hand ?? [];
 	if (!hero.globalInfo) {
 		hero.globalInfo = {};

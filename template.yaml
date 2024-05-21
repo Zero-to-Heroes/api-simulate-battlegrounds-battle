@@ -11,7 +11,7 @@ Resources:
             Handler: simulate-bgs-battle.default
             Runtime: nodejs18.x
             Timeout: 15
-            MemorySize: 512
+            MemorySize: 850
             CodeUri: ./dist/simulate-bgs-battle
             # Layers:
             #     - !Sub "arn:aws:lambda:${AWS::Region}:580247275435:layer:LambdaInsightsExtension:14"
