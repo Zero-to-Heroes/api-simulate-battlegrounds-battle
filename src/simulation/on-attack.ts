@@ -68,8 +68,8 @@ export const applyOnAttackBuffs = (
 				(e) => e.cardId === CardIds.RoaringRallier_BG29_816 || e.cardId === CardIds.RoaringRallier_BG29_816_G,
 			)
 			.forEach((rallier) => {
-				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 4 : 2;
-				modifyAttack(attacker, stats, attackingBoard, attackingBoardHero, gameState);
+				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
+				modifyAttack(attacker, 2 * stats, attackingBoard, attackingBoardHero, gameState);
 				modifyHealth(attacker, stats, attackingBoard, attackingBoardHero, gameState);
 				onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(

@@ -179,7 +179,7 @@ const handleOtherEntityEffects = (
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
 				if (!!target) {
 					modifyAttack(target, stats, board, hero, gameState);
-					modifyHealth(target, stats, board, hero, gameState);
+					modifyHealth(target, 2 * stats, board, hero, gameState);
 					onStatsUpdate(target, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
 				}
@@ -192,6 +192,7 @@ const handleOtherEntityEffects = (
 			.filter((e) => e.entityId !== entity.entityId)
 			.forEach((e) => {
 				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 2 : 1;
+				modifyAttack(e, stats, board, hero, gameState);
 				modifyHealth(e, stats, board, hero, gameState);
 				onStatsUpdate(e, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);

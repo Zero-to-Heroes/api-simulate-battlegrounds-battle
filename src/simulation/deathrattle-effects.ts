@@ -30,7 +30,6 @@ import {
 	dealDamageToMinion,
 	dealDamageToRandomEnemy,
 	findNearestEnemies,
-	getLeftNeighbour,
 	getNeighbours,
 	processMinionDeath,
 } from './attack';
@@ -119,12 +118,11 @@ export const handleDeathrattleEffects = (
 			case CardIds.RylakMetalhead_BG26_801_G:
 				// const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
+					const allNeighbours = getNeighbours(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight);
 					const neighbours =
 						deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G
-							? getNeighbours(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight)
-							: [getLeftNeighbour(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight)].filter(
-									(entity) => !!entity,
-							  );
+							? allNeighbours
+							: [pickRandom(allNeighbours)].filter((e) => !!e);
 					// console.debug(
 					// 	'triggering neighbours',
 					// 	stringifySimple(neighbours, gameState.allCards),

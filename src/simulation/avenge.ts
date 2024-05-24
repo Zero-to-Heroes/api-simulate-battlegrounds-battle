@@ -378,7 +378,7 @@ const handleAvenge = (
 		case CardIds.HungeringAbomination_BG25_014_G:
 			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
 			modifyAttack(avenger, abominationMultiplier * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-			modifyHealth(avenger, abominationMultiplier * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+			modifyHealth(avenger, abominationMultiplier * 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			onStatsUpdate(avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				avenger,

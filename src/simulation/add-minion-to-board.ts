@@ -310,7 +310,7 @@ export const applyAurasToSelf = (
 		case CardIds.FlourishingFrostling_BG26_537_G:
 			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
 			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
-			modifyAttack(spawned, statsBonusFrostling, board, boardHero, gameState);
+			modifyAttack(spawned, 2 * statsBonusFrostling, board, boardHero, gameState);
 			modifyHealth(spawned, statsBonusFrostling, board, boardHero, gameState);
 			onStatsUpdate(spawned, board, boardHero, gameState);
 			break;

@@ -315,8 +315,8 @@ export class Spectator {
 			return;
 		}
 
-		if (!sourceEntity.entityId) {
-			console.error('missing spawn source entity id', sourceEntity);
+		if (!sourceEntity?.entityId) {
+			// console.error('missing spawn source entity id', sourceEntity);
 		}
 		const friendlyBoard = boardOnWhichToSpawn.every((entity) => entity.friendly) ? boardOnWhichToSpawn : null;
 		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;

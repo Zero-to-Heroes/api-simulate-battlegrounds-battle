@@ -293,8 +293,8 @@ export const triggerBattlecry = (
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
-					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
-					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
+					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
+					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
 					gameState,
 					Race[Race.MURLOC],
 				);
@@ -416,8 +416,8 @@ export const triggerBattlecry = (
 					allMinions.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards)),
 				);
 				if (!!smolderwingTarget) {
-					const targetBoard = board.includes(emergentFlameTarget) ? board : otherBoard;
-					const targetHero = board.includes(emergentFlameTarget) ? hero : otherHero;
+					const targetBoard = board.includes(smolderwingTarget) ? board : otherBoard;
+					const targetHero = board.includes(smolderwingTarget) ? hero : otherHero;
 					const smolderwingMultiplier =
 						entity.cardId === CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t ? 1 : 2;
 					const smolderwingStats = 5 * smolderwingMultiplier;
@@ -449,8 +449,11 @@ export const triggerBattlecry = (
 			case CardIds.Murky_BG24_012:
 			case CardIds.Murky_BG24_012_G:
 				const murkyScale = entity.cardId === CardIds.Murky_BG24_012 ? 1 : 2;
+				const murlocsControlled = board.filter((e) =>
+					hasCorrectTribe(e, Race.MURLOC, gameState.allCards),
+				).length;
 				// const murkyBattlecriesPlayed = entity.scriptDataNum1 > 0 ? entity.scriptDataNum1 / murkyScale - 1 : 0;
-				const murkyStats = murkyScale * 10;
+				const murkyStats = murkyScale * 4 * murlocsControlled;
 				const murkyTarget = pickRandom(
 					board.filter((e) => hasCorrectTribe(e, Race.MURLOC, gameState.allCards)),
 				);
@@ -651,15 +654,15 @@ export const triggerBattlecry = (
 					entity.cardId === CardIds.ShellWhistler_BG26_045_G ? [null] : [null, null];
 				addCardsInHand(hero, board, shellWhistlerCardsToAdd, gameState);
 				break;
-			case CardIds.ScrapScraper_BG26_148:
-			case CardIds.ScrapScraper_BG26_148_G:
-				const scraperToAddQuantity = entity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
-				const scraperCardsToAdd = [];
-				for (let i = 0; i < scraperToAddQuantity; i++) {
-					scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
-				}
-				addCardsInHand(hero, board, scraperCardsToAdd, gameState);
-				break;
+			// case CardIds.ScrapScraper_BG26_148:
+			// case CardIds.ScrapScraper_BG26_148_G:
+			// 	const scraperToAddQuantity = entity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
+			// 	const scraperCardsToAdd = [];
+			// 	for (let i = 0; i < scraperToAddQuantity; i++) {
+			// 		scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
+			// 	}
+			// 	addCardsInHand(hero, board, scraperCardsToAdd, gameState);
+			// 	break;
 			case CardIds.GemSmuggler_BG25_155:
 			case CardIds.GemSmuggler_BG25_155_G:
 				// console.debug('triggering gem smuggler');
@@ -722,8 +725,8 @@ export const triggerBattlecry = (
 					const targetBoard = board.includes(conductorTarget) ? board : otherBoard;
 					const targetHero = board.includes(conductorTarget) ? hero : otherHero;
 					const multiplier = entity.cardId === CardIds.OrcEstraConductor_BGDUO_119 ? 1 : 2;
-					const attackStats = (entity.scriptDataNum1 ?? 2) * multiplier;
-					const healthStats = (entity.scriptDataNum1 ?? 1) * multiplier;
+					const attackStats = 2 * (entity.scriptDataNum1 ?? 1) * multiplier;
+					const healthStats = 2 * (entity.scriptDataNum1 ?? 1) * multiplier;
 					modifyAttack(conductorTarget, attackStats, targetBoard, targetHero, gameState);
 					modifyHealth(conductorTarget, healthStats, targetBoard, targetHero, gameState);
 					onStatsUpdate(conductorTarget, targetBoard, targetHero, gameState);

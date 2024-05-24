@@ -1340,8 +1340,8 @@ export const performStartOfCombatMinionsForPlayer = (
 				if (!otherDragon.divineShield) {
 					updateDivineShield(otherDragon, attackingBoard, true, gameState.allCards);
 				}
-				modifyAttack(otherDragon, 2, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(otherDragon, 2, attackingBoard, attackingBoardHero, gameState);
+				modifyAttack(otherDragon, 7, attackingBoard, attackingBoardHero, gameState);
+				modifyHealth(otherDragon, 7, attackingBoard, attackingBoardHero, gameState);
 				onStatsUpdate(otherDragon, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					attacker,
