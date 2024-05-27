@@ -1309,6 +1309,20 @@ export const processMinionDeath = (
 		// return [board1, board2];
 	}
 
+	// Remember them right away, so that subsequent deaths do not break the order
+	// TODO: move this to the deathrattle-orchestration?
+	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
+	board1
+		.filter((entity) => isFish(entity))
+		.forEach((entity) =>
+			rememberDeathrattles(entity, deadEntities1, gameState.cardsData, gameState.allCards, gameState.sharedState),
+		);
+	board2
+		.filter((entity) => isFish(entity))
+		.forEach((entity) =>
+			rememberDeathrattles(entity, deadEntities2, gameState.cardsData, gameState.allCards, gameState.sharedState),
+		);
+
 	gameState.spectator.registerDeadEntities(
 		deadMinionIndexesFromRights1,
 		deadEntities1,
@@ -1349,20 +1363,6 @@ export const processMinionDeath = (
 			? deadMinionIndexesFromRights2
 			: deadMinionIndexesFromRights1,
 	});
-
-	// TODO: move this to the deathrattle-orchestration?
-	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
-	// console.debug('processing minion death', stringifySimple(board1, allCards), stringifySimple(board2, allCards));
-	board1
-		.filter((entity) => isFish(entity))
-		.forEach((entity) =>
-			rememberDeathrattles(entity, deadEntities1, gameState.cardsData, gameState.allCards, gameState.sharedState),
-		);
-	board2
-		.filter((entity) => isFish(entity))
-		.forEach((entity) =>
-			rememberDeathrattles(entity, deadEntities2, gameState.cardsData, gameState.allCards, gameState.sharedState),
-		);
 
 	board1
 		.filter(
