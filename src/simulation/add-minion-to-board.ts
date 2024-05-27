@@ -70,6 +70,11 @@ const handleSpawnEffect = (
 	}
 
 	for (const entity of board) {
+		// The case for Reborns, and these shouldn't proc on themselves
+		if (entity.entityId === spawned.entityId) {
+			continue;
+		}
+
 		switch (entity.cardId) {
 			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy:
 			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G:

@@ -51,6 +51,10 @@ export const handleRebornForEntity = (
 					deadEntity,
 			  )
 			: [];
+	if (!entitiesFromReborn.length) {
+		return;
+	}
+
 	const entitiesThatWereReborn = performEntitySpawns(
 		entitiesFromReborn,
 		boardWithKilledMinion,
