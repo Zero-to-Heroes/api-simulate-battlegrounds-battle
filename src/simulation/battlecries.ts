@@ -457,9 +457,11 @@ export const triggerBattlecry = (
 				const murkyTarget = pickRandom(
 					board.filter((e) => hasCorrectTribe(e, Race.MURLOC, gameState.allCards)),
 				);
-				modifyAttack(murkyTarget, murkyStats, board, hero, gameState);
-				modifyHealth(murkyTarget, murkyStats, board, hero, gameState);
-				onStatsUpdate(murkyTarget, board, hero, gameState);
+				if (!!murkyTarget) {
+					modifyAttack(murkyTarget, murkyStats, board, hero, gameState);
+					modifyHealth(murkyTarget, murkyStats, board, hero, gameState);
+					onStatsUpdate(murkyTarget, board, hero, gameState);
+				}
 				break;
 			case CardIds.LovesickBalladist_BG26_814:
 			case CardIds.LovesickBalladist_BG26_814_G:

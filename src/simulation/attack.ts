@@ -693,6 +693,12 @@ const triggerRandomDeathrattle = (
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsService): BoardEntity => {
+	const debug = attackingBoard.map((e) => ({
+		name: allCards.getCard(e.cardId)?.name,
+		attacked: e.hasAttacked,
+		entityId: e.entityId,
+		reborn: e.reborn,
+	}));
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
