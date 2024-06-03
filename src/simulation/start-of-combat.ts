@@ -1801,14 +1801,18 @@ export const performStartOfCombatMinionsForPlayer = (
 	) {
 		const loops = attacker.cardId === CardIds.YulonFortuneGranter_BG29_811_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
-			// Because we pick one at random from all the ones that have the lowest tier
-			const randomBoard = shuffleArray([...attackingBoard]);
-			const candidates = randomBoard
+			const candidateBoard = attackingBoard
 				.filter((e) => !isGolden(e.cardId, gameState.allCards))
-				.sort(
-					(a, b) =>
-						gameState.cardsData.getTavernLevel(a.cardId) - gameState.cardsData.getTavernLevel(b.cardId),
+				.filter(
+					(e) =>
+						e.cardId !== CardIds.YulonFortuneGranter_BG29_811 &&
+						e.cardId !== CardIds.YulonFortuneGranter_BG29_811_G,
 				);
+			// Because we pick one at random from all the ones that have the lowest tier
+			const randomBoard = shuffleArray(candidateBoard);
+			const candidates = randomBoard.sort(
+				(a, b) => gameState.cardsData.getTavernLevel(a.cardId) - gameState.cardsData.getTavernLevel(b.cardId),
+			);
 			const target = candidates[0];
 			if (!!target) {
 				makeMinionGolden(target, attacker, attackingBoard, attackingBoardHero, gameState);
