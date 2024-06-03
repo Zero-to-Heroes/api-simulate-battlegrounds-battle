@@ -960,7 +960,13 @@ const handleTeronForPlayer = (
 	// with the biggest entityId
 	const minionThatWillDie = playerBoard
 		.filter((m) => m.enchantments.some((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment))
-		.sort((a, b) => b.entityId - a.entityId)[0];
+		.sort(
+			(a, b) =>
+				b.enchantments.find((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment)
+					.originEntityId -
+					a.enchantments.find((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment)
+						.originEntityId || b.entityId - a.entityId,
+		)[0];
 	if (minionThatWillDie) {
 		// So this is a bit tricky (as all the stuff with indices...). Because in practice it's more likely that players use Rapid Reanimation
 		// on minions that they want to die quickly, most of the time they will be placed
