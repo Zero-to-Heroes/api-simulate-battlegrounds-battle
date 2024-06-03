@@ -952,7 +952,6 @@ const handleTeronForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): boolean => {
-	// const deadMinionEntityId = +playerEntity.heroPowerInfo;
 	// Getting the right enchantment can be tricky. The RapidReanimation enchantment can sometimes be
 	// in the Graveyard zone, so we can't filter them out. In that case, we can have multiple
 	// enchantments
@@ -972,8 +971,12 @@ const handleTeronForPlayer = (
 		// on minions that they want to die quickly, most of the time they will be placed
 		// to the left of the board
 		// So using a left-based index (usually 0) is more likely to be correct after minions spawn on the board
-		const minionIndexFromLeft = playerBoard.indexOf(minionThatWillDie);
-		playerEntity.rapidReanimationIndexFromLeft = minionIndexFromLeft;
+		// Update: this looks like it's not the case, and looking at
+		// http://replays.firestoneapp.com/?reviewId=2e6b389f-d904-43a2-a7cd-928a60d973ce&turn=11&action=1
+		// the index seems to be right-based at least in some cases
+		playerEntity.rapidReanimationIndexFromLeft = playerBoard.indexOf(minionThatWillDie) === 0 ? 0 : null;
+		playerEntity.rapidReanimationIndexFromRight =
+			playerBoard.indexOf(minionThatWillDie) === 0 ? null : playerBoard.length - 1;
 		const minionToCopy = {
 			...minionThatWillDie,
 			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
