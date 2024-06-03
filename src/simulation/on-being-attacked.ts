@@ -20,8 +20,10 @@ export const applyOnBeingAttackedBuffs = (
 	for (const secret of (defendingPlayerEntity.secrets ?? []).filter((s) => !s.triggered)) {
 		switch (secret.cardId) {
 			case CardIds.AutodefenseMatrix_TB_Bacon_Secrets_07:
-				secret.triggered = true;
-				updateDivineShield(defendingEntity, defendingBoard, true, gameState.allCards);
+				if (!defendingEntity.divineShield) {
+					secret.triggered = true;
+					updateDivineShield(defendingEntity, defendingBoard, true, gameState.allCards);
+				}
 				break;
 			case CardIds.SplittingImage_TB_Bacon_Secrets_04:
 				if (defendingBoard.length < 7) {
