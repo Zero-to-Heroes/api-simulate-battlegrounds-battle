@@ -69,7 +69,7 @@ export const simulateBattle = (
 		averageDamageLost: undefined,
 	};
 
-	const spectator = new Spectator(battleInput);
+	const spectator = new Spectator();
 	const inputReady = buildFinalInput(battleInput, cards, cardsData);
 	!battleInput.options?.skipInfoLogs && console.time('simulation');
 	const outcomes = {};

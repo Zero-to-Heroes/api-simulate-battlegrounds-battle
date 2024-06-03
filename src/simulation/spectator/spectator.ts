@@ -1,8 +1,7 @@
 import { BgsPlayerEntity } from 'src/bgs-player-entity';
-import { BgsBattleInfo } from '../../bgs-battle-info';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
-import { GameAction } from './game-action';
+import { GameAction, buildGameAction } from './game-action';
 import { GameSample } from './game-sample';
 
 const MAX_SAMPLES = 1;
@@ -13,25 +12,7 @@ export class Spectator {
 	private tiedBattles: GameSample[];
 	private lostBattles: GameSample[];
 
-	private readonly playerCardId?: string;
-	private readonly playerHeroPowerCardId: string;
-	private readonly playerHeroPowerUsed: boolean;
-	// private readonly playerRewardCardId: string;
-	// private readonly playerRewardData: number;
-	private readonly opponentCardId: string;
-	private readonly opponentHeroPowerCardId: string;
-	private readonly opponentHeroPowerUsed: boolean;
-	// private readonly opponentRewardCardId: string;
-	// private readonly opponentRewardData: number;
-
-	constructor(battleInput: BgsBattleInfo) {
-		this.playerCardId = battleInput.playerBoard.player.cardId;
-		this.playerHeroPowerCardId = battleInput.playerBoard.player.heroPowerId;
-		this.playerHeroPowerUsed = battleInput.playerBoard.player.heroPowerUsed;
-		this.opponentCardId = battleInput.opponentBoard.player.cardId;
-		this.opponentHeroPowerCardId = battleInput.opponentBoard.player.heroPowerId;
-		this.opponentHeroPowerUsed = battleInput.opponentBoard.player.heroPowerUsed;
-
+	constructor() {
 		this.actionsForCurrentBattle = [];
 		this.wonBattles = [];
 		this.tiedBattles = [];
@@ -80,16 +61,6 @@ export class Spectator {
 
 		const battle: GameSample = {
 			actions: actionsForBattle,
-			playerCardId: this.playerCardId,
-			playerHeroPowerCardId: this.playerHeroPowerCardId,
-			playerHeroPowerUsed: this.playerHeroPowerUsed,
-			// playerRewardCardId: this.playerRewardCardId,
-			// playerRewardData: this.playerRewardData,
-			opponentCardId: this.opponentCardId,
-			opponentHeroPowerCardId: this.opponentHeroPowerCardId,
-			opponentHeroPowerUsed: this.opponentHeroPowerUsed,
-			// opponentRewardCardId: this.opponentRewardCardId,
-			// opponentRewardData: this.opponentRewardData,
 		};
 		switch (result) {
 			case 'won':
@@ -123,13 +94,11 @@ export class Spectator {
 		// 	attackingBoard.find((e) => e.entityId === 2442),
 		// );
 		const isAttackerFriendly = attackingBoard.every((entity) => entity.friendly);
-		const friendlyBoard = isAttackerFriendly ? attackingBoard : defendingBoard;
-		const opponentBoard = isAttackerFriendly ? defendingBoard : attackingBoard;
-		const playerSecrets = isAttackerFriendly ? attackingBoardHero.secrets : defendingBoardHero.secrets;
-		const opponentSecrets = isAttackerFriendly ? defendingBoardHero.secrets : attackingBoardHero.secrets;
 		const playerHero = isAttackerFriendly ? attackingBoardHero : defendingBoardHero;
 		const opponentHero = isAttackerFriendly ? defendingBoardHero : attackingBoardHero;
-		const action: GameAction = {
+		const friendlyBoard = isAttackerFriendly ? attackingBoard : defendingBoard;
+		const opponentBoard = isAttackerFriendly ? defendingBoard : attackingBoard;
+		const action: GameAction = buildGameAction(playerHero, opponentHero, {
 			type: 'attack',
 			sourceEntityId: attackingEntity.entityId,
 			targetEntityId: defendingEntity.entityId,
@@ -137,16 +106,7 @@ export class Spectator {
 			playerHand: this.sanitize(playerHero.hand),
 			opponentBoard: this.sanitize(opponentBoard),
 			opponentHand: this.sanitize(opponentHero.hand),
-			playerSecrets: (playerSecrets ?? []).filter((s) => !s.triggered),
-			opponentSecrets: (opponentSecrets ?? []).filter((s) => !s.triggered),
-
-			playerRewardCardId: playerHero?.questRewardEntities?.[0]?.cardId ?? playerHero?.questRewards?.[0],
-			playerRewardEntityId: playerHero?.questRewardEntities?.[0]?.entityId,
-			playerRewardData: playerHero?.questRewardEntities?.[0]?.scriptDataNum1,
-			opponentRewardCardId: opponentHero?.questRewardEntities?.[0]?.cardId ?? opponentHero?.questRewards?.[0],
-			opponentRewardEntityId: opponentHero?.questRewardEntities?.[0]?.entityId,
-			opponentRewardData: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1,
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -156,23 +116,13 @@ export class Spectator {
 		friendlyHero: BgsPlayerEntity,
 		opponentHero: BgsPlayerEntity,
 	): void {
-		const playerSecrets = friendlyHero.secrets;
-		const opponentSecrets = opponentHero.secrets;
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(friendlyHero, opponentHero, {
 			type: 'start-of-combat',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: this.sanitize(friendlyHero.hand),
 			opponentHand: this.sanitize(opponentHero.hand),
-			playerSecrets: playerSecrets ?? [],
-			opponentSecrets: opponentSecrets ?? [],
-			playerRewardCardId: friendlyHero.questRewardEntities?.[0]?.cardId ?? friendlyHero.questRewards?.[0],
-			playerRewardEntityId: friendlyHero.questRewardEntities?.[0]?.entityId,
-			playerRewardData: friendlyHero.questRewardEntities?.[0]?.scriptDataNum1,
-			opponentRewardCardId: opponentHero.questRewardEntities?.[0]?.cardId ?? opponentHero.questRewards?.[0],
-			opponentRewardEntityId: opponentHero.questRewardEntities?.[0]?.entityId,
-			opponentRewardData: opponentHero.questRewardEntities?.[0]?.scriptDataNum1,
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -181,26 +131,18 @@ export class Spectator {
 		opponentBoard: readonly BoardEntity[],
 		damage: number,
 	): void {
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(null, null, {
 			type: 'player-attack',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
-			playerSecrets: null,
-			opponentSecrets: null,
-			playerRewardCardId: null,
-			playerRewardEntityId: null,
-			playerRewardData: null,
-			opponentRewardCardId: null,
-			opponentRewardEntityId: null,
-			opponentRewardData: null,
 			damages: [
 				{
 					damage: damage,
 				},
 			],
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -209,26 +151,18 @@ export class Spectator {
 		opponentBoard: readonly BoardEntity[],
 		damage: number,
 	): void {
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(null, null, {
 			type: 'opponent-attack',
 			playerBoard: this.sanitize(friendlyBoard),
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
-			playerSecrets: null,
-			opponentSecrets: null,
-			playerRewardCardId: null,
-			playerRewardEntityId: null,
-			playerRewardData: null,
-			opponentRewardCardId: null,
-			opponentRewardEntityId: null,
-			opponentRewardData: null,
 			damages: [
 				{
 					damage: damage,
 				},
 			],
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -243,7 +177,7 @@ export class Spectator {
 		}
 		const friendlyBoard = damagedEntityBoard.every((entity) => entity.friendly) ? damagedEntityBoard : null;
 		const opponentBoard = damagedEntityBoard.every((entity) => !entity.friendly) ? damagedEntityBoard : null;
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(null, null, {
 			type: 'damage',
 			damages: [
 				{
@@ -256,15 +190,7 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
-			playerSecrets: null,
-			opponentSecrets: null,
-			playerRewardCardId: null,
-			playerRewardEntityId: null,
-			playerRewardData: null,
-			opponentRewardCardId: null,
-			opponentRewardEntityId: null,
-			opponentRewardData: null,
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -286,7 +212,7 @@ export class Spectator {
 		const opponentBoard = targetBoard?.every((entity) => !entity.friendly) ? targetBoard : null;
 		const friendlyHero = hero1?.friendly ? hero1 : hero2?.friendly ? hero2 : null;
 		const opponentHero = hero1?.friendly ? hero2 : hero2?.friendly ? hero1 : null;
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(friendlyHero, opponentHero, {
 			type: 'power-target',
 			sourceEntityId: sourceEntity.entityId,
 			targetEntityId: targetEntity.entityId,
@@ -294,15 +220,7 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: this.sanitize(friendlyHero?.hand),
 			opponentHand: this.sanitize(opponentHero?.hand),
-			playerSecrets: (friendlyHero?.secrets ?? []).filter((s) => !s.triggered),
-			opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
-			playerRewardCardId: friendlyHero?.questRewardEntities?.[0]?.cardId ?? friendlyHero?.questRewards?.[0],
-			playerRewardEntityId: friendlyHero?.questRewardEntities?.[0]?.entityId,
-			playerRewardData: friendlyHero?.questRewardEntities?.[0]?.scriptDataNum1,
-			opponentRewardCardId: opponentHero?.questRewardEntities?.[0]?.cardId ?? opponentHero?.questRewards?.[0],
-			opponentRewardEntityId: opponentHero?.questRewardEntities?.[0]?.entityId,
-			opponentRewardData: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1,
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -320,7 +238,7 @@ export class Spectator {
 		}
 		const friendlyBoard = boardOnWhichToSpawn.every((entity) => entity.friendly) ? boardOnWhichToSpawn : null;
 		const opponentBoard = boardOnWhichToSpawn.every((entity) => !entity.friendly) ? boardOnWhichToSpawn : null;
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(null, null, {
 			type: 'spawn',
 			spawns: this.sanitize(spawnedEntities),
 			sourceEntityId: sourceEntity?.entityId,
@@ -328,15 +246,7 @@ export class Spectator {
 			opponentBoard: this.sanitize(opponentBoard),
 			playerHand: null,
 			opponentHand: null,
-			playerSecrets: null,
-			opponentSecrets: null,
-			playerRewardCardId: null,
-			playerRewardEntityId: null,
-			playerRewardData: null,
-			opponentRewardCardId: null,
-			opponentRewardEntityId: null,
-			opponentRewardData: null,
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -352,26 +262,14 @@ export class Spectator {
 		if (!deaths || deaths.length === 0) {
 			return;
 		}
-		const action: GameAction = {
+		const action: GameAction = buildGameAction(null, null, {
 			type: 'minion-death',
 			deaths: this.sanitize(deaths),
 			deadMinionsPositionsOnBoard: [
 				...(deadMinionIndexes1 || []).map((i) => board1.length - i),
 				...(deadMinionIndexes2 || []).map((i) => board2.length - i),
 			],
-			playerBoard: undefined,
-			opponentBoard: undefined,
-			playerHand: null,
-			opponentHand: null,
-			playerSecrets: null,
-			opponentSecrets: null,
-			playerRewardCardId: null,
-			playerRewardEntityId: null,
-			playerRewardData: null,
-			opponentRewardCardId: null,
-			opponentRewardEntityId: null,
-			opponentRewardData: null,
-		};
+		});
 		this.addAction(action);
 	}
 
@@ -397,41 +295,30 @@ export class Spectator {
 			// action.playerBoard && console.debug('\naction playerboard', stringifySimple(action.playerBoard));
 			const lastAction = result.length > 0 ? result[result.length - 1] : null;
 
-			if (lastAction && !action.playerBoard) {
-				action.playerBoard = lastAction.playerBoard;
-			}
-			if (lastAction && !action.opponentBoard) {
-				action.opponentBoard = lastAction.opponentBoard;
-			}
-			if (lastAction && !action.playerHand) {
-				action.playerHand = lastAction.playerHand;
-			}
-			if (lastAction && !action.opponentHand) {
-				action.opponentHand = lastAction.opponentHand;
-			}
-			if (lastAction && !action.playerSecrets) {
-				action.playerSecrets = lastAction.playerSecrets;
-			}
-			if (lastAction && !action.opponentSecrets) {
-				action.opponentSecrets = lastAction.opponentSecrets;
-			}
-			if (lastAction && !action.playerRewardCardId) {
-				action.playerRewardCardId = lastAction.playerRewardCardId;
-			}
-			if (lastAction && !action.playerRewardEntityId) {
-				action.playerRewardEntityId = lastAction.playerRewardEntityId;
-			}
-			if (lastAction && !action.playerRewardData) {
-				action.playerRewardData = lastAction.playerRewardData;
-			}
-			if (lastAction && !action.opponentRewardCardId) {
-				action.opponentRewardCardId = lastAction.opponentRewardCardId;
-			}
-			if (lastAction && !action.opponentRewardEntityId) {
-				action.opponentRewardEntityId = lastAction.opponentRewardEntityId;
-			}
-			if (lastAction && !action.opponentRewardData) {
-				action.opponentRewardData = lastAction.opponentRewardData;
+			if (lastAction) {
+				action.playerBoard = action.playerBoard ?? lastAction.playerBoard;
+				action.opponentBoard = action.opponentBoard ?? lastAction.opponentBoard;
+				action.playerHand = action.playerHand ?? lastAction.playerHand;
+				action.opponentHand = action.opponentHand ?? lastAction.opponentHand;
+				action.playerSecrets = action.playerSecrets ?? lastAction.playerSecrets;
+				action.opponentSecrets = action.opponentSecrets ?? lastAction.opponentSecrets;
+				action.playerRewardCardId = action.playerRewardCardId ?? lastAction.playerRewardCardId;
+				action.playerRewardEntityId = action.playerRewardEntityId ?? lastAction.playerRewardEntityId;
+				action.playerRewardData = action.playerRewardData ?? lastAction.playerRewardData;
+				action.opponentRewardCardId = action.opponentRewardCardId ?? lastAction.opponentRewardCardId;
+				action.opponentRewardEntityId = action.opponentRewardEntityId ?? lastAction.opponentRewardEntityId;
+				action.opponentRewardData = action.opponentRewardData ?? lastAction.opponentRewardData;
+				action.playerCardId = action.playerCardId ?? lastAction.playerCardId;
+				action.playerEntityId = action.playerEntityId ?? lastAction.playerEntityId;
+				action.playerHeroPowerCardId = action.playerHeroPowerCardId ?? lastAction.playerHeroPowerCardId;
+				action.playerHeroPowerEntityId = action.playerHeroPowerEntityId ?? lastAction.playerHeroPowerEntityId;
+				action.playerHeroPowerUsed = action.playerHeroPowerUsed ?? lastAction.playerHeroPowerUsed;
+				action.opponentCardId = action.opponentCardId ?? lastAction.opponentCardId;
+				action.opponentEntityId = action.opponentEntityId ?? lastAction.opponentEntityId;
+				action.opponentHeroPowerCardId = action.opponentHeroPowerCardId ?? lastAction.opponentHeroPowerCardId;
+				action.opponentHeroPowerEntityId =
+					action.opponentHeroPowerEntityId ?? lastAction.opponentHeroPowerEntityId;
+				action.opponentHeroPowerUsed = action.opponentHeroPowerUsed ?? lastAction.opponentHeroPowerUsed;
 			}
 
 			if (lastAction && action.type === 'damage' && lastAction.type === 'attack') {
