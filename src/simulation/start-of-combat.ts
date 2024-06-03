@@ -375,24 +375,45 @@ const handleStartOfCombatQuestRewards = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
-		playerEntity,
-		playerBoard,
-		opponentEntity,
-		opponentBoard,
-		currentAttacker,
-		gameState,
-		true,
-	);
-	currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
-		opponentEntity,
-		opponentBoard,
-		playerEntity,
-		playerBoard,
-		currentAttacker,
-		gameState,
-		false,
-	);
+	if (Math.random() < 0.5) {
+		currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			gameState,
+			true,
+		);
+		currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			gameState,
+			false,
+		);
+	} else {
+		currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			gameState,
+			false,
+		);
+		currentAttacker = handleStartOfCombatQuestRewardsForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			gameState,
+			true,
+		);
+	}
 	return currentAttacker;
 };
 
@@ -404,22 +425,41 @@ const handleStartOfCombatSpells = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	currentAttacker = handleStartOfCombatSpellsForPlayer(
-		playerEntity,
-		playerBoard,
-		opponentEntity,
-		opponentBoard,
-		currentAttacker,
-		gameState,
-	);
-	currentAttacker = handleStartOfCombatSpellsForPlayer(
-		opponentEntity,
-		opponentBoard,
-		playerEntity,
-		playerBoard,
-		currentAttacker,
-		gameState,
-	);
+	if (Math.random() < 0.5) {
+		currentAttacker = handleStartOfCombatSpellsForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			gameState,
+		);
+		currentAttacker = handleStartOfCombatSpellsForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			gameState,
+		);
+	} else {
+		currentAttacker = handleStartOfCombatSpellsForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			gameState,
+		);
+		currentAttacker = handleStartOfCombatSpellsForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			gameState,
+		);
+	}
 	return currentAttacker;
 };
 
