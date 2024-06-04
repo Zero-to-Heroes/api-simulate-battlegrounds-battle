@@ -191,7 +191,7 @@ const handlePreCombatHeroPowersForPlayer = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
-	if (playerEntity.startOfCombatDone) {
+	if (playerEntity.startOfCombatDone || playerEntity.hpLeft <= 0) {
 		return currentAttacker;
 	}
 
@@ -792,6 +792,9 @@ const handlePlayerIllidanHeroPowers = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
+	if (playerEntity.hpLeft <= 0) {
+		return currentAttacker;
+	}
 	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
 	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
 		// After Illidan triggers, it's always the other opponent's turn
@@ -1165,7 +1168,7 @@ const handlePlayerStartOfCombatHeroPowers = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
-	if (playerEntity.startOfCombatDone) {
+	if (playerEntity.startOfCombatDone || playerEntity.hpLeft <= 0) {
 		return currentAttacker;
 	}
 	// eslint-disable-next-line prefer-const
