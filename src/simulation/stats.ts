@@ -147,13 +147,11 @@ export const modifyHealth = (
 				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
 		);
 		mishmashes.forEach((mishmash) => {
-			modifyHealth(
-				mishmash,
-				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
-				friendlyBoard,
-				friendlyBoardHero,
-				gameState,
-			);
+			const buff = (mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount;
+			entity.health += buff;
+			if (buff > 0) {
+				entity.maxHealth += buff;
+			}
 		});
 	}
 
@@ -165,13 +163,11 @@ export const modifyHealth = (
 				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G,
 		);
 	titanicGuardians.forEach((guardian) => {
-		modifyHealth(
-			guardian,
-			(guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount,
-			friendlyBoard,
-			friendlyBoardHero,
-			gameState,
-		);
+		const buff = (guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount;
+		entity.health += buff;
+		if (buff > 0) {
+			entity.maxHealth += buff;
+		}
 	});
 };
 
