@@ -96,22 +96,6 @@ const setMissingMinionsAura = (board: BoardEntity[], boardHero: BgsPlayerEntity,
 		0,
 	);
 	setMissingAura(
-		board,
-		CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy,
-		CardIds.DraconicBlessingEnchantment_TB_BaconShop_HERO_52_Buddy_e,
-		3,
-		0,
-		false,
-	);
-	setMissingAura(
-		board,
-		CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G,
-		CardIds.DraconicBlessingEnchantment_TB_BaconShop_HERO_52_Buddy_G_e,
-		6,
-		0,
-		false,
-	);
-	setMissingAura(
 		board.filter((e) => e.divineShield),
 		CardIds.CyborgDrake_BG25_043,
 		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043e,

@@ -7,6 +7,7 @@ import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/ut
 import {
 	addImpliedMechanics,
 	addStatsToBoard,
+	getMinionsOfDifferentTypes,
 	getRandomMinionWithHighestHealth,
 	getTeammateInitialState,
 	hasCorrectTribe,
@@ -1879,6 +1880,42 @@ export const performStartOfCombatMinionsForPlayer = (
 			if (isGolden) {
 				makeMinionGolden(copy, copy, attackingBoard, attackingBoardHero, gameState);
 			}
+		}
+	} else if (attacker.cardId === CardIds.Vaelastrasz || attacker.cardId === CardIds.Vaelastrasz_G) {
+		const vaelastraszBonus = attacker.cardId === CardIds.Vaelastrasz_G ? 4 : 2;
+		attackingBoard
+			.filter((e) => e.entityId !== attacker.entityId)
+			.forEach((e) => {
+				modifyAttack(e, vaelastraszBonus, attackingBoard, attackingBoardHero, gameState);
+				modifyHealth(e, vaelastraszBonus, attackingBoard, attackingBoardHero, gameState);
+				onStatsUpdate(e, attackingBoard, attackingBoardHero, gameState);
+				gameState.spectator.registerPowerTarget(
+					attacker,
+					e,
+					attackingBoard,
+					attackingBoardHero,
+					defendingBoardHero,
+				);
+			});
+	} else if (
+		attacker.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy ||
+		attacker.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G
+	) {
+		const minionsOfDifferentTypes = getMinionsOfDifferentTypes(attackingBoard, gameState);
+		if (minionsOfDifferentTypes.length >= 4) {
+			const highestAttackOnBoard = Math.max(...attackingBoard.map((entity) => entity.attack));
+			const highestHealthOnBoard = Math.max(...attackingBoard.map((entity) => entity.health));
+			const multiplier = attacker.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G ? 2 : 1;
+			modifyAttack(attacker, highestAttackOnBoard * multiplier, attackingBoard, attackingBoardHero, gameState);
+			modifyHealth(attacker, highestHealthOnBoard * multiplier, attackingBoard, attackingBoardHero, gameState);
+			onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+			gameState.spectator.registerPowerTarget(
+				attacker,
+				attacker,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+			);
 		}
 	}
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);

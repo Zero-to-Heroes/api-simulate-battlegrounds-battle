@@ -85,16 +85,6 @@ const handleSpawnEffect = (
 					onStatsUpdate(spawned, board, boardHero, gameState);
 				}
 				break;
-			// This has to happen after greybough's hero power kicks in
-			case CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy:
-			case CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G:
-				if (spawned.taunt) {
-					const statsBonus = entity.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G ? 4 : 2;
-					modifyAttack(spawned, statsBonus, board, boardHero, gameState);
-					modifyHealth(spawned, statsBonus, board, boardHero, gameState);
-					onStatsUpdate(spawned, board, boardHero, gameState);
-				}
-				break;
 			case CardIds.CobaltGuardian:
 				if (hasCorrectTribe(spawned, Race.MECH, gameState.allCards)) {
 					if (!entity.divineShield) {
@@ -269,10 +259,6 @@ export const applyAurasToSelf = (
 					spawned.health += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
 				}
 				break;
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
-				spawned.attack += entity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
-				break;
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
 				if (hasCorrectTribe(spawned, Race.DEMON, gameState.allCards) && entity.entityId !== spawned.entityId) {
@@ -402,13 +388,6 @@ export const removeAurasFromSelf = (
 					);
 				}
 				break;
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
-			case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
-				entity.attack = Math.max(
-					0,
-					entity.attack - (boardEntity.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3),
-				);
-				break;
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
 				if (hasCorrectTribe(entity, Race.DEMON, allCards) && entity.entityId !== boardEntity.entityId) {
@@ -518,12 +497,6 @@ const handleMinionAddedAuraEffect = (
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
 				});
-			break;
-		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
-		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
-			board.forEach((e) => {
-				e.attack += spawned.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
-			});
 			break;
 		case CardIds.Kathranatir_BG21_039:
 		case CardIds.Kathranatir_BG21_039_G:
@@ -675,6 +648,17 @@ const handleAfterSpawnEffect = (
 				if (spawned.attack > entity.attack) {
 					const observerBuff = entity.cardId === CardIds.ObserverOfMyths_BG_TTN_078_G ? 2 : 1;
 					addStatsToBoard(entity, board, hero, observerBuff, 0, gameState);
+				}
+				break;
+			case CardIds.ValithriaDreamwalker_TB_BaconShop_HERO_53_Buddy:
+			case CardIds.ValithriaDreamwalker_TB_BaconShop_HERO_53_Buddy_G:
+				if (hasCorrectTribe(spawned, Race.DRAGON, gameState.allCards) && entity.entityId !== spawned.entityId) {
+					const valithriaBuff =
+						entity.cardId === CardIds.ValithriaDreamwalker_TB_BaconShop_HERO_53_Buddy_G ? 3 : 2;
+					modifyAttack(entity, valithriaBuff, board, hero, gameState);
+					modifyHealth(entity, valithriaBuff, board, hero, gameState);
+					onStatsUpdate(entity, board, hero, gameState);
+					gameState.spectator.registerPowerTarget(entity, spawned, board, null, null);
 				}
 				break;
 

@@ -57,6 +57,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.TheUninvitedGuest_BG29_875_G,
 	CardIds.Sandy_BGDUO_125,
 	CardIds.Sandy_BGDUO_125_G,
+	CardIds.Vaelastrasz,
+	CardIds.Vaelastrasz_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,
@@ -73,7 +75,8 @@ export class CardsData {
 	public gentleDjinniSpawns: readonly string[];
 	// public festergutSpawns: readonly string[];
 	public kilrekSpawns: readonly string[];
-	public brannEpicEggSpawns: readonly string[];
+	public battlecryMinions: readonly string[];
+	public deathrattleMinions: readonly string[];
 	// public sneedsSpawns: readonly string[];
 	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
@@ -143,7 +146,10 @@ export class CardsData {
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy)
 			.map((card) => card.id);
-		this.brannEpicEggSpawns = this.pool.filter((card) => hasMechanic(card, 'BATTLECRY')).map((card) => card.id);
+		this.battlecryMinions = this.pool.filter((card) => hasMechanic(card, 'BATTLECRY')).map((card) => card.id);
+		this.deathrattleMinions = this.pool
+			.filter((card) => hasMechanic(card, GameTag[GameTag.DEATHRATTLE]))
+			.map((card) => card.id);
 		this.pirateSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.PIRATE)).map((card) => card.id);
 		this.beastSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.BEAST)).map((card) => card.id);
 		this.scrapScraperSpawns = this.pool
@@ -165,8 +171,8 @@ export class CardsData {
 			case CardIds.HungeringAbomination_BG25_014:
 			case CardIds.HungeringAbomination_BG25_014_G:
 			// Not technically an avenge, but behaves as if
-			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
-			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
+			// case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
+			// case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
 			case CardIds.IceSickle:
 				return 1;
 			case CardIds.GhoulOfTheFeast_BG25_002:

@@ -129,6 +129,18 @@ export const triggerBattlecry = (
 					Race[Race.PIRATE],
 				);
 				break;
+			case CardIds.CrowsNestSentry:
+			case CardIds.CrowsNestSentry_G:
+				addStatsToBoard(
+					entity,
+					board.filter((e) => e.entityId != entity.entityId),
+					hero,
+					0,
+					entity.cardId === CardIds.CrowsNestSentry ? 3 : 6,
+					gameState,
+					Race[Race.PIRATE],
+				);
+				break;
 			case CardIds.ColdlightSeerLegacy_BG_EX1_103:
 			case CardIds.ColdlightSeerLegacy_TB_BaconUps_064:
 				addStatsToBoard(
@@ -293,8 +305,8 @@ export const triggerBattlecry = (
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
-					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
-					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 2 : 4,
+					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
+					entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
 					gameState,
 					Race[Race.MURLOC],
 				);
@@ -734,6 +746,49 @@ export const triggerBattlecry = (
 					onStatsUpdate(conductorTarget, targetBoard, targetHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, conductorTarget, targetBoard, hero, otherHero);
 				}
+				break;
+			case CardIds.FacelessOne:
+			case CardIds.FacelessOne_G:
+				const facelessOneCardsToAdd = entity.cardId === CardIds.FacelessOne_G ? [null] : [null, null];
+				addCardsInHand(hero, board, facelessOneCardsToAdd, gameState);
+				break;
+			case CardIds.Phyresz:
+			case CardIds.Phyresz_G:
+				const phyreszCardsToAdd = entity.cardId === CardIds.Phyresz_G ? [null] : [null, null];
+				addCardsInHand(hero, board, phyreszCardsToAdd, gameState);
+				break;
+			case CardIds.Muckslinger:
+			case CardIds.Muckslinger_G:
+				const muckslingerCardsToAdd =
+					entity.cardId === CardIds.Muckslinger
+						? [pickRandom(gameState.cardsData.battlecryMinions)]
+						: [
+								pickRandom(gameState.cardsData.battlecryMinions),
+								pickRandom(gameState.cardsData.battlecryMinions),
+						  ];
+				addCardsInHand(hero, board, muckslingerCardsToAdd, gameState);
+				break;
+			case CardIds.BarrensBrawler:
+			case CardIds.BarrensBrawler_G:
+				const barrendsBrawlerCardsToAdd =
+					entity.cardId === CardIds.BarrensBrawler
+						? [pickRandom(gameState.cardsData.deathrattleMinions)]
+						: [
+								pickRandom(gameState.cardsData.deathrattleMinions),
+								pickRandom(gameState.cardsData.deathrattleMinions),
+						  ];
+				addCardsInHand(hero, board, barrendsBrawlerCardsToAdd, gameState);
+				break;
+			case CardIds.Vaelastrasz:
+			case CardIds.Vaelastrasz_G:
+				const vaelastraszBonus = entity.cardId === CardIds.Vaelastrasz_G ? 4 : 2;
+				board
+					.filter((e) => e.entityId !== entity.entityId)
+					.forEach((e) => {
+						modifyAttack(e, vaelastraszBonus, board, hero, gameState);
+						modifyHealth(e, vaelastraszBonus, board, hero, gameState);
+						onStatsUpdate(e, board, hero, gameState);
+					});
 				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state

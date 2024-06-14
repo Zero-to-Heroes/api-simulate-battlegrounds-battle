@@ -249,7 +249,7 @@ const handleAvenge = (
 			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
 			const nestmatronCardsToAdd = [];
 			for (let i = 0; i < nestmatronToAddQuantity; i++) {
-				nestmatronCardsToAdd.push(pickRandom(gameState.cardsData.brannEpicEggSpawns));
+				nestmatronCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));
 			}
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, nestmatronCardsToAdd, gameState);
 			break;
@@ -387,23 +387,6 @@ const handleAvenge = (
 				boardWithDeadEntityHero,
 				otherBoardHero,
 			);
-			break;
-		case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
-		case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
-			const neighboursShadowy = getNeighbours(boardWithDeadEntity, null, deadEntityIndexFromRight);
-			const multiplierShadowy = avenger.cardId === CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G ? 2 : 1;
-			neighboursShadowy.forEach((neighbour) => {
-				modifyAttack(neighbour, multiplierShadowy * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				modifyHealth(neighbour, multiplierShadowy * 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				onStatsUpdate(neighbour, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					avenger,
-					neighbour,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-				);
-			});
 			break;
 		case CardIds.IceSickle:
 			grantRandomStats(

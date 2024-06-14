@@ -38,6 +38,15 @@ export const modifyAttack = (
 		return;
 	}
 
+	if (entity.cardId === CardIds.LocPrince || entity.cardId === CardIds.LocPrince_G) {
+		const buff = entity.cardId === CardIds.LocPrince_G ? 4 : 2;
+		amount += buff;
+		// TODO: how to handle the health buff here? If we also buff the health via modifyHealth
+		// afterwards, that's ok. Otherwise, we will miss on health buff triggers
+		entity.health += buff;
+		entity.maxHealth += buff;
+	}
+
 	const otherBoardHero: BgsPlayerEntity =
 		gameState.gameState.player.player === friendlyBoardHero
 			? gameState.gameState.opponent.player
@@ -66,6 +75,7 @@ export const modifyAttack = (
 			);
 			stormbringers.forEach((stormbringer) => {
 				const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
+				// This is never called?
 				(e) => {
 					modifyAttack(e, multiplier * realAmount, friendlyBoard, friendlyBoardHero, gameState);
 					gameState.spectator.registerPowerTarget(
@@ -79,6 +89,16 @@ export const modifyAttack = (
 			});
 		}
 	}
+
+	// Sinestra
+	friendlyBoard
+		.filter((e) => e.cardId === CardIds.Sinestra || e.cardId === CardIds.Sinestra_G)
+		.forEach((sinestra) => {
+			const buff = sinestra.cardId === CardIds.Sinestra_G ? 2 : 1;
+			modifyHealth(entity, buff, friendlyBoard, friendlyBoardHero, gameState);
+			onStatsUpdate(entity, friendlyBoard, friendlyBoardHero, gameState);
+			gameState.spectator.registerPowerTarget(sinestra, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
+		});
 
 	// TODO: what happens if the Hunter is killed during the attack?
 	if ([CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(entity.cardId as CardIds)) {
@@ -129,6 +149,14 @@ export const modifyHealth = (
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	if (entity.cardId === CardIds.LocPrince || entity.cardId === CardIds.LocPrince_G) {
+		const buff = entity.cardId === CardIds.LocPrince_G ? 4 : 2;
+		amount += buff;
+		// TODO: how to handle the attack buff here? If we also buff the health via modifyHealth
+		// afterwards, that's ok. Otherwise, we will miss on health buff triggers
+		entity.attack += buff;
+	}
+
 	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
 	entity.health += realAmount;
 	if (realAmount > 0) {

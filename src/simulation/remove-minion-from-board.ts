@@ -41,13 +41,6 @@ export const handleMinionRemovedAuraEffect = (
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy:
-		case CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G:
-			board.forEach((e) => {
-				const diff = removed.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 6 : 3;
-				e.attack = Math.max(0, e.attack - diff);
-			});
-			break;
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			// console.debug('removing southsea captain', stringifySimpleCard(removed, allCards), stringifySimple(board, allCards));

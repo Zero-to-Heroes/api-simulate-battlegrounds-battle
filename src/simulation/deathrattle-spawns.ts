@@ -7,6 +7,7 @@ import {
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
+	getMinionsOfDifferentTypes,
 	getTeammateInitialState,
 	hasCorrectTribe,
 	isCorrectTribe,
@@ -895,7 +896,7 @@ export const spawnEntitiesFromDeathrattle = (
 					const brannToSpawnQuandtity =
 						deadEntity.cardId === CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G ? 2 : 1;
 					for (let i = 0; i < brannToSpawnQuandtity; i++) {
-						brannSpawns.push(pickRandom(gameState.cardsData.brannEpicEggSpawns));
+						brannSpawns.push(pickRandom(gameState.cardsData.battlecryMinions));
 					}
 					for (const brannSpawn of brannSpawns) {
 						spawnedEntities.push(
@@ -1523,6 +1524,39 @@ export const spawnEntitiesFromDeathrattle = (
 							...e,
 							attack: harmlessBoneheadStats,
 							health: harmlessBoneheadStats,
+						})),
+					);
+					break;
+				case CardIds.AridAtrocity:
+				case CardIds.AridAtrocity_G:
+					const aridAtrocityStatsMultiplier = deadEntity.cardId === CardIds.AridAtrocity_G ? 2 : 1;
+					const friendlyDeadEntities = gameState.sharedState.deaths.filter(
+						(e) => e.friendly === deadEntity.friendly,
+					);
+					const types = getMinionsOfDifferentTypes(friendlyDeadEntities, gameState);
+					const constaridAtrocityStats = aridAtrocityStatsMultiplier * types.length;
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntityCardId === CardIds.AridAtrocity_G
+								? CardIds.AridAtrocity_Token_G
+								: CardIds.AridAtrocity_Token,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+							false,
+							true,
+						).map((e) => ({
+							...e,
+							attack: constaridAtrocityStats,
+							health: constaridAtrocityStats,
 						})),
 					);
 					break;

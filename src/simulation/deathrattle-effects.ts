@@ -34,6 +34,7 @@ import {
 	processMinionDeath,
 } from './attack';
 import { triggerBattlecry } from './battlecries';
+import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
 import { spawnEntities } from './deathrattle-spawns';
@@ -764,6 +765,21 @@ export const handleDeathrattleEffects = (
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 				}
 				break;
+			case CardIds.ThreeLilQuilboar:
+			case CardIds.ThreeLilQuilboar_G:
+				for (let i = 0; i < multiplier; i++) {
+					const numberOfBloodGems = deadEntityCardId === CardIds.ThreeLilQuilboar_G ? 6 : 3;
+					for (const entity of boardWithDeadEntity) {
+						playBloodGemsOn(
+							entity,
+							numberOfBloodGems,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							gameState,
+						);
+					}
+				}
+				break;
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy:
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy_G:
 				for (let i = 0; i < multiplier; i++) {
@@ -974,6 +990,44 @@ export const handleDeathrattleEffects = (
 						scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
 					}
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, scraperCardsToAdd, gameState);
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
+			case CardIds.BarrensConjurer:
+			case CardIds.BarrensConjurer_G:
+				for (let i = 0; i < multiplier; i++) {
+					const conjurerToAddQuantity = deadEntity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
+					const conjurerCardsToAdd = [];
+					for (let i = 0; i < conjurerToAddQuantity; i++) {
+						conjurerCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));
+					}
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, conjurerCardsToAdd, gameState);
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
+			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
+			case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
+				for (let i = 0; i < multiplier; i++) {
+					const loops = deadEntity.cardId === CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G ? 2 : 1;
+					for (let j = 0; j < loops; j++) {
+						const atkBuff = deadEntity.attack;
+						const healthBuff = deadEntity.maxHealth;
+						const target = pickRandom(
+							boardWithDeadEntity.filter((e) => e.entityId !== deadEntity.entityId),
+						);
+						if (target) {
+							modifyAttack(target, atkBuff, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							modifyHealth(target, healthBuff, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							onStatsUpdate(target, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+							gameState.spectator.registerPowerTarget(
+								deadEntity,
+								target,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+							);
+						}
+					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;

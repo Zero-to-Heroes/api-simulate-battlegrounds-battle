@@ -1,7 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { updateDivineShield } from '../utils';
+import { addStatsToBoard, updateDivineShield } from '../utils';
 import { getNeighbours } from './attack';
 import { FullGameState } from './internal-game-state';
 import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
@@ -130,6 +130,17 @@ export const applyOnBeingAttackedBuffs = (
 				defendingPlayerEntity,
 			);
 		});
+
+		defendingBoard
+			.filter(
+				(e) =>
+					e.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy ||
+					e.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G,
+			)
+			.forEach((entity) => {
+				const buff = entity.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy ? 1 : 2;
+				addStatsToBoard(entity, defendingBoard, defendingPlayerEntity, buff, 0, gameState);
+			});
 	}
 
 	// Based on defending entity

@@ -409,6 +409,30 @@ export const grantStatsToMinionsOfEachType = (
 	}
 };
 
+export const getMinionsOfDifferentTypes = (
+	board: BoardEntity[],
+	gameState: FullGameState,
+	canRevive = true,
+): BoardEntity[] => {
+	const result: BoardEntity[] = [];
+	if (board.length > 0) {
+		let boardCopy = [...board];
+		const allRaces = shuffleArray(ALL_BG_RACES);
+		let typesBuffed = 0;
+		for (const tribe of allRaces) {
+			const validMinion: BoardEntity = canRevive
+				? getRandomRevivableMinion(boardCopy, tribe, gameState.allCards)
+				: getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
+			if (validMinion) {
+				result.push(validMinion);
+				boardCopy = boardCopy.filter((e) => e !== validMinion);
+				typesBuffed++;
+			}
+		}
+	}
+	return result;
+};
+
 export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
 	return card.mechanics?.includes(mechanic);
 };
