@@ -765,10 +765,10 @@ export const handleDeathrattleEffects = (
 					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 				}
 				break;
-			case CardIds.ThreeLilQuilboar:
-			case CardIds.ThreeLilQuilboar_G:
+			case CardIds.ThreeLilQuilboar_BG26_867:
+			case CardIds.ThreeLilQuilboar_BG26_867_G:
 				for (let i = 0; i < multiplier; i++) {
-					const numberOfBloodGems = deadEntityCardId === CardIds.ThreeLilQuilboar_G ? 6 : 3;
+					const numberOfBloodGems = deadEntityCardId === CardIds.ThreeLilQuilboar_BG26_867_G ? 6 : 3;
 					for (const entity of boardWithDeadEntity) {
 						playBloodGemsOn(
 							entity,
@@ -993,10 +993,10 @@ export const handleDeathrattleEffects = (
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
-			case CardIds.BarrensConjurer:
-			case CardIds.BarrensConjurer_G:
+			case CardIds.BarrensConjurer_BG29_862:
+			case CardIds.BarrensConjurer_BG29_862_G:
 				for (let i = 0; i < multiplier; i++) {
-					const conjurerToAddQuantity = deadEntity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
+					const conjurerToAddQuantity = deadEntity.cardId === CardIds.BarrensConjurer_BG29_862_G ? 2 : 1;
 					const conjurerCardsToAdd = [];
 					for (let i = 0; i < conjurerToAddQuantity; i++) {
 						conjurerCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));

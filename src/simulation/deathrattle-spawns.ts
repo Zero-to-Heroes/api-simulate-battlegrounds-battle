@@ -1527,9 +1527,9 @@ export const spawnEntitiesFromDeathrattle = (
 						})),
 					);
 					break;
-				case CardIds.AridAtrocity:
-				case CardIds.AridAtrocity_G:
-					const aridAtrocityStatsMultiplier = deadEntity.cardId === CardIds.AridAtrocity_G ? 2 : 1;
+				case CardIds.AridAtrocity_BG29_864:
+				case CardIds.AridAtrocity_BG29_864_G:
+					const aridAtrocityStatsMultiplier = deadEntity.cardId === CardIds.AridAtrocity_BG29_864_G ? 2 : 1;
 					const friendlyDeadEntities = gameState.sharedState.deaths.filter(
 						(e) => e.friendly === deadEntity.friendly,
 					);
@@ -1537,9 +1537,9 @@ export const spawnEntitiesFromDeathrattle = (
 					const constaridAtrocityStats = aridAtrocityStatsMultiplier * types.length;
 					spawnedEntities.push(
 						...spawnEntities(
-							deadEntityCardId === CardIds.AridAtrocity_G
-								? CardIds.AridAtrocity_Token_G
-								: CardIds.AridAtrocity_Token,
+							deadEntityCardId === CardIds.AridAtrocity_BG29_864_G
+								? CardIds.AridAtrocity_DesertedGolemToken_BG29_864_Gt
+								: CardIds.AridAtrocity_DesertedGolemToken_BG29_864t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

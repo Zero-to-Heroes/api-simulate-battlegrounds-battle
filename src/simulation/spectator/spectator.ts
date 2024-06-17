@@ -1,4 +1,4 @@
-import { BgsPlayerEntity } from 'src/bgs-player-entity';
+import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
 import { GameAction, buildGameAction } from './game-action';

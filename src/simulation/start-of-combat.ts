@@ -1881,8 +1881,11 @@ export const performStartOfCombatMinionsForPlayer = (
 				makeMinionGolden(copy, copy, attackingBoard, attackingBoardHero, gameState);
 			}
 		}
-	} else if (attacker.cardId === CardIds.Vaelastrasz || attacker.cardId === CardIds.Vaelastrasz_G) {
-		const vaelastraszBonus = attacker.cardId === CardIds.Vaelastrasz_G ? 4 : 2;
+	} else if (
+		attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy ||
+		attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G
+	) {
+		const vaelastraszBonus = attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 4 : 2;
 		attackingBoard
 			.filter((e) => e.entityId !== attacker.entityId)
 			.forEach((e) => {

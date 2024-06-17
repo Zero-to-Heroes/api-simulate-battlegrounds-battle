@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, CardIds, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
-import { SharedState } from 'src/simulation/shared-state';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { BoardSecret } from './board-secret';
@@ -9,6 +8,7 @@ import { pickRandom, shuffleArray } from './services/utils';
 import { handleAddedMinionAuraEffect } from './simulation/add-minion-to-board';
 import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
+import { SharedState } from './simulation/shared-state';
 import { Spectator } from './simulation/spectator/spectator';
 import { modifyAttack, modifyHealth, onStatsUpdate } from './simulation/stats';
 

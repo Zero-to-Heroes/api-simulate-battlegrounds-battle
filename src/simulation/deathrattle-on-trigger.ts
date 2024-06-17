@@ -1,7 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
-import { addStatsToBoard } from 'src/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { addStatsToBoard } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 
@@ -30,9 +30,9 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 	}
 
 	input.boardWithDeadEntity
-		.filter((e) => e.cardId === CardIds.Ghoulacabra || e.cardId === CardIds.Ghoulacabra_G)
+		.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
 		.forEach((ghoul) => {
-			const buff = ghoul.cardId === CardIds.Ghoulacabra_G ? 4 : 2;
+			const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
 			addStatsToBoard(
 				ghoul,
 				input.boardWithDeadEntity,

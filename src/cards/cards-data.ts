@@ -57,8 +57,8 @@ export const START_OF_COMBAT_CARD_IDS = [
 	CardIds.TheUninvitedGuest_BG29_875_G,
 	CardIds.Sandy_BGDUO_125,
 	CardIds.Sandy_BGDUO_125_G,
-	CardIds.Vaelastrasz,
-	CardIds.Vaelastrasz_G,
+	CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy,
+	CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G,
 ];
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,

@@ -38,8 +38,8 @@ export const modifyAttack = (
 		return;
 	}
 
-	if (entity.cardId === CardIds.LocPrince || entity.cardId === CardIds.LocPrince_G) {
-		const buff = entity.cardId === CardIds.LocPrince_G ? 4 : 2;
+	if (entity.cardId === CardIds.LocPrince_BG29_889 || entity.cardId === CardIds.LocPrince_BG29_889_G) {
+		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 4 : 2;
 		amount += buff;
 		// TODO: how to handle the health buff here? If we also buff the health via modifyHealth
 		// afterwards, that's ok. Otherwise, we will miss on health buff triggers
@@ -92,9 +92,13 @@ export const modifyAttack = (
 
 	// Sinestra
 	friendlyBoard
-		.filter((e) => e.cardId === CardIds.Sinestra || e.cardId === CardIds.Sinestra_G)
+		.filter(
+			(e) =>
+				e.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy ||
+				e.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G,
+		)
 		.forEach((sinestra) => {
-			const buff = sinestra.cardId === CardIds.Sinestra_G ? 2 : 1;
+			const buff = sinestra.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 2 : 1;
 			modifyHealth(entity, buff, friendlyBoard, friendlyBoardHero, gameState);
 			onStatsUpdate(entity, friendlyBoard, friendlyBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(sinestra, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
@@ -149,8 +153,8 @@ export const modifyHealth = (
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	if (entity.cardId === CardIds.LocPrince || entity.cardId === CardIds.LocPrince_G) {
-		const buff = entity.cardId === CardIds.LocPrince_G ? 4 : 2;
+	if (entity.cardId === CardIds.LocPrince_BG29_889 || entity.cardId === CardIds.LocPrince_BG29_889_G) {
+		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 4 : 2;
 		amount += buff;
 		// TODO: how to handle the attack buff here? If we also buff the health via modifyHealth
 		// afterwards, that's ok. Otherwise, we will miss on health buff triggers

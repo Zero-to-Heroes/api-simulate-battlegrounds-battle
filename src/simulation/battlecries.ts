@@ -129,14 +129,14 @@ export const triggerBattlecry = (
 					Race[Race.PIRATE],
 				);
 				break;
-			case CardIds.CrowsNestSentry:
-			case CardIds.CrowsNestSentry_G:
+			case CardIds.CrowsNestSentry_BG29_502:
+			case CardIds.CrowsNestSentry_BG29_502_G:
 				addStatsToBoard(
 					entity,
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
 					0,
-					entity.cardId === CardIds.CrowsNestSentry ? 3 : 6,
+					entity.cardId === CardIds.CrowsNestSentry_BG29_502 ? 3 : 6,
 					gameState,
 					Race[Race.PIRATE],
 				);
@@ -747,20 +747,22 @@ export const triggerBattlecry = (
 					gameState.spectator.registerPowerTarget(entity, conductorTarget, targetBoard, hero, otherHero);
 				}
 				break;
-			case CardIds.FacelessOne:
-			case CardIds.FacelessOne_G:
-				const facelessOneCardsToAdd = entity.cardId === CardIds.FacelessOne_G ? [null] : [null, null];
+			case CardIds.FacelessOne_BGDUO_HERO_100_Buddy:
+			case CardIds.FacelessOne_BGDUO_HERO_100_Buddy_G:
+				const facelessOneCardsToAdd =
+					entity.cardId === CardIds.FacelessOne_BGDUO_HERO_100_Buddy ? [null] : [null, null];
 				addCardsInHand(hero, board, facelessOneCardsToAdd, gameState);
 				break;
-			case CardIds.Phyresz:
-			case CardIds.Phyresz_G:
-				const phyreszCardsToAdd = entity.cardId === CardIds.Phyresz_G ? [null] : [null, null];
+			case CardIds.Phyresz_TB_BaconShop_HERO_91_Buddy:
+			case CardIds.Phyresz_TB_BaconShop_HERO_91_Buddy_G:
+				const phyreszCardsToAdd =
+					entity.cardId === CardIds.Phyresz_TB_BaconShop_HERO_91_Buddy ? [null] : [null, null];
 				addCardsInHand(hero, board, phyreszCardsToAdd, gameState);
 				break;
-			case CardIds.Muckslinger:
-			case CardIds.Muckslinger_G:
+			case CardIds.Muckslinger_TB_BaconShop_HERO_23_Buddy:
+			case CardIds.Muckslinger_TB_BaconShop_HERO_23_Buddy_G:
 				const muckslingerCardsToAdd =
-					entity.cardId === CardIds.Muckslinger
+					entity.cardId === CardIds.Muckslinger_TB_BaconShop_HERO_23_Buddy
 						? [pickRandom(gameState.cardsData.battlecryMinions)]
 						: [
 								pickRandom(gameState.cardsData.battlecryMinions),
@@ -768,10 +770,10 @@ export const triggerBattlecry = (
 						  ];
 				addCardsInHand(hero, board, muckslingerCardsToAdd, gameState);
 				break;
-			case CardIds.BarrensBrawler:
-			case CardIds.BarrensBrawler_G:
+			case CardIds.BarrensBrawler_BG29_861:
+			case CardIds.BarrensBrawler_BG29_861_G:
 				const barrendsBrawlerCardsToAdd =
-					entity.cardId === CardIds.BarrensBrawler
+					entity.cardId === CardIds.BarrensBrawler_BG29_861
 						? [pickRandom(gameState.cardsData.deathrattleMinions)]
 						: [
 								pickRandom(gameState.cardsData.deathrattleMinions),
@@ -779,9 +781,9 @@ export const triggerBattlecry = (
 						  ];
 				addCardsInHand(hero, board, barrendsBrawlerCardsToAdd, gameState);
 				break;
-			case CardIds.Vaelastrasz:
-			case CardIds.Vaelastrasz_G:
-				const vaelastraszBonus = entity.cardId === CardIds.Vaelastrasz_G ? 4 : 2;
+			case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy:
+			case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G:
+				const vaelastraszBonus = entity.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 4 : 2;
 				board
 					.filter((e) => e.entityId !== entity.entityId)
 					.forEach((e) => {
