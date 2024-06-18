@@ -557,11 +557,10 @@ const performAttack = (
 			attackingEntity.cardId === CardIds.WildfireElemental_TB_BaconUps_166)
 	) {
 		const excessDamage = -defendingEntity.health;
-		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		// console.log('neighbours', stringifySimple(neighbours, allCards));
-		if (neighbours.length > 0) {
+		if (defenderNeighbours.length > 0) {
 			if (attackingEntity.cardId === CardIds.WildfireElemental_BGS_126) {
-				const randomTarget = neighbours[Math.floor(Math.random() * neighbours.length)];
+				const randomTarget = defenderNeighbours[Math.floor(Math.random() * defenderNeighbours.length)];
 				damageDoneByAttacker += dealDamageToMinion(
 					randomTarget,
 					defendingBoard,
@@ -573,7 +572,7 @@ const performAttack = (
 					gameState,
 				);
 			} else {
-				damageDoneByAttacker += neighbours
+				damageDoneByAttacker += defenderNeighbours
 					.map((neighbour) =>
 						dealDamageToMinion(
 							neighbour,
