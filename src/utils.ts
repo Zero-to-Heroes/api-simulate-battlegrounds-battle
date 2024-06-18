@@ -385,27 +385,12 @@ export const grantStatsToMinionsOfEachType = (
 	numberOfDifferentTypes = 99,
 	canRevive = true,
 ): void => {
-	if (board.length > 0) {
-		let boardCopy = [...board];
-		const allRaces = shuffleArray(ALL_BG_RACES);
-		let typesBuffed = 0;
-		for (const tribe of allRaces) {
-			if (typesBuffed >= numberOfDifferentTypes) {
-				return;
-			}
-
-			const validMinion: BoardEntity = canRevive
-				? getRandomRevivableMinion(boardCopy, tribe, gameState.allCards)
-				: getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
-			if (validMinion) {
-				modifyAttack(validMinion, attack, board, hero, gameState);
-				modifyHealth(validMinion, health, board, hero, gameState);
-				onStatsUpdate(validMinion, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(source, validMinion, board, null, null);
-				boardCopy = boardCopy.filter((e) => e !== validMinion);
-				typesBuffed++;
-			}
-		}
+	const minionsToBuff = getMinionsOfDifferentTypes(board, gameState, canRevive, numberOfDifferentTypes);
+	for (const entity of minionsToBuff) {
+		modifyAttack(entity, attack, board, hero, gameState);
+		modifyHealth(entity, health, board, hero, gameState);
+		onStatsUpdate(entity, board, hero, gameState);
+		gameState.spectator.registerPowerTarget(source, entity, board, null, null);
 	}
 };
 
@@ -413,6 +398,7 @@ export const getMinionsOfDifferentTypes = (
 	board: BoardEntity[],
 	gameState: FullGameState,
 	canRevive = true,
+	numberOfDifferentTypes = 99,
 ): BoardEntity[] => {
 	const result: BoardEntity[] = [];
 	if (board.length > 0) {
@@ -422,12 +408,15 @@ export const getMinionsOfDifferentTypes = (
 		for (let i = 1; i <= 2; i++) {
 			const minionsWithRaces = boardCopy.filter((e) => gameState.allCards.getCard(e.cardId).races?.length === i);
 			for (const tribe of allRaces) {
-				const tribeStr = Race[tribe];
-				const minionWithRevive = getRandomRevivableMinion(boardCopy, tribe, gameState.allCards);
-				const boardDebug = minionsWithRaces.map((e) => ({
-					name: gameState.allCards.getCard(e.cardId).name,
-					races: gameState.allCards.getCard(e.cardId).races?.join(','),
-				}));
+				if (typesBuffed >= numberOfDifferentTypes) {
+					return result;
+				}
+				// const tribeStr = Race[tribe];
+				// const minionWithRevive = getRandomRevivableMinion(boardCopy, tribe, gameState.allCards);
+				// const boardDebug = minionsWithRaces.map((e) => ({
+				// 	name: gameState.allCards.getCard(e.cardId).name,
+				// 	races: gameState.allCards.getCard(e.cardId).races?.join(','),
+				// }));
 				const validMinion: BoardEntity = canRevive
 					? getRandomRevivableMinion(minionsWithRaces, tribe, gameState.allCards)
 					: getRandomAliveMinion(minionsWithRaces, tribe, gameState.allCards);
