@@ -1695,14 +1695,16 @@ const applyQirajiHarbringerEffect = (
 ): void => {
 	const qiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger_BGS_112);
 	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger_TB_BaconUps_303);
-	const neighbours = getNeighbours(board, null, deadEntityIndexFromRight);
 
 	// TODO: if reactivated, properly apply buffs one by one, instead of all together
-	neighbours.forEach((entity) => {
-		modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, hero, gameState);
-		modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, hero, gameState);
-		onStatsUpdate(entity, board, hero, gameState);
-	});
+	if (qiraji.length + goldenQiraji.length > 0) {
+		const neighbours = getNeighbours(board, null, deadEntityIndexFromRight);
+		neighbours.forEach((entity) => {
+			modifyAttack(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, hero, gameState);
+			modifyHealth(entity, 2 * qiraji.length + 4 * goldenQiraji.length, board, hero, gameState);
+			onStatsUpdate(entity, board, hero, gameState);
+		});
+	}
 };
 
 export const applyMonstrosity = (
