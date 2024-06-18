@@ -1,4 +1,4 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { addStatsToBoard } from '../utils';
@@ -106,7 +106,6 @@ export const handleRebornForEntity = (
 					multiplier * 1,
 					multiplier * 3,
 					gameState,
-					Race[Race.UNDEAD],
 				);
 			});
 		boardWithKilledMinion
