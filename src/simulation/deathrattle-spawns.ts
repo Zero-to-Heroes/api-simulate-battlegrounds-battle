@@ -1534,7 +1534,7 @@ export const spawnEntitiesFromDeathrattle = (
 						(e) => e.friendly === deadEntity.friendly,
 					);
 					const types = getMinionsOfDifferentTypes(friendlyDeadEntities, gameState);
-					const constaridAtrocityStats = aridAtrocityStatsMultiplier * types.length;
+					const constaridAtrocityStats = aridAtrocityStatsMultiplier * 7 * types.length;
 					spawnedEntities.push(
 						...spawnEntities(
 							deadEntityCardId === CardIds.AridAtrocity_BG29_864_G
@@ -1555,8 +1555,8 @@ export const spawnEntitiesFromDeathrattle = (
 							true,
 						).map((e) => ({
 							...e,
-							attack: constaridAtrocityStats,
-							health: constaridAtrocityStats,
+							attack: e.attack + constaridAtrocityStats,
+							health: e.health + constaridAtrocityStats,
 						})),
 					);
 					break;

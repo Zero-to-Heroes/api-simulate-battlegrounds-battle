@@ -420,6 +420,12 @@ export const getMinionsOfDifferentTypes = (
 		const allRaces = shuffleArray(ALL_BG_RACES);
 		let typesBuffed = 0;
 		for (const tribe of allRaces) {
+			const tribeStr = Race[tribe];
+			const minionWithRevive = getRandomRevivableMinion(boardCopy, tribe, gameState.allCards);
+			const boardDebug = boardCopy.map((e) => ({
+				name: gameState.allCards.getCard(e.cardId).name,
+				races: gameState.allCards.getCard(e.cardId).races?.join(','),
+			}));
 			const validMinion: BoardEntity = canRevive
 				? getRandomRevivableMinion(boardCopy, tribe, gameState.allCards)
 				: getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
