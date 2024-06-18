@@ -2,7 +2,6 @@
 import { ALL_BG_RACES, AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { START_OF_COMBAT_CARD_IDS } from '../cards/cards-data';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
 import {
 	addImpliedMechanics,
@@ -326,10 +325,10 @@ const handleStartOfCombatMinions = (
 	gameState: FullGameState,
 ): number => {
 	let attackerForStart = currentAttacker;
-	const playerAttackers = playerBoard.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
-	const opponentAttackers = opponentBoard.filter((entity) =>
-		START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds),
-	);
+	const playerAttackers = [...playerBoard]; //.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
+	const opponentAttackers = [...opponentBoard]; //.filter((entity) =>
+	// 	START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds),
+	// );
 
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		if (attackerForStart === 0 && playerAttackers.length > 0) {

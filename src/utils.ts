@@ -419,20 +419,23 @@ export const getMinionsOfDifferentTypes = (
 		let boardCopy = [...board];
 		const allRaces = shuffleArray(ALL_BG_RACES);
 		let typesBuffed = 0;
-		for (const tribe of allRaces) {
-			const tribeStr = Race[tribe];
-			const minionWithRevive = getRandomRevivableMinion(boardCopy, tribe, gameState.allCards);
-			const boardDebug = boardCopy.map((e) => ({
-				name: gameState.allCards.getCard(e.cardId).name,
-				races: gameState.allCards.getCard(e.cardId).races?.join(','),
-			}));
-			const validMinion: BoardEntity = canRevive
-				? getRandomRevivableMinion(boardCopy, tribe, gameState.allCards)
-				: getRandomAliveMinion(boardCopy, tribe, gameState.allCards);
-			if (validMinion) {
-				result.push(validMinion);
-				boardCopy = boardCopy.filter((e) => e !== validMinion);
-				typesBuffed++;
+		for (let i = 1; i <= 2; i++) {
+			const minionsWithRaces = boardCopy.filter((e) => gameState.allCards.getCard(e.cardId).races?.length === i);
+			for (const tribe of allRaces) {
+				const tribeStr = Race[tribe];
+				const minionWithRevive = getRandomRevivableMinion(boardCopy, tribe, gameState.allCards);
+				const boardDebug = minionsWithRaces.map((e) => ({
+					name: gameState.allCards.getCard(e.cardId).name,
+					races: gameState.allCards.getCard(e.cardId).races?.join(','),
+				}));
+				const validMinion: BoardEntity = canRevive
+					? getRandomRevivableMinion(minionsWithRaces, tribe, gameState.allCards)
+					: getRandomAliveMinion(minionsWithRaces, tribe, gameState.allCards);
+				if (validMinion) {
+					result.push(validMinion);
+					boardCopy = boardCopy.filter((e) => e !== validMinion);
+					typesBuffed++;
+				}
 			}
 		}
 	}
@@ -533,7 +536,7 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/reborn=${entity.reborn}` : null;
+	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/atk=${entity.attack}` : null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {
