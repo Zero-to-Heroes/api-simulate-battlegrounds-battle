@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
@@ -19,6 +19,7 @@ import {
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
+	hasMechanic,
 	isCorrectTribe,
 	isFish,
 	isGolden,
@@ -119,7 +120,11 @@ export const handleDeathrattleEffects = (
 			case CardIds.RylakMetalhead_BG26_801_G:
 				// const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
-					const allNeighbours = getNeighbours(boardWithDeadEntity, deadEntity, deadEntityIndexFromRight);
+					const allNeighbours = getNeighbours(
+						boardWithDeadEntity,
+						deadEntity,
+						deadEntityIndexFromRight,
+					).filter((e) => hasMechanic(gameState.allCards.getCard(e.cardId), GameTag[GameTag.BATTLECRY]));
 					const neighbours =
 						deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G
 							? allNeighbours
