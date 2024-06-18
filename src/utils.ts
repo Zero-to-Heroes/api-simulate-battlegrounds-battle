@@ -402,12 +402,14 @@ export const getMinionsOfDifferentTypes = (
 ): BoardEntity[] => {
 	const result: BoardEntity[] = [];
 	if (board.length > 0) {
-		let boardCopy = [...board];
+		let boardCopy = board.filter((e) => !gameState.allCards.getCard(e.cardId).races?.includes(Race[Race.ALL]));
 		const allRaces = shuffleArray(ALL_BG_RACES);
 		let typesBuffed = 0;
 		for (let i = 1; i <= 2; i++) {
-			const minionsWithRaces = boardCopy.filter((e) => gameState.allCards.getCard(e.cardId).races?.length === i);
 			for (const tribe of allRaces) {
+				const minionsWithRaces = boardCopy.filter(
+					(e) => gameState.allCards.getCard(e.cardId).races?.length === i,
+				);
 				if (typesBuffed >= numberOfDifferentTypes) {
 					return result;
 				}
@@ -427,6 +429,7 @@ export const getMinionsOfDifferentTypes = (
 				}
 			}
 		}
+		result.push(...board.filter((e) => gameState.allCards.getCard(e.cardId).races?.includes(Race[Race.ALL])));
 	}
 	return result;
 };

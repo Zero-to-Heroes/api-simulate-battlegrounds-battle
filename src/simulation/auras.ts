@@ -193,8 +193,13 @@ export const setImplicitDataHero = (
 	hero.globalInfo.TavernSpellsCastThisGame = hero.globalInfo.TavernSpellsCastThisGame ?? 0;
 	hero.globalInfo.UndeadAttackBonus = hero.globalInfo.UndeadAttackBonus ?? 0;
 	hero.globalInfo.FrostlingBonus = hero.globalInfo.FrostlingBonus ?? 0;
-	hero.globalInfo.BloodGemAttackBonus = hero.globalInfo.BloodGemAttackBonus ?? 0;
-	hero.globalInfo.BloodGemHealthBonus = hero.globalInfo.BloodGemHealthBonus ?? 0;
+	hero.globalInfo.BloodGemAttackBonus =
+		(hero.globalInfo.BloodGemAttackBonus ?? 0) +
+		// Not sure why, but this isn't reflected in the player enchant
+		(hero.questRewardEntities?.filter((e) => e.cardId === CardIds.EndlessBloodMoon).length ?? 0);
+	hero.globalInfo.BloodGemHealthBonus =
+		(hero.globalInfo.BloodGemHealthBonus ?? 0) +
+		(hero.questRewardEntities?.filter((e) => e.cardId === CardIds.EndlessBloodMoon).length ?? 0);
 	hero.globalInfo.GoldrinnBuffAtk = hero.globalInfo.GoldrinnBuffAtk ?? 0;
 	hero.globalInfo.GoldrinnBuffHealth = hero.globalInfo.GoldrinnBuffHealth ?? 0;
 };
