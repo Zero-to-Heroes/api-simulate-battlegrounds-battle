@@ -74,20 +74,30 @@ export const handleRebornForEntity = (
 		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
 	});
 
-	const arfus = boardWithKilledMinion
-		.filter((e) => e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy)
-		.map((e) => e.attack)
-		.reduce((a, b) => a + b, 0);
-	const goldenArfus = boardWithKilledMinion
-		.filter((e) => e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy_G)
-		.map((e) => 2 * e.attack)
-		.reduce((a, b) => a + b, 0);
-	if (arfus + goldenArfus > 0) {
-		entitiesThatWereReborn.forEach((e) => {
-			modifyAttack(e, arfus + goldenArfus, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-			onStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+	// Arfus
+	boardWithKilledMinion
+		.filter(
+			(e) =>
+				e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy ||
+				e.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy_G,
+		)
+		.forEach((arfus) => {
+			const multiplier = arfus.cardId === CardIds.Arfus_TB_BaconShop_HERO_22_Buddy_G ? 2 : 1;
+			const attackBonus = arfus.attack * multiplier;
+			entitiesThatWereReborn
+				.filter((e) => e.entityId !== arfus.entityId && e.rebornFromEntityId !== arfus.entityId)
+				.forEach((e) => {
+					modifyAttack(e, attackBonus, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+					onStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+					gameState.spectator.registerPowerTarget(
+						arfus,
+						e,
+						boardWithKilledMinion,
+						boardWithKilledMinionHero,
+						opponentBoardHero,
+					);
+				});
 		});
-	}
 
 	const numberOfTriggersForDeathwhisper = Math.min(entitiesThatWereReborn.length, 1);
 	for (let i = 0; i < numberOfTriggersForDeathwhisper; i++) {
