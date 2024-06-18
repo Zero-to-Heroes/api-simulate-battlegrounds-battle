@@ -1020,10 +1020,8 @@ const handleTeronForPlayer = (
 		// the index seems to be right-based at least in some cases
 		// Looks like even this is wrong:
 		// http://replays.firestoneapp.com/?reviewId=9a46ab39-ccf0-478c-a010-68f2abb06c6f&turn=9&action=0
-		// playerEntity.rapidReanimationIndexFromLeft =
-		// 	playerBoard.length > 1 && playerBoard.indexOf(minionThatWillDie) === 0 ? 0 : null;
-		playerEntity.rapidReanimationIndexFromRight =
-			playerEntity.rapidReanimationIndexFromLeft != null ? null : playerBoard.length - 1;
+		const rapidReanimationIndexFromLeft = playerBoard.indexOf(minionThatWillDie);
+		playerEntity.rapidReanimationIndexFromRight = playerBoard.length - 1 - rapidReanimationIndexFromLeft;
 		const minionToCopy = {
 			...minionThatWillDie,
 			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
