@@ -1725,7 +1725,17 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G
 	) {
 		// const iterations = attacker.cardId === CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G ? 2 : 1;
-		rememberDeathrattles(attacker, attackingBoard, gameState.cardsData, gameState.allCards, gameState.sharedState);
+		rememberDeathrattles(
+			attacker,
+			attackingBoard.filter(
+				(e) =>
+					e.cardId !== CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy &&
+					e.cardId !== CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G,
+			),
+			gameState.cardsData,
+			gameState.allCards,
+			gameState.sharedState,
+		);
 		gameState.spectator.registerPowerTarget(
 			attacker,
 			attacker,

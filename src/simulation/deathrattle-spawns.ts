@@ -510,7 +510,7 @@ export const spawnEntitiesFromDeathrattle = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.RatPack_RatToken_BG_CFM_316t,
-							deadEntity.attack,
+							Math.min(7, deadEntity.attack),
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,
@@ -528,7 +528,7 @@ export const spawnEntitiesFromDeathrattle = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.RatPack_RatToken_TB_BaconUps_027t,
-							deadEntity.attack,
+							Math.min(7, deadEntity.attack),
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,
