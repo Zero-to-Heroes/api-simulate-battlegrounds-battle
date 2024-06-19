@@ -181,25 +181,29 @@ export const makeMinionGolden = (
 	const refCard = gameState.allCards.getCard(target.cardId);
 	const goldenCard = gameState.allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
 	target.cardId = goldenCard.id;
+	const refGoldenCard = gameState.allCards.getCard(target.cardId);
 	// A minion becoming golden ignore the current death.
 	// This way of handling it is not ideal, since it will still trigger if both avenges trigger at the same time, but
 	// should solve the other cases
 	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
+	// The rule for golden minions is to add the base stats
 	modifyAttack(target, refCard.attack, targetBoard, targetBoardHero, gameState);
 	modifyHealth(target, refCard.health, targetBoard, targetBoardHero, gameState);
 	onStatsUpdate(target, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
-	const hasDivineShield = target.divineShield;
+	// const hasDivineShield = target.divineShield;
 	addImpliedMechanics(target, gameState.cardsData);
 
 	// addImpliedMechanics grants divine shield if the card has divine shield, or if the entity had
 	// it at some point. That means that when we gild Zilliax: Defense Module (with Divine Shield) into
 	// Zilliaw: Assembled, we restore the divine shield, while we shouldn't
-	target.divineShield =
-		hasDivineShield ||
-		gameState.allCards.getCard(target.cardId).mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
+	target.divineShield = refGoldenCard.mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
+	target.reborn = refGoldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
+	target.windfury = refGoldenCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
+	target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
+	target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
 
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 
