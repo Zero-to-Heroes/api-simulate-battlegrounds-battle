@@ -187,9 +187,13 @@ export const makeMinionGolden = (
 	// should solve the other cases
 	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
 	// The rule for golden minions is to add the base stats
-	modifyAttack(target, refCard.attack, targetBoard, targetBoardHero, gameState);
-	modifyHealth(target, refCard.health, targetBoard, targetBoardHero, gameState);
-	onStatsUpdate(target, targetBoard, targetBoardHero, gameState);
+	// TO CHECK: not sure that this is what actually happens (i.e. do minions that trigger on stats modifications
+	// trigger?)
+	target.attack += refCard.attack;
+	target.health += refCard.health;
+	// modifyAttack(target, refCard.attack, targetBoard, targetBoardHero, gameState);
+	// modifyHealth(target, refCard.health, targetBoard, targetBoardHero, gameState);
+	// onStatsUpdate(target, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);

@@ -1667,6 +1667,7 @@ export const spawnEntitiesFromEnchantments = (
 	const spawnedEntities: BoardEntity[] = [];
 	for (const enchantment of deadEntity.enchantments || []) {
 		for (let i = 0; i < multiplier; i++) {
+			let deathrattleTriggered = true;
 			switch (enchantment.cardId) {
 				case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
 				case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
@@ -1857,6 +1858,19 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
+				default:
+					deathrattleTriggered = false;
+					break;
+			}
+			if (deathrattleTriggered) {
+				onDeathrattleTriggered({
+					boardWithDeadEntity: boardWithDeadEntity,
+					boardWithDeadEntityHero: boardWithDeadEntityHero,
+					deadEntity: deadEntity,
+					otherBoard: otherBoard,
+					otherBoardHero: otherBoardHero,
+					gameState: gameState,
+				});
 			}
 		}
 	}
