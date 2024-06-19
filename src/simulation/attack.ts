@@ -909,11 +909,8 @@ export const getDefendingEntity = (
 	attackingEntity: BoardEntity,
 	ignoreTaunts = false,
 ): BoardEntity => {
-	// if (attackingEntity.entityId === 2029) {
-	// 	return defendingBoard.find((e) => e.entityId === 1399);
-	// }
-	// if (attackingEntity.entityId === 2040) {
-	// 	return defendingBoard.find((e) => e.entityId === 2042);
+	// if (attackingEntity.entityId === 10133) {
+	// 	return defendingBoard.find((e) => e.entityId === 8274);
 	// }
 
 	let possibleDefenders: readonly BoardEntity[];

@@ -119,10 +119,22 @@ export const buildSingleBoardEntity = (
 		}
 		newEntity.health = 1;
 		newEntity.reborn = false;
+		newEntity.scriptDataNum1 = getScriptDataNum1(cardId, originalEntity);
 	}
 
 	newEntity.hadDivineShield = newEntity.divineShield || newEntity.hadDivineShield;
 	return newEntity;
+};
+
+const getScriptDataNum1 = (cardId: string, originalEntity: BoardEntity): number => {
+	switch (cardId) {
+		case CardIds.OctosariWrapGod_BG26_804:
+			return 8;
+		case CardIds.OctosariWrapGod_BG26_804_G:
+			return 16;
+		default:
+			return 0;
+	}
 };
 
 export const buildRandomUndeadCreation = (

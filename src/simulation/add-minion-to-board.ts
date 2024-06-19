@@ -617,8 +617,10 @@ const handleAfterSpawnEffect = (
 				break;
 			case CardIds.OctosariWrapGod_BG26_804:
 			case CardIds.OctosariWrapGod_BG26_804_G:
-				const octoStats = entity.cardId === CardIds.OctosariWrapGod_BG26_804_G ? 4 : 2;
-				entity.scriptDataNum1 += octoStats;
+				if (entity.entityId !== spawned.entityId) {
+					const octoStats = entity.cardId === CardIds.OctosariWrapGod_BG26_804_G ? 4 : 2;
+					entity.scriptDataNum1 = (entity.scriptDataNum1 ?? 0) + octoStats;
+				}
 				break;
 			case CardIds.BananaSlamma_BG26_802:
 			case CardIds.BananaSlamma_BG26_802_G:

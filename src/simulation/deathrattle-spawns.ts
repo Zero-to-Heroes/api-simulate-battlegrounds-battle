@@ -1332,8 +1332,8 @@ export const spawnEntitiesFromDeathrattle = (
 						false,
 					);
 					octoSpawns.forEach((b) => {
-						b.attack += stats;
-						b.health += stats;
+						b.attack = stats;
+						b.health = stats;
 					});
 					spawnedEntities.push(...octoSpawns);
 					break;
