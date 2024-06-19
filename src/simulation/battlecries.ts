@@ -69,11 +69,13 @@ export const triggerBattlecry = (
 			case CardIds.RockpoolHunter_BG_UNG_073:
 			case CardIds.RockpoolHunter_TB_BaconUps_061:
 				const rockPoolTarget = getRandomAliveMinion(board, Race.MURLOC, gameState.allCards);
-				const rockpoolStats = entity.cardId === CardIds.RockpoolHunter_BG_UNG_073 ? 1 : 2;
-				modifyAttack(rockPoolTarget, rockpoolStats, board, hero, gameState);
-				modifyHealth(rockPoolTarget, rockpoolStats, board, hero, gameState);
-				onStatsUpdate(rockPoolTarget, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(entity, rockPoolTarget, board, hero, otherHero);
+				if (!!rockPoolTarget) {
+					const rockpoolStats = entity.cardId === CardIds.RockpoolHunter_BG_UNG_073 ? 1 : 2;
+					modifyAttack(rockPoolTarget, rockpoolStats, board, hero, gameState);
+					modifyHealth(rockPoolTarget, rockpoolStats, board, hero, gameState);
+					onStatsUpdate(rockPoolTarget, board, hero, gameState);
+					gameState.spectator.registerPowerTarget(entity, rockPoolTarget, board, hero, otherHero);
+				}
 				break;
 			case CardIds.ShellCollector_BG23_002:
 			case CardIds.ShellCollector_BG23_002_G:
