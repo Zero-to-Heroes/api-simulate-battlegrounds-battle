@@ -120,6 +120,10 @@ export const buildSingleBoardEntity = (
 		newEntity.health = 1;
 		newEntity.reborn = false;
 		newEntity.scriptDataNum1 = getScriptDataNum1(cardId, originalEntity);
+
+		// For ghoul-acabra + reborn
+		newEntity.attack += originalEntity.permanentAttack ?? 0;
+		newEntity.health += originalEntity.permanentHealth ?? 0;
 	}
 
 	newEntity.hadDivineShield = newEntity.divineShield || newEntity.hadDivineShield;
@@ -400,6 +404,7 @@ export const addStatsToBoard = (
 	health: number,
 	gameState: FullGameState,
 	tribe?: string,
+	permanentUpgrade = false,
 ): void => {
 	for (const entity of board) {
 		if (!tribe || hasCorrectTribe(entity, Race[tribe], gameState.allCards)) {
@@ -407,6 +412,10 @@ export const addStatsToBoard = (
 			modifyHealth(entity, health, board, hero, gameState);
 			onStatsUpdate(entity, board, hero, gameState);
 			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
+			if (permanentUpgrade) {
+				entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
+				entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
+			}
 		}
 	}
 };

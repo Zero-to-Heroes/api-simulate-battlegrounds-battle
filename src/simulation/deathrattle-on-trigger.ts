@@ -40,6 +40,8 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 				buff,
 				buff,
 				input.gameState,
+				null,
+				true, // http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
 			);
 		});
 };
