@@ -191,7 +191,15 @@ export const makeMinionGolden = (
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
+	const hasDivineShield = target.divineShield;
 	addImpliedMechanics(target, gameState.cardsData);
+
+	// addImpliedMechanics grants divine shield if the card has divine shield, or if the entity had
+	// it at some point. That means that when we gild Zilliax: Defense Module (with Divine Shield) into
+	// Zilliaw: Assembled, we restore the divine shield, while we shouldn't
+	target.divineShield =
+		hasDivineShield ||
+		gameState.allCards.getCard(target.cardId).mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
 
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 
