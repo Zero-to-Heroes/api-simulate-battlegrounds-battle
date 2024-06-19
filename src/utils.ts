@@ -175,11 +175,17 @@ export const makeMinionGolden = (
 		return;
 	}
 
+	gameState.spectator.registerPowerTarget(source, target, targetBoard, null, null);
+
 	// console.log('before transforming minion', stringifySimple(targetBoard, allCards));
 	handleMinionRemovedAuraEffect(targetBoard, target, targetBoardHero, gameState.allCards, gameState.spectator);
 	// console.log('after removed effect', stringifySimple(targetBoard, allCards));
 	const refCard = gameState.allCards.getCard(target.cardId);
-	const goldenCard = gameState.allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+	let goldenCard = gameState.allCards.getCardFromDbfId(refCard.battlegroundsPremiumDbfId);
+	// Happens when there is no dedicated golden card, like for the Bettle token from Boon of Beetles
+	if (!goldenCard?.id) {
+		goldenCard = refCard;
+	}
 	target.cardId = goldenCard.id;
 	const refGoldenCard = gameState.allCards.getCard(target.cardId);
 	// A minion becoming golden ignore the current death.
@@ -210,13 +216,13 @@ export const makeMinionGolden = (
 	target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
 
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
-
-	gameState.spectator.registerPowerTarget(source, target, targetBoard, null, null);
 };
 
 export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): boolean => {
 	const ref = allCards.getCard(entity.cardId);
-	return !ref.battlegroundsPremiumDbfId;
+	// Some cards (like the Bettle token from Boon of Beetles) don't have a premium dbf id. However, we can still
+	// gild it
+	return !!ref.battlegroundsNormalDbfId;
 	// Why this condition?
 	// || !allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
 };
