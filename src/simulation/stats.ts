@@ -196,9 +196,9 @@ export const modifyHealth = (
 		);
 	titanicGuardians.forEach((guardian) => {
 		const buff = (guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount;
-		entity.health += buff;
 		if (buff > 0) {
-			entity.maxHealth += buff;
+			guardian.health += buff;
+			guardian.maxHealth += buff;
 		}
 	});
 };
