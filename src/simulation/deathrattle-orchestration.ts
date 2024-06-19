@@ -1,6 +1,6 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { hasCorrectTribe } from '../utils';
+import { addStatsToBoard, hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
 import { applyMinionDeathEffect, handleDeathrattleEffects } from './deathrattle-effects';
@@ -493,13 +493,13 @@ const handlePostDeathrattleEffects = (deathrattleInput: DeathrattleInput, entiti
 	// Process one player first, then the other
 	for (let i = 0; i < 2; i++) {
 		const deadEntities = playerDeadEntities[i];
+		const deadEntityPlayerState = playerStates[i];
+		const otherPlayerState = playerStates[1 - i];
 		if (deadEntities.length >= 0) {
 			for (let j = 0; j < deadEntities.length; j++) {
 				const deadEntity = deadEntities[j];
 				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
 				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
-				const deadEntityPlayerState = playerStates[i];
-				const otherPlayerState = playerStates[1 - i];
 				handlePostDeathrattleEffect(
 					deadEntity,
 					indexFromRight,
@@ -513,6 +513,25 @@ const handlePostDeathrattleEffects = (deathrattleInput: DeathrattleInput, entiti
 				);
 			}
 		}
+
+		deadEntityPlayerState.board
+			.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
+			.forEach((ghoul) => {
+				// These are apparently processed after Reborn is triggered
+				// // http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
+				for (let k = 0; k < ghoul.scriptDataNum1 ?? 0; k++) {
+					const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
+					addStatsToBoard(
+						ghoul,
+						deadEntityPlayerState.board,
+						deadEntityPlayerState.player,
+						buff,
+						buff,
+						deathrattleInput.gameState,
+					);
+				}
+				ghoul.scriptDataNum1 = 0;
+			});
 	}
 };
 

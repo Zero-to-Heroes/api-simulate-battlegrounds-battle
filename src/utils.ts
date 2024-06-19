@@ -122,8 +122,8 @@ export const buildSingleBoardEntity = (
 		newEntity.scriptDataNum1 = getScriptDataNum1(cardId, originalEntity);
 
 		// For ghoul-acabra + reborn
-		newEntity.attack += originalEntity.permanentAttack ?? 0;
-		newEntity.health += originalEntity.permanentHealth ?? 0;
+		// newEntity.attack += originalEntity.permanentAttack ?? 0;
+		// newEntity.health += originalEntity.permanentHealth ?? 0;
 	}
 
 	newEntity.hadDivineShield = newEntity.divineShield || newEntity.hadDivineShield;
@@ -219,17 +219,19 @@ export const makeMinionGolden = (
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
-	// const hasDivineShield = target.divineShield;
+	const hasDivineShield = target.divineShield;
 	addImpliedMechanics(target, gameState.cardsData);
 
 	// addImpliedMechanics grants divine shield if the card has divine shield, or if the entity had
 	// it at some point. That means that when we gild Zilliax: Defense Module (with Divine Shield) into
 	// Zilliaw: Assembled, we restore the divine shield, while we shouldn't
-	target.divineShield = refGoldenCard.mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
-	target.reborn = refGoldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
-	target.windfury = refGoldenCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
-	target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
-	target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
+	target.divineShield = hasDivineShield;
+	// Update 2024-06-19: Hat tested on one of their build, and gilding a zilliax module should NOT
+	// remove its divine shield / reborn status
+	// target.reborn = refGoldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
+	// target.windfury = refGoldenCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
+	// target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
+	// target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
 
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 };
@@ -404,7 +406,7 @@ export const addStatsToBoard = (
 	health: number,
 	gameState: FullGameState,
 	tribe?: string,
-	permanentUpgrade = false,
+	// permanentUpgrade = false,
 ): void => {
 	for (const entity of board) {
 		if (!tribe || hasCorrectTribe(entity, Race[tribe], gameState.allCards)) {
@@ -412,10 +414,10 @@ export const addStatsToBoard = (
 			modifyHealth(entity, health, board, hero, gameState);
 			onStatsUpdate(entity, board, hero, gameState);
 			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
-			if (permanentUpgrade) {
-				entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
-				entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
-			}
+			// if (permanentUpgrade) {
+			// 	entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
+			// 	entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
+			// }
 		}
 	}
 };

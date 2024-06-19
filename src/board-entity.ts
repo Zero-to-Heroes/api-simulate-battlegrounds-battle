@@ -51,8 +51,8 @@ export interface BoardEntity {
 	hadDivineShield?: boolean;
 	abiityChargesLeft?: number;
 
-	permanentAttack?: number;
-	permanentHealth?: number;
+	// permanentAttack?: number;
+	// permanentHealth?: number;
 
 	onCanceledSummon?: () => void;
 }
