@@ -5,7 +5,7 @@ import { buildSingleBoardEntity } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 
-export const handleSummonWhenSpace = (
+export const handleSummonsWhenSpace = (
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],

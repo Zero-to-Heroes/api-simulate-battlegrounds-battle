@@ -7,7 +7,7 @@ import { simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { handleStartOfCombat } from './start-of-combat';
-import { handleSummonWhenSpace as handleSummonsWhenSpace } from './summon-when-space';
+import { handleSummonsWhenSpace } from './summon-when-space';
 
 // New simulator should be instantiated for each match
 export class Simulator {

@@ -28,7 +28,7 @@ import { applyOnBeingAttackedBuffs } from './on-being-attacked';
 import { onQuestProgressUpdated } from './quest';
 import { performEntitySpawns } from './spawns';
 import { applyAfterStatsUpdate, modifyAttack, modifyHealth, onStatsUpdate } from './stats';
-import { handleSummonWhenSpace } from './summon-when-space';
+import { handleSummonsWhenSpace } from './summon-when-space';
 import { canAttack } from './utils/entity-utils';
 
 // Only use it to simulate actual attack. To simulate damage, or something similar, use bumpInto
@@ -1394,7 +1394,7 @@ export const processMinionDeath = (
 	processMinionDeath(board1, board1Hero, board2, board2Hero, gameState);
 
 	// Not sure about the timing here, but I have bothered Mitchell quite a lot already recently :)
-	handleSummonWhenSpace(board1, board1Hero, board2, board2Hero, gameState);
+	handleSummonsWhenSpace(board1, board1Hero, board2, board2Hero, gameState);
 
 	// Apply "after minion death" effects
 	handleAfterMinionsDeaths(board1, deadEntities1, board1Hero, board2, deadEntities2, board2Hero, gameState);

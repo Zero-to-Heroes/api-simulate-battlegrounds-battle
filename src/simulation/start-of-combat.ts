@@ -39,6 +39,7 @@ import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
 import { applyAfterStatsUpdate, modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { handleSummonsWhenSpace } from './summon-when-space';
 
 // TODO 20/04/2024: I'm not too sure about some ordering. The way I understand it, the Start of Combat has
 // multiple phases, and in each phase the player order is random
@@ -607,18 +608,8 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
 				secret.chargesLeft = 4;
-				// playerBoard.forEach((e) => {
-				// 	e.enchantments = e.enchantments || [];
-				// 	if (
-				// 		!e.enchantments.some((e) => e.cardId === CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e)
-				// 	) {
-				// 		e.enchantments.push({
-				// 			cardId: CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
-				// 			originEntityId: secret.entityId,
-				// 			timing: gameState.sharedState.currentEntityId++,
-				// 		});
-				// 	}
-				// });
+				// In case there is already room on the board
+				handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 				break;
 			case CardIds.FleetingVigor_BG28_519:
 				addStatsToBoard(secret, playerBoard, playerEntity, 2, 1, gameState);
