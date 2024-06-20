@@ -1,7 +1,6 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { addStatsToBoard } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 
@@ -36,14 +35,14 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 			// http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
 			ghoul.scriptDataNum1 = ghoul.scriptDataNum1 ?? 0;
 			ghoul.scriptDataNum1++;
-			const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
-			addStatsToBoard(
-				ghoul,
-				input.boardWithDeadEntity,
-				input.boardWithDeadEntityHero,
-				buff,
-				buff,
-				input.gameState,
-			);
+			// const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
+			// addStatsToBoard(
+			// 	ghoul,
+			// 	input.boardWithDeadEntity,
+			// 	input.boardWithDeadEntityHero,
+			// 	buff,
+			// 	buff,
+			// 	input.gameState,
+			// );
 		});
 };
