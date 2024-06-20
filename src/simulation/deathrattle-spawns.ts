@@ -1818,11 +1818,10 @@ export const spawnEntitiesFromEnchantments = (
 					);
 					break;
 				case CardIds.SneedsReplicator_ReplicateEnchantment:
+					const tavernTier = deadEntity.tavernTier ?? gameState.cardsData.getTavernLevel(deadEntity.cardId);
 					spawnedEntities.push(
 						...spawnEntities(
-							gameState.cardsData.getRandomMinionForTavernTier(
-								Math.max(1, gameState.cardsData.getTavernLevel(deadEntity.cardId) - 1),
-							),
+							gameState.cardsData.getRandomMinionForTavernTier(Math.max(1, tavernTier - 1)),
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

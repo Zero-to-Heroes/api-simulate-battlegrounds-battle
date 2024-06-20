@@ -401,6 +401,8 @@ const handleEnchantmentsDeathrattle = (
 			...deadEntity,
 			rememberedDeathrattles: undefined,
 			cardId: dr.cardId,
+			// So that cards that rely on the tavern tier use the base entity, and not the enchantment / remembered card
+			tavernTier: gameState.cardsData.getTavernLevel(deadEntity.cardId),
 			enchantments: [
 				{
 					cardId: dr.cardId,

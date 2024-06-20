@@ -53,6 +53,7 @@ export interface BoardEntity {
 
 	// permanentAttack?: number;
 	// permanentHealth?: number;
+	tavernTier?: number;
 
 	onCanceledSummon?: () => void;
 }
