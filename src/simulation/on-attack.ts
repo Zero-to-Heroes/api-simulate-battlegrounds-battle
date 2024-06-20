@@ -174,7 +174,8 @@ export const applyOnAttackBuffs = (
 				CardIds.EclipsionIllidari_TB_BaconShop_HERO_08_Buddy_G,
 			].includes(e.cardId as CardIds) && e.abiityChargesLeft > 0,
 	);
-	if (!!eclipsion) {
+	// Only once per minion
+	if (!!eclipsion && attacker.immuneWhenAttackCharges == null) {
 		attacker.immuneWhenAttackCharges = 1;
 		eclipsion.abiityChargesLeft--;
 	}

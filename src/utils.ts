@@ -509,7 +509,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 	entity.cantAttack = cantAttack;
 	entity.divineShield = entity.divineShield || entity.hadDivineShield;
 	entity.immuneWhenAttackCharges =
-		entity.cardId === CardIds.Warpwing_BG24_004 || entity.cardId === CardIds.Warpwing_BG24_004_G ? 99999 : 0;
+		entity.cardId === CardIds.Warpwing_BG24_004 || entity.cardId === CardIds.Warpwing_BG24_004_G ? 99999 : null;
 	entity.frenzyChargesLeft =
 		entity.cardId === CardIds.BristlebackKnight_BG20_204_G
 			? 2
