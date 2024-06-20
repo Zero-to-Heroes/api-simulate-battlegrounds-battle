@@ -102,13 +102,6 @@ export const simulateAttack = (
 		}
 		attackingEntity.attacking = false;
 		attackingEntity.hasAttacked = 1;
-		// // In case of Broodmother spawn, it spawns where the dead minion was, and has no influence on the
-		// // attack order
-		// if (!isAttackingImmediately) {
-		// 	// Make sure they won't be able to attack until everyone has attacked
-		// 	// See http://replays.firestoneapp.com/?reviewId=a1b3066d-e806-44c1-ab4b-7ef9dbf9b5b9&turn=5&action=4
-		// 	attackingEntitiesToTheLeft.forEach((entity) => (entity.hasAttacked = 2));
-		// }
 	}
 };
 

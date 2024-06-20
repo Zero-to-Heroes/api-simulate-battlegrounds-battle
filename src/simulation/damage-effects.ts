@@ -155,6 +155,11 @@ export const onEntityDamaged = (
 		otherHero,
 		gameState,
 	);
+
+	const entityRightToSpawns = board[board.indexOf(entity) + 1];
+	finalSpawns.forEach((e) => {
+		e.hasAttacked = entity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
+	});
 	return finalSpawns;
 };
 
