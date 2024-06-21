@@ -219,6 +219,7 @@ export const makeMinionGolden = (
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
 	const hasDivineShield = target.divineShield;
+	const hasReborn = target.reborn;
 	addImpliedMechanics(target, gameState.cardsData);
 
 	// addImpliedMechanics grants divine shield if the card has divine shield, or if the entity had
@@ -227,7 +228,9 @@ export const makeMinionGolden = (
 	target.divineShield = hasDivineShield;
 	// Update 2024-06-19: Hat tested on one of their build, and gilding a zilliax module should NOT
 	// remove its divine shield / reborn status
-	// target.reborn = refGoldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
+	// Gilding a reborn Risen Rider results into a golden Risen Rider with reborn
+	// http://replays.firestoneapp.com/?reviewId=c553c3e7-01e2-494d-80f8-69f33c08fb39&turn=7&action=4
+	target.reborn = hasReborn || refGoldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
 	// target.windfury = refGoldenCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
 	// target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	// target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
