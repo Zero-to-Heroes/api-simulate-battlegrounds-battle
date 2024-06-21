@@ -72,7 +72,7 @@ export const modifyStats = (
 			);
 			whelpSmugglers.forEach((smuggler) => {
 				const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
-				modifyStats(entity, buff, 0, friendlyBoard, friendlyBoardHero, gameState);
+				modifyStats(entity, 0, buff, friendlyBoard, friendlyBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					smuggler,
 					entity,
@@ -90,7 +90,7 @@ export const modifyStats = (
 					const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
 					// This is never called?
 					(e) => {
-						modifyStats(e, multiplier * realAttackAmount, 0, friendlyBoard, friendlyBoardHero, gameState);
+						e.attack += multiplier * realAttackAmount;
 						gameState.spectator.registerPowerTarget(
 							stormbringer,
 							entity,
@@ -112,7 +112,7 @@ export const modifyStats = (
 			)
 			.forEach((sinestra) => {
 				const buff = sinestra.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 2 : 1;
-				modifyStats(entity, buff, 0, friendlyBoard, friendlyBoardHero, gameState);
+				entity.attack += buff;
 				gameState.spectator.registerPowerTarget(
 					sinestra,
 					entity,
@@ -329,13 +329,7 @@ const onStatUpdateMinions = (
 				e.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G,
 		);
 	tentaclesOfCthun.forEach((tentacle) => {
-		modifyStats(
-			tentacle,
-			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
-			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
-			friendlyBoard,
-			friendlyBoardHero,
-			gameState,
-		);
+		tentacle.attack += tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1;
+		tentacle.health += tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1;
 	});
 };

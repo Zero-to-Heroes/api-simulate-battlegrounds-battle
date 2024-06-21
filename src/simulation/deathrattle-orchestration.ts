@@ -503,7 +503,11 @@ const handlePostDeathrattleEffects = (deathrattleInput: DeathrattleInput, entiti
 		const deadEntityPlayerState = playerStates[i];
 		const otherPlayerState = playerStates[1 - i];
 		if (deadEntities.length >= 0) {
-			for (let j = 0; j < deadEntities.length; j++) {
+			// Process from right to left, so that we can set the hasAttacked attribute properly
+			// If two minions die at the same time, both of which having attacked, but the third in line having not,
+			// processing them from left to right means the first (leftmost) one will check its right neighbor, which
+			// is the minion that hasn't attacked
+			for (let j = deadEntities.length - 1; j >= 0; j--) {
 				const deadEntity = deadEntities[j];
 				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
 				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
