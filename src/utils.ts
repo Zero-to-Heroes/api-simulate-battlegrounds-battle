@@ -202,8 +202,6 @@ export const makeMinionGolden = (
 	if (!goldenCard?.id) {
 		goldenCard = refCard;
 	}
-	target.cardId = goldenCard.id;
-	const refGoldenCard = gameState.allCards.getCard(target.cardId);
 	// A minion becoming golden ignore the current death.
 	// This way of handling it is not ideal, since it will still trigger if both avenges trigger at the same time, but
 	// should solve the other cases
@@ -215,6 +213,10 @@ export const makeMinionGolden = (
 	// of the +2 health bonus
 	// http://replays.firestoneapp.com/?reviewId=283dc44c-5fc8-40fb-af89-7d752a39f9b9&turn=7&action=1
 	modifyStats(target, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
+	// Only change the card ID after modifying the stats, so that some effects (like Tarecgosa) won't trigger
+	// too early
+	const refGoldenCard = gameState.allCards.getCard(target.cardId);
+	target.cardId = goldenCard.id;
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
