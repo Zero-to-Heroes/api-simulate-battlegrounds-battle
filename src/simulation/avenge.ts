@@ -355,7 +355,7 @@ const handleAvenge = (
 			for (let i = 0; i < bristlebachMultiplier; i++) {
 				for (const entity of boardWithDeadEntity) {
 					if (hasCorrectTribe(entity, Race.QUILBOAR, gameState.allCards)) {
-						playBloodGemsOn(entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+						playBloodGemsOn(avenger, entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 						gameState.spectator.registerPowerTarget(
 							avenger,
 							entity,

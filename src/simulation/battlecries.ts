@@ -225,7 +225,7 @@ export const triggerBattlecry = (
 				// console.debug('triggering necrolyte', entity.entityId);
 				const necrolyteBloodGems = entity.cardId === CardIds.Necrolyte_BG20_202 ? 2 : 4;
 				const necrolyteTarget = pickRandom(board);
-				playBloodGemsOn(necrolyteTarget, necrolyteBloodGems, board, hero, gameState);
+				playBloodGemsOn(entity, necrolyteTarget, necrolyteBloodGems, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(entity, necrolyteTarget, board, hero, otherHero);
 
 				const necrolyteTargetNeighbours = getNeighbours(board, necrolyteTarget);
@@ -677,7 +677,7 @@ export const triggerBattlecry = (
 				const gemSmugglerBloodGems = entity.cardId === CardIds.GemSmuggler_BG25_155 ? 1 : 2;
 				board
 					.filter((e) => e.entityId !== entity.entityId)
-					.forEach((e) => playBloodGemsOn(e, gemSmugglerBloodGems, board, hero, gameState));
+					.forEach((e) => playBloodGemsOn(entity, e, gemSmugglerBloodGems, board, hero, gameState));
 				break;
 			case CardIds.DisguisedGraverobber_BG28_303:
 			case CardIds.DisguisedGraverobber_BG28_303_G:

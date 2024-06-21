@@ -771,12 +771,14 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.ThreeLilQuilboar_BG26_867:
 			case CardIds.ThreeLilQuilboar_BG26_867_G:
+				// console.log('Triggering blood gems', deadEntityCardId, deadEntity.entityId);
 				for (let i = 0; i < multiplier; i++) {
 					const numberOfBloodGems = deadEntityCardId === CardIds.ThreeLilQuilboar_BG26_867_G ? 6 : 3;
 					for (const entity of boardWithDeadEntity.filter((e) =>
 						hasCorrectTribe(e, Race.QUILBOAR, gameState.allCards),
 					)) {
 						playBloodGemsOn(
+							deadEntity,
 							entity,
 							numberOfBloodGems,
 							boardWithDeadEntity,
