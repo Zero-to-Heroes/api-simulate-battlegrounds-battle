@@ -27,7 +27,7 @@ import { applyOnAttackBuffs } from './on-attack';
 import { applyOnBeingAttackedBuffs } from './on-being-attacked';
 import { onQuestProgressUpdated } from './quest';
 import { performEntitySpawns } from './spawns';
-import { applyAfterStatsUpdate, modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { applyAfterStatsUpdate, modifyStats } from './stats';
 import { handleSummonsWhenSpace } from './summon-when-space';
 import { canAttack } from './utils/entity-utils';
 
@@ -231,8 +231,7 @@ const applyAfterAttackEffects = (
 	attackingBoard
 		.filter((e) => e.additionalCards?.includes(CardIds.FesterootHulk_BG_GIL_655))
 		.forEach((e) => {
-			modifyAttack(e, 1, attackingBoard, attackingBoardHero, gameState);
-			onStatsUpdate(e, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(e, 1, 0, attackingBoard, attackingBoardHero, gameState);
 		});
 
 	attackingEntity.stealth = false;
@@ -1001,8 +1000,7 @@ export const bumpEntities = (
 		// Handle all the divine shield loss effects here
 		for (let i = 0; i < entityBoard.length; i++) {
 			if (entityBoard[i].cardId === CardIds.BolvarFireblood_ICC_858) {
-				modifyAttack(entityBoard[i], 2, entityBoard, entityBoardHero, gameState);
-				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				modifyStats(entityBoard[i], 2, 0, entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1011,8 +1009,7 @@ export const bumpEntities = (
 					otherHero,
 				);
 			} else if (entityBoard[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
-				modifyAttack(entityBoard[i], 4, entityBoard, entityBoardHero, gameState);
-				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				modifyStats(entityBoard[i], 4, 0, entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1021,9 +1018,7 @@ export const bumpEntities = (
 					otherHero,
 				);
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
-				modifyAttack(entityBoard[i], 2, entityBoard, entityBoardHero, gameState);
-				modifyHealth(entityBoard[i], 2, entityBoard, entityBoardHero, gameState);
-				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				modifyStats(entityBoard[i], 2, 2, entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1032,9 +1027,7 @@ export const bumpEntities = (
 					otherHero,
 				);
 			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
-				modifyAttack(entityBoard[i], 4, entityBoard, entityBoardHero, gameState);
-				modifyHealth(entityBoard[i], 4, entityBoard, entityBoardHero, gameState);
-				onStatsUpdate(entityBoard[i], entityBoard, entityBoardHero, gameState);
+				modifyStats(entityBoard[i], 4, 4, entityBoard, entityBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					entityBoard[i],
 					entityBoard[i],
@@ -1083,13 +1076,11 @@ export const bumpEntities = (
 		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
 		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
 		greaseBots.forEach((bot) => {
-			modifyAttack(entity, 2, entityBoard, entityBoardHero, gameState);
-			modifyHealth(entity, 2, entityBoard, entityBoardHero, gameState);
+			modifyStats(entity, 2, 2, entityBoard, entityBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(bot, entity, entityBoard, entityBoardHero, otherHero);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
-			modifyAttack(entity, 4, entityBoard, entityBoardHero, gameState);
-			modifyHealth(entity, 4, entityBoard, entityBoardHero, gameState);
+			modifyStats(entity, 4, 4, entityBoard, entityBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(bot, entity, entityBoard, entityBoardHero, otherHero);
 		});
 
@@ -1434,8 +1425,7 @@ const handleAfterMinionsDeathsForBoard = (
 		// Killed an enemy minion
 		if (killer.friendly !== deadEntity.friendly) {
 			if (otherHeroEntity.heroPowerId === CardIds.Rokara_GloryOfCombat) {
-				modifyAttack(killer, 1, otherBoard, otherHeroEntity, gameState);
-				onStatsUpdate(killer, otherBoard, otherHeroEntity, gameState);
+				modifyStats(killer, 1, 0, otherBoard, otherHeroEntity, gameState);
 				// Icesnarl the Mighty
 				otherBoard
 					.filter(
@@ -1444,14 +1434,14 @@ const handleAfterMinionsDeathsForBoard = (
 							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G,
 					)
 					.forEach((icesnarl) => {
-						modifyHealth(
+						modifyStats(
 							icesnarl,
+							0,
 							icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1,
 							friendlyBoard,
 							friendlyHeroEntity,
 							gameState,
 						);
-						onStatsUpdate(icesnarl, friendlyBoard, friendlyHeroEntity, gameState);
 					});
 			}
 		}

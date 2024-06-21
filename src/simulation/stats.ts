@@ -26,94 +26,135 @@ export const setEntityStats = (
 	applyAurasToSelf(entity, board, boardHero, gameState);
 };
 
-export const modifyAttack = (
+export const modifyStats = (
 	entity: BoardEntity,
-	amount: number,
+	attackAmount: number,
+	healthAmount: number,
 	friendlyBoard: BoardEntity[],
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 	spectator: Spectator = null,
 ): void => {
-	if (amount === 0) {
+	if (attackAmount === 0 && healthAmount === 0) {
 		return;
 	}
 
 	if (entity.cardId === CardIds.LocPrince_BG29_889 || entity.cardId === CardIds.LocPrince_BG29_889_G) {
 		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 4 : 2;
-		amount += buff;
-		// TODO: how to handle the health buff here? If we also buff the health via modifyHealth
-		// afterwards, that's ok. Otherwise, we will miss on health buff triggers
-		entity.health += buff;
-		entity.maxHealth += buff;
+		attackAmount += buff;
+		healthAmount += buff;
 	}
 
 	const otherBoardHero: BgsPlayerEntity =
 		gameState.gameState.player.player === friendlyBoardHero
 			? gameState.gameState.opponent.player
 			: gameState.gameState.player.player;
+
 	const neighbours = getNeighbours(friendlyBoard, entity);
 	const poetMultipliers = neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1;
 	const tarecgosaMultiplier = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
-	const realAmount = amount * poetMultipliers * tarecgosaMultiplier;
-	entity.attack = Math.max(0, entity.attack + realAmount);
+
+	const realAttackAmount = attackAmount * poetMultipliers * tarecgosaMultiplier;
+	const realHealthAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * healthAmount : healthAmount;
+
+	entity.attack = Math.max(0, entity.attack + realAttackAmount);
 	entity.previousAttack = entity.attack;
-	entity.pendingAttackBuffs.push(realAmount);
+	entity.pendingAttackBuffs.push(realAttackAmount);
+	entity.health += realHealthAmount;
+	if (realHealthAmount > 0) {
+		entity.maxHealth += realHealthAmount;
+	}
 
-	if (isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.DRAGON)) {
-		const whelpSmugglers = friendlyBoard.filter(
-			(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
-		);
-		whelpSmugglers.forEach((smuggler) => {
-			const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
-			modifyHealth(entity, buff, friendlyBoard, friendlyBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(smuggler, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
-		});
-
-		if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
-			const stormbringers = friendlyBoard.filter(
-				(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
+	if (realAttackAmount > 0) {
+		if (isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.DRAGON)) {
+			const whelpSmugglers = friendlyBoard.filter(
+				(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
 			);
-			stormbringers.forEach((stormbringer) => {
-				const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
-				// This is never called?
-				(e) => {
-					modifyAttack(e, multiplier * realAmount, friendlyBoard, friendlyBoardHero, gameState);
-					gameState.spectator.registerPowerTarget(
-						stormbringer,
-						entity,
-						friendlyBoard,
-						friendlyBoardHero,
-						otherBoardHero,
-					);
-				};
+			whelpSmugglers.forEach((smuggler) => {
+				const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
+				modifyStats(entity, buff, 0, friendlyBoard, friendlyBoardHero, gameState);
+				gameState.spectator.registerPowerTarget(
+					smuggler,
+					entity,
+					friendlyBoard,
+					friendlyBoardHero,
+					otherBoardHero,
+				);
 			});
+
+			if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
+				const stormbringers = friendlyBoard.filter(
+					(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
+				);
+				stormbringers.forEach((stormbringer) => {
+					const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
+					// This is never called?
+					(e) => {
+						modifyStats(e, multiplier * realAttackAmount, 0, friendlyBoard, friendlyBoardHero, gameState);
+						gameState.spectator.registerPowerTarget(
+							stormbringer,
+							entity,
+							friendlyBoard,
+							friendlyBoardHero,
+							otherBoardHero,
+						);
+					};
+				});
+			}
+		}
+
+		// Sinestra
+		friendlyBoard
+			.filter(
+				(e) =>
+					e.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy ||
+					e.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G,
+			)
+			.forEach((sinestra) => {
+				const buff = sinestra.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 2 : 1;
+				modifyStats(entity, buff, 0, friendlyBoard, friendlyBoardHero, gameState);
+				gameState.spectator.registerPowerTarget(
+					sinestra,
+					entity,
+					friendlyBoard,
+					friendlyBoardHero,
+					otherBoardHero,
+				);
+			});
+
+		// TODO: what happens if the Hunter is killed during the attack?
+		if (
+			[CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(
+				entity.cardId as CardIds,
+			)
+		) {
+			addStatsToBoard(
+				entity,
+				friendlyBoard,
+				friendlyBoardHero,
+				0,
+				entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
+				gameState,
+			);
 		}
 	}
 
-	// Sinestra
-	friendlyBoard
-		.filter(
-			(e) =>
-				e.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy ||
-				e.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G,
-		)
-		.forEach((sinestra) => {
-			const buff = sinestra.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 2 : 1;
-			modifyHealth(entity, buff, friendlyBoard, friendlyBoardHero, gameState);
-			onStatsUpdate(entity, friendlyBoard, friendlyBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(sinestra, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
+	if (realHealthAmount > 0) {
+		const titanicGuardians = friendlyBoard
+			.filter((e) => e.entityId !== entity.entityId)
+			.filter(
+				(e) =>
+					e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy ||
+					e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G,
+			);
+		titanicGuardians.forEach((guardian) => {
+			const buff =
+				(guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realHealthAmount;
+			if (buff > 0) {
+				guardian.health += buff;
+				guardian.maxHealth += buff;
+			}
 		});
-
-	// TODO: what happens if the Hunter is killed during the attack?
-	if ([CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(entity.cardId as CardIds)) {
-		addStatsToBoard(
-			entity,
-			friendlyBoard,
-			friendlyBoardHero,
-			0,
-			entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
-			gameState,
-		);
 	}
 
 	if (
@@ -129,9 +170,10 @@ export const modifyAttack = (
 				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
 		);
 		mishmashes.forEach((mishmash) => {
-			modifyAttack(
+			modifyStats(
 				mishmash,
-				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount,
+				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAttackAmount,
+				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realHealthAmount,
 				friendlyBoard,
 				friendlyBoardHero,
 				gameState,
@@ -144,66 +186,11 @@ export const modifyAttack = (
 		const stat = entity.cardId === CardIds.DefiantShipwright_BG21_018_G ? 2 : 1;
 		entity.health += stat;
 	}
+
+	onStatsUpdate(entity, friendlyBoard, friendlyBoardHero, gameState);
 };
 
-export const modifyHealth = (
-	entity: BoardEntity,
-	amount: number,
-	friendlyBoard: BoardEntity[],
-	friendlyBoardHero: BgsPlayerEntity,
-	gameState: FullGameState,
-): void => {
-	if (entity.cardId === CardIds.LocPrince_BG29_889 || entity.cardId === CardIds.LocPrince_BG29_889_G) {
-		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 4 : 2;
-		amount += buff;
-		// TODO: how to handle the attack buff here? If we also buff the health via modifyHealth
-		// afterwards, that's ok. Otherwise, we will miss on health buff triggers
-		entity.attack += buff;
-	}
-
-	const realAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * amount : amount;
-	entity.health += realAmount;
-	if (realAmount > 0) {
-		entity.maxHealth += realAmount;
-	}
-	if (
-		entity.cardId === CardIds.Menagerist_AmalgamToken ||
-		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
-		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A_G ||
-		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D ||
-		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D_G
-	) {
-		const mishmashes = friendlyBoard.filter(
-			(e) =>
-				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy ||
-				e.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G,
-		);
-		mishmashes.forEach((mishmash) => {
-			const buff = (mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAmount;
-			entity.health += buff;
-			if (buff > 0) {
-				entity.maxHealth += buff;
-			}
-		});
-	}
-
-	const titanicGuardians = friendlyBoard
-		.filter((e) => e.entityId !== entity.entityId)
-		.filter(
-			(e) =>
-				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy ||
-				e.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G,
-		);
-	titanicGuardians.forEach((guardian) => {
-		const buff = (guardian.cardId === CardIds.TitanicGuardian_TB_BaconShop_HERO_39_Buddy_G ? 2 : 1) * realAmount;
-		if (buff > 0) {
-			guardian.health += buff;
-			guardian.maxHealth += buff;
-		}
-	});
-};
-
-export const onStatsUpdate = (
+const onStatsUpdate = (
 	entity: BoardEntity,
 	friendlyBoard: BoardEntity[],
 	friendlyHero: BgsPlayerEntity,
@@ -324,15 +311,9 @@ const onStatUpdateMinions = (
 			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
 		);
 		masterOfRealities.forEach((master) => {
-			modifyAttack(
+			modifyStats(
 				master,
 				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
-				friendlyBoard,
-				friendlyBoardHero,
-				gameState,
-			);
-			modifyHealth(
-				master,
 				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
 				friendlyBoard,
 				friendlyBoardHero,
@@ -348,15 +329,9 @@ const onStatUpdateMinions = (
 				e.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G,
 		);
 	tentaclesOfCthun.forEach((tentacle) => {
-		modifyAttack(
+		modifyStats(
 			tentacle,
 			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
-			friendlyBoard,
-			friendlyBoardHero,
-			gameState,
-		);
-		modifyHealth(
-			tentacle,
 			tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1,
 			friendlyBoard,
 			friendlyBoardHero,

@@ -38,7 +38,7 @@ import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
-import { applyAfterStatsUpdate, modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { applyAfterStatsUpdate, modifyStats } from './stats';
 import { handleSummonsWhenSpace } from './summon-when-space';
 
 // TODO 20/04/2024: I'm not too sure about some ordering. The way I understand it, the Start of Combat has
@@ -556,9 +556,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				break;
 			case CardIds.StaffOfOrigination_BG24_Reward_312:
 				playerBoard.forEach((entity) => {
-					modifyAttack(entity, 15, playerBoard, playerEntity, gameState);
-					modifyHealth(entity, 15, playerBoard, playerEntity, gameState);
-					onStatsUpdate(entity, playerBoard, playerEntity, gameState);
+					modifyStats(entity, 15, 15, playerBoard, playerEntity, gameState);
 					gameState.spectator.registerPowerTarget(playerEntity, entity, playerBoard, null, null);
 				});
 				break;
@@ -815,14 +813,10 @@ const handleIllidanForPlayer = (
 	const secondAttacker = minionsAtStart > 1 ? playerBoard[playerBoard.length - 1] : null;
 
 	// Stats updates
-	modifyAttack(firstAttacker, 2, playerBoard, playerEntity, gameState);
-	modifyHealth(firstAttacker, 1, playerBoard, playerEntity, gameState);
-	onStatsUpdate(firstAttacker, playerBoard, playerEntity, gameState);
+	modifyStats(firstAttacker, 2, 1, playerBoard, playerEntity, gameState);
 	gameState.spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
-		modifyAttack(secondAttacker, 2, playerBoard, playerEntity, gameState);
-		modifyHealth(secondAttacker, 1, playerBoard, playerEntity, gameState);
-		onStatsUpdate(secondAttacker, playerBoard, playerEntity, gameState);
+		modifyStats(secondAttacker, 2, 1, playerBoard, playerEntity, gameState);
 		gameState.spectator.registerPowerTarget(
 			secondAttacker,
 			secondAttacker,
@@ -882,9 +876,7 @@ const handleTamsinForPlayer = (
 	// How to mark the minion as dead
 	chosenEntity.definitelyDead = true;
 	newBoard.forEach((e) => {
-		modifyAttack(e, chosenEntity.attack, newBoard, playerEntity, gameState);
-		modifyHealth(e, chosenEntity.health, newBoard, playerEntity, gameState);
-		onStatsUpdate(e, newBoard, playerEntity, gameState);
+		modifyStats(e, chosenEntity.attack, chosenEntity.health, newBoard, playerEntity, gameState);
 		gameState.spectator.registerPowerTarget(chosenEntity, e, newBoard, playerEntity, opponentEntity);
 	});
 };
@@ -1057,9 +1049,14 @@ const handleWaxWarbandForPlayer = (
 			...boardWithTribes.filter((e) => gameState.allCards.getCard(e.cardId).races.includes(Race[Race.ALL])),
 		];
 		allMinions.forEach((e) => {
-			modifyAttack(e, gameState.cardsData.getTavernLevel(e.cardId), playerBoard, playerEntity, gameState);
-			modifyHealth(e, gameState.cardsData.getTavernLevel(e.cardId), playerBoard, playerEntity, gameState);
-			onStatsUpdate(e, playerBoard, playerEntity, gameState);
+			modifyStats(
+				e,
+				gameState.cardsData.getTavernLevel(e.cardId),
+				gameState.cardsData.getTavernLevel(e.cardId),
+				playerBoard,
+				playerEntity,
+				gameState,
+			);
 			gameState.spectator.registerPowerTarget(playerEntity, e, playerBoard, playerEntity, opponentEntity);
 		});
 	}
@@ -1329,9 +1326,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			.filter((e) => e.entityId !== attacker.entityId)
 			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards));
 		for (const entity of targets) {
-			modifyAttack(entity, stats, attackingBoard, attackingBoardHero, gameState);
-			modifyHealth(entity, stats, attackingBoard, attackingBoardHero, gameState);
-			onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(entity, stats, stats, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				entity,
@@ -1345,21 +1340,14 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G
 	) {
 		const multiplier = attacker.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;
-		modifyAttack(
+		modifyStats(
 			attacker,
 			multiplier * attackingBoardHero.globalInfo?.ChoralAttackBuff,
-			attackingBoard,
-			attackingBoardHero,
-			gameState,
-		);
-		modifyHealth(
-			attacker,
 			multiplier * attackingBoardHero.globalInfo?.ChoralHealthBuff,
 			attackingBoard,
 			attackingBoardHero,
 			gameState,
 		);
-		onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
 		gameState.spectator.registerPowerTarget(
 			attacker,
 			attacker,
@@ -1384,9 +1372,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				if (!otherDragon.divineShield) {
 					updateDivineShield(otherDragon, attackingBoard, true, gameState.allCards);
 				}
-				modifyAttack(otherDragon, 7, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(otherDragon, 7, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(otherDragon, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(otherDragon, 7, 7, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					attacker,
 					otherDragon,
@@ -1407,8 +1393,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
 		otherDragons.forEach((otherDragon) => {
-			modifyHealth(otherDragon, buff, attackingBoard, attackingBoardHero, gameState);
-			onStatsUpdate(otherDragon, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(otherDragon, 0, buff, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				otherDragon,
@@ -1445,21 +1430,14 @@ export const performStartOfCombatMinionsForPlayer = (
 		const neighbours = getNeighbours(attackingBoard, attacker);
 		const multiplier = attacker.cardId === CardIds.Crabby_BG22_HERO_000_Buddy_G ? 2 : 1;
 		neighbours.forEach((entity) => {
-			modifyAttack(
+			modifyStats(
 				entity,
+				multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0),
 				multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0),
 				attackingBoard,
 				attackingBoardHero,
 				gameState,
 			);
-			modifyHealth(
-				entity,
-				multiplier * (attackingBoardHero.deadEyeDamageDone ?? 0),
-				attackingBoard,
-				attackingBoardHero,
-				gameState,
-			);
-			onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				entity,
@@ -1473,9 +1451,14 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012_G
 	) {
 		const multiplier = attacker.cardId === CardIds.CorruptedMyrmidon_BG23_012_G ? 2 : 1;
-		modifyAttack(attacker, multiplier * attacker.attack, attackingBoard, attackingBoardHero, gameState);
-		modifyHealth(attacker, multiplier * attacker.health, attackingBoard, attackingBoardHero, gameState);
-		onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(
+			attacker,
+			multiplier * attacker.attack,
+			multiplier * attacker.health,
+			attackingBoard,
+			attackingBoardHero,
+			gameState,
+		);
 		gameState.spectator.registerPowerTarget(
 			attacker,
 			attacker,
@@ -1511,9 +1494,7 @@ export const performStartOfCombatMinionsForPlayer = (
 				const buffType = getRandomMantidQueenBuffType(attacker);
 				switch (buffType) {
 					case 'stats':
-						modifyAttack(attacker, 5, attackingBoard, attackingBoardHero, gameState);
-						modifyHealth(attacker, 5, attackingBoard, attackingBoardHero, gameState);
-						onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+						modifyStats(attacker, 5, 5, attackingBoard, attackingBoardHero, gameState);
 						break;
 					case 'reborn':
 						attacker.reborn = true;
@@ -1599,9 +1580,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			// reflect the values they have in hand
 			// if (target?.friendly || !target?.inInitialState) {
 			const diremuckBuff = attacker.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
-			modifyAttack(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
-			modifyHealth(target, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
-			onStatsUpdate(target, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(target, diremuckBuff, diremuckBuff, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				target,
@@ -1756,7 +1735,7 @@ export const performStartOfCombatMinionsForPlayer = (
 					defendingBoardHero,
 					gameState,
 				);
-				modifyAttack(neighbour, 4, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(neighbour, 4, 0, attackingBoard, attackingBoardHero, gameState);
 			}
 		}
 	} else if (
@@ -1766,9 +1745,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const multiplier = attacker.cardId === CardIds.MisfitDragonling_BG29_814_G ? 2 : 1;
 		const tier = attackingBoardHero.tavernTier;
 		const stats = multiplier * tier;
-		modifyAttack(attacker, stats, attackingBoard, attackingBoardHero, gameState);
-		modifyHealth(attacker, stats, attackingBoard, attackingBoardHero, gameState);
-		onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(attacker, stats, stats, attackingBoard, attackingBoardHero, gameState);
 		gameState.spectator.registerPowerTarget(
 			attacker,
 			attacker,
@@ -1786,9 +1763,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		for (let i = 0; i < loops; i++) {
 			const target = dragons.filter((e) => !pickedTargets.includes(e))[0];
 			if (!!target) {
-				modifyAttack(target, 1, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(target, 2, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(target, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(target, 1, 2, attackingBoard, attackingBoardHero, gameState);
 				target.windfury = true;
 				gameState.spectator.registerPowerTarget(
 					attacker,
@@ -1835,9 +1810,14 @@ export const performStartOfCombatMinionsForPlayer = (
 			target.attack = Math.max(0, target.attack - stats);
 			target.health = Math.max(0, target.health - stats);
 			target.maxHealth = Math.max(0, target.maxHealth - stats);
-			modifyAttack(attacker, previousAttack - target.attack, attackingBoard, attackingBoardHero, gameState);
-			modifyHealth(attacker, previousHealth - target.health, attackingBoard, attackingBoardHero, gameState);
-			onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(
+				attacker,
+				previousAttack - target.attack,
+				previousHealth - target.health,
+				attackingBoard,
+				attackingBoardHero,
+				gameState,
+			);
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				target,
@@ -1887,9 +1867,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		attackingBoard
 			.filter((e) => e.entityId !== attacker.entityId)
 			.forEach((e) => {
-				modifyAttack(e, vaelastraszBonus, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(e, vaelastraszBonus, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(e, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(e, vaelastraszBonus, vaelastraszBonus, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					attacker,
 					e,
@@ -1907,9 +1885,14 @@ export const performStartOfCombatMinionsForPlayer = (
 			const highestAttackOnBoard = Math.max(...attackingBoard.map((entity) => entity.attack));
 			const highestHealthOnBoard = Math.max(...attackingBoard.map((entity) => entity.health));
 			const multiplier = attacker.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G ? 2 : 1;
-			modifyAttack(attacker, highestAttackOnBoard * multiplier, attackingBoard, attackingBoardHero, gameState);
-			modifyHealth(attacker, highestHealthOnBoard * multiplier, attackingBoard, attackingBoardHero, gameState);
-			onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(
+				attacker,
+				highestAttackOnBoard * multiplier,
+				highestHealthOnBoard * multiplier,
+				attackingBoard,
+				attackingBoardHero,
+				gameState,
+			);
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				attacker,
@@ -1931,13 +1914,11 @@ const applyAllWillBurn = (
 	gameState: FullGameState,
 ): void => {
 	for (const entity of board1) {
-		modifyAttack(entity, 2, board1, board1Hero, gameState);
-		onStatsUpdate(entity, board1, board1Hero, gameState);
+		modifyStats(entity, 2, 0, board1, board1Hero, gameState);
 		gameState.spectator.registerPowerTarget(sourceEntity, entity, board1, null, null);
 	}
 	for (const entity of board2) {
-		modifyAttack(entity, 2, board2, board1Hero, gameState);
-		onStatsUpdate(entity, board2, board2Hero, gameState);
+		modifyStats(entity, 2, 0, board2, board1Hero, gameState);
 		gameState.spectator.registerPowerTarget(sourceEntity, entity, board2, null, null);
 	}
 };

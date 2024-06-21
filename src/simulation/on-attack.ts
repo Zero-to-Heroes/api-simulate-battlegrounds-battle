@@ -5,7 +5,7 @@ import { isCorrectTribe } from '../utils';
 import { dealDamageToMinion } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
-import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { modifyStats } from './stats';
 
 export const applyOnAttackBuffs = (
 	attacker: BoardEntity,
@@ -22,11 +22,11 @@ export const applyOnAttackBuffs = (
 			(entity) => entity.cardId === CardIds.RipsnarlCaptain_TB_BaconUps_139,
 		);
 		ripsnarls.forEach((captain) => {
-			modifyAttack(attacker, 3, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(attacker, 3, 0, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
 		});
 		ripsnarlsTB.forEach((captain) => {
-			modifyAttack(attacker, 6, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(attacker, 6, 0, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(captain, attacker, attackingBoard, attackingBoardHero, otherHero);
 		});
 	}
@@ -45,17 +45,13 @@ export const applyOnAttackBuffs = (
 
 		elizas.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
-				modifyAttack(entity, 3, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(entity, 1, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(entity, 3, 1, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
 		elizasTB.forEach((eliza) => {
 			attackingBoard.forEach((entity) => {
-				modifyAttack(entity, 6, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(entity, 2, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(entity, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(entity, 6, 2, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(eliza, entity, attackingBoard, attackingBoardHero, otherHero);
 			});
 		});
@@ -69,9 +65,7 @@ export const applyOnAttackBuffs = (
 			)
 			.forEach((rallier) => {
 				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
-				modifyAttack(attacker, 2 * stats, attackingBoard, attackingBoardHero, gameState);
-				modifyHealth(attacker, stats, attackingBoard, attackingBoardHero, gameState);
-				onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(attacker, 2 * stats, stats, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					rallier,
 					attacker,
@@ -84,17 +78,15 @@ export const applyOnAttackBuffs = (
 
 	if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
 		// For now the utility method only works additively, so we hack around it
-		modifyAttack(attacker, 2 * attacker.attack - attacker.attack, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(attacker, 2 * attacker.attack - attacker.attack, 0, attackingBoard, attackingBoardHero, gameState);
 	} else if (attacker.cardId === CardIds.GlyphGuardian_TB_BaconUps_115) {
-		modifyAttack(attacker, 3 * attacker.attack - attacker.attack, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(attacker, 3 * attacker.attack - attacker.attack, 0, attackingBoard, attackingBoardHero, gameState);
 	} else if (
 		attacker.cardId === CardIds.GlimGuardian_BG29_888 ||
 		attacker.cardId === CardIds.GlimGuardian_BG29_888_G
 	) {
 		const multiplier = attacker.cardId === CardIds.GlimGuardian_BG29_888_G ? 2 : 1;
-		modifyAttack(attacker, 2 * multiplier, attackingBoard, attackingBoardHero, gameState);
-		modifyHealth(attacker, 1 * multiplier, attackingBoard, attackingBoardHero, gameState);
-		onStatsUpdate(attacker, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(attacker, 2 * multiplier, 1 * multiplier, attackingBoard, attackingBoardHero, gameState);
 		gameState.spectator.registerPowerTarget(attacker, attacker, attackingBoard, attackingBoardHero, otherHero);
 	} else if (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708 ||
@@ -103,15 +95,9 @@ export const applyOnAttackBuffs = (
 		attackingBoard
 			.filter((e) => isCorrectTribe(gameState.allCards.getCard(e.cardId).races, Race.PIRATE))
 			.forEach((e) => {
-				modifyAttack(
+				modifyStats(
 					e,
 					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
-					attackingBoard,
-					attackingBoardHero,
-					gameState,
-				);
-				modifyHealth(
-					e,
 					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attackingBoard,
 					attackingBoardHero,

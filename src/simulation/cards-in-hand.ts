@@ -5,7 +5,7 @@ import { pickRandom } from '../services/utils';
 import { buildSingleBoardEntity, getRandomAliveMinion } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
-import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { modifyStats } from './stats';
 
 export const addCardsInHand = (
 	playerEntity: BgsPlayerEntity,
@@ -104,21 +104,14 @@ const onCardAddedToHandMinion = (
 			gameState.allCards,
 		);
 		if (pirate) {
-			modifyAttack(
+			modifyStats(
 				pirate,
+				peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
 				peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
 				board,
 				playerEntity,
 				gameState,
 			);
-			modifyHealth(
-				pirate,
-				peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
-				board,
-				playerEntity,
-				gameState,
-			);
-			onStatsUpdate(pirate, board, playerEntity, gameState);
 			gameState.spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
 		}
 	});
@@ -126,14 +119,14 @@ const onCardAddedToHandMinion = (
 		(e) => e.cardId === CardIds.Thorncaptain_BG25_045 || e.cardId === CardIds.Thorncaptain_BG25_045_G,
 	);
 	thornCaptains.forEach((captain) => {
-		modifyHealth(
+		modifyStats(
 			captain,
+			0,
 			captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1,
 			board,
 			playerEntity,
 			gameState,
 		);
-		onStatsUpdate(captain, board, playerEntity, gameState);
 		gameState.spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
 	});
 };

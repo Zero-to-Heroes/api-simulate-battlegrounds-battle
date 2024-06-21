@@ -10,7 +10,7 @@ import { FullGameState, GameState, PlayerState } from './simulation/internal-gam
 import { handleMinionRemovedAuraEffect } from './simulation/remove-minion-from-board';
 import { SharedState } from './simulation/shared-state';
 import { Spectator } from './simulation/spectator/spectator';
-import { modifyAttack, modifyHealth, onStatsUpdate } from './simulation/stats';
+import { modifyStats } from './simulation/stats';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
@@ -214,9 +214,7 @@ export const makeMinionGolden = (
 	// UPDATE 2024-06-20: Defiant Shipwright (2/5) going golden (4/10) actually ends up at 4/12 because
 	// of the +2 health bonus
 	// http://replays.firestoneapp.com/?reviewId=283dc44c-5fc8-40fb-af89-7d752a39f9b9&turn=7&action=1
-	modifyAttack(target, refCard.attack, targetBoard, targetBoardHero, gameState);
-	modifyHealth(target, refCard.health, targetBoard, targetBoardHero, gameState);
-	onStatsUpdate(target, targetBoard, targetBoardHero, gameState);
+	modifyStats(target, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
@@ -259,8 +257,7 @@ export const grantRandomAttack = (
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyAttack(target, additionalAttack, candidateBoard, hero, gameState);
-		onStatsUpdate(target, candidateBoard, hero, gameState);
+		modifyStats(target, additionalAttack, 0, candidateBoard, hero, gameState);
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
@@ -278,8 +275,7 @@ export const grantRandomHealth = (
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyHealth(target, health, board, hero, gameState);
-		onStatsUpdate(target, board, hero, gameState);
+		modifyStats(target, 0, health, board, hero, gameState);
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 };
@@ -301,9 +297,7 @@ export const grantRandomStats = (
 			gameState.allCards,
 		);
 		if (target) {
-			modifyAttack(target, attack, board, hero, gameState);
-			modifyHealth(target, health, board, hero, gameState);
-			onStatsUpdate(target, board, hero, gameState);
+			modifyStats(target, attack, health, board, hero, gameState);
 			if (gameState.spectator) {
 				gameState.spectator.registerPowerTarget(source, target, board, null, null);
 			}
@@ -411,9 +405,7 @@ export const addStatsToBoard = (
 ): void => {
 	for (const entity of board) {
 		if (!tribe || hasCorrectTribe(entity, Race[tribe], gameState.allCards)) {
-			modifyAttack(entity, attack, board, hero, gameState);
-			modifyHealth(entity, health, board, hero, gameState);
-			onStatsUpdate(entity, board, hero, gameState);
+			modifyStats(entity, attack, health, board, hero, gameState);
 			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
 			// if (permanentUpgrade) {
 			// 	entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
@@ -435,9 +427,7 @@ export const grantStatsToMinionsOfEachType = (
 ): void => {
 	const minionsToBuff = getMinionsOfDifferentTypes(board, gameState, canRevive, numberOfDifferentTypes);
 	for (const entity of minionsToBuff) {
-		modifyAttack(entity, attack, board, hero, gameState);
-		modifyHealth(entity, health, board, hero, gameState);
-		onStatsUpdate(entity, board, hero, gameState);
+		modifyStats(entity, attack, health, board, hero, gameState);
 		gameState.spectator.registerPowerTarget(source, entity, board, null, null);
 	}
 };

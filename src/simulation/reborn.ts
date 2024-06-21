@@ -5,7 +5,7 @@ import { addStatsToBoard } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { modifyStats } from './stats';
 
 export const handleRebornForEntity = (
 	boardWithKilledMinion: BoardEntity[],
@@ -87,8 +87,7 @@ export const handleRebornForEntity = (
 			entitiesThatWereReborn
 				.filter((e) => e.entityId !== arfus.entityId && e.rebornFromEntityId !== arfus.entityId)
 				.forEach((e) => {
-					modifyAttack(e, attackBonus, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-					onStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+					modifyStats(e, attackBonus, 0, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 					gameState.spectator.registerPowerTarget(
 						arfus,
 						e,
@@ -122,9 +121,14 @@ export const handleRebornForEntity = (
 			.filter((e) => e.cardId === CardIds.JellyBelly_BG25_005 || e.cardId === CardIds.JellyBelly_BG25_005_G)
 			.forEach((e) => {
 				const multiplier = e.cardId === CardIds.JellyBelly_BG25_005_G ? 2 : 1;
-				modifyAttack(e, multiplier * 3, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-				modifyHealth(e, multiplier * 3, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-				onStatsUpdate(e, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
+				modifyStats(
+					e,
+					multiplier * 3,
+					multiplier * 3,
+					boardWithKilledMinion,
+					boardWithKilledMinionHero,
+					gameState,
+				);
 				gameState.spectator.registerPowerTarget(
 					e,
 					e,

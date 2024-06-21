@@ -5,7 +5,7 @@ import { addStatsToBoard, updateDivineShield } from '../utils';
 import { getNeighbours } from './attack';
 import { FullGameState } from './internal-game-state';
 import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
-import { modifyAttack, modifyHealth, setEntityStats } from './stats';
+import { modifyStats, setEntityStats } from './stats';
 
 export const applyOnBeingAttackedBuffs = (
 	attackerEntity: BoardEntity,
@@ -86,8 +86,7 @@ export const applyOnBeingAttackedBuffs = (
 			(entity) => entity.cardId === CardIds.ChampionOfYshaarj_TB_BaconUps_301,
 		);
 		champions.forEach((entity) => {
-			modifyAttack(entity, 1, defendingBoard, defendingPlayerEntity, gameState);
-			modifyHealth(entity, 2, defendingBoard, defendingPlayerEntity, gameState);
+			modifyStats(entity, 1, 2, defendingBoard, defendingPlayerEntity, gameState);
 			gameState.spectator.registerPowerTarget(
 				entity,
 				entity,
@@ -97,8 +96,7 @@ export const applyOnBeingAttackedBuffs = (
 			);
 		});
 		goldenChampions.forEach((entity) => {
-			modifyAttack(entity, 2, defendingBoard, defendingPlayerEntity, gameState);
-			modifyHealth(entity, 4, defendingBoard, defendingPlayerEntity, gameState);
+			modifyStats(entity, 2, 4, defendingBoard, defendingPlayerEntity, gameState);
 			gameState.spectator.registerPowerTarget(
 				entity,
 				entity,
@@ -111,7 +109,7 @@ export const applyOnBeingAttackedBuffs = (
 		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_BGS_110);
 		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_TB_BaconUps_302);
 		arms.forEach((arm) => {
-			modifyAttack(defendingEntity, 2, defendingBoard, defendingPlayerEntity, gameState);
+			modifyStats(defendingEntity, 2, 0, defendingBoard, defendingPlayerEntity, gameState);
 			gameState.spectator.registerPowerTarget(
 				arm,
 				defendingEntity,
@@ -121,7 +119,7 @@ export const applyOnBeingAttackedBuffs = (
 			);
 		});
 		goldenArms.forEach((arm) => {
-			modifyAttack(defendingEntity, 4, defendingBoard, defendingPlayerEntity, gameState);
+			modifyStats(defendingEntity, 4, 0, defendingBoard, defendingPlayerEntity, gameState);
 			gameState.spectator.registerPowerTarget(
 				arm,
 				defendingEntity,
@@ -147,8 +145,7 @@ export const applyOnBeingAttackedBuffs = (
 	if (defendingEntity.cardId === CardIds.TormentedRitualist_BGS_201) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, 1, defendingBoard, defendingPlayerEntity, gameState);
-			modifyHealth(entity, 1, defendingBoard, defendingPlayerEntity, gameState);
+			modifyStats(entity, 1, 1, defendingBoard, defendingPlayerEntity, gameState);
 			gameState.spectator.registerPowerTarget(
 				defendingEntity,
 				entity,
@@ -160,8 +157,7 @@ export const applyOnBeingAttackedBuffs = (
 	} else if (defendingEntity.cardId === CardIds.TormentedRitualist_TB_BaconUps_257) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		neighbours.forEach((entity) => {
-			modifyAttack(entity, 2, defendingBoard, defendingPlayerEntity, gameState);
-			modifyHealth(entity, 2, defendingBoard, defendingPlayerEntity, gameState);
+			modifyStats(entity, 2, 2, defendingBoard, defendingPlayerEntity, gameState);
 			gameState.spectator.registerPowerTarget(
 				defendingEntity,
 				entity,
@@ -174,9 +170,10 @@ export const applyOnBeingAttackedBuffs = (
 		defendingEntity.cardId === CardIds.DozyWhelp_BG24_300 ||
 		defendingEntity.cardId === CardIds.DozyWhelp_BG24_300_G
 	) {
-		modifyAttack(
+		modifyStats(
 			defendingEntity,
 			defendingEntity.cardId === CardIds.DozyWhelp_BG24_300_G ? 2 : 1,
+			0,
 			defendingBoard,
 			defendingPlayerEntity,
 			gameState,

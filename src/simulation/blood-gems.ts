@@ -4,7 +4,7 @@ import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
 import { updateDivineShield } from '../utils';
 import { FullGameState } from './internal-game-state';
-import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { modifyStats } from './stats';
 
 export const playBloodGemsOn = (
 	target: BoardEntity,
@@ -16,9 +16,7 @@ export const playBloodGemsOn = (
 	const bloodGemAttack = 1 + (hero.globalInfo?.BloodGemAttackBonus ?? 0);
 	const bloodGemHealth = 1 + (hero.globalInfo?.BloodGemHealthBonus ?? 0);
 	for (let i = 0; i < quantity; i++) {
-		modifyAttack(target, bloodGemAttack, board, hero, gameState);
-		modifyHealth(target, bloodGemHealth, board, hero, gameState);
-		onStatsUpdate(target, board, hero, gameState);
+		modifyStats(target, bloodGemAttack, bloodGemHealth, board, hero, gameState);
 	}
 	switch (target.cardId) {
 		case CardIds.ToughTusk_BG20_102:

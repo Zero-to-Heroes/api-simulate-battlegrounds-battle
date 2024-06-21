@@ -8,7 +8,7 @@ import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { modifyAttack, modifyHealth, onStatsUpdate } from './stats';
+import { modifyStats } from './stats';
 
 export const onEntityDamaged = (
 	entity: BoardEntity,
@@ -59,8 +59,7 @@ export const onEntityDamaged = (
 		case CardIds.TrustyPup_BG29_800:
 		case CardIds.TrustyPup_BG29_800_G:
 			const trustyPupStats = entity.cardId === CardIds.TrustyPup_BG29_800_G ? 2 : 1;
-			modifyAttack(entity, trustyPupStats, board, hero, gameState);
-			onStatsUpdate(entity, board, hero, gameState);
+			modifyStats(entity, trustyPupStats, 0, board, hero, gameState);
 			gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
 			break;
 		case CardIds.SilverGoose_BG29_801:
@@ -183,9 +182,7 @@ const handleOtherEntityEffects = (
 				const stats = e.cardId === CardIds.IridescentSkyblazer_BG29_806_G ? 2 : 1;
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
 				if (!!target) {
-					modifyAttack(target, stats, board, hero, gameState);
-					modifyHealth(target, 2 * stats, board, hero, gameState);
-					onStatsUpdate(target, board, hero, gameState);
+					modifyStats(target, stats, 2 * stats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
 				}
 			});
@@ -197,9 +194,7 @@ const handleOtherEntityEffects = (
 			.filter((e) => e.entityId !== entity.entityId)
 			.forEach((e) => {
 				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 2 : 1;
-				modifyAttack(e, stats, board, hero, gameState);
-				modifyHealth(e, stats, board, hero, gameState);
-				onStatsUpdate(e, board, hero, gameState);
+				modifyStats(e, stats, stats, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);
 			});
 	}
