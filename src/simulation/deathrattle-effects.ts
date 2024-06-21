@@ -1083,6 +1083,13 @@ export const handleDeathrattleEffects = (
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
+			// Add all the deathrattles that don't have an effect on combat
+			case CardIds.FieryFelblood_BG29_877:
+			case CardIds.FieryFelblood_BG29_877_G:
+				for (let i = 0; i < multiplier; i++) {
+					onDeathrattleTriggered(deathrattleTriggeredInput);
+				}
+				break;
 		}
 	}
 
