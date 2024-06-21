@@ -112,7 +112,7 @@ export const modifyStats = (
 			)
 			.forEach((sinestra) => {
 				const buff = sinestra.cardId === CardIds.LadySinestra_TB_BaconShop_HERO_52_Buddy_G ? 2 : 1;
-				entity.attack += buff;
+				entity.health += buff;
 				gameState.spectator.registerPowerTarget(
 					sinestra,
 					entity,
