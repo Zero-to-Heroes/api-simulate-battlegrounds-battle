@@ -1090,7 +1090,8 @@ export const handleDeathrattleEffects = (
 	// in an infinite loop - since new enchants are added after each step
 	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
 		...(deadEntity.enchantments ?? []),
-		...(deadEntity.rememberedDeathrattles ?? []),
+		// These seem to be first processed separately
+		// ...(deadEntity.rememberedDeathrattles ?? []),
 	].sort((a, b) => a.timing - b.timing);
 	// In some cases it's possible that there are way too many enchantments because of the frog
 	// In that case, we make a trade-off and don't trigger the "on stats change" trigger as

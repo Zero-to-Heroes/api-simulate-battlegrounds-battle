@@ -393,6 +393,7 @@ const handleEnchantmentsDeathrattle = (
 	deadEntityPlayerState: PlayerState,
 	otherPlayerState: PlayerState,
 	gameState: FullGameState,
+	skipSpawns = false,
 ) => {
 	const modifiedIndexFromRight = Math.min(deadEntityPlayerState.board.length, indexFromRight);
 	const result = [];
@@ -420,6 +421,8 @@ const handleEnchantmentsDeathrattle = (
 			deadEntityPlayerState,
 			otherPlayerState,
 			gameState,
+			// We skip spawns, otherwise it will be added twice
+			true,
 		);
 		result.push(...spawns);
 	}
@@ -432,16 +435,18 @@ const handleEnchantmentsDeathrattle = (
 		gameState,
 	);
 	result.push(...entitiesFromEnchantments);
-	performEntitySpawns(
-		result,
-		deadEntityPlayerState.board,
-		deadEntityPlayerState.player,
-		deadEntity,
-		modifiedIndexFromRight,
-		otherPlayerState.board,
-		otherPlayerState.player,
-		gameState,
-	);
+	if (!skipSpawns) {
+		performEntitySpawns(
+			result,
+			deadEntityPlayerState.board,
+			deadEntityPlayerState.player,
+			deadEntity,
+			modifiedIndexFromRight,
+			otherPlayerState.board,
+			otherPlayerState.player,
+			gameState,
+		);
+	}
 	return result;
 };
 
