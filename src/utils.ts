@@ -202,10 +202,16 @@ export const makeMinionGolden = (
 	if (!goldenCard?.id) {
 		goldenCard = refCard;
 	}
+
 	// A minion becoming golden ignore the current death.
 	// This way of handling it is not ideal, since it will still trigger if both avenges trigger at the same time, but
 	// should solve the other cases
-	target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
+	// Update 2024-06-21: I'm not sure what this is about exactly. See
+	// http://replays.firestoneapp.com/?reviewId=5d94ebeb-3691-4509-88de-5d5418b20597&turn=11&action=2
+	// The Sr. Tomb Diver dies, thus gilding the Phaerix. Two other deaths later, the avenge procs
+	// This means the death of the diver counted normally
+	// target.avengeCurrent = Math.min(target.avengeDefault, target.avengeCurrent + 1);
+
 	// The rule for golden minions is to add the base stats
 	// TO CHECK: not sure that this is what actually happens (i.e. do minions that trigger on stats modifications
 	// trigger?)
@@ -213,6 +219,7 @@ export const makeMinionGolden = (
 	// of the +2 health bonus
 	// http://replays.firestoneapp.com/?reviewId=283dc44c-5fc8-40fb-af89-7d752a39f9b9&turn=7&action=1
 	modifyStats(target, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
+
 	// Only change the card ID after modifying the stats, so that some effects (like Tarecgosa) won't trigger
 	// too early
 	const refGoldenCard = gameState.allCards.getCard(target.cardId);
@@ -222,6 +229,7 @@ export const makeMinionGolden = (
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
 	const hasDivineShield = target.divineShield;
 	const hasReborn = target.reborn;
+	const avengeCurrent = target.avengeCurrent;
 	addImpliedMechanics(target, gameState.cardsData);
 
 	// addImpliedMechanics grants divine shield if the card has divine shield, or if the entity had
@@ -236,6 +244,7 @@ export const makeMinionGolden = (
 	// target.windfury = refGoldenCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
 	// target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	// target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
+	target.avengeCurrent = avengeCurrent;
 
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 };
@@ -322,7 +331,7 @@ export const grantRandomDivineShield = (
 		.filter((entity) => !entity.divineShield)
 		.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 	if (elligibleEntities.length > 0) {
-		const chosen = elligibleEntities[Math.floor(Math.random() * elligibleEntities.length)];
+		const chosen = pickRandom(elligibleEntities);
 		updateDivineShield(chosen, board, true, allCards);
 		spectator.registerPowerTarget(source, chosen, board, null, null);
 	}
