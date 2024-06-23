@@ -605,7 +605,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				}
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
-				secret.chargesLeft = 4;
+				secret.scriptDataNum1 = secret.scriptDataNum1 ?? 4;
 				// In case there is already room on the board
 				handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 				break;
