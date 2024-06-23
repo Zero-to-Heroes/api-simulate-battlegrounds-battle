@@ -1435,7 +1435,7 @@ export const spawnEntitiesFromDeathrattle = (
 							deadEntity.cardId === CardIds.PapaBear_BG27_509_G
 								? CardIds.MamaBear_TB_BaconUps_090
 								: CardIds.MamaBear_BGS_021,
-							3,
+							4,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoard,
