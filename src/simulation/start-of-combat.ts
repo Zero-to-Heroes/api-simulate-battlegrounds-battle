@@ -872,6 +872,7 @@ const handleTamsinForPlayer = (
 		console.warn('could not pick any entity for tamsin');
 		return;
 	}
+	gameState.spectator.registerPowerTarget(playerEntity, chosenEntity, playerBoard, null, null);
 	const newBoard = playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);
 	// How to mark the minion as dead
 	chosenEntity.definitelyDead = true;

@@ -786,6 +786,7 @@ export const handleDeathrattleEffects = (
 							gameState,
 						);
 					}
+					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
 			case CardIds.SrTombDiver_TB_BaconShop_HERO_41_Buddy:
