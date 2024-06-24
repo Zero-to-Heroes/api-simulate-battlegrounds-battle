@@ -36,6 +36,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.HummingBird_BG26_805_G:
 			board
 				.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
+				.filter((e) => e.entityId !== removed.entityId)
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
