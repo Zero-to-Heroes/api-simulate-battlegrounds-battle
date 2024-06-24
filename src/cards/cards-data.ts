@@ -255,6 +255,14 @@ export class CardsData {
 		return pickRandom(this.minionsForTier[tavernTier ?? 1])?.id;
 	}
 
+	public getRandomMechToMagnetize(tavernLimitUpper: number): string {
+		const magneticMechs = this.pool
+			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
+			.filter((m) => hasMechanic(m, GameTag[GameTag.MODULAR]));
+		const pool = magneticMechs.filter((m) => m.techLevel <= tavernLimitUpper);
+		return pickRandom(pool)?.id;
+	}
+
 	public getRandomMinionForTribe(tribe: Race, tavernLimitUpper: number): string {
 		const pool = this.pool
 			.filter((m) => this.isValidTribe([tribe], m.races, false))

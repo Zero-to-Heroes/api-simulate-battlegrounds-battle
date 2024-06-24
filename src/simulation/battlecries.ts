@@ -16,6 +16,7 @@ import { getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
+import { magnetizeToTarget } from './magnetize';
 import { SharedState } from './shared-state';
 import { modifyStats } from './stats';
 
@@ -781,6 +782,21 @@ export const triggerBattlecry = (
 					.forEach((e) => {
 						modifyStats(e, vaelastraszBonus, vaelastraszBonus, board, hero, gameState);
 					});
+				break;
+			case CardIds.ClunkerJunker_BG29_503:
+			case CardIds.ClunkerJunker_BG29_503_G:
+				const boardWithMechs = board.filter((e) => hasCorrectTribe(e, Race.MECH, gameState.allCards));
+				const junkerTarget = pickRandom(boardWithMechs);
+				if (junkerTarget) {
+					// const name = gameState.allCards.getCard(junkerTarget.cardId)?.name;
+					const numberOfMagnetizes = entity.cardId === CardIds.ClunkerJunker_BG29_503 ? 1 : 2;
+					for (let i = 0; i < numberOfMagnetizes; i++) {
+						const minionToMagnetize = gameState.cardsData.getRandomMechToMagnetize(hero.tavernTier ?? 1);
+						// const magnet = gameState.allCards.getCard(minionToMagnetize).name;
+						gameState.spectator.registerPowerTarget(entity, junkerTarget, board, null, null);
+						magnetizeToTarget(junkerTarget, minionToMagnetize, board, hero, gameState);
+					}
+				}
 				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state
