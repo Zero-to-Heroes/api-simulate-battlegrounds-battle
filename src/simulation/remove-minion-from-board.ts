@@ -81,15 +81,4 @@ export const handleMinionRemovedAuraEffect = (
 				});
 			break;
 	}
-
-	if (hasCorrectTribe(removed, Race.UNDEAD, allCards)) {
-		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
-			removed.attack = Math.max(0, removed.attack - boardHero.globalInfo.UndeadAttackBonus);
-		}
-	}
-	if (hasCorrectTribe(removed, Race.BEAST, allCards)) {
-		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
-			removed.attack = Math.max(0, removed.attack - boardHero.globalInfo.GoldrinnBuffAtk);
-		}
-	}
 };

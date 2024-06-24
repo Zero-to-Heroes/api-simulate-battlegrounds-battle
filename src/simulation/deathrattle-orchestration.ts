@@ -1,6 +1,6 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { addStatsToBoard, hasCorrectTribe } from '../utils';
+import { hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
 import { applyMinionDeathEffect, handleDeathrattleEffects } from './deathrattle-effects';
@@ -135,6 +135,7 @@ const processDeathrattles = (deathrattleInput: DeathrattleInput, processAvenge =
 			// So we would need to find another proxy for the order
 			for (let j = 0; j < deadEntities.length; j++) {
 				const deadEntity = deadEntities[j];
+				const deadEntityAttack = deadEntity.attack;
 				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
 				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
 				const deadEntityPlayerState = playerStates[i];
@@ -524,25 +525,6 @@ const handlePostDeathrattleEffects = (deathrattleInput: DeathrattleInput, entiti
 				);
 			}
 		}
-
-		deadEntityPlayerState.board
-			.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
-			.forEach((ghoul) => {
-				// These are apparently processed after Reborn is triggered
-				// // http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
-				for (let k = 0; k < ghoul.scriptDataNum1 ?? 0; k++) {
-					const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
-					addStatsToBoard(
-						ghoul,
-						deadEntityPlayerState.board,
-						deadEntityPlayerState.player,
-						buff,
-						buff,
-						deathrattleInput.gameState,
-					);
-				}
-				ghoul.scriptDataNum1 = 0;
-			});
 	}
 };
 
@@ -581,6 +563,26 @@ const handlePostDeathrattleEffect = (
 		if (ogDeadEntity) {
 			ogDeadEntity.attack += 4;
 			ogDeadEntity.health += 4;
+		}
+	}
+
+	// ISSUE: when we do this, we change the minion's stats before processing deathrattle effects, which can mess
+	// up the simulation in some cases (like Nightbane, Ignited)
+	// FIX: we do it in postDeathrattleEfects, not when removing minions from the board
+	if (hasCorrectTribe(deadEntity, Race.UNDEAD, gameState.allCards)) {
+		if (deadEntityPlayerState.player.globalInfo.UndeadAttackBonus > 0) {
+			deadEntity.attack = Math.max(
+				0,
+				deadEntity.attack - deadEntityPlayerState.player.globalInfo.UndeadAttackBonus,
+			);
+		}
+	}
+	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
+		if (deadEntityPlayerState.player.globalInfo.GoldrinnBuffAtk > 0) {
+			deadEntity.attack = Math.max(
+				0,
+				deadEntity.attack - deadEntityPlayerState.player.globalInfo.GoldrinnBuffAtk,
+			);
 		}
 	}
 };

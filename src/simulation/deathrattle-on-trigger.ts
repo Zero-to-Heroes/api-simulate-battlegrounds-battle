@@ -31,8 +31,6 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 	input.boardWithDeadEntity
 		.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
 		.forEach((ghoul) => {
-			// These are apparently processed after Reborn is triggered
-			// http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
 			ghoul.scriptDataNum1 = ghoul.scriptDataNum1 ?? 0;
 			ghoul.scriptDataNum1++;
 			// const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
