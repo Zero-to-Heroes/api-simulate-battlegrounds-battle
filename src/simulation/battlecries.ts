@@ -216,7 +216,7 @@ export const triggerBattlecry = (
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
 					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 3 : 6,
-					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 1 : 2,
+					entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 2 : 4,
 					gameState,
 					Race[Race.DRAGON],
 				);
@@ -776,7 +776,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy:
 			case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G:
-				const vaelastraszBonus = entity.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 4 : 2;
+				const vaelastraszBonus = entity.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 6 : 3;
 				board
 					.filter((e) => e.entityId !== entity.entityId)
 					.forEach((e) => {

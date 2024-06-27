@@ -605,7 +605,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				}
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
-				secret.scriptDataNum1 = secret.scriptDataNum1 ?? 4;
+				secret.scriptDataNum1 = secret.scriptDataNum1 ?? 1;
 				// In case there is already room on the board
 				handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 				break;
@@ -1864,7 +1864,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy ||
 		attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G
 	) {
-		const vaelastraszBonus = attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 4 : 2;
+		const vaelastraszBonus = attacker.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 6 : 3;
 		attackingBoard
 			.filter((e) => e.entityId !== attacker.entityId)
 			.forEach((e) => {

@@ -65,7 +65,7 @@ export const applyOnAttackBuffs = (
 			)
 			.forEach((rallier) => {
 				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
-				modifyStats(attacker, 2 * stats, stats, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(attacker, 3 * stats, stats, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					rallier,
 					attacker,

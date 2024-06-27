@@ -1,8 +1,8 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandomAlive } from '../services/utils';
-import { addStatsToBoard } from '../utils';
+import { addStatsToBoard, hasMechanic } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -39,22 +39,22 @@ export const applyAfterDeathEffects = (
 		gameState,
 	);
 
-	// These are apparently processed after Reborn is triggered
-	// http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
-	// UPDATE 2024-06-24: Multiple counterexamples of this, so I'm not sure exactly what is the right approach
-	// I'm implementing the one that makes more sense to me; triggering after reborn is just too different
-	// from what happens usually
-	// However, we want to trigger it after all the spawns have been processed, so more or less an "avenge" timing?
-	// Maybe even after that?
-	boardWithDeadEntity
-		.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
-		.forEach((ghoul) => {
-			for (let k = 0; k < ghoul.scriptDataNum1 ?? 0; k++) {
+	if (hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag[GameTag.DEATHRATTLE])) {
+		// These are apparently processed after Reborn is triggered
+		// http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
+		// UPDATE 2024-06-24: Multiple counterexamples of this, so I'm not sure exactly what is the right approach
+		// I'm implementing the one that makes more sense to me; triggering after reborn is just too different
+		// from what happens usually
+		// However, we want to trigger it after all the spawns have been processed, so more or less an "avenge" timing?
+		// Maybe even after that?
+		// Update 2024-06-27 29.6.2: timing should stay the same
+		boardWithDeadEntity
+			.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
+			.forEach((ghoul) => {
 				const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
 				addStatsToBoard(ghoul, boardWithDeadEntity, boardWithDeadEntityHero, buff, buff, gameState);
-			}
-			ghoul.scriptDataNum1 = 0;
-		});
+			});
+	}
 
 	return allSpawns;
 };

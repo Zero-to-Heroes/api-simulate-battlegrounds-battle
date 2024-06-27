@@ -182,7 +182,7 @@ const handleOtherEntityEffects = (
 				const stats = e.cardId === CardIds.IridescentSkyblazer_BG29_806_G ? 2 : 1;
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
 				if (!!target) {
-					modifyStats(target, stats, 2 * stats, board, hero, gameState);
+					modifyStats(target, stats, stats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
 				}
 			});
@@ -194,7 +194,7 @@ const handleOtherEntityEffects = (
 			.filter((e) => e.entityId !== entity.entityId)
 			.forEach((e) => {
 				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 2 : 1;
-				modifyStats(e, stats, stats, board, hero, gameState);
+				modifyStats(e, 0, 2 * stats, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);
 			});
 	}

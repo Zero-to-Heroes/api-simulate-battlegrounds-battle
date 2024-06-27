@@ -27,20 +27,4 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 				break;
 		}
 	}
-
-	input.boardWithDeadEntity
-		.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
-		.forEach((ghoul) => {
-			ghoul.scriptDataNum1 = ghoul.scriptDataNum1 ?? 0;
-			ghoul.scriptDataNum1++;
-			// const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
-			// addStatsToBoard(
-			// 	ghoul,
-			// 	input.boardWithDeadEntity,
-			// 	input.boardWithDeadEntityHero,
-			// 	buff,
-			// 	buff,
-			// 	input.gameState,
-			// );
-		});
 };
