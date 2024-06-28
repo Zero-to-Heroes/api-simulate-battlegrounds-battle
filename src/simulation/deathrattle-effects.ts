@@ -117,7 +117,6 @@ export const handleDeathrattleEffects = (
 		switch (deadEntityCardId) {
 			case CardIds.RylakMetalhead_BG26_801:
 			case CardIds.RylakMetalhead_BG26_801_G:
-				// const rylakMutltiplier = deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					const allNeighbours = getNeighbours(
 						boardWithDeadEntity,

@@ -872,21 +872,12 @@ export const getDefendingEntity = (
 	attackingEntity: BoardEntity,
 	ignoreTaunts = false,
 ): BoardEntity => {
-	if (attackingEntity.entityId === 10863) {
-		return defendingBoard.find((e) => e.entityId === 8897);
-	}
-	if (attackingEntity.entityId === 10868) {
-		return defendingBoard.find((e) => e.entityId === 8901);
-	}
-	if (attackingEntity.entityId === 10871) {
-		return defendingBoard.find((e) => e.entityId === 8885);
-	}
-	if (attackingEntity.entityId === 10872) {
-		return defendingBoard.find((e) => e.entityId === 8901);
-	}
-	if (attackingEntity.entityId === 10873) {
-		return defendingBoard.find((e) => e.entityId === 8897);
-	}
+	// if (attackingEntity.entityId === 4946) {
+	// 	let def = null;
+	// 	if (!!(def = defendingBoard.find((e) => e.entityId === 7170))) {
+	// 		return def;
+	// 	}
+	// }
 
 	let possibleDefenders: readonly BoardEntity[];
 	if (

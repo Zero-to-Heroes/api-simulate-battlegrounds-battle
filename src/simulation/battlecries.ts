@@ -833,7 +833,7 @@ const afterBattlecryTriggered = (
 	board
 		.filter((e) => e.cardId === CardIds.BlazingSkyfin_BG25_040 || e.cardId === CardIds.BlazingSkyfin_BG25_040_G)
 		.forEach((e) => {
-			const buff = entity.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
+			const buff = e.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
 			modifyStats(e, buff, buff, board, hero, gameState);
 		});
 };
