@@ -192,7 +192,6 @@ export class CardsData {
 			case CardIds.BuddingGreenthumb_BG21_030_G:
 			// case CardIds.FrostwolfLieutenant:
 			// case CardIds.FrostwolfLieutenantBattlegrounds:
-			case CardIds.Onyxia_Broodmother:
 			case CardIds.PashmarTheVengeful_BG23_014:
 			case CardIds.PashmarTheVengeful_BG23_014_G:
 			case CardIds.WitchwingNestmatron_BG21_038:
@@ -203,6 +202,7 @@ export class CardsData {
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
 				return 3;
+			case CardIds.Onyxia_Broodmother:
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
 			case CardIds.Sisefin_BG21_009:
