@@ -58,6 +58,7 @@ const handleSecrets = (
 				secret.triggered = true;
 				const avengeTarget = pickRandomAlive(boardWithDeadEntity);
 				modifyStats(avengeTarget, 3, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				gameState.spectator.registerPowerTarget(secret, avengeTarget, boardWithDeadEntity, null, null);
 				break;
 			case CardIds.Redemption_TB_Bacon_Secrets_10:
 				secret.triggered = true;
@@ -80,6 +81,7 @@ const handleSecrets = (
 				);
 				redemptionSpawns[0].health = 1;
 				allSpawns.push(...redemptionSpawns);
+				gameState.spectator.registerPowerTarget(secret, redemptionSpawns[0], boardWithDeadEntity, null, null);
 				break;
 			case CardIds.Effigy_TB_Bacon_Secrets_05:
 				secret.triggered = true;
@@ -102,6 +104,7 @@ const handleSecrets = (
 					true,
 				);
 				allSpawns.push(...effigySpawns);
+				gameState.spectator.registerPowerTarget(secret, effigySpawns[0], boardWithDeadEntity, null, null);
 				break;
 		}
 	}

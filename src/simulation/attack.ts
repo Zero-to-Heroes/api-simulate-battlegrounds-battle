@@ -23,7 +23,7 @@ import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
 import { makeMinionsDie } from './minion-death';
 import { onMinionKill } from './minion-kill';
-import { applyOnAttackBuffs } from './on-attack';
+import { applyOnAttackEffects } from './on-attack';
 import { applyOnBeingAttackedBuffs } from './on-being-attacked';
 import { onQuestProgressUpdated } from './quest';
 import { performEntitySpawns } from './spawns';
@@ -114,10 +114,11 @@ export const doFullAttack = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	applyOnAttackBuffs(
+	applyOnAttackEffects(
 		attackingEntity,
 		attackingBoard,
 		attackingBoardHero,
+		defendingEntity,
 		defendingBoard,
 		defendingBoardHero,
 		gameState,
@@ -353,33 +354,6 @@ const performAttack = (
 				);
 			}
 		}
-	} else if (
-		attackingEntity.cardId === CardIds.ObsidianRavager_BG27_017 ||
-		attackingEntity.cardId === CardIds.ObsidianRavager_BG27_017_G
-	) {
-		const neighbours = getNeighbours(defendingBoard, defendingEntity);
-		const neighbourTargets =
-			attackingEntity.cardId === CardIds.ObsidianRavager_BG27_017_G ? neighbours : [pickRandom(neighbours)];
-		const targets = [defendingEntity, ...neighbourTargets];
-		targets.forEach((target) => {
-			gameState.spectator.registerPowerTarget(
-				attackingEntity,
-				target,
-				defendingBoard,
-				attackingBoardHero,
-				defendingBoardHero,
-			);
-			damageDoneByAttacker += dealDamageToMinion(
-				target,
-				defendingBoard,
-				defendingBoardHero,
-				attackingEntity,
-				attackingEntity.attack,
-				attackingBoard,
-				attackingBoardHero,
-				gameState,
-			);
-		});
 	} else if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
 		const spawns = spawnEntities(
 			attackingEntity.cardId === CardIds.BabyKrush_BG22_001_G
