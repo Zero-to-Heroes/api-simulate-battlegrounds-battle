@@ -1,7 +1,7 @@
 import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { pickRandom } from '../services/utils';
+import { pickRandom, pickRandomAlive } from '../services/utils';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -682,7 +682,9 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.DisguisedGraverobber_BG28_303:
 			case CardIds.DisguisedGraverobber_BG28_303_G:
-				const disguisedGraverobberTarget = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
+				const disguisedGraverobberTarget = pickRandomAlive(
+					board.filter((e) => hasCorrectTribe(e, Race.UNDEAD, gameState.allCards)),
+				);
 				if (disguisedGraverobberTarget) {
 					const disguisedGraverobberNumberOfCopies =
 						entity.cardId === CardIds.DisguisedGraverobber_BG28_303 ? 1 : 2;
