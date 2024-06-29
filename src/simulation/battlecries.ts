@@ -798,6 +798,22 @@ export const triggerBattlecry = (
 					}
 				}
 				break;
+			case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy:
+			case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy_G:
+				const nathanosTarget = pickRandom(board);
+				if (nathanosTarget) {
+					gameState.spectator.registerPowerTarget(entity, target, board, null, null);
+					nathanosTarget.definitelyDead = true;
+					const buffMultiplier = entity.cardId === CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy ? 1 : 2;
+					const attackBuff = nathanosTarget.attack * buffMultiplier;
+					const healthBuff = nathanosTarget.health * buffMultiplier;
+					const buffTargets = getNeighbours(board, nathanosTarget);
+					buffTargets.forEach((e) => {
+						modifyStats(e, attackBuff, healthBuff, board, hero, gameState);
+						gameState.spectator.registerPowerTarget(entity, e, board, null, null);
+					});
+				}
+				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state
 				const hasBattlecry = gameState.allCards
