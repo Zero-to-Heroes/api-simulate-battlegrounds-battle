@@ -804,7 +804,7 @@ export const triggerBattlecry = (
 			case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy_G:
 				const nathanosTarget = pickRandom(board);
 				if (nathanosTarget) {
-					gameState.spectator.registerPowerTarget(entity, target, board, null, null);
+					gameState.spectator.registerPowerTarget(entity, nathanosTarget, board, null, null);
 					nathanosTarget.definitelyDead = true;
 					const buffMultiplier = entity.cardId === CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy ? 1 : 2;
 					const attackBuff = nathanosTarget.attack * buffMultiplier;
