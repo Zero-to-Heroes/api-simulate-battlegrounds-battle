@@ -3,7 +3,11 @@ import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
-import { applyMinionDeathEffect, handleDeathrattleEffects } from './deathrattle-effects';
+import {
+	applyWheneverMinionDiesEffect,
+	handleAfterMinionKillsEffect,
+	handleDeathrattleEffects,
+} from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { handleRebornForEntity } from './reborn';
@@ -23,8 +27,11 @@ export const orchestrateMinionDeathEffects = (
 	processAvenge = true,
 	processReborn = true,
 ) => {
+	// Icesnarl / Rokara here?
+	handleAfterMinionsKillEffects(deathrattleInput);
+
 	// Not sure about this
-	handlePreDeathrattleEffects(deathrattleInput);
+	handleWheneverMinionsDieEffects(deathrattleInput);
 
 	const playerBoardBefore = [...deathrattleInput.gameState.gameState.player.board];
 	const opponentBoardBefore = [...deathrattleInput.gameState.gameState.opponent.board];
@@ -72,7 +79,37 @@ export const orchestrateMinionDeathEffects = (
 	handlePostDeathrattleEffects(deathrattleInput, [...entitiesFromDeathrattles, ...entitiesFromFeathermanes]);
 };
 
-const handlePreDeathrattleEffects = (deathrattleInput: DeathrattleInput) => {
+const handleAfterMinionsKillEffects = (deathrattleInput: DeathrattleInput) => {
+	const processPlayerFirst = Math.random() > 0.5;
+	const playerStates = processPlayerFirst
+		? [deathrattleInput.gameState.gameState.player, deathrattleInput.gameState.gameState.opponent]
+		: [deathrattleInput.gameState.gameState.opponent, deathrattleInput.gameState.gameState.player];
+	const playerDeadEntities = processPlayerFirst
+		? [deathrattleInput.playerDeadEntities, deathrattleInput.opponentDeadEntities]
+		: [deathrattleInput.opponentDeadEntities, deathrattleInput.playerDeadEntities];
+	const playerDeadEntityIndexesFromRight = processPlayerFirst
+		? [deathrattleInput.playerDeadEntityIndexesFromRight, deathrattleInput.opponentDeadEntityIndexesFromRight]
+		: [deathrattleInput.opponentDeadEntityIndexesFromRight, deathrattleInput.playerDeadEntityIndexesFromRight];
+	for (let i = 0; i < 2; i++) {
+		const deadEntities = playerDeadEntities[i];
+		if (deadEntities.length >= 0) {
+			for (let j = 0; j < deadEntities.length; j++) {
+				const deadEntity = deadEntities[j];
+				handleAfterMinionKillsEffect(
+					deadEntity,
+					playerDeadEntityIndexesFromRight[i][j],
+					playerStates[i].board,
+					playerStates[i].player,
+					playerStates[1 - i].board,
+					playerStates[1 - i].player,
+					deathrattleInput.gameState,
+				);
+			}
+		}
+	}
+};
+
+const handleWheneverMinionsDieEffects = (deathrattleInput: DeathrattleInput) => {
 	// Wildfire Element is applied first, before the DR spawns
 	const processPlayerFirst = Math.random() > 0.5;
 	const playerStates = processPlayerFirst
@@ -89,7 +126,7 @@ const handlePreDeathrattleEffects = (deathrattleInput: DeathrattleInput) => {
 		if (deadEntities.length >= 0) {
 			for (let j = 0; j < deadEntities.length; j++) {
 				const deadEntity = deadEntities[j];
-				applyMinionDeathEffect(
+				applyWheneverMinionDiesEffect(
 					deadEntity,
 					playerDeadEntityIndexesFromRight[i][j],
 					playerStates[i].board,

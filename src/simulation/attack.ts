@@ -1394,40 +1394,6 @@ const handleAfterMinionsDeathsForBoard = (
 	otherHeroEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	for (const deadEntity of friendlyDeadEntities) {
-		const killer = deadEntity.lastAffectedByEntity;
-		if (!killer) {
-			continue;
-		}
-		// Killed an enemy minion
-		if (killer.friendly !== deadEntity.friendly) {
-			if (otherHeroEntity.heroPowerId === CardIds.Rokara_GloryOfCombat) {
-				modifyStats(killer, 1, 0, otherBoard, otherHeroEntity, gameState);
-			}
-
-			// Icesnarl the Mighty
-			// The timing here might be off, as the following replay suggests that the effect should trigger
-			// before Sr. Tomb Diver's deathrattle is applied
-			// http://replays.firestoneapp.com/?reviewId=ebb4e2d6-11b4-44f4-a052-3be2c63dd38f&turn=11&action=6
-			otherBoard
-				.filter(
-					(e) =>
-						e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy ||
-						e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G,
-				)
-				.forEach((icesnarl) => {
-					modifyStats(
-						icesnarl,
-						0,
-						icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1,
-						friendlyBoard,
-						friendlyHeroEntity,
-						gameState,
-					);
-				});
-		}
-	}
-
 	const candidateEntities = [];
 	let secretTriggered = null;
 	if (
