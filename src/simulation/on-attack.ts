@@ -25,7 +25,7 @@ export const applyOnAttackEffects = (
 	) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		const targets = attacker.cardId === CardIds.ObsidianRavager_BG27_017_G ? neighbours : [pickRandom(neighbours)];
-		targets.forEach((target) => {
+		[defendingEntity, ...targets].forEach((target) => {
 			gameState.spectator.registerPowerTarget(
 				attacker,
 				target,
