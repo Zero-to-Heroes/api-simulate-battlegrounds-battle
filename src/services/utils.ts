@@ -44,7 +44,7 @@ export const pickRandomLowestHealth = (board: BoardEntity[]): BoardEntity => {
 	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
 	const lowestHealth = Math.min(...targetBoard.map((e) => e.health));
 	const entitiesWithLowestHealth = targetBoard.filter((e) => e.health === lowestHealth);
-	const chosenEntity = entitiesWithLowestHealth[0]; // pickRandom(entitiesWithLowestHealth);
+	const chosenEntity = pickRandom(entitiesWithLowestHealth);
 	return chosenEntity;
 };
 
