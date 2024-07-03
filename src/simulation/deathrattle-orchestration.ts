@@ -341,6 +341,7 @@ export const processDeathrattleForMinion = (
 			otherPlayerState.board,
 			otherPlayerState.player,
 			gameState,
+			[...drEntities, ...enchEntities],
 		);
 	}
 

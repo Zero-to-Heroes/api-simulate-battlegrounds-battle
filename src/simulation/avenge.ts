@@ -2,6 +2,7 @@ import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
+import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
 	getRandomAliveMinion,
@@ -30,6 +31,7 @@ export const applyAvengeEffects = (
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
+	entitiesSpawnedFromMinionDeath: BoardEntity[],
 ): void => {
 	const candidatesEntitiesSpawnedFromAvenge: BoardEntity[] = [];
 	// updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
@@ -99,7 +101,11 @@ export const applyAvengeEffects = (
 		gameState,
 	);
 
-	if (hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag[GameTag.DEATHRATTLE])) {
+	// Not an avenge, but with Avenge timing
+	const hasDeathrattle =
+		hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag[GameTag.DEATHRATTLE]) ||
+		deadEntity.enchantments.some((e) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(e.cardId as CardIds));
+	if (hasDeathrattle) {
 		// These are apparently processed after Reborn is triggered
 		// http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12
 		// UPDATE 2024-06-24: Multiple counterexamples of this, so I'm not sure exactly what is the right approach

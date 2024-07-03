@@ -10,7 +10,7 @@ import {
 	pickRandomAlive,
 	pickRandomLowestHealth,
 } from '../services/utils';
-import { VALID_ENCHANTMENTS } from '../simulate-bgs-battle';
+import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
 	grantRandomAttack,
@@ -1781,7 +1781,7 @@ export const rememberDeathrattles = (
 			repeats: enchantment.repeats ?? 1,
 			timing: sharedState.currentEntityId++,
 		}))
-		.filter((enchantment) => VALID_ENCHANTMENTS.includes(enchantment.cardId as CardIds));
+		.filter((enchantment) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(enchantment.cardId as CardIds));
 	// Multiple fish
 	const deadEntityRememberedDeathrattles =
 		deadEntities

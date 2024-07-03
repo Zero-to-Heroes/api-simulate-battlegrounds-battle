@@ -206,7 +206,7 @@ const checkRounding = (roundedValue: number, initialValue: number, totalValue: n
 };
 
 // Used when triggering random deathrattles
-export const VALID_ENCHANTMENTS = [
+export const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e,
 	CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e,
 	CardIds.LivingSpores_LivingSporesEnchantment,
@@ -219,8 +219,6 @@ export const VALID_ENCHANTMENTS = [
 	CardIds.LightningRecollectionEnchantment,
 	CardIds.WaterRecollectionEnchantment,
 	CardIds.EarthInvocation_ElementEarthEnchantment, // Summon a 1/1
-	// CardIds.FireInvocation_ElementFireEnchantment, // Attack is doubled, probably no use to keep it
-	// CardIds.WaterInvocation_ElementWaterEnchantment, // +3 health and taunt, same
 	CardIds.LightningInvocation, // Deal 1 damage to 5 enemy minions
 	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e,
 	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
