@@ -255,9 +255,7 @@ export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): 
 	const ref = allCards.getCard(entity.cardId);
 	// Some cards (like the Bettle token from Boon of Beetles) don't have a premium dbf id. However, we can still
 	// gild it
-	return !!ref.battlegroundsNormalDbfId;
-	// Why this condition?
-	// || !allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
+	return ref.premium || !!ref.battlegroundsNormalDbfId;
 };
 
 export const grantRandomAttack = (
