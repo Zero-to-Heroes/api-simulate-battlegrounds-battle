@@ -46,6 +46,7 @@ export interface BgsPlayerGlobalInfo {
 	GoldrinnBuffAtk?: number;
 	GoldrinnBuffHealth?: number;
 	TavernSpellsCastThisGame?: number;
+	PiratesPlayedThisGame?: number;
 }
 
 export interface BgsQuestEntity {

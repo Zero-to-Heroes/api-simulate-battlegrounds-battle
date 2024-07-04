@@ -816,6 +816,17 @@ export const triggerBattlecry = (
 					});
 				}
 				break;
+			case CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy:
+			case CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy_G:
+				const tuskarrTarget = pickRandom(allMinions);
+				if (tuskarrTarget) {
+					gameState.spectator.registerPowerTarget(entity, tuskarrTarget, board, null, null);
+					const buffMultiplier = entity.cardId === CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy ? 1 : 2;
+					const attackBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
+					const healthBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
+					modifyStats(tuskarrTarget, attackBuff, healthBuff, board, hero, gameState);
+				}
+				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state
 				const hasBattlecry = gameState.allCards
