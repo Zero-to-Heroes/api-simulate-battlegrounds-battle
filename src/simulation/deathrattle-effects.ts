@@ -1237,7 +1237,8 @@ export const applyWaterInvocationEnchantment = (
 ): void => {
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
-		const target: BoardEntity = boardWithDeadEntity[boardWithDeadEntity.length - 1];
+		const validBoard = boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead);
+		const target: BoardEntity = validBoard[validBoard.length - 1];
 		if (!!target) {
 			target.taunt = true;
 			modifyStats(target, 0, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
@@ -1255,7 +1256,7 @@ export const applyFireInvocationEnchantment = (
 ): void => {
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
 	for (let i = 0; i < multiplier; i++) {
-		const target: BoardEntity = boardWithDeadEntity[0];
+		const target: BoardEntity = boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead)[0];
 		if (!!target) {
 			modifyStats(target, target.attack, 0, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity, null, null);
