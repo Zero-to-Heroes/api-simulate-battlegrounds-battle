@@ -223,6 +223,8 @@ const handlePreCombatHeroPowersForPlayer = (
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EmbraceYourRage) {
 		handleEmbraceYourRageForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		shouldRecomputeCurrentAttacker = true;
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.RebornRites) {
+		handleRebornRitesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TeronGorefiend_RapidReanimation) {
 		shouldRecomputeCurrentAttacker = handleTeronForPlayer(
 			playerBoard,
@@ -970,6 +972,23 @@ const handleEmbraceYourRageForPlayer = (
 	gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 	addCardsInHand(playerEntity, playerBoard, spawns, gameState);
 	gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+};
+
+const handleRebornRitesForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	const targetEntityId = playerEntity.heroPowerInfo as number;
+	const target = playerBoard.find((entity) => entity.entityId === targetEntityId);
+	if (!target) {
+		return;
+	}
+
+	target.reborn = true;
+	gameState.spectator.registerPowerTarget(playerEntity, target, playerBoard, playerEntity, opponentEntity);
 };
 
 const handleTeronForPlayer = (
