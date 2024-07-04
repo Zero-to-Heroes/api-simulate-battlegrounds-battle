@@ -114,15 +114,6 @@ export const doFullAttack = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	applyOnAttackEffects(
-		attackingEntity,
-		attackingBoard,
-		attackingBoardHero,
-		defendingEntity,
-		defendingBoard,
-		defendingBoardHero,
-		gameState,
-	);
 	gameState.spectator.registerAttack(
 		attackingEntity,
 		defendingEntity,
@@ -131,7 +122,18 @@ export const doFullAttack = (
 		attackingBoardHero,
 		defendingBoardHero,
 	);
+	// http://replays.firestoneapp.com/?reviewId=50576a9f-2e6a-4600-87ba-6e737ca9853e&turn=21&action=4
+	// Looks like onBeingAttacked effects apply before onAttack effects
 	applyOnBeingAttackedBuffs(
+		attackingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingEntity,
+		defendingBoard,
+		defendingBoardHero,
+		gameState,
+	);
+	applyOnAttackEffects(
 		attackingEntity,
 		attackingBoard,
 		attackingBoardHero,
