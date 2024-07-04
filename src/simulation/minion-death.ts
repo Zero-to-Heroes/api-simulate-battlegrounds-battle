@@ -2,6 +2,7 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateAvengeCounters } from './avenge';
+import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { removeMinionFromBoard } from './remove-minion-from-board';
@@ -61,10 +62,29 @@ export const makeMinionsDie = (
 	// See http://replays.firestoneapp.com/?reviewId=0ce4db9c-3269-4704-b662-8a8c31f5afe1&turn=16&action=27
 	for (const deadEntity of deadEntities) {
 		updateAvengeCounters(board, boardHero);
+		onMinionDeadHeroPower(board, boardHero, deadEntity, gameState);
+		onMinionDeadHeroPower(otherBoard, otherBoardHero, deadEntity, gameState);
 		onMinionDeadQuest(board, boardHero, otherBoard, otherBoardHero, gameState);
 	}
 
 	return [indexesFromRightAfterDeath, deadEntities];
+};
+
+export const onMinionDeadHeroPower = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	deadEntity: BoardEntity,
+	gameState: FullGameState,
+) => {
+	if (
+		boardHero.heroPowerId === CardIds.IllTakeThat &&
+		boardHero.heroPowerUsed &&
+		boardHero.heroPowerInfo2 <= 0 &&
+		deadEntity.friendly !== boardHero.friendly
+	) {
+		addCardsInHand(boardHero, board, [deadEntity.cardId], gameState);
+		boardHero.heroPowerInfo2 = 1;
+	}
 };
 
 export const onMinionDeadQuest = (
