@@ -12,8 +12,6 @@ import {
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	hasMechanic,
-	isMinionGolden,
-	makeMinionGolden,
 } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
@@ -22,6 +20,7 @@ import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
+import { isMinionGolden, makeMinionGolden } from './utils/golden';
 
 export const applyAvengeEffects = (
 	deadEntity: BoardEntity,

@@ -23,7 +23,6 @@ import {
 	isCorrectTribe,
 	isFish,
 	isGolden,
-	makeMinionGolden,
 	updateDivineShield,
 } from '../utils';
 import {
@@ -42,6 +41,7 @@ import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 import { modifyStats } from './stats';
+import { makeMinionGolden } from './utils/golden';
 
 export const computeDeathrattleMultiplier = (
 	board: BoardEntity[],

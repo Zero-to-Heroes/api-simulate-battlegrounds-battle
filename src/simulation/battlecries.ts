@@ -9,8 +9,6 @@ import {
 	getRandomAliveMinion,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
-	isMinionGolden,
-	makeMinionGolden,
 } from '../utils';
 import { getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
@@ -19,6 +17,7 @@ import { FullGameState } from './internal-game-state';
 import { magnetizeToTarget } from './magnetize';
 import { SharedState } from './shared-state';
 import { modifyStats } from './stats';
+import { isMinionGolden, makeMinionGolden } from './utils/golden';
 
 export const computeBattlecryMultiplier = (
 	board: BoardEntity[],

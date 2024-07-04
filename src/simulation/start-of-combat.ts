@@ -12,7 +12,6 @@ import {
 	hasCorrectTribe,
 	isCorrectTribe,
 	isGolden,
-	makeMinionGolden,
 	updateDivineShield,
 } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
@@ -40,6 +39,7 @@ import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
 import { applyAfterStatsUpdate, modifyStats } from './stats';
 import { handleSummonsWhenSpace } from './summon-when-space';
+import { makeMinionGolden } from './utils/golden';
 
 // TODO 20/04/2024: I'm not too sure about some ordering. The way I understand it, the Start of Combat has
 // multiple phases, and in each phase the player order is random
