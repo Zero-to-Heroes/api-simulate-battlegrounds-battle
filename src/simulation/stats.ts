@@ -55,7 +55,7 @@ export const modifyStats = (
 	const tarecgosaMultiplier = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
 
 	const realAttackAmount = attackAmount * poetMultipliers * tarecgosaMultiplier;
-	const realHealthAmount = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 * healthAmount : healthAmount;
+	const realHealthAmount = healthAmount * poetMultipliers * tarecgosaMultiplier;
 
 	entity.attack = Math.max(0, entity.attack + realAttackAmount);
 	entity.previousAttack = entity.attack;
