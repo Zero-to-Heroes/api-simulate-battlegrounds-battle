@@ -207,7 +207,7 @@ export const grantRandomHealth = (
 		.filter((e) => !excludeSource || e.entityId !== source.entityId)
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
-		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
+		const target = pickRandom(candidateBoard);
 		modifyStats(target, 0, health, board, hero, gameState);
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
@@ -472,7 +472,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 
 const setImplicitDataForEntity = (entity: BoardEntity, cardsData: CardsData): BoardEntity => {
 	entity.cardId = normalizeCardIdForSkin(entity.cardId);
-	entity.maxHealth = Math.max(0, entity.health);
+	entity.maxHealth = Math.max(0, entity.health, entity.maxHealth);
 	const avengeValue = cardsData.avengeValue(entity.cardId);
 	if (avengeValue > 0) {
 		entity.avengeCurrent = avengeValue;

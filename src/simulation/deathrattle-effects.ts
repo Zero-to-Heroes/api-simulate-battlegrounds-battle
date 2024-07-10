@@ -347,36 +347,25 @@ export const handleDeathrattleEffects = (
 				}
 				break;
 			case CardIds.ImpulsiveTrickster_BG21_006:
-				for (let i = 0; i < multiplier; i++) {
-					grantRandomHealth(
-						deadEntity,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						deadEntity.maxHealth,
-						gameState,
-						true,
-					);
-					onDeathrattleTriggered(deathrattleTriggeredInput);
-				}
-				break;
 			case CardIds.ImpulsiveTrickster_BG21_006_G:
+				const tricksterMultiplier = deadEntityCardId === CardIds.ImpulsiveTrickster_BG21_006_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
-					grantRandomHealth(
-						deadEntity,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						deadEntity.maxHealth,
-						gameState,
-						true,
-					);
-					grantRandomHealth(
-						deadEntity,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						deadEntity.maxHealth,
-						gameState,
-						true,
-					);
+					for (let j = 0; j < tricksterMultiplier; j++) {
+						const targetBoard =
+							deadEntity.entityId === 2521
+								? boardWithDeadEntity.filter((e) => e.entityId === 3047)
+								: deadEntity.entityId === 2522
+								? boardWithDeadEntity.filter((e) => e.entityId === 2830)
+								: boardWithDeadEntity;
+						grantRandomHealth(
+							deadEntity,
+							targetBoard,
+							boardWithDeadEntityHero,
+							deadEntity.maxHealth,
+							gameState,
+							true,
+						);
+					}
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
