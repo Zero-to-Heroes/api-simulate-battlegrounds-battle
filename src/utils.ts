@@ -68,6 +68,7 @@ export const buildSingleBoardEntity = (
 					reborn: hasMechanic(card, 'REBORN'),
 					poisonous: hasMechanic(card, GameTag[GameTag.POISONOUS]),
 					venomous: hasMechanic(card, GameTag[GameTag.VENOMOUS]),
+					stealth: hasMechanic(card, GameTag[GameTag.STEALTH]),
 					windfury:
 						hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
 						card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
@@ -113,6 +114,7 @@ export const buildSingleBoardEntity = (
 				newEntity.poisonous = newEntity.poisonous || hasMechanic(moduleCard, GameTag[GameTag.POISONOUS]);
 				newEntity.venomous = newEntity.venomous || hasMechanic(moduleCard, GameTag[GameTag.VENOMOUS]);
 				newEntity.windfury = newEntity.windfury || hasMechanic(moduleCard, GameTag[GameTag.WINDFURY]);
+				newEntity.stealth = newEntity.stealth || hasMechanic(moduleCard, GameTag[GameTag.STEALTH]);
 			}
 		}
 		newEntity.health = 1;
