@@ -401,7 +401,8 @@ const handleNaturalDeathrattle = (
 	);
 	allSpawns.push(...entitiesFromNativeDeathrattle);
 	spawnsToSpawn.push(...entitiesFromNativeDeathrattle);
-	performEntitySpawns(
+	// Some candidate entities are not spawned, and so are ignored in further processing
+	const actualSpawns = performEntitySpawns(
 		spawnsToSpawn,
 		deadEntityPlayerState.board,
 		deadEntityPlayerState.player,
@@ -422,7 +423,7 @@ const handleNaturalDeathrattle = (
 		gameState,
 	);
 
-	return allSpawns;
+	return actualSpawns;
 };
 
 const handleEnchantmentsDeathrattle = (
