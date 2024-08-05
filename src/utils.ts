@@ -474,7 +474,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 
 const setImplicitDataForEntity = (entity: BoardEntity, cardsData: CardsData): BoardEntity => {
 	entity.cardId = normalizeCardIdForSkin(entity.cardId);
-	entity.maxHealth = Math.max(0, entity.health, entity.maxHealth);
+	entity.maxHealth = Math.max(0, entity.health, entity.maxHealth ?? 0);
 	const avengeValue = cardsData.avengeValue(entity.cardId);
 	if (avengeValue > 0) {
 		entity.avengeCurrent = avengeValue;
@@ -499,7 +499,9 @@ export const stringifySimple = (board: readonly BoardEntity[], allCards: AllCard
 };
 
 export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsService = null): string => {
-	return entity ? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/atk=${entity.attack}` : null;
+	return entity
+		? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/atk=${entity.attack}/hp=${entity.health}`
+		: null;
 };
 
 export const isFish = (entity: BoardEntity): boolean => {
