@@ -2,6 +2,7 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { buildSingleBoardEntity } from '../utils';
+import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 
@@ -12,23 +13,87 @@ export const handleSummonsWhenSpace = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	if (playerEntity.rapidReanimationMinion) {
+	handleSummonsWhenSpaceForPlayer(playerEntity, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	handleSummonsWhenSpaceForPlayer(
+		opponentEntity,
+		opponentBoard,
+		opponentEntity,
+		playerBoard,
+		playerEntity,
+		gameState,
+	);
+};
+
+const handleSummonsWhenSpaceForPlayer = (
+	targetEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+) => {
+	if (targetEntity.rapidReanimationMinion) {
 		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
-	if (opponentEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
-	}
-	if (playerEntity.questRewards?.includes(CardIds.StableAmalgamation_BG28_Reward_518)) {
+	if (targetEntity.questRewards?.includes(CardIds.StableAmalgamation_BG28_Reward_518)) {
 		handleStableAmalgamationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
-	if (opponentEntity.questRewards?.includes(CardIds.StableAmalgamation_BG28_Reward_518)) {
-		handleStableAmalgamationForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
-	}
-	if (playerEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
+	if (targetEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
 		handleBoonOfBeetlesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
-	if (opponentEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
-		handleBoonOfBeetlesForPlayer(opponentBoard, opponentEntity, playerBoard, playerEntity, gameState);
+	if (targetEntity.heroPowerId === CardIds.Ozumat_Tentacular) {
+		handleOzumatForPlayer(
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			targetEntity.friendly,
+			gameState,
+		);
+	}
+};
+
+const handleOzumatForPlayer = (
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	friendly: boolean,
+	gameState: FullGameState,
+): void => {
+	if (playerBoard.length < 7 && !playerEntity.heroPowerInfo2) {
+		const tentacularSize = +playerEntity.heroPowerInfo;
+		const tentacular = spawnEntities(
+			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
+			1,
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			gameState.allCards,
+			gameState.cardsData,
+			gameState.sharedState,
+			gameState.spectator,
+			friendly,
+			true,
+			false,
+			false,
+		);
+		tentacular[0].attack = tentacularSize;
+		tentacular[0].health = tentacularSize;
+		const indexFromRight = 0;
+		performEntitySpawns(
+			tentacular,
+			playerBoard,
+			playerEntity,
+			playerEntity,
+			indexFromRight,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+		);
+		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
+		playerEntity.heroPowerInfo2 = 1;
 	}
 };
 

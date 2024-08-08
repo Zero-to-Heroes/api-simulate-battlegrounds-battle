@@ -5,6 +5,7 @@ export interface BoardEntity {
 	health: number;
 
 	maxHealth?: number;
+	maxAttack?: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	frenzyChargesLeft?: number;

@@ -211,9 +211,6 @@ const handlePreCombatHeroPowersForPlayer = (
 		applyFireInvocationEnchantment(playerBoard, playerEntity, null, playerEntity, gameState);
 	} else if (playerHeroPowerId === CardIds.AllWillBurn) {
 		applyAllWillBurn(playerBoard, playerEntity, opponentBoard, opponentEntity, playerEntity, gameState);
-	} else if (playerHeroPowerId === CardIds.Ozumat_Tentacular) {
-		handleOzumatForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, friendly, gameState);
-		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.TamsinRoame_FragrantPhylactery) {
 		handleTamsinForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		// Tamsin's hero power somehow happens before the current attacker is chosen.
@@ -1117,54 +1114,6 @@ const selectMinions = (minions: BoardEntity[], tribes: Race[], allCards: AllCard
 
 	// Step 4
 	return selectedMinions;
-};
-
-const handleOzumatForPlayer = (
-	playerBoard: BoardEntity[],
-	playerEntity: BgsPlayerEntity,
-	opponentBoard: BoardEntity[],
-	opponentEntity: BgsPlayerEntity,
-	friendly: boolean,
-	gameState: FullGameState,
-): void => {
-	// Because of some interactions between start of combat hero powers, it can happen that Ozumat is already present
-	// on the board when we receive the board state
-	if (
-		playerBoard.length < 7 &&
-		!playerBoard.some((e) => e.cardId === CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt)
-	) {
-		const tentacularSize = +playerEntity.heroPowerInfo;
-		const tentacular = spawnEntities(
-			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
-			1,
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			gameState.allCards,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			friendly,
-			true,
-			false,
-			false,
-		);
-		tentacular[0].attack = tentacularSize;
-		tentacular[0].health = tentacularSize;
-		const indexFromRight = 0;
-		performEntitySpawns(
-			tentacular,
-			playerBoard,
-			playerEntity,
-			playerEntity,
-			indexFromRight,
-			opponentBoard,
-			opponentEntity,
-			gameState,
-		);
-		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
-	}
 };
 
 const handlePlayerStartOfCombatHeroPowers = (

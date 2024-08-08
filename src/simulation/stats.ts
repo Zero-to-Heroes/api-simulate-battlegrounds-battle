@@ -18,6 +18,7 @@ export const setEntityStats = (
 ): void => {
 	if (attack !== null) {
 		entity.attack = attack;
+		entity.maxAttack = attack;
 	}
 	if (health !== null) {
 		entity.health = health;
@@ -61,11 +62,9 @@ export const modifyStats = (
 	entity.previousAttack = entity.attack;
 	entity.pendingAttackBuffs.push(realAttackAmount);
 	entity.health += realHealthAmount;
-	if (realHealthAmount > 0) {
-		entity.maxHealth += realHealthAmount;
-	}
 
 	if (realAttackAmount > 0) {
+		entity.maxAttack += realAttackAmount;
 		if (isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.DRAGON)) {
 			const whelpSmugglers = friendlyBoard.filter(
 				(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
@@ -140,6 +139,7 @@ export const modifyStats = (
 	}
 
 	if (realHealthAmount > 0) {
+		entity.maxHealth += realHealthAmount;
 		const titanicGuardians = friendlyBoard
 			.filter((e) => e.entityId !== entity.entityId)
 			.filter(

@@ -116,8 +116,8 @@ export const applyAvengeEffects = (
 		boardWithDeadEntity
 			.filter((e) => e.cardId === CardIds.GhoulAcabra_BG29_863 || e.cardId === CardIds.GhoulAcabra_BG29_863_G)
 			.forEach((ghoul) => {
-				const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 4 : 2;
-				addStatsToBoard(ghoul, boardWithDeadEntity, boardWithDeadEntityHero, buff, buff, gameState);
+				const buff = ghoul.cardId === CardIds.GhoulAcabra_BG29_863_G ? 2 : 1;
+				addStatsToBoard(ghoul, boardWithDeadEntity, boardWithDeadEntityHero, 2 * buff, buff, gameState);
 			});
 	}
 };

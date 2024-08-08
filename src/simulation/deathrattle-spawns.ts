@@ -1479,27 +1479,31 @@ export const spawnEntitiesFromDeathrattle = (
 							isCorrectTribe(gameState.allCards.getCard(entity.cardId)?.races, Race.DEMON),
 						)
 						.slice(0, cultistStharaSpawnNumber);
-					cultistStharaSpawnCandidates.forEach((candidate) =>
-						spawnedEntities.push(
-							...spawnEntities(
-								candidate.cardId,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-								false,
-								true,
-								{ ...candidate } as BoardEntity,
-							),
-						),
-					);
+					cultistStharaSpawnCandidates.forEach((candidate) => {
+						const spawns = spawnEntities(
+							candidate.cardId,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+							false,
+							true,
+							// { ...candidate } as BoardEntity,
+						);
+						spawns.forEach((spawn) => {
+							spawn.attack = spawn.maxAttack ?? spawn.attack;
+							spawn.health = spawn.maxHealth ?? spawn.health;
+							spawn.maxHealth = spawn.health;
+						});
+						spawnedEntities.push(...spawns);
+					});
 					break;
 				case CardIds.HarmlessBonehead_BG28_300:
 				case CardIds.HarmlessBonehead_BG28_300_G:

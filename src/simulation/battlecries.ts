@@ -470,8 +470,7 @@ export const triggerBattlecry = (
 				const murlocsControlled = board.filter((e) =>
 					hasCorrectTribe(e, Race.MURLOC, gameState.allCards),
 				).length;
-				// const murkyBattlecriesPlayed = entity.scriptDataNum1 > 0 ? entity.scriptDataNum1 / murkyScale - 1 : 0;
-				const murkyStats = murkyScale * 4 * murlocsControlled;
+				const murkyStats = murkyScale * 3 * murlocsControlled;
 				const murkyTarget = pickRandom(
 					board.filter((e) => hasCorrectTribe(e, Race.MURLOC, gameState.allCards)),
 				);
