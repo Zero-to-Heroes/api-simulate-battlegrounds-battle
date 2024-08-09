@@ -475,6 +475,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 const setImplicitDataForEntity = (entity: BoardEntity, cardsData: CardsData): BoardEntity => {
 	entity.cardId = normalizeCardIdForSkin(entity.cardId);
 	entity.maxHealth = Math.max(0, entity.health, entity.maxHealth ?? 0);
+	entity.maxAttack = Math.max(0, entity.attack, entity.maxAttack ?? 0);
 	const avengeValue = cardsData.avengeValue(entity.cardId);
 	if (avengeValue > 0) {
 		entity.avengeCurrent = avengeValue;

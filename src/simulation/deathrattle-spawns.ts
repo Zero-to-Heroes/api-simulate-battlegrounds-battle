@@ -1495,11 +1495,10 @@ export const spawnEntitiesFromDeathrattle = (
 							false,
 							false,
 							true,
-							// { ...candidate } as BoardEntity,
 						);
 						spawns.forEach((spawn) => {
-							spawn.attack = spawn.maxAttack ?? spawn.attack;
-							spawn.health = spawn.maxHealth ?? spawn.health;
+							spawn.attack = candidate.maxAttack ?? candidate.attack;
+							spawn.health = candidate.maxHealth ?? candidate.health;
 							spawn.maxHealth = spawn.health;
 						});
 						spawnedEntities.push(...spawns);
