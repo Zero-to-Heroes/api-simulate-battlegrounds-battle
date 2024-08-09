@@ -6,11 +6,15 @@ export interface BgsPlayerEntity {
 	readonly nonGhostCardId?: string;
 	readonly hpLeft: number;
 	readonly tavernTier: number;
+
 	readonly heroPowerId?: string | undefined | null;
 	readonly heroPowerEntityId?: number;
 	readonly heroPowerUsed: boolean;
 	readonly heroPowerInfo?: number | string;
 	heroPowerInfo2?: number;
+	// For Ozumat
+	heroPowerActivated?: boolean;
+
 	friendly?: boolean;
 	entityId?: number;
 	questEntities: BgsQuestEntity[];
