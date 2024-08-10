@@ -489,7 +489,7 @@ const performAttack = (
 	// Cleave
 	if (attackingEntity.cleave) {
 		for (const neighbour of defenderNeighbours) {
-			damageDoneByAttacker += bumpEntities(
+			const thisAttackDamage = bumpEntities(
 				neighbour,
 				attackingEntity,
 				defendingBoard,
@@ -498,10 +498,22 @@ const performAttack = (
 				attackingBoardHero,
 				gameState,
 			);
+			damageDoneByAttacker += thisAttackDamage;
 			// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 			// cause wrong results to happen
 			if (attackingEntity.attack > 0 && neighbour.divineShield) {
 				updateDivineShield(neighbour, defendingBoard, false, gameState.allCards);
+			}
+			if (thisAttackDamage > 0) {
+				onEntityDamaged(
+					neighbour,
+					defendingBoard,
+					defendingBoardHero,
+					attackingBoard,
+					attackingBoardHero,
+					thisAttackDamage,
+					gameState,
+				);
 			}
 			if (neighbour.health <= 0 || neighbour.definitelyDead) {
 				onMinionKill(
