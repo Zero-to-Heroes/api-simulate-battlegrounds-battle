@@ -57,6 +57,15 @@ export const handleStartOfCombat = (
 	gameState: FullGameState,
 ): number => {
 	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	const shouldRecomputeCurrentAttacker = true;
+	if (shouldRecomputeCurrentAttacker) {
+		currentAttacker =
+			playerBoard.length > opponentBoard.length
+				? 0
+				: opponentBoard.length > playerBoard.length
+				? 1
+				: Math.round(Math.random());
+	}
 
 	// https://twitter.com/DCalkosz/status/1564705111850434561
 	currentAttacker = handleStartOfCombatQuestRewards(
