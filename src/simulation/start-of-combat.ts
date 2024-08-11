@@ -56,6 +56,8 @@ export const handleStartOfCombat = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+
 	// https://twitter.com/DCalkosz/status/1564705111850434561
 	currentAttacker = handleStartOfCombatQuestRewards(
 		playerEntity,
@@ -180,6 +182,7 @@ const handlePreCombatHeroPowers = (
 			gameState,
 		);
 	}
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	return currentAttacker;
 };
 
@@ -310,7 +313,7 @@ export const handleIllidanHeroPowers = (
 		);
 	}
 	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
-	// console.log('current attacker after', currentAttacker);
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	return currentAttacker;
 };
 
@@ -414,6 +417,8 @@ const handleStartOfCombatQuestRewards = (
 			true,
 		);
 	}
+
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	return currentAttacker;
 };
 
@@ -460,6 +465,7 @@ const handleStartOfCombatSpells = (
 			gameState,
 		);
 	}
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	return currentAttacker;
 };
 
@@ -487,6 +493,7 @@ const handleStartOfCombatAnomalies = (
 		currentAttacker,
 		gameState,
 	);
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	return currentAttacker;
 };
 
@@ -605,8 +612,6 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
 				secret.scriptDataNum1 = secret.scriptDataNum1 ?? 1;
-				// In case there is already room on the board
-				handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 				break;
 			case CardIds.FleetingVigor_BG28_519:
 				addStatsToBoard(secret, playerBoard, playerEntity, 2, 1, gameState);
@@ -768,6 +773,7 @@ export const handleStartOfCombatHeroPowers = (
 			gameState,
 		);
 	}
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	return currentAttacker;
 };
 
