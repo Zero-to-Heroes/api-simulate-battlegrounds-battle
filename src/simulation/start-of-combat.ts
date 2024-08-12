@@ -336,19 +336,20 @@ const handleStartOfCombatMinions = (
 	opponentBoardBefore: BoardEntity[],
 	gameState: FullGameState,
 ): number => {
-	let attackerForStart = currentAttacker;
+	let attackerForStart = Math.random() < 0.5 ? 0 : 1;
 	const playerAttackers = [...playerBoard]; //.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
 	const opponentAttackers = [...opponentBoard]; //.filter((entity) =>
 	// 	START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds),
 	// );
 
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
+		let shouldUpdateNextPlayer = false;
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
 			const attacker = playerAttackers.splice(0, 1)[0];
 			if (attacker.health <= 0 || attacker.definitelyDead) {
 				continue;
 			}
-			performStartOfCombatMinionsForPlayer(
+			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(
 				attacker,
 				playerBoard,
 				playerEntity,
@@ -358,12 +359,14 @@ const handleStartOfCombatMinions = (
 				opponentBoardBefore,
 				gameState,
 			);
+		} else if (attackerForStart === 0 && playerAttackers.length === 0) {
+			shouldUpdateNextPlayer = true;
 		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
 			const attacker = opponentAttackers.splice(0, 1)[0];
 			if (attacker.health <= 0 || attacker.definitelyDead) {
 				continue;
 			}
-			performStartOfCombatMinionsForPlayer(
+			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(
 				attacker,
 				opponentBoard,
 				opponentEntity,
@@ -373,8 +376,13 @@ const handleStartOfCombatMinions = (
 				playerBoardBefore,
 				gameState,
 			);
+		} else if (attackerForStart === 1 && opponentAttackers.length === 0) {
+			shouldUpdateNextPlayer = true;
 		}
-		attackerForStart = (attackerForStart + 1) % 2;
+
+		if (shouldUpdateNextPlayer) {
+			attackerForStart = (attackerForStart + 1) % 2;
+		}
 	}
 	return currentAttacker;
 };
@@ -1261,10 +1269,11 @@ export const performStartOfCombatMinionsForPlayer = (
 	attackingBoardBefore: BoardEntity[],
 	defendingBoardBefore: BoardEntity[],
 	gameState: FullGameState,
-): void => {
+): boolean => {
 	if (attackingBoardHero.startOfCombatDone) {
-		return;
+		return false;
 	}
+	let hasProcessed = true;
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
 		const damage = attackingBoardBefore
@@ -1885,8 +1894,11 @@ export const performStartOfCombatMinionsForPlayer = (
 				defendingBoardHero,
 			);
 		}
+	} else {
+		hasProcessed = false;
 	}
 	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
+	return hasProcessed;
 };
 
 const applyAllWillBurn = (
