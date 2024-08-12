@@ -150,10 +150,6 @@ export const buildRandomUndeadCreation = (
 	sharedState: SharedState,
 ): BoardEntity => {
 	const baseCard = pickRandom(cardsData.putricidePool1);
-	const stitchedCardId =
-		baseCard === CardIds.EternalSummoner_BG25_009
-			? pickRandom(cardsData.putridicePool2ForEternalSummoner)
-			: pickRandom(cardsData.putricidePool2);
 	const newEntity = buildSingleBoardEntity(
 		baseCard,
 		controllerHero,
@@ -166,6 +162,11 @@ export const buildRandomUndeadCreation = (
 		sharedState,
 		null,
 	);
+
+	const stitchedCardId =
+		baseCard === CardIds.EternalSummoner_BG25_009
+			? pickRandom(cardsData.putridicePool2ForEternalSummoner)
+			: pickRandom(cardsData.putricidePool2);
 	const stitchedCard = allCards.getCard(stitchedCardId);
 	newEntity.attack += stitchedCard.attack;
 	newEntity.health += stitchedCard.health;
@@ -174,6 +175,7 @@ export const buildRandomUndeadCreation = (
 	newEntity.poisonous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
 	newEntity.venomous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
 	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
+	newEntity.reborn = newEntity.reborn || hasMechanic(stitchedCard, GameTag[GameTag.REBORN]);
 	newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 	newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
 	return newEntity;
