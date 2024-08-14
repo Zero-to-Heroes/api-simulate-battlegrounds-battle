@@ -24,6 +24,7 @@ export const handleSummonsWhenSpace = (
 	);
 };
 
+// TODO: Twin Sky Lanterns wait for 2 spaces
 const handleSummonsWhenSpaceForPlayer = (
 	targetEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],

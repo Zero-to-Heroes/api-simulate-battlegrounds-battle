@@ -523,6 +523,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 	gameState: FullGameState,
 	playerIsFriendly: boolean,
 ): number => {
+	// TODO: add trinkets
 	if (!playerEntity.questRewards?.length || playerEntity.startOfCombatDone) {
 		return currentAttacker;
 	}
