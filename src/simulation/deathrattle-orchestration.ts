@@ -251,7 +251,7 @@ const processFeathermaneForMinion = (
 	const allSpawns = [];
 
 	// Feathermane
-	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
+	if (hasCorrectTribe(deadEntity, deadEntityPlayerState.player, Race.BEAST, gameState.allCards)) {
 		const feathermanes =
 			deadEntityPlayerState.player.hand
 				?.filter((e) => !e.locked)
@@ -608,7 +608,7 @@ const handlePostDeathrattleEffect = (
 	// ISSUE: when we do this, we change the minion's stats before processing deathrattle effects, which can mess
 	// up the simulation in some cases (like Nightbane, Ignited)
 	// FIX: we do it in postDeathrattleEfects, not when removing minions from the board
-	if (hasCorrectTribe(deadEntity, Race.UNDEAD, gameState.allCards)) {
+	if (hasCorrectTribe(deadEntity, deadEntityPlayerState.player, Race.UNDEAD, gameState.allCards)) {
 		if (deadEntityPlayerState.player.globalInfo.UndeadAttackBonus > 0) {
 			deadEntity.attack = Math.max(
 				0,
@@ -616,7 +616,7 @@ const handlePostDeathrattleEffect = (
 			);
 		}
 	}
-	if (hasCorrectTribe(deadEntity, Race.BEAST, gameState.allCards)) {
+	if (hasCorrectTribe(deadEntity, deadEntityPlayerState.player, Race.BEAST, gameState.allCards)) {
 		if (deadEntityPlayerState.player.globalInfo.GoldrinnBuffAtk > 0) {
 			deadEntity.attack = Math.max(
 				0,

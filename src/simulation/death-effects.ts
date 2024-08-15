@@ -1,7 +1,8 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { pickRandomAlive } from '../services/utils';
+import { pickRandom, pickRandomAlive } from '../services/utils';
+import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -51,6 +52,22 @@ const handleSecrets = (
 	gameState: FullGameState,
 ): BoardEntity[] => {
 	const allSpawns = [];
+
+	const trinkets = boardWithDeadEntityHero.trinkets ?? [];
+	for (const trinket of trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.LuckyTabby:
+				if (!trinket.scriptDataNum1) {
+					trinket.scriptDataNum1 = 6;
+				}
+				trinket.scriptDataNum1--;
+				if (trinket.scriptDataNum1 === 0) {
+					const randomBeast = pickRandom(gameState.cardsData.beastSpawns);
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomBeast], gameState);
+				}
+				break;
+		}
+	}
 
 	for (const secret of (boardWithDeadEntityHero.secrets ?? []).filter((s) => !s.triggered)) {
 		switch (secret.cardId) {

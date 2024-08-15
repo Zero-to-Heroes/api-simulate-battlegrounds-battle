@@ -89,7 +89,8 @@ const buildFinalInputForPlayer = (
 	}
 
 	const { board, hand } = buildFinalInputBoard(playerInfo, isPlayer, cardsData, cards);
-	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId);
+	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId) ?? [];
+	playerInfo.player.trinkets = playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
 	playerInfo.player.friendly = isPlayer;
 	// When using the simulator, the aura is not applied when receiving the board state.
 	setMissingAuras(board, playerInfo.player, cards);

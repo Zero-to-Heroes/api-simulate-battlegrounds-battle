@@ -10,7 +10,6 @@ import {
 	getRandomMinionWithHighestHealth,
 	getTeammateInitialState,
 	hasCorrectTribe,
-	isCorrectTribe,
 	isGolden,
 	updateDivineShield,
 } from '../utils';
@@ -523,10 +522,28 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 	gameState: FullGameState,
 	playerIsFriendly: boolean,
 ): number => {
-	// TODO: add trinkets
-	if (!playerEntity.questRewards?.length || playerEntity.startOfCombatDone) {
+	if (playerEntity.startOfCombatDone) {
 		return currentAttacker;
 	}
+
+	for (const trinket of playerEntity.trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.HolyMallet:
+				if (playerBoard.length > 0) {
+					updateDivineShield(playerBoard[0], playerBoard, true, gameState.allCards);
+					gameState.spectator.registerPowerTarget(playerEntity, playerBoard[0], playerBoard, null, null);
+					if (playerBoard.length > 1) {
+						updateDivineShield(playerBoard[1], playerBoard, true, gameState.allCards);
+						gameState.spectator.registerPowerTarget(playerEntity, playerBoard[1], playerBoard, null, null);
+					}
+				}
+				break;
+			case CardIds.ValorousMedallion:
+				addStatsToBoard(trinket, playerBoard, playerEntity, 2, 2, gameState);
+				break;
+		}
+	}
+
 	for (const reward of playerEntity.questRewards) {
 		switch (reward) {
 			case CardIds.EvilTwin:
@@ -1277,9 +1294,9 @@ export const performStartOfCombatMinionsForPlayer = (
 	let hasProcessed = true;
 	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
-		const damage = attackingBoardBefore
-			.map((entity) => gameState.allCards.getCard(entity.cardId).races)
-			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
+		const damage = attackingBoardBefore.filter((entity) =>
+			hasCorrectTribe(entity, attackingBoardHero, Race.DRAGON, gameState.allCards),
+		).length;
 		dealDamageToRandomEnemy(
 			defendingBoard,
 			defendingBoardHero,
@@ -1290,9 +1307,9 @@ export const performStartOfCombatMinionsForPlayer = (
 			gameState,
 		);
 	} else if (attacker.cardId === CardIds.RedWhelp_TB_BaconUps_102) {
-		const damage = attackingBoardBefore
-			.map((entity) => gameState.allCards.getCard(entity.cardId).races)
-			.filter((races) => isCorrectTribe(races, Race.DRAGON)).length;
+		const damage = attackingBoardBefore.filter((entity) =>
+			hasCorrectTribe(entity, attackingBoardHero, Race.DRAGON, gameState.allCards),
+		).length;
 		dealDamageToRandomEnemy(
 			defendingBoard,
 			defendingBoardHero,
@@ -1318,7 +1335,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const stats = attacker.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
 		const targets = attackingBoard
 			.filter((e) => e.entityId !== attacker.entityId)
-			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards));
+			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.DRAGON, gameState.allCards));
 		for (const entity of targets) {
 			modifyStats(entity, stats, stats, attackingBoard, attackingBoardHero, gameState);
 			gameState.spectator.registerPowerTarget(
@@ -1355,7 +1372,7 @@ export const performStartOfCombatMinionsForPlayer = (
 	) {
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard
-			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards))
+			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.DRAGON, gameState.allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
 		const loops = attacker.cardId === CardIds.AmberGuardian_BG24_500_G ? 2 : 1;
 		const dragonsToConsider = otherDragons;
@@ -1384,7 +1401,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const buff = attacker.cardId === CardIds.SanctumRester_BG26_356_G ? 16 : 8;
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = attackingBoard
-			.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards))
+			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.DRAGON, gameState.allCards))
 			.filter((e) => e.entityId !== attacker.entityId);
 		otherDragons.forEach((otherDragon) => {
 			modifyStats(otherDragon, 0, buff, attackingBoard, attackingBoardHero, gameState);
@@ -1403,7 +1420,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		const numberOfTargets = attacker.cardId === CardIds.Soulsplitter_BG25_023_G ? 2 : 1;
 		for (let i = 0; i < numberOfTargets; i++) {
 			const undeadsWithoutReborn = attackingBoard
-				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, gameState.allCards))
+				.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.UNDEAD, gameState.allCards))
 				.filter((e) => !e.reborn);
 			const chosenUndead = pickRandom(undeadsWithoutReborn);
 			if (chosenUndead) {
@@ -1753,7 +1770,9 @@ export const performStartOfCombatMinionsForPlayer = (
 	) {
 		const loops = attacker.cardId === CardIds.ThousandthPaperDrake_BG29_810_G ? 2 : 1;
 		const pickedTargets = [];
-		const dragons = attackingBoard.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards));
+		const dragons = attackingBoard.filter((e) =>
+			hasCorrectTribe(e, attackingBoardHero, Race.DRAGON, gameState.allCards),
+		);
 		for (let i = 0; i < loops; i++) {
 			const target = dragons.filter((e) => !pickedTargets.includes(e))[0];
 			if (!!target) {
@@ -1874,7 +1893,7 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy ||
 		attacker.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G
 	) {
-		const minionsOfDifferentTypes = getMinionsOfDifferentTypes(attackingBoard, gameState);
+		const minionsOfDifferentTypes = getMinionsOfDifferentTypes(attackingBoard, attackingBoardHero, gameState);
 		if (minionsOfDifferentTypes.length >= 4) {
 			const highestAttackOnBoard = Math.max(...attackingBoard.map((entity) => entity.attack));
 			const highestHealthOnBoard = Math.max(...attackingBoard.map((entity) => entity.health));

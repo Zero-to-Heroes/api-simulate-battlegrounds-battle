@@ -26,7 +26,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 			board
-				.filter((e) => hasCorrectTribe(e, Race.MURLOC, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, allCards))
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
@@ -35,7 +35,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.HummingBird_BG26_805:
 		case CardIds.HummingBird_BG26_805_G:
 			board
-				.filter((e) => hasCorrectTribe(e, Race.BEAST, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, allCards))
 				.filter((e) => e.entityId !== removed.entityId)
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
@@ -46,7 +46,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			// console.debug('removing southsea captain', stringifySimpleCard(removed, allCards), stringifySimple(board, allCards));
 			board
-				.filter((e) => hasCorrectTribe(e, Race.PIRATE, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, allCards))
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
 					e.attack = Math.max(0, e.attack - diff);
@@ -57,7 +57,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.Kathranatir_BG21_039:
 		case CardIds.Kathranatir_BG21_039_G:
 			board
-				.filter((e) => hasCorrectTribe(e, Race.DEMON, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, allCards))
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
@@ -75,7 +75,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.SoreLoser_BG27_030:
 		case CardIds.SoreLoser_BG27_030_G:
 			board
-				.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, allCards))
 				.forEach((e) => {
 					const diff = (removed.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
 					e.attack = Math.max(0, e.attack - diff);

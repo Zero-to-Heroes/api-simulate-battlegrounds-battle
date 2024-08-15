@@ -1,7 +1,7 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { addStatsToBoard, hasCorrectTribe, isCorrectTribe } from '../utils';
+import { addStatsToBoard, hasCorrectTribe } from '../utils';
 import { applyAurasToSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
 import { FullGameState, PlayerState } from './internal-game-state';
@@ -65,7 +65,7 @@ export const modifyStats = (
 
 	if (realAttackAmount > 0) {
 		entity.maxAttack += realAttackAmount;
-		if (isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.DRAGON)) {
+		if (hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.allCards)) {
 			const whelpSmugglers = friendlyBoard.filter(
 				(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
 			);
@@ -306,7 +306,7 @@ const onStatUpdateMinions = (
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	if (hasCorrectTribe(entity, Race.ELEMENTAL, gameState.allCards)) {
+	if (hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
 			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
 		);

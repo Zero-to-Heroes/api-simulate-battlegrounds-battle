@@ -100,6 +100,7 @@ const onCardAddedToHandMinion = (
 	peggys.forEach((peggy) => {
 		const pirate = getRandomAliveMinion(
 			board.filter((e) => e.entityId !== peggy.entityId),
+			playerEntity,
 			Race.PIRATE,
 			gameState.allCards,
 		);

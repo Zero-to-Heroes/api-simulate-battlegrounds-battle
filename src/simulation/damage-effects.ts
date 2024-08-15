@@ -171,7 +171,7 @@ const handleOtherEntityEffects = (
 	spawnedEntities: BoardEntity[],
 	gameState: FullGameState,
 ) => {
-	if (hasCorrectTribe(entity, Race.BEAST, gameState.allCards)) {
+	if (hasCorrectTribe(entity, hero, Race.BEAST, gameState.allCards)) {
 		board
 			.filter(
 				(e) =>
@@ -198,4 +198,15 @@ const handleOtherEntityEffects = (
 				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);
 			});
 	}
+
+	const trinkets = hero.trinkets ?? [];
+	trinkets
+		.filter((t) => t.cardId === CardIds.TigerCarving)
+		.forEach((carving) => {
+			const target = pickRandom(board);
+			if (!!target) {
+				modifyStats(target, 2, 0, board, hero, gameState);
+				gameState.spectator.registerPowerTarget(carving, target, board, hero, otherHero);
+			}
+		});
 };

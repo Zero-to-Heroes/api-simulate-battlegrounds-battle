@@ -68,7 +68,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.RockpoolHunter_BG_UNG_073:
 			case CardIds.RockpoolHunter_TB_BaconUps_061:
-				const rockPoolTarget = getRandomAliveMinion(board, Race.MURLOC, gameState.allCards);
+				const rockPoolTarget = getRandomAliveMinion(board, hero, Race.MURLOC, gameState.allCards);
 				if (!!rockPoolTarget) {
 					const rockpoolStats = entity.cardId === CardIds.RockpoolHunter_BG_UNG_073 ? 1 : 2;
 					modifyStats(rockPoolTarget, rockpoolStats, rockpoolStats, board, hero, gameState);
@@ -110,7 +110,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.TwilightEmissary_BGS_038:
 			case CardIds.TwilightEmissary_TB_BaconUps_108:
-				const twilightEmissaryTarget = getRandomAliveMinion(board, Race.DRAGON, gameState.allCards);
+				const twilightEmissaryTarget = getRandomAliveMinion(board, hero, Race.DRAGON, gameState.allCards);
 				const twilightEmissaryStats = entity.cardId === CardIds.TwilightEmissary_BGS_038 ? 2 : 4;
 				modifyStats(
 					twilightEmissaryTarget,
@@ -193,7 +193,7 @@ export const triggerBattlecry = (
 			case CardIds.Smogger_BG21_021_G:
 				const smoggerLoops = entity.cardId === CardIds.Smogger_BG21_021 ? 1 : 2;
 				for (let i = 0; i < smoggerLoops; i++) {
-					const smoggerTarget = getRandomAliveMinion(board, Race.ELEMENTAL, gameState.allCards);
+					const smoggerTarget = getRandomAliveMinion(board, hero, Race.ELEMENTAL, gameState.allCards);
 					const smoggerStats = hero.tavernTier ?? 3;
 					modifyStats(smoggerTarget, smoggerStats, smoggerStats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, smoggerTarget, board, hero, otherHero);
@@ -411,7 +411,7 @@ export const triggerBattlecry = (
 			case CardIds.EmergentFlame_BG27_018:
 			case CardIds.EmergentFlame_BG27_018_G:
 				const emergentFlameTarget = pickRandom(
-					allMinions.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
+					allMinions.filter((e) => hasCorrectTribe(e, hero, Race.ELEMENTAL, gameState.allCards)),
 				);
 				if (!!emergentFlameTarget) {
 					const targetBoard = board.includes(emergentFlameTarget) ? board : otherBoard;
@@ -432,7 +432,7 @@ export const triggerBattlecry = (
 			case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t:
 			case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309_Gt:
 				const smolderwingTarget = pickRandom(
-					allMinions.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards)),
+					allMinions.filter((e) => hasCorrectTribe(e, hero, Race.DRAGON, gameState.allCards)),
 				);
 				if (!!smolderwingTarget) {
 					const targetBoard = board.includes(smolderwingTarget) ? board : otherBoard;
@@ -468,11 +468,11 @@ export const triggerBattlecry = (
 			case CardIds.Murky_BG24_012_G:
 				const murkyScale = entity.cardId === CardIds.Murky_BG24_012 ? 1 : 2;
 				const murlocsControlled = board.filter((e) =>
-					hasCorrectTribe(e, Race.MURLOC, gameState.allCards),
+					hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards),
 				).length;
 				const murkyStats = murkyScale * 3 * murlocsControlled;
 				const murkyTarget = pickRandom(
-					board.filter((e) => hasCorrectTribe(e, Race.MURLOC, gameState.allCards)),
+					board.filter((e) => hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards)),
 				);
 				if (!!murkyTarget) {
 					modifyStats(murkyTarget, murkyStats, murkyStats, board, hero, gameState);
@@ -482,7 +482,9 @@ export const triggerBattlecry = (
 			case CardIds.LovesickBalladist_BG26_814_G:
 				const balladistMultiplier = entity.cardId === CardIds.LovesickBalladist_BG26_814 ? 1 : 2;
 				const balladistStats = balladistMultiplier * (entity.scriptDataNum1 ?? 0);
-				const balladistTargets = allMinions.filter((e) => hasCorrectTribe(e, Race.PIRATE, gameState.allCards));
+				const balladistTargets = allMinions.filter((e) =>
+					hasCorrectTribe(e, hero, Race.PIRATE, gameState.allCards),
+				);
 				const balladistTarget = pickRandom(balladistTargets);
 				if (balladistTarget) {
 					const targetBoard = board.includes(balladistTarget) ? board : otherBoard;
@@ -681,7 +683,7 @@ export const triggerBattlecry = (
 			case CardIds.DisguisedGraverobber_BG28_303:
 			case CardIds.DisguisedGraverobber_BG28_303_G:
 				const disguisedGraverobberTarget = pickRandomAlive(
-					board.filter((e) => hasCorrectTribe(e, Race.UNDEAD, gameState.allCards)),
+					board.filter((e) => hasCorrectTribe(e, hero, Race.UNDEAD, gameState.allCards)),
 				);
 				if (disguisedGraverobberTarget) {
 					const disguisedGraverobberNumberOfCopies =
@@ -728,7 +730,7 @@ export const triggerBattlecry = (
 			case CardIds.OrcEstraConductor_BGDUO_119:
 			case CardIds.OrcEstraConductor_BGDUO_119_G:
 				const conductorTarget = pickRandom(
-					allMinions.filter((e) => hasCorrectTribe(e, Race.ELEMENTAL, gameState.allCards)),
+					allMinions.filter((e) => hasCorrectTribe(e, hero, Race.ELEMENTAL, gameState.allCards)),
 				);
 				if (!!conductorTarget) {
 					const targetBoard = board.includes(conductorTarget) ? board : otherBoard;
@@ -785,7 +787,7 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.ClunkerJunker_BG29_503:
 			case CardIds.ClunkerJunker_BG29_503_G:
-				const boardWithMechs = board.filter((e) => hasCorrectTribe(e, Race.MECH, gameState.allCards));
+				const boardWithMechs = board.filter((e) => hasCorrectTribe(e, hero, Race.MECH, gameState.allCards));
 				const junkerTarget = pickRandom(boardWithMechs);
 				if (junkerTarget) {
 					// const name = gameState.allCards.getCard(junkerTarget.cardId)?.name;

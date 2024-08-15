@@ -20,7 +20,6 @@ import {
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	hasMechanic,
-	isCorrectTribe,
 	isFish,
 	isGolden,
 	updateDivineShield,
@@ -177,7 +176,9 @@ export const handleDeathrattleEffects = (
 							.filter((entity) => !entity.venomous)
 							.filter((entity) => !entity.poisonous)
 							.filter((entity) => entity.health > 0 && !entity.definitelyDead)
-							.filter((entity) => hasCorrectTribe(entity, Race.MURLOC, gameState.allCards));
+							.filter((entity) =>
+								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards),
+							);
 						if (possibleBelcherTargets.length > 0) {
 							const chosen = pickRandom(possibleBelcherTargets);
 							chosen.venomous = true;
@@ -230,7 +231,7 @@ export const handleDeathrattleEffects = (
 					const nadinaMultiplier = deadEntityCardId === CardIds.NadinaTheRed_TB_BaconUps_154 ? 6 : 3;
 					for (let j = 0; j < nadinaMultiplier; j++) {
 						const validTargets = boardWithDeadEntity
-							.filter((e) => hasCorrectTribe(e, Race.DRAGON, gameState.allCards))
+							.filter((e) => hasCorrectTribe(e, boardWithDeadEntityHero, Race.DRAGON, gameState.allCards))
 							.filter((entity) => !entity.divineShield);
 						const target = pickRandom(validTargets);
 						if (target) {
@@ -541,7 +542,7 @@ export const handleDeathrattleEffects = (
 						.filter((entity) => entity.friendly === deadEntity.friendly)
 						// eslint-disable-next-line prettier/prettier
 						.filter((entity) =>
-							isCorrectTribe(gameState.allCards.getCard(entity.cardId)?.races, Race.MECH),
+							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
 						).length;
 					for (let j = 0; j < numberOfDeadMechsThisCombat; j++) {
 						dealDamageToRandomEnemy(
@@ -763,7 +764,7 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					const numberOfBloodGems = deadEntityCardId === CardIds.ThreeLilQuilboar_BG26_867_G ? 6 : 3;
 					for (const entity of boardWithDeadEntity.filter((e) =>
-						hasCorrectTribe(e, Race.QUILBOAR, gameState.allCards),
+						hasCorrectTribe(e, boardWithDeadEntityHero, Race.QUILBOAR, gameState.allCards),
 					)) {
 						playBloodGemsOn(
 							deadEntity,
@@ -894,6 +895,7 @@ export const handleDeathrattleEffects = (
 				for (let i = 0; i < multiplier; i++) {
 					applyRecurringNightmareDeathrattleEffect(
 						boardWithDeadEntity,
+						boardWithDeadEntityHero,
 						deadEntity,
 						deadEntityCardId === CardIds.RecurringNightmare_BG26_055_G,
 						gameState.allCards,
@@ -962,7 +964,9 @@ export const handleDeathrattleEffects = (
 									e.cardId !== CardIds.Mummifier_BG28_309_G,
 							)
 							.filter((e) => !e.reborn)
-							.filter((e) => hasCorrectTribe(e, Race.UNDEAD, gameState.allCards));
+							.filter((e) =>
+								hasCorrectTribe(e, boardWithDeadEntityHero, Race.UNDEAD, gameState.allCards),
+							);
 						const target = pickRandom(targets);
 						if (target) {
 							target.reborn = true;
@@ -1075,10 +1079,13 @@ export const handleDeathrattleEffects = (
 				}
 				break;
 			// Add all the deathrattles that don't have an effect on combat
-			case CardIds.FieryFelblood_BG29_877:
-			case CardIds.FieryFelblood_BG29_877_G:
-				for (let i = 0; i < multiplier; i++) {
-					onDeathrattleTriggered(deathrattleTriggeredInput);
+			// case CardIds.FieryFelblood_BG29_877:
+			// case CardIds.FieryFelblood_BG29_877_G:
+			default:
+				if (hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag[GameTag.DEATHRATTLE])) {
+					for (let i = 0; i < multiplier; i++) {
+						onDeathrattleTriggered(deathrattleTriggeredInput);
+					}
 				}
 				break;
 		}
@@ -1310,6 +1317,7 @@ const applyLeapFroggerEffect = (
 
 const applyRecurringNightmareDeathrattleEffect = (
 	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
 	isPremium: boolean,
 	allCards: AllCardsService,
@@ -1320,7 +1328,7 @@ const applyRecurringNightmareDeathrattleEffect = (
 	multiplier = multiplier || 1;
 	const target = pickRandom(
 		boardWithDeadEntity
-			.filter((e) => hasCorrectTribe(e, Race.UNDEAD, allCards))
+			.filter((e) => hasCorrectTribe(e, boardWithDeadEntityHero, Race.UNDEAD, allCards))
 			.filter(
 				(e) =>
 					e.cardId !== CardIds.RecurringNightmare_BG26_055 &&
@@ -1394,16 +1402,16 @@ export const applyWheneverMinionDiesEffect = (
 	gameState: FullGameState,
 ): void => {
 	// console.log('applying minion death effect', stringifySimpleCard(deadEntity, allCards));
-	if (isCorrectTribe(gameState.allCards.getCard(deadEntity.cardId).races, Race.BEAST)) {
+	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.BEAST, gameState.allCards)) {
 		applyScavengingHyenaEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 	}
-	if (isCorrectTribe(gameState.allCards.getCard(deadEntity.cardId).races, Race.DEMON)) {
+	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.DEMON, gameState.allCards)) {
 		applySoulJugglerEffect(boardWithDeadEntity, boardWithDeadEntityHero, otherBoard, otherBoardHero, gameState);
 	}
-	if (isCorrectTribe(gameState.allCards.getCard(deadEntity.cardId).races, Race.MECH)) {
+	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.MECH, gameState.allCards)) {
 		applyJunkbotEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 	}
-	if (hasCorrectTribe(deadEntity, Race.MURLOC, gameState.allCards)) {
+	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards)) {
 		removeOldMurkEyeAttack(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 		removeOldMurkEyeAttack(otherBoard, otherBoardHero, gameState);
 	}
@@ -1542,7 +1550,7 @@ export const applyWheneverMinionDiesEffect = (
 			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {
 			const otherPirates = otherBoard
-				.filter((entity) => isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.PIRATE))
+				.filter((entity) => hasCorrectTribe(entity, boardWithDeadEntityHero, Race.PIRATE, gameState.allCards))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
 				modifyStats(pirate, 2, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
@@ -1556,7 +1564,7 @@ export const applyWheneverMinionDiesEffect = (
 			});
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_TB_BaconUps_142) {
 			const otherPirates = otherBoard
-				.filter((entity) => isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.PIRATE))
+				.filter((entity) => hasCorrectTribe(entity, boardWithDeadEntityHero, Race.PIRATE, gameState.allCards))
 				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
 			otherPirates.forEach((pirate) => {
 				modifyStats(pirate, 4, 4, boardWithDeadEntity, boardWithDeadEntityHero, gameState);

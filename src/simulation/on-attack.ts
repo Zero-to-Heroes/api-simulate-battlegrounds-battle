@@ -2,7 +2,7 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
-import { isCorrectTribe } from '../utils';
+import { hasCorrectTribe } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
@@ -48,7 +48,7 @@ export const applyOnAttackEffects = (
 	}
 
 	// Ripsnarl Captain
-	if (isCorrectTribe(gameState.allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
+	if (hasCorrectTribe(attacker, attackingBoardHero, Race.PIRATE, gameState.allCards)) {
 		const ripsnarls = attackingBoard.filter((e) => e.cardId === CardIds.RipsnarlCaptain_BGS_056);
 		const ripsnarlsTB = attackingBoard.filter(
 			(entity) => entity.cardId === CardIds.RipsnarlCaptain_TB_BaconUps_139,
@@ -76,7 +76,7 @@ export const applyOnAttackEffects = (
 	}
 
 	// Dread Admiral Eliza
-	if (isCorrectTribe(gameState.allCards.getCard(attacker.cardId).races, Race.PIRATE)) {
+	if (hasCorrectTribe(attacker, attackingBoardHero, Race.PIRATE, gameState.allCards)) {
 		const elizas = attackingBoard.filter(
 			(e) =>
 				e.cardId === CardIds.DreadAdmiralEliza_BGS_047 || e.cardId === CardIds.AdmiralElizaGoreblade_BG27_555,
@@ -114,7 +114,7 @@ export const applyOnAttackEffects = (
 	}
 
 	// Roaring Rallier
-	if (isCorrectTribe(gameState.allCards.getCard(attacker.cardId).races, Race.DRAGON)) {
+	if (hasCorrectTribe(attacker, attackingBoardHero, Race.DRAGON, gameState.allCards)) {
 		attackingBoard
 			.filter(
 				(e) => e.cardId === CardIds.RoaringRallier_BG29_816 || e.cardId === CardIds.RoaringRallier_BG29_816_G,
@@ -155,7 +155,7 @@ export const applyOnAttackEffects = (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708_G
 	) {
 		attackingBoard
-			.filter((e) => isCorrectTribe(gameState.allCards.getCard(e.cardId).races, Race.PIRATE))
+			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.PIRATE, gameState.allCards))
 			.forEach((e) => {
 				modifyStats(
 					e,

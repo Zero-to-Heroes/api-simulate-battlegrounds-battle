@@ -280,7 +280,12 @@ const handleAvenge = (
 			const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
 			for (let i = 0; i < poisonousIterations; i++) {
 				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
-				const murloc = getRandomAliveMinion(validTargets, Race.MURLOC, gameState.allCards);
+				const murloc = getRandomAliveMinion(
+					validTargets,
+					boardWithDeadEntityHero,
+					Race.MURLOC,
+					gameState.allCards,
+				);
 				if (murloc) {
 					murloc.venomous = true;
 					gameState.spectator.registerPowerTarget(
@@ -346,7 +351,12 @@ const handleAvenge = (
 						!!gameState.allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
 					);
 				});
-			const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, gameState.allCards);
+			const pirate = getRandomAliveMinion(
+				nonGoldenMinions,
+				boardWithDeadEntityHero,
+				Race.PIRATE,
+				gameState.allCards,
+			);
 			if (pirate) {
 				makeMinionGolden(pirate, avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			}
@@ -354,7 +364,12 @@ const handleAvenge = (
 		case CardIds.TonyTwoTusk_BG21_031_G:
 			for (let i = 0; i < 2; i++) {
 				const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, gameState.allCards));
-				const pirate = getRandomAliveMinion(nonGoldenMinions, Race.PIRATE, gameState.allCards);
+				const pirate = getRandomAliveMinion(
+					nonGoldenMinions,
+					boardWithDeadEntityHero,
+					Race.PIRATE,
+					gameState.allCards,
+				);
 				if (pirate) {
 					makeMinionGolden(pirate, avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				}
@@ -377,7 +392,7 @@ const handleAvenge = (
 			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
 			for (let i = 0; i < bristlebachMultiplier; i++) {
 				for (const entity of boardWithDeadEntity) {
-					if (hasCorrectTribe(entity, Race.QUILBOAR, gameState.allCards)) {
+					if (hasCorrectTribe(entity, boardWithDeadEntityHero, Race.QUILBOAR, gameState.allCards)) {
 						playBloodGemsOn(avenger, entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 						gameState.spectator.registerPowerTarget(
 							avenger,

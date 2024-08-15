@@ -273,7 +273,7 @@ const performAttack = (
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 
-	if (hasCorrectTribe(attackingEntity, Race.DRAGON, gameState.allCards)) {
+	if (hasCorrectTribe(attackingEntity, attackingBoardHero, Race.DRAGON, gameState.allCards)) {
 		const prestors = attackingBoard
 			.filter((e) => e.entityId !== attackingEntity.entityId)
 			.filter(

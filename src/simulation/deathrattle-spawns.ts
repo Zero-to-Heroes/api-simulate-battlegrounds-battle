@@ -10,7 +10,6 @@ import {
 	getMinionsOfDifferentTypes,
 	getTeammateInitialState,
 	hasCorrectTribe,
-	isCorrectTribe,
 	stringifySimple,
 } from '../utils';
 import { addCardsInHand } from './cards-in-hand';
@@ -1083,7 +1082,9 @@ export const spawnEntitiesFromDeathrattle = (
 					const cardIdsToSpawn = gameState.sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
 						// eslint-disable-next-line prettier/prettier
-						.filter((entity) => isCorrectTribe(gameState.allCards.getCard(entity.cardId)?.races, Race.MECH))
+						.filter((entity) =>
+							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
+						)
 						.slice(0, 2)
 						.map((entity) => entity.cardId);
 					cardIdsToSpawn.forEach((cardId) =>
@@ -1108,7 +1109,9 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.KangorsApprentice_TB_BaconUps_087:
 					const cardIdsToSpawn2 = gameState.sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
-						.filter((entity) => isCorrectTribe(gameState.allCards.getCard(entity.cardId)?.races, Race.MECH))
+						.filter((entity) =>
+							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
+						)
 						.slice(0, 4)
 						.map((entity) => entity.cardId);
 					cardIdsToSpawn2.forEach((cardId) =>
@@ -1343,7 +1346,9 @@ export const spawnEntitiesFromDeathrattle = (
 					for (let i = 0; i < bassgillIterations; i++) {
 						const hand =
 							boardWithDeadEntityHero.hand
-								?.filter((e) => hasCorrectTribe(e, Race.MURLOC, gameState.allCards))
+								?.filter((e) =>
+									hasCorrectTribe(e, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards),
+								)
 								.filter((e) => !!e?.cardId)
 								.filter((e) => !e.locked) ?? [];
 						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
@@ -1476,7 +1481,7 @@ export const spawnEntitiesFromDeathrattle = (
 					const cultistStharaSpawnCandidates = gameState.sharedState.deaths
 						.filter((entity) => entity.friendly === deadEntity.friendly)
 						.filter((entity) =>
-							isCorrectTribe(gameState.allCards.getCard(entity.cardId)?.races, Race.DEMON),
+							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.DEMON, gameState.allCards),
 						)
 						.slice(0, cultistStharaSpawnNumber);
 					cultistStharaSpawnCandidates.forEach((candidate) => {
@@ -1536,7 +1541,7 @@ export const spawnEntitiesFromDeathrattle = (
 					const friendlyDeadEntities = gameState.sharedState.deaths.filter(
 						(e) => e.friendly === deadEntity.friendly,
 					);
-					const types = getMinionsOfDifferentTypes(friendlyDeadEntities, gameState);
+					const types = getMinionsOfDifferentTypes(friendlyDeadEntities, boardWithDeadEntityHero, gameState);
 					const constaridAtrocityStats = aridAtrocityStatsMultiplier * 7 * types.length;
 					spawnedEntities.push(
 						...spawnEntities(
