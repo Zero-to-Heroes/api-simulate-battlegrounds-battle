@@ -53,7 +53,12 @@ const handleSummonsWhenSpaceForPlayer = (
 		);
 	}
 	targetEntity.trinkets
-		.filter((t) => t.cardId === CardIds.TwinSkyLanterns && t.scriptDataNum1 > 0)
+		.filter((t) => t.cardId === CardIds.TwinSkyLanterns && t.scriptDataNum1 === 1)
+		.forEach((t) => {
+			handleTwinSkyLanternsForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		});
+	targetEntity.trinkets
+		.filter((t) => t.cardId === CardIds.TwinSkyLanternsGreater && t.scriptDataNum1 === 2)
 		.forEach((t) => {
 			handleTwinSkyLanternsForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
@@ -67,11 +72,12 @@ const handleTwinSkyLanternsForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	if (playerBoard.length < 7 && trinket.rememberedMinion) {
+	const spawnNumber = trinket.scriptDataNum1;
+	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion) {
 		const spawn = copyEntity(trinket.rememberedMinion);
 		const target = spawnEntities(
 			spawn.cardId,
-			1,
+			spawnNumber,
 			playerBoard,
 			playerEntity,
 			opponentBoard,
@@ -96,7 +102,9 @@ const handleTwinSkyLanternsForPlayer = (
 			opponentEntity,
 			gameState,
 		);
-		gameState.spectator.registerPowerTarget(playerEntity, target[0], playerBoard, playerEntity, opponentEntity);
+		target.forEach((t) =>
+			gameState.spectator.registerPowerTarget(playerEntity, t, playerBoard, playerEntity, opponentEntity),
+		);
 		trinket.scriptDataNum1 = 0;
 	}
 };

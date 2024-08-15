@@ -520,12 +520,40 @@ const handleAvenge = (
 		case CardIds.CycleOfEnergy_BG28_Reward_504:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 			break;
+		case CardIds.FridgeMagnet:
+			const randomMagnetic = gameState.cardsData.getRandomMechToMagnetize(boardWithDeadEntityHero.tavernTier);
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomMagnetic], gameState);
+			break;
 		case CardIds.StableAmalgamation_BG28_Reward_518:
 			avenger.scriptDataNum1++;
 			break;
 		case CardIds.QuilligraphySet:
-			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += 1;
-			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
+		case CardIds.QuilligraphySetGreater:
+			const quilligraphySetBuff = avenger.cardId === CardIds.QuilligraphySetGreater ? 2 : 1;
+			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += quilligraphySetBuff;
+			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += quilligraphySetBuff;
+			break;
+		case CardIds.GilneanThornedRose:
+			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 3, 3, gameState);
+			for (const minion of boardWithDeadEntity) {
+				dealDamageToMinion(
+					minion,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					avenger,
+					1,
+					otherBoard,
+					otherBoardHero,
+					gameState,
+				);
+				gameState.spectator.registerPowerTarget(
+					avenger,
+					minion,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
+			}
 			break;
 		case CardIds.StaffOfTheScourge:
 			if (boardWithDeadEntity.length > 0) {

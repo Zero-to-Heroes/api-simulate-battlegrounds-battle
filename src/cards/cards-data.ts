@@ -201,6 +201,8 @@ export class CardsData {
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
+			case CardIds.GilneanThornedRose:
+			case CardIds.FridgeMagnet:
 				return 3;
 			case CardIds.Onyxia_Broodmother:
 			case CardIds.ImpatientDoomsayer_BG21_007:
@@ -222,6 +224,7 @@ export class CardsData {
 			case CardIds.MurglMkIi_BG29_991:
 			case CardIds.MurglMkIi_BG29_991_G:
 			case CardIds.QuilligraphySet:
+			case CardIds.QuilligraphySetGreater:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:

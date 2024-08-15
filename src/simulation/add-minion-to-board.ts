@@ -167,6 +167,7 @@ export const handleAddedMinionAuraEffect = (
 				}
 				break;
 			case CardIds.TwinSkyLanterns:
+			case CardIds.TwinSkyLanternsGreater:
 				if (!trinket.rememberedMinion) {
 					trinket.rememberedMinion = copyEntity(spawned);
 				}
@@ -223,6 +224,10 @@ export const applyAurasToSelf = (
 				case CardIds.FeralTalisman:
 					spawned.attack += 2;
 					spawned.health += 1;
+					break;
+				case CardIds.FeralTalismanGreater:
+					spawned.attack += 5;
+					spawned.health += 3;
 					break;
 			}
 		}
@@ -712,6 +717,17 @@ const handleAfterSpawnEffect = (
 				) {
 					modifyStats(spawned, 1, 0, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
+				}
+				break;
+		}
+	}
+
+	for (const trinket of hero.trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.SlammaSticker:
+				if (hasCorrectTribe(spawned, hero, Race.BEAST, gameState.allCards)) {
+					setEntityStats(spawned, spawned.attack * 2, spawned.health * 2, board, hero, gameState);
+					gameState.spectator.registerPowerTarget(hero, spawned, board, null, null);
 				}
 				break;
 		}

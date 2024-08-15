@@ -300,9 +300,12 @@ export const updateVenomous = (
 	const lostVenomous = entity.venomous && !newValue;
 	entity.venomous = newValue;
 	if (lostVenomous) {
-		const belcherPortraits = boardHero.trinkets.filter((t) => t.cardId === CardIds.BelcherPortrait);
+		const belcherPortraits = boardHero.trinkets.filter(
+			(t) => t.cardId === CardIds.BelcherPortrait || t.cardId === CardIds.BelcherPortraitGreater,
+		);
 		belcherPortraits.forEach((p) => {
-			modifyStats(entity, 5, 5, board, boardHero, gameState);
+			const buff = p.cardId === CardIds.BelcherPortraitGreater ? 15 : 5;
+			modifyStats(entity, buff, buff, board, boardHero, gameState);
 			gameState.spectator.registerPowerTarget(p, entity, board, null, null);
 		});
 	}
@@ -481,6 +484,9 @@ const getSpecialTribesForEntity = (
 		case CardIds.WhelpSmuggler_BG21_013:
 		case CardIds.WhelpSmuggler_BG21_013_G:
 			return playerEntity.trinkets.some((t) => t.cardId === CardIds.SmugglerPortrait) ? [Race.DRAGON] : [];
+		case CardIds.LightfangEnforcer_BGS_009:
+		case CardIds.LightfangEnforcer_TB_BaconUps_082:
+			return playerEntity.trinkets.some((t) => t.cardId === CardIds.EnforcerPortrait) ? [Race.ALL] : [];
 	}
 	return [];
 };

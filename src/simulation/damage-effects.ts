@@ -201,11 +201,12 @@ const handleOtherEntityEffects = (
 
 	const trinkets = hero.trinkets ?? [];
 	trinkets
-		.filter((t) => t.cardId === CardIds.TigerCarving)
+		.filter((t) => t.cardId === CardIds.TigerCarving || t.cardId === CardIds.TigerCarvingGreater)
 		.forEach((carving) => {
 			const target = pickRandom(board);
 			if (!!target) {
-				modifyStats(target, 2, 0, board, hero, gameState);
+				const buff = carving.cardId === CardIds.TigerCarvingGreater ? 4 : 2;
+				modifyStats(target, buff, 0, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(carving, target, board, hero, otherHero);
 			}
 		});

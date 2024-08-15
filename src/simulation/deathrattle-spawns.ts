@@ -1865,6 +1865,24 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
+				case CardIds.JarredFrostling_Enchantment:
+					spawnedEntities.push(
+						...spawnEntities(
+							CardIds.FlourishingFrostling_BG26_537,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 				default:
 					deathrattleTriggered = false;
 					break;

@@ -227,6 +227,7 @@ export const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
 	CardIds.RustyTrident_Enchantment,
 	CardIds.HoggyBank_Enchantment,
+	CardIds.JarredFrostling_Enchantment,
 ];
 
 // const cleanEnchantmentsForEntity = (

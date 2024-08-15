@@ -565,7 +565,33 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				}
 				break;
 			case CardIds.ValorousMedallion:
-				addStatsToBoard(trinket, playerBoard, playerEntity, 2, 2, gameState);
+			case CardIds.ValorousMedallionGreater:
+				const medallionBuff = trinket.cardId === CardIds.ValorousMedallion ? 2 : 5;
+				addStatsToBoard(trinket, playerBoard, playerEntity, medallionBuff, medallionBuff, gameState);
+				break;
+			case CardIds.EmeraldDreamcatcher:
+				const highestAttack = Math.max(...playerBoard.map((entity) => entity.attack));
+				playerBoard
+					.filter((e) => hasCorrectTribe(e, playerEntity, Race.DRAGON, gameState.allCards))
+					.forEach((e) => {
+						setEntityStats(e, highestAttack, null, playerBoard, playerEntity, gameState);
+					});
+				break;
+			case CardIds.JarredFrostling:
+				const elementals = shuffleArray(
+					playerBoard.filter((e) => hasCorrectTribe(e, playerEntity, Race.ELEMENTAL, gameState.allCards)),
+				);
+				const targets = elementals.slice(0, 2);
+				targets.forEach((e) => {
+					e.enchantments = e.enchantments ?? [];
+					e.enchantments.push({
+						cardId: CardIds.JarredFrostling_Enchantment,
+						originEntityId: trinket.entityId,
+						repeats: 1,
+						timing: gameState.sharedState.currentEntityId++,
+					});
+					gameState.spectator.registerPowerTarget(playerEntity, e, playerBoard, null, null);
+				});
 				break;
 			case CardIds.RustyTrident:
 				playerBoard
@@ -666,7 +692,8 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					});
 				break;
 			case CardIds.TwinSkyLanterns:
-				trinket.scriptDataNum1 = 1;
+			case CardIds.TwinSkyLanternsGreater:
+				trinket.scriptDataNum1 = trinket.cardId === CardIds.TwinSkyLanterns ? 1 : 2;
 				trinket.rememberedMinion = null;
 				break;
 			case CardIds.AllianceKeychain:
@@ -674,6 +701,15 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				break;
 			case CardIds.ArtisanalUrn:
 				playerEntity.globalInfo.UndeadAttackBonus = (playerEntity.globalInfo.UndeadAttackBonus ?? 0) + 3;
+				break;
+			case CardIds.RivendarePortrait:
+				playerBoard
+					.filter(
+						(e) =>
+							e.cardId === CardIds.TitusRivendare_BG25_354 ||
+							e.cardId === CardIds.TitusRivendare_BG25_354_G,
+					)
+					.forEach((e) => (e.stealth = true));
 				break;
 			case CardIds.FishySticker:
 				if (playerBoard.length < 7) {
