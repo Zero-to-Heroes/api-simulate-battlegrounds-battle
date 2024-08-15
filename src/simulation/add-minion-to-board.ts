@@ -1,8 +1,10 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { pickRandom } from 'src/services/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
-import { addStatsToBoard, hasCorrectTribe, updateDivineShield } from '../utils';
+import { addStatsToBoard, copyEntity, hasCorrectTribe, updateDivineShield } from '../utils';
+import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { SharedState } from './shared-state';
@@ -152,6 +154,24 @@ export const handleAddedMinionAuraEffect = (
 			boardHero.questRewardEntities?.find((e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505)
 				?.scriptDataNum1 || 1;
 		modifyStats(spawned, tumblingDisasterBonus, tumblingDisasterBonus, board, boardHero, gameState);
+	}
+
+	for (const trinket of boardHero.trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.BlingtronsSunglasses:
+				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
+					const target = pickRandom(board.filter((e) => !e.divineShield));
+					if (!!target) {
+						updateDivineShield(target, board, true, gameState.allCards);
+					}
+				}
+				break;
+			case CardIds.TwinSkyLanterns:
+				if (!trinket.rememberedMinion) {
+					trinket.rememberedMinion = copyEntity(spawned);
+				}
+				break;
+		}
 	}
 
 	// The board here already contains the new minion
@@ -554,6 +574,7 @@ const handleAfterSpawnEffects = (
 	for (const spawned of allSpawned) {
 		handleAfterSpawnEffect(board, hero, spawned, gameState);
 	}
+	updateBoardwideAuras(board, hero, gameState);
 };
 
 export const onMinionSummoned = (hero: BgsPlayerEntity, board: BoardEntity[], gameState: FullGameState): void => {

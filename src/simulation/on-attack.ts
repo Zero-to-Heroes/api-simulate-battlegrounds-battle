@@ -243,4 +243,12 @@ export const applyOnAttackEffects = (
 				e.abiityChargesLeft--;
 			});
 	}
+
+	for (const trinket of attackingBoardHero.trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.CeremonialSword:
+				modifyStats(attacker, 4, 0, attackingBoard, attackingBoardHero, gameState);
+				break;
+		}
+	}
 };

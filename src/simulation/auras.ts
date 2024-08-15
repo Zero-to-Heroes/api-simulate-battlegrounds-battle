@@ -4,6 +4,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { hasCorrectTribe } from '../utils';
+import { FullGameState } from './internal-game-state';
 
 export const setMissingAuras = (board: BoardEntity[], boardHero: BgsPlayerEntity, allCards: AllCardsService): void => {
 	setMissingMinionsAura(board, boardHero, allCards);
@@ -182,6 +183,11 @@ export const setImplicitDataHero = (
 				avengeDefault: cardsData.avengeValue(reward),
 				scriptDataNum1: cardsData.defaultScriptDataNum(reward),
 		  }));
+	hero.trinkets = (hero.trinkets ?? []).map((trinket) => ({
+		...trinket,
+		avengeDefault: cardsData.avengeValue(trinket.cardId),
+		avengeCurrent: cardsData.avengeValue(trinket.cardId),
+	}));
 	// 0 is not a valid entityId
 	hero.entityId = hero.entityId || entityIdContainer.entityId--;
 	hero.hand = hero.hand ?? [];
@@ -216,4 +222,34 @@ export const clearStealthIfNeeded = (board: BoardEntity[], otherBoard: BoardEnti
 		board.forEach((e) => (e.stealth = false));
 		otherBoard.forEach((e) => (e.stealth = false));
 	}
+};
+
+export const updateBoardwideAuras = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	if (board.length === 0) {
+		return;
+	}
+
+	board
+		.filter((entity) => entity.enchantments.some((ench) => ench.cardId === CardIds.WindrunnerNecklace_Enchantment))
+		.forEach((e) => {
+			const enchantments = e.enchantments.filter(
+				(ench) => ench.cardId === CardIds.WindrunnerNecklace_Enchantment,
+			).length;
+			e.attack = Math.max(0, e.attack - enchantments * 8);
+			e.enchantments = e.enchantments.filter((ench) => ench.cardId !== CardIds.WindrunnerNecklace_Enchantment);
+		});
+	boardHero.trinkets
+		.filter((t) => t.cardId === CardIds.WindrunnerNecklace)
+		.forEach((t) => {
+			board[0].attack = board[0].attack + 8;
+			board[0].enchantments.push({
+				cardId: CardIds.WindrunnerNeachment_Enchantment,
+				originEntityId: t.entityId,
+				timing: gameState.sharedState.currentEntityId++,
+			});
+		});
 };

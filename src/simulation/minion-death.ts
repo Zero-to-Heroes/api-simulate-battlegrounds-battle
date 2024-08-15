@@ -1,4 +1,6 @@
 import { CardIds } from '@firestone-hs/reference-data';
+import { pickRandomAlive } from 'src/services/utils';
+import { getEffectiveTribesForEntity } from 'src/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateAvengeCounters } from './avenge';
@@ -6,6 +8,7 @@ import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { removeMinionFromBoard } from './remove-minion-from-board';
+import { modifyStats } from './stats';
 
 export const makeMinionsDie = (
 	board: BoardEntity[],
@@ -47,7 +50,7 @@ export const makeMinionsDie = (
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].health <= 0 || board[i].definitelyDead) {
 			// console.log('\tflagging dead minion', stringifySimpleCard(board[i], allCards), deadMinionIndexesFromRight);
-			removeMinionFromBoard(board, boardHero, i, gameState.allCards, gameState.spectator);
+			removeMinionFromBoard(board, boardHero, i, gameState);
 			// We modify the original array, so we need to update teh current index accordingly
 			i--;
 		}
@@ -64,7 +67,8 @@ export const makeMinionsDie = (
 		updateAvengeCounters(board, boardHero);
 		onMinionDeadHeroPower(board, boardHero, deadEntity, gameState);
 		onMinionDeadHeroPower(otherBoard, otherBoardHero, deadEntity, gameState);
-		onMinionDeadQuest(board, boardHero, otherBoard, otherBoardHero, gameState);
+		onMinionDeadQuest(deadEntity, board, boardHero, otherBoard, otherBoardHero, gameState);
+		onMinionDeadQuest(deadEntity, otherBoard, otherBoardHero, board, boardHero, gameState);
 	}
 
 	return [indexesFromRightAfterDeath, deadEntities];
@@ -88,6 +92,7 @@ export const onMinionDeadHeroPower = (
 };
 
 export const onMinionDeadQuest = (
+	deadEntity: BoardEntity,
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
@@ -103,11 +108,26 @@ export const onMinionDeadQuest = (
 		}
 	}
 
-	const otherQuests = otherBoardHero.questEntities ?? [];
-	for (const quest of otherQuests) {
-		switch (quest.CardId) {
-			case CardIds.RoundUpTheSuspects:
-				onQuestProgressUpdated(otherBoardHero, quest, otherBoard, gameState);
+	const trinkets = boardHero.trinkets ?? [];
+	for (const trinket of trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.AllianceKeychain:
+				if (trinket.scriptDataNum1 > 0 && deadEntity.friendly === boardHero.friendly) {
+					const target = pickRandomAlive(board);
+					if (!!target) {
+						modifyStats(target, deadEntity.maxAttack, deadEntity.maxHealth, board, boardHero, gameState);
+						gameState.spectator.registerPowerTarget(boardHero, target, board, boardHero, otherBoardHero);
+						trinket.scriptDataNum1--;
+					}
+				}
+				break;
+			case CardIds.TheEyeOfDalaran:
+				if (
+					deadEntity.friendly === boardHero.friendly &&
+					getEffectiveTribesForEntity(deadEntity, boardHero, gameState.allCards).length === 0
+				) {
+					addCardsInHand(boardHero, board, [null], gameState);
+				}
 				break;
 		}
 	}

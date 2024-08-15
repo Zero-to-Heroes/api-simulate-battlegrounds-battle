@@ -6,6 +6,7 @@ import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/ut
 import {
 	addImpliedMechanics,
 	addStatsToBoard,
+	getEffectiveTribesForEntity,
 	getMinionsOfDifferentTypes,
 	getRandomMinionWithHighestHealth,
 	getTeammateInitialState,
@@ -36,7 +37,7 @@ import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 import { Spectator } from './spectator/spectator';
-import { applyAfterStatsUpdate, modifyStats } from './stats';
+import { applyAfterStatsUpdate, modifyStats, setEntityStats } from './stats';
 import { handleSummonsWhenSpace } from './summon-when-space';
 import { makeMinionGolden } from './utils/golden';
 
@@ -538,8 +539,179 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					}
 				}
 				break;
+			case CardIds.TrainingCertificate:
+				if (playerBoard.length > 0) {
+					const minionsByAttack = [...playerBoard].sort((a, b) => a.attack - b.attack);
+					const firstTarget = minionsByAttack[0];
+					setEntityStats(
+						firstTarget,
+						2 * firstTarget.maxAttack,
+						2 * firstTarget.maxHealth,
+						playerBoard,
+						playerEntity,
+						gameState,
+					);
+					if (playerBoard.length > 1) {
+						const secondTarget = minionsByAttack[1];
+						setEntityStats(
+							secondTarget,
+							2 * secondTarget.maxAttack,
+							2 * secondTarget.maxHealth,
+							playerBoard,
+							playerEntity,
+							gameState,
+						);
+					}
+				}
+				break;
 			case CardIds.ValorousMedallion:
 				addStatsToBoard(trinket, playerBoard, playerEntity, 2, 2, gameState);
+				break;
+			case CardIds.RustyTrident:
+				playerBoard
+					.filter((e) => hasCorrectTribe(e, playerEntity, Race.NAGA, gameState.allCards))
+					.forEach((e) => {
+						e.enchantments = e.enchantments ?? [];
+						e.enchantments.push({
+							cardId: CardIds.RustyTrident_Enchantment,
+							originEntityId: trinket.entityId,
+							repeats: 1,
+							timing: gameState.sharedState.currentEntityId++,
+						});
+					});
+				break;
+			case CardIds.HoggyBank:
+				playerBoard
+					.filter((e) => hasCorrectTribe(e, playerEntity, Race.QUILBOAR, gameState.allCards))
+					.forEach((e) => {
+						e.enchantments = e.enchantments ?? [];
+						e.enchantments.push({
+							cardId: CardIds.HoggyBank_Enchantment,
+							originEntityId: trinket.entityId,
+							repeats: 1,
+							timing: gameState.sharedState.currentEntityId++,
+						});
+					});
+				break;
+			case CardIds.AutomatonPortrait:
+				if (playerBoard.length < 7) {
+					const newMinions = spawnEntities(
+						CardIds.AstralAutomaton_BG_TTN_401,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						playerEntity.friendly,
+						true,
+					);
+					performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						playerEntity,
+						0,
+						opponentBoard,
+						opponentEntity,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.ShipInABottle:
+				if (playerBoard.length < 7) {
+					const target = pickRandom(gameState.cardsData.pirateSpawns);
+					addCardsInHand(playerEntity, playerBoard, [target], gameState);
+					const newMinions = spawnEntities(
+						target,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						playerEntity.friendly,
+						false,
+					);
+					const spawns = performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						playerEntity,
+						0,
+						opponentBoard,
+						opponentEntity,
+						gameState,
+					);
+					spawns.forEach((spawn) => (spawn.attackImmediately = true));
+				}
+				break;
+			case CardIds.EternalPortrait:
+				playerBoard
+					.filter(
+						(e) =>
+							e.cardId === CardIds.EternalKnight_BG25_008 ||
+							e.cardId === CardIds.EternalKnight_BG25_008_G,
+					)
+					.forEach((knight) => {
+						knight.taunt = true;
+						knight.reborn = true;
+						gameState.spectator.registerPowerTarget(playerEntity, knight, playerBoard, null, null);
+					});
+				break;
+			case CardIds.TwinSkyLanterns:
+				trinket.scriptDataNum1 = 1;
+				trinket.rememberedMinion = null;
+				break;
+			case CardIds.AllianceKeychain:
+				trinket.scriptDataNum1 = 1;
+				break;
+			case CardIds.ArtisanalUrn:
+				playerEntity.globalInfo.UndeadAttackBonus = (playerEntity.globalInfo.UndeadAttackBonus ?? 0) + 3;
+				break;
+			case CardIds.FishySticker:
+				if (playerBoard.length < 7) {
+					const newMinions = spawnEntities(
+						CardIds.FishOfNzoth,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						playerEntity.friendly,
+						false,
+					);
+					const spawns = performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						playerEntity,
+						0,
+						opponentBoard,
+						opponentEntity,
+						gameState,
+					);
+					currentAttacker =
+						playerBoard.length > opponentBoard.length
+							? playerIsFriendly
+								? 0
+								: 1
+							: opponentBoard.length > playerBoard.length
+							? playerIsFriendly
+								? 1
+								: 0
+							: Math.round(Math.random());
+				}
 				break;
 		}
 	}
@@ -584,15 +756,16 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					gameState.spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
 					// Recompute first attacker
 					// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
-					return playerBoard.length > opponentBoard.length
-						? playerIsFriendly
-							? 0
-							: 1
-						: opponentBoard.length > playerBoard.length
-						? playerIsFriendly
-							? 1
-							: 0
-						: Math.round(Math.random());
+					currentAttacker =
+						playerBoard.length > opponentBoard.length
+							? playerIsFriendly
+								? 0
+								: 1
+							: opponentBoard.length > playerBoard.length
+							? playerIsFriendly
+								? 1
+								: 0
+							: Math.round(Math.random());
 				}
 				break;
 			case CardIds.StaffOfOrigination_BG24_Reward_312:
@@ -1097,7 +1270,9 @@ const handleWaxWarbandForPlayer = (
 	gameState: FullGameState,
 ): void => {
 	if (playerBoard.length > 0) {
-		const boardWithTribes = playerBoard.filter((e) => !!gameState.allCards.getCard(e.cardId)?.races?.length);
+		const boardWithTribes = playerBoard.filter(
+			(e) => !!getEffectiveTribesForEntity(e, playerEntity, gameState.allCards).length,
+		);
 		const boardWithoutAll = boardWithTribes.filter(
 			(e) => !gameState.allCards.getCard(e.cardId).races.includes(Race[Race.ALL]),
 		);

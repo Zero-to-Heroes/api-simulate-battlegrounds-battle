@@ -1,7 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { addStatsToBoard, updateDivineShield } from '../utils';
+import { addStatsToBoard, updateDivineShield, updateVenomous } from '../utils';
 import { getNeighbours } from './attack';
 import { FullGameState } from './internal-game-state';
 import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
@@ -213,7 +213,7 @@ export const applyOnBeingAttackedBuffs = (
 			defendingEntity.cardId as CardIds,
 		)
 	) {
-		defendingEntity.venomous = true;
+		updateVenomous(defendingEntity, true, defendingBoard, defendingPlayerEntity, gameState);
 	}
 
 	// Based on attacking entity

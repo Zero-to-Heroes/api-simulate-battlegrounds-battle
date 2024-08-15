@@ -18,7 +18,10 @@ export const playBloodGemsOn = (
 	if (registerTarget) {
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
-	const bloodGemAttack = 1 + (hero.globalInfo?.BloodGemAttackBonus ?? 0);
+	const bloodGemAttack =
+		1 +
+		(hero.globalInfo?.BloodGemAttackBonus ?? 0) +
+		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoartSticket).length * 3;
 	const bloodGemHealth = 1 + (hero.globalInfo?.BloodGemHealthBonus ?? 0);
 	for (let i = 0; i < quantity; i++) {
 		modifyStats(target, bloodGemAttack, bloodGemHealth, board, hero, gameState);

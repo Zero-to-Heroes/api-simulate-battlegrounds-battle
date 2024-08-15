@@ -23,6 +23,7 @@ import {
 	isFish,
 	isGolden,
 	updateDivineShield,
+	updateVenomous,
 } from '../utils';
 import {
 	dealDamageToMinion,
@@ -181,7 +182,7 @@ export const handleDeathrattleEffects = (
 							);
 						if (possibleBelcherTargets.length > 0) {
 							const chosen = pickRandom(possibleBelcherTargets);
-							chosen.venomous = true;
+							updateVenomous(chosen, true, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 							gameState.spectator.registerPowerTarget(
 								deadEntity,
 								chosen,
@@ -563,13 +564,16 @@ export const handleDeathrattleEffects = (
 				// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
 				// could be spawned between the shots firing), but let's say it's good enough for now
 				const kaboomLoops = deadEntity.cardId === CardIds.KaboomBot_TB_BaconUps_028 ? 2 : 1;
+				const baseDamage =
+					4 +
+					boardWithDeadEntityHero.trinkets.filter((t) => t.cardId === CardIds.KaboomBotPortrait).length * 8;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < kaboomLoops; j++) {
 						dealDamageToRandomEnemy(
 							otherBoard,
 							otherBoardHero,
 							deadEntity,
-							4,
+							baseDamage,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							gameState,
@@ -1134,6 +1138,12 @@ export const handleDeathrattleEffects = (
 	});
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
+			case CardIds.RustyTrident_Enchantment:
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				break;
+			case CardIds.HoggyBank_Enchantment:
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
+				break;
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
 				applyLeapFroggerEffect(

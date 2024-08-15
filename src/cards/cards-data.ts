@@ -221,9 +221,11 @@ export class CardsData {
 			case CardIds.AugmentedLaborer_BG28_740_G:
 			case CardIds.MurglMkIi_BG29_991:
 			case CardIds.MurglMkIi_BG29_991_G:
+			case CardIds.QuilligraphySet:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
+			case CardIds.StaffOfTheScourge:
 				return 5;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;

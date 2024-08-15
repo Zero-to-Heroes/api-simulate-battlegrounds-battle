@@ -172,8 +172,8 @@ export const buildRandomUndeadCreation = (
 	newEntity.health += stitchedCard.health;
 	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
 	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
-	newEntity.poisonous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
-	newEntity.venomous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
+	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
+	newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
 	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
 	newEntity.reborn = newEntity.reborn || hasMechanic(stitchedCard, GameTag[GameTag.REBORN]);
 	newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
@@ -290,6 +290,24 @@ export const updateDivineShield = (
 	}
 };
 
+export const updateVenomous = (
+	entity: BoardEntity,
+	newValue: boolean,
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	const lostVenomous = entity.venomous && !newValue;
+	entity.venomous = newValue;
+	if (lostVenomous) {
+		const belcherPortraits = boardHero.trinkets.filter((t) => t.cardId === CardIds.BelcherPortrait);
+		belcherPortraits.forEach((p) => {
+			modifyStats(entity, 5, 5, board, boardHero, gameState);
+			gameState.spectator.registerPowerTarget(p, entity, board, null, null);
+		});
+	}
+};
+
 // export const grantAllDivineShield = (
 // 	board: BoardEntity[],
 // 	hero: BgsPlayerEntity,
@@ -401,19 +419,15 @@ export const getMinionsOfDifferentTypes = (
 		for (let i = 1; i <= 2; i++) {
 			for (const tribe of allRaces) {
 				const minionsWithRaces = boardCopy
-					.filter((e) => gameState.allCards.getCard(e.cardId).races?.length === i)
+					.filter((e) => getEffectiveTribesForEntity(e, hero, gameState.allCards).length === i)
 					.filter((e) =>
-						gameState.allCards.getCard(e.cardId).races.some((r) => !racesProcessed.includes(Race[r])),
+						getEffectiveTribesForEntity(e, hero, gameState.allCards).some(
+							(r) => !racesProcessed.includes(Race[r]),
+						),
 					);
 				if (typesBuffed >= numberOfDifferentTypes) {
 					return result;
 				}
-				// const tribeStr = Race[tribe];
-				// const minionWithRevive = getRandomRevivableMinion(boardCopy, tribe, gameState.allCards);
-				// const boardDebug = minionsWithRaces.map((e) => ({
-				// 	name: gameState.allCards.getCard(e.cardId).name,
-				// 	races: gameState.allCards.getCard(e.cardId).races?.join(','),
-				// }));
 				const validMinion: BoardEntity = canRevive
 					? getRandomRevivableMinion(minionsWithRaces, hero, tribe, gameState.allCards)
 					: getRandomAliveMinion(minionsWithRaces, hero, tribe, gameState.allCards);
@@ -440,31 +454,35 @@ export const hasCorrectTribe = (
 	targetTribe: Race,
 	allCards: AllCardsService,
 ): boolean => {
+	const effectiveTribesForEntity = getEffectiveTribesForEntity(entity, playerEntity, allCards);
 	return (
-		isCorrectTribe(allCards.getCard(entity.cardId).races, targetTribe) ||
-		isSpecialCaseTribe(entity, playerEntity, targetTribe, allCards)
+		effectiveTribesForEntity.length > 0 &&
+		(effectiveTribesForEntity.includes(targetTribe) || targetTribe === Race.ALL)
 	);
 };
 
-const isSpecialCaseTribe = (
+export const getEffectiveTribesForEntity = (
 	entity: BoardEntity,
 	playerEntity: BgsPlayerEntity,
-	targetTribe: Race,
 	allCards: AllCardsService,
-): boolean => {
-	if (!playerEntity?.trinkets?.length) {
-		return false;
-	}
+): readonly Race[] => {
+	return [
+		...(allCards.getCard(entity.cardId).races?.map((r) => Race[r]) ?? []),
+		...getSpecialTribesForEntity(entity, playerEntity, allCards),
+	];
+};
 
-	switch (targetTribe) {
-		case Race.DRAGON:
-			return (
-				[CardIds.WhelpSmuggler_BG21_013, CardIds.WhelpSmuggler_BG21_013_G].includes(entity.cardId as CardIds) &&
-				playerEntity.trinkets.some((t) => t.cardId === CardIds.SmugglerPortrait)
-			);
-		default:
-			return false;
+const getSpecialTribesForEntity = (
+	entity: BoardEntity,
+	playerEntity: BgsPlayerEntity,
+	allCards: AllCardsService,
+): readonly Race[] => {
+	switch (entity.cardId) {
+		case CardIds.WhelpSmuggler_BG21_013:
+		case CardIds.WhelpSmuggler_BG21_013_G:
+			return playerEntity.trinkets.some((t) => t.cardId === CardIds.SmugglerPortrait) ? [Race.DRAGON] : [];
 	}
+	return [];
 };
 
 /** @deprecated use hasCorreectTribe instead */
@@ -592,4 +610,14 @@ export const getTeammateInitialState = (gameState: GameState, hero: BgsPlayerEnt
 		: gameState.opponentInitial.teammate?.player?.entityId === hero?.entityId
 		? gameState.opponentInitial
 		: null;
+};
+
+export const copyEntity = (entity: BoardEntity): BoardEntity => {
+	const copy: BoardEntity = {
+		...entity,
+		enchantments: (entity.enchantments ?? []).map((ench) => ({ ...ench })),
+		pendingAttackBuffs: [],
+		rememberedDeathrattles: (entity.rememberedDeathrattles ?? []).map((r) => ({ ...r })),
+	};
+	return copy;
 };

@@ -12,6 +12,7 @@ import {
 	stringifySimple,
 	stringifySimpleCard,
 	updateDivineShield,
+	updateVenomous,
 } from '../utils';
 import { addCardsInHand } from './cards-in-hand';
 import { onEntityDamaged } from './damage-effects';
@@ -1101,7 +1102,7 @@ export const bumpEntities = (
 		// So that further buffs don't revive it
 		// And we don't just set the health to avoid applying overkill effects
 		entity.definitelyDead = true;
-		bumpInto.venomous = false;
+		updateVenomous(bumpInto, false, entityBoard, entityBoardHero, gameState);
 	}
 	// Ideally we should do the Reckoning stuff here. However, at this point we only have half the damage
 	// information, so it is possible that the entity deals more than 3 (which should trigger Reckoning)

@@ -89,6 +89,20 @@ export const applyAvengeEffects = (
 		);
 	}
 
+	const trinketAvengers = boardWithDeadEntityHero.trinkets.filter((e) => !!e.avengeDefault && e.avengeCurrent <= 0);
+	for (const avenger of trinketAvengers) {
+		handleAvenge(
+			boardWithDeadEntity,
+			boardWithDeadEntityHero,
+			deadEntity,
+			deadEntityIndexFromRight,
+			avenger as BoardEntity,
+			otherBoard,
+			otherBoardHero,
+			gameState,
+		);
+	}
+
 	performEntitySpawns(
 		candidatesEntitiesSpawnedFromAvenge,
 		boardWithDeadEntity,
@@ -508,6 +522,23 @@ const handleAvenge = (
 			break;
 		case CardIds.StableAmalgamation_BG28_Reward_518:
 			avenger.scriptDataNum1++;
+			break;
+		case CardIds.QuilligraphySet:
+			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += 1;
+			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
+			break;
+		case CardIds.StaffOfTheScourge:
+			if (boardWithDeadEntity.length > 0) {
+				const target = pickRandom(boardWithDeadEntity.filter((e) => !e.reborn));
+				target.reborn = true;
+				gameState.spectator.registerPowerTarget(
+					avenger,
+					target,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
+			}
 			break;
 		case CardIds.MurglMkIi_BG29_991:
 		case CardIds.MurglMkIi_BG29_991_G:

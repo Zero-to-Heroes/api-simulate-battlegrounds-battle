@@ -2,17 +2,19 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
+import { updateBoardwideAuras } from './auras';
+import { FullGameState } from './internal-game-state';
 import { Spectator } from './spectator/spectator';
 
 export const removeMinionFromBoard = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
 	index: number,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 ): void => {
 	const removedEntity = board.splice(index, 1)[0];
-	handleMinionRemovedAuraEffect(board, removedEntity, boardHero, allCards, spectator);
+	handleMinionRemovedAuraEffect(board, removedEntity, boardHero, gameState.allCards, gameState.spectator);
+	updateBoardwideAuras(board, boardHero, gameState);
 };
 
 export const handleMinionRemovedAuraEffect = (
