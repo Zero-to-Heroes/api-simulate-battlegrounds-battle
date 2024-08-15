@@ -22,7 +22,14 @@ export const applyOnBeingAttackedBuffs = (
 			case CardIds.AutodefenseMatrix_TB_Bacon_Secrets_07:
 				if (!defendingEntity.divineShield) {
 					secret.triggered = true;
-					updateDivineShield(defendingEntity, defendingBoard, true, gameState.allCards);
+					updateDivineShield(
+						defendingEntity,
+						defendingBoard,
+						defendingPlayerEntity,
+						attackerHero,
+						true,
+						gameState,
+					);
 				}
 				break;
 			case CardIds.SplittingImage_TB_Bacon_Secrets_04:

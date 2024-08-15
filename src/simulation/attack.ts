@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { groupByFunction, pickRandom } from '../services/utils';
 import {
 	addImpliedMechanics,
-	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	isFish,
@@ -433,10 +432,24 @@ const performAttack = (
 			gameState,
 		);
 		if (defendingEntity.attack > 0 && attackerHadDivineShield && !attackingEntity.immuneWhenAttackCharges) {
-			updateDivineShield(attackingEntity, attackingBoard, false, gameState.allCards);
+			updateDivineShield(
+				attackingEntity,
+				attackingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+				false,
+				gameState,
+			);
 		}
 		if (attackingEntity.attack > 0 && defenderHadDivineShield) {
-			updateDivineShield(defendingEntity, defendingBoard, false, gameState.allCards);
+			updateDivineShield(
+				defendingEntity,
+				defendingBoard,
+				attackingBoardHero,
+				defendingBoardHero,
+				false,
+				gameState,
+			);
 		}
 		// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 		// cause wrong results to happen
@@ -503,7 +516,7 @@ const performAttack = (
 			// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 			// cause wrong results to happen
 			if (attackingEntity.attack > 0 && neighbour.divineShield) {
-				updateDivineShield(neighbour, defendingBoard, false, gameState.allCards);
+				updateDivineShield(neighbour, defendingBoard, defendingBoardHero, attackingBoardHero, false, gameState);
 			}
 			if (thisAttackDamage > 0) {
 				onEntityDamaged(
@@ -864,7 +877,7 @@ export const dealDamageToMinion = (
 	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 	// cause wrong results to happen
 	if (fakeAttacker.attack > 0 && target.divineShield) {
-		updateDivineShield(target, board, false, gameState.allCards);
+		updateDivineShield(target, board, hero, otherHero, false, gameState);
 	}
 	if (actualDamageDone > 0) {
 		// TODO: handle entities that have been spawned here to adjust the dead entity index from parent stack
@@ -979,7 +992,7 @@ export const bumpEntities = (
 				false,
 			);
 			if (newSource.attack > 0 && defenderHadDivineShield) {
-				updateDivineShield(newTarget, otherBoard, false, gameState.allCards);
+				updateDivineShield(newTarget, otherBoard, otherHero, hero, false, gameState.allCards);
 			}
 			if (damageDone > 0) {
 				onEntityDamaged(newTarget, otherBoard, otherHero, entityBoard, entityBoardHero, damageDone, gameState);
@@ -990,91 +1003,6 @@ export const bumpEntities = (
 
 	if (entity.divineShield) {
 		// Handle all the divine shield loss effects here
-		for (let i = 0; i < entityBoard.length; i++) {
-			if (entityBoard[i].cardId === CardIds.BolvarFireblood_ICC_858) {
-				modifyStats(entityBoard[i], 2, 0, entityBoard, entityBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					entityBoard[i],
-					entityBoard[i],
-					entityBoard,
-					entityBoardHero,
-					otherHero,
-				);
-			} else if (entityBoard[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
-				modifyStats(entityBoard[i], 4, 0, entityBoard, entityBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					entityBoard[i],
-					entityBoard[i],
-					entityBoard,
-					entityBoardHero,
-					otherHero,
-				);
-			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
-				modifyStats(entityBoard[i], 2, 2, entityBoard, entityBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					entityBoard[i],
-					entityBoard[i],
-					entityBoard,
-					entityBoardHero,
-					otherHero,
-				);
-			} else if (entityBoard[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
-				modifyStats(entityBoard[i], 4, 4, entityBoard, entityBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					entityBoard[i],
-					entityBoard[i],
-					entityBoard,
-					entityBoardHero,
-					otherHero,
-				);
-			} else if (
-				entityBoard[i].entityId !== entity.entityId &&
-				(entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401 ||
-					entityBoard[i].cardId === CardIds.HolyMecherel_BG20_401_G)
-			) {
-				updateDivineShield(entityBoard[i], entityBoard, true, gameState.allCards);
-			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037) {
-				addCardsInHand(entityBoardHero, entityBoard, [CardIds.BloodGem], gameState);
-			} else if (entityBoard[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
-				addCardsInHand(entityBoardHero, entityBoard, [CardIds.BloodGem, CardIds.BloodGem], gameState);
-			} else if (
-				entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008 ||
-				entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G
-			) {
-				// When it's the opponent, the game state already contains all the buffs
-				if (entityBoard[i]?.friendly) {
-					const buff = entityBoard[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
-					grantRandomStats(
-						entityBoard[i],
-						entityBoardHero.hand.filter(
-							(e) =>
-								gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-						),
-						entityBoardHero,
-						buff,
-						buff,
-						null,
-						true,
-						gameState,
-					);
-				}
-			}
-
-			// So that self-buffs from Bolvar are taken into account
-			// if (entityBoard[i].entityId === entity.entityId && entity.divineShield) {
-			// 	updateDivineShield(entityBoard[i], entityBoard, false, allCards);
-			// }
-		}
-		const greaseBots = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
-		const greaseBotBattlegrounds = entityBoard.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
-		greaseBots.forEach((bot) => {
-			modifyStats(entity, 2, 2, entityBoard, entityBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(bot, entity, entityBoard, entityBoardHero, otherHero);
-		});
-		greaseBotBattlegrounds.forEach((bot) => {
-			modifyStats(entity, 4, 4, entityBoard, entityBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(bot, entity, entityBoard, entityBoardHero, otherHero);
-		});
 
 		gameState.spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);
 		return 0;

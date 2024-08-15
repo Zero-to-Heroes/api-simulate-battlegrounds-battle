@@ -53,7 +53,7 @@ export const onEntityDamaged = (
 			break;
 		case CardIds.Untameabull_BG29_878:
 		case CardIds.Untameabull_BG29_878_G:
-			updateDivineShield(entity, board, true, gameState.allCards);
+			updateDivineShield(entity, board, hero, otherHero, true, gameState);
 			gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
 			break;
 		case CardIds.TrustyPup_BG29_800:

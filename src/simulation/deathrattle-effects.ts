@@ -157,14 +157,32 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.SelflessHero_BG_OG_221:
 				for (let i = 0; i < multiplier; i++) {
-					grantRandomDivineShield(deadEntity, boardWithDeadEntity, gameState.allCards, gameState.spectator);
+					grantRandomDivineShield(
+						deadEntity,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+						gameState,
+					);
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
 			case CardIds.SelflessHero_TB_BaconUps_014:
 				for (let i = 0; i < multiplier; i++) {
-					grantRandomDivineShield(deadEntity, boardWithDeadEntity, gameState.allCards, gameState.spectator);
-					grantRandomDivineShield(deadEntity, boardWithDeadEntity, gameState.allCards, gameState.spectator);
+					grantRandomDivineShield(
+						deadEntity,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+						gameState,
+					);
+					grantRandomDivineShield(
+						deadEntity,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+						gameState,
+					);
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
@@ -210,7 +228,14 @@ export const handleDeathrattleEffects = (
 						const target = pickRandom(validTargets);
 						if (target) {
 							if (!target.divineShield) {
-								updateDivineShield(target, boardWithDeadEntity, true, gameState.allCards);
+								updateDivineShield(
+									target,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoardHero,
+									true,
+									gameState.allCards,
+								);
 							}
 							target.taunt = true;
 							target.windfury = true;

@@ -17,7 +17,14 @@ export const applyFrenzy = (
 		entityWithFrenzy.cardId === CardIds.BristlebackKnight_BG20_204_G
 	) {
 		if (!entityWithFrenzy.divineShield) {
-			updateDivineShield(entityWithFrenzy, entityWithFrenzyBoard, true, gameState.allCards);
+			updateDivineShield(
+				entityWithFrenzy,
+				entityWithFrenzyBoard,
+				entityWithFrenzyBoardHero,
+				null,
+				true,
+				gameState,
+			);
 		}
 	} else if (
 		entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101 ||

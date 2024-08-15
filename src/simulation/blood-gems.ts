@@ -39,7 +39,7 @@ export const playBloodGemsOn = (
 		case CardIds.ToughTusk_BG20_102:
 		case CardIds.ToughTusk_BG20_102_G:
 			if (!target.divineShield) {
-				updateDivineShield(target, board, true, gameState.allCards);
+				updateDivineShield(target, board, hero, null, true, gameState);
 				gameState.spectator.registerPowerTarget(target, target, board, null, null);
 			}
 			break;

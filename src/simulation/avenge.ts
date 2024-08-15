@@ -499,7 +499,13 @@ const handleAvenge = (
 		case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
 			const phaerixLoops = avenger.cardId === CardIds.PhaerixWrathOfTheSun_BG28_403_G ? 2 : 1;
 			for (let i = 0; i < phaerixLoops; i++) {
-				grantRandomDivineShield(avenger, boardWithDeadEntity, gameState.allCards, gameState.spectator);
+				grantRandomDivineShield(
+					avenger,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+					gameState,
+				);
 			}
 			break;
 		case CardIds.AugmentedLaborer_BG28_740:

@@ -84,7 +84,7 @@ const handleSpawnEffect = (
 			case CardIds.CobaltGuardian:
 				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
 					if (!entity.divineShield) {
-						updateDivineShield(entity, board, true, gameState.allCards);
+						updateDivineShield(entity, board, boardHero, otherHero, true, gameState);
 					}
 					modifyStats(entity, 2, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
@@ -95,7 +95,7 @@ const handleSpawnEffect = (
 				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.DeflectOBot_TB_BaconUps_123 ? 4 : 2;
 					if (!entity.divineShield) {
-						updateDivineShield(entity, board, true, gameState.allCards);
+						updateDivineShield(entity, board, boardHero, otherHero, true, gameState);
 					}
 					modifyStats(entity, statsBonus, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
@@ -162,7 +162,7 @@ export const handleAddedMinionAuraEffect = (
 				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
 					const target = pickRandom(board.filter((e) => !e.divineShield));
 					if (!!target) {
-						updateDivineShield(target, board, true, gameState.allCards);
+						updateDivineShield(target, board, boardHero, otherHero, true, gameState);
 					}
 				}
 				break;

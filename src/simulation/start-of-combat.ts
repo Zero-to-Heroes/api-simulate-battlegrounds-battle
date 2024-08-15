@@ -531,10 +531,10 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 		switch (trinket.cardId) {
 			case CardIds.HolyMallet:
 				if (playerBoard.length > 0) {
-					updateDivineShield(playerBoard[0], playerBoard, true, gameState.allCards);
+					updateDivineShield(playerBoard[0], playerBoard, playerEntity, opponentEntity, true, gameState);
 					gameState.spectator.registerPowerTarget(playerEntity, playerBoard[0], playerBoard, null, null);
 					if (playerBoard.length > 1) {
-						updateDivineShield(playerBoard[1], playerBoard, true, gameState.allCards);
+						updateDivineShield(playerBoard[1], playerBoard, playerEntity, opponentEntity, true, gameState);
 						gameState.spectator.registerPowerTarget(playerEntity, playerBoard[1], playerBoard, null, null);
 					}
 				}
@@ -698,6 +698,9 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				break;
 			case CardIds.AllianceKeychain:
 				trinket.scriptDataNum1 = 1;
+				break;
+			case CardIds.MechagonAdapter:
+				trinket.scriptDataNum1 = 3;
 				break;
 			case CardIds.ArtisanalUrn:
 				playerEntity.globalInfo.UndeadAttackBonus = (playerEntity.globalInfo.UndeadAttackBonus ?? 0) + 3;
@@ -913,7 +916,7 @@ const handleStartOfCombatAnomaliesForPlayer = (
 			case CardIds.BlessedOrBlighted_BG27_Anomaly_726:
 				if (playerBoard.length > 0) {
 					const dsTarget = playerBoard[0];
-					updateDivineShield(dsTarget, playerBoard, true, gameState.allCards);
+					updateDivineShield(dsTarget, playerBoard, playerEntity, opponentEntity, true, gameState);
 					const rebornTarget = playerBoard[playerBoard.length - 1];
 					rebornTarget.reborn = true;
 				}
@@ -1103,7 +1106,7 @@ const handleAlakirForPlayer = (
 	const firstEntity = playerBoard[0];
 	firstEntity.windfury = true;
 	if (!firstEntity.divineShield) {
-		updateDivineShield(firstEntity, playerBoard, true, gameState.allCards);
+		updateDivineShield(firstEntity, playerBoard, playerEntity, opponentEntity, true, gameState);
 	}
 	firstEntity.taunt = true;
 	gameState.spectator.registerPowerTarget(firstEntity, firstEntity, playerBoard, playerEntity, opponentEntity);
@@ -1592,7 +1595,14 @@ export const performStartOfCombatMinionsForPlayer = (
 				pickRandom(dragonsToConsider.filter((e) => !e.divineShield)) ?? pickRandom(dragonsToConsider);
 			if (otherDragon) {
 				if (!otherDragon.divineShield) {
-					updateDivineShield(otherDragon, attackingBoard, true, gameState.allCards);
+					updateDivineShield(
+						otherDragon,
+						attackingBoard,
+						attackingBoardHero,
+						defendingBoardHero,
+						true,
+						gameState,
+					);
 				}
 				modifyStats(otherDragon, 7, 7, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
