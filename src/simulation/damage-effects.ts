@@ -1,8 +1,9 @@
 import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
+import { updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
-import { addStatsToBoard, grantStatsToMinionsOfEachType, hasCorrectTribe, updateDivineShield } from '../utils';
+import { addStatsToBoard, grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { dealDamageToRandomEnemy } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
+import { updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
@@ -12,7 +13,6 @@ import {
 	getTeammateInitialState,
 	hasCorrectTribe,
 	isGolden,
-	updateDivineShield,
 } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
 import {

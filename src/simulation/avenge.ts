@@ -1,4 +1,5 @@
 import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
+import { grantRandomDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom } from '../services/utils';
@@ -7,7 +8,6 @@ import {
 	addStatsToBoard,
 	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
-	grantRandomDivineShield,
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
