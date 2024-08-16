@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
-import { updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { updateDivineShield } from '../divine-shield';
 import { groupByFunction, pickRandom } from '../services/utils';
 import {
 	addImpliedMechanics,

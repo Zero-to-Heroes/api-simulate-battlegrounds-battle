@@ -1,8 +1,8 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
-import { pickRandomAlive } from 'src/services/utils';
-import { getEffectiveTribesForEntity, hasCorrectTribe } from 'src/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { pickRandomAlive } from '../services/utils';
+import { getEffectiveTribesForEntity, hasCorrectTribe } from '../utils';
 import { updateAvengeCounters } from './avenge';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';

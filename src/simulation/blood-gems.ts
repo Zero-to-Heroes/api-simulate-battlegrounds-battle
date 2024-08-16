@@ -1,7 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
-import { updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { updateDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';

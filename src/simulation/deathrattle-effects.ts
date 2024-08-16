@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
-import { grantRandomDivineShield, updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { grantRandomDivineShield, updateDivineShield } from '../divine-shield';
 import {
 	groupByFunction,
 	pickMultipleRandomDifferent,

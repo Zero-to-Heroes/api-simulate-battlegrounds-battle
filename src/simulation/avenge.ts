@@ -1,7 +1,7 @@
 import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
-import { grantRandomDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { grantRandomDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
-import { grantDivineShieldToLeftmostMinions, updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { grantDivineShieldToLeftmostMinions, updateDivineShield } from '../divine-shield';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
 import {
 	addImpliedMechanics,

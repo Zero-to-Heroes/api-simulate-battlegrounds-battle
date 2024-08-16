@@ -1,9 +1,9 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
-import { updateDivineShield } from 'src/divine-shield';
-import { pickRandom } from 'src/services/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
+import { updateDivineShield } from '../divine-shield';
+import { pickRandom } from '../services/utils';
 import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
