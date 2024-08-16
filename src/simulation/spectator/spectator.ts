@@ -1,4 +1,4 @@
-import { BgsPlayerEntity } from '../../bgs-player-entity';
+import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
 import { GameAction, buildGameAction } from './game-action';
@@ -195,7 +195,7 @@ export class Spectator {
 	}
 
 	public registerPowerTarget(
-		sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret,
+		sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret | BoardTrinket,
 		targetEntity: BoardEntity | BgsPlayerEntity,
 		targetBoard: BoardEntity[],
 		hero1: BgsPlayerEntity,

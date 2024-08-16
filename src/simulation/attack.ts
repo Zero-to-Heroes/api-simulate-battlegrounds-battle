@@ -264,7 +264,7 @@ const applyOnAttackQuest = (
 				trinket.scriptDataNum1--;
 				if (trinket.scriptDataNum1 <= 0) {
 					for (const entity of attackingBoard) {
-						playBloodGemsOn(trinket, entity, attackingBoard, attackingBoardHero, gameState);
+						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
 						gameState.spectator.registerPowerTarget(
 							trinket,
 							entity,

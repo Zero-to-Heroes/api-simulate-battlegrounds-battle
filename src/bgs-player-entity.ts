@@ -28,6 +28,7 @@ export interface BgsPlayerEntity {
 	}[];
 	hand?: BoardEntity[];
 	secrets?: BoardSecret[];
+	trinkets?: BoardTrinket[];
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	globalInfo?: BgsPlayerGlobalInfo;
@@ -59,4 +60,13 @@ export interface BgsQuestEntity {
 	RewardDbfId: number;
 	ProgressCurrent: number;
 	ProgressTotal: number;
+}
+
+export interface BoardTrinket {
+	cardId: string;
+	entityId: number;
+	scriptDataNum1: number;
+	rememberedMinion?: BoardEntity;
+	avengeDefault?: number;
+	avengeCurrent?: number;
 }

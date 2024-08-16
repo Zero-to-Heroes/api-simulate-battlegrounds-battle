@@ -53,8 +53,7 @@ const handleSecrets = (
 ): BoardEntity[] => {
 	const allSpawns = [];
 
-	const trinkets = boardWithDeadEntityHero.trinkets ?? [];
-	for (const trinket of trinkets) {
+	for (const trinket of boardWithDeadEntityHero.trinkets) {
 		switch (trinket.cardId) {
 			case CardIds.LuckyTabby:
 				if (!trinket.scriptDataNum1) {

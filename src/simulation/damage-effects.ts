@@ -200,8 +200,7 @@ const handleOtherEntityEffects = (
 			});
 	}
 
-	const trinkets = hero.trinkets ?? [];
-	trinkets
+	hero.trinkets
 		.filter((t) => t.cardId === CardIds.TigerCarving || t.cardId === CardIds.TigerCarvingGreater)
 		.forEach((carving) => {
 			const target = pickRandom(board);

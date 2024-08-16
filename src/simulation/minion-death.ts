@@ -110,8 +110,7 @@ export const onMinionDeadQuest = (
 		}
 	}
 
-	const trinkets = boardHero.trinkets ?? [];
-	for (const trinket of trinkets) {
+	for (const trinket of boardHero.trinkets) {
 		switch (trinket.cardId) {
 			case CardIds.AllianceKeychain:
 			case CardIds.AllianceKeychainGreater:
