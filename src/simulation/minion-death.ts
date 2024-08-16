@@ -147,8 +147,11 @@ export const onMinionDeadQuest = (
 					hasCorrectTribe(deadEntity, boardHero, Race.QUILBOAR, gameState.allCards)
 				) {
 					// TODO: blood gem size
-					const bloodGemAttack = deadEntity.attack;
-					const bloodGemHealth = deadEntity.health;
+					const bloodGemEnchantment =
+						deadEntity.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??
+						deadEntity.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment);
+					const bloodGemAttack = bloodGemEnchantment?.tagScriptDataNum1 ?? 0;
+					const bloodGemHealth = bloodGemEnchantment?.tagScriptDataNum2 ?? 0;
 					const spawns = spawnEntities(
 						CardIds.BloodGolemSticker_Token,
 						1,

@@ -27,8 +27,25 @@ export const playBloodGemsOn = (
 		1 +
 		(hero.globalInfo?.BloodGemHealthBonus ?? 0) +
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarStickerGreater).length * 4;
+
+	let bloodGemEnchantment =
+		target.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??
+		target.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment);
+	if (!bloodGemEnchantment) {
+		bloodGemEnchantment = {
+			cardId: CardIds.BloodGem_BloodGemEnchantment,
+			originEntityId: source.entityId,
+			timing: 0,
+			tagScriptDataNum1: 0,
+			tagScriptDataNum2: 0,
+		};
+		target.enchantments = target.enchantments ?? [];
+		target.enchantments.push(bloodGemEnchantment);
+	}
 	for (let i = 0; i < quantity; i++) {
 		modifyStats(target, bloodGemAttack, bloodGemHealth, board, hero, gameState);
+		bloodGemEnchantment.tagScriptDataNum1 += bloodGemAttack;
+		bloodGemEnchantment.tagScriptDataNum2 += bloodGemHealth;
 	}
 
 	switch (target.cardId) {
