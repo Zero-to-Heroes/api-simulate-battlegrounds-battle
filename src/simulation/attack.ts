@@ -607,7 +607,10 @@ const performAttack = (
 		attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135
 	) {
 		const loops = attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
-		const validDeathrattles = getValidDeathrattles(attackingBoard, gameState);
+		const validDeathrattles = getValidDeathrattles(
+			attackingBoard.filter((e) => e.entityId !== attackingEntity.entityId),
+			gameState,
+		);
 		const leftMost = validDeathrattles[0];
 		if (!!leftMost) {
 			for (let i = 0; i < loops; i++) {

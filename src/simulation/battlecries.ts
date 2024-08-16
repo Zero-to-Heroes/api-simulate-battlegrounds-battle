@@ -13,6 +13,7 @@ import {
 import { getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
+import { dealDamageToHero } from './damage-to-hero';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { magnetizeToTarget } from './magnetize';
@@ -183,6 +184,10 @@ export const triggerBattlecry = (
 					gameState,
 					Race[Race.DEMON],
 				);
+				const numberOfTimesToTrigger = entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 1 : 2;
+				for (let i = 0; i < numberOfTimesToTrigger; i++) {
+					dealDamageToHero(entity, hero, board, 2, gameState);
+				}
 				break;
 			case CardIds.MoonBaconJazzer_BG26_159:
 			case CardIds.MoonBaconJazzer_BG26_159_G:

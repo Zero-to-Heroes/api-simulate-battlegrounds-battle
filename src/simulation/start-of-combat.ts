@@ -338,10 +338,8 @@ const handleStartOfCombatMinions = (
 	gameState: FullGameState,
 ): number => {
 	let attackerForStart = Math.random() < 0.5 ? 0 : 1;
-	const playerAttackers = [...playerBoard]; //.filter((entity) => START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds));
-	const opponentAttackers = [...opponentBoard]; //.filter((entity) =>
-	// 	START_OF_COMBAT_CARD_IDS.includes(entity.cardId as CardIds),
-	// );
+	const playerAttackers = [...playerBoard];
+	const opponentAttackers = [...opponentBoard];
 
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		let shouldUpdateNextPlayer = false;
@@ -1593,7 +1591,6 @@ export const performStartOfCombatMinionsForPlayer = (
 		return false;
 	}
 	let hasProcessed = true;
-	// Don't forget to update START_OF_COMBAT_CARD_IDS
 	if (attacker.cardId === CardIds.RedWhelp_BGS_019) {
 		const damage = attackingBoardBefore.filter((entity) =>
 			hasCorrectTribe(entity, attackingBoardHero, Race.DRAGON, gameState.allCards),
@@ -1790,13 +1787,15 @@ export const performStartOfCombatMinionsForPlayer = (
 		attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G
 	) {
 		if (defendingBoard.length > 0) {
-			const attackerIndex = attackingBoard.indexOf(attacker);
-			const defenderPosition = attackerIndex - (attackingBoard.length - defendingBoard.length) / 2;
-			if (Math.round(defenderPosition) === defenderPosition) {
-				castImpure(defendingBoard[defenderPosition], attacker, attackingBoard, gameState.spectator);
-			} else {
-				castImpure(defendingBoard[defenderPosition - 0.5], attacker, attackingBoard, gameState.spectator);
-				castImpure(defendingBoard[defenderPosition + 0.5], attacker, attackingBoard, gameState.spectator);
+			const validTargets = defendingBoard.filter((e) => gameState.cardsData.getTavernLevel(e.cardId) >= 5);
+			const numberOfPicks = attacker.cardId === CardIds.InterrogatorWhitemane_BG24_704_G ? 2 : 1;
+			for (let i = 0; i < numberOfPicks; i++) {
+				const target = pickRandom(validTargets);
+				if (!!target) {
+					castImpure(attacker, target, attackingBoard, gameState.spectator);
+					const targetIndex = validTargets.findIndex((e) => e.entityId === target.entityId);
+					validTargets.splice(targetIndex, 1);
+				}
 			}
 		}
 	} else if (attacker.cardId === CardIds.MantidQueen_BG22_402 || attacker.cardId === CardIds.MantidQueen_BG22_402_G) {

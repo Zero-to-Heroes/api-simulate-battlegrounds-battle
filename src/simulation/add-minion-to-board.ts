@@ -710,7 +710,7 @@ const handleAfterSpawnEffect = (
 			case CardIds.XyloBones_BG26_172:
 			case CardIds.XyloBones_BG26_172_G:
 				if (entity.entityId !== spawned.entityId) {
-					const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 6 : 3;
+					const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 4 : 2;
 					modifyStats(entity, 0, xylobonesBuff, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
 				}

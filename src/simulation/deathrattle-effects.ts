@@ -943,14 +943,14 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.MotleyPhalanx_BG27_080:
 			case CardIds.MotleyPhalanx_BG27_080_G:
-				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 8 : 4;
+				const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					grantStatsToMinionsOfEachType(
 						deadEntity,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
-						motleyBuff,
-						motleyBuff,
+						motleyBuff * 2,
+						motleyBuff * 1,
 						gameState,
 					);
 					onDeathrattleTriggered(deathrattleTriggeredInput);

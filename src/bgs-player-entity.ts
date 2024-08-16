@@ -4,7 +4,7 @@ import { BoardSecret } from './board-secret';
 export interface BgsPlayerEntity {
 	readonly cardId: string;
 	readonly nonGhostCardId?: string;
-	readonly hpLeft: number;
+	hpLeft: number;
 	readonly tavernTier: number;
 
 	readonly heroPowerId?: string | undefined | null;
