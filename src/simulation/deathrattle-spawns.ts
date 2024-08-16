@@ -1607,6 +1607,34 @@ export const spawnEntitiesFromDeathrattle = (
 						}
 					}
 					break;
+				case CardIds.IndomitableMount:
+				case CardIds.IndomitableMount_G:
+					const tiersToSummon = [3, 4, 5];
+					for (const tier of tiersToSummon) {
+						let spawnId = gameState.cardsData.getRandomMinionForTavernTier(tier);
+						if (deadEntity.cardId === CardIds.IndomitableMount_G) {
+							const premiumDbfId = gameState.allCards.getCard(spawnId).battlegroundsPremiumDbfId;
+							spawnId = gameState.allCards.getCard(premiumDbfId).id;
+						}
+
+						spawnedEntities.push(
+							...spawnEntities(
+								spawnId,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+					}
+					break;
 
 				// Putricide-only
 				case CardIds.FoulEgg_BG26_RLK_833:

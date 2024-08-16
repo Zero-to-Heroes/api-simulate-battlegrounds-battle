@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, CardIds, CardType, Race } from '@firestone-hs/reference-data';
-import { updateDivineShield } from 'src/divine-shield';
+import { grantDivineShieldToLeftmostMinions, updateDivineShield } from 'src/divine-shield';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/utils';
@@ -2220,6 +2220,18 @@ export const performStartOfCombatMinionsForPlayer = (
 				attackingBoard,
 				attackingBoardHero,
 				defendingBoardHero,
+			);
+		}
+	} else if (attacker.cardId === CardIds.SunScreener || attacker.cardId === CardIds.SunScreener_G) {
+		if (attackingBoard.length > 0 || defendingBoard.length > 0) {
+			const quantity = attacker.cardId === CardIds.SunScreener ? 3 : 6;
+			grantDivineShieldToLeftmostMinions(
+				attacker,
+				attackingBoard,
+				attackingBoardHero,
+				quantity,
+				defendingBoardHero,
+				gameState,
 			);
 		}
 	} else {

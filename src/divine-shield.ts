@@ -119,5 +119,18 @@ export const grantRandomDivineShield = (
 		updateDivineShield(chosen, board, hero, otherHero, true, gameState);
 		gameState.spectator.registerPowerTarget(source, chosen, board, null, null);
 	}
-	// return board;
+};
+
+export const grantDivineShieldToLeftmostMinions = (
+	source: BoardEntity,
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	quantity: number,
+	otherHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	for (let i = 0; i < Math.min(quantity, board.length); i++) {
+		updateDivineShield(board[i], board, hero, otherHero, true, gameState);
+		gameState.spectator.registerPowerTarget(source, board[i], board, null, null);
+	}
 };

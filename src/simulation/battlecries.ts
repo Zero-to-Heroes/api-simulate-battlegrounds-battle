@@ -13,9 +13,11 @@ import {
 import { getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
+import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { magnetizeToTarget } from './magnetize';
 import { SharedState } from './shared-state';
+import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
 import { isMinionGolden, makeMinionGolden } from './utils/golden';
 
@@ -825,6 +827,54 @@ export const triggerBattlecry = (
 					const attackBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
 					const healthBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
 					modifyStats(tuskarrTarget, attackBuff, healthBuff, board, hero, gameState);
+				}
+				break;
+			case CardIds.InspiringUnderdog:
+			case CardIds.InspiringUnderdog_G:
+				if (board.length > 0) {
+					const targets = board.filter((e) => gameState.cardsData.getTavernLevel(e.cardId) <= 3);
+					if (targets.length > 0) {
+						const multiplier = entity.cardId === CardIds.InspiringUnderdog ? 1 : 2;
+						targets.forEach((target) => {
+							modifyStats(target, multiplier * 2, multiplier * 1, board, hero, gameState);
+							gameState.spectator.registerPowerTarget(entity, target, board, hero, otherHero);
+						});
+					}
+				}
+				break;
+			case CardIds.LuckyEgg:
+			case CardIds.LuckyEgg_G:
+				if (board.length > 0) {
+					const transformedInto = gameState.cardsData.getRandomMinionForTavernTier(3);
+					const premiumDbfId = gameState.allCards.getCard(transformedInto).battlegroundsPremiumDbfId;
+					const goldenCardId = gameState.allCards.getCard(premiumDbfId).id;
+					const currentIndex = board.findIndex((e) => e.entityId === entity.entityId);
+					const currentIndexFromRight = board.length - currentIndex - 1;
+					board.splice(currentIndex, 1);
+					const newMinions = spawnEntities(
+						goldenCardId,
+						1,
+						board,
+						hero,
+						otherBoard,
+						otherHero,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						entity.friendly,
+						false,
+					);
+					const spawns = performEntitySpawns(
+						newMinions,
+						board,
+						hero,
+						entity,
+						currentIndexFromRight,
+						otherBoard,
+						otherHero,
+						gameState,
+					);
 				}
 				break;
 			default:
