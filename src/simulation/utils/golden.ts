@@ -12,6 +12,7 @@ export const makeMinionGolden = (
 	source: BoardEntity | BgsPlayerEntity,
 	targetBoard: BoardEntity[],
 	targetBoardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
 	// Typically, we are already golden
@@ -60,7 +61,7 @@ export const makeMinionGolden = (
 	modifyStats(target, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
-	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, target, gameState);
+	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, otherHero, target, gameState);
 	const hasDivineShield = target.divineShield;
 	const hasReborn = target.reborn;
 	const avengeCurrent = target.avengeCurrent;

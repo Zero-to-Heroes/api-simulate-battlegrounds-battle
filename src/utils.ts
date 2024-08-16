@@ -441,6 +441,11 @@ const getSpecialTribesForEntity = (
 		case CardIds.LightfangEnforcer_BGS_009:
 		case CardIds.LightfangEnforcer_TB_BaconUps_082:
 			return playerEntity.trinkets.some((t) => t.cardId === CardIds.EnforcerPortrait) ? [Race.ALL] : [];
+		case CardIds.BrannBronzebeard_BG_LOE_077:
+		case CardIds.BrannBronzebeard_TB_BaconUps_045:
+			return playerEntity.trinkets.some((t) => t.cardId === CardIds.BronzebeardPortrait)
+				? [Race.DRAGON, Race.MURLOC]
+				: [];
 	}
 	return [];
 };

@@ -455,7 +455,7 @@ export const triggerBattlecry = (
 			case CardIds.CaptainSanders_BG25_034_G:
 				const captainSandersTarget = pickRandom(board.filter((e) => !isMinionGolden(e, gameState.allCards)));
 				if (captainSandersTarget) {
-					makeMinionGolden(captainSandersTarget, entity, board, hero, gameState);
+					makeMinionGolden(captainSandersTarget, entity, board, hero, otherHero, gameState);
 				}
 				break;
 			case CardIds.SanguineChampion_BG23_017:

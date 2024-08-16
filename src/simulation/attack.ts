@@ -13,6 +13,7 @@ import {
 	stringifySimpleCard,
 	updateVenomous,
 } from '../utils';
+import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
@@ -248,14 +249,31 @@ const applyOnAttackQuest = (
 	gameState: FullGameState,
 ) => {
 	const quests = attackingBoardHero.questEntities ?? [];
-	if (!quests.length) {
-		return;
-	}
-
 	for (const quest of quests) {
 		switch (quest.CardId) {
 			case CardIds.CrackTheCase:
 				onQuestProgressUpdated(attackingBoardHero, quest, attackingBoard, gameState);
+				break;
+		}
+	}
+
+	const trinkets = attackingBoardHero.trinkets ?? [];
+	for (const trinket of trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.JaroGems:
+				trinket.scriptDataNum1--;
+				if (trinket.scriptDataNum1 <= 0) {
+					for (const entity of attackingBoard) {
+						playBloodGemsOn(trinket, entity, attackingBoard, attackingBoardHero, gameState);
+						gameState.spectator.registerPowerTarget(
+							trinket,
+							entity,
+							attackingBoard,
+							attackingBoardHero,
+							attackingBoardHero,
+						);
+					}
+				}
 				break;
 		}
 	}

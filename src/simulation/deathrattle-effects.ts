@@ -820,6 +820,7 @@ export const handleDeathrattleEffects = (
 								deadEntity,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
+								otherBoardHero,
 								gameState,
 							);
 						}

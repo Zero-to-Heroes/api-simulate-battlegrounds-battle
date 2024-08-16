@@ -1,13 +1,15 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { pickRandomAlive } from 'src/services/utils';
-import { getEffectiveTribesForEntity } from 'src/utils';
+import { getEffectiveTribesForEntity, hasCorrectTribe } from 'src/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateAvengeCounters } from './avenge';
 import { addCardsInHand } from './cards-in-hand';
+import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { removeMinionFromBoard } from './remove-minion-from-board';
+import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
 
 export const makeMinionsDie = (
@@ -112,13 +114,23 @@ export const onMinionDeadQuest = (
 	for (const trinket of trinkets) {
 		switch (trinket.cardId) {
 			case CardIds.AllianceKeychain:
+			case CardIds.AllianceKeychainGreater:
 				if (trinket.scriptDataNum1 > 0 && deadEntity.friendly === boardHero.friendly) {
-					const target = pickRandomAlive(board);
-					if (!!target) {
-						modifyStats(target, deadEntity.maxAttack, deadEntity.maxHealth, board, boardHero, gameState);
-						gameState.spectator.registerPowerTarget(boardHero, target, board, boardHero, otherBoardHero);
-						trinket.scriptDataNum1--;
+					const loops = trinket.cardId === CardIds.AllianceKeychain ? 1 : 2;
+					for (let i = 0; i < loops; i++) {
+						const target = pickRandomAlive(board);
+						if (!!target) {
+							modifyStats(target, deadEntity.attack, deadEntity.health, board, boardHero, gameState);
+							gameState.spectator.registerPowerTarget(
+								boardHero,
+								target,
+								board,
+								boardHero,
+								otherBoardHero,
+							);
+						}
 					}
+					trinket.scriptDataNum1--;
 				}
 				break;
 			case CardIds.TheEyeOfDalaran:
@@ -127,6 +139,36 @@ export const onMinionDeadQuest = (
 					getEffectiveTribesForEntity(deadEntity, boardHero, gameState.allCards).length === 0
 				) {
 					addCardsInHand(boardHero, board, [null], gameState);
+				}
+				break;
+			case CardIds.BloodGolemSticker:
+				if (
+					deadEntity.friendly === boardHero.friendly &&
+					trinket.scriptDataNum1 > 0 &&
+					hasCorrectTribe(deadEntity, boardHero, Race.QUILBOAR, gameState.allCards)
+				) {
+					// TODO: blood gem size
+					const bloodGemAttack = deadEntity.attack;
+					const bloodGemHealth = deadEntity.health;
+					const spawns = spawnEntities(
+						CardIds.BloodGolemSticker_Token,
+						1,
+						board,
+						boardHero,
+						otherBoard,
+						otherBoardHero,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						deadEntity.friendly,
+						false,
+					);
+					spawns.forEach((b) => {
+						b.attack = bloodGemAttack;
+						b.health = bloodGemHealth;
+					});
+					performEntitySpawns(spawns, board, boardHero, deadEntity, 0, otherBoard, otherBoardHero, gameState);
 				}
 				break;
 		}

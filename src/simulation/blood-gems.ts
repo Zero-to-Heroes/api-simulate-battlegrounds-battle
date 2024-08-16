@@ -21,8 +21,12 @@ export const playBloodGemsOn = (
 	const bloodGemAttack =
 		1 +
 		(hero.globalInfo?.BloodGemAttackBonus ?? 0) +
-		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoartSticket).length * 3;
-	const bloodGemHealth = 1 + (hero.globalInfo?.BloodGemHealthBonus ?? 0);
+		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker).length * 3 +
+		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarStickerGreater).length * 4;
+	const bloodGemHealth =
+		1 +
+		(hero.globalInfo?.BloodGemHealthBonus ?? 0) +
+		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarStickerGreater).length * 4;
 	for (let i = 0; i < quantity; i++) {
 		modifyStats(target, bloodGemAttack, bloodGemHealth, board, hero, gameState);
 		// console.log(

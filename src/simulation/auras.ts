@@ -187,6 +187,7 @@ export const setImplicitDataHero = (
 		...trinket,
 		avengeDefault: cardsData.avengeValue(trinket.cardId),
 		avengeCurrent: cardsData.avengeValue(trinket.cardId),
+		scriptDataNum1: cardsData.defaultScriptDataNum(trinket.cardId),
 	}));
 	// 0 is not a valid entityId
 	hero.entityId = hero.entityId || entityIdContainer.entityId--;
@@ -234,20 +235,35 @@ export const updateBoardwideAuras = (
 	}
 
 	board
-		.filter((entity) => entity.enchantments.some((ench) => ench.cardId === CardIds.WindrunnerNecklace_Enchantment))
+		.filter((entity) =>
+			entity.enchantments.some(
+				(ench) =>
+					ench.cardId === CardIds.WindrunnerNecklace_Enchantment ||
+					ench.cardId === CardIds.WindrunnerNecklaceGreater_Enchantment,
+			),
+		)
 		.forEach((e) => {
 			const enchantments = e.enchantments.filter(
 				(ench) => ench.cardId === CardIds.WindrunnerNecklace_Enchantment,
 			).length;
-			e.attack = Math.max(0, e.attack - enchantments * 8);
-			e.enchantments = e.enchantments.filter((ench) => ench.cardId !== CardIds.WindrunnerNecklace_Enchantment);
+			const greaterEnchantments = e.enchantments.filter(
+				(ench) => ench.cardId === CardIds.WindrunnerNecklaceGreater_Enchantment,
+			).length;
+			e.attack = Math.max(0, e.attack - enchantments * 8 - greaterEnchantments * 20);
+			e.enchantments = e.enchantments
+				.filter((ench) => ench.cardId !== CardIds.WindrunnerNecklace_Enchantment)
+				.filter((ench) => ench.cardId !== CardIds.WindrunnerNecklaceGreater_Enchantment);
 		});
 	boardHero.trinkets
-		.filter((t) => t.cardId === CardIds.WindrunnerNecklace)
+		.filter((t) => t.cardId === CardIds.WindrunnerNecklace || t.cardId === CardIds.WindrunnerNecklaceGreater)
 		.forEach((t) => {
-			board[0].attack = board[0].attack + 8;
+			const buff = t.cardId === CardIds.WindrunnerNecklace ? 8 : 20;
+			board[0].attack = board[0].attack + buff;
 			board[0].enchantments.push({
-				cardId: CardIds.WindrunnerNeachment_Enchantment,
+				cardId:
+					t.cardId === CardIds.WindrunnerNecklace
+						? CardIds.WindrunnerNeachment_Enchantment
+						: CardIds.WindrunnerNecklaceGreater_Enchantment,
 				originEntityId: t.entityId,
 				timing: gameState.sharedState.currentEntityId++,
 			});

@@ -239,7 +239,19 @@ export class CardsData {
 	public defaultScriptDataNum(cardId: string): number {
 		switch (cardId) {
 			case CardIds.TumblingDisaster_BG28_Reward_505:
+			case CardIds.TwinSkyLanterns:
+			case CardIds.BoomController:
+			case CardIds.AllianceKeychain:
+			case CardIds.AllianceKeychainGreater:
 				return 1;
+			case CardIds.TwinSkyLanternsGreater:
+			case CardIds.JarOGems:
+				return 2;
+			case CardIds.MechagonAdapter:
+			case CardIds.BloodGolemSticker:
+				return 3;
+			case CardIds.ReinforcedShield:
+				return 4;
 			default:
 				return 0;
 		}

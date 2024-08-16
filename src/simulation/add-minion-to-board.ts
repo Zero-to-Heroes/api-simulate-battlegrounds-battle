@@ -38,7 +38,7 @@ export const addMinionToBoard = (
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
-	handleAddedMinionAuraEffect(board, boardHero, minionToAdd, gameState);
+	handleAddedMinionAuraEffect(board, boardHero, otherHero, minionToAdd, gameState);
 	// Important to do this here, so that "attack immediately" minions can be taken into account by the quests
 	onMinionSummoned(boardHero, board, gameState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, gameState);
@@ -132,6 +132,7 @@ const handleSpawnEffect = (
 export const handleAddedMinionAuraEffect = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
 ): void => {
@@ -171,6 +172,12 @@ export const handleAddedMinionAuraEffect = (
 			case CardIds.TwinSkyLanternsGreater:
 				if (!trinket.rememberedMinion) {
 					trinket.rememberedMinion = copyEntity(spawned);
+				}
+				break;
+			case CardIds.ReinforcedShield:
+				if (trinket.scriptDataNum1 > 0 && !spawned.divineShield) {
+					updateDivineShield(spawned, board, boardHero, otherHero, true, gameState);
+					trinket.scriptDataNum1--;
 				}
 				break;
 		}
@@ -219,6 +226,7 @@ export const applyAurasToSelf = (
 			}
 		}
 	}
+
 	if (!!boardHero.trinkets?.length) {
 		for (const trinket of boardHero.trinkets) {
 			switch (trinket) {
@@ -229,6 +237,12 @@ export const applyAurasToSelf = (
 				case CardIds.FeralTalismanGreater:
 					spawned.attack += 5;
 					spawned.health += 3;
+					break;
+				case CardIds.HordeKeychain:
+					if (gameState.cardsData.getTavernLevel(spawned.cardId) <= 3) {
+						spawned.attack += 6;
+						spawned.health += 4;
+					}
 					break;
 			}
 		}
@@ -350,9 +364,7 @@ export const removeAurasFromSelf = (
 	entity: BoardEntity,
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	sharedState: SharedState,
-	spectator: Spectator,
+	gameState: FullGameState,
 ): void => {
 	if (!!boardHero.questRewards?.length) {
 		for (const quest of boardHero.questRewards) {
@@ -371,12 +383,33 @@ export const removeAurasFromSelf = (
 		}
 	}
 
-	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, allCards)) {
+	if (!!boardHero.trinkets?.length) {
+		for (const trinket of boardHero.trinkets) {
+			switch (trinket) {
+				case CardIds.FeralTalisman:
+					entity.attack = Math.max(0, entity.attack - 2);
+					entity.health = Math.max(1, entity.health - 1);
+					break;
+				case CardIds.FeralTalismanGreater:
+					entity.attack = Math.max(0, entity.attack - 5);
+					entity.health = Math.max(1, entity.health - 3);
+					break;
+				case CardIds.HordeKeychain:
+					if (gameState.cardsData.getTavernLevel(entity.cardId) <= 3) {
+						entity.attack = Math.max(0, entity.attack - 6);
+						entity.health = Math.max(1, entity.health - 4);
+					}
+					break;
+			}
+		}
+	}
+
+	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.UndeadAttackBonus);
 		}
 	}
-	if (hasCorrectTribe(entity, boardHero, Race.BEAST, allCards)) {
+	if (hasCorrectTribe(entity, boardHero, Race.BEAST, gameState.allCards)) {
 		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
 			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.GoldrinnBuffAtk);
 			entity.health = Math.max(1, entity.health - boardHero.globalInfo.GoldrinnBuffHealth);
@@ -388,7 +421,7 @@ export const removeAurasFromSelf = (
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.MURLOC, allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.MURLOC, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -400,7 +433,7 @@ export const removeAurasFromSelf = (
 			case CardIds.HummingBird_BG26_805:
 			case CardIds.HummingBird_BG26_805_G:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.BEAST, allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.BEAST, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -412,7 +445,7 @@ export const removeAurasFromSelf = (
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.PIRATE, allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.PIRATE, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -428,7 +461,7 @@ export const removeAurasFromSelf = (
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.DEMON, allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.DEMON, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -449,7 +482,7 @@ export const removeAurasFromSelf = (
 			case CardIds.SoreLoser_BG27_030:
 			case CardIds.SoreLoser_BG27_030_G:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.UNDEAD, allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -488,7 +521,7 @@ export const removeAurasFromSelf = (
 		case CardIds.RotHideGnoll_BG25_013_G:
 			const multiplierGnoll = entity.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
 			const statsBonusGnoll =
-				multiplierGnoll * sharedState.deaths.filter((e) => e.friendly === entity.friendly).length;
+				multiplierGnoll * gameState.sharedState.deaths.filter((e) => e.friendly === entity.friendly).length;
 			entity.attack = Math.max(0, entity.attack - statsBonusGnoll);
 			break;
 	}

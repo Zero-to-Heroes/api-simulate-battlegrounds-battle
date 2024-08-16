@@ -7,6 +7,7 @@ import { pickRandom, pickRandomLowestHealth, shuffleArray } from '../services/ut
 import {
 	addImpliedMechanics,
 	addStatsToBoard,
+	copyEntity,
 	getEffectiveTribesForEntity,
 	getMinionsOfDifferentTypes,
 	getRandomMinionWithHighestHealth,
@@ -693,17 +694,13 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				break;
 			case CardIds.TwinSkyLanterns:
 			case CardIds.TwinSkyLanternsGreater:
-				trinket.scriptDataNum1 = trinket.cardId === CardIds.TwinSkyLanterns ? 1 : 2;
 				trinket.rememberedMinion = null;
 				break;
-			case CardIds.AllianceKeychain:
-				trinket.scriptDataNum1 = 1;
-				break;
-			case CardIds.MechagonAdapter:
-				trinket.scriptDataNum1 = 3;
-				break;
 			case CardIds.ArtisanalUrn:
-				playerEntity.globalInfo.UndeadAttackBonus = (playerEntity.globalInfo.UndeadAttackBonus ?? 0) + 3;
+			case CardIds.ArtisanalUrnGreater:
+				const artisanalUrnBuff = trinket.cardId === CardIds.ArtisanalUrn ? 3 : 7;
+				playerEntity.globalInfo.UndeadAttackBonus =
+					(playerEntity.globalInfo.UndeadAttackBonus ?? 0) + artisanalUrnBuff;
 				break;
 			case CardIds.RivendarePortrait:
 				playerBoard
@@ -714,10 +711,100 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					)
 					.forEach((e) => (e.stealth = true));
 				break;
+			case CardIds.TinyfinOnesie:
+				const highestHealthMinionInHand = playerEntity.hand?.sort((a, b) => b.health - a.health)[0];
+				if (highestHealthMinionInHand && playerBoard.length > 0) {
+					modifyStats(
+						playerBoard[0],
+						highestHealthMinionInHand.attack,
+						highestHealthMinionInHand.health,
+						playerBoard,
+						playerEntity,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.BronzeTimepiece:
+				if (playerBoard.length > 0) {
+					playerBoard.forEach((entity) => {
+						const highest = Math.max(entity.attack, entity.health);
+						setEntityStats(entity, highest, highest, playerBoard, playerEntity, gameState);
+						gameState.spectator.registerPowerTarget(trinket, entity, playerBoard, null, null);
+					});
+				}
+				break;
+			case CardIds.IronforgeAnvil:
+				if (playerBoard.length > 0) {
+					playerBoard
+						.filter((e) => getEffectiveTribesForEntity(e, playerEntity, gameState.allCards).length === 0)
+						.forEach((entity) => {
+							setEntityStats(
+								entity,
+								3 * entity.attack,
+								3 * entity.health,
+								playerBoard,
+								playerEntity,
+								gameState,
+							);
+							gameState.spectator.registerPowerTarget(trinket, entity, playerBoard, null, null);
+						});
+				}
+				break;
+			case CardIds.KarazhanChessSet:
+				if (playerBoard.length > 0) {
+					for (let i = 0; i < Math.min(playerBoard.length, 7); i++) {
+						const entityToCoy = playerBoard[i];
+						const copy: BoardEntity = copyEntity(entityToCoy);
+						const newMinions = spawnEntities(
+							copy.cardId,
+							1,
+							playerBoard,
+							playerEntity,
+							opponentBoard,
+							opponentEntity,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							playerEntity.friendly,
+							false,
+							false,
+							false,
+							copy,
+						);
+						const spawns = performEntitySpawns(
+							newMinions,
+							playerBoard,
+							playerEntity,
+							playerEntity,
+							playerBoard.length - i - 1,
+							opponentBoard,
+							opponentEntity,
+							gameState,
+						);
+						i += spawns.length;
+					}
+				}
+				currentAttacker =
+					playerBoard.length > opponentBoard.length
+						? playerIsFriendly
+							? 0
+							: 1
+						: opponentBoard.length > playerBoard.length
+						? playerIsFriendly
+							? 1
+							: 0
+						: Math.round(Math.random());
+				break;
 			case CardIds.FishySticker:
+			case CardIds.FishyStickerGreater:
 				if (playerBoard.length < 7) {
+					const spawnId =
+						trinket.cardId === CardIds.FishySticker
+							? CardIds.AvatarOfNzoth_FishOfNzothToken
+							: CardIds.FishOfNzoth;
 					const newMinions = spawnEntities(
-						CardIds.FishOfNzoth,
+						spawnId,
 						1,
 						playerBoard,
 						playerEntity,
@@ -815,7 +902,14 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				break;
 			case CardIds.StolenGold:
 				if (playerBoard.length > 0) {
-					makeMinionGolden(playerBoard[0], playerEntity, playerBoard, playerEntity, gameState);
+					makeMinionGolden(
+						playerBoard[0],
+						playerEntity,
+						playerBoard,
+						playerEntity,
+						opponentEntity,
+						gameState,
+					);
 				}
 				if (playerBoard.length > 1) {
 					makeMinionGolden(
@@ -1279,14 +1373,7 @@ const handleTeronForPlayer = (
 			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
 			pendingAttackBuffs: [],
 		} as BoardEntity;
-		removeAurasFromSelf(
-			minionToCopy,
-			playerBoard,
-			playerEntity,
-			gameState.allCards,
-			gameState.sharedState,
-			gameState.spectator,
-		);
+		removeAurasFromSelf(minionToCopy, playerBoard, playerEntity, gameState);
 		playerEntity.rapidReanimationMinion = minionToCopy;
 		minionThatWillDie.definitelyDead = true;
 		gameState.spectator.registerPowerTarget(
@@ -2029,7 +2116,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			);
 			const target = candidates[0];
 			if (!!target) {
-				makeMinionGolden(target, attacker, attackingBoard, attackingBoardHero, gameState);
+				makeMinionGolden(target, attacker, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 			}
 		}
 	} else if (

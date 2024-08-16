@@ -372,7 +372,14 @@ const handleAvenge = (
 				gameState.allCards,
 			);
 			if (pirate) {
-				makeMinionGolden(pirate, avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				makeMinionGolden(
+					pirate,
+					avenger,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+					gameState,
+				);
 			}
 			break;
 		case CardIds.TonyTwoTusk_BG21_031_G:

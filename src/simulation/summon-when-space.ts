@@ -1,7 +1,7 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { buildSingleBoardEntity, copyEntity } from '../utils';
+import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -53,15 +53,64 @@ const handleSummonsWhenSpaceForPlayer = (
 		);
 	}
 	targetEntity.trinkets
-		.filter((t) => t.cardId === CardIds.TwinSkyLanterns && t.scriptDataNum1 === 1)
+		.filter((t) => t.cardId === CardIds.TwinSkyLanterns || t.cardId === CardIds.TwinSkyLanternsGreater)
 		.forEach((t) => {
 			handleTwinSkyLanternsForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
 	targetEntity.trinkets
-		.filter((t) => t.cardId === CardIds.TwinSkyLanternsGreater && t.scriptDataNum1 === 2)
+		.filter((t) => t.cardId === CardIds.BoomController)
 		.forEach((t) => {
-			handleTwinSkyLanternsForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+			handleBoomControllerForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
+};
+
+const handleBoomControllerForPlayer = (
+	trinket: BgsTrinketEntity,
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	if (playerBoard.length < 7 && trinket.scriptDataNum1 > 0) {
+		const candidate = gameState.sharedState.deaths
+			.filter((d) => d.friendly === playerEntity.friendly)
+			.filter((d) => hasCorrectTribe(d, playerEntity, Race.MECH, gameState.allCards))[0];
+		if (!!candidate) {
+			const spawn = copyEntity(candidate);
+			const target = spawnEntities(
+				spawn.cardId,
+				1,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState.allCards,
+				gameState.cardsData,
+				gameState.sharedState,
+				gameState.spectator,
+				playerEntity.friendly,
+				true,
+				false,
+				false,
+				spawn,
+			);
+			performEntitySpawns(
+				target,
+				playerBoard,
+				playerEntity,
+				playerEntity,
+				0,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+			);
+			target.forEach((t) =>
+				gameState.spectator.registerPowerTarget(playerEntity, t, playerBoard, playerEntity, opponentEntity),
+			);
+			trinket.scriptDataNum1 = 0;
+		}
+	}
 };
 
 const handleTwinSkyLanternsForPlayer = (
@@ -73,7 +122,8 @@ const handleTwinSkyLanternsForPlayer = (
 	gameState: FullGameState,
 ): void => {
 	const spawnNumber = trinket.scriptDataNum1;
-	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion) {
+	const canTrigger = trinket.cardId === CardIds.TwinSkyLanternsGreater ? spawnNumber >= 2 : spawnNumber >= 1;
+	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion && canTrigger) {
 		const spawn = copyEntity(trinket.rememberedMinion);
 		const target = spawnEntities(
 			spawn.cardId,
