@@ -55,7 +55,7 @@ const handleSecrets = (
 
 	for (const trinket of boardWithDeadEntityHero.trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.LuckyTabby:
+			case CardIds.LuckyTabby_BG30_MagicItem_931:
 				if (!trinket.scriptDataNum1) {
 					trinket.scriptDataNum1 = 6;
 				}

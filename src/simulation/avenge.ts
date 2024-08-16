@@ -392,7 +392,14 @@ const handleAvenge = (
 					gameState.allCards,
 				);
 				if (pirate) {
-					makeMinionGolden(pirate, avenger, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+					makeMinionGolden(
+						pirate,
+						avenger,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+						gameState,
+					);
 				}
 			}
 			break;
@@ -533,20 +540,21 @@ const handleAvenge = (
 		case CardIds.CycleOfEnergy_BG28_Reward_504:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 			break;
-		case CardIds.FridgeMagnet:
+		case CardIds.FridgeMagnet_BG30_MagicItem_545:
 			const randomMagnetic = gameState.cardsData.getRandomMechToMagnetize(boardWithDeadEntityHero.tavernTier);
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomMagnetic], gameState);
 			break;
 		case CardIds.StableAmalgamation_BG28_Reward_518:
 			avenger.scriptDataNum1++;
 			break;
-		case CardIds.QuilligraphySet:
-		case CardIds.QuilligraphySetGreater:
-			const quilligraphySetBuff = avenger.cardId === CardIds.QuilligraphySetGreater ? 2 : 1;
+		case CardIds.QuilligraphySet_BG30_MagicItem_410:
+		case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
+			const quilligraphySetBuff =
+				avenger.cardId === CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2 ? 2 : 1;
 			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += quilligraphySetBuff;
 			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += quilligraphySetBuff;
 			break;
-		case CardIds.GilneanThornedRose:
+		case CardIds.GilneanThornedRose_BG30_MagicItem_864:
 			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 3, 3, gameState);
 			for (const minion of boardWithDeadEntity) {
 				dealDamageToMinion(
@@ -568,7 +576,7 @@ const handleAvenge = (
 				);
 			}
 			break;
-		case CardIds.StaffOfTheScourge:
+		case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
 			if (boardWithDeadEntity.length > 0) {
 				const target = pickRandom(boardWithDeadEntity.filter((e) => !e.reborn));
 				target.reborn = true;

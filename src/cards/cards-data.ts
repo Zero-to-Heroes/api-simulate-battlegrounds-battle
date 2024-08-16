@@ -152,8 +152,8 @@ export class CardsData {
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
-			case CardIds.GilneanThornedRose:
-			case CardIds.FridgeMagnet:
+			case CardIds.GilneanThornedRose_BG30_MagicItem_864:
+			case CardIds.FridgeMagnet_BG30_MagicItem_545:
 				return 3;
 			case CardIds.Onyxia_Broodmother:
 			case CardIds.ImpatientDoomsayer_BG21_007:
@@ -174,12 +174,12 @@ export class CardsData {
 			case CardIds.AugmentedLaborer_BG28_740_G:
 			case CardIds.MurglMkIi_BG29_991:
 			case CardIds.MurglMkIi_BG29_991_G:
-			case CardIds.QuilligraphySet:
-			case CardIds.QuilligraphySetGreater:
+			case CardIds.QuilligraphySet_BG30_MagicItem_410:
+			case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
-			case CardIds.StaffOfTheScourge:
+			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
 				return 5;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
@@ -190,18 +190,18 @@ export class CardsData {
 	public defaultScriptDataNum(cardId: string): number {
 		switch (cardId) {
 			case CardIds.TumblingDisaster_BG28_Reward_505:
-			case CardIds.TwinSkyLanterns:
-			case CardIds.BoomController:
-			case CardIds.AllianceKeychain:
-			case CardIds.AllianceKeychainGreater:
+			case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
+			case CardIds.BoomController_BG30_MagicItem_440:
+			case CardIds.AllianceKeychain_BG30_MagicItem_433:
+			case CardIds.AllianceKeychain_AllianceKeychainToken_BG30_MagicItem_433t:
 				return 1;
-			case CardIds.TwinSkyLanternsGreater:
-			case CardIds.JarOGems:
+			case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
+			case CardIds.JarOGems_BG30_MagicItem_546:
 				return 2;
-			case CardIds.MechagonAdapter:
-			case CardIds.BloodGolemSticker:
+			case CardIds.MechagonAdapter_BG30_MagicItem_910:
+			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				return 3;
-			case CardIds.ReinforcedShield:
+			case CardIds.ReinforcedShield_BG30_MagicItem_886:
 				return 4;
 			default:
 				return 0;

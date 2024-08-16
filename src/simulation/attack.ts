@@ -260,7 +260,7 @@ const applyOnAttackQuest = (
 	const trinkets = attackingBoardHero.trinkets ?? [];
 	for (const trinket of trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.JaroGems:
+			case CardIds.JarOGems_BG30_MagicItem_546:
 				trinket.scriptDataNum1--;
 				if (trinket.scriptDataNum1 <= 0) {
 					for (const entity of attackingBoard) {
@@ -1013,7 +1013,7 @@ export const bumpEntities = (
 				false,
 			);
 			if (newSource.attack > 0 && defenderHadDivineShield) {
-				updateDivineShield(newTarget, otherBoard, otherHero, hero, false, gameState.allCards);
+				updateDivineShield(newTarget, otherBoard, otherHero, entityBoardHero, false, gameState);
 			}
 			if (damageDone > 0) {
 				onEntityDamaged(newTarget, otherBoard, otherHero, entityBoard, entityBoardHero, damageDone, gameState);

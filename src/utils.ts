@@ -255,10 +255,12 @@ export const updateVenomous = (
 	entity.venomous = newValue;
 	if (lostVenomous) {
 		const belcherPortraits = boardHero.trinkets.filter(
-			(t) => t.cardId === CardIds.BelcherPortrait || t.cardId === CardIds.BelcherPortraitGreater,
+			(t) =>
+				t.cardId === CardIds.BelcherPortrait_BG30_MagicItem_432 ||
+				t.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t,
 		);
 		belcherPortraits.forEach((p) => {
-			const buff = p.cardId === CardIds.BelcherPortraitGreater ? 15 : 5;
+			const buff = p.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t ? 15 : 5;
 			modifyStats(entity, buff, buff, board, boardHero, gameState);
 			gameState.spectator.registerPowerTarget(p, entity, board, null, null);
 		});
@@ -437,13 +439,17 @@ const getSpecialTribesForEntity = (
 	switch (entity.cardId) {
 		case CardIds.WhelpSmuggler_BG21_013:
 		case CardIds.WhelpSmuggler_BG21_013_G:
-			return playerEntity.trinkets.some((t) => t.cardId === CardIds.SmugglerPortrait) ? [Race.DRAGON] : [];
+			return playerEntity.trinkets.some((t) => t.cardId === CardIds.SmugglerPortrait_BG30_MagicItem_825)
+				? [Race.DRAGON]
+				: [];
 		case CardIds.LightfangEnforcer_BGS_009:
 		case CardIds.LightfangEnforcer_TB_BaconUps_082:
-			return playerEntity.trinkets.some((t) => t.cardId === CardIds.EnforcerPortrait) ? [Race.ALL] : [];
+			return playerEntity.trinkets.some((t) => t.cardId === CardIds.EnforcerPortrait_BG30_MagicItem_971)
+				? [Race.ALL]
+				: [];
 		case CardIds.BrannBronzebeard_BG_LOE_077:
 		case CardIds.BrannBronzebeard_TB_BaconUps_045:
-			return playerEntity.trinkets.some((t) => t.cardId === CardIds.BronzebeardPortrait)
+			return playerEntity.trinkets.some((t) => t.cardId === CardIds.BronzebeardPortrait_BG30_MagicItem_418)
 				? [Race.DRAGON, Race.MURLOC]
 				: [];
 	}
@@ -497,7 +503,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 				CardIds.MadMatador_BG28_404_G,
 				CardIds.WingedChimera_BG29_844,
 				CardIds.WingedChimera_BG29_844_G,
-				CardIds.MossOfTheSchloss_G,
+				CardIds.MossOfTheSchloss_BG30_111_G,
 		  ].includes(entity.cardId as CardIds)
 		? 2
 		: 1;

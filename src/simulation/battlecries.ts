@@ -834,12 +834,12 @@ export const triggerBattlecry = (
 					modifyStats(tuskarrTarget, attackBuff, healthBuff, board, hero, gameState);
 				}
 				break;
-			case CardIds.InspiringUnderdog:
-			case CardIds.InspiringUnderdog_G:
+			case CardIds.InspiringUnderdog_BG30_127:
+			case CardIds.InspiringUnderdog_BG30_127_G:
 				if (board.length > 0) {
 					const targets = board.filter((e) => gameState.cardsData.getTavernLevel(e.cardId) <= 3);
 					if (targets.length > 0) {
-						const multiplier = entity.cardId === CardIds.InspiringUnderdog ? 1 : 2;
+						const multiplier = entity.cardId === CardIds.InspiringUnderdog_BG30_127 ? 1 : 2;
 						targets.forEach((target) => {
 							modifyStats(target, multiplier * 2, multiplier * 1, board, hero, gameState);
 							gameState.spectator.registerPowerTarget(entity, target, board, hero, otherHero);
@@ -847,8 +847,8 @@ export const triggerBattlecry = (
 					}
 				}
 				break;
-			case CardIds.LuckyEgg:
-			case CardIds.LuckyEgg_G:
+			case CardIds.LuckyEgg_BG30_104:
+			case CardIds.LuckyEgg_BG30_104_G:
 				if (board.length > 0) {
 					const transformedInto = gameState.cardsData.getRandomMinionForTavernTier(3);
 					const premiumDbfId = gameState.allCards.getCard(transformedInto).battlegroundsPremiumDbfId;
@@ -882,10 +882,12 @@ export const triggerBattlecry = (
 					);
 				}
 				break;
-			case CardIds.MuseumMummy:
-			case CardIds.MuseumMummy_G:
+			case CardIds.MuseumMummy_BG30_850:
+			case CardIds.MuseumMummy_BG30_850_G:
 				const newMinions = spawnEntities(
-					entity.cardId === CardIds.MuseumMummy ? CardIds.MuseumMummy_Token : CardIds.MuseumMummy_Token_G,
+					entity.cardId === CardIds.MuseumMummy_BG30_850_G
+						? CardIds.Skeleton_BG_ICC_026t_G
+						: CardIds.SkeletonToken,
 					1,
 					board,
 					hero,

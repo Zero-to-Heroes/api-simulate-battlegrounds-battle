@@ -528,7 +528,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 
 	for (const trinket of playerEntity.trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.HolyMallet:
+			case CardIds.HolyMallet_BG30_MagicItem_902:
 				if (playerBoard.length > 0) {
 					updateDivineShield(playerBoard[0], playerBoard, playerEntity, opponentEntity, true, gameState);
 					gameState.spectator.registerPowerTarget(playerEntity, playerBoard[0], playerBoard, null, null);
@@ -538,7 +538,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					}
 				}
 				break;
-			case CardIds.TrainingCertificate:
+			case CardIds.TrainingCertificate_BG30_MagicItem_962:
 				if (playerBoard.length > 0) {
 					const minionsByAttack = [...playerBoard].sort((a, b) => a.attack - b.attack);
 					const firstTarget = minionsByAttack[0];
@@ -563,12 +563,12 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					}
 				}
 				break;
-			case CardIds.ValorousMedallion:
-			case CardIds.ValorousMedallionGreater:
-				const medallionBuff = trinket.cardId === CardIds.ValorousMedallion ? 2 : 5;
+			case CardIds.ValorousMedallion_BG30_MagicItem_970:
+			case CardIds.ValorousMedallion_ValorousMedallionToken_BG30_MagicItem_970t:
+				const medallionBuff = trinket.cardId === CardIds.ValorousMedallion_BG30_MagicItem_970 ? 2 : 5;
 				addStatsToBoard(trinket, playerBoard, playerEntity, medallionBuff, medallionBuff, gameState);
 				break;
-			case CardIds.EmeraldDreamcatcher:
+			case CardIds.EmeraldDreamcatcher_BG30_MagicItem_542:
 				const highestAttack = Math.max(...playerBoard.map((entity) => entity.attack));
 				playerBoard
 					.filter((e) => hasCorrectTribe(e, playerEntity, Race.DRAGON, gameState.allCards))
@@ -576,7 +576,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						setEntityStats(e, highestAttack, null, playerBoard, playerEntity, gameState);
 					});
 				break;
-			case CardIds.JarredFrostling:
+			case CardIds.JarredFrostling_BG30_MagicItem_952:
 				const elementals = shuffleArray(
 					playerBoard.filter((e) => hasCorrectTribe(e, playerEntity, Race.ELEMENTAL, gameState.allCards)),
 				);
@@ -584,7 +584,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 				targets.forEach((e) => {
 					e.enchantments = e.enchantments ?? [];
 					e.enchantments.push({
-						cardId: CardIds.JarredFrostling_Enchantment,
+						cardId: CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e,
 						originEntityId: trinket.entityId,
 						repeats: 1,
 						timing: gameState.sharedState.currentEntityId++,
@@ -592,33 +592,33 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					gameState.spectator.registerPowerTarget(playerEntity, e, playerBoard, null, null);
 				});
 				break;
-			case CardIds.RustyTrident:
+			case CardIds.RustyTrident_BG30_MagicItem_917:
 				playerBoard
 					.filter((e) => hasCorrectTribe(e, playerEntity, Race.NAGA, gameState.allCards))
 					.forEach((e) => {
 						e.enchantments = e.enchantments ?? [];
 						e.enchantments.push({
-							cardId: CardIds.RustyTrident_Enchantment,
+							cardId: CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e,
 							originEntityId: trinket.entityId,
 							repeats: 1,
 							timing: gameState.sharedState.currentEntityId++,
 						});
 					});
 				break;
-			case CardIds.HoggyBank:
+			case CardIds.HoggyBank_BG30_MagicItem_411:
 				playerBoard
 					.filter((e) => hasCorrectTribe(e, playerEntity, Race.QUILBOAR, gameState.allCards))
 					.forEach((e) => {
 						e.enchantments = e.enchantments ?? [];
 						e.enchantments.push({
-							cardId: CardIds.HoggyBank_Enchantment,
+							cardId: CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e,
 							originEntityId: trinket.entityId,
 							repeats: 1,
 							timing: gameState.sharedState.currentEntityId++,
 						});
 					});
 				break;
-			case CardIds.AutomatonPortrait:
+			case CardIds.AutomatonPortrait_BG30_MagicItem_303:
 				if (playerBoard.length < 7) {
 					const newMinions = spawnEntities(
 						CardIds.AstralAutomaton_BG_TTN_401,
@@ -646,7 +646,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					);
 				}
 				break;
-			case CardIds.ShipInABottle:
+			case CardIds.ShipInABottle_BG30_MagicItem_407:
 				if (playerBoard.length < 7) {
 					const target = pickRandom(gameState.cardsData.pirateSpawns);
 					addCardsInHand(playerEntity, playerBoard, [target], gameState);
@@ -677,7 +677,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					spawns.forEach((spawn) => (spawn.attackImmediately = true));
 				}
 				break;
-			case CardIds.EternalPortrait:
+			case CardIds.EternalPortrait_BG30_MagicItem_301:
 				playerBoard
 					.filter(
 						(e) =>
@@ -690,17 +690,17 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						gameState.spectator.registerPowerTarget(playerEntity, knight, playerBoard, null, null);
 					});
 				break;
-			case CardIds.TwinSkyLanterns:
-			case CardIds.TwinSkyLanternsGreater:
+			case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
+			case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
 				trinket.rememberedMinion = null;
 				break;
-			case CardIds.ArtisanalUrn:
-			case CardIds.ArtisanalUrnGreater:
-				const artisanalUrnBuff = trinket.cardId === CardIds.ArtisanalUrn ? 3 : 7;
+			case CardIds.ArtisanalUrn_BG30_MagicItem_989:
+			case CardIds.ArtisanalUrn_ArtisanalUrnToken_BG30_MagicItem_989t:
+				const artisanalUrnBuff = trinket.cardId === CardIds.ArtisanalUrn_BG30_MagicItem_989 ? 3 : 7;
 				playerEntity.globalInfo.UndeadAttackBonus =
 					(playerEntity.globalInfo.UndeadAttackBonus ?? 0) + artisanalUrnBuff;
 				break;
-			case CardIds.RivendarePortrait:
+			case CardIds.RivendarePortrait_BG30_MagicItem_310:
 				playerBoard
 					.filter(
 						(e) =>
@@ -709,7 +709,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					)
 					.forEach((e) => (e.stealth = true));
 				break;
-			case CardIds.TinyfinOnesie:
+			case CardIds.TinyfinOnesie_BG30_MagicItem_441:
 				const highestHealthMinionInHand = playerEntity.hand?.sort((a, b) => b.health - a.health)[0];
 				if (highestHealthMinionInHand && playerBoard.length > 0) {
 					modifyStats(
@@ -722,7 +722,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					);
 				}
 				break;
-			case CardIds.BronzeTimepiece:
+			case CardIds.BronzeTimepiece_BG30_MagicItem_995:
 				if (playerBoard.length > 0) {
 					playerBoard.forEach((entity) => {
 						const highest = Math.max(entity.attack, entity.health);
@@ -731,7 +731,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					});
 				}
 				break;
-			case CardIds.IronforgeAnvil:
+			case CardIds.IronforgeAnvil_BG30_MagicItem_403:
 				if (playerBoard.length > 0) {
 					playerBoard
 						.filter((e) => getEffectiveTribesForEntity(e, playerEntity, gameState.allCards).length === 0)
@@ -748,7 +748,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						});
 				}
 				break;
-			case CardIds.KarazhanChessSet:
+			case CardIds.KarazhanChessSet_BG30_MagicItem_972:
 				if (playerBoard.length > 0) {
 					for (let i = 0; i < Math.min(playerBoard.length, 7); i++) {
 						const entityToCoy = playerBoard[i];
@@ -794,11 +794,11 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 							: 0
 						: Math.round(Math.random());
 				break;
-			case CardIds.FishySticker:
-			case CardIds.FishyStickerGreater:
+			case CardIds.FishySticker_BG30_MagicItem_821:
+			case CardIds.FishySticker_FishyStickerToken_BG30_MagicItem_821t2:
 				if (playerBoard.length < 7) {
 					const spawnId =
-						trinket.cardId === CardIds.FishySticker
+						trinket.cardId === CardIds.FishySticker_BG30_MagicItem_821
 							? CardIds.AvatarOfNzoth_FishOfNzothToken
 							: CardIds.FishOfNzoth;
 					const newMinions = spawnEntities(
@@ -915,6 +915,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 						playerEntity,
 						playerBoard,
 						playerEntity,
+						opponentEntity,
 						gameState,
 					);
 				}
@@ -2176,7 +2177,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			// Insert the copy in its place
 			attackingBoard.splice(attackerIndex, 0, copy);
 			if (isGolden) {
-				makeMinionGolden(copy, copy, attackingBoard, attackingBoardHero, gameState);
+				makeMinionGolden(copy, copy, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 			}
 		}
 	} else if (
@@ -2221,9 +2222,9 @@ export const performStartOfCombatMinionsForPlayer = (
 				defendingBoardHero,
 			);
 		}
-	} else if (attacker.cardId === CardIds.SunScreener || attacker.cardId === CardIds.SunScreener_G) {
+	} else if (attacker.cardId === CardIds.SunScreener_BG30_101 || attacker.cardId === CardIds.SunScreener_BG30_101_G) {
 		if (attackingBoard.length > 0 || defendingBoard.length > 0) {
-			const quantity = attacker.cardId === CardIds.SunScreener ? 3 : 6;
+			const quantity = attacker.cardId === CardIds.SunScreener_BG30_101 ? 3 : 6;
 			grantDivineShieldToLeftmostMinions(
 				attacker,
 				attackingBoard,
@@ -2233,7 +2234,10 @@ export const performStartOfCombatMinionsForPlayer = (
 				gameState,
 			);
 		}
-	} else if (attacker.cardId === CardIds.SkyPirateFlagbearer || attacker.cardId === CardIds.SkyPirateFlagbearer_G) {
+	} else if (
+		attacker.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
+		attacker.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
+	) {
 		attackingBoard
 			.filter((e) => e.entityId !== attacker.entityId)
 			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.PIRATE, gameState.allCards))
@@ -2241,9 +2245,9 @@ export const performStartOfCombatMinionsForPlayer = (
 				e.enchantments = e.enchantments || [];
 				e.enchantments.push({
 					cardId:
-						attacker.cardId === CardIds.SkyPirateFlagbearer_G
-							? CardIds.SkyPirateFlagbearer_FlagbearerEnchantment_G
-							: CardIds.SkyPirateFlagbearer_FlagbearerEnchantment,
+						attacker.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
+							? CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119_Ge
+							: CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e,
 					originEntityId: attacker.entityId,
 					timing: gameState.sharedState.currentEntityId++,
 				});

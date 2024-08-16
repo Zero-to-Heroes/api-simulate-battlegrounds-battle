@@ -55,10 +55,13 @@ export const handleRebornForEntity = (
 		return;
 	}
 
-	if (deadEntity.cardId === CardIds.WannabeGargoyle || deadEntity.cardId === CardIds.WannabeGargoyle_G) {
+	if (
+		deadEntity.cardId === CardIds.WannabeGargoyle_BG30_109 ||
+		deadEntity.cardId === CardIds.WannabeGargoyle_BG30_109_G
+	) {
 		entitiesFromReborn.forEach((e) => {
 			const attack = deadEntity.maxAttack;
-			const health = deadEntity.cardId === CardIds.WannabeGargoyle_G ? deadEntity.maxHealth : 1;
+			const health = deadEntity.cardId === CardIds.WannabeGargoyle_BG30_109_G ? deadEntity.maxHealth : 1;
 			e.attack = attack;
 			e.health = health;
 		});

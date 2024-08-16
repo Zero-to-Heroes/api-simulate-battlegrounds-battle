@@ -1,5 +1,5 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from '../bgs-player-entity';
+import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
@@ -53,19 +53,23 @@ const handleSummonsWhenSpaceForPlayer = (
 		);
 	}
 	targetEntity.trinkets
-		.filter((t) => t.cardId === CardIds.TwinSkyLanterns || t.cardId === CardIds.TwinSkyLanternsGreater)
+		.filter(
+			(t) =>
+				t.cardId === CardIds.TwinSkyLanterns_BG30_MagicItem_822 ||
+				t.cardId === CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2,
+		)
 		.forEach((t) => {
 			handleTwinSkyLanternsForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
 	targetEntity.trinkets
-		.filter((t) => t.cardId === CardIds.BoomController)
+		.filter((t) => t.cardId === CardIds.BoomController_BG30_MagicItem_440)
 		.forEach((t) => {
 			handleBoomControllerForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
 };
 
 const handleBoomControllerForPlayer = (
-	trinket: BgsTrinketEntity,
+	trinket: BoardTrinket,
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
@@ -114,7 +118,7 @@ const handleBoomControllerForPlayer = (
 };
 
 const handleTwinSkyLanternsForPlayer = (
-	trinket: BgsTrinketEntity,
+	trinket: BoardTrinket,
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
@@ -122,7 +126,10 @@ const handleTwinSkyLanternsForPlayer = (
 	gameState: FullGameState,
 ): void => {
 	const spawnNumber = trinket.scriptDataNum1;
-	const canTrigger = trinket.cardId === CardIds.TwinSkyLanternsGreater ? spawnNumber >= 2 : spawnNumber >= 1;
+	const canTrigger =
+		trinket.cardId === CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2
+			? spawnNumber >= 2
+			: spawnNumber >= 1;
 	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion && canTrigger) {
 		const spawn = copyEntity(trinket.rememberedMinion);
 		const target = spawnEntities(

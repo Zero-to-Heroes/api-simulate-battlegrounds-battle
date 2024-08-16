@@ -159,13 +159,13 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.CadaverCaretaker:
-				case CardIds.CadaverCaretaker_G:
+				case CardIds.CadaverCaretaker_BG30_125:
+				case CardIds.CadaverCaretaker_BG30_125_G:
 					spawnedEntities.push(
 						...spawnEntities(
-							deadEntity.cardId === CardIds.CadaverCaretaker
-								? CardIds.CadaverCaretaker_Token
-								: CardIds.CadaverCaretaker_Token_G,
+							deadEntity.cardId === CardIds.CadaverCaretaker_BG30_125
+								? CardIds.SkeletonToken
+								: CardIds.Skeleton_BG_ICC_026t_G,
 							4,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
@@ -1628,12 +1628,12 @@ export const spawnEntitiesFromDeathrattle = (
 						}
 					}
 					break;
-				case CardIds.IndomitableMount:
-				case CardIds.IndomitableMount_G:
+				case CardIds.IndomitableMount_BG30_105:
+				case CardIds.IndomitableMount_BG30_105_G:
 					const tiersToSummon = [3, 4, 5];
 					for (const tier of tiersToSummon) {
 						let spawnId = gameState.cardsData.getRandomMinionForTavernTier(tier);
-						if (deadEntity.cardId === CardIds.IndomitableMount_G) {
+						if (deadEntity.cardId === CardIds.IndomitableMount_BG30_105_G) {
 							const premiumDbfId = gameState.allCards.getCard(spawnId).battlegroundsPremiumDbfId;
 							spawnId = gameState.allCards.getCard(premiumDbfId).id;
 						}
@@ -1914,7 +1914,7 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.JarredFrostling_Enchantment:
+				case CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e:
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.FlourishingFrostling_BG26_537,
@@ -1932,11 +1932,11 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.SkyPirateFlagbearer_FlagbearerEnchantment:
-				case CardIds.SkyPirateFlagbearer_FlagbearerEnchantment_G:
+				case CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e:
+				case CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119_Ge:
 					spawnedEntities.push(
 						...spawnEntities(
-							enchantment.cardId === CardIds.SkyPirateFlagbearer_FlagbearerEnchantment
+							enchantment.cardId === CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e
 								? CardIds.Scallywag_SkyPirateToken_BGS_061t
 								: CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 							1,

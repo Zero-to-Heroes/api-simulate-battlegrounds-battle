@@ -112,10 +112,10 @@ export const onMinionDeadQuest = (
 
 	for (const trinket of boardHero.trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.AllianceKeychain:
-			case CardIds.AllianceKeychainGreater:
+			case CardIds.AllianceKeychain_BG30_MagicItem_433:
+			case CardIds.AllianceKeychain_AllianceKeychainToken_BG30_MagicItem_433t:
 				if (trinket.scriptDataNum1 > 0 && deadEntity.friendly === boardHero.friendly) {
-					const loops = trinket.cardId === CardIds.AllianceKeychain ? 1 : 2;
+					const loops = trinket.cardId === CardIds.AllianceKeychain_BG30_MagicItem_433 ? 1 : 2;
 					for (let i = 0; i < loops; i++) {
 						const target = pickRandomAlive(board);
 						if (!!target) {
@@ -132,7 +132,7 @@ export const onMinionDeadQuest = (
 					trinket.scriptDataNum1--;
 				}
 				break;
-			case CardIds.TheEyeOfDalaran:
+			case CardIds.TheEyeOfDalaran_BG30_MagicItem_981:
 				if (
 					deadEntity.friendly === boardHero.friendly &&
 					getEffectiveTribesForEntity(deadEntity, boardHero, gameState.allCards).length === 0
@@ -140,7 +140,7 @@ export const onMinionDeadQuest = (
 					addCardsInHand(boardHero, board, [null], gameState);
 				}
 				break;
-			case CardIds.BloodGolemSticker:
+			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				if (
 					deadEntity.friendly === boardHero.friendly &&
 					trinket.scriptDataNum1 > 0 &&
@@ -153,7 +153,7 @@ export const onMinionDeadQuest = (
 					const bloodGemAttack = bloodGemEnchantment?.tagScriptDataNum1 ?? 0;
 					const bloodGemHealth = bloodGemEnchantment?.tagScriptDataNum2 ?? 0;
 					const spawns = spawnEntities(
-						CardIds.BloodGolemSticker_Token,
+						CardIds.BloodGolemSticker_BloodGolemToken_BG30_MagicItem_442t,
 						1,
 						board,
 						boardHero,

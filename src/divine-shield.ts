@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, CardType } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { pickRandom } from './services/utils';
@@ -39,7 +39,7 @@ export const updateDivineShield = (
 	// Lost divine shield
 	if (entity.hadDivineShield && !entity.divineShield) {
 		const adapter = hero.trinkets
-			.filter((t) => t.cardId === CardIds.MechagonAdapter)
+			.filter((t) => t.cardId === CardIds.MechagonAdapter_BG30_MagicItem_910)
 			.filter((t) => t.scriptDataNum1 > 0)[0];
 		if (!!adapter) {
 			updateDivineShield(entity, board, hero, otherHero, true, gameState);

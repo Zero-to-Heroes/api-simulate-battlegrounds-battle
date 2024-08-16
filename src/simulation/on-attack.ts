@@ -246,7 +246,7 @@ export const applyOnAttackEffects = (
 
 	for (const trinket of attackingBoardHero.trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.CeremonialSword:
+			case CardIds.CeremonialSword_BG30_MagicItem_925:
 				modifyStats(attacker, 4, 0, attackingBoard, attackingBoardHero, gameState);
 				break;
 		}

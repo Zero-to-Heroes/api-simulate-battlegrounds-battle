@@ -238,32 +238,42 @@ export const updateBoardwideAuras = (
 		.filter((entity) =>
 			entity.enchantments.some(
 				(ench) =>
-					ench.cardId === CardIds.WindrunnerNecklace_Enchantment ||
-					ench.cardId === CardIds.WindrunnerNecklaceGreater_Enchantment,
+					ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e ||
+					ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
 			),
 		)
 		.forEach((e) => {
 			const enchantments = e.enchantments.filter(
-				(ench) => ench.cardId === CardIds.WindrunnerNecklace_Enchantment,
+				(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e,
 			).length;
 			const greaterEnchantments = e.enchantments.filter(
-				(ench) => ench.cardId === CardIds.WindrunnerNecklaceGreater_Enchantment,
+				(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
 			).length;
 			e.attack = Math.max(0, e.attack - enchantments * 8 - greaterEnchantments * 20);
 			e.enchantments = e.enchantments
-				.filter((ench) => ench.cardId !== CardIds.WindrunnerNecklace_Enchantment)
-				.filter((ench) => ench.cardId !== CardIds.WindrunnerNecklaceGreater_Enchantment);
+				.filter(
+					(ench) =>
+						ench.cardId !== CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e,
+				)
+				.filter(
+					(ench) =>
+						ench.cardId !== CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
+				);
 		});
 	boardHero.trinkets
-		.filter((t) => t.cardId === CardIds.WindrunnerNecklace || t.cardId === CardIds.WindrunnerNecklaceGreater)
+		.filter(
+			(t) =>
+				t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ||
+				t.cardId === CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t,
+		)
 		.forEach((t) => {
-			const buff = t.cardId === CardIds.WindrunnerNecklace ? 8 : 20;
+			const buff = t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 20;
 			board[0].attack = board[0].attack + buff;
 			board[0].enchantments.push({
 				cardId:
-					t.cardId === CardIds.WindrunnerNecklace
-						? CardIds.WindrunnerNeachment_Enchantment
-						: CardIds.WindrunnerNecklaceGreater_Enchantment,
+					t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997
+						? CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e
+						: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
 				originEntityId: t.entityId,
 				timing: gameState.sharedState.currentEntityId++,
 			});

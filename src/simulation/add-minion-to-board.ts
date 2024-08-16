@@ -124,9 +124,9 @@ const handleSpawnEffect = (
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
-			case CardIds.ThunderingAbomination:
-			case CardIds.ThunderingAbomination_G:
-				const abomStatsBonus = entity.cardId === CardIds.ThunderingAbomination_G ? 4 : 2;
+			case CardIds.ThunderingAbomination_BG30_124:
+			case CardIds.ThunderingAbomination_BG30_124_G:
+				const abomStatsBonus = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 4 : 2;
 				modifyStats(spawned, abomStatsBonus, abomStatsBonus, board, boardHero, gameState);
 				gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				break;
@@ -164,7 +164,7 @@ export const handleAddedMinionAuraEffect = (
 
 	for (const trinket of boardHero.trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.BlingtronsSunglasses:
+			case CardIds.BlingtronsSunglasses_BG30_MagicItem_978:
 				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
 					const target = pickRandom(board.filter((e) => !e.divineShield));
 					if (!!target) {
@@ -172,13 +172,13 @@ export const handleAddedMinionAuraEffect = (
 					}
 				}
 				break;
-			case CardIds.TwinSkyLanterns:
-			case CardIds.TwinSkyLanternsGreater:
+			case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
+			case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
 				if (!trinket.rememberedMinion) {
 					trinket.rememberedMinion = copyEntity(spawned);
 				}
 				break;
-			case CardIds.ReinforcedShield:
+			case CardIds.ReinforcedShield_BG30_MagicItem_886:
 				if (trinket.scriptDataNum1 > 0 && !spawned.divineShield) {
 					updateDivineShield(spawned, board, boardHero, otherHero, true, gameState);
 					trinket.scriptDataNum1--;
@@ -225,16 +225,16 @@ export const applyAurasToSelf = (
 
 	if (!!boardHero.trinkets?.length) {
 		for (const trinket of boardHero.trinkets) {
-			switch (trinket) {
-				case CardIds.FeralTalisman:
+			switch (trinket.cardId) {
+				case CardIds.FeralTalisman_BG30_MagicItem_880:
 					spawned.attack += 2;
 					spawned.health += 1;
 					break;
-				case CardIds.FeralTalismanGreater:
+				case CardIds.FeralTalisman_FeralTalismanToken_BG30_MagicItem_880t:
 					spawned.attack += 5;
 					spawned.health += 3;
 					break;
-				case CardIds.HordeKeychain:
+				case CardIds.HordeKeychainToken_BG30_MagicItem_843t:
 					if (gameState.cardsData.getTavernLevel(spawned.cardId) <= 3) {
 						spawned.attack += 6;
 						spawned.health += 4;
@@ -392,16 +392,16 @@ export const removeAurasFromSelf = (
 
 	if (!!boardHero.trinkets?.length) {
 		for (const trinket of boardHero.trinkets) {
-			switch (trinket) {
-				case CardIds.FeralTalisman:
+			switch (trinket.cardId) {
+				case CardIds.FeralTalisman_BG30_MagicItem_880:
 					entity.attack = Math.max(0, entity.attack - 2);
 					entity.health = Math.max(1, entity.health - 1);
 					break;
-				case CardIds.FeralTalismanGreater:
+				case CardIds.FeralTalisman_FeralTalismanToken_BG30_MagicItem_880t:
 					entity.attack = Math.max(0, entity.attack - 5);
 					entity.health = Math.max(1, entity.health - 3);
 					break;
-				case CardIds.HordeKeychain:
+				case CardIds.HordeKeychainToken_BG30_MagicItem_843t:
 					if (gameState.cardsData.getTavernLevel(entity.cardId) <= 3) {
 						entity.attack = Math.max(0, entity.attack - 6);
 						entity.health = Math.max(1, entity.health - 4);
@@ -785,7 +785,7 @@ const handleAfterSpawnEffect = (
 
 	for (const trinket of hero.trinkets) {
 		switch (trinket.cardId) {
-			case CardIds.SlammaSticker:
+			case CardIds.SlammaSticker_BG30_MagicItem_540:
 				if (hasCorrectTribe(spawned, hero, Race.BEAST, gameState.allCards)) {
 					setEntityStats(spawned, spawned.attack * 2, spawned.health * 2, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(hero, spawned, board, null, null);

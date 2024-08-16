@@ -225,9 +225,9 @@ export const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
 	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge,
 	CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
-	CardIds.RustyTrident_Enchantment,
-	CardIds.HoggyBank_Enchantment,
-	CardIds.JarredFrostling_Enchantment,
+	CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e,
+	CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e,
+	CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e,
 ];
 
 // const cleanEnchantmentsForEntity = (

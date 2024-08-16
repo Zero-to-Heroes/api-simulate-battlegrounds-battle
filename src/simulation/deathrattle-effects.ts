@@ -597,7 +597,10 @@ export const handleDeathrattleEffects = (
 				const kaboomLoops = deadEntity.cardId === CardIds.KaboomBot_TB_BaconUps_028 ? 2 : 1;
 				const baseDamage =
 					4 +
-					boardWithDeadEntityHero.trinkets.filter((t) => t.cardId === CardIds.KaboomBotPortrait).length * 8;
+					boardWithDeadEntityHero.trinkets.filter(
+						(t) => t.cardId === CardIds.KaboomBotPortrait_BG30_MagicItem_803,
+					).length *
+						8;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < kaboomLoops; j++) {
 						dealDamageToRandomEnemy(
@@ -1114,11 +1117,11 @@ export const handleDeathrattleEffects = (
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
-			case CardIds.CruiseController:
-			case CardIds.CruiseController_G:
+			case CardIds.CruiseController_BG31_821:
+			case CardIds.CruiseController_BG31_821_G:
 				for (let i = 0; i < multiplier; i++) {
 					boardWithDeadEntityHero.globalInfo.PirateAttackBonus +=
-						deadEntity.cardId === CardIds.CruiseController_G ? 8 : 4;
+						deadEntity.cardId === CardIds.CruiseController_BG31_821_G ? 8 : 4;
 				}
 				break;
 			// Add all the deathrattles that don't have an effect on combat
@@ -1177,10 +1180,10 @@ export const handleDeathrattleEffects = (
 	});
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
-			case CardIds.RustyTrident_Enchantment:
+			case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 				break;
-			case CardIds.HoggyBank_Enchantment:
+			case CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e:
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
 				break;
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
@@ -1774,7 +1777,9 @@ const applyMossOfTheSchlossEffect = (
 	gameState: FullGameState,
 ): void => {
 	board
-		.filter((e) => e.cardId === CardIds.MossOfTheSchloss || e.cardId === CardIds.MossOfTheSchloss_G)
+		.filter(
+			(e) => e.cardId === CardIds.MossOfTheSchloss_BG30_111 || e.cardId === CardIds.MossOfTheSchloss_BG30_111_G,
+		)
 		.filter((e) => e.abiityChargesLeft > 0)
 		.forEach((entity) => {
 			modifyStats(entity, deadEntity.maxAttack, deadEntity.maxHealth, board, hero, gameState);
