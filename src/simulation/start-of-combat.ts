@@ -2234,6 +2234,21 @@ export const performStartOfCombatMinionsForPlayer = (
 				gameState,
 			);
 		}
+	} else if (attacker.cardId === CardIds.SkyPirateFlagbearer || attacker.cardId === CardIds.SkyPirateFlagbearer_G) {
+		attackingBoard
+			.filter((e) => e.entityId !== attacker.entityId)
+			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.PIRATE, gameState.allCards))
+			.forEach((e) => {
+				e.enchantments = e.enchantments || [];
+				e.enchantments.push({
+					cardId:
+						attacker.cardId === CardIds.SkyPirateFlagbearer_G
+							? CardIds.SkyPirateFlagbearer_FlagbearerEnchantment_G
+							: CardIds.SkyPirateFlagbearer_FlagbearerEnchantment,
+					originEntityId: attacker.entityId,
+					timing: gameState.sharedState.currentEntityId++,
+				});
+			});
 	} else {
 		hasProcessed = false;
 	}

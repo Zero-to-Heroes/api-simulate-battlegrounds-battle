@@ -233,7 +233,7 @@ export const handleDeathrattleEffects = (
 									boardWithDeadEntityHero,
 									otherBoardHero,
 									true,
-									gameState.allCards,
+									gameState,
 								);
 							}
 							target.taunt = true;
@@ -260,7 +260,14 @@ export const handleDeathrattleEffects = (
 							.filter((entity) => !entity.divineShield);
 						const target = pickRandom(validTargets);
 						if (target) {
-							updateDivineShield(target, boardWithDeadEntity, true, gameState.allCards);
+							updateDivineShield(
+								target,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+								true,
+								gameState,
+							);
 							gameState.spectator.registerPowerTarget(
 								deadEntity,
 								target,
@@ -1107,6 +1114,13 @@ export const handleDeathrattleEffects = (
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
+			case CardIds.CruiseController:
+			case CardIds.CruiseController_G:
+				for (let i = 0; i < multiplier; i++) {
+					boardWithDeadEntityHero.globalInfo.PirateAttackBonus +=
+						deadEntity.cardId === CardIds.CruiseController_G ? 8 : 4;
+				}
+				break;
 			// Add all the deathrattles that don't have an effect on combat
 			// case CardIds.FieryFelblood_BG29_877:
 			// case CardIds.FieryFelblood_BG29_877_G:
@@ -1450,6 +1464,10 @@ export const applyWheneverMinionDiesEffect = (
 		removeOldMurkEyeAttack(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 		removeOldMurkEyeAttack(otherBoard, otherBoardHero, gameState);
 	}
+	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.ELEMENTAL, gameState.allCards)) {
+		applyMossOfTheSchlossEffect(deadEntity, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+	}
+
 	if (deadEntity.taunt) {
 		applyBristlemaneScrapsmithEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 		applyQirajiHarbringerEffect(boardWithDeadEntity, boardWithDeadEntityHero, deadEntityIndexFromRight, gameState);
@@ -1747,6 +1765,22 @@ const applyBristlemaneScrapsmithEffect = (
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, boardPlayerEntity, null);
 		}
 	}
+};
+
+const applyMossOfTheSchlossEffect = (
+	deadEntity: BoardEntity,
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	board
+		.filter((e) => e.cardId === CardIds.MossOfTheSchloss || e.cardId === CardIds.MossOfTheSchloss_G)
+		.filter((e) => e.abiityChargesLeft > 0)
+		.forEach((entity) => {
+			modifyStats(entity, deadEntity.maxAttack, deadEntity.maxHealth, board, hero, gameState);
+			entity.abiityChargesLeft--;
+			gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
+		});
 };
 
 const applyJunkbotEffect = (board: BoardEntity[], hero: BgsPlayerEntity, gameState: FullGameState): void => {

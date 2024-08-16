@@ -159,6 +159,27 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
+				case CardIds.CadaverCaretaker:
+				case CardIds.CadaverCaretaker_G:
+					spawnedEntities.push(
+						...spawnEntities(
+							deadEntity.cardId === CardIds.CadaverCaretaker
+								? CardIds.CadaverCaretaker_Token
+								: CardIds.CadaverCaretaker_Token_G,
+							4,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
 				case CardIds.CordPuller_BG29_611:
 				case CardIds.CordPuller_BG29_611_G:
 					spawnedEntities.push(
@@ -1897,6 +1918,27 @@ export const spawnEntitiesFromEnchantments = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.FlourishingFrostling_BG26_537,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						),
+					);
+					break;
+				case CardIds.SkyPirateFlagbearer_FlagbearerEnchantment:
+				case CardIds.SkyPirateFlagbearer_FlagbearerEnchantment_G:
+					spawnedEntities.push(
+						...spawnEntities(
+							enchantment.cardId === CardIds.SkyPirateFlagbearer_FlagbearerEnchantment
+								? CardIds.Scallywag_SkyPirateToken_BGS_061t
+								: CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

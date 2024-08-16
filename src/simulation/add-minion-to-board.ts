@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { updateDivineShield } from 'src/divine-shield';
 import { pickRandom } from 'src/services/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
@@ -8,8 +8,6 @@ import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
-import { SharedState } from './shared-state';
-import { Spectator } from './spectator/spectator';
 import { modifyStats, setEntityStats } from './stats';
 
 export const addMinionsToBoard = (
@@ -126,6 +124,12 @@ const handleSpawnEffect = (
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
+			case CardIds.ThunderingAbomination:
+			case CardIds.ThunderingAbomination_G:
+				const abomStatsBonus = entity.cardId === CardIds.ThunderingAbomination_G ? 4 : 2;
+				modifyStats(spawned, abomStatsBonus, abomStatsBonus, board, boardHero, gameState);
+				gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
+				break;
 		}
 	}
 };
@@ -190,15 +194,7 @@ export const handleAddedMinionAuraEffect = (
 	// Apply auras to board
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 	for (const spawnedCardId of cardIds) {
-		handleMinionAddedAuraEffect(
-			spawnedCardId,
-			spawned,
-			board,
-			boardHero,
-			gameState.allCards,
-			gameState.spectator,
-			gameState.sharedState,
-		);
+		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, gameState);
 	}
 };
 
@@ -251,6 +247,11 @@ export const applyAurasToSelf = (
 	if (hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			modifyStats(spawned, boardHero.globalInfo.UndeadAttackBonus, 0, board, boardHero, gameState);
+		}
+	}
+	if (hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.allCards)) {
+		if (boardHero.globalInfo.PirateAttackBonus > 0) {
+			modifyStats(spawned, boardHero.globalInfo.PirateAttackBonus, 0, board, boardHero, gameState);
 		}
 	}
 	if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
@@ -347,6 +348,12 @@ export const applyAurasToSelf = (
 			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
 			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
 			modifyStats(spawned, 2 * statsBonusFrostling, statsBonusFrostling, board, boardHero, gameState);
+			break;
+		case CardIds.AstralAutomaton_BG_TTN_401:
+		case CardIds.AstralAutomaton_BG_TTN_401_G:
+			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
+			const statsBonusAstral = multiplierAstral * boardHero.globalInfo.AstralAutomatonsSummonedThisGame;
+			modifyStats(spawned, 3 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -517,6 +524,13 @@ export const removeAurasFromSelf = (
 			entity.attack = Math.max(0, entity.attack - statsBonusFrostling);
 			entity.health = Math.max(1, entity.health - statsBonusFrostling);
 			break;
+		case CardIds.AstralAutomaton_BG_TTN_401:
+		case CardIds.AstralAutomaton_BG_TTN_401_G:
+			const multiplierAstral = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
+			const statsBonusAstral = multiplierAstral * boardHero.globalInfo.FrostlingBonus;
+			entity.attack = Math.max(0, entity.attack - statsBonusAstral);
+			entity.health = Math.max(1, entity.health - statsBonusAstral);
+			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
 			const multiplierGnoll = entity.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
@@ -540,15 +554,13 @@ const handleMinionAddedAuraEffect = (
 	spawned: BoardEntity,
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
-	sharedState: SharedState,
+	gameState: FullGameState,
 ): void => {
 	switch (spawnedCardId) {
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, gameState.allCards))
 				// Other
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
@@ -559,7 +571,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
@@ -568,7 +580,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.HummingBird_BG26_805:
 		case CardIds.HummingBird_BG26_805_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
@@ -577,7 +589,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.Kathranatir_BG21_039:
 		case CardIds.Kathranatir_BG21_039_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
@@ -595,10 +607,25 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.SoreLoser_BG27_030:
 		case CardIds.SoreLoser_BG27_030_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += (spawned.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
+				});
+			break;
+		case CardIds.AstralAutomaton_BG_TTN_401:
+		case CardIds.AstralAutomaton_BG_TTN_401_G:
+			boardHero.globalInfo.AstralAutomatonsSummonedThisGame++;
+			board
+				.filter((e) => e.entityId !== spawned.entityId)
+				.filter(
+					(e) =>
+						e.cardId === CardIds.AstralAutomaton_BG_TTN_401 ||
+						e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G,
+				)
+				.forEach((e) => {
+					const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
+					modifyStats(spawned, 3 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
 				});
 			break;
 	}

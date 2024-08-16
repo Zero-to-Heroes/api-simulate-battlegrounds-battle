@@ -877,6 +877,34 @@ export const triggerBattlecry = (
 					);
 				}
 				break;
+			case CardIds.MuseumMummy:
+			case CardIds.MuseumMummy_G:
+				const newMinions = spawnEntities(
+					entity.cardId === CardIds.MuseumMummy ? CardIds.MuseumMummy_Token : CardIds.MuseumMummy_Token_G,
+					1,
+					board,
+					hero,
+					otherBoard,
+					otherHero,
+					gameState.allCards,
+					gameState.cardsData,
+					gameState.sharedState,
+					gameState.spectator,
+					entity.friendly,
+					false,
+				);
+				const indexFromRight = board.length - board.findIndex((e) => e.entityId === entity.entityId) - 1;
+				const spawns = performEntitySpawns(
+					newMinions,
+					board,
+					hero,
+					entity,
+					indexFromRight,
+					otherBoard,
+					otherHero,
+					gameState,
+				);
+				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state
 				const hasBattlecry = gameState.allCards

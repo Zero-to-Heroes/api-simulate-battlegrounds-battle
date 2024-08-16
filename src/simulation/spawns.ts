@@ -1,10 +1,9 @@
-import { CardIds } from '@firestone-hs/reference-data';
-import { addStatsToBoard } from 'src/utils';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { addMinionToBoard } from './add-minion-to-board';
 import { simulateAttack } from './attack';
 import { FullGameState } from './internal-game-state';
+import { onMinionFailedToSpawn } from './spawn-fail';
 
 export const performEntitySpawns = (
 	candidateEntities: readonly BoardEntity[],
@@ -24,14 +23,7 @@ export const performEntitySpawns = (
 		// All entities have been spawned
 		if (boardWithKilledMinion.length >= 7) {
 			for (let j = i; j < aliveEntites.length; j++) {
-				if (aliveEntites[j]?.onCanceledSummon) {
-					aliveEntites[j].onCanceledSummon();
-				}
-				boardWithKilledMinionHero.trinkets
-					.filter((t) => t.cardId === CardIds.MugOfTheSire)
-					.forEach((t) =>
-						addStatsToBoard(t, boardWithKilledMinion, boardWithKilledMinionHero, 4, 0, gameState),
-					);
+				onMinionFailedToSpawn(aliveEntites[j], boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 			}
 			break;
 		}
