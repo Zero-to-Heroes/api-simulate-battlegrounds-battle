@@ -30,6 +30,8 @@ export const computeBattlecryMultiplier = (
 	const brann = board.find(
 		(entity) =>
 			entity.cardId === CardIds.BrannBronzebeard_BG_LOE_077 ||
+			// Should be a playtesting relic
+			// entity.cardId === CardIds.BrannBronzebeard_BrannBronzebeardMurlocdragonToken_BG_LOE_077t ||
 			entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
 	);
 	const brannBlessings = boardHero.secrets?.some((e) => e.cardId === CardIds.BrannsBlessing_BG28_509);
@@ -37,6 +39,7 @@ export const computeBattlecryMultiplier = (
 	const goldenBrann = board.find(
 		(entity) =>
 			entity.cardId === CardIds.BrannBronzebeard_TB_BaconUps_045 ||
+			// entity.cardId === CardIds.BrannBronzebeard_BrannBronzebeardMurlocdragonToken_TB_BaconUps_045t ||
 			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
 	);
 	const goldenBrannBonus = !!goldenBrann ? 3 : 0;
