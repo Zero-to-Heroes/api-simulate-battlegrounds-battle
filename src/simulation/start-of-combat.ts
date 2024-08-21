@@ -753,6 +753,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					for (let i = 0; i < Math.min(playerBoard.length, 7); i++) {
 						const entityToCoy = playerBoard[i];
 						const copy: BoardEntity = copyEntity(entityToCoy);
+						removeAurasFromSelf(copy, playerBoard, playerEntity, gameState);
 						const newMinions = spawnEntities(
 							copy.cardId,
 							1,
@@ -780,6 +781,10 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 							opponentEntity,
 							gameState,
 						);
+						// TODO: according to http://replays.firestoneapp.com/?reviewId=576aa3bb-caa1-4e46-9d16-08a001fdd941&turn=23&action=3
+						// it looks like the stats are simply copied from the original entity to the copy, instead
+						// of summoning a copy and applying all the auras stuff
+						// I've asked on Discord (2024-08-21) for clarification
 						i += spawns.length;
 					}
 				}

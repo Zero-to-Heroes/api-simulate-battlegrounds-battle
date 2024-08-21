@@ -527,9 +527,9 @@ export const removeAurasFromSelf = (
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
 			const multiplierAstral = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-			const statsBonusAstral = multiplierAstral * boardHero.globalInfo.FrostlingBonus;
-			entity.attack = Math.max(0, entity.attack - statsBonusAstral);
-			entity.health = Math.max(1, entity.health - statsBonusAstral);
+			const statsBonusAstral = multiplierAstral * boardHero.globalInfo.AstralAutomatonsSummonedThisGame;
+			entity.attack = Math.max(0, entity.attack - 3 * statsBonusAstral);
+			entity.health = Math.max(1, entity.health - 2 * statsBonusAstral);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -624,8 +624,8 @@ const handleMinionAddedAuraEffect = (
 						e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G,
 				)
 				.forEach((e) => {
-					const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-					modifyStats(spawned, 3 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
+					const multiplierAstral = e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
+					modifyStats(e, 3 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
 				});
 			break;
 	}

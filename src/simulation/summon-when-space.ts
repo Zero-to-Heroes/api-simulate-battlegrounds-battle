@@ -2,6 +2,7 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
+import { removeAurasFromSelf } from './add-minion-to-board';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -82,6 +83,7 @@ const handleBoomControllerForPlayer = (
 			.filter((d) => hasCorrectTribe(d, playerEntity, Race.MECH, gameState.allCards))[0];
 		if (!!candidate) {
 			const spawn = copyEntity(candidate);
+			removeAurasFromSelf(spawn, playerBoard, playerEntity, gameState);
 			const target = spawnEntities(
 				spawn.cardId,
 				1,
@@ -132,6 +134,7 @@ const handleTwinSkyLanternsForPlayer = (
 			: spawnNumber >= 1;
 	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion && canTrigger) {
 		const spawn = copyEntity(trinket.rememberedMinion);
+		removeAurasFromSelf(spawn, playerBoard, playerEntity, gameState);
 		const target = spawnEntities(
 			spawn.cardId,
 			spawnNumber,
