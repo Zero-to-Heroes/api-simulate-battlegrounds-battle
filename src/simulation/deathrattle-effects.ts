@@ -384,12 +384,7 @@ export const handleDeathrattleEffects = (
 				const tricksterMultiplier = deadEntityCardId === CardIds.ImpulsiveTrickster_BG21_006_G ? 2 : 1;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < tricksterMultiplier; j++) {
-						const targetBoard =
-							deadEntity.entityId === 2521
-								? boardWithDeadEntity.filter((e) => e.entityId === 3047)
-								: deadEntity.entityId === 2522
-								? boardWithDeadEntity.filter((e) => e.entityId === 2830)
-								: boardWithDeadEntity;
+						const targetBoard = boardWithDeadEntity;
 						grantRandomHealth(
 							deadEntity,
 							targetBoard,

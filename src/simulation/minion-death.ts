@@ -119,7 +119,14 @@ export const onMinionDeadQuest = (
 					for (let i = 0; i < loops; i++) {
 						const target = pickRandomAlive(board);
 						if (!!target) {
-							modifyStats(target, deadEntity.attack, deadEntity.health, board, boardHero, gameState);
+							modifyStats(
+								target,
+								deadEntity.maxAttack,
+								deadEntity.maxHealth,
+								board,
+								boardHero,
+								gameState,
+							);
 							gameState.spectator.registerPowerTarget(
 								boardHero,
 								target,
