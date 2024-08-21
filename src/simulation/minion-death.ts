@@ -66,11 +66,12 @@ export const makeMinionsDie = (
 	// and the next minion dying could count towards that quest progress
 	// See http://replays.firestoneapp.com/?reviewId=0ce4db9c-3269-4704-b662-8a8c31f5afe1&turn=16&action=27
 	for (const deadEntity of deadEntities) {
+		const indexFromRight = indexesFromRightAfterDeath[deadEntities.indexOf(deadEntity)];
 		updateAvengeCounters(board, boardHero);
 		onMinionDeadHeroPower(board, boardHero, deadEntity, gameState);
 		onMinionDeadHeroPower(otherBoard, otherBoardHero, deadEntity, gameState);
-		onMinionDeadQuest(deadEntity, board, boardHero, otherBoard, otherBoardHero, gameState);
-		onMinionDeadQuest(deadEntity, otherBoard, otherBoardHero, board, boardHero, gameState);
+		onMinionDeadQuest(deadEntity, indexFromRight, board, boardHero, otherBoard, otherBoardHero, gameState);
+		onMinionDeadQuest(deadEntity, indexFromRight, otherBoard, otherBoardHero, board, boardHero, gameState);
 	}
 
 	return [indexesFromRightAfterDeath, deadEntities];
@@ -95,6 +96,7 @@ export const onMinionDeadHeroPower = (
 
 export const onMinionDeadQuest = (
 	deadEntity: BoardEntity,
+	indexFromRight: number,
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
@@ -153,31 +155,42 @@ export const onMinionDeadQuest = (
 					trinket.scriptDataNum1 > 0 &&
 					hasCorrectTribe(deadEntity, boardHero, Race.QUILBOAR, gameState.allCards)
 				) {
-					// TODO: blood gem size
 					const bloodGemEnchantment =
 						deadEntity.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??
 						deadEntity.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment);
 					const bloodGemAttack = bloodGemEnchantment?.tagScriptDataNum1 ?? 0;
 					const bloodGemHealth = bloodGemEnchantment?.tagScriptDataNum2 ?? 0;
-					const spawns = spawnEntities(
-						CardIds.BloodGolemSticker_BloodGolemToken_BG30_MagicItem_442t,
-						1,
-						board,
-						boardHero,
-						otherBoard,
-						otherBoardHero,
-						gameState.allCards,
-						gameState.cardsData,
-						gameState.sharedState,
-						gameState.spectator,
-						deadEntity.friendly,
-						false,
-					);
-					spawns.forEach((b) => {
-						b.attack = bloodGemAttack;
-						b.health = bloodGemHealth;
-					});
-					performEntitySpawns(spawns, board, boardHero, deadEntity, 0, otherBoard, otherBoardHero, gameState);
+					if (bloodGemAttack > 0 || bloodGemHealth > 0) {
+						const spawns = spawnEntities(
+							CardIds.BloodGolemSticker_BloodGolemToken_BG30_MagicItem_442t,
+							1,
+							board,
+							boardHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						);
+						spawns.forEach((b) => {
+							b.attack = bloodGemAttack;
+							b.health = bloodGemHealth;
+						});
+						performEntitySpawns(
+							spawns,
+							board,
+							boardHero,
+							deadEntity,
+							indexFromRight,
+							otherBoard,
+							otherBoardHero,
+							gameState,
+						);
+					}
+					trinket.scriptDataNum1--;
 				}
 				break;
 		}
