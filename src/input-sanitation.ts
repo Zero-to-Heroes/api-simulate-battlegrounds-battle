@@ -1,4 +1,4 @@
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds, normalizeHeroCardId } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BgsBoardInfo } from './bgs-board-info';
 import { BgsPlayerEntity } from './bgs-player-entity';
@@ -99,7 +99,11 @@ const buildFinalInputForPlayer = (
 	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
 	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
 	playerInfo.player.heroPowerId =
-		playerInfo.player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ?? playerInfo.player.heroPowerId;
+		playerInfo.player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
+		(normalizeHeroCardId(playerInfo.player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
+			? playerInfo.player.questRewardEntities?.[0]?.cardId
+			: null) ??
+		playerInfo.player.heroPowerId;
 	playerInfo.player.cardId = isGhost ? CardIds.Kelthuzad_TB_BaconShop_HERO_KelThuzad : playerInfo.player.cardId;
 	// When using the simulator, the aura is not applied when receiving the board state.
 	setMissingAuras(board, playerInfo.player, cards);
