@@ -1,174 +1,106 @@
 	{
 		"playerBoard": {
 			"player": {
-				"tavernTier": 4,
-				"hpLeft": 6,
-				"cardId": "TB_BaconShop_HERO_50",
-				"entityId": 90,
-				"nonGhostCardId": "TB_BaconShop_HERO_50",
-				"heroPowerId": "TB_BaconShop_HP_077",
+				"tavernTier": 5,
+				"hpLeft": 17,
+				"cardId": "BG26_HERO_102",
+				"entityId": 81,
+				"nonGhostCardId": "BG26_HERO_102",
+				"heroPowerId": "BG26_HERO_102p",
 				"heroPowerUsed": false,
 				"heroPowerInfo": -1,
 				"heroPowerInfo2": -1,
 				"questRewards": [],
 				"questRewardEntities": [],
 				"questEntities": [],
-				"hand": [
-					{
-						"cardId": "BG20_GEM",
-						"attack": 0,
-						"divineShield": false,
-						"enchantments": [],
-						"entityId": 6817,
-						"health": 0,
-						"poisonous": false,
-						"venomous": false,
-						"reborn": false,
-						"taunt": false,
-						"stealth": false,
-						"windfury": false,
-						"scriptDataNum1": 2,
-						"locked": false,
-						"friendly": true,
-						"definitelyDead": false,
-						"immuneWhenAttackCharges": 0,
-						"additionalCards": null
-					},
-					{
-						"cardId": "BG20_301",
-						"attack": 1,
-						"divineShield": false,
-						"enchantments": [],
-						"entityId": 6806,
-						"health": 2,
-						"maxHealth": 2,
-						"poisonous": false,
-						"venomous": false,
-						"reborn": false,
-						"taunt": false,
-						"stealth": false,
-						"windfury": false,
-						"scriptDataNum1": 0,
-						"locked": false,
-						"friendly": true,
-						"definitelyDead": false,
-						"immuneWhenAttackCharges": 0,
-						"additionalCards": null
-					},
-					{
-						"cardId": "BG20_GEM",
-						"attack": 0,
-						"divineShield": false,
-						"enchantments": [],
-						"entityId": 7785,
-						"health": 0,
-						"poisonous": false,
-						"venomous": false,
-						"reborn": false,
-						"taunt": false,
-						"stealth": false,
-						"windfury": false,
-						"scriptDataNum1": 2,
-						"locked": false,
-						"friendly": true,
-						"definitelyDead": false,
-						"immuneWhenAttackCharges": 0,
-						"additionalCards": null
-					},
-					{
-						"cardId": "BG20_GEM",
-						"attack": 0,
-						"divineShield": false,
-						"enchantments": [],
-						"entityId": 7786,
-						"health": 0,
-						"poisonous": false,
-						"venomous": false,
-						"reborn": false,
-						"taunt": false,
-						"stealth": false,
-						"windfury": false,
-						"scriptDataNum1": 2,
-						"locked": false,
-						"friendly": true,
-						"definitelyDead": false,
-						"immuneWhenAttackCharges": 0,
-						"additionalCards": null
-					}
-				],
+				"hand": [],
 				"trinkets": [
 					{
-						"cardId": "BG30_MagicItem_423",
-						"entityId": 360,
+						"cardId": "BG30_MagicItem_993",
+						"entityId": 348,
 						"scriptDataNum1": 0
 					},
 					{
-						"cardId": "BG30_MagicItem_442",
-						"entityId": 361,
-						"scriptDataNum1": 3
+						"cardId": "BG30_MagicItem_993",
+						"entityId": 349,
+						"scriptDataNum1": 0
 					}
 				],
 				"secrets": [],
 				"globalInfo": {
 					"EternalKnightsDeadThisGame": 0,
 					"TavernSpellsCastThisGame": 2,
-					"PiratesPlayedThisGame": 6,
+					"PiratesPlayedThisGame": 1,
 					"UndeadAttackBonus": 0,
 					"ChoralAttackBuff": 0,
 					"ChoralHealthBuff": 0,
-					"FrostlingBonus": 0,
-					"AstralAutomatonsSummonedThisGame": 0,
-					"BloodGemAttackBonus": 1,
-					"BloodGemHealthBonus": 5
+					"FrostlingBonus": 4,
+					"AstralAutomatonsSummonedThisGame": 6,
+					"BloodGemAttackBonus": 8,
+					"BloodGemHealthBonus": 8
 				},
 				"debugArmor": 0,
 				"debugHealth": 30
 			},
 			"board": [
 				{
-					"cardId": "BG26_160",
-					"attack": 5,
-					"divineShield": false,
-					"enchantments": [],
-					"entityId": 6798,
-					"health": 1,
-					"maxHealth": 1,
-					"poisonous": false,
-					"venomous": false,
-					"reborn": false,
-					"taunt": false,
-					"stealth": false,
-					"windfury": false,
-					"scriptDataNum1": 0,
-					"locked": false,
-					"friendly": true,
-					"definitelyDead": false,
-					"immuneWhenAttackCharges": 0,
-					"additionalCards": null
-				},
-				{
-					"cardId": "BG26_531",
-					"attack": 22,
-					"divineShield": false,
+					"cardId": "BGS_071",
+					"attack": 56,
+					"divineShield": true,
 					"enchantments": [
 						{
-							"originEntityId": 6296,
-							"cardId": "BG20_GEMe",
-							"tagScriptDataNum1": 18,
-							"tagScriptDataNum2": 54,
+							"originEntityId": 9805,
+							"cardId": "BG26_147e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": 3,
 							"timing": 0
 						},
 						{
-							"originEntityId": 6297,
+							"originEntityId": 9806,
+							"cardId": "BG26_HERO_102p2e",
+							"tagScriptDataNum1": 4,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9807,
+							"cardId": "BG26_HERO_102pe",
+							"tagScriptDataNum1": 4,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9808,
+							"cardId": "BG26_147e",
+							"tagScriptDataNum1": 13,
+							"tagScriptDataNum2": 13,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9809,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9810,
 							"cardId": "BG20_GEMe2",
-							"tagScriptDataNum1": 18,
-							"tagScriptDataNum2": 54,
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 10993,
+							"cardId": "BG26_HERO_102pe",
+							"tagScriptDataNum1": 5,
+							"tagScriptDataNum2": -1,
 							"timing": 0
 						}
 					],
-					"entityId": 6295,
-					"health": 57,
-					"maxHealth": 57,
+					"entityId": 9804,
+					"health": 50,
+					"maxHealth": 50,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
@@ -183,13 +115,13 @@
 					"additionalCards": null
 				},
 				{
-					"cardId": "BG20_201",
+					"cardId": "BG25_155",
 					"attack": 3,
 					"divineShield": false,
 					"enchantments": [],
-					"entityId": 6294,
-					"health": 5,
-					"maxHealth": 5,
+					"entityId": 10711,
+					"health": 4,
+					"maxHealth": 4,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
@@ -204,28 +136,35 @@
 					"additionalCards": null
 				},
 				{
-					"cardId": "BG28_582",
-					"attack": 7,
-					"divineShield": false,
+					"cardId": "BG29_611",
+					"attack": 32,
+					"divineShield": true,
 					"enchantments": [
 						{
-							"originEntityId": 6292,
-							"cardId": "BG20_GEMe",
-							"tagScriptDataNum1": 4,
-							"tagScriptDataNum2": 12,
+							"originEntityId": 9812,
+							"cardId": "BG26_147e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": 3,
 							"timing": 0
 						},
 						{
-							"originEntityId": 6293,
+							"originEntityId": 9813,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9814,
 							"cardId": "BG20_GEMe2",
-							"tagScriptDataNum1": 4,
-							"tagScriptDataNum2": 12,
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
 							"timing": 0
 						}
 					],
-					"entityId": 6291,
-					"health": 15,
-					"maxHealth": 15,
+					"entityId": 9811,
+					"health": 32,
+					"maxHealth": 32,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
@@ -240,39 +179,223 @@
 					"additionalCards": null
 				},
 				{
-					"cardId": "BG26_159_G",
-					"attack": 8,
-					"divineShield": false,
+					"cardId": "BG_TTN_401",
+					"attack": 54,
+					"divineShield": true,
 					"enchantments": [
 						{
-							"originEntityId": 6288,
+							"originEntityId": 9816,
+							"cardId": "BG26_HERO_102p2e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9817,
+							"cardId": "BG29_503e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": 1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9818,
+							"cardId": "BG26_HERO_102pe",
+							"tagScriptDataNum1": 4,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9819,
+							"cardId": "BG26_HERO_102p2e",
+							"tagScriptDataNum1": 4,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9820,
 							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9821,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 10446,
+							"cardId": "BG_TTN_401e",
+							"tagScriptDataNum1": 5,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 10942,
+							"cardId": "BG_BOT_911e2",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 10943,
+							"cardId": "BG_BOT_911e",
 							"tagScriptDataNum1": 2,
 							"tagScriptDataNum2": 4,
 							"timing": 0
 						},
 						{
-							"originEntityId": 6289,
+							"originEntityId": 4218,
+							"cardId": "112365",
+							"tagScriptDataNum1": 0,
+							"tagScriptDataNum2": 0,
+							"timing": 0
+						}
+					],
+					"entityId": 9815,
+					"health": 55,
+					"maxHealth": 55,
+					"poisonous": false,
+					"venomous": false,
+					"reborn": true,
+					"taunt": true,
+					"stealth": false,
+					"windfury": false,
+					"scriptDataNum1": 0,
+					"locked": false,
+					"friendly": true,
+					"definitelyDead": false,
+					"immuneWhenAttackCharges": 0,
+					"additionalCards": null
+				},
+				{
+					"cardId": "BG25_155",
+					"attack": 21,
+					"divineShield": false,
+					"enchantments": [
+						{
+							"originEntityId": 10951,
 							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 18,
+							"tagScriptDataNum2": 18,
+							"timing": 0
+						},
+						{
+							"originEntityId": 10952,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 18,
+							"tagScriptDataNum2": 18,
+							"timing": 0
+						}
+					],
+					"entityId": 9822,
+					"health": 22,
+					"maxHealth": 22,
+					"poisonous": false,
+					"venomous": false,
+					"reborn": false,
+					"taunt": false,
+					"stealth": false,
+					"windfury": false,
+					"scriptDataNum1": 0,
+					"locked": false,
+					"friendly": true,
+					"definitelyDead": false,
+					"immuneWhenAttackCharges": 0,
+					"additionalCards": null
+				},
+				{
+					"cardId": "BG_TTN_401_G",
+					"attack": 75,
+					"divineShield": true,
+					"enchantments": [
+						{
+							"originEntityId": 9824,
+							"cardId": "BG26_HERO_102pe",
+							"tagScriptDataNum1": 2,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9825,
+							"cardId": "BG26_HERO_102pe",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9826,
+							"cardId": "BG26_HERO_102p2e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9827,
+							"cardId": "BG_DEEP_015e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": 1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9828,
+							"cardId": "BG29_503e",
 							"tagScriptDataNum1": 2,
 							"tagScriptDataNum2": 4,
 							"timing": 0
 						},
 						{
-							"originEntityId": 6290,
+							"originEntityId": 9829,
+							"cardId": "BG29_503e",
+							"tagScriptDataNum1": 3,
+							"tagScriptDataNum2": 3,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9830,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 9831,
 							"cardId": "BG20_GEMe2",
-							"tagScriptDataNum1": 4,
-							"tagScriptDataNum2": 8,
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
+							"timing": 0
+						},
+						{
+							"originEntityId": 10447,
+							"cardId": "BG_TTN_401e",
+							"tagScriptDataNum1": 10,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 8934,
+							"cardId": "96813",
+							"tagScriptDataNum1": 0,
+							"tagScriptDataNum2": 0,
+							"timing": 0
+						},
+						{
+							"originEntityId": 8944,
+							"cardId": "98579",
+							"tagScriptDataNum1": 0,
+							"tagScriptDataNum2": 0,
 							"timing": 0
 						}
 					],
-					"entityId": 6287,
-					"health": 14,
-					"maxHealth": 14,
+					"entityId": 9823,
+					"health": 69,
+					"maxHealth": 69,
 					"poisonous": false,
 					"venomous": false,
-					"reborn": false,
-					"taunt": false,
+					"reborn": true,
+					"taunt": true,
 					"stealth": false,
 					"windfury": false,
 					"scriptDataNum1": 0,
@@ -283,50 +406,28 @@
 					"additionalCards": null
 				},
 				{
-					"cardId": "BG25_045_G",
-					"attack": 8,
+					"cardId": "BG27_518",
+					"attack": 31,
 					"divineShield": false,
 					"enchantments": [
 						{
-							"originEntityId": 6815,
-							"cardId": "BG25_045e2",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
+							"originEntityId": 9833,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
 							"timing": 0
-						}
-					],
-					"entityId": 6285,
-					"health": 18,
-					"maxHealth": 18,
-					"poisonous": false,
-					"venomous": false,
-					"reborn": false,
-					"taunt": false,
-					"stealth": false,
-					"windfury": false,
-					"scriptDataNum1": 0,
-					"locked": false,
-					"friendly": true,
-					"definitelyDead": false,
-					"immuneWhenAttackCharges": 0,
-					"additionalCards": null
-				},
-				{
-					"cardId": "BG25_040",
-					"attack": 8,
-					"divineShield": false,
-					"enchantments": [
+						},
 						{
-							"originEntityId": 6299,
-							"cardId": "BG25_040e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
+							"originEntityId": 9834,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 28,
+							"tagScriptDataNum2": 28,
 							"timing": 0
 						}
 					],
-					"entityId": 6298,
-					"health": 10,
-					"maxHealth": 10,
+					"entityId": 9832,
+					"health": 37,
+					"maxHealth": 37,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
@@ -347,33 +448,33 @@
 		"opponentBoard": {
 			"player": {
 				"tavernTier": 4,
-				"hpLeft": 27,
-				"cardId": "BG30_HERO_304",
-				"entityId": 8502,
-				"nonGhostCardId": "BG30_HERO_304",
-				"heroPowerId": null,
+				"hpLeft": 38,
+				"cardId": "BG20_HERO_202",
+				"entityId": 11814,
+				"nonGhostCardId": "BG20_HERO_202",
+				"heroPowerId": "TB_BaconShop_HP_022",
 				"heroPowerUsed": false,
-				"heroPowerInfo": 0,
-				"heroPowerInfo2": 0,
+				"heroPowerInfo": 2,
+				"heroPowerInfo2": -1,
 				"questRewards": [],
 				"questRewardEntities": [],
 				"questEntities": [],
 				"hand": [
 					{
-						"cardId": "BG28_966",
-						"attack": -1,
+						"cardId": "BG29_160",
+						"attack": 3,
 						"divineShield": false,
 						"enchantments": [],
-						"entityId": 8251,
-						"health": -1,
-						"maxHealth": -1,
+						"entityId": 11588,
+						"health": 4,
+						"maxHealth": 4,
 						"poisonous": false,
 						"venomous": false,
 						"reborn": false,
 						"taunt": false,
 						"stealth": false,
 						"windfury": false,
-						"scriptDataNum1": 0,
+						"scriptDataNum1": 3,
 						"locked": false,
 						"friendly": true,
 						"definitelyDead": false,
@@ -383,219 +484,63 @@
 				],
 				"trinkets": [
 					{
-						"cardId": "BG30_MagicItem_423",
-						"entityId": 8245,
+						"cardId": "BG30_MagicItem_410",
+						"entityId": 11583,
 						"scriptDataNum1": -1
 					},
 					{
-						"cardId": "BG30_MagicItem_828",
-						"entityId": 8246,
-						"scriptDataNum1": -1
-					},
-					{
-						"cardId": "BG30_MagicItem_986",
-						"entityId": 8247,
-						"scriptDataNum1": 1
+						"cardId": "BG30_MagicItem_546",
+						"entityId": 11584,
+						"scriptDataNum1": 2
 					}
 				],
 				"secrets": [],
 				"globalInfo": {
 					"EternalKnightsDeadThisGame": 0,
-					"TavernSpellsCastThisGame": 4,
+					"TavernSpellsCastThisGame": 6,
 					"PiratesPlayedThisGame": 0,
 					"UndeadAttackBonus": 0,
 					"ChoralAttackBuff": 0,
 					"ChoralHealthBuff": 0,
 					"FrostlingBonus": 0,
 					"AstralAutomatonsSummonedThisGame": 0,
-					"BloodGemAttackBonus": 0,
-					"BloodGemHealthBonus": 0
+					"BloodGemAttackBonus": 9,
+					"BloodGemHealthBonus": 6
 				},
-				"debugArmor": 0,
+				"debugArmor": 8,
 				"debugHealth": 30
 			},
 			"board": [
 				{
-					"cardId": "BG21_018",
-					"attack": 26,
+					"cardId": "BG25_155",
+					"attack": 15,
 					"divineShield": false,
 					"enchantments": [
 						{
-							"originEntityId": 8507,
-							"cardId": "BG28_168e",
+							"originEntityId": 11819,
+							"cardId": "BG28_845e",
 							"tagScriptDataNum1": -1,
 							"tagScriptDataNum2": -1,
 							"timing": 0
 						},
 						{
-							"originEntityId": 8508,
-							"cardId": "BG21_018e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						},
-						{
-							"originEntityId": 8509,
-							"cardId": "BG26_502e",
-							"tagScriptDataNum1": 11,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						},
-						{
-							"originEntityId": 8510,
-							"cardId": "BG26_502e",
-							"tagScriptDataNum1": 12,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						}
-					],
-					"entityId": 8506,
-					"health": 37,
-					"maxHealth": 37,
-					"poisonous": false,
-					"venomous": false,
-					"reborn": false,
-					"taunt": false,
-					"stealth": false,
-					"windfury": false,
-					"scriptDataNum1": 0,
-					"locked": false,
-					"friendly": true,
-					"definitelyDead": false,
-					"immuneWhenAttackCharges": 0,
-					"additionalCards": null
-				},
-				{
-					"cardId": "BG28_585",
-					"attack": 13,
-					"divineShield": false,
-					"enchantments": [
-						{
-							"originEntityId": 8512,
-							"cardId": "BG26_502e",
-							"tagScriptDataNum1": 9,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						}
-					],
-					"entityId": 8511,
-					"health": 14,
-					"maxHealth": 14,
-					"poisonous": false,
-					"venomous": false,
-					"reborn": false,
-					"taunt": false,
-					"stealth": false,
-					"windfury": false,
-					"scriptDataNum1": 0,
-					"locked": false,
-					"friendly": true,
-					"definitelyDead": false,
-					"immuneWhenAttackCharges": 0,
-					"additionalCards": null
-				},
-				{
-					"cardId": "BG23_001",
-					"attack": 10,
-					"divineShield": false,
-					"enchantments": [
-						{
-							"originEntityId": 8514,
-							"cardId": "BG23_001e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						},
-						{
-							"originEntityId": 8515,
-							"cardId": "BG28_168e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						}
-					],
-					"entityId": 8513,
-					"health": 9,
-					"maxHealth": 9,
-					"poisonous": false,
-					"venomous": false,
-					"reborn": false,
-					"taunt": false,
-					"stealth": false,
-					"windfury": false,
-					"scriptDataNum1": 0,
-					"locked": false,
-					"friendly": true,
-					"definitelyDead": false,
-					"immuneWhenAttackCharges": 0,
-					"additionalCards": null
-				},
-				{
-					"cardId": "BG26_505",
-					"attack": 21,
-					"divineShield": false,
-					"enchantments": [
-						{
-							"originEntityId": 8517,
-							"cardId": "BG28_814e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						},
-						{
-							"originEntityId": 8518,
-							"cardId": "BG28_814e2",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						},
-						{
-							"originEntityId": 8519,
-							"cardId": "BG26_502e",
+							"originEntityId": 11820,
+							"cardId": "BG20_GEMe",
 							"tagScriptDataNum1": 10,
-							"tagScriptDataNum2": -1,
-							"timing": 0
-						}
-					],
-					"entityId": 8516,
-					"health": 20,
-					"maxHealth": 20,
-					"poisonous": false,
-					"venomous": false,
-					"reborn": false,
-					"taunt": false,
-					"stealth": false,
-					"windfury": false,
-					"scriptDataNum1": 1,
-					"locked": false,
-					"friendly": true,
-					"definitelyDead": false,
-					"immuneWhenAttackCharges": 0,
-					"additionalCards": null
-				},
-				{
-					"cardId": "BG25_045",
-					"attack": 5,
-					"divineShield": false,
-					"enchantments": [
-						{
-							"originEntityId": 8521,
-							"cardId": "BG28_168e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
+							"tagScriptDataNum2": 7,
 							"timing": 0
 						},
 						{
-							"originEntityId": 8522,
-							"cardId": "BG25_045e",
-							"tagScriptDataNum1": -1,
-							"tagScriptDataNum2": -1,
+							"originEntityId": 11821,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 10,
+							"tagScriptDataNum2": 7,
 							"timing": 0
 						}
 					],
-					"entityId": 8520,
-					"health": 9,
-					"maxHealth": 9,
+					"entityId": 11818,
+					"health": 13,
+					"maxHealth": 13,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
@@ -610,20 +555,42 @@
 					"additionalCards": null
 				},
 				{
-					"cardId": "BG26_502",
-					"attack": 2,
+					"cardId": "BG30_121",
+					"attack": 44,
 					"divineShield": false,
-					"enchantments": [],
-					"entityId": 8523,
-					"health": 2,
-					"maxHealth": 2,
+					"enchantments": [
+						{
+							"originEntityId": 11823,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 37,
+							"tagScriptDataNum2": 26,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11824,
+							"cardId": "BG28_845e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11825,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 37,
+							"tagScriptDataNum2": 26,
+							"timing": 0
+						}
+					],
+					"entityId": 11822,
+					"health": 36,
+					"maxHealth": 36,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
 					"taunt": false,
 					"stealth": false,
 					"windfury": false,
-					"scriptDataNum1": 13,
+					"scriptDataNum1": 0,
 					"locked": false,
 					"friendly": true,
 					"definitelyDead": false,
@@ -631,20 +598,228 @@
 					"additionalCards": null
 				},
 				{
-					"cardId": "BG26_502",
-					"attack": 2,
+					"cardId": "BG26_160",
+					"attack": 52,
 					"divineShield": false,
-					"enchantments": [],
-					"entityId": 8524,
-					"health": 2,
-					"maxHealth": 2,
+					"enchantments": [
+						{
+							"originEntityId": 11827,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 45,
+							"tagScriptDataNum2": 33,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11828,
+							"cardId": "BG28_845e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11829,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 45,
+							"tagScriptDataNum2": 33,
+							"timing": 0
+						}
+					],
+					"entityId": 11826,
+					"health": 36,
+					"maxHealth": 36,
 					"poisonous": false,
 					"venomous": false,
 					"reborn": false,
 					"taunt": false,
 					"stealth": false,
 					"windfury": false,
-					"scriptDataNum1": 13,
+					"scriptDataNum1": 0,
+					"locked": false,
+					"friendly": true,
+					"definitelyDead": false,
+					"immuneWhenAttackCharges": 0,
+					"additionalCards": null
+				},
+				{
+					"cardId": "BG29_160",
+					"attack": 83,
+					"divineShield": false,
+					"enchantments": [
+						{
+							"originEntityId": 11831,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 78,
+							"tagScriptDataNum2": 63,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11832,
+							"cardId": "BG28_503e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11833,
+							"cardId": "BG28_845e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11834,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 78,
+							"tagScriptDataNum2": 63,
+							"timing": 0
+						}
+					],
+					"entityId": 11830,
+					"health": 72,
+					"maxHealth": 72,
+					"poisonous": false,
+					"venomous": false,
+					"reborn": false,
+					"taunt": true,
+					"stealth": false,
+					"windfury": false,
+					"scriptDataNum1": 3,
+					"locked": false,
+					"friendly": true,
+					"definitelyDead": false,
+					"immuneWhenAttackCharges": 0,
+					"additionalCards": null
+				},
+				{
+					"cardId": "BG28_582_G",
+					"attack": 91,
+					"divineShield": false,
+					"enchantments": [
+						{
+							"originEntityId": 11836,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 10,
+							"tagScriptDataNum2": 8,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11837,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 73,
+							"tagScriptDataNum2": 53,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11838,
+							"cardId": "BG28_845e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11839,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 83,
+							"tagScriptDataNum2": 61,
+							"timing": 0
+						}
+					],
+					"entityId": 11835,
+					"health": 69,
+					"maxHealth": 69,
+					"poisonous": false,
+					"venomous": false,
+					"reborn": false,
+					"taunt": false,
+					"stealth": false,
+					"windfury": false,
+					"scriptDataNum1": 0,
+					"locked": false,
+					"friendly": true,
+					"definitelyDead": false,
+					"immuneWhenAttackCharges": 0,
+					"additionalCards": null
+				},
+				{
+					"cardId": "BG20_303",
+					"attack": 148,
+					"divineShield": false,
+					"enchantments": [
+						{
+							"originEntityId": 11841,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 142,
+							"tagScriptDataNum2": 104,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11842,
+							"cardId": "BG28_845e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11843,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 142,
+							"tagScriptDataNum2": 104,
+							"timing": 0
+						}
+					],
+					"entityId": 11840,
+					"health": 110,
+					"maxHealth": 110,
+					"poisonous": false,
+					"venomous": false,
+					"reborn": false,
+					"taunt": false,
+					"stealth": false,
+					"windfury": false,
+					"scriptDataNum1": 0,
+					"locked": false,
+					"friendly": true,
+					"definitelyDead": false,
+					"immuneWhenAttackCharges": 0,
+					"additionalCards": null
+				},
+				{
+					"cardId": "BG29_708",
+					"attack": 162,
+					"divineShield": true,
+					"enchantments": [
+						{
+							"originEntityId": 11845,
+							"cardId": "BG20_GEMe",
+							"tagScriptDataNum1": 154,
+							"tagScriptDataNum2": 112,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11846,
+							"cardId": "BG28_845e",
+							"tagScriptDataNum1": -1,
+							"tagScriptDataNum2": -1,
+							"timing": 0
+						},
+						{
+							"originEntityId": 11847,
+							"cardId": "BG20_GEMe2",
+							"tagScriptDataNum1": 154,
+							"tagScriptDataNum2": 112,
+							"timing": 0
+						}
+					],
+					"entityId": 11844,
+					"health": 121,
+					"maxHealth": 121,
+					"poisonous": false,
+					"venomous": false,
+					"reborn": false,
+					"taunt": false,
+					"stealth": false,
+					"windfury": false,
+					"scriptDataNum1": 0,
 					"locked": false,
 					"friendly": true,
 					"definitelyDead": false,
@@ -661,13 +836,13 @@
 			"skipInfoLogs": false
 		},
 		"gameState": {
-			"currentTurn": 9,
+			"currentTurn": 11,
 			"validTribes": [
 				15,
-				14,
+				17,
 				23,
-				43,
-				92
+				18,
+				43
 			]
 		}
 	}

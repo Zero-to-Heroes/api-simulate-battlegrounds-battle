@@ -38,6 +38,7 @@ export const cloneBoard = (board: BgsBoardInfo): BgsBoardInfo => {
 			questRewards: board.player.questRewards?.map((reward) => reward),
 			hand: board.player.hand?.map((entity) => cloneEntity(entity)),
 			secrets: board.player.secrets?.map((secret) => ({ ...secret })).sort((a, b) => a.entityId - b.entityId),
+			trinkets: board.player.trinkets?.map((trinket) => ({ ...trinket })),
 			globalInfo: { ...board.player.globalInfo },
 		},
 		board: board.board.map((entity) => cloneEntity(entity)),
