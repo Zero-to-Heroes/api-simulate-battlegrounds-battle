@@ -398,7 +398,12 @@ export const getMinionsOfDifferentTypes = (
 				}
 			}
 		}
-		result.push(...board.filter((e) => gameState.allCards.getCard(e.cardId).races?.includes(Race[Race.ALL])));
+		result.push(
+			...board.filter((e) => {
+				const effectiveTribes = getEffectiveTribesForEntity(e, hero, gameState.allCards);
+				return effectiveTribes?.includes(Race.ALL);
+			}),
+		);
 	}
 	return result;
 };

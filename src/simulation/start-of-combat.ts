@@ -949,8 +949,7 @@ const handleStartOfCombatSpellsForPlayer = (
 		switch (secret.cardId) {
 			case CardIds.UpperHand_BG28_573:
 				if (!!opponentBoard.length) {
-					// const target = pickRandom(opponentBoard);
-					const target = opponentBoard.find((e) => e.entityId === 9713);
+					const target = pickRandom(opponentBoard);
 					target.health = 1;
 					target.maxHealth = 1;
 					gameState.spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
