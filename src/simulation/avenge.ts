@@ -151,6 +151,12 @@ export const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDea
 			reward.avengeCurrent -= 1;
 		}
 	}
+
+	for (const trinket of boardWithDeadEntityHero.trinkets) {
+		if (!!trinket.avengeDefault) {
+			trinket.avengeCurrent -= 1;
+		}
+	}
 };
 
 const handleAvenge = (
@@ -540,12 +546,30 @@ const handleAvenge = (
 		case CardIds.CycleOfEnergy_BG28_Reward_504:
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 			break;
+		case CardIds.StableAmalgamation_BG28_Reward_518:
+			avenger.scriptDataNum1++;
+			break;
+		case CardIds.MurglMkIi_BG29_991:
+		case CardIds.MurglMkIi_BG29_991_G:
+			const murglMkStats = avenger.cardId === CardIds.MurglMkIi_BG29_991_G ? 2 : 1;
+			addStatsToBoard(
+				avenger,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				murglMkStats,
+				murglMkStats,
+				gameState,
+			);
+			// Don't use utility methods, as we don't want triggers to proc
+			for (const e of boardWithDeadEntityHero.hand ?? []) {
+				e.attack += murglMkStats;
+				e.health += murglMkStats;
+				e.maxHealth += murglMkStats;
+			}
+			break;
 		case CardIds.FridgeMagnet_BG30_MagicItem_545:
 			const randomMagnetic = gameState.cardsData.getRandomMechToMagnetize(boardWithDeadEntityHero.tavernTier);
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomMagnetic], gameState);
-			break;
-		case CardIds.StableAmalgamation_BG28_Reward_518:
-			avenger.scriptDataNum1++;
 			break;
 		case CardIds.QuilligraphySet_BG30_MagicItem_410:
 		case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
@@ -579,32 +603,16 @@ const handleAvenge = (
 		case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
 			if (boardWithDeadEntity.length > 0) {
 				const target = pickRandom(boardWithDeadEntity.filter((e) => !e.reborn));
-				target.reborn = true;
-				gameState.spectator.registerPowerTarget(
-					avenger,
-					target,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-				);
-			}
-			break;
-		case CardIds.MurglMkIi_BG29_991:
-		case CardIds.MurglMkIi_BG29_991_G:
-			const murglMkStats = avenger.cardId === CardIds.MurglMkIi_BG29_991_G ? 2 : 1;
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				murglMkStats,
-				murglMkStats,
-				gameState,
-			);
-			// Don't use utility methods, as we don't want triggers to proc
-			for (const e of boardWithDeadEntityHero.hand ?? []) {
-				e.attack += murglMkStats;
-				e.health += murglMkStats;
-				e.maxHealth += murglMkStats;
+				if (!!target) {
+					target.reborn = true;
+					gameState.spectator.registerPowerTarget(
+						avenger,
+						target,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
+				}
 			}
 			break;
 	}
