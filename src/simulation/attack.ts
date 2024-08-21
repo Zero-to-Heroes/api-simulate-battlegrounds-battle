@@ -981,6 +981,7 @@ export const bumpEntities = (
 	applyVenomous = true,
 ): number => {
 	// No attack has no impact
+	const debug = bumpInto.cardId === 'BG26_888';
 	if (bumpInto.attack === 0) {
 		return 0;
 	}
@@ -1051,7 +1052,7 @@ export const bumpEntities = (
 		// So that further buffs don't revive it
 		// And we don't just set the health to avoid applying overkill effects
 		entity.definitelyDead = true;
-		updateVenomous(bumpInto, false, entityBoard, entityBoardHero, gameState);
+		updateVenomous(bumpInto, false, otherBoard, otherHero, gameState);
 	}
 	// Ideally we should do the Reckoning stuff here. However, at this point we only have half the damage
 	// information, so it is possible that the entity deals more than 3 (which should trigger Reckoning)
