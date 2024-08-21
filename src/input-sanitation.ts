@@ -92,6 +92,8 @@ const buildFinalInputForPlayer = (
 	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId) ?? [];
 	playerInfo.player.trinkets = playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
 	playerInfo.player.friendly = isPlayer;
+	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
+	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
 	// When using the simulator, the aura is not applied when receiving the board state.
 	setMissingAuras(board, playerInfo.player, cards);
 	// Avenge, maxHealth, etc.

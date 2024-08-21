@@ -319,6 +319,8 @@ export class Spectator {
 				action.opponentHeroPowerEntityId =
 					action.opponentHeroPowerEntityId ?? lastAction.opponentHeroPowerEntityId;
 				action.opponentHeroPowerUsed = action.opponentHeroPowerUsed ?? lastAction.opponentHeroPowerUsed;
+				action.playerTrinkets = action.playerTrinkets ?? lastAction.playerTrinkets;
+				action.opponentTrinkets = action.opponentTrinkets ?? lastAction.opponentTrinkets;
 			}
 
 			if (lastAction && action.type === 'damage' && lastAction.type === 'attack') {
@@ -334,6 +336,8 @@ export class Spectator {
 				lastAction.opponentHand = action.opponentHand;
 				lastAction.playerSecrets = action.playerSecrets;
 				lastAction.opponentSecrets = action.opponentSecrets;
+				lastAction.playerTrinkets = action.playerTrinkets;
+				lastAction.opponentTrinkets = action.opponentTrinkets;
 			} else if (lastAction && action.type === 'damage' && lastAction.type === 'damage') {
 				lastAction.damages = lastAction.damages || [];
 				lastAction.damages.push({
@@ -347,6 +351,8 @@ export class Spectator {
 				lastAction.opponentHand = action.opponentHand;
 				lastAction.playerSecrets = action.playerSecrets;
 				lastAction.opponentSecrets = action.opponentSecrets;
+				lastAction.playerTrinkets = action.playerTrinkets;
+				lastAction.opponentTrinkets = action.opponentTrinkets;
 			} else if (
 				lastAction &&
 				action.type === 'power-target' &&
@@ -367,6 +373,8 @@ export class Spectator {
 				lastAction.opponentHand = action.opponentHand;
 				lastAction.playerSecrets = action.playerSecrets;
 				lastAction.opponentSecrets = action.opponentSecrets;
+				lastAction.playerTrinkets = action.playerTrinkets;
+				lastAction.opponentTrinkets = action.opponentTrinkets;
 			} else {
 				result.push(action);
 			}

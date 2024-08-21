@@ -1,4 +1,4 @@
-import { BgsPlayerEntity } from '../../bgs-player-entity';
+import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
 
@@ -15,9 +15,11 @@ export interface GameAction {
 	playerBoard: readonly BoardEntity[];
 	playerHand: readonly BoardEntity[];
 	playerSecrets: readonly BoardSecret[];
+	playerTrinkets: readonly BoardTrinket[];
 	opponentBoard: readonly BoardEntity[];
 	opponentHand: readonly BoardEntity[];
 	opponentSecrets: readonly BoardSecret[];
+	opponentTrinkets: readonly BoardTrinket[];
 	playerCardId: string;
 	playerEntityId: number;
 	playerHeroPowerCardId: string;
@@ -68,6 +70,7 @@ export const buildGameAction = (
 		playerRewardCardId: playerHero?.questRewardEntities?.[0]?.cardId ?? playerHero?.questRewards?.[0],
 		playerRewardEntityId: playerHero?.questRewardEntities?.[0]?.entityId,
 		playerRewardData: playerHero?.questRewardEntities?.[0]?.scriptDataNum1,
+		playerTrinkets: playerHero?.trinkets,
 
 		opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
 		opponentCardId: opponentHero?.cardId,
@@ -78,6 +81,7 @@ export const buildGameAction = (
 		opponentRewardCardId: opponentHero?.questRewardEntities?.[0]?.cardId ?? opponentHero?.questRewards?.[0],
 		opponentRewardEntityId: opponentHero?.questRewardEntities?.[0]?.entityId,
 		opponentRewardData: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1,
+		opponentTrinkets: opponentHero?.trinkets,
 	} as GameAction;
 	return result;
 };

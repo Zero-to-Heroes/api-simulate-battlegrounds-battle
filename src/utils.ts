@@ -557,7 +557,7 @@ export const isPilotedWhirlOTron = (entity: BoardEntity): boolean => {
 };
 
 export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {
-	return !!allCards.getCard(cardId).battlegroundsNormalDbfId;
+	return !!allCards.getCard(cardId).premium || !!allCards.getCard(cardId).battlegroundsNormalDbfId;
 };
 
 export const getPlayerState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {

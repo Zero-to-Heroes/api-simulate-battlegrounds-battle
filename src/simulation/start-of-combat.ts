@@ -1399,12 +1399,12 @@ const handleWaxWarbandForPlayer = (
 			(e) => !!getEffectiveTribesForEntity(e, playerEntity, gameState.allCards).length,
 		);
 		const boardWithoutAll = boardWithTribes.filter(
-			(e) => !gameState.allCards.getCard(e.cardId).races.includes(Race[Race.ALL]),
+			(e) => !gameState.allCards.getCard(e.cardId).races?.includes(Race[Race.ALL]),
 		);
 		const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, gameState.allCards);
 		const allMinions = [
 			...selectedMinions,
-			...boardWithTribes.filter((e) => gameState.allCards.getCard(e.cardId).races.includes(Race[Race.ALL])),
+			...boardWithTribes.filter((e) => gameState.allCards.getCard(e.cardId).races?.includes(Race[Race.ALL])),
 		];
 		allMinions.forEach((e) => {
 			modifyStats(
@@ -1425,7 +1425,7 @@ const selectMinions = (minions: BoardEntity[], tribes: Race[], allCards: AllCard
 	// Step 1
 	const minionsByTribe: { [tribe: string]: BoardEntity[] } = {};
 	for (const minion of minions) {
-		for (const tribe of allCards.getCard(minion.cardId).races) {
+		for (const tribe of allCards.getCard(minion.cardId).races ?? []) {
 			if (!minionsByTribe[tribe]) {
 				minionsByTribe[tribe] = [];
 			}

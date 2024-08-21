@@ -240,7 +240,7 @@ export class CardsData {
 	}
 
 	public isGolden(card: ReferenceCard): boolean {
-		return !!card.battlegroundsNormalDbfId;
+		return card.premium || !!card.battlegroundsNormalDbfId;
 	}
 
 	private isValidTribe(validTribes: readonly Race[], cardRaces: readonly string[], allowEmptyRaces = true): boolean {
