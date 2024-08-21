@@ -135,6 +135,12 @@ export const modifyStats = (
 				entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
 				gameState,
 			);
+		} else if (
+			entity.cardId === CardIds.DefiantShipwright_BG21_018 ||
+			entity.cardId === CardIds.DefiantShipwright_BG21_018_G
+		) {
+			const stat = entity.cardId === CardIds.DefiantShipwright_BG21_018_G ? 2 : 1;
+			entity.health += stat;
 		}
 	}
 
@@ -179,12 +185,6 @@ export const modifyStats = (
 				gameState,
 			);
 		});
-	} else if (
-		entity.cardId === CardIds.DefiantShipwright_BG21_018 ||
-		entity.cardId === CardIds.DefiantShipwright_BG21_018_G
-	) {
-		const stat = entity.cardId === CardIds.DefiantShipwright_BG21_018_G ? 2 : 1;
-		entity.health += stat;
 	}
 
 	onStatsUpdate(entity, friendlyBoard, friendlyBoardHero, gameState);
