@@ -2238,6 +2238,14 @@ export const performStartOfCombatMinionsForPlayer = (
 				defendingBoardHero,
 				gameState,
 			);
+			grantDivineShieldToLeftmostMinions(
+				attacker,
+				defendingBoard,
+				defendingBoardHero,
+				quantity,
+				attackingBoardHero,
+				gameState,
+			);
 		}
 	} else if (
 		attacker.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
