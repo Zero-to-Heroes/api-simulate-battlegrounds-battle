@@ -466,8 +466,8 @@ const performAttack = (
 			updateDivineShield(
 				defendingEntity,
 				defendingBoard,
-				attackingBoardHero,
 				defendingBoardHero,
+				attackingBoardHero,
 				false,
 				gameState,
 			);
@@ -1027,11 +1027,8 @@ export const bumpEntities = (
 	}
 
 	if (entity.divineShield) {
-		// Handle all the divine shield loss effects here
-
 		gameState.spectator.registerDamageDealt(bumpInto, entity, 0, entityBoard);
 		return 0;
-		// return entity;
 	}
 
 	const damageDealt = (entity.damageMultiplier || 1) * bumpInto.attack;
