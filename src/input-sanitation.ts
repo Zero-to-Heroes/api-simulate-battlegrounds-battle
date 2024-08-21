@@ -1,4 +1,4 @@
-import { AllCardsService } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BgsBoardInfo } from './bgs-board-info';
 import { BgsPlayerEntity } from './bgs-player-entity';
@@ -89,13 +89,18 @@ const buildFinalInputForPlayer = (
 	}
 
 	const { board, hand } = buildFinalInputBoard(playerInfo, isPlayer, cardsData, cards);
+	const isGhost = playerInfo.player?.hpLeft != null && playerInfo.player.hpLeft <= 0;
 	playerInfo.player.secrets = playerInfo.secrets?.filter((e) => !!e?.cardId) ?? [];
-	playerInfo.player.trinkets = playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
+	// Trinkets don't seem to trigger when facing the ghost
+	// http://replays.firestoneapp.com/?reviewId=4ad32e03-2620-4fb1-8b43-cad55afd30fc&turn=27&action=2
+	// One of the trinkets is Blood Golem Sticker, and no Blood Golem is summoned
+	playerInfo.player.trinkets = isGhost ? [] : playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
 	playerInfo.player.friendly = isPlayer;
 	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
 	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
 	playerInfo.player.heroPowerId =
 		playerInfo.player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ?? playerInfo.player.heroPowerId;
+	playerInfo.player.cardId = isGhost ? CardIds.Kelthuzad_TB_BaconShop_HERO_KelThuzad : playerInfo.player.cardId;
 	// When using the simulator, the aura is not applied when receiving the board state.
 	setMissingAuras(board, playerInfo.player, cards);
 	// Avenge, maxHealth, etc.

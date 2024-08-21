@@ -2,7 +2,7 @@
 
 ```
 npm install
-npm run singleFile 'full-test.test'
+npm run test-board
 ```
 
 Then you can just modify the `test/full-game/game3.json` file to change the boards initial compositions.
@@ -46,16 +46,15 @@ To profile a Node.js application using Chrome's DevTools, you can use the `--ins
 1. Run your script with the `--inspect-brk` flag. This will start the inspector and pause execution until you connect with the debugger.
 
 ```bash
-node --inspect-brk -r ts-node/register full-test.ts
+node --inspect-brk -r ts-node/register test/full-game/full-test.ts
 ```
 
 2. Open Chrome and navigate to `chrome://inspect`.
 3. Click on the "Open dedicated DevTools for Node" link. This will open a new DevTools window.
-4. In the DevTools window, click on the "Profiler" tab.
+4. In the DevTools window, click on the "Performance" tab.
 5. Click on the "Start" button to start profiling.
-6. Go back to your terminal and press `Enter` to continue script execution.
-7. Once your script finishes executing, go back to the DevTools window and click on the "Stop" button to stop profiling.
-8. You can now analyze the CPU profile in the DevTools window.
+6. Once your script finishes executing, go back to the DevTools window and click on the "Stop" button to stop profiling.
+7. You can now analyze the CPU profile in the DevTools window.
 
 Remember to replace `node` with `npx ts-node` if you're using TypeScript without compiling to JavaScript first.
 
