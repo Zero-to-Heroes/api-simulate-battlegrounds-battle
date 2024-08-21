@@ -215,7 +215,8 @@ export const applyOnBeingAttackedBuffs = (
 			defendingEntity.cardId as CardIds,
 		)
 	) {
-		attackerEntity.health = 1;
+		setEntityStats(attackerEntity, attackerEntity.attack, 1, attackerBoard, attackerHero, gameState);
+		// attackerEntity.health = 1;
 	} else if (
 		[CardIds.WaywardGrimscale_BG28_406, CardIds.WaywardGrimscale_BG28_406_G].includes(
 			defendingEntity.cardId as CardIds,
