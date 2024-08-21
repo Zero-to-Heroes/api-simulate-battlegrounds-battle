@@ -275,6 +275,7 @@ const applyOnAttackQuest = (
 							attackingBoardHero,
 						);
 					}
+					trinket.scriptDataNum1 = gameState.cardsData.defaultScriptDataNum(trinket.cardId);
 				}
 				break;
 		}
