@@ -7,7 +7,7 @@ export interface BgsPlayerEntity {
 	hpLeft: number;
 	readonly tavernTier: number;
 
-	readonly heroPowerId?: string | undefined | null;
+	heroPowerId?: string | undefined | null;
 	readonly heroPowerEntityId?: number;
 	readonly heroPowerUsed: boolean;
 	readonly heroPowerInfo?: number | string;
@@ -67,6 +67,7 @@ export interface BoardTrinket {
 	cardId: string;
 	entityId: number;
 	scriptDataNum1: number;
+	scriptDataNum6?: number;
 	rememberedMinion?: BoardEntity;
 	avengeDefault?: number;
 	avengeCurrent?: number;
