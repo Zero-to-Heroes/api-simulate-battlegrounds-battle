@@ -263,7 +263,9 @@ const applyOnAttackQuest = (
 			case CardIds.JarOGems_BG30_MagicItem_546:
 				trinket.scriptDataNum1--;
 				if (trinket.scriptDataNum1 <= 0) {
-					for (const entity of attackingBoard) {
+					for (const entity of attackingBoard.filter((e) =>
+						hasCorrectTribe(e, attackingBoardHero, Race.QUILBOAR, gameState.allCards),
+					)) {
 						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
 						gameState.spectator.registerPowerTarget(
 							trinket,
