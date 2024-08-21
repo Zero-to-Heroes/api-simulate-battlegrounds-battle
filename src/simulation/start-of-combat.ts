@@ -57,7 +57,6 @@ export const handleStartOfCombat = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	const shouldRecomputeCurrentAttacker = true;
 	if (shouldRecomputeCurrentAttacker) {
 		currentAttacker =
@@ -956,7 +955,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				}
 				break;
 			case CardIds.BoonOfBeetles_BG28_603:
-				secret.scriptDataNum1 = secret.scriptDataNum1 ?? 1;
+				secret.scriptDataNum1 = 1;
 				break;
 			case CardIds.FleetingVigor_BG28_519:
 				addStatsToBoard(secret, playerBoard, playerEntity, 2, 1, gameState);
