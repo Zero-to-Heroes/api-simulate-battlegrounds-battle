@@ -421,7 +421,7 @@ export const hasCorrectTribe = (
 	const effectiveTribesForEntity = getEffectiveTribesForEntity(entity, playerEntity, allCards);
 	return (
 		effectiveTribesForEntity.length > 0 &&
-		(effectiveTribesForEntity.includes(targetTribe) || targetTribe === Race.ALL)
+		(effectiveTribesForEntity.includes(targetTribe) || effectiveTribesForEntity.includes(Race.ALL))
 	);
 };
 
