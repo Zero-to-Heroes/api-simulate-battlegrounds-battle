@@ -25,7 +25,7 @@ export const onQuestProgressUpdated = (
 	});
 
 	// Remove the quest from the list of quests
-	playerEntity.questEntities = playerEntity.questEntities.filter((quest) => quest.CardId !== quest.CardId);
+	playerEntity.questEntities = playerEntity.questEntities.filter((q) => q.CardId !== quest.CardId);
 
 	updateStateAfterQuestCreated(rewardCardId, board, playerEntity, gameState);
 };

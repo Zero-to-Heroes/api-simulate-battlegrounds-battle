@@ -109,6 +109,9 @@ export const onMinionDeadQuest = (
 			case CardIds.ReenactTheMurder:
 				onQuestProgressUpdated(boardHero, quest, board, gameState);
 				break;
+			case CardIds.RoundUpTheSuspects:
+				onQuestProgressUpdated(boardHero, quest, board, gameState);
+				break;
 		}
 	}
 
