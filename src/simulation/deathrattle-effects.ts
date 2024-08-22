@@ -110,6 +110,52 @@ export const handleDeathrattleEffects = (
 	// We do it on a case by case basis so that we deal all the damage in one go for instance
 	// and avoid proccing deathrattle spawns between the times the damage triggers
 	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
+
+	// We compute the enchantments first, so that we don't include enchantments created by the just-processed
+	// deathrattles
+	// It's important to first copy the enchantments, otherwise you could end up
+	// in an infinite loop - since new enchants are added after each step
+	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
+		...(deadEntity.enchantments ?? []),
+		// These seem to be first processed separately
+		// ...(deadEntity.rememberedDeathrattles ?? []),
+	].sort((a, b) => a.timing - b.timing);
+	// In some cases it's possible that there are way too many enchantments because of the frog
+	// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
+	// often as we should, so that we can have the stats themselves correct
+	// We don't want to lump everything together, as it skews the stats when there are a lot of buffs
+	// Instead, we build groups
+	const maxNumberOfGroups = 12;
+	const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
+	enchantments = Object.keys(enchantmentGroups)
+		.filter((cardId) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(cardId as CardIds))
+		.flatMap((cardId) => {
+			let repeatsToApply = enchantmentGroups[cardId].map((e) => e.repeats || 1).reduce((a, b) => a + b, 0);
+			// Frogs include the multiplers here directly
+			if (
+				[
+					CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
+					CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
+				].includes(cardId as CardIds)
+			) {
+				repeatsToApply = repeatsToApply * multiplier;
+			}
+
+			const results = [];
+			const repeatsPerBuff = Math.max(1, Math.floor(repeatsToApply / maxNumberOfGroups));
+			let repeatsDone = 0;
+			while (repeatsDone < repeatsToApply) {
+				const repeats = Math.min(repeatsPerBuff, repeatsToApply - repeatsDone);
+				results.push({
+					cardId: cardId,
+					repeats: repeats,
+					timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
+				});
+				repeatsDone += repeatsPerBuff;
+			}
+			return results;
+		});
+
 	// TODO put the muliplier look here, and handle onDeathrattleTriggered like is done for
 	// deathrattle-spawns
 	for (const deadEntityCardId of cardIds) {
@@ -432,6 +478,7 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.Leapfrogger_BG21_000:
 				for (let i = 0; i < multiplier; i++) {
+					// console.log('\t', 'Leapfrogger from DR', deadEntity.entityId);
 					applyLeapFroggerEffect(boardWithDeadEntity, boardWithDeadEntityHero, deadEntity, false, gameState);
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
@@ -1132,47 +1179,6 @@ export const handleDeathrattleEffects = (
 		}
 	}
 
-	// It's important to first copy the enchantments, otherwise you could end up
-	// in an infinite loop - since new enchants are added after each step
-	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
-		...(deadEntity.enchantments ?? []),
-		// These seem to be first processed separately
-		// ...(deadEntity.rememberedDeathrattles ?? []),
-	].sort((a, b) => a.timing - b.timing);
-	// In some cases it's possible that there are way too many enchantments because of the frog
-	// In that case, we make a trade-off and don't trigger the "on stats change" trigger as
-	// often as we should, so that we can have the stats themselves correct
-	// We don't want to lump everything together, as it skews the stats when there are a lot of buffs
-	// Instead, we build groups
-	const maxNumberOfGroups = 12;
-	const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
-	enchantments = Object.keys(enchantmentGroups).flatMap((cardId) => {
-		let repeatsToApply = enchantmentGroups[cardId].map((e) => e.repeats || 1).reduce((a, b) => a + b, 0);
-
-		// Frogs include the multiplers here directly
-		if (
-			[
-				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
-				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
-			].includes(cardId as CardIds)
-		) {
-			repeatsToApply = repeatsToApply * multiplier;
-		}
-
-		const results = [];
-		const repeatsPerBuff = Math.max(1, Math.floor(repeatsToApply / maxNumberOfGroups));
-		let repeatsDone = 0;
-		while (repeatsDone < repeatsToApply) {
-			const repeats = Math.min(repeatsPerBuff, repeatsToApply - repeatsDone);
-			results.push({
-				cardId: cardId,
-				repeats: repeats,
-				timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
-			});
-			repeatsDone += repeatsPerBuff;
-		}
-		return results;
-	});
 	for (const enchantment of enchantments) {
 		switch (enchantment.cardId) {
 			case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
@@ -1183,6 +1189,7 @@ export const handleDeathrattleEffects = (
 				break;
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
+				// console.log('\t', 'Leapfrogger enchantment', enchantment.repeats);
 				applyLeapFroggerEffect(
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
@@ -1238,10 +1245,6 @@ export const handleDeathrattleEffects = (
 				break;
 		}
 	}
-	// const playerCopy = boardWithDeadEntity.map((e) => ({ ...e, lastAffectedByEntity: null }));
-	// const oppCopy = otherBoard.map((e) => ({ ...e, lastAffectedByEntity: null }));
-	// console.log('player board', boardWithDeadEntity.length, playerCopy.length, playerCopy.map((e) => JSON.stringify(e)).join('\n'));
-	// console.log('opp board', JSON.stringify(oppCopy));
 };
 
 export const applyLightningInvocationEnchantment = (
@@ -1356,9 +1359,16 @@ const applyLeapFroggerEffect = (
 			repeats: multiplier > 1 ? multiplier : 1,
 			timing: gameState.sharedState.currentEntityId++,
 		});
-		// Don't register power effect here, since it's already done in the random stats
-		// spectator.registerPowerTarget(deadEntity, buffed, boardWithDeadEntity);
-		// console.log('applyLeapFroggerEffect', stringifySimpleCard(deadEntity), stringifySimpleCard(buffed));
+		// console.log(
+		// 	'\t\t',
+		// 	'entity enchantments',
+		// 	buffed.entityId,
+		// 	multiplier,
+		// 	buffed.enchantments
+		// 		.filter((e) => e.cardId.startsWith('BG21'))
+		// 		.map((e) => e.repeats)
+		// 		.join(','),
+		// );
 	}
 };
 
