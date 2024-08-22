@@ -289,7 +289,7 @@ export const getRandomAliveMinion = (
 ): BoardEntity => {
 	const validTribes = board
 		.filter((e) => !race || hasCorrectTribe(e, hero, race, allCards))
-		.filter((e) => !!e?.health && !e.definitelyDead);
+		.filter((e) => e?.health > 0 && !e.definitelyDead);
 	if (!validTribes.length) {
 		return null;
 	}
