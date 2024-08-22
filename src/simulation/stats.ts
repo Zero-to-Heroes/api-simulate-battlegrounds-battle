@@ -60,6 +60,7 @@ export const modifyStats = (
 
 	entity.attack = Math.max(0, entity.attack + realAttackAmount);
 	entity.previousAttack = entity.attack;
+	entity.pendingAttackBuffs = entity.pendingAttackBuffs || [];
 	entity.pendingAttackBuffs.push(realAttackAmount);
 	entity.health += realHealthAmount;
 
