@@ -532,8 +532,21 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 					updateDivineShield(playerBoard[0], playerBoard, playerEntity, opponentEntity, true, gameState);
 					gameState.spectator.registerPowerTarget(playerEntity, playerBoard[0], playerBoard, null, null);
 					if (playerBoard.length > 1) {
-						updateDivineShield(playerBoard[1], playerBoard, playerEntity, opponentEntity, true, gameState);
-						gameState.spectator.registerPowerTarget(playerEntity, playerBoard[1], playerBoard, null, null);
+						updateDivineShield(
+							playerBoard[playerBoard.length - 1],
+							playerBoard,
+							playerEntity,
+							opponentEntity,
+							true,
+							gameState,
+						);
+						gameState.spectator.registerPowerTarget(
+							playerEntity,
+							playerBoard[playerBoard.length - 1],
+							playerBoard,
+							null,
+							null,
+						);
 					}
 				}
 				break;

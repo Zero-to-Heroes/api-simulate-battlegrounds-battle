@@ -96,7 +96,10 @@ const buildFinalInputForPlayer = (
 	// Trinkets don't seem to trigger when facing the ghost
 	// http://replays.firestoneapp.com/?reviewId=4ad32e03-2620-4fb1-8b43-cad55afd30fc&turn=27&action=2
 	// One of the trinkets is Blood Golem Sticker, and no Blood Golem is summoned
-	playerInfo.player.trinkets = isGhost ? [] : playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
+	// Looks like that's not always the case:
+	// http://replays.firestoneapp.com/?reviewId=9958e8d3-4388-4e6f-9b36-35f3a08be2f6&turn=25&action=4
+	// playerInfo.player.trinkets = isGhost ? [] : playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
+	playerInfo.player.trinkets = playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
 	playerInfo.player.friendly = isPlayer;
 	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
 	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
