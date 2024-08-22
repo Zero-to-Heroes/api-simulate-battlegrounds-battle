@@ -453,6 +453,7 @@ const handleStartOfCombatSpells = (
 			opponentBoard,
 			currentAttacker,
 			gameState,
+			true,
 		);
 		currentAttacker = handleStartOfCombatSpellsForPlayer(
 			opponentEntity,
@@ -461,6 +462,7 @@ const handleStartOfCombatSpells = (
 			playerBoard,
 			currentAttacker,
 			gameState,
+			false,
 		);
 	} else {
 		currentAttacker = handleStartOfCombatSpellsForPlayer(
@@ -470,6 +472,7 @@ const handleStartOfCombatSpells = (
 			playerBoard,
 			currentAttacker,
 			gameState,
+			false,
 		);
 		currentAttacker = handleStartOfCombatSpellsForPlayer(
 			playerEntity,
@@ -478,6 +481,7 @@ const handleStartOfCombatSpells = (
 			opponentBoard,
 			currentAttacker,
 			gameState,
+			true,
 		);
 	}
 	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
@@ -523,6 +527,154 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 ): number => {
 	if (playerEntity.startOfCombatDone) {
 		return currentAttacker;
+	}
+
+	for (const reward of playerEntity.questRewards) {
+		switch (reward) {
+			case CardIds.EvilTwin:
+				if (!!playerBoard.length && playerBoard.length < 7) {
+					const highestHealthMinion = [...playerBoard].sort((a, b) => b.health - a.health)[0];
+					const copy: BoardEntity = {
+						...highestHealthMinion,
+						lastAffectedByEntity: null,
+					};
+					const newMinions = spawnEntities(
+						copy.cardId,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						highestHealthMinion.friendly,
+						true,
+						false,
+						false,
+						copy,
+					);
+					const indexFromRight = playerBoard.length - (playerBoard.indexOf(highestHealthMinion) + 1);
+					performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						highestHealthMinion,
+						indexFromRight,
+						opponentBoard,
+						opponentEntity,
+						gameState,
+					);
+					gameState.spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
+					// Recompute first attacker
+					// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
+					currentAttacker =
+						playerBoard.length > opponentBoard.length
+							? playerIsFriendly
+								? 0
+								: 1
+							: opponentBoard.length > playerBoard.length
+							? playerIsFriendly
+								? 1
+								: 0
+							: Math.round(Math.random());
+				}
+				break;
+			case CardIds.StaffOfOrigination_BG24_Reward_312:
+				playerBoard.forEach((entity) => {
+					modifyStats(entity, 15, 15, playerBoard, playerEntity, gameState);
+					gameState.spectator.registerPowerTarget(playerEntity, entity, playerBoard, null, null);
+				});
+				break;
+			case CardIds.StolenGold:
+				if (playerBoard.length > 0) {
+					makeMinionGolden(
+						playerBoard[0],
+						playerEntity,
+						playerBoard,
+						playerEntity,
+						opponentEntity,
+						gameState,
+					);
+				}
+				if (playerBoard.length > 1) {
+					makeMinionGolden(
+						playerBoard[playerBoard.length - 1],
+						playerEntity,
+						playerBoard,
+						playerEntity,
+						opponentEntity,
+						gameState,
+					);
+				}
+				break;
+		}
+	}
+
+	return currentAttacker;
+};
+
+const handleStartOfCombatSpellsForPlayer = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	gameState: FullGameState,
+	playerIsFriendly: boolean,
+): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
+	}
+	for (const secret of playerEntity.secrets ?? []) {
+		switch (secret.cardId) {
+			case CardIds.UpperHand_BG28_573:
+				if (!!opponentBoard.length) {
+					const target = pickRandom(opponentBoard);
+					target.health = 1;
+					target.maxHealth = 1;
+					gameState.spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
+				}
+				break;
+			case CardIds.BoonOfBeetles_BG28_603:
+				secret.scriptDataNum1 = 1;
+				break;
+			case CardIds.FleetingVigor_BG28_519:
+				addStatsToBoard(secret, playerBoard, playerEntity, 2, 1, gameState);
+				break;
+			case CardIds.ToxicTumbleweed_BG28_641:
+				if (playerBoard.length < 7) {
+					const newMinions = spawnEntities(
+						CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
+						1,
+						playerBoard,
+						playerEntity,
+						opponentBoard,
+						opponentEntity,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						playerEntity.friendly,
+						true,
+						false,
+						false,
+					);
+					newMinions[0].attackImmediately = true;
+					performEntitySpawns(
+						newMinions,
+						playerBoard,
+						playerEntity,
+						null,
+						0,
+						opponentBoard,
+						opponentEntity,
+						gameState,
+					);
+				}
+				break;
+		}
 	}
 
 	for (const trinket of playerEntity.trinkets) {
@@ -852,156 +1004,6 @@ const handleStartOfCombatQuestRewardsForPlayer = (
 								? 1
 								: 0
 							: Math.round(Math.random());
-				}
-				break;
-		}
-	}
-
-	for (const reward of playerEntity.questRewards) {
-		switch (reward) {
-			case CardIds.EvilTwin:
-				if (!!playerBoard.length && playerBoard.length < 7) {
-					const highestHealthMinion = [...playerBoard].sort((a, b) => b.health - a.health)[0];
-					const copy: BoardEntity = {
-						...highestHealthMinion,
-						lastAffectedByEntity: null,
-					};
-					const newMinions = spawnEntities(
-						copy.cardId,
-						1,
-						playerBoard,
-						playerEntity,
-						opponentBoard,
-						opponentEntity,
-						gameState.allCards,
-						gameState.cardsData,
-						gameState.sharedState,
-						gameState.spectator,
-						highestHealthMinion.friendly,
-						true,
-						false,
-						false,
-						copy,
-					);
-					const indexFromRight = playerBoard.length - (playerBoard.indexOf(highestHealthMinion) + 1);
-					performEntitySpawns(
-						newMinions,
-						playerBoard,
-						playerEntity,
-						highestHealthMinion,
-						indexFromRight,
-						opponentBoard,
-						opponentEntity,
-						gameState,
-					);
-					gameState.spectator.registerPowerTarget(playerEntity, copy, playerBoard, null, null);
-					// Recompute first attacker
-					// See https://replays.firestoneapp.com/?reviewId=93229c4a-d864-4196-83dd-2fea2a5bf70a&turn=29&action=0
-					currentAttacker =
-						playerBoard.length > opponentBoard.length
-							? playerIsFriendly
-								? 0
-								: 1
-							: opponentBoard.length > playerBoard.length
-							? playerIsFriendly
-								? 1
-								: 0
-							: Math.round(Math.random());
-				}
-				break;
-			case CardIds.StaffOfOrigination_BG24_Reward_312:
-				playerBoard.forEach((entity) => {
-					modifyStats(entity, 15, 15, playerBoard, playerEntity, gameState);
-					gameState.spectator.registerPowerTarget(playerEntity, entity, playerBoard, null, null);
-				});
-				break;
-			case CardIds.StolenGold:
-				if (playerBoard.length > 0) {
-					makeMinionGolden(
-						playerBoard[0],
-						playerEntity,
-						playerBoard,
-						playerEntity,
-						opponentEntity,
-						gameState,
-					);
-				}
-				if (playerBoard.length > 1) {
-					makeMinionGolden(
-						playerBoard[playerBoard.length - 1],
-						playerEntity,
-						playerBoard,
-						playerEntity,
-						opponentEntity,
-						gameState,
-					);
-				}
-				break;
-		}
-	}
-
-	return currentAttacker;
-};
-
-const handleStartOfCombatSpellsForPlayer = (
-	playerEntity: BgsPlayerEntity,
-	playerBoard: BoardEntity[],
-	opponentEntity: BgsPlayerEntity,
-	opponentBoard: BoardEntity[],
-	currentAttacker: number,
-	gameState: FullGameState,
-): number => {
-	if (playerEntity.startOfCombatDone) {
-		return currentAttacker;
-	}
-	if (!playerEntity.secrets?.length) {
-		return currentAttacker;
-	}
-	for (const secret of playerEntity.secrets) {
-		switch (secret.cardId) {
-			case CardIds.UpperHand_BG28_573:
-				if (!!opponentBoard.length) {
-					const target = pickRandom(opponentBoard);
-					target.health = 1;
-					target.maxHealth = 1;
-					gameState.spectator.registerPowerTarget(playerEntity, target, opponentBoard, null, null);
-				}
-				break;
-			case CardIds.BoonOfBeetles_BG28_603:
-				secret.scriptDataNum1 = 1;
-				break;
-			case CardIds.FleetingVigor_BG28_519:
-				addStatsToBoard(secret, playerBoard, playerEntity, 2, 1, gameState);
-				break;
-			case CardIds.ToxicTumbleweed_BG28_641:
-				if (playerBoard.length < 7) {
-					const newMinions = spawnEntities(
-						CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
-						1,
-						playerBoard,
-						playerEntity,
-						opponentBoard,
-						opponentEntity,
-						gameState.allCards,
-						gameState.cardsData,
-						gameState.sharedState,
-						gameState.spectator,
-						playerEntity.friendly,
-						true,
-						false,
-						false,
-					);
-					newMinions[0].attackImmediately = true;
-					performEntitySpawns(
-						newMinions,
-						playerBoard,
-						playerEntity,
-						null,
-						0,
-						opponentBoard,
-						opponentEntity,
-						gameState,
-					);
 				}
 				break;
 		}
