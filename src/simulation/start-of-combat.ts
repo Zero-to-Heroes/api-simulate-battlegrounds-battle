@@ -1812,7 +1812,7 @@ export const performStartOfCombatMinionsForPlayer = (
 			for (let i = 0; i < numberOfPicks; i++) {
 				const target = pickRandom(validTargets);
 				if (!!target) {
-					castImpure(attacker, target, attackingBoard, gameState.spectator);
+					castImpure(target, attacker, attackingBoard, gameState.spectator);
 					const targetIndex = validTargets.findIndex((e) => e.entityId === target.entityId);
 					validTargets.splice(targetIndex, 1);
 				}

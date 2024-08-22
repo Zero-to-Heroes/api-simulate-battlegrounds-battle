@@ -16,7 +16,7 @@ const test = async () => {
 		options: {
 			numberOfSimulations: 10000,
 			skipInfoLogs: false,
-			maxAcceptableDuration: 20000,
+			maxAcceptableDuration: 30000,
 		},
 		gameState: {
 			currentTurn: 0,
