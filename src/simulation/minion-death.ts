@@ -192,8 +192,8 @@ export const onMinionDeadQuest = (
 							otherBoardHero,
 							gameState,
 						);
+						trinket.scriptDataNum1--;
 					}
-					trinket.scriptDataNum1--;
 				}
 				break;
 		}

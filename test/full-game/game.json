@@ -824,13 +824,13 @@
 			"skipInfoLogs": false
 		},
 		"gameState": {
+			"currentTurn": 13,
 			"validTribes": [
 				20,
 				23,
 				43,
 				92,
 				11
-			],
-			"currentTurn": 13
+			]
 		}
 	}
