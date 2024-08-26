@@ -133,6 +133,7 @@ const handleTwinSkyLanternsForPlayer = (
 			? spawnNumber >= 2
 			: spawnNumber >= 1;
 	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion && canTrigger) {
+		trinket.scriptDataNum1 = 0;
 		const spawn = copyEntity(trinket.rememberedMinion);
 		removeAurasFromSelf(spawn, playerBoard, playerEntity, gameState);
 		const target = spawnEntities(
@@ -165,7 +166,6 @@ const handleTwinSkyLanternsForPlayer = (
 		target.forEach((t) =>
 			gameState.spectator.registerPowerTarget(playerEntity, t, playerBoard, playerEntity, opponentEntity),
 		);
-		trinket.scriptDataNum1 = 0;
 	}
 };
 
