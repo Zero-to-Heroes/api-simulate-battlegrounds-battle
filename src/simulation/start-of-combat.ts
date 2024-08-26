@@ -1386,11 +1386,7 @@ const handleTeronForPlayer = (
 		// http://replays.firestoneapp.com/?reviewId=9a46ab39-ccf0-478c-a010-68f2abb06c6f&turn=9&action=0
 		const rapidReanimationIndexFromLeft = playerBoard.indexOf(minionThatWillDie);
 		playerEntity.rapidReanimationIndexFromRight = playerBoard.length - 1 - rapidReanimationIndexFromLeft;
-		const minionToCopy = {
-			...minionThatWillDie,
-			enchantments: minionThatWillDie.enchantments.map((e) => ({ ...e })) ?? [],
-			pendingAttackBuffs: [],
-		} as BoardEntity;
+		const minionToCopy = copyEntity(minionThatWillDie);
 		removeAurasFromSelf(minionToCopy, playerBoard, playerEntity, gameState);
 		playerEntity.rapidReanimationMinion = minionToCopy;
 		minionThatWillDie.definitelyDead = true;

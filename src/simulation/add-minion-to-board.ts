@@ -527,7 +527,9 @@ export const removeAurasFromSelf = (
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
 			const multiplierAstral = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-			const statsBonusAstral = multiplierAstral * boardHero.globalInfo.AstralAutomatonsSummonedThisGame;
+			// We remove 1 because the AstralAutomatonsSummonedThisGame also includes the current one
+			// and ancestral automaton only counts "other" automatons
+			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
 			entity.attack = Math.max(0, entity.attack - 3 * statsBonusAstral);
 			entity.health = Math.max(1, entity.health - 2 * statsBonusAstral);
 			break;
