@@ -291,6 +291,8 @@ export class Spectator {
 				opponentHand: this.sanitize(actions[i].opponentHand),
 				// spawns: this.sanitize(actions[i].spawns),
 				deaths: this.sanitize(actions[i].deaths),
+				playerTrinkets: this.sanitizeTrinkets(actions[i].playerTrinkets),
+				opponentTrinkets: this.sanitizeTrinkets(actions[i].opponentTrinkets),
 			};
 			// action.playerBoard && console.debug('\naction playerboard', stringifySimple(action.playerBoard));
 			const lastAction = result.length > 0 ? result[result.length - 1] : null;
@@ -406,6 +408,21 @@ export class Spectator {
 					windfury: entity.windfury,
 					stealth: entity.stealth,
 				} as BoardEntity),
+		);
+	}
+
+	private sanitizeTrinkets(trinkets: readonly BoardTrinket[]): readonly BoardTrinket[] {
+		if (!trinkets?.length) {
+			return undefined;
+		}
+		return trinkets.map(
+			(t) =>
+				({
+					cardId: t.cardId,
+					entityId: t.entityId,
+					scriptDataNum1: t.scriptDataNum1,
+					scriptDataNum6: t.scriptDataNum6,
+				} as BoardTrinket),
 		);
 	}
 }
