@@ -187,15 +187,17 @@ export const handleAddedMinionAuraEffect = (
 		}
 	}
 
-	// The board here already contains the new minion
-	// TODO: what if the additional part is a potential target for the aura effect?
-	applyAurasToSelf(spawned, board, boardHero, gameState);
-
 	// Apply auras to board
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 	for (const spawnedCardId of cardIds) {
 		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, gameState);
 	}
+
+	// The board here already contains the new minion
+	// TODO: what if the additional part is a potential target for the aura effect?
+	// 2024-08-27: changing the order to first handleMinionAddedAuraEffect so that the automatons get boosted,
+	// then apply the aura
+	applyAurasToSelf(spawned, board, boardHero, gameState);
 };
 
 export const applyAurasToSelf = (
@@ -352,7 +354,8 @@ export const applyAurasToSelf = (
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-			const statsBonusAstral = multiplierAstral * boardHero.globalInfo.AstralAutomatonsSummonedThisGame;
+			// Don't count the yourself
+			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
 			modifyStats(spawned, 3 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
