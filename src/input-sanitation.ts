@@ -99,7 +99,9 @@ const buildFinalInputForPlayer = (
 	// Looks like that's not always the case:
 	// http://replays.firestoneapp.com/?reviewId=9958e8d3-4388-4e6f-9b36-35f3a08be2f6&turn=25&action=4
 	// playerInfo.player.trinkets = isGhost ? [] : playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
-	playerInfo.player.trinkets = playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? [];
+	playerInfo.player.trinkets = (playerInfo.player.trinkets?.filter((e) => !!e?.cardId) ?? []).sort(
+		(a, b) => a.entityId - b.entityId,
+	);
 	playerInfo.player.friendly = isPlayer;
 	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
 	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
