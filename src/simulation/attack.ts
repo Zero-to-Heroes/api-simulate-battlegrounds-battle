@@ -2,6 +2,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { debugState } from '../debug-state';
 import { updateDivineShield } from '../divine-shield';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { addImpliedMechanics, hasCorrectTribe, isFish, updateVenomous } from '../utils';
@@ -712,6 +713,17 @@ export const getDefendingEntity = (
 	attackingEntity: BoardEntity,
 	ignoreTaunts = false,
 ): BoardEntity => {
+	if (debugState.active) {
+		for (const forcedFaceOff of debugState.forcedFaceOff) {
+			if (debugState.isCorrectEntity(forcedFaceOff.attacker, attackingEntity))
+				if (attackingEntity.entityId === forcedFaceOff.attacker.entityId) {
+					let def = null;
+					if (!!(def = defendingBoard.find((e) => debugState.isCorrectEntity(forcedFaceOff.defender, e)))) {
+						return def;
+					}
+				}
+		}
+	}
 	// if (attackingEntity.entityId === 4946) {
 	// 	let def = null;
 	// 	if (!!(def = defendingBoard.find((e) => e.entityId === 7170))) {

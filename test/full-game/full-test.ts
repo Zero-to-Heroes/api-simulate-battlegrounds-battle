@@ -5,6 +5,7 @@ import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';
 import runSimulation, { assignCards } from '../../src/simulate-bgs-battle';
 import { SharedState } from '../../src/simulation/shared-state';
+import { applyDebugState } from './apply-debug-state';
 import jsonEvent3 from './game.json';
 
 console.log('starting test');
@@ -23,6 +24,8 @@ const test = async () => {
 		},
 	} as any;
 	SharedState.debugEnabled = false;
+
+	applyDebugState();
 
 	const cardsStr = readFileSync('test/full-game/cards_enUS.json').toString();
 	const allCards = new AllCardsLocalService(cardsStr);

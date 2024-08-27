@@ -1,6 +1,7 @@
 import { getEffectiveTechLevel } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { debugState } from '../debug-state';
 import { SingleSimulationResult } from '../single-simulation-result';
 import { stringifySimple } from '../utils';
 import { simulateAttack } from './attack';
@@ -149,6 +150,9 @@ export class Simulator {
 		);
 		this.currentAttacker = suggestedNewCurrentAttacker;
 		let counter = 0;
+		if (debugState?.active) {
+			this.currentAttacker = debugState.forcedCurrentAttacker ?? this.currentAttacker;
+		}
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			clearStealthIfNeeded(playerBoard, opponentBoard);
