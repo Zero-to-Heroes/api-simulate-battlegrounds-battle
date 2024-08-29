@@ -147,7 +147,7 @@ export const triggerBattlecry = (
 					board.filter((e) => e.entityId != entity.entityId),
 					hero,
 					0,
-					entity.cardId === CardIds.CrowsNestSentry_BG29_502 ? 3 : 6,
+					entity.cardId === CardIds.CrowsNestSentry_BG29_502 ? 4 : 8,
 					gameState,
 					Race[Race.PIRATE],
 				);

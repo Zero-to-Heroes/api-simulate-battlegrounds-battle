@@ -572,11 +572,11 @@ const handleAvenge = (
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomMagnetic], gameState);
 			break;
 		case CardIds.QuilligraphySet_BG30_MagicItem_410:
+			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
+			break;
 		case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
-			const quilligraphySetBuff =
-				avenger.cardId === CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2 ? 2 : 1;
-			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += quilligraphySetBuff;
-			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += quilligraphySetBuff;
+			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += 2;
+			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 2;
 			break;
 		case CardIds.GilneanThornedRose_BG30_MagicItem_864:
 			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 3, 3, gameState);

@@ -174,12 +174,12 @@ export class CardsData {
 			case CardIds.AugmentedLaborer_BG28_740_G:
 			case CardIds.MurglMkIi_BG29_991:
 			case CardIds.MurglMkIi_BG29_991_G:
-			case CardIds.QuilligraphySet_BG30_MagicItem_410:
 			case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
 				return 4;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
+			case CardIds.QuilligraphySet_BG30_MagicItem_410:
 				return 5;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
@@ -197,9 +197,9 @@ export class CardsData {
 				return 1;
 			case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
 			case CardIds.JarOGems_BG30_MagicItem_546:
+			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				return 2;
 			case CardIds.MechagonAdapter_BG30_MagicItem_910:
-			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				return 3;
 			case CardIds.ReinforcedShield_BG30_MagicItem_886:
 				return 4;

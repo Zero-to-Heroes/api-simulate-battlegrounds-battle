@@ -126,8 +126,8 @@ const handleSpawnEffect = (
 				break;
 			case CardIds.ThunderingAbomination_BG30_124:
 			case CardIds.ThunderingAbomination_BG30_124_G:
-				const abomStatsBonus = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 4 : 2;
-				modifyStats(spawned, abomStatsBonus, abomStatsBonus, board, boardHero, gameState);
+				const abomStatsMultiplier = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
+				modifyStats(spawned, abomStatsMultiplier * 3, abomStatsMultiplier * 2, board, boardHero, gameState);
 				gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				break;
 		}
@@ -233,13 +233,13 @@ export const applyAurasToSelf = (
 					spawned.health += 1;
 					break;
 				case CardIds.FeralTalisman_FeralTalismanToken_BG30_MagicItem_880t:
-					spawned.attack += 5;
-					spawned.health += 3;
+					spawned.attack += 6;
+					spawned.health += 4;
 					break;
 				case CardIds.HordeKeychainToken_BG30_MagicItem_843t:
 					if (gameState.cardsData.getTavernLevel(spawned.cardId) <= 3) {
-						spawned.attack += 6;
-						spawned.health += 4;
+						spawned.attack += 7;
+						spawned.health += 5;
 					}
 					break;
 			}
@@ -356,7 +356,7 @@ export const applyAurasToSelf = (
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Don't count the yourself
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			modifyStats(spawned, 3 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
+			modifyStats(spawned, 2 * statsBonusAstral, 1 * statsBonusAstral, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -401,13 +401,13 @@ export const removeAurasFromSelf = (
 					entity.health = Math.max(1, entity.health - 1);
 					break;
 				case CardIds.FeralTalisman_FeralTalismanToken_BG30_MagicItem_880t:
-					entity.attack = Math.max(0, entity.attack - 5);
-					entity.health = Math.max(1, entity.health - 3);
+					entity.attack = Math.max(0, entity.attack - 6);
+					entity.health = Math.max(1, entity.health - 4);
 					break;
 				case CardIds.HordeKeychainToken_BG30_MagicItem_843t:
 					if (gameState.cardsData.getTavernLevel(entity.cardId) <= 3) {
-						entity.attack = Math.max(0, entity.attack - 6);
-						entity.health = Math.max(1, entity.health - 4);
+						entity.attack = Math.max(0, entity.attack - 7);
+						entity.health = Math.max(1, entity.health - 5);
 					}
 					break;
 			}
@@ -533,8 +533,8 @@ export const removeAurasFromSelf = (
 			// We remove 1 because the AstralAutomatonsSummonedThisGame also includes the current one
 			// and ancestral automaton only counts "other" automatons
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			entity.attack = Math.max(0, entity.attack - 3 * statsBonusAstral);
-			entity.health = Math.max(1, entity.health - 2 * statsBonusAstral);
+			entity.attack = Math.max(0, entity.attack - 2 * statsBonusAstral);
+			entity.health = Math.max(1, entity.health - 1 * statsBonusAstral);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -630,7 +630,7 @@ const handleMinionAddedAuraEffect = (
 				)
 				.forEach((e) => {
 					const multiplierAstral = e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-					modifyStats(e, 3 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
+					modifyStats(e, 2 * multiplierAstral, 1 * multiplierAstral, board, boardHero, gameState);
 				});
 			break;
 	}

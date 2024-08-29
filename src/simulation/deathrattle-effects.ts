@@ -1163,7 +1163,7 @@ export const handleDeathrattleEffects = (
 			case CardIds.CruiseController_BG31_821_G:
 				for (let i = 0; i < multiplier; i++) {
 					boardWithDeadEntityHero.globalInfo.PirateAttackBonus +=
-						deadEntity.cardId === CardIds.CruiseController_BG31_821_G ? 8 : 4;
+						deadEntity.cardId === CardIds.CruiseController_BG31_821_G ? 10 : 5;
 				}
 				break;
 			// Add all the deathrattles that don't have an effect on combat

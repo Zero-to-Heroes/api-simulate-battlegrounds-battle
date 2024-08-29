@@ -729,7 +729,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.ValorousMedallion_BG30_MagicItem_970:
 			case CardIds.ValorousMedallion_ValorousMedallionToken_BG30_MagicItem_970t:
-				const medallionBuff = trinket.cardId === CardIds.ValorousMedallion_BG30_MagicItem_970 ? 2 : 5;
+				const medallionBuff = trinket.cardId === CardIds.ValorousMedallion_BG30_MagicItem_970 ? 2 : 6;
 				addStatsToBoard(trinket, playerBoard, playerEntity, medallionBuff, medallionBuff, gameState);
 				break;
 			case CardIds.EmeraldDreamcatcher_BG30_MagicItem_542:
@@ -860,7 +860,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.ArtisanalUrn_BG30_MagicItem_989:
 			case CardIds.ArtisanalUrn_ArtisanalUrnToken_BG30_MagicItem_989t:
-				const artisanalUrnBuff = trinket.cardId === CardIds.ArtisanalUrn_BG30_MagicItem_989 ? 3 : 7;
+				const artisanalUrnBuff = trinket.cardId === CardIds.ArtisanalUrn_BG30_MagicItem_989 ? 3 : 8;
 				playerEntity.globalInfo.UndeadAttackBonus =
 					(playerEntity.globalInfo.UndeadAttackBonus ?? 0) + artisanalUrnBuff;
 				break;
@@ -871,7 +871,10 @@ const handleStartOfCombatSpellsForPlayer = (
 							e.cardId === CardIds.TitusRivendare_BG25_354 ||
 							e.cardId === CardIds.TitusRivendare_BG25_354_G,
 					)
-					.forEach((e) => (e.stealth = true));
+					.forEach((e) => {
+						modifyStats(e, 0, e.health, playerBoard, playerEntity, gameState);
+						gameState.spectator.registerPowerTarget(trinket, e, playerBoard, null, null);
+					});
 				break;
 			case CardIds.TinyfinOnesie_BG30_MagicItem_441:
 				const highestHealthMinionInHand = playerEntity.hand?.sort((a, b) => b.health - a.health)[0];
@@ -914,7 +917,11 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.KarazhanChessSet_BG30_MagicItem_972:
 				if (playerBoard.length > 0) {
+					let minionsToCopy = 2;
 					for (let i = 0; i < Math.min(playerBoard.length, 7); i++) {
+						if (minionsToCopy <= 0) {
+							break;
+						}
 						const entityToCoy = playerBoard[i];
 						const copy: BoardEntity = copyEntity(entityToCoy);
 						removeAurasFromSelf(copy, playerBoard, playerEntity, gameState);
@@ -950,6 +957,7 @@ const handleStartOfCombatSpellsForPlayer = (
 						// of summoning a copy and applying all the auras stuff
 						// I've asked on Discord (2024-08-21) for clarification
 						i += spawns.length;
+						minionsToCopy--;
 					}
 				}
 				currentAttacker =

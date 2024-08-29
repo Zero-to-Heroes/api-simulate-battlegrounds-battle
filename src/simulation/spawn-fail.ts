@@ -17,7 +17,7 @@ export const onMinionFailedToSpawn = (
 
 	hero.trinkets
 		.filter((t) => t.cardId === CardIds.MugOfTheSireToken_BG30_MagicItem_438t)
-		.forEach((t) => addStatsToBoard(t, board, hero, 4, 0, gameState));
+		.forEach((t) => addStatsToBoard(t, board, hero, 5, 0, gameState));
 
 	board
 		.filter(
@@ -26,8 +26,8 @@ export const onMinionFailedToSpawn = (
 				e.cardId === CardIds.ThunderingAbomination_BG30_124_G,
 		)
 		.forEach((abom) => {
-			const buff = abom.cardId === CardIds.ThunderingAbomination_BG30_124 ? 2 : 4;
-			modifyStats(abom, buff, buff, board, hero, gameState);
+			const abomStatsMultiplier = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
+			modifyStats(abom, abomStatsMultiplier * 3, abomStatsMultiplier * 2, board, hero, gameState);
 		});
 	board
 		.filter((e) => e.cardId === CardIds.CatacombCrasher_BG30_129 || e.cardId === CardIds.CatacombCrasher_BG30_129_G)
