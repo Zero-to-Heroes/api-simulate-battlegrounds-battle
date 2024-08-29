@@ -26,11 +26,8 @@ export const onMinionKill = (
 					),
 			);
 			if (murculesTarget) {
-				// When it's the opponent, the game state already contains all the buffs
-				if (murculesTarget?.friendly) {
-					const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
-					modifyStats(murculesTarget, murculesStats, murculesStats, killerBoard, killerHero, gameState);
-				}
+				const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
+				modifyStats(murculesTarget, murculesStats, murculesStats, killerBoard, killerHero, gameState);
 				gameState.spectator.registerPowerTarget(killer, murculesTarget, killerBoard, killerHero, victimHero);
 			}
 			break;
