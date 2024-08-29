@@ -376,6 +376,7 @@ const handleNaturalDeathrattle = (
 			rememberedDeathrattles: undefined,
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
+			enchantments: [],
 		};
 		const spawns = handleNaturalDeathrattle(
 			entityToProcess,
