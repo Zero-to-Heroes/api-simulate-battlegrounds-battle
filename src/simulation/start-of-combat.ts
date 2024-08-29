@@ -152,6 +152,9 @@ const handlePreCombatHeroPowers = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
+	const initialPlayerBoardSize0 = playerBoard.length;
+	const initialOpponentBoardSize0 = opponentBoard.length;
+	const initialCurrentAttacker = currentAttacker;
 	if (Math.random() < 0.5) {
 		currentAttacker = handlePreCombatHeroPowersForPlayer(
 			playerEntity,
@@ -191,7 +194,19 @@ const handlePreCombatHeroPowers = (
 			gameState,
 		);
 	}
+	const initialPlayerBoardSize = playerBoard.length;
+	const initialOpponentBoardSize = opponentBoard.length;
+	// Ozumat's Tentaclecan cause the first player to be recomputed
+	// https://replays.firestoneapp.com/?reviewId=f15c90de-8b3c-4017-960d-365fe09eb7ab&turn=5&action=1
 	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	if (playerBoard.length !== initialPlayerBoardSize || opponentBoard.length !== initialOpponentBoardSize) {
+		currentAttacker =
+			playerBoard.length > opponentBoard.length
+				? 0
+				: opponentBoard.length > playerBoard.length
+				? 1
+				: Math.round(Math.random());
+	}
 	return currentAttacker;
 };
 
@@ -231,6 +246,9 @@ const handlePreCombatHeroPowersForPlayer = (
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.EmbraceYourRage) {
 		handleEmbraceYourRageForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		shouldRecomputeCurrentAttacker = true;
+	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.Ozumat_Tentacular) {
+		playerEntity.heroPowerActivated = false;
 		shouldRecomputeCurrentAttacker = true;
 	} else if (playerEntity.heroPowerUsed && playerHeroPowerId === CardIds.RebornRites) {
 		handleRebornRitesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);

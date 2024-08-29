@@ -177,7 +177,7 @@ const handleOzumatForPlayer = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): void => {
-	if (playerBoard.length < 7 && !playerEntity.heroPowerActivated) {
+	if (playerBoard.length < 7 && playerEntity.heroPowerActivated === false) {
 		const tentacularSize = +playerEntity.heroPowerInfo;
 		const tentacular = spawnEntities(
 			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
