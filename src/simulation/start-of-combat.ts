@@ -714,6 +714,7 @@ const handleStartOfCombatSpellsForPlayer = (
 						playerEntity,
 						gameState,
 					);
+					gameState.spectator.registerPowerTarget(trinket, firstTarget, playerBoard, null, null);
 					if (playerBoard.length > 1) {
 						const secondTarget = minionsByAttack[1];
 						setEntityStats(
@@ -724,6 +725,7 @@ const handleStartOfCombatSpellsForPlayer = (
 							playerEntity,
 							gameState,
 						);
+						gameState.spectator.registerPowerTarget(trinket, secondTarget, playerBoard, null, null);
 					}
 				}
 				break;
@@ -901,7 +903,10 @@ const handleStartOfCombatSpellsForPlayer = (
 			case CardIds.IronforgeAnvil_BG30_MagicItem_403:
 				if (playerBoard.length > 0) {
 					playerBoard
-						.filter((e) => getEffectiveTribesForEntity(e, playerEntity, gameState.allCards).length === 0)
+						.filter((e) => {
+							const tribes = getEffectiveTribesForEntity(e, playerEntity, gameState.allCards);
+							return tribes.length === 0;
+						})
 						.forEach((entity) => {
 							setEntityStats(
 								entity,
