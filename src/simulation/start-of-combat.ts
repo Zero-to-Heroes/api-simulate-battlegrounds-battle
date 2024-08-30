@@ -876,7 +876,9 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
 			case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
-				trinket.rememberedMinion = null;
+				// Don't do this, as it prevents it from remembering other entities that have spawned before it
+				// (e.g. with Fishy Sticker)
+				// trinket.rememberedMinion = null;
 				break;
 			case CardIds.ArtisanalUrn_BG30_MagicItem_989:
 			case CardIds.ArtisanalUrn_ArtisanalUrnToken_BG30_MagicItem_989t:
