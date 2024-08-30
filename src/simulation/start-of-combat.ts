@@ -885,16 +885,24 @@ const handleStartOfCombatSpellsForPlayer = (
 					(playerEntity.globalInfo.UndeadAttackBonus ?? 0) + artisanalUrnBuff;
 				break;
 			case CardIds.RivendarePortrait_BG30_MagicItem_310:
-				playerBoard
-					.filter(
-						(e) =>
-							e.cardId === CardIds.TitusRivendare_BG25_354 ||
-							e.cardId === CardIds.TitusRivendare_BG25_354_G,
-					)
-					.forEach((e) => {
-						modifyStats(e, 0, e.health, playerBoard, playerEntity, gameState);
-						gameState.spectator.registerPowerTarget(trinket, e, playerBoard, null, null);
-					});
+				// Portraits are a bit weird, as having 2 of them makes stats go x3 instead of x3,
+				// so we process them all in one go
+				if (trinket.scriptDataNum1 != 99) {
+					const buffBonus = playerEntity.trinkets.filter(
+						(t) => t.cardId === CardIds.RivendarePortrait_BG30_MagicItem_310,
+					).length;
+					playerBoard
+						.filter(
+							(e) =>
+								e.cardId === CardIds.TitusRivendare_BG25_354 ||
+								e.cardId === CardIds.TitusRivendare_BG25_354_G,
+						)
+						.forEach((e) => {
+							modifyStats(e, 0, buffBonus * e.health, playerBoard, playerEntity, gameState);
+							gameState.spectator.registerPowerTarget(trinket, e, playerBoard, null, null);
+						});
+					playerEntity.trinkets.forEach((t) => (t.scriptDataNum1 = 99));
+				}
 				break;
 			case CardIds.TinyfinOnesie_BG30_MagicItem_441:
 				const highestHealthMinionInHand = playerEntity.hand?.sort((a, b) => b.health - a.health)[0];
