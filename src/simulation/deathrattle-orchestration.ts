@@ -374,6 +374,7 @@ const handleNaturalDeathrattle = (
 		const entityToProcess: BoardEntity = {
 			...deadEntity,
 			rememberedDeathrattles: undefined,
+			deathrattleRepeats: dr.repeats ?? 1,
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
 			enchantments: [],

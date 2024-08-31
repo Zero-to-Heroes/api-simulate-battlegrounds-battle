@@ -37,6 +37,7 @@ import { addCardsInHand } from './cards-in-hand';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
+import { groupLeapfroggerDeathrattles } from './remembered-deathrattle';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 import { modifyStats } from './stats';
@@ -482,13 +483,27 @@ export const handleDeathrattleEffects = (
 			case CardIds.Leapfrogger_BG21_000:
 				for (let i = 0; i < multiplier; i++) {
 					// console.log('\t', 'Leapfrogger from DR', deadEntity.entityId);
-					applyLeapFroggerEffect(boardWithDeadEntity, boardWithDeadEntityHero, deadEntity, false, gameState);
+					applyLeapFroggerEffect(
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						deadEntity,
+						false,
+						gameState,
+						deadEntity.deathrattleRepeats,
+					);
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
 			case CardIds.Leapfrogger_BG21_000_G:
 				for (let i = 0; i < multiplier; i++) {
-					applyLeapFroggerEffect(boardWithDeadEntity, boardWithDeadEntityHero, deadEntity, true, gameState);
+					applyLeapFroggerEffect(
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						deadEntity,
+						true,
+						gameState,
+						deadEntity.deathrattleRepeats,
+					);
 					onDeathrattleTriggered(deathrattleTriggeredInput);
 				}
 				break;
@@ -1339,9 +1354,9 @@ const applyLeapFroggerEffect = (
 	deadEntity: BoardEntity,
 	isPremium: boolean,
 	gameState: FullGameState,
-	multiplier = 1,
+	multiplier: number,
 ): void => {
-	multiplier = multiplier || 1;
+	multiplier = multiplier ?? deadEntity.deathrattleRepeats ?? 1;
 	// console.debug('applying leapfrogger effect', deadEntity.entityId, multiplier);
 	const buffed = grantRandomStats(
 		deadEntity,
@@ -1871,43 +1886,28 @@ export const rememberDeathrattles = (
 			.filter((e) => e.entityId !== fish.rebornFromEntityId)
 			.flatMap((e) => e.rememberedDeathrattles) ?? [];
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments, ...deadEntityRememberedDeathrattles];
-	// Order is important - the DR are triggered in the ordered the minions have died
-	if (isGolden(fish.cardId, allCards)) {
-		// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
-		const doubleDr = newDeathrattles.reduce((res, current) => res.concat([current, current]), []);
-		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...doubleDr];
-	} else {
-		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
-	}
-	if (fish.rememberedDeathrattles?.length) {
-		// Group everything and add repeats if need be
-		// const rememberedDeathrattles = organizeRememberedDeathrattles(fish.rememberedDeathrattles, allCards);
-		// fish.rememberedDeathrattles = rememberedDeathrattles;
 
-		// Not sure exactly why, but if a leapfrogger dies first, then a manasaber,
-		// when the fish dies, the manasaber's effect (spawning tokens) is triggered first
-		// https://replays.firestoneapp.com/?reviewId=521733fb-8ba1-4663-9a87-3da58e8a09c8&turn=21&action=3
-		// HACK: So I will hardcode a rule for now to put leapfrogger effects last
-		fish.rememberedDeathrattles = fish.rememberedDeathrattles
-			// Map the enchantment to the cardId, because the remembered deathrattles are only processed as
-			// card ids, not enchantments
-			// FIXME: this whole logic doesn't work well. rememberedDeathrattle should be processed as a block, and
-			// probably not one by one
-			.map((d) => {
-				if (d.cardId?.endsWith('e')) {
-					return { ...d, cardId: d.cardId.substring(0, d.cardId.length - 1) };
-				}
-				return d;
-			})
-			.sort((a, b) => {
-				if (a.cardId?.startsWith('BG21_000')) {
-					return 1;
-				}
-				if (b.cardId?.startsWith('BG21_000')) {
-					return -1;
-				}
-				return a.timing - b.timing;
-			});
+	if (newDeathrattles.length > 0) {
+		// Order is important - the DR are triggered in the order d the minions have died
+		if (isGolden(fish.cardId, allCards)) {
+			// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
+			const doubleDr = newDeathrattles.reduce((res, current) => res.concat([current, current]), []);
+			fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...doubleDr];
+		} else {
+			fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
+		}
+
+		if (newDeathrattles.some((d) => d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000))) {
+			// Not sure exactly why, but if a leapfrogger dies first, then a manasaber,
+			// when the fish dies, the manasaber's effect (spawning tokens) is triggered first
+			// https://replays.firestoneapp.com/?reviewId=521733fb-8ba1-4663-9a87-3da58e8a09c8&turn=21&action=3
+			// HACK: So I will hardcode a rule for now to put leapfrogger effects last
+			const leapfroggerDeathrattles = groupLeapfroggerDeathrattles(fish.rememberedDeathrattles);
+			fish.rememberedDeathrattles = [
+				...fish.rememberedDeathrattles.filter((d) => !d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000)),
+				...leapfroggerDeathrattles,
+			];
+		}
 	}
 	// console.debug(
 	// 	'remembered',
