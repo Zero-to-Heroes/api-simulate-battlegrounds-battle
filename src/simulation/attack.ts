@@ -1037,6 +1037,11 @@ export const processMinionDeath = (
 	// Remember them right away, so that subsequent deaths do not break the order
 	// TODO: move this to the deathrattle-orchestration?
 	// If the fish dies (from Scallywag for instance), it doesn't remember the deathrattle
+	// console.debug(
+	// 	'\n\ndeadEntities',
+	// 	stringifySimple(deadEntities1, gameState.allCards),
+	// 	stringifySimple(deadEntities2, gameState.allCards),
+	// );
 	board1
 		.filter((entity) => isFish(entity))
 		.forEach((entity) =>

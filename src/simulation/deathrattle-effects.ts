@@ -156,6 +156,9 @@ export const handleDeathrattleEffects = (
 			return results;
 		});
 
+	// FIXME; this is not correct, as fish can have leapfrogger card Id OR enchantment id as a
+	// remembered deathrattle, and the remembered deathrattle is handled only via the card id
+
 	// TODO put the muliplier look here, and handle onDeathrattleTriggered like is done for
 	// deathrattle-spawns
 	for (const deadEntityCardId of cardIds) {
@@ -1339,6 +1342,7 @@ const applyLeapFroggerEffect = (
 	multiplier = 1,
 ): void => {
 	multiplier = multiplier || 1;
+	// console.debug('applying leapfrogger effect', deadEntity.entityId, multiplier);
 	const buffed = grantRandomStats(
 		deadEntity,
 		boardWithDeadEntity,
@@ -1876,15 +1880,44 @@ export const rememberDeathrattles = (
 		fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 	}
 	if (fish.rememberedDeathrattles?.length) {
-		fish.rememberedDeathrattles.sort((a, b) => a.timing - b.timing);
+		// Group everything and add repeats if need be
+		// const rememberedDeathrattles = organizeRememberedDeathrattles(fish.rememberedDeathrattles, allCards);
+		// fish.rememberedDeathrattles = rememberedDeathrattles;
+
+		// Not sure exactly why, but if a leapfrogger dies first, then a manasaber,
+		// when the fish dies, the manasaber's effect (spawning tokens) is triggered first
+		// https://replays.firestoneapp.com/?reviewId=521733fb-8ba1-4663-9a87-3da58e8a09c8&turn=21&action=3
+		// HACK: So I will hardcode a rule for now to put leapfrogger effects last
+		fish.rememberedDeathrattles = fish.rememberedDeathrattles
+			// Map the enchantment to the cardId, because the remembered deathrattles are only processed as
+			// card ids, not enchantments
+			// FIXME: this whole logic doesn't work well. rememberedDeathrattle should be processed as a block, and
+			// probably not one by one
+			.map((d) => {
+				if (d.cardId?.endsWith('e')) {
+					return { ...d, cardId: d.cardId.substring(0, d.cardId.length - 1) };
+				}
+				return d;
+			})
+			.sort((a, b) => {
+				if (a.cardId?.startsWith('BG21_000')) {
+					return 1;
+				}
+				if (b.cardId?.startsWith('BG21_000')) {
+					return -1;
+				}
+				return a.timing - b.timing;
+			});
 	}
 	// console.debug(
 	// 	'remembered',
+	// 	fish.cardId,
+	// 	fish.entityId,
 	// 	fish.rememberedDeathrattles.map((d) => ({
 	// 		cardId: d.cardId,
 	// 		name: allCards.getCard(d.cardId)?.name,
 	// 		// repeats: d.repeats,
-	// 		timing: d.timing,
+	// 		// timing: d.timing,
 	// 	})),
 	// );
 };
