@@ -117,6 +117,9 @@ export class Simulator {
 		opponentBoard: BoardEntity[],
 		opponentEntity: BgsPlayerEntity,
 	) {
+		if (debugState?.active) {
+			debugState.onBattleStart();
+		}
 		// Start of combat happens only once, so we need to flag whether it has already happened for a
 		// given player
 		this.gameState.spectator.registerStartOfCombat(playerBoard, opponentBoard, playerEntity, opponentEntity);

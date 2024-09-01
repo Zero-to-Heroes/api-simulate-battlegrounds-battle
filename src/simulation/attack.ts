@@ -719,6 +719,8 @@ export const getDefendingEntity = (
 				if (attackingEntity.entityId === forcedFaceOff.attacker.entityId) {
 					let def = null;
 					if (!!(def = defendingBoard.find((e) => debugState.isCorrectEntity(forcedFaceOff.defender, e)))) {
+						// Remove the face-off
+						debugState.forcedFaceOff = debugState.forcedFaceOff.filter((f) => f != forcedFaceOff);
 						return def;
 					}
 				}
