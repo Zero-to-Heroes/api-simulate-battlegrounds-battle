@@ -52,7 +52,9 @@ export const modifyStats = (
 			: gameState.gameState.player.player;
 
 	const neighbours = getNeighbours(friendlyBoard, entity);
-	const poetMultipliers = neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1;
+	const poetMultipliers = hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.allCards)
+		? neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1
+		: 1;
 	const tarecgosaMultiplier = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
 
 	const realAttackAmount = attackAmount * poetMultipliers * tarecgosaMultiplier;
