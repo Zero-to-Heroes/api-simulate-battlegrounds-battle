@@ -101,6 +101,7 @@ const handleBoomControllerForPlayer = (
 				false,
 				spawn,
 			);
+			// FIXME: here it should try to match the position at which the original minions died
 			performEntitySpawns(
 				target,
 				playerBoard,

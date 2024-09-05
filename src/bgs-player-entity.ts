@@ -43,9 +43,6 @@ export interface BgsPlayerEntity {
 export interface BgsPlayerGlobalInfo {
 	EternalKnightsDeadThisGame?: number;
 	UndeadAttackBonus?: number;
-	PirateAttackBonus?: number;
-	ChoralAttackBuff?: number;
-	ChoralHealthBuff?: number;
 	FrostlingBonus?: number;
 	BloodGemAttackBonus?: number;
 	BloodGemHealthBonus?: number;
@@ -54,6 +51,9 @@ export interface BgsPlayerGlobalInfo {
 	TavernSpellsCastThisGame?: number;
 	PiratesPlayedThisGame?: number;
 	AstralAutomatonsSummonedThisGame?: number;
+	ChoralAttackBuff?: number;
+	ChoralHealthBuff?: number;
+	PirateAttackBonus?: number;
 }
 
 export interface BgsQuestEntity {
