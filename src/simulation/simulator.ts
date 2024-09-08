@@ -15,6 +15,8 @@ export class Simulator {
 	private currentAttacker: number;
 	private currentSpeedAttacker = -1;
 
+	private hasShowShortCircuitWarning = false;
+
 	// It should come already initialized
 	constructor(private readonly gameState: FullGameState) {}
 
@@ -201,7 +203,10 @@ export class Simulator {
 				this.currentAttacker = (this.currentAttacker + 1) % 2;
 			}
 			counter++;
-			if (counter > 400) {
+			if (counter === 350) {
+				const test = 0;
+			}
+			if (counter > 400 && !this.hasShowShortCircuitWarning) {
 				console.warn(
 					'short-circuiting simulation, too many iterations',
 					counter,
@@ -210,6 +215,7 @@ export class Simulator {
 					'\n',
 					stringifySimple(opponentBoard, this.gameState.allCards),
 				);
+				this.hasShowShortCircuitWarning = true;
 				break;
 				// return null;
 			}

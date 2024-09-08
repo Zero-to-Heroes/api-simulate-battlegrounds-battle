@@ -218,7 +218,7 @@ export class CardsData {
 		// level seems to work in all cases
 		const minionsForTier = this.minionsForTier[tavernTier ?? 1];
 		if (!minionsForTier?.length) {
-			console.error('incorrect minions for tier', tavernTier, this.minionsForTier, minionsForTier);
+			console.error('incorrect minions for tier', tavernTier);
 		}
 		return pickRandom(this.minionsForTier[tavernTier ?? 1])?.id;
 	}

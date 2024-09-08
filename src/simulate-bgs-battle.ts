@@ -33,7 +33,16 @@ export default async (event): Promise<any> => {
 		battleInput.gameState?.validTribes ?? battleInput.options?.validTribes,
 		battleInput.gameState?.anomalies ?? [],
 	);
-	const simulationResult = simulateBattle(battleInput, cards, cardsData);
+	const battleIterator = simulateBattle(battleInput, cards, cardsData);
+
+	// Iterate through all intermediate results to reach the final result
+	let result = battleIterator.next();
+	while (!result.done) {
+		result = battleIterator.next();
+	}
+
+	const simulationResult = result.value;
+	// console.debug('simulationResult', simulationResult);
 
 	const response = {
 		statusCode: 200,
@@ -43,15 +52,16 @@ export default async (event): Promise<any> => {
 	return response;
 };
 
-export const simulateBattle = (
+export const simulateBattle = function* (
 	battleInput: BgsBattleInfo,
 	cards: AllCardsService,
 	cardsData: CardsData,
-): SimulationResult => {
+): Generator<SimulationResult, SimulationResult, void> {
 	// !battleInput.options?.skipInfoLogs && console.time('full-sim');
 	const start = Date.now();
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 8000;
+	const intermediateSteps = battleInput.options?.intermediateResults ?? 200;
 	const simulationResult: SimulationResult = {
 		wonLethal: 0,
 		won: 0,
@@ -111,7 +121,7 @@ export const simulateBattle = (
 		const battleResult = simulator.simulateSingleBattle(gameState.gameState.player, gameState.gameState.opponent);
 		if (Date.now() - start > maxAcceptableDuration) {
 			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
-			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms', battleResult);
+			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms');
 			break;
 		}
 		if (!battleResult) {
@@ -137,6 +147,12 @@ export const simulateBattle = (
 			simulationResult.tied++;
 		}
 		spectator.commitBattleResult(battleResult.result);
+
+		// Yield intermediate result every 200 iterations
+		if (!!intermediateSteps && i > 0 && i % intermediateSteps === 0) {
+			updateSimulationResult(simulationResult, inputReady);
+			yield simulationResult;
+		}
 	}
 	updateSimulationResult(simulationResult, inputReady);
 	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
@@ -191,7 +207,7 @@ const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBa
 		simulationResult.averageDamageLost > 0 &&
 		simulationResult.averageDamageLost < input.opponentBoard.player.tavernTier
 	) {
-		console.warn('average damage lost issue', simulationResult);
+		console.warn('average damage lost issue');
 	}
 };
 

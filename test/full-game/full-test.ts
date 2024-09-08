@@ -18,6 +18,7 @@ const test = async () => {
 			numberOfSimulations: 10000,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 30000,
+			itermediateResults: 0,
 		},
 		gameState: {
 			currentTurn: 0,
