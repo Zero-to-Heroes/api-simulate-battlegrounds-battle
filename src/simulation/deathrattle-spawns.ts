@@ -1632,7 +1632,10 @@ export const spawnEntitiesFromDeathrattle = (
 				case CardIds.IndomitableMount_BG30_105_G:
 					const tiersToSummon = [3, 4, 5];
 					for (const tier of tiersToSummon) {
-						let spawnId = gameState.cardsData.getRandomMinionForTavernTier(tier);
+						const candidates = gameState.cardsData.beastSpawns.filter(
+							(id) => gameState.allCards.getCard(id).techLevel === tier,
+						);
+						let spawnId = pickRandom(candidates);
 						if (deadEntity.cardId === CardIds.IndomitableMount_BG30_105_G) {
 							const premiumDbfId = gameState.allCards.getCard(spawnId).battlegroundsPremiumDbfId;
 							spawnId = gameState.allCards.getCard(premiumDbfId).id;

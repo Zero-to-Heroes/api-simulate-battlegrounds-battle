@@ -203,9 +203,6 @@ export class Simulator {
 				this.currentAttacker = (this.currentAttacker + 1) % 2;
 			}
 			counter++;
-			if (counter === 350) {
-				const test = 0;
-			}
 			if (counter > 400 && !this.hasShowShortCircuitWarning) {
 				console.warn(
 					'short-circuiting simulation, too many iterations',
