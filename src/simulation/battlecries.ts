@@ -117,16 +117,18 @@ export const triggerBattlecry = (
 			case CardIds.TwilightEmissary_BGS_038:
 			case CardIds.TwilightEmissary_TB_BaconUps_108:
 				const twilightEmissaryTarget = getRandomAliveMinion(board, hero, Race.DRAGON, gameState.allCards);
-				const twilightEmissaryStats = entity.cardId === CardIds.TwilightEmissary_BGS_038 ? 2 : 4;
-				modifyStats(
-					twilightEmissaryTarget,
-					twilightEmissaryStats,
-					twilightEmissaryStats,
-					board,
-					hero,
-					gameState,
-				);
-				gameState.spectator.registerPowerTarget(entity, twilightEmissaryTarget, board, hero, otherHero);
+				if (!!twilightEmissaryTarget) {
+					const twilightEmissaryStats = entity.cardId === CardIds.TwilightEmissary_BGS_038 ? 2 : 4;
+					modifyStats(
+						twilightEmissaryTarget,
+						twilightEmissaryStats,
+						twilightEmissaryStats,
+						board,
+						hero,
+						gameState,
+					);
+					gameState.spectator.registerPowerTarget(entity, twilightEmissaryTarget, board, hero, otherHero);
+				}
 				break;
 			case CardIds.BloodsailCannoneer_BGS_053:
 			case CardIds.BloodsailCannoneer_TB_BaconUps_138:
