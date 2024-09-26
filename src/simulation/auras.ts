@@ -249,7 +249,7 @@ export const updateBoardwideAuras = (
 			const greaterEnchantments = e.enchantments.filter(
 				(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
 			).length;
-			e.attack = Math.max(0, e.attack - enchantments * 8 - greaterEnchantments * 20);
+			e.attack = Math.max(0, e.attack - enchantments * 8 - greaterEnchantments * 15);
 			e.enchantments = e.enchantments
 				.filter(
 					(ench) =>
@@ -267,7 +267,7 @@ export const updateBoardwideAuras = (
 				t.cardId === CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t,
 		)
 		.forEach((t) => {
-			const buff = t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 20;
+			const buff = t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 15;
 			board[0].attack = board[0].attack + buff;
 			board[0].enchantments.push({
 				cardId:

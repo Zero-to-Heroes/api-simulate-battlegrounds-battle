@@ -950,7 +950,7 @@ const handleStartOfCombatSpellsForPlayer = (
 				break;
 			case CardIds.KarazhanChessSet_BG30_MagicItem_972:
 				if (playerBoard.length > 0) {
-					let minionsToCopy = 2;
+					let minionsToCopy = 1;
 					for (let i = 0; i < Math.min(playerBoard.length, 7); i++) {
 						if (minionsToCopy <= 0) {
 							break;
@@ -1745,7 +1745,7 @@ export const performStartOfCombatMinionsForPlayer = (
 						gameState,
 					);
 				}
-				modifyStats(otherDragon, 7, 7, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(otherDragon, 5, 5, attackingBoard, attackingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					attacker,
 					otherDragon,

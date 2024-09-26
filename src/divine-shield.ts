@@ -95,11 +95,11 @@ export const updateDivineShield = (
 		const greaseBots = board.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
 		const greaseBotBattlegrounds = board.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
 		greaseBots.forEach((bot) => {
-			modifyStats(entity, 1, 1, board, hero, gameState);
+			modifyStats(entity, 2, 1, board, hero, gameState);
 			gameState.spectator.registerPowerTarget(bot, entity, board, hero, otherHero);
 		});
 		greaseBotBattlegrounds.forEach((bot) => {
-			modifyStats(entity, 2, 2, board, hero, gameState);
+			modifyStats(entity, 4, 2, board, hero, gameState);
 			gameState.spectator.registerPowerTarget(bot, entity, board, hero, otherHero);
 		});
 	}

@@ -129,10 +129,7 @@ const handleTwinSkyLanternsForPlayer = (
 	gameState: FullGameState,
 ): void => {
 	const spawnNumber = trinket.scriptDataNum1;
-	const canTrigger =
-		trinket.cardId === CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2
-			? spawnNumber >= 2
-			: spawnNumber >= 1;
+	const canTrigger = spawnNumber >= 1;
 	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion && canTrigger) {
 		trinket.scriptDataNum1 = 0;
 		const spawn = copyEntity(trinket.rememberedMinion);

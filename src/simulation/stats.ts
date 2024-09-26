@@ -41,9 +41,9 @@ export const modifyStats = (
 	}
 
 	if (entity.cardId === CardIds.LocPrince_BG29_889 || entity.cardId === CardIds.LocPrince_BG29_889_G) {
-		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 4 : 2;
-		attackAmount += buff;
-		healthAmount += buff;
+		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 2 : 1;
+		attackAmount += 3 * buff;
+		healthAmount += 2 * buff;
 	}
 
 	const otherBoardHero: BgsPlayerEntity =
@@ -135,7 +135,7 @@ export const modifyStats = (
 				friendlyBoard,
 				friendlyBoardHero,
 				0,
-				entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
+				entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 4 : 2,
 				gameState,
 			);
 		} else if (

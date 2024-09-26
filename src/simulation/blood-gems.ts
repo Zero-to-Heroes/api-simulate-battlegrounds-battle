@@ -24,13 +24,13 @@ export const playBloodGemsOn = (
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker_BG30_MagicItem_988).length * 3 +
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker_GreatBoarStickerToken_BG30_MagicItem_988t)
 			.length *
-			4;
+			2;
 	const bloodGemHealth =
 		1 +
 		(hero.globalInfo?.BloodGemHealthBonus ?? 0) +
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker_GreatBoarStickerToken_BG30_MagicItem_988t)
 			.length *
-			4;
+			2;
 
 	let bloodGemEnchantment =
 		target.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??

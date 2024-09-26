@@ -576,7 +576,7 @@ const handleAvenge = (
 			break;
 		case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
 			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += 2;
-			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 2;
+			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
 			break;
 		case CardIds.GilneanThornedRose_BG30_MagicItem_864:
 			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 3, 3, gameState);
