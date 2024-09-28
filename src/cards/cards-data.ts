@@ -107,9 +107,16 @@ export class CardsData {
 			.filter((card) => hasMechanic(card, GameTag[GameTag.MAGNETIC]))
 			.map((card) => card.id);
 
-		this.putricidePool1 = this.pool.filter((card) => card.battlegroundsPutridicePool1).map((card) => card.id);
-		this.putricidePool2 = this.pool.filter((card) => card.battlegroundsPutridicePool2).map((card) => card.id);
-		this.putridicePool2ForEternalSummoner = this.pool
+		this.putricidePool1 = this.allCards
+			.getCards()
+			.filter((card) => card.battlegroundsPutridicePool1)
+			.map((card) => card.id);
+		this.putricidePool2 = this.allCards
+			.getCards()
+			.filter((card) => card.battlegroundsPutridicePool2)
+			.map((card) => card.id);
+		this.putridicePool2ForEternalSummoner = this.allCards
+			.getCards()
 			.filter((card) => card.battlegroundsPutridicePool2)
 			.filter((card) => !card.battlegroundsPutridiceSummonerExclusion)
 			.map((card) => card.id);
