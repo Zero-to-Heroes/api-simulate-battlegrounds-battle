@@ -117,6 +117,17 @@ export const handleStartOfCombat = (
 		currentAttacker,
 		gameState,
 	);
+	// To be confirmed whether trinkets always trigger before spells, like at
+	// https://replays.firestoneapp.com/?reviewId=20b0c6db-d41b-4e62-9d96-646d54093c25&turn=15&action=0
+	// or whether that's just dependent on the play order
+	currentAttacker = handleStartOfCombatTrinkets(
+		playerEntity,
+		playerBoard,
+		opponentEntity,
+		opponentBoard,
+		currentAttacker,
+		gameState,
+	);
 	// Timing confirmed by Mitchell on Discord on 2024-02-21
 	currentAttacker = handleStartOfCombatSpells(
 		playerEntity,
@@ -506,6 +517,57 @@ const handleStartOfCombatSpells = (
 	return currentAttacker;
 };
 
+const handleStartOfCombatTrinkets = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	gameState: FullGameState,
+): number => {
+	if (Math.random() < 0.5) {
+		currentAttacker = handleStartOfCombatTrinketsForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			gameState,
+			true,
+		);
+		currentAttacker = handleStartOfCombatTrinketsForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			gameState,
+			false,
+		);
+	} else {
+		currentAttacker = handleStartOfCombatTrinketsForPlayer(
+			opponentEntity,
+			opponentBoard,
+			playerEntity,
+			playerBoard,
+			currentAttacker,
+			gameState,
+			false,
+		);
+		currentAttacker = handleStartOfCombatTrinketsForPlayer(
+			playerEntity,
+			playerBoard,
+			opponentEntity,
+			opponentBoard,
+			currentAttacker,
+			gameState,
+			true,
+		);
+	}
+	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	return currentAttacker;
+};
+
 const handleStartOfCombatAnomalies = (
 	playerEntity: BgsPlayerEntity,
 	playerBoard: BoardEntity[],
@@ -693,6 +755,22 @@ const handleStartOfCombatSpellsForPlayer = (
 				}
 				break;
 		}
+	}
+
+	return currentAttacker;
+};
+
+const handleStartOfCombatTrinketsForPlayer = (
+	playerEntity: BgsPlayerEntity,
+	playerBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	currentAttacker: number,
+	gameState: FullGameState,
+	playerIsFriendly: boolean,
+): number => {
+	if (playerEntity.startOfCombatDone) {
+		return currentAttacker;
 	}
 
 	for (const trinket of playerEntity.trinkets) {
