@@ -15,6 +15,7 @@ import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { dealDamageToHero } from './damage-to-hero';
 import { spawnEntities } from './deathrattle-spawns';
+import { afterDiscover } from './discover';
 import { FullGameState } from './internal-game-state';
 import { magnetizeToTarget } from './magnetize';
 import { SharedState } from './shared-state';
@@ -260,15 +261,20 @@ export const triggerBattlecry = (
 				break;
 			case CardIds.PrimalfinLookout_BGS_020:
 			case CardIds.PrimalfinLookout_TB_BaconUps_089:
-				const primalfinLookoutCardsToAdd =
-					entity.cardId === CardIds.PrimalfinLookout_BGS_020
-						? [gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1)]
-						: [
-								gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
-								gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
-						  ];
-				addCardsInHand(hero, board, primalfinLookoutCardsToAdd, gameState);
-				gameState.spectator.registerPowerTarget(entity, hero, board, hero, otherHero);
+				const primalfinLoops = entity.cardId === CardIds.PrimalfinLookout_BGS_020 ? 1 : 2;
+				for (let i = 0; i < primalfinLoops; i++) {
+					const discoverOptions = [
+						gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
+						gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
+						gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
+					];
+					const picked = pickRandom(discoverOptions);
+					const others = discoverOptions.filter((e) => e !== picked);
+					addCardsInHand(hero, board, [picked], gameState);
+					afterDiscover(hero, board, picked, others, gameState);
+					gameState.spectator.registerPowerTarget(entity, hero, board, hero, otherHero);
+					break;
+				}
 				break;
 			case CardIds.StrongshellScavenger_BG_ICC_807:
 			case CardIds.StrongshellScavenger_TB_BaconUps_072:
