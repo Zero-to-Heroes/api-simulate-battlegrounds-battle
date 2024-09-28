@@ -17,7 +17,7 @@ const test = async () => {
 		options: {
 			numberOfSimulations: 10000,
 			skipInfoLogs: false,
-			maxAcceptableDuration: 30000,
+			maxAcceptableDuration: 8000,
 			itermediateResults: 0,
 		},
 		gameState: {

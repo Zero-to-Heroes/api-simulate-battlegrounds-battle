@@ -40,6 +40,18 @@ export const pickRandomAlive = (board: BoardEntity[]): BoardEntity => {
 	return chosenEntity;
 };
 
+export const pickMultipleRandomAlive = (board: BoardEntity[], quantity: number): BoardEntity[] => {
+	const picked: BoardEntity[] = [];
+	for (let i = 0; i < quantity; i++) {
+		const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead).filter((e) => !picked.includes(e));
+		const chosenEntity = pickRandom(targetBoard);
+		if (!!chosenEntity) {
+			picked.push(chosenEntity);
+		}
+	}
+	return picked;
+};
+
 export const pickRandomLowestHealth = (board: BoardEntity[]): BoardEntity => {
 	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
 	const lowestHealth = Math.min(...targetBoard.map((e) => e.health));

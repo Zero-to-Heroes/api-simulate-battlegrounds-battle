@@ -1,7 +1,7 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { pickRandomAlive } from '../services/utils';
+import { pickMultipleRandomAlive } from '../services/utils';
 import { getEffectiveTribesForEntity, hasCorrectTribe } from '../utils';
 import { updateAvengeCounters } from './avenge';
 import { addCardsInHand } from './cards-in-hand';
@@ -120,26 +120,11 @@ export const onMinionDeadQuest = (
 			case CardIds.AllianceKeychain_BG30_MagicItem_433:
 			case CardIds.AllianceKeychain_AllianceKeychainToken_BG30_MagicItem_433t:
 				if (trinket.scriptDataNum1 > 0 && deadEntity.friendly === boardHero.friendly) {
-					const loops = trinket.cardId === CardIds.AllianceKeychain_BG30_MagicItem_433 ? 1 : 2;
-					for (let i = 0; i < loops; i++) {
-						const target = pickRandomAlive(board);
-						if (!!target) {
-							modifyStats(
-								target,
-								deadEntity.maxAttack,
-								deadEntity.maxHealth,
-								board,
-								boardHero,
-								gameState,
-							);
-							gameState.spectator.registerPowerTarget(
-								boardHero,
-								target,
-								board,
-								boardHero,
-								otherBoardHero,
-							);
-						}
+					const quantity = trinket.cardId === CardIds.AllianceKeychain_BG30_MagicItem_433 ? 1 : 2;
+					const targets = pickMultipleRandomAlive(board, quantity);
+					for (const target of targets) {
+						modifyStats(target, deadEntity.maxAttack, deadEntity.maxHealth, board, boardHero, gameState);
+						gameState.spectator.registerPowerTarget(boardHero, target, board, boardHero, otherBoardHero);
 					}
 					trinket.scriptDataNum1--;
 				}
