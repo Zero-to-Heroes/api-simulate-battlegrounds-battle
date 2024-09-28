@@ -1010,14 +1010,14 @@ export const processMinionDeath = (
 	// debug && console.debug('\nprocessing minions death');
 	// debug && console.debug(stringifySimple(board1, gameState.allCards));
 	// debug && console.debug(stringifySimple(board2, gameState.allCards));
-	const [deadMinionIndexesFromRights1, deadEntities1] = makeMinionsDie(
+	const [deadMinionIndexesFromLeft1, deadMinionIndexesFromRights1, deadEntities1] = makeMinionsDie(
 		board1,
 		board1Hero,
 		board2,
 		board2Hero,
 		gameState,
 	);
-	const [deadMinionIndexesFromRights2, deadEntities2] = makeMinionsDie(
+	const [deadMinionIndexesFromLeft2, deadMinionIndexesFromRights2, deadEntities2] = makeMinionsDie(
 		board2,
 		board2Hero,
 		board1,
@@ -1064,13 +1064,29 @@ export const processMinionDeath = (
 		board2,
 	);
 	gameState.sharedState.deaths.push(
-		...deadEntities1.map((e) =>
-			addImpliedMechanics({ ...e, health: e.maxHealth, definitelyDead: false }, gameState.cardsData),
+		...deadEntities1.map((e, index) =>
+			addImpliedMechanics(
+				{
+					...e,
+					health: e.maxHealth,
+					definitelyDead: false,
+					indexFromLeftAtTimeOfDeath: deadMinionIndexesFromLeft1[index],
+				},
+				gameState.cardsData,
+			),
 		),
 	);
 	gameState.sharedState.deaths.push(
-		...deadEntities2.map((e) =>
-			addImpliedMechanics({ ...e, health: e.maxHealth, definitelyDead: false }, gameState.cardsData),
+		...deadEntities2.map((e, index) =>
+			addImpliedMechanics(
+				{
+					...e,
+					health: e.maxHealth,
+					definitelyDead: false,
+					indexFromLeftAtTimeOfDeath: deadMinionIndexesFromLeft2[index],
+				},
+				gameState.cardsData,
+			),
 		),
 	);
 	board1Hero.globalInfo.EternalKnightsDeadThisGame =

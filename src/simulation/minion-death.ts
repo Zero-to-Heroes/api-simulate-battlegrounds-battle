@@ -18,13 +18,15 @@ export const makeMinionsDie = (
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
-): [number[], BoardEntity[]] => {
+): [number[], number[], BoardEntity[]] => {
 	// Because entities spawn to the left, so the right index is unchanged
+	const deadMinionIndexesFromLeft: number[] = [];
 	const deadMinionIndexesFromRight: number[] = [];
 	const deadEntities: BoardEntity[] = [];
 	const initialBoardLength = board.length;
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].health <= 0 || board[i].definitelyDead) {
+			deadMinionIndexesFromLeft.push(i);
 			deadMinionIndexesFromRight.push(initialBoardLength - (i + 1));
 			deadEntities.push(board[i]);
 			// console.log(
@@ -74,7 +76,7 @@ export const makeMinionsDie = (
 		onMinionDeadQuest(deadEntity, indexFromRight, otherBoard, otherBoardHero, board, boardHero, gameState);
 	}
 
-	return [indexesFromRightAfterDeath, deadEntities];
+	return [deadMinionIndexesFromLeft, indexesFromRightAfterDeath, deadEntities];
 };
 
 export const onMinionDeadHeroPower = (

@@ -84,6 +84,11 @@ const handleBoomControllerForPlayer = (
 		if (!!candidate) {
 			const spawn = copyEntity(candidate);
 			removeAurasFromSelf(spawn, playerBoard, playerEntity, gameState);
+			const initialIndexFromLeft = candidate.indexFromLeftAtTimeOfDeath;
+			const indexFromRight =
+				initialIndexFromLeft == null
+					? 0
+					: Math.min(playerBoard.length, Math.max(0, playerBoard.length - initialIndexFromLeft));
 			const target = spawnEntities(
 				spawn.cardId,
 				1,
@@ -107,7 +112,7 @@ const handleBoomControllerForPlayer = (
 				playerBoard,
 				playerEntity,
 				playerEntity,
-				0,
+				indexFromRight,
 				opponentBoard,
 				opponentEntity,
 				gameState,
