@@ -4,4 +4,6 @@ export declare const enum TempCardIds {
 	BleedingHeart = '',
 	PromoPortrait = '',
 	SummoningSphere = '',
+	PrimalfinPortrait = '',
+	FlagbearerPortrait = '',
 }

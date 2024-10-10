@@ -4,6 +4,7 @@ import { BoardEntity } from '../board-entity';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import { updateDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
@@ -221,6 +222,14 @@ export const applyAurasToSelf = (
 				case CardIds.TheSmokingGun:
 					spawned.attack += 4;
 					break;
+				case TempCardIds.FlagbearerPortrait:
+					if (
+						spawned.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
+						spawned.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
+					) {
+						spawned.attack += 8;
+					}
+					break;
 			}
 		}
 	}
@@ -388,6 +397,14 @@ export const removeAurasFromSelf = (
 					break;
 				case CardIds.TheSmokingGun:
 					entity.attack = Math.max(0, entity.attack - 7);
+					break;
+				case TempCardIds.FlagbearerPortrait:
+					if (
+						entity.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
+						entity.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
+					) {
+						entity.attack = Math.max(0, entity.attack - 8);
+					}
 					break;
 			}
 		}
