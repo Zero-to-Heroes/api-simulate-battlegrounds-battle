@@ -1,4 +1,4 @@
-import { GameTag } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { FullGameState } from './internal-game-state';
@@ -11,8 +11,16 @@ export const magnetizeToTarget = (
 	hero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
+	const electromagneticDevices = hero.trinkets.filter((t) => t.cardId === CardIds.ElectromagneticDevice);
 	const modularCard = gameState.allCards.getCard(cardIdToMagnetize);
-	modifyStats(target, modularCard.attack, modularCard.health, board, hero, gameState);
+	modifyStats(
+		target,
+		modularCard.attack + 2 * electromagneticDevices,
+		modularCard.health + 2 * electromagneticDevices,
+		board,
+		hero,
+		gameState,
+	);
 	target.taunt = target.taunt || modularCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	target.divineShield = target.divineShield || modularCard.mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
 	target.poisonous = target.poisonous || modularCard.mechanics?.includes(GameTag[GameTag.POISONOUS]);

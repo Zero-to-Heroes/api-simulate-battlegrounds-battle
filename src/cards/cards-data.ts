@@ -188,6 +188,8 @@ export class CardsData {
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
 				return 5;
+			case CardIds.BleedingHeart:
+				return 6;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
 		}
@@ -202,6 +204,8 @@ export class CardsData {
 			case CardIds.BoomController_BG30_MagicItem_440:
 			case CardIds.AllianceKeychain_BG30_MagicItem_433:
 			case CardIds.AllianceKeychain_AllianceKeychainToken_BG30_MagicItem_433t:
+			case CardIds.DeathlyPhylactery:
+			case CardIds.PromoPortrait:
 				return 1;
 			case CardIds.JarOGems_BG30_MagicItem_546:
 			case CardIds.BloodGolemSticker_BG30_MagicItem_442:

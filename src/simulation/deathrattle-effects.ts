@@ -22,7 +22,6 @@ import {
 	hasMechanic,
 	isFish,
 	isGolden,
-	stringifySimpleCard,
 	updateVenomous,
 } from '../utils';
 import {
@@ -63,6 +62,9 @@ export const computeDeathrattleMultiplier = (
 	);
 	const titus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354).length;
 	const goldenTitus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354_G).length;
+	const deathlyPhylacteries = boardHero.trinkets.filter(
+		(t) => t.cardId === CardIds.DeathlyPhylactery && t.scriptDataNum1 > 0,
+	).length;
 	const tombs =
 		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.TurbulentTombs)?.length ?? 0;
 	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
@@ -70,7 +72,12 @@ export const computeDeathrattleMultiplier = (
 
 	const multiplier =
 		scourgeMultiplier *
-		((goldenRivendare ? 3 : rivendare ? 2 : 1) + titus + 2 * goldenTitus + tombs + echoesOfArgus);
+		((goldenRivendare ? 3 : rivendare ? 2 : 1) +
+			deathlyPhylacteries +
+			titus +
+			2 * goldenTitus +
+			tombs +
+			echoesOfArgus);
 	return multiplier;
 };
 

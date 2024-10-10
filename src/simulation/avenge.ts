@@ -54,6 +54,7 @@ export const applyAvengeEffects = (
 			deadEntity,
 			deadEntityIndexFromRight,
 			avenger,
+			candidatesEntitiesSpawnedFromAvenge,
 			otherBoard,
 			otherBoardHero,
 			gameState,
@@ -83,6 +84,7 @@ export const applyAvengeEffects = (
 			deadEntity,
 			deadEntityIndexFromRight,
 			avenger as BoardEntity,
+			candidatesEntitiesSpawnedFromAvenge,
 			otherBoard,
 			otherBoardHero,
 			gameState,
@@ -97,6 +99,7 @@ export const applyAvengeEffects = (
 			deadEntity,
 			deadEntityIndexFromRight,
 			avenger as BoardEntity,
+			candidatesEntitiesSpawnedFromAvenge,
 			otherBoard,
 			otherBoardHero,
 			gameState,
@@ -165,6 +168,7 @@ const handleAvenge = (
 	deadEntity: BoardEntity,
 	deadEntityIndexFromRight: number,
 	avenger: BoardEntity,
+	candidatesEntitiesSpawnedFromAvenge: BoardEntity[],
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
@@ -614,6 +618,32 @@ const handleAvenge = (
 					);
 				}
 			}
+			break;
+
+		case CardIds.BleedingHeart:
+			const randomUndead = gameState.cardsData.getRandomMinionForTribe(
+				Race.UNDEAD,
+				boardWithDeadEntityHero.tavernTier,
+			);
+			candidatesEntitiesSpawnedFromAvenge.push(
+				...spawnEntities(
+					randomUndead,
+					1,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoard,
+					otherBoardHero,
+					gameState.allCards,
+					gameState.cardsData,
+					gameState.sharedState,
+					gameState.spectator,
+					deadEntity.friendly,
+					false,
+					false,
+					false,
+				),
+			);
+			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
 			break;
 	}
 	avenger.avengeCurrent += avenger.avengeDefault;

@@ -27,4 +27,10 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 				break;
 		}
 	}
+
+	input.boardWithDeadEntityHero.trinkets
+		.filter((t) => t.cardId === CardIds.DeathlyPhylactery)
+		.forEach((t) => {
+			t.scriptDataNum1 = 0;
+		});
 };
