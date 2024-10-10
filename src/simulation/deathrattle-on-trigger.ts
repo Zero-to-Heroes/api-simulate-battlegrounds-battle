@@ -29,7 +29,7 @@ export const onDeathrattleTriggered = (input: DeathrattleTriggeredInput) => {
 	}
 
 	input.boardWithDeadEntityHero.trinkets
-		.filter((t) => t.cardId === CardIds.DeathlyPhylactery)
+		.filter((t) => t.cardId === TempCardIds.DeathlyPhylactery)
 		.forEach((t) => {
 			t.scriptDataNum1 = 0;
 		});

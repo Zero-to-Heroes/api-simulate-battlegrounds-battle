@@ -1,0 +1,309 @@
+import { CardIds } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
+import { BoardEntity } from '../../board-entity';
+import { StartOfCombatCard } from '../../cards/card.interface';
+import { AnomalousTwin } from '../../cards/impl/anomaly/anomalous-twin';
+import { BlessedOrBlighted } from '../../cards/impl/anomaly/blessed-or-blighted';
+import { AimHigh } from '../../cards/impl/hero-power/aim-high';
+import { AimLeft } from '../../cards/impl/hero-power/aim-left';
+import { AimLow } from '../../cards/impl/hero-power/aim-low';
+import { AimRight } from '../../cards/impl/hero-power/aim-right';
+import { AllWillBurn } from '../../cards/impl/hero-power/all-will-burn';
+import { EarthInvocation } from '../../cards/impl/hero-power/earth-invocation';
+import { EmbraceYourRage } from '../../cards/impl/hero-power/embrace-your-rage';
+import { FireInvocation } from '../../cards/impl/hero-power/fire-invocation';
+import { FragrantPhylactery } from '../../cards/impl/hero-power/fragrant-phylactery';
+import { GloriousGloop } from '../../cards/impl/hero-power/glorious-gloop';
+import { LightningInvocation } from '../../cards/impl/hero-power/lightning-invocation';
+import { RapidReanimation } from '../../cards/impl/hero-power/rapid-reanimation';
+import { RebornRites } from '../../cards/impl/hero-power/reborn-rites';
+import { SwattingInsects } from '../../cards/impl/hero-power/swatting-insects';
+import { Tentacular } from '../../cards/impl/hero-power/tentacular';
+import { WaterInvocation } from '../../cards/impl/hero-power/water-invocation';
+import { WaxWarband } from '../../cards/impl/hero-power/wax-warband';
+import { AmberGuardian } from '../../cards/impl/minion/amber-guardian';
+import { AudaciousAnchor } from '../../cards/impl/minion/audacious-anchor';
+import { CarbonicCopy } from '../../cards/impl/minion/carbonic-copy';
+import { ChoralMrrrglr } from '../../cards/impl/minion/choral-mrrrglr';
+import { CorruptedMyrmidon } from '../../cards/impl/minion/corrupted-myrmidon';
+import { Crabby } from '../../cards/impl/minion/crabby';
+import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
+import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
+import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
+import { HoardingHatespawn } from '../../cards/impl/minion/hoarding-hatespawn';
+import { InterrogatorWhitemane } from '../../cards/impl/minion/interrogator-whitemane';
+import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
+import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
+import { MisfitDragonling } from '../../cards/impl/minion/misfit-dragonling';
+import { PilotedWhirlOTron } from '../../cards/impl/minion/piloted-whirl-o-tron';
+import { PrizedPromoDrake } from '../../cards/impl/minion/prized-promo-drake';
+import { RedWhelp } from '../../cards/impl/minion/red-whelp';
+import { SanctumRester } from '../../cards/impl/minion/sanctum-rester';
+import { Sandy } from '../../cards/impl/minion/sandy';
+import { SkyPirateFlagbearer } from '../../cards/impl/minion/sky-pirate-flagbearer';
+import { Soulsplitter } from '../../cards/impl/minion/soulsplitter';
+import { SunScreener } from '../../cards/impl/minion/sun-screener';
+import { TheUninvitedGuest } from '../../cards/impl/minion/the-uninvited-guest';
+import { ThousandthPaperDrake } from '../../cards/impl/minion/thousandth-paper-drake';
+import { Vaelastrasz } from '../../cards/impl/minion/vaelastrasz';
+import { YulonFortuneGranter } from '../../cards/impl/minion/yulon-fortune-granter';
+import { EvilTwin } from '../../cards/impl/quest-reward/evil-twin';
+import { StaffOfOrigination } from '../../cards/impl/quest-reward/staff-of-origination';
+import { StolenGold } from '../../cards/impl/quest-reward/stolen-gold';
+import { ArtisanalUrn } from '../../cards/impl/trinket/artisanal-urn';
+import { AutomatonPortrait } from '../../cards/impl/trinket/automaton-portrait';
+import { BronzeTimepiece } from '../../cards/impl/trinket/bronze-timepiece';
+import { EmeraldDreamcatcher } from '../../cards/impl/trinket/emerald-dreamcatcher';
+import { EternalPortrait } from '../../cards/impl/trinket/eternal-portrait';
+import { FishySticker } from '../../cards/impl/trinket/fishy-sticker';
+import { HoggyBank } from '../../cards/impl/trinket/hoggy-bank';
+import { HollyMallet } from '../../cards/impl/trinket/holly-mallet';
+import { IronforgeAnvil } from '../../cards/impl/trinket/ironforge-anvil';
+import { JarredFrostling } from '../../cards/impl/trinket/jarred-frostling';
+import { KarazhanChessSet } from '../../cards/impl/trinket/karazhan-chess-set';
+import { RivendarePortrait } from '../../cards/impl/trinket/rivendare-portrait';
+import { RustyTrident } from '../../cards/impl/trinket/rusty-trident';
+import { ShipInABottle } from '../../cards/impl/trinket/ship-in-a-bottle';
+import { SummoningSphere } from '../../cards/impl/trinket/summoning-sphere';
+import { TinyfinOnesie } from '../../cards/impl/trinket/tinyfin-onesie';
+import { TrainingCertificate } from '../../cards/impl/trinket/training-certificate';
+import { ValorousMedallion } from '../../cards/impl/trinket/valorous-medaillion';
+import { SoCInput } from './start-of-combat-input';
+
+export const performStartOfCombatAction = (cardId: string, entity: BoardEntity | BoardTrinket, input: SoCInput) => {
+	let hasTriggered:
+		| boolean
+		| {
+				hasTriggered: boolean;
+				shouldRecomputeCurrentAttacker: boolean;
+		  } = false;
+	const promoPortraitCount = getPromoPortraitCount(input.playerEntity);
+	for (let i = promoPortraitCount; i >= 0; i--) {
+		const action = getStartOfCombatAction(cardId)?.startOfCombat;
+		if (!!action) {
+			hasTriggered = action(entity, input);
+			if (!!hasTriggered) {
+				onStartOfCombatTriggered(i, cardId, input.playerEntity);
+				if (typeof hasTriggered !== 'boolean' && hasTriggered.shouldRecomputeCurrentAttacker) {
+					input.currentAttacker =
+						input.playerBoard.length > input.opponentBoard.length
+							? 0
+							: input.opponentBoard.length > input.playerBoard.length
+							? 1
+							: Math.round(Math.random());
+				}
+			}
+		}
+	}
+	return !!hasTriggered;
+};
+
+// TODO: load all cards on start, then do some programmatic mapping
+const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
+	switch (cardId) {
+		// Quest rewards
+		case CardIds.EvilTwin:
+			return EvilTwin;
+		case CardIds.StaffOfOrigination_BG24_Reward_312:
+			return StaffOfOrigination;
+		case CardIds.StolenGold:
+			return StolenGold;
+
+		// Trinkets
+		case CardIds.HolyMallet_BG30_MagicItem_902:
+			return HollyMallet;
+		case CardIds.TrainingCertificate_BG30_MagicItem_962:
+			return TrainingCertificate;
+		case CardIds.ValorousMedallion_BG30_MagicItem_970:
+		case CardIds.ValorousMedallion_ValorousMedallionToken_BG30_MagicItem_970t:
+			return ValorousMedallion;
+		case CardIds.EmeraldDreamcatcher_BG30_MagicItem_542:
+			return EmeraldDreamcatcher;
+		case CardIds.JarredFrostling_BG30_MagicItem_952:
+			return JarredFrostling;
+		case CardIds.RustyTrident_BG30_MagicItem_917:
+			return RustyTrident;
+		case CardIds.HoggyBank_BG30_MagicItem_411:
+			return HoggyBank;
+		case CardIds.AutomatonPortrait_BG30_MagicItem_303:
+			return AutomatonPortrait;
+		case CardIds.ShipInABottle_BG30_MagicItem_407:
+			return ShipInABottle;
+		case CardIds.EternalPortrait_BG30_MagicItem_301:
+			return EternalPortrait;
+		case CardIds.ArtisanalUrn_BG30_MagicItem_989:
+		case CardIds.ArtisanalUrn_ArtisanalUrnToken_BG30_MagicItem_989t:
+			return ArtisanalUrn;
+		case CardIds.RivendarePortrait_BG30_MagicItem_310:
+			return RivendarePortrait;
+		case CardIds.TinyfinOnesie_BG30_MagicItem_441:
+			return TinyfinOnesie;
+		case CardIds.BronzeTimepiece_BG30_MagicItem_995:
+			return BronzeTimepiece;
+		case CardIds.IronforgeAnvil_BG30_MagicItem_403:
+			return IronforgeAnvil;
+		case CardIds.KarazhanChessSet_BG30_MagicItem_972:
+			return KarazhanChessSet;
+		case CardIds.FishySticker_BG30_MagicItem_821:
+		case CardIds.FishySticker_FishyStickerToken_BG30_MagicItem_821t2:
+			return FishySticker;
+		case CardIds.SummoningSphere:
+			return SummoningSphere;
+
+		// Hero powers
+		case CardIds.SwattingInsects:
+			return SwattingInsects;
+		case CardIds.EarthInvocationToken:
+			return EarthInvocation;
+		case CardIds.WaterInvocationToken:
+			return WaterInvocation;
+		case CardIds.FireInvocationToken:
+			return FireInvocation;
+		case CardIds.LightningInvocationToken:
+			return LightningInvocation;
+		case CardIds.AllWillBurn:
+			return AllWillBurn;
+		case CardIds.TamsinRoame_FragrantPhylactery:
+			return FragrantPhylactery;
+		case CardIds.EmbraceYourRage:
+			return EmbraceYourRage;
+		case CardIds.Ozumat_Tentacular:
+			return Tentacular;
+		case CardIds.RebornRites:
+			return RebornRites;
+		case CardIds.TeronGorefiend_RapidReanimation:
+			return RapidReanimation;
+		case CardIds.WaxWarband:
+			return WaxWarband;
+		case CardIds.FlobbidinousFloop_GloriousGloop_BGDUO_HERO_101p:
+			return GloriousGloop;
+		case CardIds.AimLeftToken:
+			return AimLeft;
+		case CardIds.AimRightToken:
+			return AimRight;
+		case CardIds.AimLowToken:
+			return AimLow;
+		case CardIds.AimHighToken:
+			return AimHigh;
+
+		// Anomalies
+		case CardIds.BlessedOrBlighted_BG27_Anomaly_726:
+			return BlessedOrBlighted;
+		case CardIds.AnomalousTwin_BG27_Anomaly_560:
+			return AnomalousTwin;
+
+		// Minions
+		case CardIds.RedWhelp_BGS_019:
+		case CardIds.RedWhelp_TB_BaconUps_102:
+			return RedWhelp;
+		case CardIds.PrizedPromoDrake_BG21_014:
+		case CardIds.PrizedPromoDrake_BG21_014_G:
+			return PrizedPromoDrake;
+		case CardIds.ChoralMrrrglr_BG26_354:
+		case CardIds.ChoralMrrrglr_BG26_354_G:
+			return ChoralMrrrglr;
+		case CardIds.AmberGuardian_BG24_500:
+		case CardIds.AmberGuardian_BG24_500_G:
+			return AmberGuardian;
+		case CardIds.SanctumRester_BG26_356:
+		case CardIds.SanctumRester_BG26_356_G:
+			return SanctumRester;
+		case CardIds.Soulsplitter_BG25_023:
+		case CardIds.Soulsplitter_BG25_023_G:
+			return Soulsplitter;
+		case CardIds.Crabby_BG22_HERO_000_Buddy:
+		case CardIds.Crabby_BG22_HERO_000_Buddy_G:
+			return Crabby;
+		case CardIds.CorruptedMyrmidon_BG23_012:
+		case CardIds.CorruptedMyrmidon_BG23_012_G:
+			return CorruptedMyrmidon;
+		case CardIds.InterrogatorWhitemane_BG24_704:
+		case CardIds.InterrogatorWhitemane_BG24_704_G:
+			return InterrogatorWhitemane;
+		case CardIds.MantidQueen_BG22_402:
+		case CardIds.MantidQueen_BG22_402_G:
+			return MantidQueen;
+		case CardIds.CarbonicCopy_BG27_503:
+		case CardIds.CarbonicCopy_BG27_503_G:
+			return CarbonicCopy;
+		case CardIds.DiremuckForager_BG27_556:
+		case CardIds.DiremuckForager_BG27_556_G:
+			return DiremuckForager;
+		case CardIds.HawkstriderHerald_BG27_079:
+		case CardIds.HawkstriderHerald_BG27_079_G:
+			return HawkstriderHerald;
+		case CardIds.AudaciousAnchor_BG28_904:
+		case CardIds.AudaciousAnchor_BG28_904_G:
+			return AudaciousAnchor;
+		case CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy:
+		case CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G:
+			return PilotedWhirlOTron;
+		case CardIds.IrateRooster_BG29_990:
+		case CardIds.IrateRooster_BG29_990_G:
+			return IrateRooster;
+		case CardIds.MisfitDragonling_BG29_814:
+		case CardIds.MisfitDragonling_BG29_814_G:
+			return MisfitDragonling;
+		case CardIds.ThousandthPaperDrake_BG29_810:
+		case CardIds.ThousandthPaperDrake_BG29_810_G:
+			return ThousandthPaperDrake;
+		case CardIds.YulonFortuneGranter_BG29_811:
+		case CardIds.YulonFortuneGranter_BG29_811_G:
+			return YulonFortuneGranter;
+		case CardIds.HoardingHatespawn_BG29_872:
+		case CardIds.HoardingHatespawn_BG29_872_G:
+			return HoardingHatespawn;
+		case CardIds.TheUninvitedGuest_BG29_875:
+		case CardIds.TheUninvitedGuest_BG29_875_G:
+			return TheUninvitedGuest;
+		case CardIds.Sandy_BGDUO_125:
+		case CardIds.Sandy_BGDUO_125_G:
+			return Sandy;
+		case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy:
+		case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G:
+			return Vaelastrasz;
+		case CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy:
+		case CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G:
+			return ElderTaggawag;
+		case CardIds.SunScreener_BG30_101:
+		case CardIds.SunScreener_BG30_101_G:
+			return SunScreener;
+		case CardIds.SkyPirateFlagbearer_BG30_119:
+		case CardIds.SkyPirateFlagbearer_BG30_119_G:
+			return SkyPirateFlagbearer;
+
+		default:
+			return null;
+	}
+};
+
+const onStartOfCombatTriggered = (iteration: number, triggeredCardId: string, playerEntity: BgsPlayerEntity) => {
+	// Some procs are iso-functional, and don't update the promo portrait
+	const promoPortraits = playerEntity.trinkets.filter(
+		(t) => t.cardId === CardIds.PromoPortrait && t.scriptDataNum1 > 0,
+	);
+	if (promoPortraits.length === 0 || iteration === 0 || iteration >= promoPortraits.length) {
+		return;
+	}
+
+	switch (triggeredCardId) {
+		case CardIds.StolenGold:
+		case CardIds.HolyMallet_BG30_MagicItem_902:
+		case CardIds.TrainingCertificate_BG30_MagicItem_962:
+		case CardIds.EmeraldDreamcatcher_BG30_MagicItem_542:
+		case CardIds.EternalPortrait_BG30_MagicItem_301:
+		case CardIds.TinyfinOnesie_BG30_MagicItem_441:
+		case CardIds.BronzeTimepiece_BG30_MagicItem_995:
+		case CardIds.IronforgeAnvil_BG30_MagicItem_403:
+		case CardIds.SwattingInsects:
+		case CardIds.RebornRites:
+			return;
+	}
+
+	const promoPortrait = promoPortraits[iteration - 1];
+	promoPortrait.scriptDataNum1--;
+};
+
+const getPromoPortraitCount = (playerEntity: BgsPlayerEntity) => {
+	return playerEntity.trinkets.filter((t) => t.cardId === CardIds.PromoPortrait && t.scriptDataNum1 > 0).length;
+};
