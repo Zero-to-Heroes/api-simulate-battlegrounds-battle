@@ -6,6 +6,7 @@ import { pickRandom } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
 import { TempCardIds } from '../temp-card-ids';
 import {
+	addImpliedMechanics,
 	addStatsToBoard,
 	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
@@ -620,7 +621,6 @@ const handleAvenge = (
 				}
 			}
 			break;
-
 		case TempCardIds.BleedingHeart:
 			const randomUndead = gameState.cardsData.getRandomMinionForTribe(
 				Race.UNDEAD,
@@ -645,6 +645,29 @@ const handleAvenge = (
 				),
 			);
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
+			break;
+		case TempCardIds.KarmicChameleon:
+			const chameleonIndex = boardWithDeadEntity.findIndex((entity) => entity.entityId === avenger.entityId);
+			if (chameleonIndex > 0) {
+				const minionToTheLeft = boardWithDeadEntity[chameleonIndex - 1];
+				const clone: BoardEntity = addImpliedMechanics(
+					{
+						...minionToTheLeft,
+						lastAffectedByEntity: null,
+						definitelyDead: false,
+						attackImmediately: false,
+					},
+					gameState.cardsData,
+				);
+				gameState.spectator.registerPowerTarget(
+					clone,
+					clone,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
+				boardWithDeadEntity.splice(chameleonIndex, 1, clone);
+			}
 			break;
 	}
 	avenger.avengeCurrent += avenger.avengeDefault;

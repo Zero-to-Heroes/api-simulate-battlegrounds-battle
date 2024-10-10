@@ -188,6 +188,7 @@ export class CardsData {
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
+			case TempCardIds.KarmicChameleon:
 				return 5;
 			case TempCardIds.BleedingHeart:
 				return 6;

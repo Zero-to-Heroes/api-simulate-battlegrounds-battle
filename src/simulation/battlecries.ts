@@ -2,6 +2,7 @@ import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom, pickRandomAlive } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -922,6 +923,17 @@ export const triggerBattlecry = (
 					otherHero,
 					gameState,
 				);
+				break;
+			case TempCardIds.ParchedWanderer:
+			case TempCardIds.ParchedWanderer_G:
+				const wandererTarget = pickRandom(
+					board.filter((e) => hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards)),
+				);
+				if (!!wandererTarget) {
+					const wandererMultiplier = entity.cardId === TempCardIds.ParchedWanderer ? 1 : 2;
+					wandererTarget.taunt = true;
+					modifyStats(wandererTarget, wandererMultiplier * 3, wandererMultiplier * 3, board, hero, gameState);
+				}
 				break;
 			default:
 				// All hte Battlecry minions that arent implemented / have no effect on the board state

@@ -6,4 +6,7 @@ export declare const enum TempCardIds {
 	SummoningSphere = '',
 	PrimalfinPortrait = '',
 	FlagbearerPortrait = '',
+	KarmicChameleon = '',
+	ParchedWanderer = '',
+	ParchedWanderer_G = '',
 }
