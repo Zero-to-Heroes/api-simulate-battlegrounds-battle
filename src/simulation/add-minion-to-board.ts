@@ -4,7 +4,6 @@ import { BoardEntity } from '../board-entity';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import { updateDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
@@ -222,7 +221,7 @@ export const applyAurasToSelf = (
 				case CardIds.TheSmokingGun:
 					spawned.attack += 4;
 					break;
-				case TempCardIds.FlagbearerPortrait:
+				case CardIds.FlagbearerPortrait_BG30_MagicItem_921:
 					if (
 						spawned.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
 						spawned.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
@@ -351,6 +350,12 @@ export const applyAurasToSelf = (
 			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
 			modifyStats(spawned, 2 * statsBonusFrostling, statsBonusFrostling, board, boardHero, gameState);
 			break;
+		case CardIds.SaltyLooter_BGS_081:
+		case CardIds.SaltyLooter_TB_BaconUps_143:
+			const multiplierLooter = spawned.cardId === CardIds.SaltyLooter_TB_BaconUps_143 ? 2 : 1;
+			const statsBonusLooter = multiplierLooter * boardHero.globalInfo.PiratesSummonedThisGame;
+			modifyStats(spawned, 2 * statsBonusLooter, 2 * multiplierLooter, board, boardHero, gameState);
+			break;
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
@@ -389,7 +394,7 @@ export const removeAurasFromSelf = (
 				case CardIds.TheSmokingGun:
 					entity.attack = Math.max(0, entity.attack - 7);
 					break;
-				case TempCardIds.FlagbearerPortrait:
+				case CardIds.FlagbearerPortrait_BG30_MagicItem_921:
 					if (
 						entity.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
 						entity.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G

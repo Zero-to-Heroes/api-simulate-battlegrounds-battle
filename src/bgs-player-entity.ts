@@ -50,10 +50,11 @@ export interface BgsPlayerGlobalInfo {
 	GoldrinnBuffHealth?: number;
 	TavernSpellsCastThisGame?: number;
 	PiratesPlayedThisGame?: number;
+	PiratesSummonedThisGame?: number;
+	PirateAttackBonus?: number;
 	AstralAutomatonsSummonedThisGame?: number;
 	ChoralAttackBuff?: number;
 	ChoralHealthBuff?: number;
-	PirateAttackBonus?: number;
 }
 
 export interface BgsQuestEntity {

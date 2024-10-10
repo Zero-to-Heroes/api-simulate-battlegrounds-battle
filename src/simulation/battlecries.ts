@@ -2,7 +2,6 @@ import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { pickRandom, pickRandomAlive } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -924,13 +923,13 @@ export const triggerBattlecry = (
 					gameState,
 				);
 				break;
-			case TempCardIds.ParchedWanderer:
-			case TempCardIds.ParchedWanderer_G:
+			case CardIds.ParchedWanderer_BG30_756:
+			case CardIds.ParchedWanderer_BG30_756_G:
 				const wandererTarget = pickRandom(
 					board.filter((e) => hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards)),
 				);
 				if (!!wandererTarget) {
-					const wandererMultiplier = entity.cardId === TempCardIds.ParchedWanderer ? 1 : 2;
+					const wandererMultiplier = entity.cardId === CardIds.ParchedWanderer_BG30_756 ? 1 : 2;
 					wandererTarget.taunt = true;
 					modifyStats(wandererTarget, wandererMultiplier * 3, wandererMultiplier * 3, board, hero, gameState);
 				}

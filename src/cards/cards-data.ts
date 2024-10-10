@@ -9,7 +9,6 @@ import {
 	ReferenceCard,
 } from '@firestone-hs/reference-data';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 
 export const WHELP_CARD_IDS = [
@@ -188,9 +187,10 @@ export class CardsData {
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
-			case TempCardIds.KarmicChameleon:
+			case CardIds.KarmicChameleon_BG31_802:
+			case CardIds.KarmicChameleon_BG31_802_G:
 				return 5;
-			case TempCardIds.BleedingHeart:
+			case CardIds.BleedingHeart_BG30_MagicItem_713:
 				return 6;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
@@ -206,8 +206,8 @@ export class CardsData {
 			case CardIds.BoomController_BG30_MagicItem_440:
 			case CardIds.AllianceKeychain_BG30_MagicItem_433:
 			case CardIds.AllianceKeychain_AllianceKeychainToken_BG30_MagicItem_433t:
-			case TempCardIds.DeathlyPhylactery:
-			case TempCardIds.PromoPortrait:
+			case CardIds.DeathlyPhylactery_BG30_MagicItem_700:
+			case CardIds.PromoPortrait_BG30_MagicItem_918:
 				return 1;
 			case CardIds.JarOGems_BG30_MagicItem_546:
 			case CardIds.BloodGolemSticker_BG30_MagicItem_442:

@@ -3,6 +3,7 @@ import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
+import { getMinionsOfDifferentTypes } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -18,6 +19,7 @@ export const playBloodGemsOn = (
 	if (registerTarget) {
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
+
 	const bloodGemAttack =
 		1 +
 		(hero.globalInfo?.BloodGemAttackBonus ?? 0) +
@@ -46,6 +48,7 @@ export const playBloodGemsOn = (
 		target.enchantments = target.enchantments ?? [];
 		target.enchantments.push(bloodGemEnchantment);
 	}
+
 	for (let i = 0; i < quantity; i++) {
 		modifyStats(target, bloodGemAttack, bloodGemHealth, board, hero, gameState);
 		bloodGemEnchantment.tagScriptDataNum1 += bloodGemAttack;
@@ -74,5 +77,19 @@ export const playBloodGemsOn = (
 				}
 			}
 			break;
+		case CardIds.AggemThorncurse_BG20_302:
+		case CardIds.AggemThorncurse_BG20_302_G:
+			const candidates = getMinionsOfDifferentTypes(
+				board.filter(
+					(e) =>
+						e.cardId !== CardIds.AggemThorncurse_BG20_302 &&
+						e.cardId !== CardIds.AggemThorncurse_BG20_302_G,
+				),
+				hero,
+				gameState,
+			);
+			for (const candidate of candidates) {
+				playBloodGemsOn(target, candidate, 1, board, hero, gameState, false);
+			}
 	}
 };

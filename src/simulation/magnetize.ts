@@ -1,7 +1,6 @@
-import { GameTag } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { TempCardIds } from '../temp-card-ids';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -12,7 +11,9 @@ export const magnetizeToTarget = (
 	hero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	const electromagneticDevices = hero.trinkets.filter((t) => t.cardId === TempCardIds.ElectromagneticDevice).length;
+	const electromagneticDevices = hero.trinkets.filter(
+		(t) => t.cardId === CardIds.ElectromagneticDevice_BG30_MagicItem_709,
+	).length;
 	const modularCard = gameState.allCards.getCard(cardIdToMagnetize);
 	modifyStats(
 		target,

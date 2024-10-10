@@ -12,7 +12,6 @@ import {
 	pickRandomLowestHealth,
 } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	grantRandomAttack,
@@ -64,7 +63,7 @@ export const computeDeathrattleMultiplier = (
 	const titus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354).length;
 	const goldenTitus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354_G).length;
 	const deathlyPhylacteries = boardHero.trinkets.filter(
-		(t) => t.cardId === TempCardIds.DeathlyPhylactery && t.scriptDataNum1 > 0,
+		(t) => t.cardId === CardIds.DeathlyPhylactery_BG30_MagicItem_700 && t.scriptDataNum1 > 0,
 	).length;
 	const tombs =
 		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.TurbulentTombs)?.length ?? 0;

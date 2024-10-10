@@ -4,7 +4,6 @@ import { BoardEntity } from '../board-entity';
 import { grantRandomDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addImpliedMechanics,
 	addStatsToBoard,
@@ -621,7 +620,7 @@ const handleAvenge = (
 				}
 			}
 			break;
-		case TempCardIds.BleedingHeart:
+		case CardIds.BleedingHeart_BG30_MagicItem_713:
 			const randomUndead = gameState.cardsData.getRandomMinionForTribe(
 				Race.UNDEAD,
 				boardWithDeadEntityHero.tavernTier,
@@ -646,7 +645,8 @@ const handleAvenge = (
 			);
 			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
 			break;
-		case TempCardIds.KarmicChameleon:
+		case CardIds.KarmicChameleon_BG31_802:
+		case CardIds.KarmicChameleon_BG31_802_G:
 			const chameleonIndex = boardWithDeadEntity.findIndex((entity) => entity.entityId === avenger.entityId);
 			if (chameleonIndex > 0) {
 				const minionToTheLeft = boardWithDeadEntity[chameleonIndex - 1];

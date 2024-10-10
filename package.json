@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.487",
+	"version": "1.1.488",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",
@@ -25,7 +25,7 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
-		"@firestone-hs/reference-data": "^2.0.63"
+		"@firestone-hs/reference-data": "^2.0.84"
 	},
 	"devDependencies": {
 		"@types/aws-lambda": "8.10.31",

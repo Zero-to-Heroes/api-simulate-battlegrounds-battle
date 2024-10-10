@@ -1,7 +1,6 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { TempCardIds } from '../temp-card-ids';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -40,7 +39,9 @@ export const afterDiscover = (
 		}
 	}
 
-	const primalfinPortraits = hero.trinkets.filter((t) => t.cardId === TempCardIds.PrimalfinPortrait).length;
+	const primalfinPortraits = hero.trinkets.filter(
+		(t) => t.cardId === CardIds.PrimalfinPortrait_BG30_MagicItem_702,
+	).length;
 	if (!!primalfinPortraits) {
 		const cardsToAdd = new Array(primalfinPortraits).fill(null);
 		addCardsInHand(hero, board, cardsToAdd, gameState);
