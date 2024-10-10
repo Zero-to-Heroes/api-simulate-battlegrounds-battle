@@ -27,12 +27,12 @@ export const handleStartOfCombatMinions = (
 				continue;
 			}
 			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, {
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				playerBoardBefore,
-				opponentBoardBefore,
+				playerBoard: playerBoard,
+				playerEntity: playerEntity,
+				opponentBoard: opponentBoard,
+				opponentEntity: opponentEntity,
+				playerBoardBefore: playerBoardBefore,
+				opponentBoardBefore: opponentBoardBefore,
 				playerIsFriendly: true,
 				currentAttacker: 0,
 				gameState,
@@ -45,12 +45,12 @@ export const handleStartOfCombatMinions = (
 				continue;
 			}
 			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, {
-				opponentBoard,
-				opponentEntity,
-				playerBoard,
-				playerEntity,
-				opponentBoardBefore,
-				playerBoardBefore,
+				playerBoard: opponentBoard,
+				playerEntity: opponentEntity,
+				opponentBoard: playerBoard,
+				opponentEntity: playerEntity,
+				playerBoardBefore: opponentBoardBefore,
+				opponentBoardBefore: playerBoardBefore,
 				playerIsFriendly: false,
 				currentAttacker: 0,
 				gameState,

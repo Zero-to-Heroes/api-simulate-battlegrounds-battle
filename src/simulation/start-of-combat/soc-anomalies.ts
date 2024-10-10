@@ -14,19 +14,19 @@ export const handleStartOfCombatAnomalies = (
 	gameState: FullGameState,
 ): number => {
 	currentAttacker = handleStartOfCombatAnomaliesForPlayer({
-		playerEntity,
-		playerBoard,
-		opponentEntity,
-		opponentBoard,
+		playerEntity: playerEntity,
+		playerBoard: playerBoard,
+		opponentEntity: opponentEntity,
+		opponentBoard: opponentBoard,
 		currentAttacker,
 		gameState,
 		playerIsFriendly: true,
 	});
 	currentAttacker = handleStartOfCombatAnomaliesForPlayer({
-		opponentEntity,
-		opponentBoard,
-		playerEntity,
-		playerBoard,
+		playerEntity: opponentEntity,
+		playerBoard: opponentBoard,
+		opponentEntity: playerEntity,
+		opponentBoard: playerBoard,
 		currentAttacker,
 		gameState,
 		playerIsFriendly: false,

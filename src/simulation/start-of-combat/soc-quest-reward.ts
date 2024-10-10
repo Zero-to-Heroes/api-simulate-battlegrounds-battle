@@ -15,38 +15,38 @@ export const handleStartOfCombatQuestRewards = (
 ): number => {
 	if (Math.random() < 0.5) {
 		currentAttacker = handleStartOfCombatQuestRewardsForPlayer({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: true,
 		});
 		currentAttacker = handleStartOfCombatQuestRewardsForPlayer({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: false,
 		});
 	} else {
 		currentAttacker = handleStartOfCombatQuestRewardsForPlayer({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: false,
 		});
 		currentAttacker = handleStartOfCombatQuestRewardsForPlayer({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: true,

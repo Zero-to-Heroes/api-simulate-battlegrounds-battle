@@ -17,38 +17,38 @@ export const handlePreCombatHeroPowers = (
 ): number => {
 	if (Math.random() < 0.5) {
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			playerIsFriendly: true,
 			gameState,
 		});
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			playerIsFriendly: false,
 			gameState,
 		});
 	} else {
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			playerIsFriendly: false,
 			gameState,
 		});
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			playerIsFriendly: true,
 			gameState,

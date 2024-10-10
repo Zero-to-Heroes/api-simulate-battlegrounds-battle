@@ -19,38 +19,38 @@ export const handleStartOfCombatHeroPowers = (
 	// Auras are only relevant for Illidan, and already applied there
 	if (Math.random() < 0.5) {
 		currentAttacker = handlePlayerStartOfCombatHeroPowers({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			playerIsFriendly: true,
 			gameState,
 		});
 		currentAttacker = handlePlayerStartOfCombatHeroPowers({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			playerIsFriendly: false,
 			gameState,
 		});
 	} else {
 		currentAttacker = handlePlayerStartOfCombatHeroPowers({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			playerIsFriendly: false,
 			gameState,
 		});
 		currentAttacker = handlePlayerStartOfCombatHeroPowers({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			playerIsFriendly: true,
 			gameState,

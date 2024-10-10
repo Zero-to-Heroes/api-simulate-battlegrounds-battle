@@ -15,38 +15,38 @@ export const handleStartOfCombatTrinkets = (
 ): number => {
 	if (Math.random() < 0.5) {
 		currentAttacker = handleStartOfCombatTrinketsForPlayer({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: true,
 		});
 		currentAttacker = handleStartOfCombatTrinketsForPlayer({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: false,
 		});
 	} else {
 		currentAttacker = handleStartOfCombatTrinketsForPlayer({
-			opponentEntity,
-			opponentBoard,
-			playerEntity,
-			playerBoard,
+			playerEntity: opponentEntity,
+			playerBoard: opponentBoard,
+			opponentEntity: playerEntity,
+			opponentBoard: playerBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: false,
 		});
 		currentAttacker = handleStartOfCombatTrinketsForPlayer({
-			playerEntity,
-			playerBoard,
-			opponentEntity,
-			opponentBoard,
+			playerEntity: playerEntity,
+			playerBoard: playerBoard,
+			opponentEntity: opponentEntity,
+			opponentBoard: opponentBoard,
 			currentAttacker,
 			gameState,
 			playerIsFriendly: true,
