@@ -4,8 +4,10 @@ import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { addImpliedMechanics, getTeammateInitialState } from '../../../utils';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const GloriousGloop = {
+export const GloriousGloop: StartOfCombatCard = {
+	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			if (!input.playerBoard?.length) {

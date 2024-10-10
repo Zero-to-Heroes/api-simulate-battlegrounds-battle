@@ -2,8 +2,10 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { pickRandomLowestHealth } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const FragrantPhylactery = {
+export const FragrantPhylactery: StartOfCombatCard = {
+	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			const chosenEntity = pickRandomLowestHealth(input.playerBoard);

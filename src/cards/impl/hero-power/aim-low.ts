@@ -2,8 +2,10 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { pickRandom } from '../../../services/utils';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const AimLow = {
+export const AimLow: StartOfCombatCard = {
+	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			const smallestHealthMinion = [...input.opponentBoard].sort((a, b) => a.health - b.health)[0];

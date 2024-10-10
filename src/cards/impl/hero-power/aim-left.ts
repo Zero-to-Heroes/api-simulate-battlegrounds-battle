@@ -1,8 +1,10 @@
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const AimLeft = {
+export const AimLeft: StartOfCombatCard = {
+	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			const target = input.opponentBoard[0];

@@ -66,7 +66,7 @@ const handlePlayerStartOfCombatHeroPowers = (input: SoCInput): number => {
 	}
 
 	const playerHeroPowerId = input.playerEntity.heroPowerId || getHeroPowerForHero(input.playerEntity.cardId);
-	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input);
+	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input, 'start-of-combat');
 	processMinionDeath(
 		input.playerBoard,
 		input.playerEntity,

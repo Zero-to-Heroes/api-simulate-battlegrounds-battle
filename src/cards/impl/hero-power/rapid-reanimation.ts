@@ -3,8 +3,10 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { copyEntity } from '../../../utils';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const RapidReanimation = {
+export const RapidReanimation: StartOfCombatCard = {
+	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			// Getting the right enchantment can be tricky. The RapidReanimation enchantment can sometimes be

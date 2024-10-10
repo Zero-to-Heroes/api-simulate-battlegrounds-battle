@@ -1,7 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
-import { StartOfCombatCard } from '../../cards/card.interface';
+import { StartOfCombatCard, StartOfCombatTiming } from '../../cards/card.interface';
 import { AnomalousTwin } from '../../cards/impl/anomaly/anomalous-twin';
 import { BlessedOrBlighted } from '../../cards/impl/anomaly/blessed-or-blighted';
 import { AimHigh } from '../../cards/impl/hero-power/aim-high';
@@ -75,6 +75,7 @@ export const performStartOfCombatAction = (
 	cardId: string,
 	entity: BoardEntity | BoardTrinket | BgsPlayerEntity,
 	input: SoCInput,
+	timing?: StartOfCombatTiming,
 ) => {
 	let hasTriggered:
 		| boolean
@@ -84,7 +85,12 @@ export const performStartOfCombatAction = (
 		  } = false;
 	const promoPortraitCount = getPromoPortraitCount(input.playerEntity);
 	for (let i = promoPortraitCount; i >= 0; i--) {
-		const action = getStartOfCombatAction(cardId)?.startOfCombat;
+		const card = getStartOfCombatAction(cardId);
+		if (!!timing && card?.startOfCombatTiming !== timing) {
+			return false;
+		}
+
+		const action = card?.startOfCombat;
 		if (!!action) {
 			hasTriggered = action(entity, input);
 			if (!!hasTriggered) {

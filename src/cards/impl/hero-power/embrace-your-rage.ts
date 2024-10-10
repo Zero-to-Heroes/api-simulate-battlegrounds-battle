@@ -3,8 +3,10 @@ import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const EmbraceYourRage = {
+export const EmbraceYourRage: StartOfCombatCard = {
+	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			const createdCardId = input.playerEntity.heroPowerInfo as string;

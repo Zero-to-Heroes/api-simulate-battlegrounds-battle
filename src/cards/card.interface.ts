@@ -9,5 +9,7 @@ export interface Card {
 	) => boolean | { hasTriggered: boolean; shouldRecomputeCurrentAttacker: boolean };
 }
 export interface StartOfCombatCard extends Card {
+	startOfCombatTiming?: StartOfCombatTiming;
 	startOfCombat: NonNullable<Card['startOfCombat']>;
 }
+export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';

@@ -1,7 +1,9 @@
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const RebornRites = {
+export const RebornRites: StartOfCombatCard = {
+	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
 			const targetEntityId = input.playerEntity.heroPowerInfo as number;
