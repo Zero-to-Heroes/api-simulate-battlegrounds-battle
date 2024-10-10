@@ -4,6 +4,7 @@ import { BoardEntity } from '../board-entity';
 import { grantRandomDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	getRandomAliveMinion,
@@ -620,7 +621,7 @@ const handleAvenge = (
 			}
 			break;
 
-		case CardIds.BleedingHeart:
+		case TempCardIds.BleedingHeart:
 			const randomUndead = gameState.cardsData.getRandomMinionForTribe(
 				Race.UNDEAD,
 				boardWithDeadEntityHero.tavernTier,

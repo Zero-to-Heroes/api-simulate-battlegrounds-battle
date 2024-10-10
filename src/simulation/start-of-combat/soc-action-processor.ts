@@ -68,6 +68,7 @@ import { SummoningSphere } from '../../cards/impl/trinket/summoning-sphere';
 import { TinyfinOnesie } from '../../cards/impl/trinket/tinyfin-onesie';
 import { TrainingCertificate } from '../../cards/impl/trinket/training-certificate';
 import { ValorousMedallion } from '../../cards/impl/trinket/valorous-medaillion';
+import { TempCardIds } from '../../temp-card-ids';
 import { SoCInput } from './start-of-combat-input';
 
 export const performStartOfCombatAction = (cardId: string, entity: BoardEntity | BoardTrinket, input: SoCInput) => {
@@ -147,7 +148,7 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.FishySticker_BG30_MagicItem_821:
 		case CardIds.FishySticker_FishyStickerToken_BG30_MagicItem_821t2:
 			return FishySticker;
-		case CardIds.SummoningSphere:
+		case TempCardIds.SummoningSphere:
 			return SummoningSphere;
 
 		// Hero powers
@@ -280,7 +281,7 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 const onStartOfCombatTriggered = (iteration: number, triggeredCardId: string, playerEntity: BgsPlayerEntity) => {
 	// Some procs are iso-functional, and don't update the promo portrait
 	const promoPortraits = playerEntity.trinkets.filter(
-		(t) => t.cardId === CardIds.PromoPortrait && t.scriptDataNum1 > 0,
+		(t) => t.cardId === TempCardIds.PromoPortrait && t.scriptDataNum1 > 0,
 	);
 	if (promoPortraits.length === 0 || iteration === 0 || iteration >= promoPortraits.length) {
 		return;
@@ -305,5 +306,5 @@ const onStartOfCombatTriggered = (iteration: number, triggeredCardId: string, pl
 };
 
 const getPromoPortraitCount = (playerEntity: BgsPlayerEntity) => {
-	return playerEntity.trinkets.filter((t) => t.cardId === CardIds.PromoPortrait && t.scriptDataNum1 > 0).length;
+	return playerEntity.trinkets.filter((t) => t.cardId === TempCardIds.PromoPortrait && t.scriptDataNum1 > 0).length;
 };

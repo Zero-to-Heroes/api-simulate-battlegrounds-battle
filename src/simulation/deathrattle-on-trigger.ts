@@ -1,6 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { TempCardIds } from '../temp-card-ids';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 
