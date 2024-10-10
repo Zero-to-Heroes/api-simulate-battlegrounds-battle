@@ -77,7 +77,7 @@ const handlePreCombatHeroPowersForPlayer = (input: SoCInput): number => {
 	}
 
 	const playerHeroPowerId = input.playerEntity.heroPowerId || getHeroPowerForHero(input.playerEntity.cardId);
-	performStartOfCombatAction(playerHeroPowerId, null, input);
+	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input);
 	processMinionDeath(
 		input.playerBoard,
 		input.playerEntity,

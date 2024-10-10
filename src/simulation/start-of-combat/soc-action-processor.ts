@@ -71,7 +71,11 @@ import { TrainingCertificate } from '../../cards/impl/trinket/training-certifica
 import { ValorousMedallion } from '../../cards/impl/trinket/valorous-medaillion';
 import { SoCInput } from './start-of-combat-input';
 
-export const performStartOfCombatAction = (cardId: string, entity: BoardEntity | BoardTrinket, input: SoCInput) => {
+export const performStartOfCombatAction = (
+	cardId: string,
+	entity: BoardEntity | BoardTrinket | BgsPlayerEntity,
+	input: SoCInput,
+) => {
 	let hasTriggered:
 		| boolean
 		| {

@@ -41,7 +41,7 @@ const handleStartOfCombatAnomaliesForPlayer = (input: SoCInput): number => {
 	}
 
 	for (const anomaly of input.gameState.anomalies) {
-		performStartOfCombatAction(anomaly, null, input);
+		performStartOfCombatAction(anomaly, input.playerEntity, input);
 	}
 
 	return input.currentAttacker;

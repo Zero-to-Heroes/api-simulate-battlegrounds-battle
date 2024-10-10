@@ -63,7 +63,7 @@ const handleStartOfCombatQuestRewardsForPlayer = (input: SoCInput): number => {
 	}
 
 	for (const reward of input.playerEntity.questRewards) {
-		performStartOfCombatAction(reward, null, input);
+		performStartOfCombatAction(reward, input.playerEntity, input);
 	}
 
 	return input.currentAttacker;
