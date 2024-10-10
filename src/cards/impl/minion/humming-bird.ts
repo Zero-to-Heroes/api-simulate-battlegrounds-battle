@@ -10,13 +10,12 @@ export const HummingBird = {
 			minion,
 			input.playerBoard,
 			input.playerEntity,
-			multiplier,
-			multiplier,
+			2 * multiplier,
+			0,
 			input.gameState,
 			Race[Race.BEAST],
 		);
-		input.playerEntity.globalInfo.GoldrinnBuffAtk += multiplier;
-		input.playerEntity.globalInfo.GoldrinnBuffHealth += multiplier;
+		input.playerEntity.globalInfo.GoldrinnBuffAtk += 2 * multiplier;
 		return true;
 	},
 };
