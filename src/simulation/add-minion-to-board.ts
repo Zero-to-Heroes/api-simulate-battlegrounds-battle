@@ -221,14 +221,6 @@ export const applyAurasToSelf = (
 				case CardIds.TheSmokingGun:
 					spawned.attack += 4;
 					break;
-				case CardIds.FlagbearerPortrait_BG30_MagicItem_921:
-					if (
-						spawned.cardId === CardIds.SkyPirateFlagbearer_BG30_119 ||
-						spawned.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
-					) {
-						spawned.attack += 8;
-					}
-					break;
 			}
 		}
 	}
@@ -248,6 +240,14 @@ export const applyAurasToSelf = (
 					if (gameState.cardsData.getTavernLevel(spawned.cardId) <= 3) {
 						spawned.attack += 7;
 						spawned.health += 5;
+					}
+					break;
+				case CardIds.FlagbearerPortrait_BG30_MagicItem_921:
+					if (
+						spawned.cardId === CardIds.Scallywag_SkyPirateToken_BGS_061t ||
+						spawned.cardId === CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t
+					) {
+						spawned.attack += 8;
 					}
 					break;
 			}
