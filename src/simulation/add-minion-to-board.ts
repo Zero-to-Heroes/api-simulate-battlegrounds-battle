@@ -295,15 +295,6 @@ export const applyAurasToSelf = (
 					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
 				}
 				break;
-			case CardIds.HummingBird_BG26_805:
-			case CardIds.HummingBird_BG26_805_G:
-				if (
-					hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards) &&
-					entity.entityId !== spawned.entityId
-				) {
-					spawned.attack += entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
-				}
-				break;
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				if (
@@ -457,18 +448,6 @@ export const removeAurasFromSelf = (
 					);
 				}
 				break;
-			case CardIds.HummingBird_BG26_805:
-			case CardIds.HummingBird_BG26_805_G:
-				if (
-					hasCorrectTribe(entity, boardHero, Race.BEAST, gameState.allCards) &&
-					entity.entityId !== boardEntity.entityId
-				) {
-					entity.attack = Math.max(
-						0,
-						entity.attack - (entity.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2),
-					);
-				}
-				break;
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				if (
@@ -597,15 +576,6 @@ const handleMinionAddedAuraEffect = (
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
-				});
-			break;
-		case CardIds.HummingBird_BG26_805:
-		case CardIds.HummingBird_BG26_805_G:
-			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, gameState.allCards))
-				.filter((e) => e.entityId !== spawned.entityId)
-				.forEach((e) => {
-					e.attack += spawned.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
 				});
 			break;
 		case CardIds.Kathranatir_BG21_039:

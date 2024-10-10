@@ -34,16 +34,6 @@ export const handleMinionRemovedAuraEffect = (
 					e.attack = Math.max(0, e.attack - diff);
 				});
 			break;
-		case CardIds.HummingBird_BG26_805:
-		case CardIds.HummingBird_BG26_805_G:
-			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, allCards))
-				.filter((e) => e.entityId !== removed.entityId)
-				.forEach((e) => {
-					const diff = removed.cardId === CardIds.HummingBird_BG26_805_G ? 4 : 2;
-					e.attack = Math.max(0, e.attack - diff);
-				});
-			break;
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			// console.debug('removing southsea captain', stringifySimpleCard(removed, allCards), stringifySimple(board, allCards));

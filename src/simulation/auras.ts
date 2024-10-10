@@ -69,20 +69,6 @@ const setMissingMinionsAura = (board: BoardEntity[], boardHero: BgsPlayerEntity,
 		0,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, allCards)),
-		CardIds.HummingBird_BG26_805,
-		CardIds.HummingBird_EntrancedEnchantment_BG26_805e,
-		2,
-		0,
-	);
-	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.BEAST, allCards)),
-		CardIds.HummingBird_BG26_805_G,
-		CardIds.HummingBird_EntrancedEnchantment_BG26_805_Ge,
-		4,
-		0,
-	);
-	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, allCards)),
 		CardIds.Kathranatir_BG21_039,
 		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e,

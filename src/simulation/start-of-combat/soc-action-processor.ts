@@ -31,6 +31,7 @@ import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
 import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
 import { HoardingHatespawn } from '../../cards/impl/minion/hoarding-hatespawn';
+import { HummingBird } from '../../cards/impl/minion/humming-bird';
 import { InterrogatorWhitemane } from '../../cards/impl/minion/interrogator-whitemane';
 import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
@@ -272,6 +273,9 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.SkyPirateFlagbearer_BG30_119:
 		case CardIds.SkyPirateFlagbearer_BG30_119_G:
 			return SkyPirateFlagbearer;
+		case CardIds.HummingBird_BG26_805:
+		case CardIds.HummingBird_BG26_805_G:
+			return HummingBird;
 
 		default:
 			return null;
