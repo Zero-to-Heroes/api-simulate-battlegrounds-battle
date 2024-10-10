@@ -98,9 +98,13 @@ export const performStartOfCombatAction = (
 				if (typeof hasTriggered !== 'boolean' && hasTriggered.shouldRecomputeCurrentAttacker) {
 					input.currentAttacker =
 						input.playerBoard.length > input.opponentBoard.length
-							? 0
+							? input.playerIsFriendly
+								? 0
+								: 1
 							: input.opponentBoard.length > input.playerBoard.length
-							? 1
+							? input.playerIsFriendly
+								? 1
+								: 0
 							: Math.round(Math.random());
 				}
 			}
