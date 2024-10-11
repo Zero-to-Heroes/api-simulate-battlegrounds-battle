@@ -128,7 +128,7 @@ const handleSpawnEffect = (
 			case CardIds.ThunderingAbomination_BG30_124_G:
 				const abomStatsMultiplier = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
 				modifyStats(spawned, abomStatsMultiplier * 3, abomStatsMultiplier * 3, board, boardHero, gameState);
-				gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
+				gameState.spectator.registerPowerTarget(entity, spawned, board, boardHero, otherHero);
 				break;
 		}
 	}

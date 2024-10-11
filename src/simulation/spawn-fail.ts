@@ -26,7 +26,7 @@ export const onMinionFailedToSpawn = (
 				e.cardId === CardIds.ThunderingAbomination_BG30_124_G,
 		)
 		.forEach((abom) => {
-			const abomStatsMultiplier = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
+			const abomStatsMultiplier = abom.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
 			modifyStats(abom, abomStatsMultiplier * 3, abomStatsMultiplier * 3, board, hero, gameState);
 		});
 	board
