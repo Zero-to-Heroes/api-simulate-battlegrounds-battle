@@ -23,7 +23,7 @@ export const setMissingTrinketAura = (board: BoardEntity[], boardHero: BgsPlayer
 						: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2;
 				const buff = trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 20;
 				const target = board[0];
-				if (!target.enchantments.find((e) => e.cardId === enchantment)) {
+				if (!!target && !target.enchantments?.find((e) => e.cardId === enchantment)) {
 					target.attack += buff;
 					target.enchantments.push({
 						cardId: enchantment,
