@@ -9,6 +9,31 @@ import { FullGameState } from './internal-game-state';
 export const setMissingAuras = (board: BoardEntity[], boardHero: BgsPlayerEntity, allCards: AllCardsService): void => {
 	setMissingMinionsAura(board, boardHero, allCards);
 	setMissingHeroPowerAura(board, boardHero);
+	setMissingTrinketAura(board, boardHero);
+};
+
+export const setMissingTrinketAura = (board: BoardEntity[], boardHero: BgsPlayerEntity): void => {
+	for (const trinket of boardHero.trinkets ?? []) {
+		switch (trinket.cardId) {
+			case CardIds.WindrunnerNecklace_BG30_MagicItem_997:
+			case CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t:
+				const enchantment =
+					trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997
+						? CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e
+						: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2;
+				const buff = trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 20;
+				const target = board[0];
+				if (!target.enchantments.find((e) => e.cardId === enchantment)) {
+					target.attack += buff;
+					target.enchantments.push({
+						cardId: enchantment,
+						originEntityId: trinket.entityId,
+						timing: 0,
+					});
+				}
+				break;
+		}
+	}
 };
 
 export const setMissingHeroPowerAura = (board: BoardEntity[], boardHero: BgsPlayerEntity): void => {
