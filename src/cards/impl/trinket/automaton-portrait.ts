@@ -3,8 +3,9 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const AutomatonPortrait = {
+export const AutomatonPortrait: StartOfCombatCard = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerBoard.length < 7) {
 			const newMinions = spawnEntities(
@@ -31,7 +32,7 @@ export const AutomatonPortrait = {
 				input.opponentEntity,
 				input.gameState,
 			);
-			return true;
+			return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
 		}
 	},
 };

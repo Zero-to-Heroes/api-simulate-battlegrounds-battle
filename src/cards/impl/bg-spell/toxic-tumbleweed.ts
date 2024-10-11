@@ -34,7 +34,7 @@ export const ToxicTumbleweed = {
 				input.opponentEntity,
 				input.gameState,
 			);
-			return true;
+			return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
 		}
 	},
 };

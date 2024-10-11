@@ -58,7 +58,7 @@ export const SummoningSphere = {
 				input.playerEntity,
 				input.opponentEntity,
 			);
-			return true;
+			return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
 		}
 	},
 };

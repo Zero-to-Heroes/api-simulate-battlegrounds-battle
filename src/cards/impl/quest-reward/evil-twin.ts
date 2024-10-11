@@ -30,7 +30,7 @@ export const EvilTwin = {
 				copy,
 			);
 			const indexFromRight = input.playerBoard.length - (input.playerBoard.indexOf(highestHealthMinion) + 1);
-			performEntitySpawns(
+			const actualSpawns = performEntitySpawns(
 				newMinions,
 				input.playerBoard,
 				input.playerEntity,
@@ -53,7 +53,7 @@ export const EvilTwin = {
 						? 1
 						: 0
 					: Math.round(Math.random());
-			return true;
+			return actualSpawns.length > 0 ? { hasTriggered: true, shouldRecomputeCurrentAttacker: true } : false;
 		}
 	},
 };

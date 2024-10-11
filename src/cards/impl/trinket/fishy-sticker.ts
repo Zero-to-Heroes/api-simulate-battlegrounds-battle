@@ -35,17 +35,7 @@ export const FishySticker = {
 				input.opponentEntity,
 				input.gameState,
 			);
-			input.currentAttacker =
-				input.playerBoard.length > input.opponentBoard.length
-					? input.playerIsFriendly
-						? 0
-						: 1
-					: input.opponentBoard.length > input.playerBoard.length
-					? input.playerIsFriendly
-						? 1
-						: 0
-					: Math.round(Math.random());
-			return true;
+			return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
 		}
 	},
 };
