@@ -1,6 +1,5 @@
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
-import { processMinionDeath } from '../attack';
 import { FullGameState } from '../internal-game-state';
 import { performStartOfCombatAction } from './soc-action-processor';
 import { SoCInput } from './start-of-combat-input';
@@ -75,14 +74,6 @@ export const performStartOfCombatMinionsForPlayer = (minion: BoardEntity, input:
 		return false;
 	}
 
-	const hasProcessed = performStartOfCombatAction(minion.cardId, minion, input);
-
-	processMinionDeath(
-		input.playerBoard,
-		input.playerEntity,
-		input.opponentBoard,
-		input.opponentEntity,
-		input.gameState,
-	);
+	const hasProcessed = performStartOfCombatAction(minion.cardId, minion, input, true);
 	return hasProcessed;
 };

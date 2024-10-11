@@ -1,7 +1,6 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
-import { processMinionDeath } from '../attack';
 import { FullGameState } from '../internal-game-state';
 import { handleSummonsWhenSpace } from '../summon-when-space';
 import { performStartOfCombatAction } from './soc-action-processor';
@@ -66,14 +65,7 @@ const handlePlayerStartOfCombatHeroPowers = (input: SoCInput): number => {
 	}
 
 	const playerHeroPowerId = input.playerEntity.heroPowerId || getHeroPowerForHero(input.playerEntity.cardId);
-	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input, 'start-of-combat');
-	processMinionDeath(
-		input.playerBoard,
-		input.playerEntity,
-		input.opponentBoard,
-		input.opponentEntity,
-		input.gameState,
-	);
+	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input, true, 'start-of-combat');
 	return input.currentAttacker;
 };
 

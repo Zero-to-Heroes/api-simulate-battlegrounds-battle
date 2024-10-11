@@ -1,6 +1,5 @@
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
-import { processMinionDeath } from '../attack';
 import { FullGameState } from '../internal-game-state';
 import { handleSummonsWhenSpace } from '../summon-when-space';
 import { performStartOfCombatAction } from './soc-action-processor';
@@ -77,14 +76,7 @@ const handlePreCombatHeroPowersForPlayer = (input: SoCInput): number => {
 	}
 
 	const playerHeroPowerId = input.playerEntity.heroPowerId || getHeroPowerForHero(input.playerEntity.cardId);
-	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input, 'pre-combat');
-	processMinionDeath(
-		input.playerBoard,
-		input.playerEntity,
-		input.opponentBoard,
-		input.opponentEntity,
-		input.gameState,
-	);
+	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input, true, 'pre-combat');
 
 	return input.currentAttacker;
 };

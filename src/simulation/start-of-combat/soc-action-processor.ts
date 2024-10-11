@@ -69,14 +69,16 @@ import { SummoningSphere } from '../../cards/impl/trinket/summoning-sphere';
 import { TinyfinOnesie } from '../../cards/impl/trinket/tinyfin-onesie';
 import { TrainingCertificate } from '../../cards/impl/trinket/training-certificate';
 import { ValorousMedallion } from '../../cards/impl/trinket/valorous-medaillion';
+import { processMinionDeath } from '../attack';
 import { SoCInput } from './start-of-combat-input';
 
 export const performStartOfCombatAction = (
 	cardId: string,
 	entity: BoardEntity | BoardTrinket | BgsPlayerEntity,
 	input: SoCInput,
+	processDeaths: boolean,
 	timing?: StartOfCombatTiming,
-) => {
+): boolean => {
 	let hasTriggered:
 		| boolean
 		| {
@@ -95,6 +97,15 @@ export const performStartOfCombatAction = (
 			hasTriggered = action(entity, input);
 			if (!!hasTriggered) {
 				onStartOfCombatTriggered(i, cardId, input.playerEntity);
+				if (processDeaths) {
+					processMinionDeath(
+						input.playerBoard,
+						input.playerEntity,
+						input.opponentBoard,
+						input.opponentEntity,
+						input.gameState,
+					);
+				}
 				if (typeof hasTriggered !== 'boolean' && hasTriggered.shouldRecomputeCurrentAttacker) {
 					input.currentAttacker =
 						input.playerBoard.length > input.opponentBoard.length

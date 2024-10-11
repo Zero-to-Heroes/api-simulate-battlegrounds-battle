@@ -62,7 +62,7 @@ const handleStartOfCombatTrinketsForPlayer = (input: SoCInput): number => {
 	}
 
 	for (const trinket of input.playerEntity.trinkets) {
-		performStartOfCombatAction(trinket.cardId, trinket, input);
+		performStartOfCombatAction(trinket.cardId, trinket, input, false);
 	}
 
 	return input.currentAttacker;
