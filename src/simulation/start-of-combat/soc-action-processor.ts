@@ -1,9 +1,13 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
+import { BoardSecret } from '../../board-secret';
 import { StartOfCombatCard, StartOfCombatTiming } from '../../cards/card.interface';
 import { AnomalousTwin } from '../../cards/impl/anomaly/anomalous-twin';
 import { BlessedOrBlighted } from '../../cards/impl/anomaly/blessed-or-blighted';
+import { BoonOfBeetles } from '../../cards/impl/bg-spell/boon-of-beetles';
+import { ToxicTumbleweed } from '../../cards/impl/bg-spell/toxic-tumbleweed';
+import { UpperHand } from '../../cards/impl/bg-spell/upper-hand';
 import { AimHigh } from '../../cards/impl/hero-power/aim-high';
 import { AimLeft } from '../../cards/impl/hero-power/aim-left';
 import { AimLow } from '../../cards/impl/hero-power/aim-low';
@@ -51,6 +55,7 @@ import { YulonFortuneGranter } from '../../cards/impl/minion/yulon-fortune-grant
 import { EvilTwin } from '../../cards/impl/quest-reward/evil-twin';
 import { StaffOfOrigination } from '../../cards/impl/quest-reward/staff-of-origination';
 import { StolenGold } from '../../cards/impl/quest-reward/stolen-gold';
+import { FleetingVigor } from '../../cards/impl/spell/fleeting-vigor';
 import { ArtisanalUrn } from '../../cards/impl/trinket/artisanal-urn';
 import { AutomatonPortrait } from '../../cards/impl/trinket/automaton-portrait';
 import { BronzeTimepiece } from '../../cards/impl/trinket/bronze-timepiece';
@@ -74,7 +79,7 @@ import { SoCInput } from './start-of-combat-input';
 
 export const performStartOfCombatAction = (
 	cardId: string,
-	entity: BoardEntity | BoardTrinket | BgsPlayerEntity,
+	entity: BoardEntity | BoardTrinket | BgsPlayerEntity | BoardSecret,
 	input: SoCInput,
 	processDeaths: boolean,
 	timing?: StartOfCombatTiming,
@@ -95,8 +100,9 @@ export const performStartOfCombatAction = (
 		const action = card?.startOfCombat;
 		if (!!action) {
 			hasTriggered = action(entity, input);
+			// Always proc it (for promo portrait), and use the hasTriggered for finer control
+			onStartOfCombatTriggered(i, cardId, input.playerEntity);
 			if (!!hasTriggered) {
-				onStartOfCombatTriggered(i, cardId, input.playerEntity);
 				if (processDeaths) {
 					processMinionDeath(
 						input.playerBoard,
@@ -217,6 +223,16 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return BlessedOrBlighted;
 		case CardIds.AnomalousTwin_BG27_Anomaly_560:
 			return AnomalousTwin;
+		case CardIds.BoonOfBeetles_BG28_603:
+			return BoonOfBeetles;
+
+		// Spells
+		case CardIds.ToxicTumbleweed_BG28_641:
+			return ToxicTumbleweed;
+		case CardIds.UpperHand_BG28_573:
+			return UpperHand;
+		case CardIds.FleetingVigor_BG28_519:
+			return FleetingVigor;
 
 		// Minions
 		case CardIds.RedWhelp_BGS_019:
@@ -323,6 +339,7 @@ const onStartOfCombatTriggered = (iteration: number, triggeredCardId: string, pl
 		case CardIds.BronzeTimepiece_BG30_MagicItem_995:
 		case CardIds.SwattingInsects:
 		case CardIds.RebornRites:
+		case CardIds.BoonOfBeetles_BG28_603:
 			return;
 	}
 
