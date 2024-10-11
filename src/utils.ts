@@ -371,7 +371,9 @@ export const getMinionsOfDifferentTypes = (
 ): BoardEntity[] => {
 	const result: BoardEntity[] = [];
 	if (board.length > 0) {
-		let boardCopy = board.filter((e) => !gameState.allCards.getCard(e.cardId).races?.includes(Race[Race.ALL]));
+		let boardCopy = board.filter(
+			(e) => !getEffectiveTribesForEntity(e, hero, gameState.allCards)?.includes(Race.ALL),
+		);
 		const allRaces = shuffleArray(ALL_BG_RACES);
 		let typesBuffed = 0;
 		const racesProcessed = [];
