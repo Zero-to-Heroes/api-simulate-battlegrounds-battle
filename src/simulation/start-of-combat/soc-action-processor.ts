@@ -311,7 +311,7 @@ const onStartOfCombatTriggered = (iteration: number, triggeredCardId: string, pl
 	const promoPortraits = playerEntity.trinkets.filter(
 		(t) => t.cardId === CardIds.PromoPortrait_BG30_MagicItem_918 && t.scriptDataNum1 > 0,
 	);
-	if (promoPortraits.length === 0 || iteration === 0 || iteration >= promoPortraits.length) {
+	if (promoPortraits.length === 0 || iteration === 0 || iteration > promoPortraits.length) {
 		return;
 	}
 

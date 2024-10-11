@@ -415,7 +415,7 @@ export class Spectator {
 		if (!trinkets?.length) {
 			return undefined;
 		}
-		return trinkets.map(
+		const result = trinkets.map(
 			(t) =>
 				({
 					cardId: t.cardId,
@@ -424,5 +424,6 @@ export class Spectator {
 					scriptDataNum6: t.scriptDataNum6,
 				} as BoardTrinket),
 		);
+		return result;
 	}
 }

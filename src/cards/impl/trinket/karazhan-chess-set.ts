@@ -5,8 +5,9 @@ import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { copyEntity } from '../../../utils';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const KarazhanChessSet = {
+export const KarazhanChessSet: StartOfCombatCard = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		let hasTriggered = false;
 		if (input.playerBoard.length > 0) {
@@ -54,16 +55,6 @@ export const KarazhanChessSet = {
 				hasTriggered = true;
 			}
 		}
-		input.currentAttacker =
-			input.playerBoard.length > input.opponentBoard.length
-				? input.playerIsFriendly
-					? 0
-					: 1
-				: input.opponentBoard.length > input.playerBoard.length
-				? input.playerIsFriendly
-					? 1
-					: 0
-				: Math.round(Math.random());
-		return hasTriggered;
+		return { hasTriggered: hasTriggered, shouldRecomputeCurrentAttacker: hasTriggered };
 	},
 };
