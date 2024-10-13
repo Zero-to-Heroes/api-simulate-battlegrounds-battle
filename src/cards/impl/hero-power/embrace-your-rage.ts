@@ -26,7 +26,7 @@ export const EmbraceYourRage: StartOfCombatCard = {
 				input.gameState.sharedState,
 				input.gameState.spectator,
 				input.playerEntity.friendly,
-				true,
+				false,
 				false,
 				false,
 			);

@@ -1617,7 +1617,7 @@ export const applyWheneverMinionDiesEffect = (
 				gameState.sharedState,
 				gameState.spectator,
 				!deadEntity.friendly,
-				true,
+				false,
 			);
 			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn_TB_BaconUps_051) {
@@ -1633,7 +1633,7 @@ export const applyWheneverMinionDiesEffect = (
 				gameState.sharedState,
 				gameState.spectator,
 				!deadEntity.friendly,
-				true,
+				false,
 			);
 			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
 		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {

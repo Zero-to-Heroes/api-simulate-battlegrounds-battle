@@ -32,6 +32,8 @@ export const spawnEntities = (
 	spectator: Spectator,
 	friendly: boolean,
 	// In most cases the business of knowing the number of minions to handle is left to the caller
+	// Bascially, use limitSpawns = true only if the source does not trigger if there is not enough room,
+	// e.g. Toxic Tumbleweed. Otherwise, it will prevent the "spawn failed" event.
 	limitSpawns: boolean,
 	spawnReborn = false,
 	useKhadgar = true,

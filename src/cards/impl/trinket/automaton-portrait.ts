@@ -20,7 +20,7 @@ export const AutomatonPortrait: StartOfCombatCard = {
 				input.gameState.sharedState,
 				input.gameState.spectator,
 				input.playerEntity.friendly,
-				true,
+				false,
 			);
 			performEntitySpawns(
 				newMinions,
