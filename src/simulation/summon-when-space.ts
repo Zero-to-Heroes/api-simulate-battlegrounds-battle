@@ -298,6 +298,17 @@ const handleRapidReanimationForPlayer = (
 	);
 	if (hasSummoned) {
 		playerEntity.rapidReanimationMinion = null;
+		// Hard-coding a correction for Astral Automation
+		hasSummoned.forEach((entity) => {
+			switch (entity.cardId) {
+				case CardIds.AstralAutomaton_BG_TTN_401:
+				case CardIds.AstralAutomaton_BG_TTN_401_G:
+					const overstatMult = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401 ? 1 : 2;
+					entity.attack = Math.max(1, entity.attack - 2 * overstatMult);
+					entity.health = Math.max(0, entity.health - overstatMult);
+					break;
+			}
+		});
 	}
 };
 
@@ -310,9 +321,9 @@ const handleSummon = (
 	cardId: string,
 	indexFromRight: number,
 	minion: BoardEntity = null,
-): boolean => {
+): readonly BoardEntity[] => {
 	if (playerBoard.length >= 7) {
-		return false;
+		return null;
 	}
 	const newMinion = buildSingleBoardEntity(
 		cardId,
@@ -340,5 +351,5 @@ const handleSummon = (
 		false,
 	);
 	gameState.spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
-	return spawned.length > 0;
+	return spawned;
 };
