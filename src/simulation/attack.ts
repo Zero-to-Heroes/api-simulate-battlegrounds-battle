@@ -105,6 +105,7 @@ export const doFullAttack = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
+	const isAttackingImmediately = attackingEntity.attackImmediately;
 	gameState.spectator.registerAttack(
 		attackingEntity,
 		defendingEntity,
@@ -152,7 +153,14 @@ export const doFullAttack = (
 		damageDoneByDefender,
 		gameState,
 	);
-	processMinionDeath(attackingBoard, attackingBoardHero, defendingBoard, defendingBoardHero, gameState);
+	processMinionDeath(
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		gameState,
+		isAttackingImmediately,
+	);
 	applyAfterStatsUpdate(gameState);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, (attackingEntity.immuneWhenAttackCharges ?? 0) - 1);
 	if (
@@ -1005,6 +1013,8 @@ export const processMinionDeath = (
 	board2: BoardEntity[],
 	board2Hero: BgsPlayerEntity,
 	gameState: FullGameState,
+	// When we're in an "attack immediately" phase, we wait until we're out of the phase to summon minions
+	skipSummonWhenSpace = false,
 ): void => {
 	// const debug = board1.some((e) => e.health <= 0) || board2.some((e) => e.health <= 0);
 	// debug && console.debug('\nprocessing minions death');
@@ -1137,7 +1147,9 @@ export const processMinionDeath = (
 	processMinionDeath(board1, board1Hero, board2, board2Hero, gameState);
 
 	// Not sure about the timing here, but I have bothered Mitchell quite a lot already recently :)
-	handleSummonsWhenSpace(board1, board1Hero, board2, board2Hero, gameState);
+	if (!skipSummonWhenSpace) {
+		handleSummonsWhenSpace(board1, board1Hero, board2, board2Hero, gameState);
+	}
 
 	// Apply "after minion death" effects
 	handleAfterMinionsDeaths(board1, deadEntities1, board1Hero, board2, deadEntities2, board2Hero, gameState);
