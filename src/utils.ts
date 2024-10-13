@@ -345,6 +345,28 @@ export const addStatsToBoard = (
 	}
 };
 
+export const addStatsToAliveBoard = (
+	sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret,
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	attack: number,
+	health: number,
+	gameState: FullGameState,
+	tribe?: string,
+	// permanentUpgrade = false,
+): void => {
+	for (const entity of board.filter((e) => e.health > 0 && !e.definitelyDead)) {
+		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.allCards)) {
+			modifyStats(entity, attack, health, board, hero, gameState);
+			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
+			// if (permanentUpgrade) {
+			// 	entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
+			// 	entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
+			// }
+		}
+	}
+};
+
 export const grantStatsToMinionsOfEachType = (
 	source: BoardEntity,
 	board: BoardEntity[],

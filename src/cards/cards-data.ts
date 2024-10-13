@@ -48,7 +48,7 @@ export class CardsData {
 	}
 
 	public inititialize(validTribes?: readonly Race[], anomalies?: readonly string[]): void {
-		const poolWithoutGolden = this.allCards
+		const poolWithGolden = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
 			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
@@ -63,7 +63,7 @@ export class CardsData {
 					? card.techLevel <= 4
 					: true,
 			);
-		this.pool = poolWithoutGolden
+		this.pool = poolWithGolden
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.filter((card) =>
 				anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801)
@@ -76,7 +76,7 @@ export class CardsData {
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
-		this.validDeathrattles = poolWithoutGolden
+		this.validDeathrattles = poolWithGolden
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);

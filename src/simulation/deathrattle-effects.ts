@@ -1873,6 +1873,10 @@ export const rememberDeathrattles = (
 	allCards: AllCardsService,
 	sharedState: SharedState,
 ): void => {
+	if (!deadEntities?.length) {
+		return;
+	}
+
 	const validDeathrattles = deadEntities
 		.filter((entity) => cardsData.validDeathrattles.includes(entity.cardId) || isFish(entity))
 		.map((entity) => ({ cardId: entity.cardId, repeats: 1, timing: sharedState.currentEntityId++ }));
