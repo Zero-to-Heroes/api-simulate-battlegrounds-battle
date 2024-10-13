@@ -1338,7 +1338,12 @@ export const spawnEntitiesFromDeathrattle = (
 					break;
 				case CardIds.OctosariWrapGod_BG26_804:
 				case CardIds.OctosariWrapGod_BG26_804_G:
-					const stats = deadEntity.scriptDataNum1;
+					// For remembered deathrattles
+					const stats =
+						deadEntity.scriptDataNum1 ||
+						gameState.sharedState.deaths.find(
+							(e) => e.friendly === deadEntity.friendly && e.cardId === deadEntity.cardId,
+						)?.scriptDataNum1;
 					const octosariSpawn =
 						deadEntity.cardId === CardIds.OctosariWrapGod_BG26_804_G
 							? CardIds.TentacleOfOctosariToken_BG26_803_Gt
