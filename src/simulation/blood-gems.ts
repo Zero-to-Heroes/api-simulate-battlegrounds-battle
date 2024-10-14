@@ -55,17 +55,17 @@ export const playBloodGemsOn = (
 		bloodGemEnchantment.tagScriptDataNum2 += bloodGemHealth;
 	}
 
-	switch (target.cardId) {
-		case CardIds.ToughTusk_BG20_102:
-		case CardIds.ToughTusk_BG20_102_G:
-			if (!target.divineShield) {
-				updateDivineShield(target, board, hero, null, true, gameState);
-				gameState.spectator.registerPowerTarget(target, target, board, null, null);
-			}
-			break;
-		case CardIds.GeomagusRoogug_BG28_583:
-		case CardIds.GeomagusRoogug_BG28_583_G:
-			for (let i = 0; i < quantity; i++) {
+	for (let i = 0; i < quantity; i++) {
+		switch (target.cardId) {
+			case CardIds.ToughTusk_BG20_102:
+			case CardIds.ToughTusk_BG20_102_G:
+				if (!target.divineShield) {
+					updateDivineShield(target, board, hero, null, true, gameState);
+					gameState.spectator.registerPowerTarget(target, target, board, null, null);
+				}
+				break;
+			case CardIds.GeomagusRoogug_BG28_583:
+			case CardIds.GeomagusRoogug_BG28_583_G:
 				const roogugTargets = board.filter(
 					(e) =>
 						e.cardId !== CardIds.GeomagusRoogug_BG28_583 && e.cardId !== CardIds.GeomagusRoogug_BG28_583_G,
@@ -75,21 +75,24 @@ export const playBloodGemsOn = (
 					const roogugBuff = target.cardId === CardIds.GeomagusRoogug_BG28_583_G ? 2 : 1;
 					playBloodGemsOn(target, roogugTarget, roogugBuff, board, hero, gameState, false);
 				}
-			}
-			break;
-		case CardIds.AggemThorncurse_BG20_302:
-		case CardIds.AggemThorncurse_BG20_302_G:
-			const candidates = getMinionsOfDifferentTypes(
-				board.filter(
-					(e) =>
-						e.cardId !== CardIds.AggemThorncurse_BG20_302 &&
-						e.cardId !== CardIds.AggemThorncurse_BG20_302_G,
-				),
-				hero,
-				gameState,
-			);
-			for (const candidate of candidates) {
-				playBloodGemsOn(target, candidate, 1, board, hero, gameState, false);
-			}
+				break;
+			case CardIds.AggemThorncurse_BG20_302:
+			case CardIds.AggemThorncurse_BG20_302_G:
+				// console.debug('playing blood gem on Aggem Thorncurse', target.cardId);
+				const aggemGemsToPlay = target.cardId === CardIds.AggemThorncurse_BG20_302_G ? 2 : 1;
+				const candidates = getMinionsOfDifferentTypes(
+					board.filter(
+						(e) =>
+							e.cardId !== CardIds.AggemThorncurse_BG20_302 &&
+							e.cardId !== CardIds.AggemThorncurse_BG20_302_G,
+					),
+					hero,
+					gameState,
+				);
+				for (const candidate of candidates) {
+					playBloodGemsOn(target, candidate, aggemGemsToPlay, board, hero, gameState, false);
+				}
+				break;
+		}
 	}
 };
