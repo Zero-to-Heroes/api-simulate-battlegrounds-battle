@@ -19,17 +19,12 @@ export const WHELP_CARD_IDS = [
 
 export class CardsData {
 	public ghastcoilerSpawns: readonly string[];
-	// public shredderSpawns: readonly string[];
-	public validDeathrattles: readonly string[];
 	public impMamaSpawns: readonly string[];
 	public demonSpawns: readonly string[];
 	public gentleDjinniSpawns: readonly string[];
-	// public festergutSpawns: readonly string[];
 	public kilrekSpawns: readonly string[];
 	public battlecryMinions: readonly string[];
 	public deathrattleMinions: readonly string[];
-	// public sneedsSpawns: readonly string[];
-	// public treasureChestSpawns: readonly string[];
 	public pirateSpawns: readonly string[];
 	public beastSpawns: readonly string[];
 	public scrapScraperSpawns: readonly string[];
@@ -73,10 +68,6 @@ export class CardsData {
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(this.pool);
 		this.ghastcoilerSpawns = this.pool
 			.filter((card) => card.id !== 'BGS_008')
-			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
-			.filter((card) => this.isValidTribe(validTribes, card.races))
-			.map((card) => card.id);
-		this.validDeathrattles = poolWithGolden
 			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
