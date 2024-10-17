@@ -1461,27 +1461,6 @@ export const spawnEntitiesFromDeathrattle = (
 						),
 					);
 					break;
-				case CardIds.PapaBear_BG27_509:
-				case CardIds.PapaBear_BG27_509_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntity.cardId === CardIds.PapaBear_BG27_509_G
-								? CardIds.MamaBear_TB_BaconUps_090
-								: CardIds.MamaBear_BGS_021,
-							4,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
 				case CardIds.RapscallionRecruiter_BG26_018:
 				case CardIds.RapscallionRecruiter_BG26_018_G:
 					spawnedEntities.push(

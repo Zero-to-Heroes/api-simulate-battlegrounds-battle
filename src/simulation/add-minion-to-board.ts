@@ -116,6 +116,14 @@ const handleSpawnEffect = (
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
+			case CardIds.PapaBear_BG27_509:
+			case CardIds.PapaBear_BG27_509_G:
+				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
+					const statsBonus = entity.cardId === CardIds.PapaBear_BG27_509_G ? 16 : 8;
+					modifyStats(spawned, statsBonus, statsBonus, board, boardHero, gameState);
+					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
+				}
+				break;
 			case CardIds.PackLeader_BGS_017:
 			case CardIds.PackLeader_TB_BaconUps_086:
 				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
@@ -247,7 +255,7 @@ export const applyAurasToSelf = (
 						spawned.cardId === CardIds.Scallywag_SkyPirateToken_BGS_061t ||
 						spawned.cardId === CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t
 					) {
-						spawned.attack += 8;
+						spawned.attack += 6;
 					}
 					break;
 			}

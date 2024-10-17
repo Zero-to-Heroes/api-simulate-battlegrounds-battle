@@ -150,9 +150,9 @@ export class CardsData {
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
-			case CardIds.GilneanThornedRose_BG30_MagicItem_864:
 			case CardIds.FridgeMagnet_BG30_MagicItem_545:
 				return 3;
+			case CardIds.GilneanThornedRose_BG30_MagicItem_864:
 			case CardIds.Onyxia_Broodmother:
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
@@ -182,7 +182,6 @@ export class CardsData {
 			case CardIds.KarmicChameleon_BG31_802_G:
 				return 5;
 			case CardIds.BleedingHeart_BG30_MagicItem_713:
-				return 6;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
 		}

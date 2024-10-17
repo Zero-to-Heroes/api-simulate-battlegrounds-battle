@@ -10,7 +10,7 @@ export const HummingBird = {
 			minion,
 			input.playerBoard,
 			input.playerEntity,
-			2 * multiplier,
+			1 * multiplier,
 			0,
 			input.gameState,
 			Race[Race.BEAST],

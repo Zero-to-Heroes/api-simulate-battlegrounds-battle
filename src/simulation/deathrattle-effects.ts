@@ -353,7 +353,7 @@ export const handleDeathrattleEffects = (
 			case CardIds.GoldrinnTheGreatWolf_BGS_018:
 			case CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085:
 				for (let i = 0; i < multiplier; i++) {
-					const goldrinnBuff = deadEntityCardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 8 : 4;
+					const goldrinnBuff = deadEntityCardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 6 : 3;
 					addStatsToBoard(
 						deadEntity,
 						boardWithDeadEntity,
