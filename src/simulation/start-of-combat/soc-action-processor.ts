@@ -176,7 +176,7 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return IronforgeAnvil;
 		case CardIds.KarazhanChessSet_BG30_MagicItem_972:
 			return KarazhanChessSet;
-		case CardIds.FishySticker_BG30_MagicItem_821:
+		// case CardIds.FishySticker_BG30_MagicItem_821:
 		case CardIds.FishySticker_FishyStickerToken_BG30_MagicItem_821t2:
 			return FishySticker;
 		case CardIds.SummoningSphere_BGDUO_MagicItem_003:
