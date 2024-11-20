@@ -668,7 +668,7 @@ export const handleDeathrattleEffects = (
 					boardWithDeadEntityHero.trinkets.filter(
 						(t) => t.cardId === CardIds.KaboomBotPortrait_BG30_MagicItem_803,
 					).length *
-						8;
+						10;
 				for (let i = 0; i < multiplier; i++) {
 					for (let j = 0; j < kaboomLoops; j++) {
 						dealDamageToRandomEnemy(

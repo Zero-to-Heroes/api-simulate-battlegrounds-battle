@@ -659,6 +659,16 @@ const handleAvenge = (
 					},
 					gameState.cardsData,
 				);
+				if (avenger.cardId === CardIds.KarmicChameleon_BG31_802_G) {
+					makeMinionGolden(
+						clone,
+						avenger,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+						gameState,
+					);
+				}
 				gameState.spectator.registerPowerTarget(
 					clone,
 					clone,

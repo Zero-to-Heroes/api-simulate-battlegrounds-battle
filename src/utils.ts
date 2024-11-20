@@ -260,7 +260,7 @@ export const updateVenomous = (
 				t.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t,
 		);
 		belcherPortraits.forEach((p) => {
-			const buff = p.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t ? 12 : 3;
+			const buff = p.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t ? 14 : 4;
 			modifyStats(entity, buff, buff, board, boardHero, gameState);
 			gameState.spectator.registerPowerTarget(p, entity, board, null, null);
 		});
