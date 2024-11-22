@@ -1,11 +1,11 @@
-import { CardIds, CardType } from '@firestone-hs/reference-data';
+import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { pickRandom } from './services/utils';
 import { addCardsInHand } from './simulation/cards-in-hand';
 import { FullGameState } from './simulation/internal-game-state';
 import { modifyStats } from './simulation/stats';
-import { grantRandomStats } from './utils';
+import { grantRandomStats, hasCorrectTribe } from './utils';
 
 export const updateDivineShield = (
 	entity: BoardEntity,
@@ -41,7 +41,7 @@ export const updateDivineShield = (
 		const adapter = hero.trinkets
 			.filter((t) => t.cardId === CardIds.MechagonAdapter_BG30_MagicItem_910)
 			.filter((t) => t.scriptDataNum1 > 0)[0];
-		if (!!adapter) {
+		if (!!adapter && hasCorrectTribe(entity, hero, Race.MECH, gameState.allCards)) {
 			updateDivineShield(entity, board, hero, otherHero, true, gameState);
 			adapter.scriptDataNum1--;
 		}
