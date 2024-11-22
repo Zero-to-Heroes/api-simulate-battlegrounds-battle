@@ -41,15 +41,36 @@ export class Simulator {
 				playerState.board.every((entity) => entity.attack === 0) &&
 				opponentState.board.length > 0 &&
 				opponentState.board.every((entity) => entity.attack === 0);
+			if (areBothBoards0Attack) {
+				playerState.board = [];
+				opponentState.board = [];
+			}
+
 			const isPlayerBoardEmpty = playerState.board.length === 0;
 			const isOpponentBoardEmpty = opponentState.board.length === 0;
-			playerBoard = areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.board : playerState.board;
-			playerEntity =
-				areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
-			opponentBoard =
-				areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
-			opponentEntity =
-				areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
+			if (isPlayerBoardEmpty) {
+				playerBoard = playerState.teammate?.board;
+				playerState.board = [];
+				playerEntity = playerState.teammate?.player;
+			} else {
+				playerBoard = playerState.board;
+				playerEntity = playerState.player;
+			}
+			if (isOpponentBoardEmpty) {
+				opponentBoard = opponentState.teammate?.board;
+				opponentState.board = [];
+				opponentEntity = opponentState.teammate?.player;
+			} else {
+				opponentBoard = opponentState.board;
+				opponentEntity = opponentState.player;
+			}
+			// playerBoard = areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.board : playerState.board;
+			// playerEntity =
+			// 	areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
+			// opponentBoard =
+			// 	areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
+			// opponentEntity =
+			// 	areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
 			// So that gameState.player always refers to the active player
 			if (isPlayerBoardEmpty) {
 				// Reset deaths
