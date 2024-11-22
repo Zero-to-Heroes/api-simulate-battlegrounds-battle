@@ -39,6 +39,8 @@ export const performEntitySpawns = (
 			indexToSpawnAt,
 			newMinion,
 			gameState,
+			true,
+			applySelfAuras,
 		);
 		if (newMinion.attackImmediately) {
 			// console.debug(

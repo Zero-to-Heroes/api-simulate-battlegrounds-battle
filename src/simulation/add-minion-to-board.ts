@@ -33,10 +33,11 @@ export const addMinionToBoard = (
 	minionToAdd: BoardEntity,
 	gameState: FullGameState,
 	performAfterSpawnEffects = true,
+	applySelfAuras = true,
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
-	handleAddedMinionAuraEffect(board, boardHero, otherHero, minionToAdd, gameState);
+	handleAddedMinionAuraEffect(board, boardHero, otherHero, minionToAdd, gameState, applySelfAuras);
 	// Important to do this here, so that "attack immediately" minions can be taken into account by the quests
 	onMinionSummoned(boardHero, board, gameState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, gameState);
@@ -147,6 +148,7 @@ export const handleAddedMinionAuraEffect = (
 	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
+	applySelfAuras = true,
 ): void => {
 	switch (boardHero.heroPowerId) {
 		case CardIds.SproutItOut:
@@ -201,11 +203,14 @@ export const handleAddedMinionAuraEffect = (
 		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, gameState);
 	}
 
-	// The board here already contains the new minion
-	// TODO: what if the additional part is a potential target for the aura effect?
-	// 2024-08-27: changing the order to first handleMinionAddedAuraEffect so that the automatons get boosted,
-	// then apply the aura
-	applyAurasToSelf(spawned, board, boardHero, gameState);
+	// When we want to summon an "exact copy", we need to make sure we don't apply the aura twice
+	if (applySelfAuras) {
+		// The board here already contains the new minion
+		// TODO: what if the additional part is a potential target for the aura effect?
+		// 2024-08-27: changing the order to first handleMinionAddedAuraEffect so that the automatons get boosted,
+		// then apply the aura
+		applyAurasToSelf(spawned, board, boardHero, gameState);
+	}
 };
 
 export const applyAurasToSelf = (

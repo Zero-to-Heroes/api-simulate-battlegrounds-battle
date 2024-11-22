@@ -107,7 +107,7 @@ const handleBoomControllerForPlayer = (
 				spawn,
 			);
 			// FIXME: here it should try to match the position at which the original minions died
-			performEntitySpawns(
+			const actualSpawns = performEntitySpawns(
 				target,
 				playerBoard,
 				playerEntity,
@@ -117,10 +117,21 @@ const handleBoomControllerForPlayer = (
 				opponentEntity,
 				gameState,
 			);
-			target.forEach((t) =>
+			actualSpawns.forEach((t) =>
 				gameState.spectator.registerPowerTarget(playerEntity, t, playerBoard, playerEntity, opponentEntity),
 			);
 			trinket.scriptDataNum1 = 0;
+			// It summons an exact copy
+			// actualSpawns.forEach((entity) => {
+			// 	switch (entity.cardId) {
+			// 		case CardIds.AstralAutomaton_BG_TTN_401:
+			// 		case CardIds.AstralAutomaton_BG_TTN_401_G:
+			// 			const overstatMult = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401 ? 1 : 2;
+			// 			entity.attack = Math.max(1, entity.attack - 2 * overstatMult);
+			// 			entity.health = Math.max(0, entity.health - overstatMult);
+			// 			break;
+			// 	}
+			// });
 		}
 	}
 };
