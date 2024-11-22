@@ -14,7 +14,10 @@ export const handlePreCombatHeroPowers = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	if (Math.random() < 0.5) {
+	let initialPlayerBoardSize = playerBoard.length;
+	let initialOpponentBoardSize = opponentBoard.length;
+	const random = Math.random();
+	if (random < 0.5) {
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
 			playerEntity: playerEntity,
 			playerBoard: playerBoard,
@@ -24,6 +27,8 @@ export const handlePreCombatHeroPowers = (
 			playerIsFriendly: true,
 			gameState,
 		});
+		initialPlayerBoardSize = playerBoard.length;
+		handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
 			playerEntity: opponentEntity,
 			playerBoard: opponentBoard,
@@ -33,6 +38,8 @@ export const handlePreCombatHeroPowers = (
 			playerIsFriendly: false,
 			gameState,
 		});
+		initialOpponentBoardSize = opponentBoard.length;
+		handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	} else {
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
 			playerEntity: opponentEntity,
@@ -43,6 +50,8 @@ export const handlePreCombatHeroPowers = (
 			playerIsFriendly: false,
 			gameState,
 		});
+		initialOpponentBoardSize = opponentBoard.length;
+		handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		currentAttacker = handlePreCombatHeroPowersForPlayer({
 			playerEntity: playerEntity,
 			playerBoard: playerBoard,
@@ -52,13 +61,11 @@ export const handlePreCombatHeroPowers = (
 			playerIsFriendly: true,
 			gameState,
 		});
+		initialPlayerBoardSize = playerBoard.length;
+		handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
-	const initialPlayerBoardSize = playerBoard.length;
-	const initialOpponentBoardSize = opponentBoard.length;
 	// Ozumat's Tentaclecan cause the first player to be recomputed
 	// https://replays.firestoneapp.com/?reviewId=f15c90de-8b3c-4017-960d-365fe09eb7ab&turn=5&action=1
-	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
-
 	if (playerBoard.length !== initialPlayerBoardSize || opponentBoard.length !== initialOpponentBoardSize) {
 		currentAttacker =
 			playerBoard.length > opponentBoard.length
