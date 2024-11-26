@@ -1,6 +1,8 @@
 import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasAvenge } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { grantRandomDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
@@ -174,178 +176,167 @@ const handleAvenge = (
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	// Don't forget to update the avenge data in cards-data
-	switch (avenger.cardId) {
-		case CardIds.BirdBuddy_BG21_002:
-			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 1, 1, gameState, 'BEAST');
-			break;
-		case CardIds.BirdBuddy_BG21_002_G:
-			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 2, 2, gameState, 'BEAST');
-			break;
-		case CardIds.BuddingGreenthumb_BG21_030:
-		case CardIds.BuddingGreenthumb_BG21_030_G:
-			const neighbours = getNeighbours(boardWithDeadEntity, avenger);
-			neighbours.forEach((entity) => {
-				modifyStats(
-					entity,
-					avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2,
-					avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					gameState,
-				);
-				gameState.spectator.registerPowerTarget(
-					avenger,
-					entity,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-				);
-			});
-			break;
-		// case CardIds.FrostwolfLieutenant:
-		// case CardIds.FrostwolfLieutenantBattlegrounds:
-		// 	addStatsToBoard(
-		// 		avenger,
-		// 		boardWithDeadEntity,
-		// 		avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
-		// 		0,
-		// 		allCards,
-		// 		spectator,
-		// 	);
-		// 	break;
-		case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
-		case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
-			// Only for Tavern
-			// addStatsToBoard(
-			// 	avenger,
-			// 	boardWithDeadEntity,
-			// 	0,
-			// 	avenger.cardId === CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G ? 2 : 1,
-			// 	gameState.allCards,
-			// 	gameState.spectator,
-			// );
-			break;
-		case CardIds.PalescaleCrocolisk_BG21_001:
-			const target1 = grantRandomStats(
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				6,
-				6,
-				Race.BEAST,
-				true,
-				gameState,
-			);
-			if (!!target1) {
-				gameState.spectator.registerPowerTarget(
-					avenger,
-					target1,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-				);
-			}
-			break;
-		case CardIds.PalescaleCrocolisk_BG21_001_G:
-			const target2 = grantRandomStats(
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				12,
-				12,
-				Race.BEAST,
-				true,
-				gameState,
-			);
-			if (!!target2) {
-				gameState.spectator.registerPowerTarget(
-					avenger,
-					target2,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-				);
-			}
-			break;
-		case CardIds.ImpatientDoomsayer_BG21_007:
-		case CardIds.ImpatientDoomsayer_BG21_007_G:
-			const doomsayerCardsToAddQuantity = avenger.cardId === CardIds.ImpatientDoomsayer_BG21_007_G ? 2 : 1;
-			const doomsayerCardsToAdd = [];
-			for (let i = 0; i < doomsayerCardsToAddQuantity; i++) {
-				doomsayerCardsToAdd.push(pickRandom(gameState.cardsData.demonSpawns));
-			}
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, doomsayerCardsToAdd, gameState);
-			break;
-		case CardIds.PashmarTheVengeful_BG23_014:
-		case CardIds.PashmarTheVengeful_BG23_014_G:
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-			break;
-		case CardIds.TremblingTrolley_BG28_967:
-		case CardIds.TremblingTrolley_BG28_967_G:
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-			break;
-		case CardIds.WitchwingNestmatron_BG21_038:
-		case CardIds.WitchwingNestmatron_BG21_038_G:
-			const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
-			const nestmatronCardsToAdd = [];
-			for (let i = 0; i < nestmatronToAddQuantity; i++) {
-				nestmatronCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));
-			}
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, nestmatronCardsToAdd, gameState);
-			break;
-		case CardIds.Thorncaller_BG20_105:
-		case CardIds.Thorncaller_BG20_105_G:
-			const thorncallerToAddQuantity = avenger.cardId === CardIds.Thorncaller_BG20_105_G ? 2 : 1;
-			const thorncallerCardsToAdd = Array(thorncallerToAddQuantity).fill(CardIds.BloodGem);
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, thorncallerCardsToAdd, gameState);
-			break;
-		case CardIds.Sisefin_BG21_009:
-		case CardIds.Sisefin_BG21_009_G:
-			const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
-			for (let i = 0; i < poisonousIterations; i++) {
-				const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
-				const murloc = getRandomAliveMinion(
-					validTargets,
-					boardWithDeadEntityHero,
-					Race.MURLOC,
-					gameState.allCards,
-				);
-				if (murloc) {
-					murloc.venomous = true;
+	const avengeImpl = cardMappings[avenger.cardId];
+	if (hasAvenge(avengeImpl)) {
+		avengeImpl.avenge(avenger, {
+			board: boardWithDeadEntity,
+			hero: boardWithDeadEntityHero,
+			otherBoard: otherBoard,
+			otherHero: otherBoardHero,
+			gameState,
+		});
+	} else {
+		// Don't forget to update the avenge data in cards-data
+		switch (avenger.cardId) {
+			case CardIds.BirdBuddy_BG21_002:
+				addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 1, 1, gameState, 'BEAST');
+				break;
+			case CardIds.BirdBuddy_BG21_002_G:
+				addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 2, 2, gameState, 'BEAST');
+				break;
+			case CardIds.BuddingGreenthumb_BG21_030:
+			case CardIds.BuddingGreenthumb_BG21_030_G:
+				const neighbours = getNeighbours(boardWithDeadEntity, avenger);
+				neighbours.forEach((entity) => {
+					modifyStats(
+						entity,
+						avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2,
+						avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						gameState,
+					);
 					gameState.spectator.registerPowerTarget(
 						avenger,
-						murloc,
+						entity,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
+				});
+				break;
+			// case CardIds.FrostwolfLieutenant:
+			// case CardIds.FrostwolfLieutenantBattlegrounds:
+			// 	addStatsToBoard(
+			// 		avenger,
+			// 		boardWithDeadEntity,
+			// 		avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
+			// 		0,
+			// 		allCards,
+			// 		spectator,
+			// 	);
+			// 	break;
+			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
+			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
+				// Only for Tavern
+				// addStatsToBoard(
+				// 	avenger,
+				// 	boardWithDeadEntity,
+				// 	0,
+				// 	avenger.cardId === CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G ? 2 : 1,
+				// 	gameState.allCards,
+				// 	gameState.spectator,
+				// );
+				break;
+			case CardIds.PalescaleCrocolisk_BG21_001:
+				const target1 = grantRandomStats(
+					avenger,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					6,
+					6,
+					Race.BEAST,
+					true,
+					gameState,
+				);
+				if (!!target1) {
+					gameState.spectator.registerPowerTarget(
+						avenger,
+						target1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						otherBoardHero,
 					);
 				}
-			}
-			break;
-		case CardIds.MechanoTank_BG21_023:
-			// This can be null if the avenge triggers when the last enemy minion dies as well
-			const target = getRandomMinionWithHighestHealth(otherBoard);
-			gameState.spectator.registerPowerTarget(
-				avenger,
-				target,
-				otherBoard,
-				boardWithDeadEntityHero,
-				otherBoardHero,
-			);
-			dealDamageToMinion(
-				target,
-				otherBoard,
-				otherBoardHero,
-				avenger,
-				5,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				gameState,
-			);
-			break;
-		case CardIds.MechanoTank_BG21_023_G:
-			for (let i = 0; i < 2; i++) {
+				break;
+			case CardIds.PalescaleCrocolisk_BG21_001_G:
+				const target2 = grantRandomStats(
+					avenger,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					12,
+					12,
+					Race.BEAST,
+					true,
+					gameState,
+				);
+				if (!!target2) {
+					gameState.spectator.registerPowerTarget(
+						avenger,
+						target2,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
+				}
+				break;
+			case CardIds.ImpatientDoomsayer_BG21_007:
+			case CardIds.ImpatientDoomsayer_BG21_007_G:
+				const doomsayerCardsToAddQuantity = avenger.cardId === CardIds.ImpatientDoomsayer_BG21_007_G ? 2 : 1;
+				const doomsayerCardsToAdd = [];
+				for (let i = 0; i < doomsayerCardsToAddQuantity; i++) {
+					doomsayerCardsToAdd.push(pickRandom(gameState.cardsData.demonSpawns));
+				}
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, doomsayerCardsToAdd, gameState);
+				break;
+			case CardIds.PashmarTheVengeful_BG23_014:
+			case CardIds.PashmarTheVengeful_BG23_014_G:
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				break;
+			case CardIds.TremblingTrolley_BG28_967:
+			case CardIds.TremblingTrolley_BG28_967_G:
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				break;
+			case CardIds.WitchwingNestmatron_BG21_038:
+			case CardIds.WitchwingNestmatron_BG21_038_G:
+				const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
+				const nestmatronCardsToAdd = [];
+				for (let i = 0; i < nestmatronToAddQuantity; i++) {
+					nestmatronCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));
+				}
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, nestmatronCardsToAdd, gameState);
+				break;
+			case CardIds.Thorncaller_BG20_105:
+			case CardIds.Thorncaller_BG20_105_G:
+				const thorncallerToAddQuantity = avenger.cardId === CardIds.Thorncaller_BG20_105_G ? 2 : 1;
+				const thorncallerCardsToAdd = Array(thorncallerToAddQuantity).fill(CardIds.BloodGem);
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, thorncallerCardsToAdd, gameState);
+				break;
+			case CardIds.Sisefin_BG21_009:
+			case CardIds.Sisefin_BG21_009_G:
+				const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
+				for (let i = 0; i < poisonousIterations; i++) {
+					const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
+					const murloc = getRandomAliveMinion(
+						validTargets,
+						boardWithDeadEntityHero,
+						Race.MURLOC,
+						gameState.allCards,
+					);
+					if (murloc) {
+						murloc.venomous = true;
+						gameState.spectator.registerPowerTarget(
+							avenger,
+							murloc,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
+					}
+				}
+				break;
+			case CardIds.MechanoTank_BG21_023:
+				// This can be null if the avenge triggers when the last enemy minion dies as well
 				const target = getRandomMinionWithHighestHealth(otherBoard);
 				gameState.spectator.registerPowerTarget(
 					avenger,
@@ -364,38 +355,39 @@ const handleAvenge = (
 					boardWithDeadEntityHero,
 					gameState,
 				);
-			}
-			break;
-		case CardIds.TonyTwoTusk_BG21_031:
-			const nonGoldenMinions = boardWithDeadEntity
-				.filter((e) => e.entityId !== avenger.entityId)
-				.filter((e) => {
-					const ref = gameState.allCards.getCard(e.cardId);
-					return (
-						!!ref.battlegroundsPremiumDbfId &&
-						!!gameState.allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
+				break;
+			case CardIds.MechanoTank_BG21_023_G:
+				for (let i = 0; i < 2; i++) {
+					const target = getRandomMinionWithHighestHealth(otherBoard);
+					gameState.spectator.registerPowerTarget(
+						avenger,
+						target,
+						otherBoard,
+						boardWithDeadEntityHero,
+						otherBoardHero,
 					);
-				});
-			const pirate = getRandomAliveMinion(
-				nonGoldenMinions,
-				boardWithDeadEntityHero,
-				Race.PIRATE,
-				gameState.allCards,
-			);
-			if (pirate) {
-				makeMinionGolden(
-					pirate,
-					avenger,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-					gameState,
-				);
-			}
-			break;
-		case CardIds.TonyTwoTusk_BG21_031_G:
-			for (let i = 0; i < 2; i++) {
-				const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, gameState.allCards));
+					dealDamageToMinion(
+						target,
+						otherBoard,
+						otherBoardHero,
+						avenger,
+						5,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						gameState,
+					);
+				}
+				break;
+			case CardIds.TonyTwoTusk_BG21_031:
+				const nonGoldenMinions = boardWithDeadEntity
+					.filter((e) => e.entityId !== avenger.entityId)
+					.filter((e) => {
+						const ref = gameState.allCards.getCard(e.cardId);
+						return (
+							!!ref.battlegroundsPremiumDbfId &&
+							!!gameState.allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
+						);
+					});
 				const pirate = getRandomAliveMinion(
 					nonGoldenMinions,
 					boardWithDeadEntityHero,
@@ -412,256 +404,146 @@ const handleAvenge = (
 						gameState,
 					);
 				}
-			}
-			break;
-		case CardIds.GhoulOfTheFeast_BG25_002:
-		case CardIds.GhoulOfTheFeast_BG25_002_G:
-			const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
-			grantStatsToMinionsOfEachType(
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				ghoulMultiplier * 3,
-				0,
-				gameState,
-			);
-			break;
-		case CardIds.Bristlebach_BG26_157:
-		case CardIds.Bristlebach_BG26_157_G:
-			const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
-			for (let i = 0; i < bristlebachMultiplier; i++) {
-				for (const entity of boardWithDeadEntity) {
-					if (hasCorrectTribe(entity, boardWithDeadEntityHero, Race.QUILBOAR, gameState.allCards)) {
-						playBloodGemsOn(avenger, entity, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-						gameState.spectator.registerPowerTarget(
+				break;
+			case CardIds.TonyTwoTusk_BG21_031_G:
+				for (let i = 0; i < 2; i++) {
+					const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, gameState.allCards));
+					const pirate = getRandomAliveMinion(
+						nonGoldenMinions,
+						boardWithDeadEntityHero,
+						Race.PIRATE,
+						gameState.allCards,
+					);
+					if (pirate) {
+						makeMinionGolden(
+							pirate,
 							avenger,
-							entity,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
 							otherBoardHero,
+							gameState,
 						);
 					}
 				}
-			}
-			break;
-		case CardIds.HungeringAbomination_BG25_014:
-		case CardIds.HungeringAbomination_BG25_014_G:
-			const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
-			modifyStats(
-				avenger,
-				abominationMultiplier * 1,
-				abominationMultiplier * 2,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				gameState,
-			);
-			gameState.spectator.registerPowerTarget(
-				avenger,
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				otherBoardHero,
-			);
-			break;
-		case CardIds.IceSickle:
-			grantRandomStats(
-				avenger,
-				boardWithDeadEntityHero.hand.filter(
-					(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-				),
-				boardWithDeadEntityHero,
-				4,
-				0,
-				null,
-				true,
-				gameState,
-			);
-			break;
-		case CardIds.BoomSquad_BG27_Reward_502:
-			const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
-			dealDamageToMinion(
-				highestHealthMinion,
-				otherBoard,
-				otherBoardHero,
-				avenger,
-				10,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				gameState,
-			);
-			gameState.spectator.registerPowerTarget(
-				avenger,
-				highestHealthMinion,
-				otherBoard,
-				boardWithDeadEntityHero,
-				otherBoardHero,
-			);
-			break;
-		case CardIds.RelentlessSentry_BG25_003:
-		case CardIds.RelentlessSentry_BG25_003_G:
-			avenger.reborn = true;
-			avenger.taunt = true;
-			break;
-		case CardIds.RelentlessMurghoul_BG27_010:
-		case CardIds.RelentlessMurghoul_BG27_010_G:
-			avenger.reborn = true;
-			break;
-		case CardIds.ChampionOfThePrimus_BG27_029:
-		case CardIds.ChampionOfThePrimus_BG27_029_G:
-			const championPrimusStat = avenger.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
-			boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += championPrimusStat;
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				championPrimusStat,
-				0,
-				gameState,
-				Race[Race.UNDEAD],
-			);
-			break;
-		case CardIds.PhaerixWrathOfTheSun_BG28_403:
-		case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
-			const phaerixLoops = avenger.cardId === CardIds.PhaerixWrathOfTheSun_BG28_403_G ? 2 : 1;
-			for (let i = 0; i < phaerixLoops; i++) {
-				grantRandomDivineShield(
+				break;
+			case CardIds.GhoulOfTheFeast_BG25_002:
+			case CardIds.GhoulOfTheFeast_BG25_002_G:
+				const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
+				grantStatsToMinionsOfEachType(
 					avenger,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
-					otherBoardHero,
+					ghoulMultiplier * 3,
+					0,
 					gameState,
 				);
-			}
-			break;
-		case CardIds.AugmentedLaborer_BG28_740:
-		case CardIds.AugmentedLaborer_BG28_740_G:
-			const AugmentedLaborerLoops = avenger.cardId === CardIds.AugmentedLaborer_BG28_740_G ? 2 : 1;
-			for (let i = 0; i < AugmentedLaborerLoops; i++) {
-				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-			}
-			break;
-		case CardIds.TumblingDisaster_BG28_Reward_505:
-			const tumblingDisasterEntity = boardWithDeadEntityHero.questRewardEntities?.find(
-				(e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505,
-			);
-			if (tumblingDisasterEntity) {
-				tumblingDisasterEntity.scriptDataNum1++;
-			}
-			break;
-		case CardIds.CycleOfEnergy_BG28_Reward_504:
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-			break;
-		case CardIds.StableAmalgamation_BG28_Reward_518:
-			avenger.scriptDataNum1++;
-			break;
-		case CardIds.MurglMkIi_BG29_991:
-		case CardIds.MurglMkIi_BG29_991_G:
-			const murglMkStats = avenger.cardId === CardIds.MurglMkIi_BG29_991_G ? 2 : 1;
-			addStatsToBoard(
-				avenger,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				murglMkStats,
-				murglMkStats,
-				gameState,
-			);
-			// Don't use utility methods, as we don't want triggers to proc
-			for (const e of boardWithDeadEntityHero.hand ?? []) {
-				e.attack += murglMkStats;
-				e.health += murglMkStats;
-				e.maxHealth += murglMkStats;
-			}
-			break;
-		case CardIds.FridgeMagnet_BG30_MagicItem_545:
-			const randomMagnetic = gameState.cardsData.getRandomMechToMagnetize(boardWithDeadEntityHero.tavernTier);
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomMagnetic], gameState);
-			break;
-		case CardIds.QuilligraphySet_BG30_MagicItem_410:
-			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
-			break;
-		case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
-			boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += 1;
-			boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
-			break;
-		case CardIds.GilneanThornedRose_BG30_MagicItem_864:
-			addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 3, 3, gameState);
-			for (const minion of boardWithDeadEntity) {
-				dealDamageToMinion(
-					minion,
+				break;
+			case CardIds.Bristlebach_BG26_157:
+			case CardIds.Bristlebach_BG26_157_G:
+				const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
+				for (let i = 0; i < bristlebachMultiplier; i++) {
+					for (const entity of boardWithDeadEntity) {
+						if (hasCorrectTribe(entity, boardWithDeadEntityHero, Race.QUILBOAR, gameState.allCards)) {
+							playBloodGemsOn(
+								avenger,
+								entity,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								gameState,
+							);
+							gameState.spectator.registerPowerTarget(
+								avenger,
+								entity,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+							);
+						}
+					}
+				}
+				break;
+			case CardIds.HungeringAbomination_BG25_014:
+			case CardIds.HungeringAbomination_BG25_014_G:
+				const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
+				modifyStats(
+					avenger,
+					abominationMultiplier * 1,
+					abominationMultiplier * 2,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
-					avenger,
-					1,
-					otherBoard,
-					otherBoardHero,
 					gameState,
 				);
 				gameState.spectator.registerPowerTarget(
 					avenger,
-					minion,
+					avenger,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
 					otherBoardHero,
 				);
-			}
-			break;
-		case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
-			if (boardWithDeadEntity.length > 0) {
-				const target = pickRandom(boardWithDeadEntity.filter((e) => !e.reborn));
-				if (!!target) {
-					target.reborn = true;
-					gameState.spectator.registerPowerTarget(
-						avenger,
-						target,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoardHero,
-					);
-				}
-			}
-			break;
-		case CardIds.BleedingHeart_BG30_MagicItem_713:
-			const randomUndead = gameState.cardsData.getRandomMinionForTribe(
-				Race.UNDEAD,
-				boardWithDeadEntityHero.tavernTier,
-			);
-			candidatesEntitiesSpawnedFromAvenge.push(
-				...spawnEntities(
-					randomUndead,
-					1,
-					boardWithDeadEntity,
+				break;
+			case CardIds.IceSickle:
+				grantRandomStats(
+					avenger,
+					boardWithDeadEntityHero.hand.filter(
+						(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+					),
 					boardWithDeadEntityHero,
+					4,
+					0,
+					null,
+					true,
+					gameState,
+				);
+				break;
+			case CardIds.BoomSquad_BG27_Reward_502:
+				const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
+				dealDamageToMinion(
+					highestHealthMinion,
 					otherBoard,
 					otherBoardHero,
-					gameState.allCards,
-					gameState.cardsData,
-					gameState.sharedState,
-					gameState.spectator,
-					deadEntity.friendly,
-					false,
-					false,
-					false,
-				),
-			);
-			addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
-			break;
-		case CardIds.KarmicChameleon_BG31_802:
-		case CardIds.KarmicChameleon_BG31_802_G:
-			const chameleonIndex = boardWithDeadEntity.findIndex((entity) => entity.entityId === avenger.entityId);
-			if (chameleonIndex > 0) {
-				const minionToTheLeft = boardWithDeadEntity[chameleonIndex - 1];
-				const clone: BoardEntity = addImpliedMechanics(
-					{
-						...minionToTheLeft,
-						lastAffectedByEntity: null,
-						definitelyDead: false,
-						attackImmediately: false,
-					},
-					gameState.cardsData,
+					avenger,
+					10,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					gameState,
 				);
-				if (avenger.cardId === CardIds.KarmicChameleon_BG31_802_G) {
-					makeMinionGolden(
-						clone,
+				gameState.spectator.registerPowerTarget(
+					avenger,
+					highestHealthMinion,
+					otherBoard,
+					boardWithDeadEntityHero,
+					otherBoardHero,
+				);
+				break;
+			case CardIds.RelentlessSentry_BG25_003:
+			case CardIds.RelentlessSentry_BG25_003_G:
+				avenger.reborn = true;
+				avenger.taunt = true;
+				break;
+			case CardIds.RelentlessMurghoul_BG27_010:
+			case CardIds.RelentlessMurghoul_BG27_010_G:
+				avenger.reborn = true;
+				break;
+			case CardIds.ChampionOfThePrimus_BG27_029:
+			case CardIds.ChampionOfThePrimus_BG27_029_G:
+				const championPrimusStat = avenger.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
+				boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += championPrimusStat;
+				addStatsToBoard(
+					avenger,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					championPrimusStat,
+					0,
+					gameState,
+					Race[Race.UNDEAD],
+				);
+				break;
+			case CardIds.PhaerixWrathOfTheSun_BG28_403:
+			case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
+				const phaerixLoops = avenger.cardId === CardIds.PhaerixWrathOfTheSun_BG28_403_G ? 2 : 1;
+				for (let i = 0; i < phaerixLoops; i++) {
+					grantRandomDivineShield(
 						avenger,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
@@ -669,16 +551,154 @@ const handleAvenge = (
 						gameState,
 					);
 				}
-				gameState.spectator.registerPowerTarget(
-					clone,
-					clone,
+				break;
+			case CardIds.AugmentedLaborer_BG28_740:
+			case CardIds.AugmentedLaborer_BG28_740_G:
+				const AugmentedLaborerLoops = avenger.cardId === CardIds.AugmentedLaborer_BG28_740_G ? 2 : 1;
+				for (let i = 0; i < AugmentedLaborerLoops; i++) {
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				}
+				break;
+			case CardIds.TumblingDisaster_BG28_Reward_505:
+				const tumblingDisasterEntity = boardWithDeadEntityHero.questRewardEntities?.find(
+					(e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505,
+				);
+				if (tumblingDisasterEntity) {
+					tumblingDisasterEntity.scriptDataNum1++;
+				}
+				break;
+			case CardIds.CycleOfEnergy_BG28_Reward_504:
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				break;
+			case CardIds.StableAmalgamation_BG28_Reward_518:
+				avenger.scriptDataNum1++;
+				break;
+			case CardIds.MurglMkIi_BG29_991:
+			case CardIds.MurglMkIi_BG29_991_G:
+				const murglMkStats = avenger.cardId === CardIds.MurglMkIi_BG29_991_G ? 2 : 1;
+				addStatsToBoard(
+					avenger,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
-					otherBoardHero,
+					murglMkStats,
+					murglMkStats,
+					gameState,
 				);
-				boardWithDeadEntity.splice(chameleonIndex, 1, clone);
-			}
-			break;
+				// Don't use utility methods, as we don't want triggers to proc
+				for (const e of boardWithDeadEntityHero.hand ?? []) {
+					e.attack += murglMkStats;
+					e.health += murglMkStats;
+					e.maxHealth += murglMkStats;
+				}
+				break;
+			case CardIds.FridgeMagnet_BG30_MagicItem_545:
+				const randomMagnetic = gameState.cardsData.getRandomMechToMagnetize(boardWithDeadEntityHero.tavernTier);
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomMagnetic], gameState);
+				break;
+			case CardIds.QuilligraphySet_BG30_MagicItem_410:
+				boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
+				break;
+			case CardIds.QuilligraphySet_QuilligraphySetToken_BG30_MagicItem_410t2:
+				boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += 1;
+				boardWithDeadEntityHero.globalInfo.BloodGemHealthBonus += 1;
+				break;
+			case CardIds.GilneanThornedRose_BG30_MagicItem_864:
+				addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 3, 3, gameState);
+				for (const minion of boardWithDeadEntity) {
+					dealDamageToMinion(
+						minion,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						avenger,
+						1,
+						otherBoard,
+						otherBoardHero,
+						gameState,
+					);
+					gameState.spectator.registerPowerTarget(
+						avenger,
+						minion,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
+				}
+				break;
+			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
+				if (boardWithDeadEntity.length > 0) {
+					const target = pickRandom(boardWithDeadEntity.filter((e) => !e.reborn));
+					if (!!target) {
+						target.reborn = true;
+						gameState.spectator.registerPowerTarget(
+							avenger,
+							target,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+						);
+					}
+				}
+				break;
+			case CardIds.BleedingHeart_BG30_MagicItem_713:
+				const randomUndead = gameState.cardsData.getRandomMinionForTribe(
+					Race.UNDEAD,
+					boardWithDeadEntityHero.tavernTier,
+				);
+				candidatesEntitiesSpawnedFromAvenge.push(
+					...spawnEntities(
+						randomUndead,
+						1,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoard,
+						otherBoardHero,
+						gameState.allCards,
+						gameState.cardsData,
+						gameState.sharedState,
+						gameState.spectator,
+						deadEntity.friendly,
+						false,
+						false,
+						false,
+					),
+				);
+				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
+				break;
+			case CardIds.KarmicChameleon_BG31_802:
+			case CardIds.KarmicChameleon_BG31_802_G:
+				const chameleonIndex = boardWithDeadEntity.findIndex((entity) => entity.entityId === avenger.entityId);
+				if (chameleonIndex > 0) {
+					const minionToTheLeft = boardWithDeadEntity[chameleonIndex - 1];
+					const clone: BoardEntity = addImpliedMechanics(
+						{
+							...minionToTheLeft,
+							lastAffectedByEntity: null,
+							definitelyDead: false,
+							attackImmediately: false,
+						},
+						gameState.cardsData,
+					);
+					if (avenger.cardId === CardIds.KarmicChameleon_BG31_802_G) {
+						makeMinionGolden(
+							clone,
+							avenger,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+							gameState,
+						);
+					}
+					gameState.spectator.registerPowerTarget(
+						clone,
+						clone,
+						boardWithDeadEntity,
+						boardWithDeadEntityHero,
+						otherBoardHero,
+					);
+					boardWithDeadEntity.splice(chameleonIndex, 1, clone);
+				}
+				break;
+		}
 	}
 	avenger.avengeCurrent += avenger.avengeDefault;
 };
@@ -744,3 +764,11 @@ const handleHeroAvenge = (
 	}
 	boardWithDeadEntityHero.avengeCurrent += boardWithDeadEntityHero.avengeDefault;
 };
+
+export interface AvengeInput {
+	readonly board: BoardEntity[];
+	readonly hero: BgsPlayerEntity;
+	readonly otherBoard: BoardEntity[];
+	readonly otherHero: BgsPlayerEntity;
+	readonly gameState: FullGameState;
+}

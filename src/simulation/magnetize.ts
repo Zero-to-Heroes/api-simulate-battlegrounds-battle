@@ -23,6 +23,7 @@ export const magnetizeToTarget = (
 		hero,
 		gameState,
 	);
+	// TODO: Dr Boom's Monster?
 	target.taunt = target.taunt || modularCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	target.divineShield = target.divineShield || modularCard.mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
 	target.poisonous = target.poisonous || modularCard.mechanics?.includes(GameTag[GameTag.POISONOUS]);

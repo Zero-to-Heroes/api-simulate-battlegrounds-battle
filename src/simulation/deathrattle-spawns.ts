@@ -1,7 +1,9 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasDeathrattleSpawn } from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom } from '../services/utils';
 import {
 	addStatsToBoard,
@@ -124,325 +126,18 @@ export const spawnEntitiesFromDeathrattle = (
 		// );
 		for (const deadEntityCardId of cardIds) {
 			let hasTriggered = true;
-			switch (deadEntityCardId) {
-				case CardIds.Mecharoo_BOT_445:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.Mecharoo_JoEBotToken_BOT_445t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Mecharoo_TB_BaconUps_002:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.Mecharoo_JoEBotToken_TB_BaconUps_002t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.CadaverCaretaker_BG30_125:
-				case CardIds.CadaverCaretaker_BG30_125_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntity.cardId === CardIds.CadaverCaretaker_BG30_125
-								? CardIds.SkeletonToken
-								: CardIds.Skeleton_BG_ICC_026t_G,
-							4,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.CordPuller_BG29_611:
-				case CardIds.CordPuller_BG29_611_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntity.cardId === CardIds.CordPuller_BG29_611
-								? CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t
-								: CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Manasaber_BG26_800:
-				case CardIds.Manasaber_BG26_800_G:
-					const cublingId =
-						deadEntity.cardId === CardIds.Manasaber_BG26_800_G
-							? CardIds.Manasaber_CublingToken_BG26_800_Gt
-							: CardIds.Manasaber_CublingToken_BG26_800t;
-					spawnedEntities.push(
-						...spawnEntities(
-							cublingId,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.PiggybackImp_BG_AV_309:
-				case CardIds.PiggybackImp_BG_AV_309_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntityCardId === CardIds.PiggybackImp_BG_AV_309_G
-								? CardIds.PiggybackImp_BackpiggyImpToken_BG_AV_309t
-								: CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.HandlessForsaken_BG25_010:
-				case CardIds.HandlessForsaken_BG25_010_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntityCardId === CardIds.HandlessForsaken_BG25_010_G
-								? CardIds.HandlessForsaken_HelpingHandToken_BG25_010_Gt
-								: CardIds.HandlessForsaken_HelpingHandToken_BG25_010t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.EternalSummoner_BG25_009:
-				case CardIds.EternalSummoner_BG25_009_G:
-					// TODO
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntityCardId === CardIds.EternalSummoner_BG25_009_G
-								? CardIds.EternalKnight_BG25_008_G
-								: CardIds.EternalKnight_BG25_008,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Scallywag_BGS_061:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.Scallywag_SkyPirateToken_BGS_061t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Scallywag_TB_BaconUps_141:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.IckyImp_BG21_029:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ImpGangBoss_ImpToken_BRM_006t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.IckyImp_BG21_029_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.HarvestGolemLegacy_BG_EX1_556:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.DamagedGolemLegacy,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.HarvestGolemLegacy_TB_BaconUps_006:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.HarvestGolem_DamagedGolemLegacyToken_TB_BaconUps_006t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SewerRat_BG19_010:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SewerRat_HalfShellToken_BG19_010t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SewerRat_BG19_010_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SewerRat_HalfShellToken_BG19_010_Gt,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy:
-				case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G:
-					const minionsToSpawnMawsworn =
-						deadEntityCardId === CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G ? 6 : 3;
-					for (let i = 0; i < minionsToSpawnMawsworn; i++) {
-						const minionCardId = gameState.cardsData.getRandomMinionForTavernTier(1);
+			const spawnEntityImpl = cardMappings[deadEntityCardId];
+			if (hasDeathrattleSpawn(spawnEntityImpl)) {
+				const spawned = spawnEntityImpl.deathrattleSpawn(deadEntity, deathrattleTriggeredInput);
+				if (spawned?.length) {
+					spawnedEntities.push(...spawned);
+				}
+			} else {
+				switch (deadEntityCardId) {
+					case CardIds.Mecharoo_BOT_445:
 						spawnedEntities.push(
 							...spawnEntities(
-								minionCardId,
+								CardIds.Mecharoo_JoEBotToken_BOT_445t,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -456,24 +151,11 @@ export const spawnEntitiesFromDeathrattle = (
 								false,
 							),
 						);
-					}
-					break;
-				case CardIds.Festergut_BG25_HERO_100_Buddy:
-				case CardIds.Festergut_BG25_HERO_100_Buddy_G:
-					const minionsToSpawnFestergut =
-						deadEntityCardId === CardIds.Festergut_BG25_HERO_100_Buddy_G ? 2 : 1;
-					for (let i = 0; i < minionsToSpawnFestergut; i++) {
-						const randomUndeadCreation = buildRandomUndeadCreation(
-							boardWithDeadEntityHero,
-							boardWithDeadEntity,
-							gameState.allCards,
-							deadEntity.friendly,
-							gameState.cardsData,
-							gameState.sharedState,
-						);
+						break;
+					case CardIds.Mecharoo_TB_BaconUps_002:
 						spawnedEntities.push(
 							...spawnEntities(
-								randomUndeadCreation.cardId,
+								CardIds.Mecharoo_JoEBotToken_TB_BaconUps_002t,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -485,406 +167,17 @@ export const spawnEntitiesFromDeathrattle = (
 								gameState.spectator,
 								deadEntity.friendly,
 								false,
-								false,
-								true,
-								randomUndeadCreation,
 							),
 						);
-					}
-					break;
-				case CardIds.KindlyGrandmother_BG_KAR_005:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.KindlyGrandmother_BigBadWolf_BG_KAR_005a,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.KindlyGrandmother_TB_BaconUps_004:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.KindlyGrandmother_BigBadWolfToken,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.RatPack_BG_CFM_316:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.RatPack_RatToken_BG_CFM_316t,
-							Math.min(7, deadEntity.attack),
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.RatPack_TB_BaconUps_027:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.RatPack_RatToken_TB_BaconUps_027t,
-							Math.min(7, deadEntity.attack),
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Imprisoner_BGS_014:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ImpGangBoss_ImpToken_BRM_006t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Imprisoner_TB_BaconUps_113:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.InfestedWolf_OG_216:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.InfestedWolf_Spider,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.InfestedWolf_TB_BaconUps_026:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.InfestedWolf_SpiderToken,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				// case CardIds.TheBeastLegacy:
-				// case CardIds.TheBeastBattlegrounds:
-				// 	otherBoardSpawnedEntities.push(
-				// 		...spawnEntities(
-				// 			CardIds.FinkleEinhornLegacy,
-				// 			1,
-				// 			otherBoard,
-				// 			otherBoardHero,
-				// 			boardWithDeadEntity,
-				// 			boardWithDeadEntityHero,
-				// 			allCards,
-				// 			spawns,
-				// 			sharedState,
-				// 			spectator,
-				// 			!deadEntity.friendly,
-				// 			false,
-				// 		),
-				// 	);
-				// 	break;
-				case CardIds.ReplicatingMenace_BG_BOT_312:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.ReplicatingMenace_TB_BaconUps_032:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.MechanoEgg_BOT_537:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.MechanoEgg_RobosaurToken_BOT_537t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.MechanoEgg_TB_BaconUps_039:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.MechanoEgg_RobosaurToken_TB_BaconUps_039t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SavannahHighmaneLegacy_BG_EX1_534:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SavannahHighmane_HyenaLegacyToken_BG_EX1_534t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SavannahHighmaneLegacy_TB_BaconUps_049:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SavannahHighmane_HyenaLegacyToken_TB_BaconUps_049t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.RingMatron_BG_DMF_533:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.RingMatron_FieryImpToken_BG_DMF_533t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.RingMatron_TB_BaconUps_309:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.RingMatron_FieryImpToken_TB_BaconUps_309t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SatedThreshadon_UNG_010:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.PrimalfinTotem_PrimalfinToken,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SatedThreshadon_TB_BaconUps_052:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SatedThreshadon_PrimalfinToken,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Ghastcoiler_BGS_008:
-					spawnedEntities.push(
-						...[
-							...spawnEntities(
-								gameState.cardsData.ghastcoilerSpawns[
-									Math.floor(Math.random() * gameState.cardsData.ghastcoilerSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.ghastcoilerSpawns[
-									Math.floor(Math.random() * gameState.cardsData.ghastcoilerSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					break;
-				case CardIds.GentleDjinni_BGS_121:
-				case CardIds.GentleDjinni_TB_BaconUps_165:
-					const djinniSpawns = [];
-					const djinniToSpawnQuandtity = deadEntity.cardId === CardIds.GentleDjinni_TB_BaconUps_165 ? 2 : 1;
-					for (let i = 0; i < djinniToSpawnQuandtity; i++) {
-						djinniSpawns.push(pickRandom(gameState.cardsData.gentleDjinniSpawns));
-					}
-					for (const djinniSpawn of djinniSpawns) {
+						break;
+					case CardIds.CadaverCaretaker_BG30_125:
+					case CardIds.CadaverCaretaker_BG30_125_G:
 						spawnedEntities.push(
 							...spawnEntities(
-								djinniSpawn,
-								1,
+								deadEntity.cardId === CardIds.CadaverCaretaker_BG30_125
+									? CardIds.SkeletonToken
+									: CardIds.Skeleton_BG_ICC_026t_G,
+								4,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
 								otherBoard,
@@ -897,33 +190,14 @@ export const spawnEntitiesFromDeathrattle = (
 								false,
 							),
 						);
-					}
-					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, djinniSpawns, gameState);
-					break;
-
-				case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy:
-				case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G:
-					const kilrekCardsToAddQuantity =
-						deadEntity.cardId === CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G ? 2 : 1;
-					const kilrekCardsToAdd = [];
-					for (let i = 0; i < kilrekCardsToAddQuantity; i++) {
-						kilrekCardsToAdd.push(pickRandom(gameState.cardsData.demonSpawns));
-					}
-					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, kilrekCardsToAdd, gameState);
-					break;
-
-				case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy:
-				case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G:
-					const brannSpawns = [];
-					const brannToSpawnQuandtity =
-						deadEntity.cardId === CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G ? 2 : 1;
-					for (let i = 0; i < brannToSpawnQuandtity; i++) {
-						brannSpawns.push(pickRandom(gameState.cardsData.battlecryMinions));
-					}
-					for (const brannSpawn of brannSpawns) {
+						break;
+					case CardIds.CordPuller_BG29_611:
+					case CardIds.CordPuller_BG29_611_G:
 						spawnedEntities.push(
 							...spawnEntities(
-								brannSpawn,
+								deadEntity.cardId === CardIds.CordPuller_BG29_611
+									? CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t
+									: CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -937,14 +211,640 @@ export const spawnEntitiesFromDeathrattle = (
 								false,
 							),
 						);
-					}
-					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, brannSpawns, gameState);
-					break;
-
-				case CardIds.Ghastcoiler_TRLA_149:
-				case CardIds.Ghastcoiler_TB_BaconUps_057:
-					const ghastcoilerLoop = deadEntity.cardId === CardIds.Ghastcoiler_TB_BaconUps_057 ? 4 : 2;
-					for (let i = 0; i < ghastcoilerLoop; i++) {
+						break;
+					case CardIds.Manasaber_BG26_800:
+					case CardIds.Manasaber_BG26_800_G:
+						const cublingId =
+							deadEntity.cardId === CardIds.Manasaber_BG26_800_G
+								? CardIds.Manasaber_CublingToken_BG26_800_Gt
+								: CardIds.Manasaber_CublingToken_BG26_800t;
+						spawnedEntities.push(
+							...spawnEntities(
+								cublingId,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.PiggybackImp_BG_AV_309:
+					case CardIds.PiggybackImp_BG_AV_309_G:
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntityCardId === CardIds.PiggybackImp_BG_AV_309_G
+									? CardIds.PiggybackImp_BackpiggyImpToken_BG_AV_309t
+									: CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.HandlessForsaken_BG25_010:
+					case CardIds.HandlessForsaken_BG25_010_G:
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntityCardId === CardIds.HandlessForsaken_BG25_010_G
+									? CardIds.HandlessForsaken_HelpingHandToken_BG25_010_Gt
+									: CardIds.HandlessForsaken_HelpingHandToken_BG25_010t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.EternalSummoner_BG25_009:
+					case CardIds.EternalSummoner_BG25_009_G:
+						// TODO
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntityCardId === CardIds.EternalSummoner_BG25_009_G
+									? CardIds.EternalKnight_BG25_008_G
+									: CardIds.EternalKnight_BG25_008,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.Scallywag_BGS_061:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.Scallywag_SkyPirateToken_BGS_061t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.Scallywag_TB_BaconUps_141:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.IckyImp_BG21_029:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ImpGangBoss_ImpToken_BRM_006t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.IckyImp_BG21_029_G:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.HarvestGolemLegacy_BG_EX1_556:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.DamagedGolemLegacy,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.HarvestGolemLegacy_TB_BaconUps_006:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.HarvestGolem_DamagedGolemLegacyToken_TB_BaconUps_006t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SewerRat_BG19_010:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.SewerRat_HalfShellToken_BG19_010t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SewerRat_BG19_010_G:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.SewerRat_HalfShellToken_BG19_010_Gt,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy:
+					case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G:
+						const minionsToSpawnMawsworn =
+							deadEntityCardId === CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G ? 6 : 3;
+						for (let i = 0; i < minionsToSpawnMawsworn; i++) {
+							const minionCardId = gameState.cardsData.getRandomMinionForTavernTier(1);
+							spawnedEntities.push(
+								...spawnEntities(
+									minionCardId,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							);
+						}
+						break;
+					case CardIds.Festergut_BG25_HERO_100_Buddy:
+					case CardIds.Festergut_BG25_HERO_100_Buddy_G:
+						const minionsToSpawnFestergut =
+							deadEntityCardId === CardIds.Festergut_BG25_HERO_100_Buddy_G ? 2 : 1;
+						for (let i = 0; i < minionsToSpawnFestergut; i++) {
+							const randomUndeadCreation = buildRandomUndeadCreation(
+								boardWithDeadEntityHero,
+								boardWithDeadEntity,
+								gameState.allCards,
+								deadEntity.friendly,
+								gameState.cardsData,
+								gameState.sharedState,
+							);
+							spawnedEntities.push(
+								...spawnEntities(
+									randomUndeadCreation.cardId,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+									false,
+									true,
+									randomUndeadCreation,
+								),
+							);
+						}
+						break;
+					case CardIds.KindlyGrandmother_BG_KAR_005:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.KindlyGrandmother_BigBadWolf_BG_KAR_005a,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.KindlyGrandmother_TB_BaconUps_004:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.KindlyGrandmother_BigBadWolfToken,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.RatPack_BG_CFM_316:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.RatPack_RatToken_BG_CFM_316t,
+								Math.min(7, deadEntity.attack),
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.RatPack_TB_BaconUps_027:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.RatPack_RatToken_TB_BaconUps_027t,
+								Math.min(7, deadEntity.attack),
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.Imprisoner_BGS_014:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ImpGangBoss_ImpToken_BRM_006t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.Imprisoner_TB_BaconUps_113:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.InfestedWolf_OG_216:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.InfestedWolf_Spider,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.InfestedWolf_TB_BaconUps_026:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.InfestedWolf_SpiderToken,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					// case CardIds.TheBeastLegacy:
+					// case CardIds.TheBeastBattlegrounds:
+					// 	otherBoardSpawnedEntities.push(
+					// 		...spawnEntities(
+					// 			CardIds.FinkleEinhornLegacy,
+					// 			1,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			allCards,
+					// 			spawns,
+					// 			sharedState,
+					// 			spectator,
+					// 			!deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	break;
+					case CardIds.ReplicatingMenace_BG_BOT_312:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.ReplicatingMenace_TB_BaconUps_032:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.MechanoEgg_BOT_537:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.MechanoEgg_RobosaurToken_BOT_537t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.MechanoEgg_TB_BaconUps_039:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.MechanoEgg_RobosaurToken_TB_BaconUps_039t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SavannahHighmaneLegacy_BG_EX1_534:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.SavannahHighmane_HyenaLegacyToken_BG_EX1_534t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SavannahHighmaneLegacy_TB_BaconUps_049:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.SavannahHighmane_HyenaLegacyToken_TB_BaconUps_049t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.RingMatron_BG_DMF_533:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.RingMatron_FieryImpToken_BG_DMF_533t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.RingMatron_TB_BaconUps_309:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.RingMatron_FieryImpToken_TB_BaconUps_309t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SatedThreshadon_UNG_010:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.PrimalfinTotem_PrimalfinToken,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SatedThreshadon_TB_BaconUps_052:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.SatedThreshadon_PrimalfinToken,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.Ghastcoiler_BGS_008:
 						spawnedEntities.push(
 							...[
 								...spawnEntities(
@@ -963,637 +863,552 @@ export const spawnEntitiesFromDeathrattle = (
 									deadEntity.friendly,
 									false,
 								),
+								...spawnEntities(
+									gameState.cardsData.ghastcoilerSpawns[
+										Math.floor(Math.random() * gameState.cardsData.ghastcoilerSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
 							],
 						);
-					}
-					break;
-				case CardIds.Voidlord_BG_LOOT_368:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.VoidwalkerLegacy_BG_CS2_065,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.Voidlord_TB_BaconUps_059:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.Voidlord_VoidwalkerLegacyToken,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.AnnoyOTroupe_BG26_ETC_321:
-				case CardIds.AnnoyOTroupe_BG26_ETC_321_G:
-					const annoyOTroupeSpawns =
-						deadEntity.cardId === CardIds.AnnoyOTroupe_BG26_ETC_321_G
-							? CardIds.AnnoyOTron_BG_GVG_085_G
-							: CardIds.AnnoyOTron_BG_GVG_085;
-					spawnedEntities.push(
-						...spawnEntities(
-							annoyOTroupeSpawns,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.OmegaBuster_BG21_025:
-				case CardIds.OmegaBuster_BG21_025_G:
-					// Here we have to truncate the spawned entities instead of letting the caller handle it,
-					// because we need to know how many minions couldn't spawn so that we can apply the buff.
-					// HOWEVER, this can cause an issue, if for instance a Scallywag token spawns, attacks right away,
-					// and then Omega Buster spawns. In this case, it will not have yet processed the token's attack,
-					// and will limit the spawns
-					const cardParam = 6;
-					const entitiesToSpawn = Math.max(
-						0,
-						Math.min(cardParam, 7 - boardWithDeadEntity.length - spawnedEntities.length),
-					);
-					const buffAmount =
-						(deadEntityCardId === CardIds.OmegaBuster_BG21_025_G ? 2 : 1) * (cardParam - entitiesToSpawn);
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntityCardId === CardIds.OmegaBuster_BG21_025_G
-								? CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t
-								: CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
-							entitiesToSpawn,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							true,
-						),
-					);
-					addStatsToBoard(
-						deadEntity,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						buffAmount,
-						buffAmount,
-						gameState,
-						Race[Race.MECH],
-					);
-					// when the buster triggers multiple times because of Baron for instance
-					addStatsToBoard(
-						deadEntity,
-						spawnedEntities,
-						boardWithDeadEntityHero,
-						buffAmount,
-						buffAmount,
-						gameState,
-						Race[Race.MECH],
-					);
-					break;
-				// case CardIds.OmegaBusterBattlegrounds:
-				// 	const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
-				// 	const buffAmount2 = 6 - entitiesToSpawn2;
-				// 	spawnedEntities.push(
-				// 		...spawnEntities(
-				// 			CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds,
-				// 			entitiesToSpawn2,
-				// 			boardWithDeadEntity,
-				// 			boardWithDeadEntityHero,
-				// 			otherBoard,
-				// 			otherBoardHero,
-				// 			allCards,
-				// 			spawns,
-				// 			sharedState,
-				// 			spectator,
-				// 			deadEntity.friendly,
-				// 			false,
-				// 		),
-				// 	);
-				// 	addStatsToBoard(deadEntity, boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
-				// 	// when the buster triggers multiple times because of Baron for instance
-				// 	addStatsToBoard(deadEntity, spawnedEntities, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
-				// 	break;
-				case CardIds.KangorsApprentice_BGS_012:
-					const cardIdsToSpawn = gameState.sharedState.deaths
-						.filter((entity) => entity.friendly === deadEntity.friendly)
-						// eslint-disable-next-line prettier/prettier
-						.filter((entity) =>
-							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
-						)
-						.slice(0, 2)
-						.map((entity) => entity.cardId);
-					cardIdsToSpawn.forEach((cardId) =>
-						spawnedEntities.push(
-							...spawnEntities(
-								cardId,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						),
-					);
-					break;
-				case CardIds.KangorsApprentice_TB_BaconUps_087:
-					const cardIdsToSpawn2 = gameState.sharedState.deaths
-						.filter((entity) => entity.friendly === deadEntity.friendly)
-						.filter((entity) =>
-							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
-						)
-						.slice(0, 4)
-						.map((entity) => entity.cardId);
-					cardIdsToSpawn2.forEach((cardId) =>
-						spawnedEntities.push(
-							...spawnEntities(
-								cardId,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						),
-					);
-					break;
-				case CardIds.TheTideRazor_BGS_079:
-					spawnedEntities.push(
-						...[
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					break;
-				case CardIds.TheTideRazor_TB_BaconUps_137:
-					spawnedEntities.push(
-						...[
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-							...spawnEntities(
-								gameState.cardsData.pirateSpawns[
-									Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-								],
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						],
-					);
-					break;
-				case CardIds.SlyRaptor_BG25_806:
-				case CardIds.SlyRaptor_BG25_806_G:
-					const raptorStat = deadEntity.cardId === CardIds.SlyRaptor_BG25_806_G ? 14 : 7;
-					const beastPool = gameState.cardsData.beastSpawns.filter((id) => id !== CardIds.SlyRaptor_BG25_806);
-					const beastsFromRaptor = spawnEntities(
-						beastPool[Math.floor(Math.random() * beastPool.length)],
-						1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						gameState.allCards,
-						gameState.cardsData,
-						gameState.sharedState,
-						gameState.spectator,
-						deadEntity.friendly,
-						false,
-					);
-					beastsFromRaptor.forEach((b) => {
-						b.attack = raptorStat;
-						b.health = raptorStat;
-					});
-					spawnedEntities.push(...beastsFromRaptor);
-					break;
-				case CardIds.OctosariWrapGod_BG26_804:
-				case CardIds.OctosariWrapGod_BG26_804_G:
-					// For remembered deathrattles
-					const stats =
-						deadEntity.scriptDataNum1 ||
-						gameState.sharedState.deaths.find(
-							(e) => e.friendly === deadEntity.friendly && e.cardId === deadEntity.cardId,
-						)?.scriptDataNum1;
-					const octosariSpawn =
-						deadEntity.cardId === CardIds.OctosariWrapGod_BG26_804_G
-							? CardIds.TentacleOfOctosariToken_BG26_803_Gt
-							: CardIds.TentacleOfOctosariToken_BG26_803t;
-					const octoSpawns = spawnEntities(
-						octosariSpawn,
-						1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						gameState.allCards,
-						gameState.cardsData,
-						gameState.sharedState,
-						gameState.spectator,
-						deadEntity.friendly,
-						false,
-					);
-					octoSpawns.forEach((b) => {
-						b.attack = stats;
-						b.health = stats;
-					});
-					spawnedEntities.push(...octoSpawns);
-					break;
-				case CardIds.Bassgill_BG26_350:
-				case CardIds.Bassgill_BG26_350_G:
-					const bassgillIterations = deadEntity.cardId === CardIds.Bassgill_BG26_350_G ? 2 : 1;
-					for (let i = 0; i < bassgillIterations; i++) {
-						const hand =
-							boardWithDeadEntityHero.hand
-								?.filter((e) =>
-									hasCorrectTribe(e, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards),
-								)
-								.filter((e) => !!e?.cardId)
-								.filter((e) => !e.locked) ?? [];
-						const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
-						const highestHealthMinions = highestHealth
-							? hand.filter((c) => c.health === highestHealth)
-							: null;
-						const spawn = !!highestHealthMinions?.length
-							? pickRandom(highestHealthMinions)
-							: hand.filter((c) => c.cardId).length
-							? pickRandom(hand.filter((c) => c.cardId))
-							: null;
-						if (spawn) {
-							spawn.locked = true;
-							// Technically it should not be removed from hand, but rather flagged
-							// Probably very low impact doing it like this
-							// spawn.locked = true;
-							// removeCardFromHand(boardWithDeadEntityHero, spawn);
-							const bassgillSpawns = spawnEntities(
-								spawn.cardId,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-								false,
-								true,
-								{ ...spawn } as BoardEntity,
-							);
-							for (const s of bassgillSpawns) {
-								s.onCanceledSummon = () => (spawn.locked = false);
-								// s.backRef = spawn;
-							}
-							spawnedEntities.push(...bassgillSpawns);
+						break;
+					case CardIds.GentleDjinni_BGS_121:
+					case CardIds.GentleDjinni_TB_BaconUps_165:
+						const djinniSpawns = [];
+						const djinniToSpawnQuandtity =
+							deadEntity.cardId === CardIds.GentleDjinni_TB_BaconUps_165 ? 2 : 1;
+						for (let i = 0; i < djinniToSpawnQuandtity; i++) {
+							djinniSpawns.push(pickRandom(gameState.cardsData.gentleDjinniSpawns));
 						}
-					}
-					break;
-				case CardIds.MechanizedGiftHorse_BG27_008:
-				case CardIds.MechanizedGiftHorse_BG27_008_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntity.cardId === CardIds.MechanizedGiftHorse_BG27_008_G
-								? CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
-								: CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t:
-				case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntity.cardId === CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
-								? CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008_Gt2
-								: CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008t2,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.RapscallionRecruiter_BG26_018:
-				case CardIds.RapscallionRecruiter_BG26_018_G:
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntity.cardId === CardIds.RapscallionRecruiter_BG26_018_G
-								? CardIds.Scallywag_TB_BaconUps_141
-								: CardIds.Scallywag_BGS_061,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.CultistSthara_BG27_081:
-				case CardIds.CultistSthara_BG27_081_G:
-					const cultistStharaSpawnNumber = deadEntity.cardId === CardIds.CultistSthara_BG27_081_G ? 2 : 1;
-					const cultistStharaSpawnCandidates = gameState.sharedState.deaths
-						.filter((entity) => entity.friendly === deadEntity.friendly)
-						.filter((entity) =>
-							hasCorrectTribe(entity, boardWithDeadEntityHero, Race.DEMON, gameState.allCards),
-						)
-						.slice(0, cultistStharaSpawnNumber);
-					cultistStharaSpawnCandidates.forEach((candidate) => {
-						const spawns = spawnEntities(
-							candidate.cardId,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-							false,
-							true,
-						);
-						spawns.forEach((spawn) => {
-							spawn.attack = candidate.maxAttack ?? candidate.attack;
-							spawn.health = candidate.maxHealth ?? candidate.health;
-							spawn.maxHealth = spawn.health;
-						});
-						spawnedEntities.push(...spawns);
-					});
-					break;
-				case CardIds.HarmlessBonehead_BG28_300:
-				case CardIds.HarmlessBonehead_BG28_300_G:
-					const harmlessBoneheadStats = deadEntity.cardId === CardIds.HarmlessBonehead_BG28_300_G ? 2 : 1;
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.SkeletonToken,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-							false,
-							true,
-						).map((e) => ({
-							...e,
-							attack: harmlessBoneheadStats,
-							health: harmlessBoneheadStats,
-						})),
-					);
-					break;
-				case CardIds.AridAtrocity_BG29_864:
-				case CardIds.AridAtrocity_BG29_864_G:
-					const aridAtrocityStatsMultiplier = deadEntity.cardId === CardIds.AridAtrocity_BG29_864_G ? 2 : 1;
-					const friendlyDeadEntities = gameState.sharedState.deaths.filter(
-						(e) => e.friendly === deadEntity.friendly,
-					);
-					const types = getMinionsOfDifferentTypes(friendlyDeadEntities, boardWithDeadEntityHero, gameState);
-					const constaridAtrocityStats = aridAtrocityStatsMultiplier * 7 * types.length;
-					spawnedEntities.push(
-						...spawnEntities(
-							deadEntityCardId === CardIds.AridAtrocity_BG29_864_G
-								? CardIds.AridAtrocity_DesertedGolemToken_BG29_864_Gt
-								: CardIds.AridAtrocity_DesertedGolemToken_BG29_864t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-							false,
-							true,
-						).map((e) => ({
-							...e,
-							attack: e.attack + constaridAtrocityStats,
-							health: e.health + constaridAtrocityStats,
-						})),
-					);
-					break;
-				case CardIds.Magnanimoose_BGDUO_105:
-				case CardIds.Magnanimoose_BGDUO_105_G:
-					const magnanimooseCopies = deadEntity.cardId === CardIds.Magnanimoose_BGDUO_105_G ? 2 : 1;
-					for (let i = 0; i < magnanimooseCopies; i++) {
-						const teammateState = getTeammateInitialState(gameState.gameState, boardWithDeadEntityHero);
-						const teammateBoard = teammateState?.board ?? [];
-						const copied: number[] = [];
-						const minionToCopy = pickRandom(teammateBoard.filter((e) => !copied.includes(e.entityId)));
-						if (minionToCopy) {
-							const copy: BoardEntity = {
-								...minionToCopy,
-								health: 1,
-								maxHealth: 1,
-								enchantments: [...minionToCopy.enchantments],
-								pendingAttackBuffs: [],
-							};
+						for (const djinniSpawn of djinniSpawns) {
 							spawnedEntities.push(
 								...spawnEntities(
-									copy.cardId,
+									djinniSpawn,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							);
+						}
+						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, djinniSpawns, gameState);
+						break;
+
+					case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy:
+					case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G:
+						const kilrekCardsToAddQuantity =
+							deadEntity.cardId === CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G ? 2 : 1;
+						const kilrekCardsToAdd = [];
+						for (let i = 0; i < kilrekCardsToAddQuantity; i++) {
+							kilrekCardsToAdd.push(pickRandom(gameState.cardsData.demonSpawns));
+						}
+						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, kilrekCardsToAdd, gameState);
+						break;
+
+					case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy:
+					case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G:
+						const brannSpawns = [];
+						const brannToSpawnQuandtity =
+							deadEntity.cardId === CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G ? 2 : 1;
+						for (let i = 0; i < brannToSpawnQuandtity; i++) {
+							brannSpawns.push(pickRandom(gameState.cardsData.battlecryMinions));
+						}
+						for (const brannSpawn of brannSpawns) {
+							spawnedEntities.push(
+								...spawnEntities(
+									brannSpawn,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							);
+						}
+						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, brannSpawns, gameState);
+						break;
+
+					case CardIds.Ghastcoiler_TRLA_149:
+					case CardIds.Ghastcoiler_TB_BaconUps_057:
+						const ghastcoilerLoop = deadEntity.cardId === CardIds.Ghastcoiler_TB_BaconUps_057 ? 4 : 2;
+						for (let i = 0; i < ghastcoilerLoop; i++) {
+							spawnedEntities.push(
+								...[
+									...spawnEntities(
+										gameState.cardsData.ghastcoilerSpawns[
+											Math.floor(Math.random() * gameState.cardsData.ghastcoilerSpawns.length)
+										],
+										1,
+										boardWithDeadEntity,
+										boardWithDeadEntityHero,
+										otherBoard,
+										otherBoardHero,
+										gameState.allCards,
+										gameState.cardsData,
+										gameState.sharedState,
+										gameState.spectator,
+										deadEntity.friendly,
+										false,
+									),
+								],
+							);
+						}
+						break;
+					case CardIds.Voidlord_BG_LOOT_368:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.VoidwalkerLegacy_BG_CS2_065,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.Voidlord_TB_BaconUps_059:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.Voidlord_VoidwalkerLegacyToken,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.AnnoyOTroupe_BG26_ETC_321:
+					case CardIds.AnnoyOTroupe_BG26_ETC_321_G:
+						const annoyOTroupeSpawns =
+							deadEntity.cardId === CardIds.AnnoyOTroupe_BG26_ETC_321_G
+								? CardIds.AnnoyOTron_BG_GVG_085_G
+								: CardIds.AnnoyOTron_BG_GVG_085;
+						spawnedEntities.push(
+							...spawnEntities(
+								annoyOTroupeSpawns,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.OmegaBuster_BG21_025:
+					case CardIds.OmegaBuster_BG21_025_G:
+						// Here we have to truncate the spawned entities instead of letting the caller handle it,
+						// because we need to know how many minions couldn't spawn so that we can apply the buff.
+						// HOWEVER, this can cause an issue, if for instance a Scallywag token spawns, attacks right away,
+						// and then Omega Buster spawns. In this case, it will not have yet processed the token's attack,
+						// and will limit the spawns
+						const cardParam = 6;
+						const entitiesToSpawn = Math.max(
+							0,
+							Math.min(cardParam, 7 - boardWithDeadEntity.length - spawnedEntities.length),
+						);
+						const buffAmount =
+							(deadEntityCardId === CardIds.OmegaBuster_BG21_025_G ? 2 : 1) *
+							(cardParam - entitiesToSpawn);
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntityCardId === CardIds.OmegaBuster_BG21_025_G
+									? CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t
+									: CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
+								entitiesToSpawn,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								true,
+							),
+						);
+						addStatsToBoard(
+							deadEntity,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							buffAmount,
+							buffAmount,
+							gameState,
+							Race[Race.MECH],
+						);
+						// when the buster triggers multiple times because of Baron for instance
+						addStatsToBoard(
+							deadEntity,
+							spawnedEntities,
+							boardWithDeadEntityHero,
+							buffAmount,
+							buffAmount,
+							gameState,
+							Race[Race.MECH],
+						);
+						break;
+					// case CardIds.OmegaBusterBattlegrounds:
+					// 	const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
+					// 	const buffAmount2 = 6 - entitiesToSpawn2;
+					// 	spawnedEntities.push(
+					// 		...spawnEntities(
+					// 			CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds,
+					// 			entitiesToSpawn2,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			allCards,
+					// 			spawns,
+					// 			sharedState,
+					// 			spectator,
+					// 			deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	addStatsToBoard(deadEntity, boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
+					// 	// when the buster triggers multiple times because of Baron for instance
+					// 	addStatsToBoard(deadEntity, spawnedEntities, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
+					// 	break;
+					case CardIds.KangorsApprentice_BGS_012:
+						const cardIdsToSpawn = gameState.sharedState.deaths
+							.filter((entity) => entity.friendly === deadEntity.friendly)
+							// eslint-disable-next-line prettier/prettier
+							.filter((entity) =>
+								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
+							)
+							.slice(0, 2)
+							.map((entity) => entity.cardId);
+						cardIdsToSpawn.forEach((cardId) =>
+							spawnedEntities.push(
+								...spawnEntities(
+									cardId,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							),
+						);
+						break;
+					case CardIds.KangorsApprentice_TB_BaconUps_087:
+						const cardIdsToSpawn2 = gameState.sharedState.deaths
+							.filter((entity) => entity.friendly === deadEntity.friendly)
+							.filter((entity) =>
+								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
+							)
+							.slice(0, 4)
+							.map((entity) => entity.cardId);
+						cardIdsToSpawn2.forEach((cardId) =>
+							spawnedEntities.push(
+								...spawnEntities(
+									cardId,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							),
+						);
+						break;
+					case CardIds.TheTideRazor_BGS_079:
+						spawnedEntities.push(
+							...[
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							],
+						);
+						break;
+					case CardIds.TheTideRazor_TB_BaconUps_137:
+						spawnedEntities.push(
+							...[
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+								...spawnEntities(
+									gameState.cardsData.pirateSpawns[
+										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+									],
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							],
+						);
+						break;
+					case CardIds.SlyRaptor_BG25_806:
+					case CardIds.SlyRaptor_BG25_806_G:
+						const raptorStat = deadEntity.cardId === CardIds.SlyRaptor_BG25_806_G ? 14 : 7;
+						const beastPool = gameState.cardsData.beastSpawns.filter(
+							(id) => id !== CardIds.SlyRaptor_BG25_806,
+						);
+						const beastsFromRaptor = spawnEntities(
+							beastPool[Math.floor(Math.random() * beastPool.length)],
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						);
+						beastsFromRaptor.forEach((b) => {
+							b.attack = raptorStat;
+							b.health = raptorStat;
+						});
+						spawnedEntities.push(...beastsFromRaptor);
+						break;
+					case CardIds.OctosariWrapGod_BG26_804:
+					case CardIds.OctosariWrapGod_BG26_804_G:
+						// For remembered deathrattles
+						const stats =
+							deadEntity.scriptDataNum1 ||
+							gameState.sharedState.deaths.find(
+								(e) => e.friendly === deadEntity.friendly && e.cardId === deadEntity.cardId,
+							)?.scriptDataNum1;
+						const octosariSpawn =
+							deadEntity.cardId === CardIds.OctosariWrapGod_BG26_804_G
+								? CardIds.TentacleOfOctosariToken_BG26_803_Gt
+								: CardIds.TentacleOfOctosariToken_BG26_803t;
+						const octoSpawns = spawnEntities(
+							octosariSpawn,
+							1,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoard,
+							otherBoardHero,
+							gameState.allCards,
+							gameState.cardsData,
+							gameState.sharedState,
+							gameState.spectator,
+							deadEntity.friendly,
+							false,
+						);
+						octoSpawns.forEach((b) => {
+							b.attack = stats;
+							b.health = stats;
+						});
+						spawnedEntities.push(...octoSpawns);
+						break;
+					case CardIds.Bassgill_BG26_350:
+					case CardIds.Bassgill_BG26_350_G:
+						const bassgillIterations = deadEntity.cardId === CardIds.Bassgill_BG26_350_G ? 2 : 1;
+						for (let i = 0; i < bassgillIterations; i++) {
+							const hand =
+								boardWithDeadEntityHero.hand
+									?.filter((e) =>
+										hasCorrectTribe(e, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards),
+									)
+									.filter((e) => !!e?.cardId)
+									.filter((e) => !e.locked) ?? [];
+							const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
+							const highestHealthMinions = highestHealth
+								? hand.filter((c) => c.health === highestHealth)
+								: null;
+							const spawn = !!highestHealthMinions?.length
+								? pickRandom(highestHealthMinions)
+								: hand.filter((c) => c.cardId).length
+								? pickRandom(hand.filter((c) => c.cardId))
+								: null;
+							if (spawn) {
+								spawn.locked = true;
+								// Technically it should not be removed from hand, but rather flagged
+								// Probably very low impact doing it like this
+								// spawn.locked = true;
+								// removeCardFromHand(boardWithDeadEntityHero, spawn);
+								const bassgillSpawns = spawnEntities(
+									spawn.cardId,
 									1,
 									boardWithDeadEntity,
 									boardWithDeadEntityHero,
@@ -1607,29 +1422,44 @@ export const spawnEntitiesFromDeathrattle = (
 									false,
 									false,
 									true,
-									copy,
-								),
-							);
-							copied.push(copy.entityId);
+									{ ...spawn } as BoardEntity,
+								);
+								for (const s of bassgillSpawns) {
+									s.onCanceledSummon = () => (spawn.locked = false);
+									// s.backRef = spawn;
+								}
+								spawnedEntities.push(...bassgillSpawns);
+							}
 						}
-					}
-					break;
-				case CardIds.IndomitableMount_BG30_105:
-				case CardIds.IndomitableMount_BG30_105_G:
-					const tiersToSummon = [3, 4, 5];
-					for (const tier of tiersToSummon) {
-						const candidates = gameState.cardsData.beastSpawns.filter(
-							(id) => gameState.allCards.getCard(id).techLevel === tier,
-						);
-						let spawnId = pickRandom(candidates);
-						if (deadEntity.cardId === CardIds.IndomitableMount_BG30_105_G) {
-							const premiumDbfId = gameState.allCards.getCard(spawnId).battlegroundsPremiumDbfId;
-							spawnId = gameState.allCards.getCard(premiumDbfId).id;
-						}
-
+						break;
+					case CardIds.MechanizedGiftHorse_BG27_008:
+					case CardIds.MechanizedGiftHorse_BG27_008_G:
 						spawnedEntities.push(
 							...spawnEntities(
-								spawnId,
+								deadEntity.cardId === CardIds.MechanizedGiftHorse_BG27_008_G
+									? CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
+									: CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t:
+					case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt:
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntity.cardId === CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
+									? CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008_Gt2
+									: CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008t2,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -1643,49 +1473,238 @@ export const spawnEntitiesFromDeathrattle = (
 								false,
 							),
 						);
-					}
-					break;
-
-				// Putricide-only
-				case CardIds.FoulEgg_BG26_RLK_833:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.FoulEgg_FoulFowlToken,
-							1,
-							boardWithDeadEntity,
+						break;
+					case CardIds.RapscallionRecruiter_BG26_018:
+					case CardIds.RapscallionRecruiter_BG26_018_G:
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntity.cardId === CardIds.RapscallionRecruiter_BG26_018_G
+									? CardIds.Scallywag_TB_BaconUps_141
+									: CardIds.Scallywag_BGS_061,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.CultistSthara_BG27_081:
+					case CardIds.CultistSthara_BG27_081_G:
+						const cultistStharaSpawnNumber = deadEntity.cardId === CardIds.CultistSthara_BG27_081_G ? 2 : 1;
+						const cultistStharaSpawnCandidates = gameState.sharedState.deaths
+							.filter((entity) => entity.friendly === deadEntity.friendly)
+							.filter((entity) =>
+								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.DEMON, gameState.allCards),
+							)
+							.slice(0, cultistStharaSpawnNumber);
+						cultistStharaSpawnCandidates.forEach((candidate) => {
+							const spawns = spawnEntities(
+								candidate.cardId,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+								false,
+								true,
+							);
+							spawns.forEach((spawn) => {
+								spawn.attack = candidate.maxAttack ?? candidate.attack;
+								spawn.health = candidate.maxHealth ?? candidate.health;
+								spawn.maxHealth = spawn.health;
+							});
+							spawnedEntities.push(...spawns);
+						});
+						break;
+					case CardIds.HarmlessBonehead_BG28_300:
+					case CardIds.HarmlessBonehead_BG28_300_G:
+						const harmlessBoneheadStats = deadEntity.cardId === CardIds.HarmlessBonehead_BG28_300_G ? 2 : 1;
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.SkeletonToken,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+								false,
+								true,
+							).map((e) => ({
+								...e,
+								attack: harmlessBoneheadStats,
+								health: harmlessBoneheadStats,
+							})),
+						);
+						break;
+					case CardIds.AridAtrocity_BG29_864:
+					case CardIds.AridAtrocity_BG29_864_G:
+						const aridAtrocityStatsMultiplier =
+							deadEntity.cardId === CardIds.AridAtrocity_BG29_864_G ? 2 : 1;
+						const friendlyDeadEntities = gameState.sharedState.deaths.filter(
+							(e) => e.friendly === deadEntity.friendly,
+						);
+						const types = getMinionsOfDifferentTypes(
+							friendlyDeadEntities,
 							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				// case CardIds.SplittingFesteroot_BG26_GIL_616:
-				// 	spawnedEntities.push(
-				// 		...spawnEntities(
-				// 			CardIds.SplittingFesteroot_SplittingSaplingToken,
-				// 			2,
-				// 			boardWithDeadEntity,
-				// 			boardWithDeadEntityHero,
-				// 			otherBoard,
-				// 			otherBoardHero,
-				// 			allCards,
-				// 			spawns,
-				// 			sharedState,
-				// 			spectator,
-				// 			deadEntity.friendly,
-				// 			false,
-				// 		),
-				// 	);
-				// 	break;
-				default:
-					hasTriggered = false;
-					break;
+							gameState,
+						);
+						const constaridAtrocityStats = aridAtrocityStatsMultiplier * 7 * types.length;
+						spawnedEntities.push(
+							...spawnEntities(
+								deadEntityCardId === CardIds.AridAtrocity_BG29_864_G
+									? CardIds.AridAtrocity_DesertedGolemToken_BG29_864_Gt
+									: CardIds.AridAtrocity_DesertedGolemToken_BG29_864t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+								false,
+								true,
+							).map((e) => ({
+								...e,
+								attack: e.attack + constaridAtrocityStats,
+								health: e.health + constaridAtrocityStats,
+							})),
+						);
+						break;
+					case CardIds.Magnanimoose_BGDUO_105:
+					case CardIds.Magnanimoose_BGDUO_105_G:
+						const magnanimooseCopies = deadEntity.cardId === CardIds.Magnanimoose_BGDUO_105_G ? 2 : 1;
+						for (let i = 0; i < magnanimooseCopies; i++) {
+							const teammateState = getTeammateInitialState(gameState.gameState, boardWithDeadEntityHero);
+							const teammateBoard = teammateState?.board ?? [];
+							const copied: number[] = [];
+							const minionToCopy = pickRandom(teammateBoard.filter((e) => !copied.includes(e.entityId)));
+							if (minionToCopy) {
+								const copy: BoardEntity = {
+									...minionToCopy,
+									health: 1,
+									maxHealth: 1,
+									enchantments: [...minionToCopy.enchantments],
+									pendingAttackBuffs: [],
+								};
+								spawnedEntities.push(
+									...spawnEntities(
+										copy.cardId,
+										1,
+										boardWithDeadEntity,
+										boardWithDeadEntityHero,
+										otherBoard,
+										otherBoardHero,
+										gameState.allCards,
+										gameState.cardsData,
+										gameState.sharedState,
+										gameState.spectator,
+										deadEntity.friendly,
+										false,
+										false,
+										true,
+										copy,
+									),
+								);
+								copied.push(copy.entityId);
+							}
+						}
+						break;
+					case CardIds.IndomitableMount_BG30_105:
+					case CardIds.IndomitableMount_BG30_105_G:
+						const tiersToSummon = [3, 4, 5];
+						for (const tier of tiersToSummon) {
+							const candidates = gameState.cardsData.beastSpawns.filter(
+								(id) => gameState.allCards.getCard(id).techLevel === tier,
+							);
+							let spawnId = pickRandom(candidates);
+							if (deadEntity.cardId === CardIds.IndomitableMount_BG30_105_G) {
+								const premiumDbfId = gameState.allCards.getCard(spawnId).battlegroundsPremiumDbfId;
+								spawnId = gameState.allCards.getCard(premiumDbfId).id;
+							}
+
+							spawnedEntities.push(
+								...spawnEntities(
+									spawnId,
+									1,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoard,
+									otherBoardHero,
+									gameState.allCards,
+									gameState.cardsData,
+									gameState.sharedState,
+									gameState.spectator,
+									deadEntity.friendly,
+									false,
+								),
+							);
+						}
+						break;
+
+					// Putricide-only
+					case CardIds.FoulEgg_BG26_RLK_833:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.FoulEgg_FoulFowlToken,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState.allCards,
+								gameState.cardsData,
+								gameState.sharedState,
+								gameState.spectator,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					// case CardIds.SplittingFesteroot_BG26_GIL_616:
+					// 	spawnedEntities.push(
+					// 		...spawnEntities(
+					// 			CardIds.SplittingFesteroot_SplittingSaplingToken,
+					// 			2,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			allCards,
+					// 			spawns,
+					// 			sharedState,
+					// 			spectator,
+					// 			deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	break;
+					default:
+						hasTriggered = false;
+						break;
+				}
 			}
 
 			if (hasTriggered) {

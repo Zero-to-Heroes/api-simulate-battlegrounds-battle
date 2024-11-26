@@ -55,6 +55,8 @@ export interface BgsPlayerGlobalInfo {
 	AstralAutomatonsSummonedThisGame?: number;
 	ChoralAttackBuff?: number;
 	ChoralHealthBuff?: number;
+	BeetleAttackBuff?: number;
+	BeetleHealthBuff?: number;
 }
 
 export interface BgsQuestEntity {

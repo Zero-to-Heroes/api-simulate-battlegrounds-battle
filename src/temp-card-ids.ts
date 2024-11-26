@@ -1,1 +1,16 @@
-export declare const enum TempCardIds {}
+export declare const enum TempCardIds {
+	HoloRover = 'HoloRover',
+	HoloRover_G = 'HoloRover_G',
+	ForestRover = 'ForestRover',
+	ForestRover_G = 'ForestRover_G',
+	BeetleToken = 'BeetleToken',
+	BeetleToken_G = 'BeetleToken_G',
+	BuzzingVermin = 'BuzzingVermin',
+	BuzzingVermin_G = 'BuzzingVermin_G',
+	NestSwarmer = 'NestSwarmer',
+	NestSwarmer_G = 'NestSwarmer_G',
+	RunedProgenitor = 'RunedProgenitor',
+	RunedProgenitor_G = 'RunedProgenitor_G',
+	TurquoiseSkitterer = 'TurquoiseSkitterer',
+	TurquoiseSkitterer_G = 'TurquoiseSkitterer_G',
+}

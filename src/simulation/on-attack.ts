@@ -1,6 +1,8 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnAttack } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom } from '../services/utils';
 import { hasCorrectTribe } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
@@ -18,6 +20,18 @@ export const applyOnAttackEffects = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	const onAttackImpl = cardMappings[attacker.cardId];
+	if (hasOnAttack(onAttackImpl)) {
+		onAttackImpl.onAttack(attacker, {
+			playerEntity: attackingBoardHero,
+			playerBoard: attackingBoard,
+			opponentEntity: defendingBoardHero,
+			opponentBoard: defendingBoard,
+			gameState,
+			playerIsFriendly: attackingBoardHero.friendly,
+		});
+	}
+
 	// Damage happens before the entity is buffed, e.g. before an attack buff from Roaring Rallier
 	if (
 		attacker.cardId === CardIds.ObsidianRavager_BG27_017 ||
@@ -252,3 +266,12 @@ export const applyOnAttackEffects = (
 		}
 	}
 };
+
+export interface OnAttackInput {
+	playerEntity: BgsPlayerEntity;
+	playerBoard: BoardEntity[];
+	opponentEntity: BgsPlayerEntity;
+	opponentBoard: BoardEntity[];
+	gameState: FullGameState;
+	playerIsFriendly: boolean;
+}

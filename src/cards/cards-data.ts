@@ -4,12 +4,13 @@ import {
 	CardType,
 	GameTag,
 	isBattlegroundsCard,
-	NON_BUYABLE_MINION_IDS,
 	Race,
 	ReferenceCard,
 } from '@firestone-hs/reference-data';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
+import { hasAvenge } from './card.interface';
+import { cardMappings } from './impl/_card-mappings';
 
 export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_BGS_019,
@@ -46,7 +47,7 @@ export class CardsData {
 		const poolWithGolden = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
-			.filter((card) => !NON_BUYABLE_MINION_IDS.includes(card.id as CardIds))
+			.filter((card) => card.isBaconPool)
 			.filter((card) => !!card.techLevel)
 			.filter((card) => card.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
@@ -114,6 +115,10 @@ export class CardsData {
 	}
 
 	public avengeValue(cardId: string): number {
+		const avengeImpl = cardMappings[cardId];
+		if (hasAvenge(avengeImpl)) {
+			return avengeImpl.baseAvengeValue(cardId);
+		}
 		switch (cardId) {
 			case CardIds.BirdBuddy_BG21_002:
 			case CardIds.BirdBuddy_BG21_002_G:

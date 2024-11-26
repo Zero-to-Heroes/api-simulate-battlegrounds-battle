@@ -1,7 +1,9 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnDespawned, hasOnSpawned } from '../cards/card.interface';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../divine-shield';
 import { pickRandom } from '../services/utils';
 import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
@@ -344,6 +346,14 @@ export const applyAurasToSelf = (
 		}
 	}
 
+	const onSpawnedImpl = cardMappings[spawned.cardId];
+	if (hasOnSpawned(onSpawnedImpl)) {
+		onSpawnedImpl.onSpawned(spawned, {
+			playerEntity: boardHero,
+			playerBoard: board,
+			gameState,
+		});
+	}
 	switch (spawned.cardId) {
 		case CardIds.EternalKnight_BG25_008:
 		case CardIds.EternalKnight_BG25_008_G:
@@ -374,7 +384,7 @@ export const applyAurasToSelf = (
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Don't count the yourself
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			modifyStats(spawned, 2 * statsBonusAstral, 1 * statsBonusAstral, board, boardHero, gameState);
+			modifyStats(spawned, 2 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -438,6 +448,15 @@ export const removeAurasFromSelf = (
 					break;
 			}
 		}
+	}
+
+	const onDespawnedImpl = cardMappings[entity.cardId];
+	if (hasOnDespawned(onDespawnedImpl)) {
+		onDespawnedImpl.onDespawned(entity, {
+			playerEntity: boardHero,
+			playerBoard: board,
+			gameState,
+		});
 	}
 
 	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.allCards)) {
@@ -804,3 +823,14 @@ const handleAfterSpawnEffect = (
 		}
 	}
 };
+
+export interface OnSpawnInput {
+	playerEntity: BgsPlayerEntity;
+	playerBoard: BoardEntity[];
+	gameState: FullGameState;
+}
+export interface OnDespawnInput {
+	playerEntity: BgsPlayerEntity;
+	playerBoard: BoardEntity[];
+	gameState: FullGameState;
+}
