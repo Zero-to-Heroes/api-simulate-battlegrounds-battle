@@ -33,4 +33,10 @@ export declare const enum TempCardIds {
 	NeonAgent_G = 'NeonAgent_G',
 	ImplantSubject = 'ImplantSubject',
 	ImplantSubject_G = 'ImplantSubject_G',
+	Hackerfin = 'Hackerfin',
+	Hackerfin_G = 'Hackerfin_G',
+	BubbleGunner = 'BubbleGunner',
+	BubbleGunner_G = 'BubbleGunner_G',
+	FairyGillmother = 'FairyGillmother',
+	FairyGillmother_G = 'FairyGillmother_G',
 }

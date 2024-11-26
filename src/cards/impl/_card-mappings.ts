@@ -15,13 +15,16 @@ import {
 	StartOfCombatCard,
 } from '../card.interface';
 import { Beetle } from './minion/beetle';
+import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
 import { DancingBarnstormer } from './minion/dancing-barnstormer';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
+import { FairyGillmother } from './minion/fairy-gillmother';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
 import { GentleDjinni } from './minion/gentle-djinni';
+import { Hackerfin } from './minion/hackerfin';
 import { HoloRover } from './minion/holo-rover';
 import { ImplantSubject } from './minion/implant-subject';
 import { MarqueeTicker } from './minion/marquee-ticker';
@@ -96,4 +99,10 @@ export const cardMappings: {
 	[TempCardIds.NeonAgent_G]: NeonAgent,
 	[TempCardIds.ImplantSubject]: ImplantSubject,
 	[TempCardIds.ImplantSubject_G]: ImplantSubject,
+	[TempCardIds.Hackerfin]: Hackerfin,
+	[TempCardIds.Hackerfin_G]: Hackerfin,
+	[TempCardIds.BubbleGunner]: BubbleGunner,
+	[TempCardIds.BubbleGunner_G]: BubbleGunner,
+	[TempCardIds.FairyGillmother]: FairyGillmother,
+	[TempCardIds.FairyGillmother_G]: FairyGillmother,
 };
