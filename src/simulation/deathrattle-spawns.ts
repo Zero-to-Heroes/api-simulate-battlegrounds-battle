@@ -882,34 +882,6 @@ export const spawnEntitiesFromDeathrattle = (
 							],
 						);
 						break;
-					case CardIds.GentleDjinni_BGS_121:
-					case CardIds.GentleDjinni_TB_BaconUps_165:
-						const djinniSpawns = [];
-						const djinniToSpawnQuandtity =
-							deadEntity.cardId === CardIds.GentleDjinni_TB_BaconUps_165 ? 2 : 1;
-						for (let i = 0; i < djinniToSpawnQuandtity; i++) {
-							djinniSpawns.push(pickRandom(gameState.cardsData.gentleDjinniSpawns));
-						}
-						for (const djinniSpawn of djinniSpawns) {
-							spawnedEntities.push(
-								...spawnEntities(
-									djinniSpawn,
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState.allCards,
-									gameState.cardsData,
-									gameState.sharedState,
-									gameState.spectator,
-									deadEntity.friendly,
-									false,
-								),
-							);
-						}
-						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, djinniSpawns, gameState);
-						break;
 
 					case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy:
 					case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G:

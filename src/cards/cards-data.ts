@@ -7,6 +7,7 @@ import {
 	Race,
 	ReferenceCard,
 } from '@firestone-hs/reference-data';
+import { BoardEntity } from '../board-entity';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 import { hasAvenge } from './card.interface';
@@ -17,6 +18,37 @@ export const WHELP_CARD_IDS = [
 	CardIds.RedWhelp_TB_BaconUps_102,
 	CardIds.Onyxia_OnyxianWhelpToken,
 ];
+
+export const validBonusKeywords = [
+	GameTag.TAUNT,
+	GameTag.DIVINE_SHIELD,
+	GameTag.VENOMOUS,
+	GameTag.POISONOUS,
+	GameTag.WINDFURY,
+	GameTag.STEALTH,
+	GameTag.REBORN,
+];
+
+export const hasKeyword = (entity: BoardEntity, keyword: GameTag) => {
+	switch (keyword) {
+		case GameTag.TAUNT:
+			return entity.taunt;
+		case GameTag.DIVINE_SHIELD:
+			return entity.divineShield;
+		case GameTag.VENOMOUS:
+			return entity.venomous;
+		case GameTag.POISONOUS:
+			return entity.poisonous;
+		case GameTag.WINDFURY:
+			return entity.windfury;
+		case GameTag.STEALTH:
+			return entity.stealth;
+		case GameTag.REBORN:
+			return entity.reborn;
+		default:
+			return false;
+	}
+};
 
 export class CardsData {
 	public ghastcoilerSpawns: readonly string[];
@@ -29,6 +61,7 @@ export class CardsData {
 	public pirateSpawns: readonly string[];
 	public beastSpawns: readonly string[];
 	public scrapScraperSpawns: readonly string[];
+	public endOfTurnMinions: readonly string[];
 
 	public putricidePool1: readonly string[];
 	public putricidePool2: readonly string[];
@@ -97,6 +130,9 @@ export class CardsData {
 		this.beastSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.BEAST)).map((card) => card.id);
 		this.scrapScraperSpawns = this.pool
 			.filter((card) => hasMechanic(card, GameTag[GameTag.MAGNETIC]))
+			.map((card) => card.id);
+		this.endOfTurnMinions = this.pool
+			.filter((card) => hasMechanic(card, GameTag[GameTag.END_OF_TURN]))
 			.map((card) => card.id);
 
 		this.putricidePool1 = this.allCards

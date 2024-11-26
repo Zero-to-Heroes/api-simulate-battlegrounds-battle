@@ -2,7 +2,8 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
-import { StartOfCombatCard, StartOfCombatTiming } from '../../cards/card.interface';
+import { hasStartOfCombat, StartOfCombatCard, StartOfCombatTiming } from '../../cards/card.interface';
+import { cardMappings } from '../../cards/impl/_card-mappings';
 import { AnomalousTwin } from '../../cards/impl/anomaly/anomalous-twin';
 import { BlessedOrBlighted } from '../../cards/impl/anomaly/blessed-or-blighted';
 import { BoonOfBeetles } from '../../cards/impl/bg-spell/boon-of-beetles';
@@ -318,6 +319,10 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return HummingBird;
 
 		default:
+			const candidate = cardMappings[cardId];
+			if (hasStartOfCombat(candidate)) {
+				return candidate;
+			}
 			return null;
 	}
 };

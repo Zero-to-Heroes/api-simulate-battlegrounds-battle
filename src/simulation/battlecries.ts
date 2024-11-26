@@ -1,7 +1,7 @@
 import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasBattlecry } from '../cards/card.interface';
+import { hasBattlecry, hasOnBattlecryTriggered } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom, pickRandomAlive } from '../services/utils';
 import {
@@ -210,17 +210,17 @@ export const triggerBattlecry = (
 					break;
 				case CardIds.KeyboardIgniter_BG26_522:
 				case CardIds.KeyboardIgniter_BG26_522_G:
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 2 : 4,
-						entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 2 : 4,
-						gameState,
-						Race[Race.DEMON],
-					);
 					const numberOfTimesToTrigger = entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 1 : 2;
 					for (let i = 0; i < numberOfTimesToTrigger; i++) {
+						addStatsToBoard(
+							entity,
+							board.filter((e) => e.entityId != entity.entityId),
+							hero,
+							2,
+							2,
+							gameState,
+							Race[Race.DEMON],
+						);
 						dealDamageToHero(entity, hero, board, 2, gameState);
 					}
 					break;
@@ -250,18 +250,6 @@ export const triggerBattlecry = (
 						(entity.cardId === CardIds.AnnihilanBattlemaster_BGS_010 ? 2 : 4) * hpMissing;
 					modifyStats(entity, 0, annihilanStats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
-					break;
-				case CardIds.ElectricSynthesizer_BG26_963:
-				case CardIds.ElectricSynthesizer_BG26_963_G:
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 3 : 6,
-						entity.cardId === CardIds.ElectricSynthesizer_BG26_963 ? 2 : 4,
-						gameState,
-						Race[Race.DRAGON],
-					);
 					break;
 				case CardIds.Necrolyte_BG20_202:
 				case CardIds.Necrolyte_BG20_202_G:
@@ -1030,6 +1018,18 @@ const afterBattlecryTriggered = (
 	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
+	for (const boardEntity of board) {
+		const onBattlecryTriggeredImpl = cardMappings[boardEntity.cardId];
+		if (hasOnBattlecryTriggered(onBattlecryTriggeredImpl)) {
+			onBattlecryTriggeredImpl.onBattlecryTriggered(boardEntity, {
+				board: board,
+				hero: hero,
+				otherBoard: otherBoard,
+				otherHero: otherHero,
+				gameState: gameState,
+			});
+		}
+	}
 	board
 		.filter(
 			(e) =>
@@ -1038,7 +1038,7 @@ const afterBattlecryTriggered = (
 		)
 		.forEach((e) => {
 			const buff = entity.cardId === CardIds.KalecgosArcaneAspect_BGS_041 ? 1 : 2;
-			addStatsToBoard(e, board, hero, buff, buff, gameState, Race[Race.DRAGON]);
+			addStatsToBoard(e, board, hero, buff, 2 * buff, gameState, Race[Race.DRAGON]);
 		});
 	board
 		.filter((e) => e.cardId === CardIds.BlazingSkyfin_BG25_040 || e.cardId === CardIds.BlazingSkyfin_BG25_040_G)
@@ -1101,3 +1101,4 @@ export interface BattlecryInput {
 	otherHero: BgsPlayerEntity;
 	gameState: FullGameState;
 }
+export type OnBattlecryTriggeredInput = BattlecryInput;
