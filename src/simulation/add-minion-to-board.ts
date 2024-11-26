@@ -1,7 +1,7 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasOnDespawned, hasOnSpawned } from '../cards/card.interface';
+import { hasOnDespawned, hasOnOtherSpawned, hasOnSpawned } from '../cards/card.interface';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
@@ -300,6 +300,15 @@ export const applyAurasToSelf = (
 	// 	...(spawned.additionalCards ?? []).map((cardId) => ({ cardId, entityId: spawned.entityId })),
 	// ];
 	for (const entity of board) {
+		const onOtherSpawnedImpl = cardMappings[entity.cardId];
+		if (hasOnOtherSpawned(onOtherSpawnedImpl)) {
+			onOtherSpawnedImpl.onOtherSpawned(entity, {
+				spawned: spawned,
+				playerEntity: boardHero,
+				playerBoard: board,
+				gameState,
+			});
+		}
 		switch (entity.cardId) {
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
@@ -826,6 +835,12 @@ const handleAfterSpawnEffect = (
 };
 
 export interface OnSpawnInput {
+	playerEntity: BgsPlayerEntity;
+	playerBoard: BoardEntity[];
+	gameState: FullGameState;
+}
+export interface OnOtherSpawnInput {
+	spawned: BoardEntity;
 	playerEntity: BgsPlayerEntity;
 	playerBoard: BoardEntity[];
 	gameState: FullGameState;

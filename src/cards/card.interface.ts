@@ -7,7 +7,7 @@ import { OnStealthUpdatedInput } from '../keywords/stealth';
 import { OnTauntUpdatedInput } from '../keywords/taunt';
 import { OnVenomousUpdatedInput } from '../keywords/venomous';
 import { OnWindfuryUpdatedInput } from '../keywords/windfury';
-import { OnDespawnInput, OnSpawnInput } from '../simulation/add-minion-to-board';
+import { OnDespawnInput, OnOtherSpawnInput, OnSpawnInput } from '../simulation/add-minion-to-board';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
@@ -38,6 +38,12 @@ export interface OnSpawnedCard extends Card {
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => void;
 }
 export const hasOnSpawned = (card: Card): card is OnSpawnedCard => (card as OnSpawnedCard)?.onSpawned !== undefined;
+
+export interface OnOtherSpawnedCard extends Card {
+	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => void;
+}
+export const hasOnOtherSpawned = (card: Card): card is OnOtherSpawnedCard =>
+	(card as OnOtherSpawnedCard)?.onOtherSpawned !== undefined;
 
 export interface OnDespawnedCard extends Card {
 	onDespawned: (minion: BoardEntity, input: OnDespawnInput) => void;

@@ -59,6 +59,8 @@ export interface BgsPlayerGlobalInfo {
 	BattlecriesTriggeredThisGame?: number;
 	BeetleAttackBuff?: number;
 	BeetleHealthBuff?: number;
+	MutatedLasherAttackBuff?: number;
+	MutatedLasherHealthBuff?: number;
 }
 
 export interface BgsQuestEntity {

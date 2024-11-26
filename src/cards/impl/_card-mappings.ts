@@ -2,10 +2,12 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { TempCardIds } from '../../temp-card-ids';
 import {
 	BattlecryCard,
+	DeathrattleEffectCard,
 	DeathrattleSpawnCard,
 	EndOfTurnCard,
 	OnAttackCard,
 	OnDivineShieldUpdatedCard,
+	OnOtherSpawnedCard,
 	OnRebornUpdatedCard,
 	OnSpawnedCard,
 	OnStealthUpdatedCard,
@@ -14,6 +16,7 @@ import {
 	OnWindfuryUpdatedCard,
 	StartOfCombatCard,
 } from '../card.interface';
+import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Beetle } from './minion/beetle';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
@@ -29,6 +32,7 @@ import { HoloRover } from './minion/holo-rover';
 import { ImplantSubject } from './minion/implant-subject';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
+import { MutatedLasher } from './minion/mutated-lasher';
 import { NeonAgent } from './minion/neon-agent';
 import { NestSwarmer } from './minion/nest-swarmer';
 import { NetherDrake } from './minion/nether-drake';
@@ -36,6 +40,8 @@ import { OutbackSmolderer } from './minion/outback-smolderer';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
 import { RecklessCliffdiver } from './minion/reckless-cliffdiver';
 import { RunedProgenitor } from './minion/runed-progenitor';
+import { ShowyCyclist } from './minion/showy-cyclist';
+import { SilverHandedRecruit } from './minion/silver-handed-recruit';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
@@ -45,7 +51,9 @@ export const cardMappings: {
 		| OnAttackCard
 		| StartOfCombatCard
 		| OnSpawnedCard
+		| OnOtherSpawnedCard
 		| DeathrattleSpawnCard
+		| DeathrattleEffectCard
 		| BattlecryCard
 		| EndOfTurnCard
 		| OnTauntUpdatedCard
@@ -105,4 +113,12 @@ export const cardMappings: {
 	[TempCardIds.BubbleGunner_G]: BubbleGunner,
 	[TempCardIds.FairyGillmother]: FairyGillmother,
 	[TempCardIds.FairyGillmother_G]: FairyGillmother,
+	[TempCardIds.ShowyCyclist]: ShowyCyclist,
+	[TempCardIds.ShowyCyclist_G]: ShowyCyclist,
+	[TempCardIds.ArcaneCannoneer]: ArcaneCannoneer,
+	[TempCardIds.ArcaneCannoneer_G]: ArcaneCannoneer,
+	[TempCardIds.MutatedLasher]: MutatedLasher,
+	[TempCardIds.MutatedLasher_G]: MutatedLasher,
+	[TempCardIds.SilverHandedRecruit]: SilverHandedRecruit,
+	[TempCardIds.SilverHandedRecruit_G]: SilverHandedRecruit,
 };

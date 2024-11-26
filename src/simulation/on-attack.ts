@@ -26,6 +26,7 @@ export const applyOnAttackEffects = (
 		onAttackImpl.onAttack(attacker, {
 			playerEntity: attackingBoardHero,
 			playerBoard: attackingBoard,
+			defendingEntity: defendingEntity,
 			opponentEntity: defendingBoardHero,
 			opponentBoard: defendingBoard,
 			gameState,
@@ -271,6 +272,7 @@ export const applyOnAttackEffects = (
 export interface OnAttackInput {
 	playerEntity: BgsPlayerEntity;
 	playerBoard: BoardEntity[];
+	defendingEntity: BoardEntity;
 	opponentEntity: BgsPlayerEntity;
 	opponentBoard: BoardEntity[];
 	gameState: FullGameState;

@@ -39,4 +39,12 @@ export declare const enum TempCardIds {
 	BubbleGunner_G = 'BubbleGunner_G',
 	FairyGillmother = 'FairyGillmother',
 	FairyGillmother_G = 'FairyGillmother_G',
+	ShowyCyclist = 'ShowyCyclist',
+	ShowyCyclist_G = 'ShowyCyclist_G',
+	ArcaneCannoneer = 'ArcaneCannoneer',
+	ArcaneCannoneer_G = 'ArcaneCannoneer_G',
+	MutatedLasher = 'MutatedLasher',
+	MutatedLasher_G = 'MutatedLasher_G',
+	SilverHandedRecruit = 'SilverHandedRecruit',
+	SilverHandedRecruit_G = 'SilverHandedRecruit_G',
 }
