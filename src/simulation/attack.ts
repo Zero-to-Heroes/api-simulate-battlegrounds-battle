@@ -3,9 +3,10 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { debugState } from '../debug-state';
-import { updateDivineShield } from '../divine-shield';
+import { updateDivineShield } from '../keywords/divine-shield';
+import { updateVenomous } from '../keywords/venomous';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { addImpliedMechanics, hasCorrectTribe, isFish, updateVenomous } from '../utils';
+import { addImpliedMechanics, hasCorrectTribe, isFish } from '../utils';
 import { applyAfterAttackEffects } from './after-attack';
 import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
@@ -504,12 +505,6 @@ const performAttack = (
 };
 
 const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsService): BoardEntity => {
-	const debug = attackingBoard.map((e) => ({
-		name: allCards.getCard(e.cardId)?.name,
-		attacked: e.hasAttacked,
-		entityId: e.entityId,
-		reborn: e.reborn,
-	}));
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
@@ -862,7 +857,7 @@ export const bumpEntities = (
 		// So that further buffs don't revive it
 		// And we don't just set the health to avoid applying overkill effects
 		entity.definitelyDead = true;
-		updateVenomous(bumpInto, false, otherBoard, otherHero, gameState);
+		updateVenomous(bumpInto, false, otherBoard, otherHero, entityBoardHero, gameState);
 	}
 	// Ideally we should do the Reckoning stuff here. However, at this point we only have half the damage
 	// information, so it is possible that the entity deals more than 3 (which should trigger Reckoning)

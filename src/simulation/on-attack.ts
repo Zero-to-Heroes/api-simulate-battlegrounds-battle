@@ -3,6 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnAttack } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { updateReborn } from '../keywords/reborn';
 import { pickRandom } from '../services/utils';
 import { hasCorrectTribe } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
@@ -223,7 +224,7 @@ export const applyOnAttackEffects = (
 		for (let i = 1; i <= loops; i++) {
 			const target = attackingBoard[attackerIndex + i];
 			if (!!target) {
-				target.reborn = true;
+				updateReborn(target, true, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					attacker,
 					target,

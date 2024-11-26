@@ -4,7 +4,8 @@ import { BoardEntity } from '../board-entity';
 import { hasOnDespawned, hasOnSpawned } from '../cards/card.interface';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { updateDivineShield } from '../divine-shield';
+import { updateDivineShield } from '../keywords/divine-shield';
+import { updateTaunt } from '../keywords/taunt';
 import { pickRandom } from '../services/utils';
 import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
@@ -154,7 +155,7 @@ export const handleAddedMinionAuraEffect = (
 ): void => {
 	switch (boardHero.heroPowerId) {
 		case CardIds.SproutItOut:
-			spawned.taunt = true;
+			updateTaunt(spawned, true, board, boardHero, otherHero, gameState);
 			modifyStats(spawned, 1, 2, board, boardHero, gameState);
 			break;
 		case CardIds.KurtrusAshfallen_CloseThePortal:

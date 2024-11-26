@@ -1,4 +1,5 @@
 import { BoardTrinket } from '../../../bgs-player-entity';
+import { updateReborn } from '../../../keywords/reborn';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { StartOfCombatCard } from '../../card.interface';
 
@@ -12,7 +13,7 @@ export const RebornRites: StartOfCombatCard = {
 				return false;
 			}
 
-			target.reborn = true;
+			updateReborn(target, true, input.playerBoard, input.playerEntity, input.opponentEntity, input.gameState);
 			input.gameState.spectator.registerPowerTarget(
 				input.playerEntity,
 				target,

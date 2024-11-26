@@ -5,7 +5,11 @@ import { BoardEntity } from '../board-entity';
 import { hasDeathrattleEffect } from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { grantRandomDivineShield, updateDivineShield } from '../divine-shield';
+import { grantRandomDivineShield, updateDivineShield } from '../keywords/divine-shield';
+import { updateReborn } from '../keywords/reborn';
+import { updateTaunt } from '../keywords/taunt';
+import { updateVenomous } from '../keywords/venomous';
+import { updateWindfury } from '../keywords/windfury';
 import {
 	groupByFunction,
 	pickMultipleRandomDifferent,
@@ -24,7 +28,6 @@ import {
 	hasMechanic,
 	isFish,
 	isGolden,
-	updateVenomous,
 } from '../utils';
 import {
 	dealDamageToMinion,
@@ -266,7 +269,14 @@ export const handleDeathrattleEffects = (
 								);
 							if (possibleBelcherTargets.length > 0) {
 								const chosen = pickRandom(possibleBelcherTargets);
-								updateVenomous(chosen, true, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+								updateVenomous(
+									chosen,
+									true,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoardHero,
+									gameState,
+								);
 								gameState.spectator.registerPowerTarget(
 									deadEntity,
 									chosen,
@@ -303,8 +313,22 @@ export const handleDeathrattleEffects = (
 										gameState,
 									);
 								}
-								target.taunt = true;
-								target.windfury = true;
+								updateTaunt(
+									target,
+									true,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoardHero,
+									gameState,
+								);
+								updateWindfury(
+									target,
+									true,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoardHero,
+									gameState,
+								);
 								gameState.spectator.registerPowerTarget(
 									deadEntity,
 									target,
@@ -1076,7 +1100,14 @@ export const handleDeathrattleEffects = (
 								);
 							const target = pickRandom(targets);
 							if (target) {
-								target.reborn = true;
+								updateReborn(
+									target,
+									true,
+									boardWithDeadEntity,
+									boardWithDeadEntityHero,
+									otherBoardHero,
+									gameState,
+								);
 								gameState.spectator.registerPowerTarget(
 									deadEntity,
 									target,
@@ -1251,6 +1282,7 @@ export const handleDeathrattleEffects = (
 					applyWaterInvocationEnchantment(
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
+						otherBoardHero,
 						deadEntity,
 						deadEntity,
 						gameState,
@@ -1305,6 +1337,7 @@ export const applyLightningInvocationEnchantment = (
 export const applyWaterInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	deadEntity: BoardEntity,
 	sourceEntity: BgsPlayerEntity | BoardEntity,
 	gameState: FullGameState,
@@ -1314,7 +1347,7 @@ export const applyWaterInvocationEnchantment = (
 		const validBoard = boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead);
 		const target: BoardEntity = validBoard[validBoard.length - 1];
 		if (!!target) {
-			target.taunt = true;
+			updateTaunt(target, true, boardWithDeadEntity, boardWithDeadEntityHero, otherHero, gameState);
 			modifyStats(target, 0, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 			gameState.spectator.registerPowerTarget(sourceEntity, target, boardWithDeadEntity, null, null);
 		}

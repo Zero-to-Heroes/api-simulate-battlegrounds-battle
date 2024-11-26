@@ -1,8 +1,11 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { updateDivineShield } from '../divine-shield';
-import { addStatsToBoard, updateVenomous } from '../utils';
+import { updateDivineShield } from '../keywords/divine-shield';
+import { updateReborn } from '../keywords/reborn';
+import { updateTaunt } from '../keywords/taunt';
+import { updateVenomous } from '../keywords/venomous';
+import { addStatsToBoard } from '../utils';
 import { getNeighbours } from './attack';
 import { FullGameState } from './internal-game-state';
 import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
@@ -222,7 +225,7 @@ export const applyOnBeingAttackedBuffs = (
 			defendingEntity.cardId as CardIds,
 		)
 	) {
-		updateVenomous(defendingEntity, true, defendingBoard, defendingPlayerEntity, gameState);
+		updateVenomous(defendingEntity, true, defendingBoard, defendingPlayerEntity, attackerHero, gameState);
 	}
 
 	// Based on attacking entity
@@ -230,8 +233,8 @@ export const applyOnBeingAttackedBuffs = (
 		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016 ||
 		attackerEntity.cardId === CardIds.SindoreiStraightShot_BG25_016_G
 	) {
-		defendingEntity.taunt = false;
-		defendingEntity.reborn = false;
+		updateTaunt(defendingEntity, false, defendingBoard, defendingPlayerEntity, attackerHero, gameState);
+		updateReborn(defendingEntity, false, defendingBoard, defendingPlayerEntity, attackerHero, gameState);
 	} else if (
 		[CardIds.TransmutedBramblewitch_BG27_013, CardIds.TransmutedBramblewitch_BG27_013_G].includes(
 			attackerEntity.cardId as CardIds,

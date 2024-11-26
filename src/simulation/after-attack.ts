@@ -1,6 +1,7 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { updateStealth } from '../keywords/stealth';
 import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
@@ -100,7 +101,7 @@ export const applyAfterAttackEffects = (
 			modifyStats(e, 1, 0, attackingBoard, attackingBoardHero, gameState);
 		});
 
-	attackingEntity.stealth = false;
+	updateStealth(attackingEntity, false, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 
 	applyOnAttackQuest(attackingEntity, attackingBoard, attackingBoardHero, gameState);
 };

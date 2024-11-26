@@ -3,6 +3,9 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasBattlecry, hasOnBattlecryTriggered } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { updateDivineShield } from '../keywords/divine-shield';
+import { updateTaunt } from '../keywords/taunt';
+import { updateWindfury } from '../keywords/windfury';
 import { pickRandom, pickRandomAlive } from '../services/utils';
 import {
 	addStatsToBoard,
@@ -141,7 +144,7 @@ export const triggerBattlecry = (
 					const sparringPartnersTargets = allMinions.filter((e) => !e.taunt);
 					const sparringPartnersTarget = pickRandom(sparringPartnersTargets);
 					if (sparringPartnersTarget) {
-						sparringPartnersTarget.taunt = true;
+						updateTaunt(sparringPartnersTarget, true, board, hero, otherHero, gameState);
 					}
 					break;
 				case CardIds.TwilightEmissary_BGS_038:
@@ -316,7 +319,7 @@ export const triggerBattlecry = (
 				case CardIds.VigilantStoneborn_BG24_023_G:
 					const vigilantStonebornTarget = pickRandom(board);
 					const vigilantStonebornStats = entity.cardId === CardIds.VigilantStoneborn_BG24_023 ? 6 : 12;
-					vigilantStonebornTarget.taunt = true;
+					updateTaunt(vigilantStonebornTarget, true, board, hero, otherHero, gameState);
 					modifyStats(vigilantStonebornTarget, 0, vigilantStonebornStats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, vigilantStonebornTarget, board, hero, otherHero);
 					break;
@@ -324,7 +327,7 @@ export const triggerBattlecry = (
 				case CardIds.Bonemare_BG26_ICC_705_G:
 					const bonemareTarget = pickRandom(board);
 					const bonemareStats = entity.cardId === CardIds.Bonemare_BG26_ICC_705 ? 4 : 8;
-					bonemareTarget.taunt = true;
+					updateTaunt(bonemareTarget, true, board, hero, otherHero, gameState);
 					modifyStats(bonemareTarget, bonemareStats, bonemareStats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, bonemareTarget, board, hero, otherHero);
 					break;
@@ -396,7 +399,14 @@ export const triggerBattlecry = (
 				case CardIds.IronGroundskeeper_BG27_000_G:
 					const ironGroundskeeperTargets = allMinions;
 					const ironGroundskeeperTarget = pickRandom(ironGroundskeeperTargets);
-					ironGroundskeeperTarget.taunt = !ironGroundskeeperTarget.taunt;
+					updateTaunt(
+						ironGroundskeeperTarget,
+						!ironGroundskeeperTarget.taunt,
+						board,
+						hero,
+						otherHero,
+						gameState,
+					);
 					break;
 				case CardIds.LivingConstellation_BG27_001:
 				case CardIds.LivingConstellation_BG27_001_G:
@@ -623,10 +633,10 @@ export const triggerBattlecry = (
 								});
 								break;
 							case CardIds.LightningSpeedToken:
-								entity.windfury = true;
+								updateWindfury(entity, true, board, hero, otherHero, gameState);
 								break;
 							case CardIds.MassiveToken:
-								entity.taunt = true;
+								updateTaunt(entity, true, board, hero, otherHero, gameState);
 								break;
 							case CardIds.PoisonSpitToken:
 								entity.poisonous = true;
@@ -635,7 +645,7 @@ export const triggerBattlecry = (
 								modifyStats(entity, 0, 3, board, hero, gameState);
 								break;
 							case CardIds.CracklingShieldToken:
-								entity.divineShield = true;
+								updateDivineShield(entity, board, hero, otherHero, true, gameState);
 								break;
 							case CardIds.VolcanicMightToken:
 								modifyStats(entity, 1, 1, board, hero, gameState);
@@ -700,7 +710,7 @@ export const triggerBattlecry = (
 					const assistantGuardMultiplier = entity.cardId === CardIds.AssistantGuard_BG29_845 ? 1 : 2;
 					const assistantGuardTarget = pickRandom(allMinions);
 					if (assistantGuardTarget) {
-						assistantGuardTarget.taunt = true;
+						updateTaunt(assistantGuardTarget, true, board, hero, otherHero, gameState);
 						gameState.spectator.registerPowerTarget(entity, assistantGuardTarget, board, hero, otherHero);
 					}
 					addStatsToBoard(
@@ -984,7 +994,7 @@ export const triggerBattlecry = (
 					);
 					if (!!wandererTarget) {
 						const wandererMultiplier = entity.cardId === CardIds.ParchedWanderer_BG30_756 ? 1 : 2;
-						wandererTarget.taunt = true;
+						updateTaunt(wandererTarget, true, board, hero, otherHero, gameState);
 						modifyStats(
 							wandererTarget,
 							wandererMultiplier * 3,

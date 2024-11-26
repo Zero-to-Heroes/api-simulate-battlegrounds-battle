@@ -1,6 +1,6 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { updateDivineShield } from '../../../divine-shield';
+import { updateDivineShield } from '../../../keywords/divine-shield';
 import { pickRandom } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';

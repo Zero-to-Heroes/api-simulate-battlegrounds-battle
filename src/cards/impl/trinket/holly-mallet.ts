@@ -1,5 +1,5 @@
 import { BoardTrinket } from '../../../bgs-player-entity';
-import { updateDivineShield } from '../../../divine-shield';
+import { updateDivineShield } from '../../../keywords/divine-shield';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
 export const HollyMallet = {

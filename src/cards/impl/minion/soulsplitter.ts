@@ -1,5 +1,6 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { updateReborn } from '../../../keywords/reborn';
 import { pickRandom } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { hasCorrectTribe } from '../../../utils';
@@ -13,7 +14,14 @@ export const Soulsplitter = {
 				.filter((e) => !e.reborn);
 			const chosenUndead = pickRandom(undeadsWithoutReborn);
 			if (chosenUndead) {
-				chosenUndead.reborn = true;
+				updateReborn(
+					chosenUndead,
+					true,
+					input.playerBoard,
+					input.playerEntity,
+					input.opponentEntity,
+					input.gameState,
+				);
 				input.gameState.spectator.registerPowerTarget(
 					minion,
 					chosenUndead,

@@ -2,7 +2,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { updateDivineShield } from '../divine-shield';
+import { updateDivineShield } from '../keywords/divine-shield';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 

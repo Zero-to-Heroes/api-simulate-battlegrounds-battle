@@ -1,6 +1,6 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { grantDivineShieldToLeftmostMinions } from '../../../divine-shield';
+import { grantDivineShieldToLeftmostMinions } from '../../../keywords/divine-shield';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
 export const SunScreener = {

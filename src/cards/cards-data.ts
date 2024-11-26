@@ -37,8 +37,6 @@ export const hasKeyword = (entity: BoardEntity, keyword: GameTag) => {
 			return entity.divineShield;
 		case GameTag.VENOMOUS:
 			return entity.venomous;
-		case GameTag.POISONOUS:
-			return entity.poisonous;
 		case GameTag.WINDFURY:
 			return entity.windfury;
 		case GameTag.STEALTH:

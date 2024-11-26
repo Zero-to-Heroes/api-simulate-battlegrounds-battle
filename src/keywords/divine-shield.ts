@@ -1,11 +1,13 @@
 import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from './bgs-player-entity';
-import { BoardEntity } from './board-entity';
-import { pickRandom } from './services/utils';
-import { addCardsInHand } from './simulation/cards-in-hand';
-import { FullGameState } from './simulation/internal-game-state';
-import { modifyStats } from './simulation/stats';
-import { grantRandomStats, hasCorrectTribe } from './utils';
+import { BgsPlayerEntity } from '../bgs-player-entity';
+import { BoardEntity } from '../board-entity';
+import { hasOnDivineShieldUpdated } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
+import { pickRandom } from '../services/utils';
+import { addCardsInHand } from '../simulation/cards-in-hand';
+import { FullGameState } from '../simulation/internal-game-state';
+import { modifyStats } from '../simulation/stats';
+import { grantRandomStats, hasCorrectTribe } from '../utils';
 
 export const updateDivineShield = (
 	entity: BoardEntity,
@@ -44,6 +46,18 @@ export const updateDivineShield = (
 		if (!!adapter && hasCorrectTribe(entity, hero, Race.MECH, gameState.allCards)) {
 			updateDivineShield(entity, board, hero, otherHero, true, gameState);
 			adapter.scriptDataNum1--;
+		}
+
+		for (const boardEntity of board) {
+			const onDivineShieldUpdatedImpl = cardMappings[boardEntity.cardId];
+			if (hasOnDivineShieldUpdated(onDivineShieldUpdatedImpl)) {
+				onDivineShieldUpdatedImpl.onDivineShieldUpdated(boardEntity, entity, entity.hadDivineShield, {
+					board: board,
+					hero: hero,
+					otherHero: otherHero,
+					gameState: gameState,
+				});
+			}
 		}
 
 		for (let i = 0; i < board.length; i++) {
@@ -104,6 +118,7 @@ export const updateDivineShield = (
 		});
 	}
 };
+
 export const grantRandomDivineShield = (
 	source: BoardEntity,
 	board: BoardEntity[],
@@ -134,3 +149,10 @@ export const grantDivineShieldToLeftmostMinions = (
 		gameState.spectator.registerPowerTarget(source, board[i], board, null, null);
 	}
 };
+
+export interface OnDivineShieldUpdatedInput {
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	otherHero: BgsPlayerEntity;
+	gameState: FullGameState;
+}

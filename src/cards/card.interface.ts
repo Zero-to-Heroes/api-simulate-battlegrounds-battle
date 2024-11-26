@@ -1,6 +1,12 @@
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { BoardSecret } from '../board-secret';
+import { OnDivineShieldUpdatedInput } from '../keywords/divine-shield';
+import { OnRebornUpdatedInput } from '../keywords/reborn';
+import { OnStealthUpdatedInput } from '../keywords/stealth';
+import { OnTauntUpdatedInput } from '../keywords/taunt';
+import { OnVenomousUpdatedInput } from '../keywords/venomous';
+import { OnWindfuryUpdatedInput } from '../keywords/windfury';
 import { OnDespawnInput, OnSpawnInput } from '../simulation/add-minion-to-board';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
@@ -74,3 +80,69 @@ export interface EndOfTurnCard extends Card {
 }
 export const hasEndOfTurn = (card: Card): card is EndOfTurnCard => (card as EndOfTurnCard)?.endOfTurn !== undefined;
 export type EndOfTurnInput = BattlecryInput;
+
+export interface OnDivineShieldUpdatedCard extends Card {
+	onDivineShieldUpdated: (
+		entity: BoardEntity,
+		impactedEntity: BoardEntity,
+		previousValue: boolean,
+		input: OnDivineShieldUpdatedInput,
+	) => void;
+}
+export const hasOnDivineShieldUpdated = (card: Card): card is OnDivineShieldUpdatedCard =>
+	(card as OnDivineShieldUpdatedCard)?.onDivineShieldUpdated !== undefined;
+
+export interface OnTauntUpdatedCard extends Card {
+	onTauntUpdated: (
+		entity: BoardEntity,
+		impactedEntity: BoardEntity,
+		previousValue: boolean,
+		input: OnTauntUpdatedInput,
+	) => void;
+}
+export const hasOnTauntUpdated = (card: Card): card is OnTauntUpdatedCard =>
+	(card as OnTauntUpdatedCard)?.onTauntUpdated !== undefined;
+
+export interface OnRebornUpdatedCard extends Card {
+	onRebornUpdated: (
+		entity: BoardEntity,
+		impactedEntity: BoardEntity,
+		previousValue: boolean,
+		input: OnRebornUpdatedInput,
+	) => void;
+}
+export const hasOnRebornUpdated = (card: Card): card is OnRebornUpdatedCard =>
+	(card as OnRebornUpdatedCard)?.onRebornUpdated !== undefined;
+
+export interface OnStealthUpdatedCard extends Card {
+	onStealthUpdated: (
+		entity: BoardEntity,
+		impactedEntity: BoardEntity,
+		previousValue: boolean,
+		input: OnStealthUpdatedInput,
+	) => void;
+}
+export const hasOnStealthUpdated = (card: Card): card is OnStealthUpdatedCard =>
+	(card as OnStealthUpdatedCard)?.onStealthUpdated !== undefined;
+
+export interface OnVenomousUpdatedCard extends Card {
+	onVenomousUpdated: (
+		entity: BoardEntity,
+		impactedEntity: BoardEntity,
+		previousValue: boolean,
+		input: OnVenomousUpdatedInput,
+	) => void;
+}
+export const hasOnVenomousUpdated = (card: Card): card is OnVenomousUpdatedCard =>
+	(card as OnVenomousUpdatedCard)?.onVenomousUpdated !== undefined;
+
+export interface OnWindfuryUpdatedCard extends Card {
+	onWindfuryUpdated: (
+		entity: BoardEntity,
+		impactedEntity: BoardEntity,
+		previousValue: boolean,
+		input: OnWindfuryUpdatedInput,
+	) => void;
+}
+export const hasOnWindfuryUpdated = (card: Card): card is OnWindfuryUpdatedCard =>
+	(card as OnWindfuryUpdatedCard)?.onWindfuryUpdated !== undefined;

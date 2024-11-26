@@ -5,7 +5,13 @@ import {
 	DeathrattleSpawnCard,
 	EndOfTurnCard,
 	OnAttackCard,
+	OnDivineShieldUpdatedCard,
+	OnRebornUpdatedCard,
 	OnSpawnedCard,
+	OnStealthUpdatedCard,
+	OnTauntUpdatedCard,
+	OnVenomousUpdatedCard,
+	OnWindfuryUpdatedCard,
 	StartOfCombatCard,
 } from '../card.interface';
 import { Beetle } from './minion/beetle';
@@ -17,6 +23,7 @@ import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { HoloRover } from './minion/holo-rover';
+import { ImplantSubject } from './minion/implant-subject';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { NeonAgent } from './minion/neon-agent';
@@ -37,7 +44,13 @@ export const cardMappings: {
 		| OnSpawnedCard
 		| DeathrattleSpawnCard
 		| BattlecryCard
-		| EndOfTurnCard;
+		| EndOfTurnCard
+		| OnTauntUpdatedCard
+		| OnDivineShieldUpdatedCard
+		| OnVenomousUpdatedCard
+		| OnWindfuryUpdatedCard
+		| OnStealthUpdatedCard
+		| OnRebornUpdatedCard;
 } = {
 	[TempCardIds.HoloRover]: HoloRover,
 	[TempCardIds.HoloRover_G]: HoloRover,
@@ -81,4 +94,6 @@ export const cardMappings: {
 	[TempCardIds.FountainChiller_G]: FountainChiller,
 	[TempCardIds.NeonAgent]: NeonAgent,
 	[TempCardIds.NeonAgent_G]: NeonAgent,
+	[TempCardIds.ImplantSubject]: ImplantSubject,
+	[TempCardIds.ImplantSubject_G]: ImplantSubject,
 };

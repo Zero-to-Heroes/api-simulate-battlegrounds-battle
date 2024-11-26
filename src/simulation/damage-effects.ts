@@ -1,7 +1,7 @@
 import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { updateDivineShield } from '../divine-shield';
+import { updateDivineShield } from '../keywords/divine-shield';
 import { pickRandom, pickRandomAlive } from '../services/utils';
 import { addStatsToBoard, grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { dealDamageToRandomEnemy } from './attack';

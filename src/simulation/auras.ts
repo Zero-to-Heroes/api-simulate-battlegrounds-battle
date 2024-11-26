@@ -3,6 +3,7 @@ import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { updateStealth } from '../keywords/stealth';
 import { hasCorrectTribe } from '../utils';
 import { FullGameState } from './internal-game-state';
 
@@ -225,17 +226,23 @@ export const setImplicitDataHero = (
 	hero.globalInfo.GoldrinnBuffHealth = hero.globalInfo.GoldrinnBuffHealth ?? 0;
 };
 
-export const clearStealthIfNeeded = (board: BoardEntity[], otherBoard: BoardEntity[]): void => {
+export const clearStealthIfNeeded = (
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
 	// https://twitter.com/DCalkosz/status/1562194944688660481?s=20&t=100I8IVZmBKgYQWkdK8nIA
 	if (board.every((entity) => entity.stealth && !entity.attack)) {
-		board.forEach((e) => (e.stealth = false));
+		board.forEach((e) => updateStealth(e, false, board, hero, otherHero, gameState));
 	}
 	if (otherBoard.every((entity) => entity.stealth && !entity.attack)) {
-		otherBoard.forEach((e) => (e.stealth = false));
+		otherBoard.forEach((e) => updateStealth(e, false, otherBoard, otherHero, hero, gameState));
 	}
 	if (board.every((e) => e.stealth) && otherBoard.every((e) => e.stealth)) {
-		board.forEach((e) => (e.stealth = false));
-		otherBoard.forEach((e) => (e.stealth = false));
+		board.forEach((e) => updateStealth(e, false, board, hero, otherHero, gameState));
+		otherBoard.forEach((e) => updateStealth(e, false, otherBoard, otherHero, hero, gameState));
 	}
 };
 

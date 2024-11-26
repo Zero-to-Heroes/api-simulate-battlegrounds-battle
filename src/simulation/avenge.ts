@@ -3,7 +3,10 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasAvenge } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { grantRandomDivineShield } from '../divine-shield';
+import { grantRandomDivineShield } from '../keywords/divine-shield';
+import { updateReborn } from '../keywords/reborn';
+import { updateTaunt } from '../keywords/taunt';
+import { updateVenomous } from '../keywords/venomous';
 import { pickRandom } from '../services/utils';
 import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
 import {
@@ -324,7 +327,14 @@ const handleAvenge = (
 						gameState.allCards,
 					);
 					if (murloc) {
-						murloc.venomous = true;
+						updateVenomous(
+							murloc,
+							true,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+							gameState,
+						);
 						gameState.spectator.registerPowerTarget(
 							avenger,
 							murloc,
@@ -518,12 +528,13 @@ const handleAvenge = (
 				break;
 			case CardIds.RelentlessSentry_BG25_003:
 			case CardIds.RelentlessSentry_BG25_003_G:
-				avenger.reborn = true;
-				avenger.taunt = true;
+				updateReborn(avenger, true, boardWithDeadEntity, boardWithDeadEntityHero, otherBoardHero, gameState);
+				updateTaunt(avenger, true, boardWithDeadEntity, boardWithDeadEntityHero, otherBoardHero, gameState);
 				break;
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
-				avenger.reborn = true;
+				updateReborn(avenger, true, boardWithDeadEntity, boardWithDeadEntityHero, otherBoardHero, gameState);
+				updateTaunt(avenger, true, boardWithDeadEntity, boardWithDeadEntityHero, otherBoardHero, gameState);
 				break;
 			case CardIds.ChampionOfThePrimus_BG27_029:
 			case CardIds.ChampionOfThePrimus_BG27_029_G:
@@ -628,7 +639,14 @@ const handleAvenge = (
 				if (boardWithDeadEntity.length > 0) {
 					const target = pickRandom(boardWithDeadEntity.filter((e) => !e.reborn));
 					if (!!target) {
-						target.reborn = true;
+						updateReborn(
+							target,
+							true,
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+							gameState,
+						);
 						gameState.spectator.registerPowerTarget(
 							avenger,
 							target,

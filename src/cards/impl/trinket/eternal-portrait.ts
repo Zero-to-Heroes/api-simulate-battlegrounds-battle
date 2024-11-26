@@ -1,5 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
+import { updateReborn } from '../../../keywords/reborn';
+import { updateTaunt } from '../../../keywords/taunt';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
 export const EternalPortrait = {
@@ -9,8 +11,15 @@ export const EternalPortrait = {
 			.filter((e) => !e.taunt || !e.reborn);
 		if (candidates?.length) {
 			candidates.forEach((knight) => {
-				knight.taunt = true;
-				knight.reborn = true;
+				updateTaunt(knight, true, input.playerBoard, input.playerEntity, input.opponentEntity, input.gameState);
+				updateReborn(
+					knight,
+					true,
+					input.playerBoard,
+					input.playerEntity,
+					input.opponentEntity,
+					input.gameState,
+				);
 				input.gameState.spectator.registerPowerTarget(
 					input.playerEntity,
 					knight,

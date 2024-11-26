@@ -244,43 +244,6 @@ export const grantRandomStats = (
 	return null;
 };
 
-export const updateVenomous = (
-	entity: BoardEntity,
-	newValue: boolean,
-	board: BoardEntity[],
-	boardHero: BgsPlayerEntity,
-	gameState: FullGameState,
-): void => {
-	const lostVenomous = entity.venomous && !newValue;
-	entity.venomous = newValue;
-	if (lostVenomous) {
-		const belcherPortraits = boardHero.trinkets.filter(
-			(t) =>
-				t.cardId === CardIds.BelcherPortrait_BG30_MagicItem_432 ||
-				t.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t,
-		);
-		belcherPortraits.forEach((p) => {
-			const buff = p.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t ? 14 : 4;
-			modifyStats(entity, buff, buff, board, boardHero, gameState);
-			gameState.spectator.registerPowerTarget(p, entity, board, null, null);
-		});
-	}
-};
-
-// export const grantAllDivineShield = (
-// 	board: BoardEntity[],
-// 	hero: BgsPlayerEntity,
-// 	tribe: string,
-// 	cards: AllCardsService,
-// ): void => {
-// 	const elligibleEntities = board
-// 		.filter((entity) => !entity.divineShield)
-// 		.filter((entity) => hasCorrectTribe(entity, hero, getRaceEnum(tribe), cards));
-// 	for (const entity of elligibleEntities) {
-// 		updateDivineShield(entity, board, true, cards);
-// 	}
-// };
-
 export const getRandomAliveMinion = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,

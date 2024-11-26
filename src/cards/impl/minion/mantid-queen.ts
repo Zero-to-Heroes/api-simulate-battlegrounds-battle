@@ -1,5 +1,8 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { updateReborn } from '../../../keywords/reborn';
+import { updateTaunt } from '../../../keywords/taunt';
+import { updateWindfury } from '../../../keywords/windfury';
 import { pickRandom } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
@@ -22,13 +25,34 @@ export const MantidQueen = {
 						modifyStats(minion, 5, 5, input.playerBoard, input.playerEntity, input.gameState);
 						break;
 					case 'reborn':
-						minion.reborn = true;
+						updateReborn(
+							minion,
+							true,
+							input.playerBoard,
+							input.playerEntity,
+							input.opponentEntity,
+							input.gameState,
+						);
 						break;
 					case 'taunt':
-						minion.taunt = true;
+						updateTaunt(
+							minion,
+							true,
+							input.playerBoard,
+							input.playerEntity,
+							input.opponentEntity,
+							input.gameState,
+						);
 						break;
 					case 'windfury':
-						minion.windfury = true;
+						updateWindfury(
+							minion,
+							true,
+							input.playerBoard,
+							input.playerEntity,
+							input.opponentEntity,
+							input.gameState,
+						);
 						break;
 				}
 				input.gameState.spectator.registerPowerTarget(

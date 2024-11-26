@@ -1,5 +1,6 @@
 import { BoardTrinket } from '../../../bgs-player-entity';
-import { updateDivineShield } from '../../../divine-shield';
+import { updateDivineShield } from '../../../keywords/divine-shield';
+import { updateReborn } from '../../../keywords/reborn';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
 export const BlessedOrBlighted = {
@@ -15,7 +16,14 @@ export const BlessedOrBlighted = {
 				input.gameState,
 			);
 			const rebornTarget = input.playerBoard[input.playerBoard.length - 1];
-			rebornTarget.reborn = true;
+			updateReborn(
+				rebornTarget,
+				true,
+				input.playerBoard,
+				input.playerEntity,
+				input.opponentEntity,
+				input.gameState,
+			);
 			return true;
 		}
 	},
