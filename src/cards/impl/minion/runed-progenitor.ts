@@ -7,6 +7,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { AvengeCard, DeathrattleSpawnCard } from '../../card.interface';
 
 export const RunedProgenitor: DeathrattleSpawnCard & AvengeCard = {
+	cardIds: [TempCardIds.RunedProgenitor, TempCardIds.RunedProgenitor_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const numberOfSpawns = deadEntity.cardId === TempCardIds.RunedProgenitor_G ? 2 : 1;
 		return spawnEntities(

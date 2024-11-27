@@ -8,6 +8,7 @@ import { hasCorrectTribe } from '../../../utils';
 import { BattlecryCard } from '../../card.interface';
 
 export const TwilightPrimordium: BattlecryCard = {
+	cardIds: [TempCardIds.TwilightPrimordium, TempCardIds.TwilightPrimordium_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const currentBuffValue = minion.scriptDataNum1;
 		const mult = minion.cardId === TempCardIds.TwilightPrimordium_G ? 2 : 1;

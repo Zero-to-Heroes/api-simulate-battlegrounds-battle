@@ -8,7 +8,7 @@ import { updateReborn } from '../keywords/reborn';
 import { updateTaunt } from '../keywords/taunt';
 import { updateVenomous } from '../keywords/venomous';
 import { pickRandom } from '../services/utils';
-import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
+import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
 	addImpliedMechanics,
 	addStatsToBoard,
@@ -126,7 +126,7 @@ export const applyAvengeEffects = (
 	// Not an avenge, but with Avenge timing
 	const hasDeathrattle =
 		hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag[GameTag.DEATHRATTLE]) ||
-		deadEntity.enchantments.some((e) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(e.cardId as CardIds));
+		deadEntity.enchantments.some((e) => isValidDeathrattleEnchantment(e.cardId));
 	if (hasDeathrattle) {
 		// These are apparently processed after Reborn is triggered
 		// http://replays.firestoneapp.com/?reviewId=5db9a191-ae9b-43a5-a072-0d460631d7a9&turn=23&action=12

@@ -13,6 +13,7 @@ import { BattlecryCard } from '../../card.interface';
 import { validBonusKeywords } from '../../cards-data';
 
 export const BubbleGunner: BattlecryCard = {
+	cardIds: [TempCardIds.BubbleGunner, TempCardIds.BubbleGunner_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		let possibleKeywords = [...validBonusKeywords];
 		const iterations = minion.cardId === TempCardIds.BubbleGunner_G ? 2 : 1;

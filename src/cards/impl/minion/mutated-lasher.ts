@@ -6,6 +6,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleEffectCard, OnOtherSpawnedCard } from '../../card.interface';
 
 export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedCard = {
+	cardIds: [TempCardIds.MutatedLasher, TempCardIds.MutatedLasher_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === TempCardIds.MutatedLasher_G ? 2 : 1;
 		input.boardWithDeadEntityHero.globalInfo.MutatedLasherAttackBuff += 2 * mult;

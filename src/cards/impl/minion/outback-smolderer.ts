@@ -5,6 +5,7 @@ import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { EndOfTurnCard } from '../../card.interface';
 
 export const OutbackSmolderer: EndOfTurnCard = {
+	cardIds: [CardIds.OutbackSmolderer_BG28_592, CardIds.OutbackSmolderer_BG28_592_G],
 	endOfTurn: (minion: BoardEntity, input: BattlecryInput) => {
 		const cards =
 			minion.cardId === CardIds.OutbackSmolderer_BG28_592_G

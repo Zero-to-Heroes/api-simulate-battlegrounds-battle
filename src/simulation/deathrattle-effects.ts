@@ -2,7 +2,7 @@
 import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasDeathrattleEffect } from '../cards/card.interface';
+import { hasDeathrattleEffect, hasDeathrattleEnchantmentEffect } from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { grantRandomDivineShield, updateDivineShield } from '../keywords/divine-shield';
@@ -10,14 +10,8 @@ import { updateReborn } from '../keywords/reborn';
 import { updateTaunt } from '../keywords/taunt';
 import { updateVenomous } from '../keywords/venomous';
 import { updateWindfury } from '../keywords/windfury';
-import {
-	groupByFunction,
-	pickMultipleRandomDifferent,
-	pickRandom,
-	pickRandomAlive,
-	pickRandomLowestHealth,
-} from '../services/utils';
-import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
+import { pickMultipleRandomDifferent, pickRandom, pickRandomAlive, pickRandomLowestHealth } from '../services/utils';
+import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
 	grantRandomAttack,
@@ -129,7 +123,7 @@ export const handleDeathrattleEffects = (
 	// deathrattles
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
-	let enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
+	const enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
 		...(deadEntity.enchantments ?? []),
 		// These seem to be first processed separately
 		// ...(deadEntity.rememberedDeathrattles ?? []),
@@ -139,40 +133,40 @@ export const handleDeathrattleEffects = (
 	// often as we should, so that we can have the stats themselves correct
 	// We don't want to lump everything together, as it skews the stats when there are a lot of buffs
 	// Instead, we build groups
-	const maxNumberOfGroups = 12;
-	const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
-	enchantments = Object.keys(enchantmentGroups)
-		.filter((cardId) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(cardId as CardIds))
-		.flatMap((cardId) => {
-			let repeatsToApply = enchantmentGroups[cardId].map((e) => e.repeats || 1).reduce((a, b) => a + b, 0);
-			// Frogs include the multiplers here directly
-			if (
-				[
-					CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
-					CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
-				].includes(cardId as CardIds)
-			) {
-				repeatsToApply = repeatsToApply * multiplier;
-			}
+	// Rework this again when Leapfrogger goes back in
+	// const maxNumberOfGroups = 12;
+	// const enchantmentGroups = groupByFunction((enchantment: any) => enchantment.cardId)(enchantments);
+	// enchantments = Object.keys(enchantmentGroups)
+	// 	.filter((cardId) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(cardId as CardIds))
+	// 	.flatMap((cardId) => {
+	// 		let repeatsToApply = enchantmentGroups[cardId].map((e) => e.repeats || 1).reduce((a, b) => a + b, 0);
+	// 		// Frogs include the multiplers here directly
+	// 		if (
+	// 			[
+	// 				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
+	// 				CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
+	// 			].includes(cardId as CardIds)
+	// 		) {
+	// 			repeatsToApply = repeatsToApply * multiplier;
+	// 		}
 
-			const results = [];
-			const repeatsPerBuff = Math.max(1, Math.floor(repeatsToApply / maxNumberOfGroups));
-			let repeatsDone = 0;
-			while (repeatsDone < repeatsToApply) {
-				const repeats = Math.min(repeatsPerBuff, repeatsToApply - repeatsDone);
-				results.push({
-					cardId: cardId,
-					repeats: repeats,
-					timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
-				});
-				repeatsDone += repeatsPerBuff;
-			}
-			return results;
-		});
+	// 		const results = [];
+	// 		const repeatsPerBuff = Math.max(1, Math.floor(repeatsToApply / maxNumberOfGroups));
+	// 		let repeatsDone = 0;
+	// 		while (repeatsDone < repeatsToApply) {
+	// 			const repeats = Math.min(repeatsPerBuff, repeatsToApply - repeatsDone);
+	// 			results.push({
+	// 				cardId: cardId,
+	// 				repeats: repeats,
+	// 				timing: Math.min(...enchantmentGroups[cardId].map((e) => e.timing)),
+	// 			});
+	// 			repeatsDone += repeatsPerBuff;
+	// 		}
+	// 		return results;
+	// 	});
 
 	// FIXME; this is not correct, as fish can have leapfrogger card Id OR enchantment id as a
 	// remembered deathrattle, and the remembered deathrattle is handled only via the card id
-
 	// TODO put the muliplier look here, and handle onDeathrattleTriggered like is done for
 	// deathrattle-spawns
 	for (const deadEntityCardId of cardIds) {
@@ -1239,12 +1233,23 @@ export const handleDeathrattleEffects = (
 	}
 
 	for (const enchantment of enchantments) {
+		const deathrattleImpl = cardMappings[enchantment.cardId];
+		if (hasDeathrattleEnchantmentEffect(deathrattleImpl)) {
+			for (let i = 0; i < multiplier; i++) {
+				deathrattleImpl.deathrattleEnchantmentEffect(enchantment, deathrattleTriggeredInput);
+				onDeathrattleTriggered(deathrattleTriggeredInput);
+			}
+		}
 		switch (enchantment.cardId) {
 			case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
-				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				for (let i = 0; i < multiplier; i++) {
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+				}
 				break;
 			case CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e:
-				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
+				for (let i = 0; i < multiplier; i++) {
+					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
+				}
 				break;
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
 			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
@@ -1930,7 +1935,7 @@ export const rememberDeathrattles = (
 			repeats: enchantment.repeats ?? 1,
 			timing: sharedState.currentEntityId++,
 		}))
-		.filter((enchantment) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(enchantment.cardId as CardIds));
+		.filter((enchantment) => isValidDeathrattleEnchantment(enchantment.cardId));
 	// Multiple fish
 	const deadEntityRememberedDeathrattles =
 		deadEntities

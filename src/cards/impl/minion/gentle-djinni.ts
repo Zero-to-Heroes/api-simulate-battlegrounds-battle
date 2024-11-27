@@ -7,6 +7,7 @@ import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-tr
 import { BattlecryCard, DeathrattleEffectCard } from '../../card.interface';
 
 export const GentleDjinni: BattlecryCard & DeathrattleEffectCard = {
+	cardIds: [CardIds.GentleDjinni_BGS_121, CardIds.GentleDjinni_TB_BaconUps_165],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const cards = [];
 		const numberOfCards = minion.cardId === CardIds.GentleDjinni_TB_BaconUps_165 ? 2 : 1;

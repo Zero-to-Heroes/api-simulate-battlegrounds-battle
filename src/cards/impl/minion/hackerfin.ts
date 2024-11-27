@@ -6,6 +6,7 @@ import { BattlecryCard } from '../../card.interface';
 import { hasKeyword, validBonusKeywords } from '../../cards-data';
 
 export const Hackerfin: BattlecryCard = {
+	cardIds: [TempCardIds.Hackerfin, TempCardIds.Hackerfin_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		for (const entity of input.board) {
 			const mult = minion.cardId === TempCardIds.Hackerfin_G ? 2 : 1;

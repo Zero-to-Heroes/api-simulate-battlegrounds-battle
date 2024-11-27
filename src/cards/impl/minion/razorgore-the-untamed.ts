@@ -6,6 +6,7 @@ import { hasCorrectTribe } from '../../../utils';
 import { EndOfTurnCard } from '../../card.interface';
 
 export const RazorgoreTheUntamed: EndOfTurnCard = {
+	cardIds: [CardIds.RazorgoreTheUntamed_BGS_036, CardIds.RazorgoreTheUntamed_TB_BaconUps_106],
 	endOfTurn: (minion: BoardEntity, input: BattlecryInput) => {
 		const otherDragons = input.board
 			.filter((e) => e.entityId !== minion.entityId)

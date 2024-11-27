@@ -6,6 +6,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { OnAttackCard } from '../../card.interface';
 
 export const NeonAgent: OnAttackCard = {
+	cardIds: [TempCardIds.NeonAgent, TempCardIds.NeonAgent_G],
 	onAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		const cards = [];
 		const numberOfCards = minion.cardId === TempCardIds.NeonAgent_G ? 2 : 1;

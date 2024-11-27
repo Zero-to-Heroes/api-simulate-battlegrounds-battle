@@ -5,6 +5,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { OnAttackCard } from '../../card.interface';
 
 export const HoloRover: OnAttackCard = {
+	cardIds: [TempCardIds.HoloRover, TempCardIds.HoloRover_G],
 	onAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		const numberOfCard = minion.cardId === TempCardIds.HoloRover_G ? 2 : 1;
 		for (let i = 0; i < numberOfCard; i++) {

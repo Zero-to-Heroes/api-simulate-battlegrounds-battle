@@ -21,6 +21,7 @@ export const ImplantSubject: OnTauntUpdatedCard &
 	OnWindfuryUpdatedCard &
 	OnStealthUpdatedCard &
 	OnRebornUpdatedCard = {
+	cardIds: [TempCardIds.ImplantSubject, TempCardIds.ImplantSubject_G],
 	onTauntUpdated: (
 		entity: BoardEntity,
 		impactedEntity: BoardEntity,

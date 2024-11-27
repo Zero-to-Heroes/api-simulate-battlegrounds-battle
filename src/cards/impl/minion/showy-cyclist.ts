@@ -5,6 +5,7 @@ import { addStatsToBoard } from '../../../utils';
 import { DeathrattleEffectCard } from '../../card.interface';
 
 export const ShowyCyclist: DeathrattleEffectCard = {
+	cardIds: [TempCardIds.ShowyCyclist, TempCardIds.ShowyCyclist_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const baseBuff = minion.scriptDataNum1;
 		const mult = minion.cardId === TempCardIds.ShowyCyclist_G ? 2 : 1;

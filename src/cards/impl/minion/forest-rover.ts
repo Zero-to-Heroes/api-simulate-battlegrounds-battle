@@ -7,6 +7,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { BattlecryCard, DeathrattleSpawnCard } from '../../card.interface';
 
 export const ForestRover: DeathrattleSpawnCard & BattlecryCard = {
+	cardIds: [TempCardIds.ForestRover, TempCardIds.ForestRover_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const numberOfSpawns = deadEntity.cardId === TempCardIds.ForestRover_G ? 2 : 1;
 		return spawnEntities(

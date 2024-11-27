@@ -5,6 +5,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { BattlecryCard } from '../../card.interface';
 
 export const SilverHandedRecruit: BattlecryCard = {
+	cardIds: [TempCardIds.SilverHandedRecruit, TempCardIds.SilverHandedRecruit_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === TempCardIds.SilverHandedRecruit_G ? 2 : 1;
 		input.board

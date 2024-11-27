@@ -6,6 +6,7 @@ import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleEffectCard, DeathrattleSpawnCard } from '../../card.interface';
 
 export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleEffectCard = {
+	cardIds: [TempCardIds.TurquoiseSkitterer, TempCardIds.TurquoiseSkitterer_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const numberOfSpawns = deadEntity.cardId === TempCardIds.TurquoiseSkitterer_G ? 2 : 1;
 		return spawnEntities(

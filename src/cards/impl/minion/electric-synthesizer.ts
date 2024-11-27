@@ -6,6 +6,7 @@ import { addStatsToBoard, hasCorrectTribe } from '../../../utils';
 import { BattlecryCard, StartOfCombatCard } from '../../card.interface';
 
 export const ElectricSynthesizer: StartOfCombatCard & BattlecryCard = {
+	cardIds: [CardIds.ElectricSynthesizer_BG26_963, CardIds.ElectricSynthesizer_BG26_963_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const otherDragons = input.playerBoard
 			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards))

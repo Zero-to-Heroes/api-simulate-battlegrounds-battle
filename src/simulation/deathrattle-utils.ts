@@ -1,6 +1,5 @@
-import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
-import { VALID_DEATHRATTLE_ENCHANTMENTS } from '../simulate-bgs-battle';
+import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import { hasMechanic } from '../utils';
 import { FullGameState } from './internal-game-state';
 
@@ -16,7 +15,7 @@ export const getValidDeathrattles = (board: BoardEntity[], gameState: FullGameSt
 			entity.enchantments &&
 			entity.enchantments
 				.map((enchantment) => enchantment.cardId)
-				.some((enchantmentId) => VALID_DEATHRATTLE_ENCHANTMENTS.includes(enchantmentId as CardIds))
+				.some((enchantmentId) => isValidDeathrattleEnchantment(enchantmentId))
 		) {
 			return true;
 		}

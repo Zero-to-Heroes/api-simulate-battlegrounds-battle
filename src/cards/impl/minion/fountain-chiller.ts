@@ -9,6 +9,7 @@ import { BattlecryCard } from '../../card.interface';
 import { hasKeyword, validBonusKeywords } from '../../cards-data';
 
 export const FountainChiller: BattlecryCard = {
+	cardIds: [TempCardIds.FountainChiller, TempCardIds.FountainChiller_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === TempCardIds.FountainChiller_G ? 2 : 1;
 		let totalKeywords = 0;

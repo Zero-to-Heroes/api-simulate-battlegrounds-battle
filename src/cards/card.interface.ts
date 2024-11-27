@@ -17,6 +17,8 @@ import { SoCInput } from '../simulation/start-of-combat/start-of-combat-input';
 import { OnStatsChangedInput } from '../simulation/stats';
 
 export interface Card {
+	// Maybe should make this mandatory
+	cardIds?: readonly string[];
 	startOfCombat?: (
 		trinket: BoardEntity | BoardTrinket | BgsPlayerEntity | BoardSecret,
 		input: SoCInput,
@@ -87,6 +89,16 @@ export interface DeathrattleEffectCard extends Card {
 }
 export const hasDeathrattleEffect = (card: Card): card is DeathrattleEffectCard =>
 	(card as DeathrattleEffectCard)?.deathrattleEffect !== undefined;
+
+export interface DeathrattleEnchantmentEffectCard extends Card {
+	deathrattleEnchantmentEffect: (
+		minion: { cardId: string; originEntityId?: number; repeats?: number },
+		input: DeathrattleTriggeredInput,
+	) => void;
+	cardIds: readonly string[];
+}
+export const hasDeathrattleEnchantmentEffect = (card: Card): card is DeathrattleEnchantmentEffectCard =>
+	(card as DeathrattleEnchantmentEffectCard)?.deathrattleEnchantmentEffect !== undefined;
 
 export interface OnCardAddedToHandCard extends Card {
 	onCardAddedToHand: (entity: BoardEntity | BgsQuestEntity, input: OnCardAddedToHandInput) => void;
