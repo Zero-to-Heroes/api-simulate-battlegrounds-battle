@@ -1,4 +1,4 @@
-import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
+import { BgsPlayerEntity, BgsQuestEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { BoardSecret } from '../board-secret';
 import { OnDivineShieldUpdatedInput } from '../keywords/divine-shield';
@@ -10,9 +10,11 @@ import { OnWindfuryUpdatedInput } from '../keywords/windfury';
 import { OnDespawnInput, OnOtherSpawnInput, OnSpawnInput } from '../simulation/add-minion-to-board';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
+import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../simulation/on-attack';
 import { SoCInput } from '../simulation/start-of-combat/start-of-combat-input';
+import { OnStatsChangedInput } from '../simulation/stats';
 
 export interface Card {
 	startOfCombat?: (
@@ -20,6 +22,12 @@ export interface Card {
 		input: SoCInput,
 	) => boolean | { hasTriggered: boolean; shouldRecomputeCurrentAttacker: boolean };
 }
+
+export interface DefaultChargesCard extends Card {
+	defaultCharges: number;
+}
+export const hasDefaultCharges = (card: Card): card is DefaultChargesCard =>
+	(card as DefaultChargesCard)?.defaultCharges !== undefined;
 
 export interface StartOfCombatCard extends Card {
 	startOfCombatTiming?: StartOfCombatTiming;
@@ -79,6 +87,12 @@ export interface DeathrattleEffectCard extends Card {
 }
 export const hasDeathrattleEffect = (card: Card): card is DeathrattleEffectCard =>
 	(card as DeathrattleEffectCard)?.deathrattleEffect !== undefined;
+
+export interface OnCardAddedToHandCard extends Card {
+	onCardAddedToHand: (entity: BoardEntity | BgsQuestEntity, input: OnCardAddedToHandInput) => void;
+}
+export const hasOnCardAddedToHand = (card: Card): card is OnCardAddedToHandCard =>
+	(card as OnCardAddedToHandCard)?.onCardAddedToHand !== undefined;
 
 export interface EndOfTurnCard extends Card {
 	// Use BattlecryInput because it's the only way end of turn effects are triggered
@@ -152,3 +166,9 @@ export interface OnWindfuryUpdatedCard extends Card {
 }
 export const hasOnWindfuryUpdated = (card: Card): card is OnWindfuryUpdatedCard =>
 	(card as OnWindfuryUpdatedCard)?.onWindfuryUpdated !== undefined;
+
+export interface OnStatsChangedCard extends Card {
+	onStatsChanged: (entity: BoardEntity, input: OnStatsChangedInput) => void;
+}
+export const hasOnStatsChanged = (card: Card): card is OnStatsChangedCard =>
+	(card as OnStatsChangedCard)?.onStatsChanged !== undefined;

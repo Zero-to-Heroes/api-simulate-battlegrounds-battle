@@ -1,6 +1,8 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnStatsChanged } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { addStatsToBoard, hasCorrectTribe } from '../utils';
 import { applyAurasToSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
@@ -68,6 +70,7 @@ export const modifyStats = (
 
 	if (realAttackAmount > 0) {
 		entity.maxAttack += realAttackAmount;
+
 		if (hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.allCards)) {
 			const whelpSmugglers = friendlyBoard.filter(
 				(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
@@ -190,16 +193,18 @@ export const modifyStats = (
 		});
 	}
 
-	onStatsUpdate(entity, friendlyBoard, friendlyBoardHero, gameState);
+	onStatsUpdate(entity, realAttackAmount, realHealthAmount, friendlyBoard, friendlyBoardHero, gameState);
 };
 
 const onStatsUpdate = (
 	entity: BoardEntity,
+	realAttackAmount: number,
+	realHealthAmount: number,
 	friendlyBoard: BoardEntity[],
 	friendlyHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	onStatUpdateMinions(entity, friendlyBoard, friendlyHero, gameState);
+	onStatUpdateMinions(entity, realAttackAmount, realHealthAmount, friendlyBoard, friendlyHero, gameState);
 	onStatUpdateQuests(entity, friendlyBoard, friendlyHero, gameState);
 };
 
@@ -305,10 +310,28 @@ const onStatUpdateQuests = (
 
 const onStatUpdateMinions = (
 	entity: BoardEntity,
+	attackAmount: number,
+	healthAmount: number,
 	friendlyBoard: BoardEntity[],
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	if (attackAmount > 0 || healthAmount > 0) {
+		for (const boardEntity of friendlyBoard) {
+			const onStatsChangedImpl = cardMappings[boardEntity.cardId];
+			if (hasOnStatsChanged(onStatsChangedImpl)) {
+				onStatsChangedImpl.onStatsChanged(boardEntity, {
+					target: entity,
+					attackAmount: attackAmount,
+					healthAmount: healthAmount,
+					board: friendlyBoard,
+					hero: friendlyBoardHero,
+					gameState: gameState,
+				});
+			}
+		}
+	}
+
 	if (hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
 			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
@@ -336,3 +359,12 @@ const onStatUpdateMinions = (
 		tentacle.health += tentacle.cardId === CardIds.TentacleOfCthun_TB_BaconShop_HERO_29_Buddy_G ? 2 : 1;
 	});
 };
+
+export interface OnStatsChangedInput {
+	target: BoardEntity;
+	attackAmount: number;
+	healthAmount: number;
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	gameState: FullGameState;
+}

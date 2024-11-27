@@ -6,10 +6,12 @@ import {
 	DeathrattleSpawnCard,
 	EndOfTurnCard,
 	OnAttackCard,
+	OnCardAddedToHandCard,
 	OnDivineShieldUpdatedCard,
 	OnOtherSpawnedCard,
 	OnRebornUpdatedCard,
 	OnSpawnedCard,
+	OnStatsChangedCard,
 	OnStealthUpdatedCard,
 	OnTauntUpdatedCard,
 	OnVenomousUpdatedCard,
@@ -27,6 +29,7 @@ import { FairyGillmother } from './minion/fairy-gillmother';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
 import { GentleDjinni } from './minion/gentle-djinni';
+import { GrittyHeadhunter } from './minion/gritty-headhunter';
 import { Hackerfin } from './minion/hackerfin';
 import { HoloRover } from './minion/holo-rover';
 import { ImplantSubject } from './minion/implant-subject';
@@ -40,8 +43,10 @@ import { OutbackSmolderer } from './minion/outback-smolderer';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
 import { RecklessCliffdiver } from './minion/reckless-cliffdiver';
 import { RunedProgenitor } from './minion/runed-progenitor';
+import { SaltyHog } from './minion/salty-hog';
 import { ShowyCyclist } from './minion/showy-cyclist';
 import { SilverHandedRecruit } from './minion/silver-handed-recruit';
+import { Spacefarer } from './minion/spacefarer';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
@@ -56,12 +61,14 @@ export const cardMappings: {
 		| DeathrattleEffectCard
 		| BattlecryCard
 		| EndOfTurnCard
+		| OnCardAddedToHandCard
 		| OnTauntUpdatedCard
 		| OnDivineShieldUpdatedCard
 		| OnVenomousUpdatedCard
 		| OnWindfuryUpdatedCard
 		| OnStealthUpdatedCard
-		| OnRebornUpdatedCard;
+		| OnRebornUpdatedCard
+		| OnStatsChangedCard;
 } = {
 	[TempCardIds.HoloRover]: HoloRover,
 	[TempCardIds.HoloRover_G]: HoloRover,
@@ -121,4 +128,10 @@ export const cardMappings: {
 	[TempCardIds.MutatedLasher_G]: MutatedLasher,
 	[TempCardIds.SilverHandedRecruit]: SilverHandedRecruit,
 	[TempCardIds.SilverHandedRecruit_G]: SilverHandedRecruit,
+	[TempCardIds.SaltyHog]: SaltyHog,
+	[TempCardIds.SaltyHog_G]: SaltyHog,
+	[TempCardIds.Spacefarer]: Spacefarer,
+	[TempCardIds.Spacefarer_G]: Spacefarer,
+	[TempCardIds.GrittyHeadhunter]: GrittyHeadhunter,
+	[TempCardIds.GrittyHeadhunter_G]: GrittyHeadhunter,
 };

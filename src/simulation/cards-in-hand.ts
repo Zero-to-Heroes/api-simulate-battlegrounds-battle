@@ -1,6 +1,8 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnCardAddedToHand } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom } from '../services/utils';
 import { buildSingleBoardEntity, getRandomAliveMinion } from '../utils';
 import { FullGameState } from './internal-game-state';
@@ -94,6 +96,17 @@ const onCardAddedToHandMinion = (
 	board: BoardEntity[],
 	gameState: FullGameState,
 ) => {
+	for (const entity of board) {
+		const onCardAddedToHandImpl = cardMappings[entity.cardId];
+		if (hasOnCardAddedToHand(onCardAddedToHandImpl)) {
+			onCardAddedToHandImpl.onCardAddedToHand(entity, {
+				addedCard: card,
+				board: board,
+				hero: playerEntity,
+				gameState: gameState,
+			});
+		}
+	}
 	const peggys = board.filter(
 		(e) => e.cardId === CardIds.PeggySturdybone_BG25_032 || e.cardId === CardIds.PeggySturdybone_BG25_032_G,
 	);
@@ -149,3 +162,10 @@ export const removeCardFromHand = (playerEntity: BgsPlayerEntity, card: BoardEnt
 		playerEntity.hand.splice(index, 1);
 	}
 };
+
+export interface OnCardAddedToHandInput {
+	addedCard: BoardEntity;
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	gameState: FullGameState;
+}

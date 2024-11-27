@@ -1,4 +1,7 @@
 export declare const enum TempCardIds {
+	MaraudersContract = 'MaraudersContract',
+	GrittyHeadhunter = 'GrittyHeadhunter',
+	GrittyHeadhunter_G = 'GrittyHeadhunter_G',
 	HoloRover = 'HoloRover',
 	HoloRover_G = 'HoloRover_G',
 	ForestRover = 'ForestRover',
@@ -47,4 +50,8 @@ export declare const enum TempCardIds {
 	MutatedLasher_G = 'MutatedLasher_G',
 	SilverHandedRecruit = 'SilverHandedRecruit',
 	SilverHandedRecruit_G = 'SilverHandedRecruit_G',
+	SaltyHog = 'SaltyHog',
+	SaltyHog_G = 'SaltyHog_G',
+	Spacefarer = 'Spacefarer',
+	Spacefarer_G = 'Spacefarer_G',
 }
