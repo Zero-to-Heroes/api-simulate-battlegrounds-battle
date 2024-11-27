@@ -3,6 +3,7 @@ import { CrystalInfuserEnchantment } from './enchantments/crystal-infuser-enchan
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Banerboar } from './minion/bannerboar';
 import { Beetle } from './minion/beetle';
+import { BirdBuddy } from './minion/bird-buddy';
 import { BoarGamer } from './minion/boar-gamer';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
@@ -20,20 +21,25 @@ import { Hackerfin } from './minion/hackerfin';
 import { HandlessForsaken } from './minion/handless-forsaken';
 import { HarmlessBonehead } from './minion/harmless-bonehead';
 import { HoloRover } from './minion/holo-rover';
+import { HungrySnapjaw } from './minion/hungry-snapjaw';
 import { ImplantSubject } from './minion/implant-subject';
+import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { MutatedLasher } from './minion/mutated-lasher';
 import { NeonAgent } from './minion/neon-agent';
 import { NestSwarmer } from './minion/nest-swarmer';
 import { NetherDrake } from './minion/nether-drake';
+import { Niuzao } from './minion/niuzao';
 import { OutbackSmolderer } from './minion/outback-smolderer';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
 import { RecklessCliffdiver } from './minion/reckless-cliffdiver';
 import { RunedProgenitor } from './minion/runed-progenitor';
+import { RylakMetalhead } from './minion/rylak-metalhead';
 import { SaltyHog } from './minion/salty-hog';
 import { ShowyCyclist } from './minion/showy-cyclist';
 import { SilverHandedRecruit } from './minion/silver-handed-recruit';
+import { SlyRaptor } from './minion/sly-raptor';
 import { Spacefarer } from './minion/spacefarer';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
@@ -87,6 +93,12 @@ const cards = [
 	HandlessForsaken,
 	HarmlessBonehead,
 	CadaverCaretaker,
+	HungrySnapjaw,
+	Niuzao,
+	BirdBuddy,
+	SlyRaptor,
+	Manasaber,
+	RylakMetalhead,
 ];
 for (const card of cards) {
 	const cardIds = card.cardIds ?? [];

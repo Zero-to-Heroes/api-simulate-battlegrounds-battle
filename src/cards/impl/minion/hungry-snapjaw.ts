@@ -1,0 +1,19 @@
+import { CardIds, Race } from '@firestone-hs/reference-data';
+import { BoardEntity } from '../../../board-entity';
+import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
+import { modifyStats } from '../../../simulation/stats';
+import { hasCorrectTribe } from '../../../utils';
+import { AfterOtherSpawnedCard } from '../../card.interface';
+
+export const HungrySnapjaw: AfterOtherSpawnedCard = {
+	cardIds: [CardIds.HungrySnapjaw_BG26_370, CardIds.HungrySnapjaw_BG26_370_G],
+	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
+		const mult = minion.cardId === CardIds.HungrySnapjaw_BG26_370_G ? 2 : 1;
+		if (
+			hasCorrectTribe(input.spawned, input.playerEntity, Race.BEAST, input.gameState.allCards) &&
+			minion.entityId !== input.spawned.entityId
+		) {
+			modifyStats(minion, 0, 1 * mult, input.playerBoard, input.playerEntity, input.gameState);
+		}
+	},
+};

@@ -20,18 +20,23 @@ export const applyOnAttackEffects = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
-): void => {
+): { damageDoneByAttacker: number; damageDoneByDefender: number } => {
+	let damageDoneByAttacker = 0;
+	let damageDoneByDefender = 0;
+
 	const onAttackImpl = cardMappings[attacker.cardId];
 	if (hasOnAttack(onAttackImpl)) {
-		onAttackImpl.onAttack(attacker, {
-			playerEntity: attackingBoardHero,
-			playerBoard: attackingBoard,
+		const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAttack(attacker, {
+			attackingHero: attackingBoardHero,
+			attackingBoard: attackingBoard,
 			defendingEntity: defendingEntity,
-			opponentEntity: defendingBoardHero,
-			opponentBoard: defendingBoard,
+			defendingHero: defendingBoardHero,
+			defendingBoard: defendingBoard,
 			gameState,
 			playerIsFriendly: attackingBoardHero.friendly,
 		});
+		damageDoneByAttacker += dmgDoneByAttacker;
+		damageDoneByDefender += dmgDoneByDefender;
 	}
 
 	// Damage happens before the entity is buffed, e.g. before an attack buff from Roaring Rallier
@@ -267,14 +272,16 @@ export const applyOnAttackEffects = (
 				break;
 		}
 	}
+
+	return { damageDoneByAttacker, damageDoneByDefender };
 };
 
 export interface OnAttackInput {
-	playerEntity: BgsPlayerEntity;
-	playerBoard: BoardEntity[];
+	attackingHero: BgsPlayerEntity;
+	attackingBoard: BoardEntity[];
 	defendingEntity: BoardEntity;
-	opponentEntity: BgsPlayerEntity;
-	opponentBoard: BoardEntity[];
+	defendingHero: BgsPlayerEntity;
+	defendingBoard: BoardEntity[];
 	gameState: FullGameState;
 	playerIsFriendly: boolean;
 }

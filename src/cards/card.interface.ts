@@ -39,8 +39,9 @@ export const hasStartOfCombat = (card: Card): card is StartOfCombatCard =>
 	(card as StartOfCombatCard)?.startOfCombat !== undefined;
 export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';
 
+// Whenever this attacks
 export interface OnAttackCard extends Card {
-	onAttack: (minion: BoardEntity, input: OnAttackInput) => void;
+	onAttack: (minion: BoardEntity, input: OnAttackInput) => { dmgDoneByAttacker: number; dmgDoneByDefender: number };
 }
 export const hasOnAttack = (card: Card): card is OnAttackCard => (card as OnAttackCard)?.onAttack !== undefined;
 

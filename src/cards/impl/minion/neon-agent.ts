@@ -7,12 +7,13 @@ import { OnAttackCard } from '../../card.interface';
 
 export const NeonAgent: OnAttackCard = {
 	cardIds: [TempCardIds.NeonAgent, TempCardIds.NeonAgent_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		const cards = [];
 		const numberOfCards = minion.cardId === TempCardIds.NeonAgent_G ? 2 : 1;
 		for (let i = 0; i < numberOfCards; i++) {
 			cards.push(pickRandom(input.gameState.cardsData.battlecryMinions));
 		}
-		addCardsInHand(input.playerEntity, input.playerBoard, cards, input.gameState);
+		addCardsInHand(input.attackingHero, input.attackingBoard, cards, input.gameState);
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

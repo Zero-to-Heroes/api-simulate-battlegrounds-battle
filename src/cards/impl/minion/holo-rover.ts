@@ -6,11 +6,12 @@ import { OnAttackCard } from '../../card.interface';
 
 export const HoloRover: OnAttackCard = {
 	cardIds: [TempCardIds.HoloRover, TempCardIds.HoloRover_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		const numberOfCard = minion.cardId === TempCardIds.HoloRover_G ? 2 : 1;
 		for (let i = 0; i < numberOfCard; i++) {
-			const magneticMech = input.gameState.cardsData.getRandomMechToMagnetize(input.playerEntity.tavernTier);
-			addCardsInHand(input.playerEntity, input.playerBoard, [magneticMech], input.gameState);
+			const magneticMech = input.gameState.cardsData.getRandomMechToMagnetize(input.attackingHero.tavernTier);
+			addCardsInHand(input.attackingHero, input.attackingBoard, [magneticMech], input.gameState);
 		}
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

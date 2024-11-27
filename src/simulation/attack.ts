@@ -126,24 +126,27 @@ export const doFullAttack = (
 		defendingBoardHero,
 		gameState,
 	);
-	applyOnAttackEffects(
+	const { damageDoneByAttacker: damageDoneByAttacker1, damageDoneByDefender: damageDoneByDefender1 } =
+		applyOnAttackEffects(
+			attackingEntity,
+			attackingBoard,
+			attackingBoardHero,
+			defendingEntity,
+			defendingBoard,
+			defendingBoardHero,
+			gameState,
+		);
+	const { damageDoneByAttacker: damageDoneByAttacker2, damageDoneByDefender: damageDoneByDefender2 } = performAttack(
 		attackingEntity,
+		defendingEntity,
 		attackingBoard,
 		attackingBoardHero,
-		defendingEntity,
 		defendingBoard,
 		defendingBoardHero,
 		gameState,
 	);
-	const { damageDoneByAttacker, damageDoneByDefender } = performAttack(
-		attackingEntity,
-		defendingEntity,
-		attackingBoard,
-		attackingBoardHero,
-		defendingBoard,
-		defendingBoardHero,
-		gameState,
-	);
+	const damageDoneByAttacker = damageDoneByAttacker1 + damageDoneByAttacker2;
+	const damageDoneByDefender = damageDoneByDefender1 + damageDoneByDefender2;
 	applyAfterAttackEffects(
 		attackingEntity,
 		attackingBoard,
@@ -244,33 +247,6 @@ const performAttack = (
 					gameState,
 				);
 			});
-		}
-	} else if (
-		attackingEntity.cardId === CardIds.Niuzao_BG27_822 ||
-		attackingEntity.cardId === CardIds.Niuzao_BG27_822_G
-	) {
-		const multiplier = attackingEntity.cardId === CardIds.Niuzao_BG27_822_G ? 2 : 1;
-		for (let i = 0; i < multiplier; i++) {
-			const target = pickRandom(defendingBoard.filter((e) => e.entityId != defendingEntity.entityId));
-			if (target) {
-				gameState.spectator.registerPowerTarget(
-					attackingEntity,
-					target,
-					defendingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
-				damageDoneByAttacker += dealDamageToMinion(
-					target,
-					defendingBoard,
-					defendingBoardHero,
-					attackingEntity,
-					attackingEntity.attack,
-					attackingBoard,
-					attackingBoardHero,
-					gameState,
-				);
-			}
 		}
 	} else if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
 		const spawns = spawnEntities(

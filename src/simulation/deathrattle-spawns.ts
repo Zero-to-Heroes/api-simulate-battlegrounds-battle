@@ -216,29 +216,6 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						);
 						break;
-					case CardIds.Manasaber_BG26_800:
-					case CardIds.Manasaber_BG26_800_G:
-						const cublingId =
-							deadEntity.cardId === CardIds.Manasaber_BG26_800_G
-								? CardIds.Manasaber_CublingToken_BG26_800_Gt
-								: CardIds.Manasaber_CublingToken_BG26_800t;
-						spawnedEntities.push(
-							...spawnEntities(
-								cublingId,
-								2,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
 					case CardIds.PiggybackImp_BG_AV_309:
 					case CardIds.PiggybackImp_BG_AV_309_G:
 						spawnedEntities.push(
@@ -1277,32 +1254,6 @@ export const spawnEntitiesFromDeathrattle = (
 								),
 							],
 						);
-						break;
-					case CardIds.SlyRaptor_BG25_806:
-					case CardIds.SlyRaptor_BG25_806_G:
-						const raptorStat = deadEntity.cardId === CardIds.SlyRaptor_BG25_806_G ? 14 : 7;
-						const beastPool = gameState.cardsData.beastSpawns.filter(
-							(id) => id !== CardIds.SlyRaptor_BG25_806,
-						);
-						const beastsFromRaptor = spawnEntities(
-							beastPool[Math.floor(Math.random() * beastPool.length)],
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						);
-						beastsFromRaptor.forEach((b) => {
-							b.attack = raptorStat;
-							b.health = raptorStat;
-						});
-						spawnedEntities.push(...beastsFromRaptor);
 						break;
 					case CardIds.OctosariWrapGod_BG26_804:
 					case CardIds.OctosariWrapGod_BG26_804_G:

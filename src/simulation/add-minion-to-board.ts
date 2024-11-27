@@ -789,16 +789,6 @@ const handleAfterSpawnEffect = (
 					gameState.spectator.registerPowerTarget(entity, spawned, board, null, null);
 				}
 				break;
-			case CardIds.HungrySnapjaw_BG26_370:
-			case CardIds.HungrySnapjaw_BG26_370_G:
-				if (
-					hasCorrectTribe(spawned, hero, Race.BEAST, gameState.allCards) &&
-					entity.entityId !== spawned.entityId
-				) {
-					const snapjawBuff = entity.cardId === CardIds.HungrySnapjaw_BG26_370_G ? 2 : 1;
-					modifyStats(entity, 0, snapjawBuff, board, hero, gameState);
-				}
-				break;
 			case CardIds.ObserverOfMyths_BG_TTN_078:
 			case CardIds.ObserverOfMyths_BG_TTN_078_G:
 				if (spawned.attack > entity.attack) {

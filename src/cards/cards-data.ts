@@ -154,8 +154,6 @@ export class CardsData {
 			return avengeImpl.baseAvengeValue(cardId);
 		}
 		switch (cardId) {
-			case CardIds.BirdBuddy_BG21_002:
-			case CardIds.BirdBuddy_BG21_002_G:
 			case CardIds.HungeringAbomination_BG25_014:
 			case CardIds.HungeringAbomination_BG25_014_G:
 			// Not technically an avenge, but behaves as if

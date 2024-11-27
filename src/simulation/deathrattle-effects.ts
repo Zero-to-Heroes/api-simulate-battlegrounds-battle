@@ -30,7 +30,6 @@ import {
 	getNeighbours,
 	processMinionDeath,
 } from './attack';
-import { triggerBattlecry } from './battlecries';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
@@ -112,6 +111,7 @@ export const handleDeathrattleEffects = (
 		deadEntity,
 		otherBoard,
 		otherBoardHero,
+		deadEntityIndexFromRight,
 		gameState,
 	};
 
@@ -178,46 +178,6 @@ export const handleDeathrattleEffects = (
 			}
 		} else {
 			switch (deadEntityCardId) {
-				case CardIds.RylakMetalhead_BG26_801:
-				case CardIds.RylakMetalhead_BG26_801_G:
-					for (let i = 0; i < multiplier; i++) {
-						const allNeighbours = getNeighbours(
-							boardWithDeadEntity,
-							deadEntity,
-							deadEntityIndexFromRight,
-						).filter((e) => hasMechanic(gameState.allCards.getCard(e.cardId), GameTag[GameTag.BATTLECRY]));
-						const neighbours =
-							deadEntityCardId === CardIds.RylakMetalhead_BG26_801_G
-								? allNeighbours
-								: [pickRandom(allNeighbours)].filter((e) => !!e);
-						// console.debug(
-						// 	'triggering neighbours',
-						// 	stringifySimple(neighbours, gameState.allCards),
-						// 	stringifySimple(allNeighbours, gameState.allCards),
-						// );
-						for (const neighbour of neighbours) {
-							// console.debug('\ttriggering neighbour', stringifySimpleCard(neighbour, gameState.allCards));
-							gameState.spectator.registerPowerTarget(
-								deadEntity,
-								neighbour,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoardHero,
-							);
-							// for (let j = 0; j < rylakMutltiplier; j++) {
-							triggerBattlecry(
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								neighbour,
-								otherBoard,
-								otherBoardHero,
-								gameState,
-							);
-							// }
-						}
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
 				case CardIds.SelflessHero_BG_OG_221:
 					for (let i = 0; i < multiplier; i++) {
 						grantRandomDivineShield(

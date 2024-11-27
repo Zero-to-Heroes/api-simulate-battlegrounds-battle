@@ -10,6 +10,7 @@ export interface DeathrattleTriggeredInput {
 	readonly deadEntity: BoardEntity;
 	readonly otherBoard: BoardEntity[];
 	readonly otherBoardHero: BgsPlayerEntity;
+	readonly deadEntityIndexFromRight?: number;
 	readonly gameState: FullGameState;
 }
 

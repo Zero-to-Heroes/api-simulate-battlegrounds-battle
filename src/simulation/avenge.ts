@@ -191,12 +191,6 @@ const handleAvenge = (
 	} else {
 		// Don't forget to update the avenge data in cards-data
 		switch (avenger.cardId) {
-			case CardIds.BirdBuddy_BG21_002:
-				addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 1, 1, gameState, 'BEAST');
-				break;
-			case CardIds.BirdBuddy_BG21_002_G:
-				addStatsToBoard(avenger, boardWithDeadEntity, boardWithDeadEntityHero, 2, 2, gameState, 'BEAST');
-				break;
 			case CardIds.BuddingGreenthumb_BG21_030:
 			case CardIds.BuddingGreenthumb_BG21_030_G:
 				const neighbours = getNeighbours(boardWithDeadEntity, avenger);
