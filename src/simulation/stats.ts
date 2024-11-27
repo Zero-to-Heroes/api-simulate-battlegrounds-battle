@@ -3,7 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnStatsChanged } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { addStatsToBoard, hasCorrectTribe } from '../utils';
+import { hasCorrectTribe } from '../utils';
 import { applyAurasToSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
 import { FullGameState, PlayerState } from './internal-game-state';
@@ -72,21 +72,6 @@ export const modifyStats = (
 		entity.maxAttack += realAttackAmount;
 
 		if (hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.allCards)) {
-			const whelpSmugglers = friendlyBoard.filter(
-				(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
-			);
-			whelpSmugglers.forEach((smuggler) => {
-				const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
-				modifyStats(entity, 0, buff, friendlyBoard, friendlyBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					smuggler,
-					entity,
-					friendlyBoard,
-					friendlyBoardHero,
-					otherBoardHero,
-				);
-			});
-
 			if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
 				const stormbringers = friendlyBoard.filter(
 					(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
@@ -127,21 +112,7 @@ export const modifyStats = (
 				);
 			});
 
-		// TODO: what happens if the Hunter is killed during the attack?
 		if (
-			[CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(
-				entity.cardId as CardIds,
-			)
-		) {
-			addStatsToBoard(
-				entity,
-				friendlyBoard,
-				friendlyBoardHero,
-				0,
-				entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 4 : 2,
-				gameState,
-			);
-		} else if (
 			entity.cardId === CardIds.DefiantShipwright_BG21_018 ||
 			entity.cardId === CardIds.DefiantShipwright_BG21_018_G
 		) {
@@ -193,7 +164,15 @@ export const modifyStats = (
 		});
 	}
 
-	onStatsUpdate(entity, realAttackAmount, realHealthAmount, friendlyBoard, friendlyBoardHero, gameState);
+	onStatsUpdate(
+		entity,
+		realAttackAmount,
+		realHealthAmount,
+		friendlyBoard,
+		friendlyBoardHero,
+		otherBoardHero,
+		gameState,
+	);
 };
 
 const onStatsUpdate = (
@@ -202,9 +181,10 @@ const onStatsUpdate = (
 	realHealthAmount: number,
 	friendlyBoard: BoardEntity[],
 	friendlyHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	onStatUpdateMinions(entity, realAttackAmount, realHealthAmount, friendlyBoard, friendlyHero, gameState);
+	onStatUpdateMinions(entity, realAttackAmount, realHealthAmount, friendlyBoard, friendlyHero, otherHero, gameState);
 	onStatUpdateQuests(entity, friendlyBoard, friendlyHero, gameState);
 };
 
@@ -223,62 +203,6 @@ const applyAfterStatsUpdateForEntity = (
 	opponentState: PlayerState,
 	gameState: FullGameState,
 ): void => {
-	// Attack buffs
-	// Actually this was a bug, and the stats update happen at the same time
-	// Keeping the structure here in case it's useful in the future
-	// for (const attackBuff of entity.pendingAttackBuffs) {
-	// 	if (isCorrectTribe(gameState.allCards.getCard(entity.cardId).races, Race.DRAGON)) {
-	// 		const whelpSmugglers = playerState.board.filter(
-	// 			(e) => e.cardId === CardIds.WhelpSmuggler_BG21_013 || e.cardId === CardIds.WhelpSmuggler_BG21_013_G,
-	// 		);
-	// 		whelpSmugglers.forEach((smuggler) => {
-	// 			const buff = smuggler.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
-	// 			modifyHealth(entity, buff, playerState.board, playerState.player, gameState);
-	// 			gameState.spectator.registerPowerTarget(
-	// 				smuggler,
-	// 				entity,
-	// 				playerState.board,
-	// 				playerState.player,
-	// 				opponentState.player,
-	// 			);
-	// 		});
-
-	// 		if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
-	// 			const stormbringers = playerState.board.filter(
-	// 				(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
-	// 			);
-	// 			stormbringers.forEach((stormbringer) => {
-	// 				const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
-	// 				(e) => {
-	// 					modifyAttack(e, multiplier * attackBuff, playerState.board, playerState.player, gameState);
-	// 					gameState.spectator.registerPowerTarget(
-	// 						stormbringer,
-	// 						entity,
-	// 						playerState.board,
-	// 						playerState.player,
-	// 						opponentState.player,
-	// 					);
-	// 				};
-	// 			});
-	// 		}
-	// 	}
-
-	// 	// TODO: what happens if the Hunter is killed during the attack?
-	// 	if (
-	// 		[CardIds.HunterOfGatherers_BG25_027, CardIds.HunterOfGatherers_BG25_027_G].includes(
-	// 			entity.cardId as CardIds,
-	// 		)
-	// 	) {
-	// 		addStatsToBoard(
-	// 			entity,
-	// 			playerState.board,
-	// 			playerState.player,
-	// 			0,
-	// 			entity.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
-	// 			gameState,
-	// 		);
-	// 	}
-	// }
 	entity.pendingAttackBuffs = [];
 };
 
@@ -314,6 +238,7 @@ const onStatUpdateMinions = (
 	healthAmount: number,
 	friendlyBoard: BoardEntity[],
 	friendlyBoardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
 	if (attackAmount > 0 || healthAmount > 0) {
@@ -326,6 +251,7 @@ const onStatUpdateMinions = (
 					healthAmount: healthAmount,
 					board: friendlyBoard,
 					hero: friendlyBoardHero,
+					otherHero: otherHero,
 					gameState: gameState,
 				});
 			}
@@ -366,5 +292,6 @@ export interface OnStatsChangedInput {
 	healthAmount: number;
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;
+	otherHero: BgsPlayerEntity;
 	gameState: FullGameState;
 }

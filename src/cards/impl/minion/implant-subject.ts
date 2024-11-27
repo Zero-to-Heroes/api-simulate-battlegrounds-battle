@@ -32,13 +32,8 @@ export const ImplantSubject: OnTauntUpdatedCard &
 			updateEntity(entity, input.board, input.hero, input.gameState);
 		}
 	},
-	onDivineShieldUpdated: (
-		entity: BoardEntity,
-		impactedEntity: BoardEntity,
-		previousValue: boolean,
-		input: OnDivineShieldUpdatedInput,
-	) => {
-		if (previousValue && !impactedEntity.divineShield) {
+	onDivineShieldUpdated: (entity: BoardEntity, input: OnDivineShieldUpdatedInput) => {
+		if (input.previousValue && !input.target.divineShield) {
 			updateEntity(entity, input.board, input.hero, input.gameState);
 		}
 	},

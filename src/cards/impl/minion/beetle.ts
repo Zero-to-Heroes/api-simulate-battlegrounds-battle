@@ -9,15 +9,15 @@ export const Beetle: OnSpawnedCard & OnDespawnedCard = {
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		modifyStats(
 			minion,
-			2 * (input.playerEntity.globalInfo.BeetleAttackBuff ?? 0),
-			1 * (input.playerEntity.globalInfo.BeetleHealthBuff ?? 0),
+			2 * (input.hero.globalInfo.BeetleAttackBuff ?? 0),
+			1 * (input.hero.globalInfo.BeetleHealthBuff ?? 0),
 			input.playerBoard,
-			input.playerEntity,
-			input.gameState,
+			input.hero,
+			input.board,
 		);
 	},
 	onDespawned: (minion: BoardEntity, input: OnDespawnInput) => {
-		minion.attack = Math.max(0, minion.attack - input.playerEntity.globalInfo.BeetleAttackBuff);
-		minion.health = Math.max(1, minion.health - input.playerEntity.globalInfo.BeetleHealthBuff);
+		minion.attack = Math.max(0, minion.attack - input.hero.globalInfo.BeetleAttackBuff);
+		minion.health = Math.max(1, minion.health - input.hero.globalInfo.BeetleHealthBuff);
 	},
 };

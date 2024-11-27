@@ -25,7 +25,7 @@ export const addMinionsToBoard = (
 	for (const minionToAdd of [...minionsToAdd].reverse()) {
 		addMinionToBoard(board, boardHero, otherHero, index, minionToAdd, gameState, false);
 	}
-	handleAfterSpawnEffects(board, boardHero, minionsToAdd, gameState);
+	handleAfterSpawnEffects(board, boardHero, otherHero, minionsToAdd, gameState);
 };
 
 export const addMinionToBoard = (
@@ -45,7 +45,7 @@ export const addMinionToBoard = (
 	onMinionSummoned(boardHero, board, gameState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, gameState);
 	if (performAfterSpawnEffects) {
-		handleAfterSpawnEffects(board, boardHero, [minionToAdd], gameState);
+		handleAfterSpawnEffects(board, boardHero, otherHero, [minionToAdd], gameState);
 	}
 };
 
@@ -90,17 +90,6 @@ const handleSpawnEffect = (
 						updateDivineShield(entity, board, boardHero, otherHero, true, gameState);
 					}
 					modifyStats(entity, 2, 0, board, boardHero, gameState);
-					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
-				}
-				break;
-			case CardIds.DeflectOBot_BGS_071:
-			case CardIds.DeflectOBot_TB_BaconUps_123:
-				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
-					const statsBonus = entity.cardId === CardIds.DeflectOBot_TB_BaconUps_123 ? 4 : 2;
-					if (!entity.divineShield) {
-						updateDivineShield(entity, board, boardHero, otherHero, true, gameState);
-					}
-					modifyStats(entity, statsBonus, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -212,7 +201,7 @@ export const handleAddedMinionAuraEffect = (
 		// TODO: what if the additional part is a potential target for the aura effect?
 		// 2024-08-27: changing the order to first handleMinionAddedAuraEffect so that the automatons get boosted,
 		// then apply the aura
-		applyAurasToSelf(spawned, board, boardHero, gameState);
+		applyAurasToSelf(spawned, board, boardHero, otherHero, gameState);
 	}
 };
 
@@ -220,6 +209,7 @@ export const applyAurasToSelf = (
 	spawned: BoardEntity,
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
 	if (!!boardHero.questRewards?.length) {
@@ -304,8 +294,9 @@ export const applyAurasToSelf = (
 		if (hasOnOtherSpawned(onOtherSpawnedImpl)) {
 			onOtherSpawnedImpl.onOtherSpawned(entity, {
 				spawned: spawned,
-				playerEntity: boardHero,
-				playerBoard: board,
+				hero: boardHero,
+				board: board,
+				otherHero: otherHero,
 				gameState,
 			});
 		}
@@ -359,9 +350,9 @@ export const applyAurasToSelf = (
 	const onSpawnedImpl = cardMappings[spawned.cardId];
 	if (hasOnSpawned(onSpawnedImpl)) {
 		onSpawnedImpl.onSpawned(spawned, {
-			playerEntity: boardHero,
+			hero: boardHero,
 			playerBoard: board,
-			gameState,
+			board: gameState,
 		});
 	}
 	switch (spawned.cardId) {
@@ -463,8 +454,8 @@ export const removeAurasFromSelf = (
 	const onDespawnedImpl = cardMappings[entity.cardId];
 	if (hasOnDespawned(onDespawnedImpl)) {
 		onDespawnedImpl.onDespawned(entity, {
-			playerEntity: boardHero,
-			playerBoard: board,
+			hero: boardHero,
+			board: board,
 			gameState,
 		});
 	}
@@ -673,11 +664,12 @@ const handleMinionAddedAuraEffect = (
 const handleAfterSpawnEffects = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	allSpawned: readonly BoardEntity[],
 	gameState: FullGameState,
 ): void => {
 	for (const spawned of allSpawned) {
-		handleAfterSpawnEffect(board, hero, spawned, gameState);
+		handleAfterSpawnEffect(board, hero, otherHero, spawned, gameState);
 	}
 	updateBoardwideAuras(board, hero, gameState);
 };
@@ -700,6 +692,7 @@ export const onMinionSummoned = (hero: BgsPlayerEntity, board: BoardEntity[], ga
 const handleAfterSpawnEffect = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
+	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
 ): void => {
@@ -709,8 +702,9 @@ const handleAfterSpawnEffect = (
 		if (hasAfterOtherSpawned(onAfterSpawnedImpl)) {
 			onAfterSpawnedImpl.afterOtherSpawned(entity, {
 				spawned: spawned,
-				playerEntity: hero,
-				playerBoard: board,
+				hero: hero,
+				board: board,
+				otherHero: otherHero,
 				gameState,
 			});
 		}
@@ -835,18 +829,19 @@ const handleAfterSpawnEffect = (
 };
 
 export interface OnSpawnInput {
-	playerEntity: BgsPlayerEntity;
+	hero: BgsPlayerEntity;
 	playerBoard: BoardEntity[];
-	gameState: FullGameState;
+	board: FullGameState;
 }
 export interface OnOtherSpawnInput {
 	spawned: BoardEntity;
-	playerEntity: BgsPlayerEntity;
-	playerBoard: BoardEntity[];
+	hero: BgsPlayerEntity;
+	board: BoardEntity[];
+	otherHero: BgsPlayerEntity;
 	gameState: FullGameState;
 }
 export interface OnDespawnInput {
-	playerEntity: BgsPlayerEntity;
-	playerBoard: BoardEntity[];
+	hero: BgsPlayerEntity;
+	board: BoardEntity[];
 	gameState: FullGameState;
 }

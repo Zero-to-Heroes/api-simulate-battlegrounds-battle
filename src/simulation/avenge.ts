@@ -10,7 +10,6 @@ import { updateVenomous } from '../keywords/venomous';
 import { pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
-	addImpliedMechanics,
 	addStatsToBoard,
 	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
@@ -675,40 +674,6 @@ const handleAvenge = (
 					),
 				);
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
-				break;
-			case CardIds.KarmicChameleon_BG31_802:
-			case CardIds.KarmicChameleon_BG31_802_G:
-				const chameleonIndex = boardWithDeadEntity.findIndex((entity) => entity.entityId === avenger.entityId);
-				if (chameleonIndex > 0) {
-					const minionToTheLeft = boardWithDeadEntity[chameleonIndex - 1];
-					const clone: BoardEntity = addImpliedMechanics(
-						{
-							...minionToTheLeft,
-							lastAffectedByEntity: null,
-							definitelyDead: false,
-							attackImmediately: false,
-						},
-						gameState.cardsData,
-					);
-					if (avenger.cardId === CardIds.KarmicChameleon_BG31_802_G) {
-						makeMinionGolden(
-							clone,
-							avenger,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoardHero,
-							gameState,
-						);
-					}
-					gameState.spectator.registerPowerTarget(
-						clone,
-						clone,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoardHero,
-					);
-					boardWithDeadEntity.splice(chameleonIndex, 1, clone);
-				}
 				break;
 		}
 	}

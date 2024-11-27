@@ -215,8 +215,6 @@ export class CardsData {
 			case CardIds.RelentlessMurghoul_BG27_010:
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
-			case CardIds.KarmicChameleon_BG31_802:
-			case CardIds.KarmicChameleon_BG31_802_G:
 				return 5;
 			case CardIds.BleedingHeart_BG30_MagicItem_713:
 			case CardIds.StableAmalgamation_BG28_Reward_518:

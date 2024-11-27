@@ -15,7 +15,6 @@ import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
 	grantRandomAttack,
-	grantRandomHealth,
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
@@ -339,24 +338,6 @@ export const handleDeathrattleEffects = (
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
-				case CardIds.GoldrinnTheGreatWolf_BGS_018:
-				case CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085:
-					for (let i = 0; i < multiplier; i++) {
-						const goldrinnBuff = deadEntityCardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 6 : 3;
-						addStatsToBoard(
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							goldrinnBuff,
-							goldrinnBuff,
-							gameState,
-							'BEAST',
-						);
-						boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += goldrinnBuff;
-						boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += goldrinnBuff;
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
 				case CardIds.SilithidBurrower_BG29_871:
 				case CardIds.SilithidBurrower_BG29_871_G:
 					const silithidStats = deadEntity.cardId === CardIds.SilithidBurrower_BG29_871_G ? 2 : 1;
@@ -401,24 +382,6 @@ export const handleDeathrattleEffects = (
 							deadEntity.attack,
 							gameState,
 						);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				case CardIds.ImpulsiveTrickster_BG21_006:
-				case CardIds.ImpulsiveTrickster_BG21_006_G:
-					const tricksterMultiplier = deadEntityCardId === CardIds.ImpulsiveTrickster_BG21_006_G ? 2 : 1;
-					for (let i = 0; i < multiplier; i++) {
-						for (let j = 0; j < tricksterMultiplier; j++) {
-							const targetBoard = boardWithDeadEntity;
-							grantRandomHealth(
-								deadEntity,
-								targetBoard,
-								boardWithDeadEntityHero,
-								deadEntity.maxHealth,
-								gameState,
-								true,
-							);
-						}
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;

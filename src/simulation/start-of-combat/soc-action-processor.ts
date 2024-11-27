@@ -36,13 +36,10 @@ import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
 import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
 import { HoardingHatespawn } from '../../cards/impl/minion/hoarding-hatespawn';
-import { HummingBird } from '../../cards/impl/minion/humming-bird';
 import { InterrogatorWhitemane } from '../../cards/impl/minion/interrogator-whitemane';
 import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
-import { MisfitDragonling } from '../../cards/impl/minion/misfit-dragonling';
 import { PilotedWhirlOTron } from '../../cards/impl/minion/piloted-whirl-o-tron';
-import { PrizedPromoDrake } from '../../cards/impl/minion/prized-promo-drake';
 import { RedWhelp } from '../../cards/impl/minion/red-whelp';
 import { SanctumRester } from '../../cards/impl/minion/sanctum-rester';
 import { Sandy } from '../../cards/impl/minion/sandy';
@@ -239,9 +236,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.RedWhelp_BGS_019:
 		case CardIds.RedWhelp_TB_BaconUps_102:
 			return RedWhelp;
-		case CardIds.PrizedPromoDrake_BG21_014:
-		case CardIds.PrizedPromoDrake_BG21_014_G:
-			return PrizedPromoDrake;
 		case CardIds.ChoralMrrrglr_BG26_354:
 		case CardIds.ChoralMrrrglr_BG26_354_G:
 			return ChoralMrrrglr;
@@ -284,9 +278,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.IrateRooster_BG29_990:
 		case CardIds.IrateRooster_BG29_990_G:
 			return IrateRooster;
-		case CardIds.MisfitDragonling_BG29_814:
-		case CardIds.MisfitDragonling_BG29_814_G:
-			return MisfitDragonling;
 		case CardIds.ThousandthPaperDrake_BG29_810:
 		case CardIds.ThousandthPaperDrake_BG29_810_G:
 			return ThousandthPaperDrake;
@@ -314,9 +305,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.SkyPirateFlagbearer_BG30_119:
 		case CardIds.SkyPirateFlagbearer_BG30_119_G:
 			return SkyPirateFlagbearer;
-		case CardIds.HummingBird_BG26_805:
-		case CardIds.HummingBird_BG26_805_G:
-			return HummingBird;
 
 		default:
 			const candidate = cardMappings[cardId];

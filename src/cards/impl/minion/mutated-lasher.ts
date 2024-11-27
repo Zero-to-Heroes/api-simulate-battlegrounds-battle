@@ -34,14 +34,8 @@ export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedCard = {
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
 		const mult = minion.cardId === TempCardIds.MutatedLasher_G ? 2 : 1;
 		if (input.gameState.cardsData.getTavernLevel(input.spawned.cardId) % 2 === 1) {
-			modifyStats(input.spawned, 2 * mult, 3 * mult, input.playerBoard, input.playerEntity, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
-				input.spawned,
-				input.playerBoard,
-				input.playerEntity,
-				null,
-			);
+			modifyStats(input.spawned, 2 * mult, 3 * mult, input.board, input.hero, input.gameState);
+			input.gameState.spectator.registerPowerTarget(minion, input.spawned, input.board, input.hero, null);
 		}
 	},
 };

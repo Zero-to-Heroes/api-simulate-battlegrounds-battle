@@ -22,7 +22,6 @@ import { dealDamageToHero } from './damage-to-hero';
 import { spawnEntities } from './deathrattle-spawns';
 import { afterDiscover } from './discover';
 import { FullGameState } from './internal-game-state';
-import { magnetizeToTarget } from './magnetize';
 import { SharedState } from './shared-state';
 import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
@@ -331,17 +330,6 @@ export const triggerBattlecry = (
 					modifyStats(bonemareTarget, bonemareStats, bonemareStats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, bonemareTarget, board, hero, otherHero);
 					break;
-				case CardIds.GeneralDrakkisath_BG25_309:
-				case CardIds.GeneralDrakkisath_BG25_309_G:
-					const generalDrakkisathCardsToAdd =
-						entity.cardId === CardIds.GeneralDrakkisath_BG25_309
-							? [CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t]
-							: [
-									CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t,
-									CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t,
-							  ];
-					addCardsInHand(hero, board, generalDrakkisathCardsToAdd, gameState);
-					break;
 				case CardIds.KingBagurgle_BGS_030:
 				case CardIds.KingBagurgle_TB_BaconUps_100:
 					addStatsToBoard(
@@ -370,14 +358,6 @@ export const triggerBattlecry = (
 							? [CardIds.TheCoinCore]
 							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
 					addCardsInHand(hero, board, tavernTempestCardsToAdd, gameState);
-					break;
-				case CardIds.MechaJaraxxus_BG25_807:
-				case CardIds.MechaJaraxxus_BG25_807_G:
-					const mechaJaraxxusCardsToAdd =
-						entity.cardId === CardIds.MechaJaraxxus_BG25_807
-							? [CardIds.TheCoinCore]
-							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
-					addCardsInHand(hero, board, mechaJaraxxusCardsToAdd, gameState);
 					break;
 				case CardIds.OozelingGladiator_BG27_002:
 				case CardIds.OozelingGladiator_BG27_002_G:
@@ -486,20 +466,6 @@ export const triggerBattlecry = (
 							hero,
 							otherHero,
 						);
-					}
-					break;
-				case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t:
-				case CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309_Gt:
-					const smolderwingTarget = pickRandom(
-						allMinions.filter((e) => hasCorrectTribe(e, hero, Race.DRAGON, gameState.allCards)),
-					);
-					if (!!smolderwingTarget) {
-						const targetBoard = board.includes(smolderwingTarget) ? board : otherBoard;
-						const targetHero = board.includes(smolderwingTarget) ? hero : otherHero;
-						const smolderwingMultiplier =
-							entity.cardId === CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t ? 1 : 2;
-						const smolderwingStats = 5 * smolderwingMultiplier;
-						modifyStats(smolderwingTarget, smolderwingStats, 0, targetBoard, targetHero, gameState);
 					}
 					break;
 				case CardIds.ArgentBraggart_BG_SCH_149:
@@ -863,23 +829,6 @@ export const triggerBattlecry = (
 							modifyStats(e, vaelastraszBonus, vaelastraszBonus, board, hero, gameState);
 						});
 					break;
-				case CardIds.ClunkerJunker_BG29_503:
-				case CardIds.ClunkerJunker_BG29_503_G:
-					const boardWithMechs = board.filter((e) => hasCorrectTribe(e, hero, Race.MECH, gameState.allCards));
-					const junkerTarget = pickRandom(boardWithMechs);
-					if (junkerTarget) {
-						// const name = gameState.allCards.getCard(junkerTarget.cardId)?.name;
-						const numberOfMagnetizes = entity.cardId === CardIds.ClunkerJunker_BG29_503 ? 1 : 2;
-						for (let i = 0; i < numberOfMagnetizes; i++) {
-							const minionToMagnetize = gameState.cardsData.getRandomMechToMagnetize(
-								hero.tavernTier ?? 1,
-							);
-							// const magnet = gameState.allCards.getCard(minionToMagnetize).name;
-							gameState.spectator.registerPowerTarget(entity, junkerTarget, board, null, null);
-							magnetizeToTarget(junkerTarget, minionToMagnetize, board, hero, gameState);
-						}
-					}
-					break;
 				case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy:
 				case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy_G:
 					const nathanosTarget = pickRandom(board);
@@ -1040,22 +989,6 @@ const afterBattlecryTriggered = (
 			});
 		}
 	}
-	board
-		.filter(
-			(e) =>
-				e.cardId === CardIds.KalecgosArcaneAspect_BGS_041 ||
-				e.cardId === CardIds.KalecgosArcaneAspect_TB_BaconUps_109,
-		)
-		.forEach((e) => {
-			const buff = entity.cardId === CardIds.KalecgosArcaneAspect_BGS_041 ? 1 : 2;
-			addStatsToBoard(e, board, hero, buff, 2 * buff, gameState, Race[Race.DRAGON]);
-		});
-	board
-		.filter((e) => e.cardId === CardIds.BlazingSkyfin_BG25_040 || e.cardId === CardIds.BlazingSkyfin_BG25_040_G)
-		.forEach((e) => {
-			const buff = e.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
-			modifyStats(e, buff, buff, board, hero, gameState);
-		});
 };
 
 // TODO: this is probably too slow

@@ -3,8 +3,9 @@ import { BoardEntity } from '../../../board-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const PrizedPromoDrake = {
+export const PrizedPromoDrake: StartOfCombatCard = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const stats = minion.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
 		const targets = input.playerBoard

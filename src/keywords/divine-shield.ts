@@ -51,11 +51,13 @@ export const updateDivineShield = (
 		for (const boardEntity of board) {
 			const onDivineShieldUpdatedImpl = cardMappings[boardEntity.cardId];
 			if (hasOnDivineShieldUpdated(onDivineShieldUpdatedImpl)) {
-				onDivineShieldUpdatedImpl.onDivineShieldUpdated(boardEntity, entity, entity.hadDivineShield, {
+				onDivineShieldUpdatedImpl.onDivineShieldUpdated(boardEntity, {
 					board: board,
 					hero: hero,
 					otherHero: otherHero,
 					gameState: gameState,
+					target: entity,
+					previousValue: entity.hadDivineShield,
 				});
 			}
 		}
@@ -106,16 +108,6 @@ export const updateDivineShield = (
 				}
 			}
 		}
-		const greaseBots = board.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024);
-		const greaseBotBattlegrounds = board.filter((entity) => entity.cardId === CardIds.GreaseBot_BG21_024_G);
-		greaseBots.forEach((bot) => {
-			modifyStats(entity, 2, 1, board, hero, gameState);
-			gameState.spectator.registerPowerTarget(bot, entity, board, hero, otherHero);
-		});
-		greaseBotBattlegrounds.forEach((bot) => {
-			modifyStats(entity, 4, 2, board, hero, gameState);
-			gameState.spectator.registerPowerTarget(bot, entity, board, hero, otherHero);
-		});
 	}
 };
 
@@ -155,4 +147,6 @@ export interface OnDivineShieldUpdatedInput {
 	hero: BgsPlayerEntity;
 	otherHero: BgsPlayerEntity;
 	gameState: FullGameState;
+	target: BoardEntity;
+	previousValue: boolean;
 }

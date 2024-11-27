@@ -121,12 +121,7 @@ export const hasEndOfTurn = (card: Card): card is EndOfTurnCard => (card as EndO
 export type EndOfTurnInput = BattlecryInput;
 
 export interface OnDivineShieldUpdatedCard extends Card {
-	onDivineShieldUpdated: (
-		entity: BoardEntity,
-		impactedEntity: BoardEntity,
-		previousValue: boolean,
-		input: OnDivineShieldUpdatedInput,
-	) => void;
+	onDivineShieldUpdated: (entity: BoardEntity, input: OnDivineShieldUpdatedInput) => void;
 }
 export const hasOnDivineShieldUpdated = (card: Card): card is OnDivineShieldUpdatedCard =>
 	(card as OnDivineShieldUpdatedCard)?.onDivineShieldUpdated !== undefined;

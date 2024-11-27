@@ -12,7 +12,7 @@ export const RecklessCliffdiver: OnSpawnedCard & OnDespawnedCard & OnBattlecryTr
 	},
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		const mult = minion.cardId === TempCardIds.RecklessCliffdiver_G ? 2 : 1;
-		minion.attack += mult * input.playerEntity.globalInfo.BattlecriesTriggeredThisGame;
+		minion.attack += mult * input.hero.globalInfo.BattlecriesTriggeredThisGame;
 	},
 	onDespawned: (minion: BoardEntity, input: OnDespawnInput) => {
 		const mult = minion.cardId === TempCardIds.RecklessCliffdiver_G ? 2 : 1;

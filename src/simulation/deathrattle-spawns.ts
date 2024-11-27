@@ -1021,84 +1021,6 @@ export const spawnEntitiesFromDeathrattle = (
 							Race[Race.MECH],
 						);
 						break;
-					// case CardIds.OmegaBusterBattlegrounds:
-					// 	const entitiesToSpawn2 = Math.min(6, 7 - boardWithDeadEntity.length);
-					// 	const buffAmount2 = 6 - entitiesToSpawn2;
-					// 	spawnedEntities.push(
-					// 		...spawnEntities(
-					// 			CardIds.ReplicatingMenace_MicrobotTokenBattlegrounds,
-					// 			entitiesToSpawn2,
-					// 			boardWithDeadEntity,
-					// 			boardWithDeadEntityHero,
-					// 			otherBoard,
-					// 			otherBoardHero,
-					// 			allCards,
-					// 			spawns,
-					// 			sharedState,
-					// 			spectator,
-					// 			deadEntity.friendly,
-					// 			false,
-					// 		),
-					// 	);
-					// 	addStatsToBoard(deadEntity, boardWithDeadEntity, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
-					// 	// when the buster triggers multiple times because of Baron for instance
-					// 	addStatsToBoard(deadEntity, spawnedEntities, 2 * buffAmount2, 2 * buffAmount2, allCards, spectator, Race[Race.MECH]);
-					// 	break;
-					case CardIds.KangorsApprentice_BGS_012:
-						const cardIdsToSpawn = gameState.sharedState.deaths
-							.filter((entity) => entity.friendly === deadEntity.friendly)
-							// eslint-disable-next-line prettier/prettier
-							.filter((entity) =>
-								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
-							)
-							.slice(0, 2)
-							.map((entity) => entity.cardId);
-						cardIdsToSpawn.forEach((cardId) =>
-							spawnedEntities.push(
-								...spawnEntities(
-									cardId,
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState.allCards,
-									gameState.cardsData,
-									gameState.sharedState,
-									gameState.spectator,
-									deadEntity.friendly,
-									false,
-								),
-							),
-						);
-						break;
-					case CardIds.KangorsApprentice_TB_BaconUps_087:
-						const cardIdsToSpawn2 = gameState.sharedState.deaths
-							.filter((entity) => entity.friendly === deadEntity.friendly)
-							.filter((entity) =>
-								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MECH, gameState.allCards),
-							)
-							.slice(0, 4)
-							.map((entity) => entity.cardId);
-						cardIdsToSpawn2.forEach((cardId) =>
-							spawnedEntities.push(
-								...spawnEntities(
-									cardId,
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState.allCards,
-									gameState.cardsData,
-									gameState.sharedState,
-									gameState.spectator,
-									deadEntity.friendly,
-									false,
-								),
-							),
-						);
-						break;
 					case CardIds.TheTideRazor_BGS_079:
 						spawnedEntities.push(
 							...[
@@ -1338,48 +1260,6 @@ export const spawnEntitiesFromDeathrattle = (
 							}
 						}
 						break;
-					case CardIds.MechanizedGiftHorse_BG27_008:
-					case CardIds.MechanizedGiftHorse_BG27_008_G:
-						spawnedEntities.push(
-							...spawnEntities(
-								deadEntity.cardId === CardIds.MechanizedGiftHorse_BG27_008_G
-									? CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
-									: CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t,
-								2,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
-					case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t:
-					case CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt:
-						spawnedEntities.push(
-							...spawnEntities(
-								deadEntity.cardId === CardIds.MechanizedGiftHorse_MechorseToken_BG27_008_Gt
-									? CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008_Gt2
-									: CardIds.MechanizedGiftHorse_MechaponyToken_BG27_008t2,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
 					case CardIds.RapscallionRecruiter_BG26_018:
 					case CardIds.RapscallionRecruiter_BG26_018_G:
 						spawnedEntities.push(
@@ -1510,37 +1390,6 @@ export const spawnEntitiesFromDeathrattle = (
 								);
 								copied.push(copy.entityId);
 							}
-						}
-						break;
-					case CardIds.IndomitableMount_BG30_105:
-					case CardIds.IndomitableMount_BG30_105_G:
-						const tiersToSummon = [3, 4, 5];
-						for (const tier of tiersToSummon) {
-							const candidates = gameState.cardsData.beastSpawns.filter(
-								(id) => gameState.allCards.getCard(id).techLevel === tier,
-							);
-							let spawnId = pickRandom(candidates);
-							if (deadEntity.cardId === CardIds.IndomitableMount_BG30_105_G) {
-								const premiumDbfId = gameState.allCards.getCard(spawnId).battlegroundsPremiumDbfId;
-								spawnId = gameState.allCards.getCard(premiumDbfId).id;
-							}
-
-							spawnedEntities.push(
-								...spawnEntities(
-									spawnId,
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState.allCards,
-									gameState.cardsData,
-									gameState.sharedState,
-									gameState.spectator,
-									deadEntity.friendly,
-									false,
-								),
-							);
 						}
 						break;
 

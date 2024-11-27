@@ -186,15 +186,14 @@ const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBa
 		simulationResult.lostLethal,
 		totalMatches,
 	);
-	// simulationResult.tiedPercent = checkRounding(Math.round((10 * (100 * simulationResult.tied)) / totalMatches) / 10, simulationResult.tied, totalMatches);
 	simulationResult.tiedPercent = checkRounding(
-		100 - simulationResult.lostPercent - simulationResult.wonPercent,
+		Math.max(0, 100 - simulationResult.lostPercent - simulationResult.wonPercent),
 		simulationResult.tied,
 		totalMatches,
 	);
 
-	simulationResult.wonLethalPercent = Math.round((10 * (100 * simulationResult.wonLethal)) / totalMatches) / 10;
-	simulationResult.lostLethalPercent = Math.round((10 * (100 * simulationResult.lostLethal)) / totalMatches) / 10;
+	// simulationResult.wonLethalPercent = Math.round((10 * (100 * simulationResult.wonLethal)) / totalMatches) / 10;
+	// simulationResult.lostLethalPercent = Math.round((10 * (100 * simulationResult.lostLethal)) / totalMatches) / 10;
 	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
 	simulationResult.averageDamageLost = simulationResult.lost
 		? simulationResult.damageLost / simulationResult.lost
