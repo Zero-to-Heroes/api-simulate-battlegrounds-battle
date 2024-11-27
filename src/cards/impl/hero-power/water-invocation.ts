@@ -11,6 +11,7 @@ export const WaterInvocation: StartOfCombatCard = {
 				input.playerBoard,
 				input.playerEntity,
 				null,
+				null,
 				input.playerEntity,
 				input.gameState,
 			);

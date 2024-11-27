@@ -1343,7 +1343,7 @@ export const applyWaterInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherHero: BgsPlayerEntity,
-	deadEntity: BoardEntity,
+	deadEntity: BoardEntity, // Can be null when trinket is used
 	sourceEntity: BgsPlayerEntity | BoardEntity,
 	gameState: FullGameState,
 ): void => {

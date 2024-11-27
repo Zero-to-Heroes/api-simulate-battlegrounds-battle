@@ -181,7 +181,7 @@ export class Simulator {
 		}
 		while (playerBoard.length > 0 && opponentBoard.length > 0) {
 			handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
-			clearStealthIfNeeded(playerBoard, opponentBoard);
+			clearStealthIfNeeded(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			// console.log('this.currentSpeedAttacker', this.currentAttacker);
 			// If there are "attack immediately" minions, we keep the same player
 			// We put it here so that it can kick in after the start of combat effects. However here we don't want
