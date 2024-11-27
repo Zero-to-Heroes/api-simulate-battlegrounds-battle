@@ -14,7 +14,7 @@ export const addCardsInHand = (
 	board: BoardEntity[],
 	cardsAdded: readonly any[],
 	gameState: FullGameState,
-): void => {
+): BoardEntity[] => {
 	const previousCardsInHand = playerEntity.hand?.length ?? 0;
 	const sages = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy);
 	const sagesGolden = board.filter((e) => e.cardId === CardIds.DeathsHeadSage_BG20_HERO_103_Buddy_G);
@@ -62,6 +62,8 @@ export const addCardsInHand = (
 		playerEntity.hand.push(cardsThatWillBeAdded[i]);
 		onCardAddedToHand(playerEntity, cardsThatWillBeAdded[i], board, gameState);
 	}
+
+	return cardsThatWillBeAdded;
 };
 
 const onCardAddedToHand = (

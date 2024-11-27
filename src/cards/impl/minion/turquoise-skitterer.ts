@@ -1,6 +1,6 @@
 import { BoardEntity } from '../../../board-entity';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { spawnEntities } from '../../../simulation/deathrattle-spawns';
+import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleEffectCard, DeathrattleSpawnCard } from '../../card.interface';
@@ -9,20 +9,7 @@ export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleEffectCard = 
 	cardIds: [TempCardIds.TurquoiseSkitterer, TempCardIds.TurquoiseSkitterer_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const numberOfSpawns = deadEntity.cardId === TempCardIds.TurquoiseSkitterer_G ? 2 : 1;
-		return spawnEntities(
-			TempCardIds.BeetleToken,
-			numberOfSpawns,
-			input.boardWithDeadEntity,
-			input.boardWithDeadEntityHero,
-			input.otherBoard,
-			input.otherBoardHero,
-			input.gameState.allCards,
-			input.gameState.cardsData,
-			input.gameState.sharedState,
-			input.gameState.spectator,
-			deadEntity.friendly,
-			false,
-		);
+		return simplifiedSpawnEntities(TempCardIds.BeetleToken, numberOfSpawns, input);
 	},
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === TempCardIds.TurquoiseSkitterer_G ? 2 : 1;

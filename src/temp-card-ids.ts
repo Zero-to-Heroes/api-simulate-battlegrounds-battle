@@ -1,4 +1,10 @@
 export declare const enum TempCardIds {
+	WispInTheShell = '',
+	WispInTheShell_G = '',
+	DeathlyStriker = '',
+	DeathlyStriker_G = '',
+	WanderingWight = '',
+	WanderingWight_G = '',
 	Banerboar = '',
 	Banerboar_G = '',
 	BoarGamer = '',

@@ -21,6 +21,31 @@ import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { Spectator } from './spectator/spectator';
 
+export const simplifiedSpawnEntities = (
+	cardId: string,
+	quantity: number,
+	input: DeathrattleTriggeredInput,
+	boardEntityToSpawn: BoardEntity = null,
+): readonly BoardEntity[] => {
+	return spawnEntities(
+		cardId,
+		quantity,
+		input.boardWithDeadEntity,
+		input.boardWithDeadEntityHero,
+		input.otherBoard,
+		input.otherBoardHero,
+		input.gameState.allCards,
+		input.gameState.cardsData,
+		input.gameState.sharedState,
+		input.gameState.spectator,
+		input.deadEntity.friendly,
+		false,
+		false,
+		false,
+		boardEntityToSpawn,
+	);
+};
+
 export const spawnEntities = (
 	cardId: string,
 	quantity: number,
@@ -170,27 +195,6 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						);
 						break;
-					case CardIds.CadaverCaretaker_BG30_125:
-					case CardIds.CadaverCaretaker_BG30_125_G:
-						spawnedEntities.push(
-							...spawnEntities(
-								deadEntity.cardId === CardIds.CadaverCaretaker_BG30_125
-									? CardIds.SkeletonToken
-									: CardIds.Skeleton_BG_ICC_026t_G,
-								4,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
 					case CardIds.CordPuller_BG29_611:
 					case CardIds.CordPuller_BG29_611_G:
 						spawnedEntities.push(
@@ -242,27 +246,6 @@ export const spawnEntitiesFromDeathrattle = (
 								deadEntityCardId === CardIds.PiggybackImp_BG_AV_309_G
 									? CardIds.PiggybackImp_BackpiggyImpToken_BG_AV_309t
 									: CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
-					case CardIds.HandlessForsaken_BG25_010:
-					case CardIds.HandlessForsaken_BG25_010_G:
-						spawnedEntities.push(
-							...spawnEntities(
-								deadEntityCardId === CardIds.HandlessForsaken_BG25_010_G
-									? CardIds.HandlessForsaken_HelpingHandToken_BG25_010_Gt
-									: CardIds.HandlessForsaken_HelpingHandToken_BG25_010t,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -1500,32 +1483,6 @@ export const spawnEntitiesFromDeathrattle = (
 							});
 							spawnedEntities.push(...spawns);
 						});
-						break;
-					case CardIds.HarmlessBonehead_BG28_300:
-					case CardIds.HarmlessBonehead_BG28_300_G:
-						const harmlessBoneheadStats = deadEntity.cardId === CardIds.HarmlessBonehead_BG28_300_G ? 2 : 1;
-						spawnedEntities.push(
-							...spawnEntities(
-								CardIds.SkeletonToken,
-								2,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-								false,
-								true,
-							).map((e) => ({
-								...e,
-								attack: harmlessBoneheadStats,
-								health: harmlessBoneheadStats,
-							})),
-						);
 						break;
 					case CardIds.AridAtrocity_BG29_864:
 					case CardIds.AridAtrocity_BG29_864_G:

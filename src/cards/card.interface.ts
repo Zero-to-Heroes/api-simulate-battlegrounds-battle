@@ -55,6 +55,12 @@ export interface OnOtherSpawnedCard extends Card {
 export const hasOnOtherSpawned = (card: Card): card is OnOtherSpawnedCard =>
 	(card as OnOtherSpawnedCard)?.onOtherSpawned !== undefined;
 
+export interface AfterOtherSpawnedCard extends Card {
+	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => void;
+}
+export const hasAfterOtherSpawned = (card: Card): card is AfterOtherSpawnedCard =>
+	(card as AfterOtherSpawnedCard)?.afterOtherSpawned !== undefined;
+
 export interface OnDespawnedCard extends Card {
 	onDespawned: (minion: BoardEntity, input: OnDespawnInput) => void;
 }

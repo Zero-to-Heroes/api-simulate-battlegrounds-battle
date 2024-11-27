@@ -1,7 +1,7 @@
 import { BoardEntity } from '../../../board-entity';
 import { AvengeInput } from '../../../simulation/avenge';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { spawnEntities } from '../../../simulation/deathrattle-spawns';
+import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
 import { AvengeCard, DeathrattleSpawnCard } from '../../card.interface';
@@ -10,20 +10,7 @@ export const RunedProgenitor: DeathrattleSpawnCard & AvengeCard = {
 	cardIds: [TempCardIds.RunedProgenitor, TempCardIds.RunedProgenitor_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const numberOfSpawns = deadEntity.cardId === TempCardIds.RunedProgenitor_G ? 2 : 1;
-		return spawnEntities(
-			TempCardIds.BeetleToken,
-			numberOfSpawns,
-			input.boardWithDeadEntity,
-			input.boardWithDeadEntityHero,
-			input.otherBoard,
-			input.otherBoardHero,
-			input.gameState.allCards,
-			input.gameState.cardsData,
-			input.gameState.sharedState,
-			input.gameState.spectator,
-			deadEntity.friendly,
-			false,
-		);
+		return simplifiedSpawnEntities(TempCardIds.BeetleToken, numberOfSpawns, input);
 	},
 	baseAvengeValue: (cardId: string) => 4,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {

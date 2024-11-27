@@ -61,6 +61,7 @@ export interface BgsPlayerGlobalInfo {
 	BeetleHealthBuff?: number;
 	MutatedLasherAttackBuff?: number;
 	MutatedLasherHealthBuff?: number;
+	FriendlyMinionsDeadLastCombat?: number;
 }
 
 export interface BgsQuestEntity {

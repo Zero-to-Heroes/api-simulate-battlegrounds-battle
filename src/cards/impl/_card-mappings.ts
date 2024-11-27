@@ -6,6 +6,8 @@ import { Beetle } from './minion/beetle';
 import { BoarGamer } from './minion/boar-gamer';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
+import { CadaverCaretaker } from './minion/cadaver-caretaker';
+import { DeathlyStriker } from './minion/deathly-striker';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { FairyGillmother } from './minion/fairy-gillmother';
@@ -15,6 +17,8 @@ import { GemRat } from './minion/gem-rat';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { GrittyHeadhunter } from './minion/gritty-headhunter';
 import { Hackerfin } from './minion/hackerfin';
+import { HandlessForsaken } from './minion/handless-forsaken';
+import { HarmlessBonehead } from './minion/harmless-bonehead';
 import { HoloRover } from './minion/holo-rover';
 import { ImplantSubject } from './minion/implant-subject';
 import { MarqueeTicker } from './minion/marquee-ticker';
@@ -34,6 +38,8 @@ import { Spacefarer } from './minion/spacefarer';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
+import { WanderingWight } from './minion/wandering-wight';
+import { WispInTheShell } from './minion/wisp-in-the-shell';
 
 export const cardMappings: {
 	[cardId: string]: Card;
@@ -75,6 +81,12 @@ const cards = [
 	CrystalInfuserEnchantment,
 	BoarGamer,
 	Banerboar,
+	WanderingWight,
+	DeathlyStriker,
+	WispInTheShell,
+	HandlessForsaken,
+	HarmlessBonehead,
+	CadaverCaretaker,
 ];
 for (const card of cards) {
 	const cardIds = card.cardIds ?? [];
