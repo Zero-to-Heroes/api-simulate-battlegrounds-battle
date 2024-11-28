@@ -183,8 +183,6 @@ export class CardsData {
 			case CardIds.WitchwingNestmatron_BG21_038:
 			case CardIds.WitchwingNestmatron_BG21_038_G:
 			case CardIds.BoomSquad_BG27_Reward_502:
-			case CardIds.ChampionOfThePrimus_BG27_029:
-			case CardIds.ChampionOfThePrimus_BG27_029_G:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
 			case CardIds.FridgeMagnet_BG30_MagicItem_545:

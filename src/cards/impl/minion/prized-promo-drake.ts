@@ -6,6 +6,7 @@ import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const PrizedPromoDrake: StartOfCombatCard = {
+	cardIds: [CardIds.PrizedPromoDrake_BG21_014, CardIds.PrizedPromoDrake_BG21_014_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const stats = minion.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
 		const targets = input.playerBoard

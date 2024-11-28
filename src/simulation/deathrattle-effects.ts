@@ -6,9 +6,7 @@ import { hasDeathrattleEffect, hasDeathrattleEnchantmentEffect } from '../cards/
 import { CardsData } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { grantRandomDivineShield, updateDivineShield } from '../keywords/divine-shield';
-import { updateReborn } from '../keywords/reborn';
 import { updateTaunt } from '../keywords/taunt';
-import { updateVenomous } from '../keywords/venomous';
 import { updateWindfury } from '../keywords/windfury';
 import { pickMultipleRandomDifferent, pickRandom, pickRandomAlive, pickRandomLowestHealth } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
@@ -29,7 +27,6 @@ import {
 	getNeighbours,
 	processMinionDeath,
 } from './attack';
-import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
 import { spawnEntities } from './deathrattle-spawns';
@@ -205,40 +202,6 @@ export const handleDeathrattleEffects = (
 							otherBoardHero,
 							gameState,
 						);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				case CardIds.OperaticBelcher_BG26_888:
-				case CardIds.OperaticBelcher_BG26_888_G:
-					const belcherMultiplier = deadEntityCardId === CardIds.OperaticBelcher_BG26_888_G ? 2 : 1;
-					for (let i = 0; i < multiplier; i++) {
-						for (let j = 0; j < belcherMultiplier; j++) {
-							const possibleBelcherTargets = boardWithDeadEntity
-								.filter((entity) => !entity.venomous)
-								.filter((entity) => !entity.poisonous)
-								.filter((entity) => entity.health > 0 && !entity.definitelyDead)
-								.filter((entity) =>
-									hasCorrectTribe(entity, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards),
-								);
-							if (possibleBelcherTargets.length > 0) {
-								const chosen = pickRandom(possibleBelcherTargets);
-								updateVenomous(
-									chosen,
-									true,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoardHero,
-									gameState,
-								);
-								gameState.spectator.registerPowerTarget(
-									deadEntity,
-									chosen,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoardHero,
-								);
-							}
-						}
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
@@ -519,48 +482,6 @@ export const handleDeathrattleEffects = (
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
-				case CardIds.AnubarakNerubianKing_BG25_007:
-				case CardIds.AnubarakNerubianKing_BG25_007_G:
-					const anubarakMultiplier = deadEntityCardId === CardIds.AnubarakNerubianKing_BG25_007_G ? 2 : 1;
-					const attackBonus = anubarakMultiplier * 1;
-					for (let i = 0; i < multiplier; i++) {
-						boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += attackBonus;
-						addStatsToBoard(
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							attackBonus,
-							0,
-							gameState,
-							Race[Race.UNDEAD],
-						);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				// case CardIds.ElementiumSquirrelBombBattlegrounds_TB_BaconShop_HERO_17_Buddy:
-				// 	// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
-				// 	// could be spawned between the shots firing), but let's say it's good enough for now
-				// 	for (let i = 0; i < multiplier; i++) {
-				// 		const numberOfDeadMechsThisCombat = sharedState.deaths
-				// 			.filter((entity) => entity.friendly === deadEntity.friendly)
-				// 			// eslint-disable-next-line prettier/prettier
-				// 			.filter((entity) => isCorrectTribe(allCards.getCard(entity.cardId)?.races, Race.MECH)).length;
-				// 		for (let j = 0; j < numberOfDeadMechsThisCombat + 1; j++) {
-				// 			dealDamageToRandomEnemy(
-				// 				otherBoard,
-				// 				otherBoardHero,
-				// 				deadEntity,
-				// 				3,
-				// 				boardWithDeadEntity,
-				// 				boardWithDeadEntityHero,
-				// 				allCards,
-				// 				cardsData,
-				// 				sharedState,
-				// 				spectator,
-				// 			);
-				// 		}
-				// 	}
-				// 	break;
 				case CardIds.ElementiumSquirrelBomb_TB_BaconShop_HERO_17_Buddy:
 				case CardIds.ElementiumSquirrelBomb_TB_BaconShop_HERO_17_Buddy_G:
 					// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
@@ -741,44 +662,6 @@ export const handleDeathrattleEffects = (
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
-				case CardIds.TunnelBlaster_BG_DAL_775:
-				case CardIds.TunnelBlaster_BG_DAL_775_G:
-					const loops = deadEntityCardId === CardIds.TunnelBlaster_BG_DAL_775_G ? 2 : 1;
-					for (let i = 0; i < multiplier; i++) {
-						for (let j = 0; j < loops; j++) {
-							// In case there are spawns, don't target them
-							const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
-							for (const target of minionsToDamage) {
-								const isSameSide = target.friendly === deadEntity.friendly;
-								const board = isSameSide ? boardWithDeadEntity : otherBoard;
-								const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
-								dealDamageToMinion(
-									target,
-									board,
-									hero,
-									deadEntity,
-									3,
-									isSameSide ? otherBoard : boardWithDeadEntity,
-									isSameSide ? otherBoardHero : boardWithDeadEntityHero,
-									gameState,
-								);
-							}
-						}
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				case CardIds.LeeroyTheReckless_BG23_318:
-				case CardIds.LeeroyTheReckless_BG23_318_G:
-					if (
-						deadEntity.lastAffectedByEntity
-						// http://replays.firestoneapp.com/?reviewId=c6121cdd-5cb6-4321-807e-4ff644568a8c&turn=25&action=7
-						// Update 02/05/2024: this is a bug, and friendly units should be killed
-						// deadEntity.friendly !== deadEntity.lastAffectedByEntity.friendly
-					) {
-						deadEntity.lastAffectedByEntity.definitelyDead = true;
-					}
-					onDeathrattleTriggered(deathrattleTriggeredInput);
-					break;
 				case CardIds.RadioStar_BG25_399:
 				case CardIds.RadioStar_BG25_399_G:
 					for (let i = 0; i < multiplier; i++) {
@@ -792,26 +675,6 @@ export const handleDeathrattleEffects = (
 				case CardIds.MysticSporebat_BG28_900_G:
 					for (let i = 0; i < multiplier; i++) {
 						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				case CardIds.ThreeLilQuilboar_BG26_867:
-				case CardIds.ThreeLilQuilboar_BG26_867_G:
-					// console.log('Triggering blood gems', deadEntityCardId, deadEntity.entityId);
-					for (let i = 0; i < multiplier; i++) {
-						const numberOfBloodGems = deadEntityCardId === CardIds.ThreeLilQuilboar_BG26_867_G ? 6 : 3;
-						for (const entity of boardWithDeadEntity.filter((e) =>
-							hasCorrectTribe(e, boardWithDeadEntityHero, Race.QUILBOAR, gameState.allCards),
-						)) {
-							playBloodGemsOn(
-								deadEntity,
-								entity,
-								numberOfBloodGems,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								gameState,
-							);
-						}
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
@@ -1000,43 +863,6 @@ export const handleDeathrattleEffects = (
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
-				case CardIds.Mummifier_BG28_309:
-				case CardIds.Mummifier_BG28_309_G:
-					const mummifierBuff = deadEntity.cardId === CardIds.Mummifier_BG28_309_G ? 2 : 1;
-					for (let i = 0; i < multiplier; i++) {
-						for (let j = 0; j < mummifierBuff; j++) {
-							const targets = boardWithDeadEntity
-								.filter(
-									(e) =>
-										e.cardId !== CardIds.Mummifier_BG28_309 &&
-										e.cardId !== CardIds.Mummifier_BG28_309_G,
-								)
-								.filter((e) => !e.reborn)
-								.filter((e) =>
-									hasCorrectTribe(e, boardWithDeadEntityHero, Race.UNDEAD, gameState.allCards),
-								);
-							const target = pickRandom(targets);
-							if (target) {
-								updateReborn(
-									target,
-									true,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoardHero,
-									gameState,
-								);
-								gameState.spectator.registerPowerTarget(
-									deadEntity,
-									target,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoardHero,
-								);
-							}
-						}
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
 				case CardIds.ScrapScraper_BG26_148:
 				case CardIds.ScrapScraper_BG26_148_G:
 					for (let i = 0; i < multiplier; i++) {
@@ -1130,14 +956,6 @@ export const handleDeathrattleEffects = (
 								);
 							}
 						}
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				case CardIds.CruiseController_BG31_821:
-				case CardIds.CruiseController_BG31_821_G:
-					for (let i = 0; i < multiplier; i++) {
-						boardWithDeadEntityHero.globalInfo.PirateAttackBonus +=
-							deadEntity.cardId === CardIds.CruiseController_BG31_821_G ? 10 : 5;
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;

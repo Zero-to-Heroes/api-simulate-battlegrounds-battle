@@ -36,14 +36,12 @@ import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
 import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
 import { HoardingHatespawn } from '../../cards/impl/minion/hoarding-hatespawn';
-import { InterrogatorWhitemane } from '../../cards/impl/minion/interrogator-whitemane';
 import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
 import { PilotedWhirlOTron } from '../../cards/impl/minion/piloted-whirl-o-tron';
 import { RedWhelp } from '../../cards/impl/minion/red-whelp';
 import { SanctumRester } from '../../cards/impl/minion/sanctum-rester';
 import { Sandy } from '../../cards/impl/minion/sandy';
-import { SkyPirateFlagbearer } from '../../cards/impl/minion/sky-pirate-flagbearer';
 import { Soulsplitter } from '../../cards/impl/minion/soulsplitter';
 import { SunScreener } from '../../cards/impl/minion/sun-screener';
 import { TheUninvitedGuest } from '../../cards/impl/minion/the-uninvited-guest';
@@ -254,9 +252,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.CorruptedMyrmidon_BG23_012:
 		case CardIds.CorruptedMyrmidon_BG23_012_G:
 			return CorruptedMyrmidon;
-		case CardIds.InterrogatorWhitemane_BG24_704:
-		case CardIds.InterrogatorWhitemane_BG24_704_G:
-			return InterrogatorWhitemane;
 		case CardIds.MantidQueen_BG22_402:
 		case CardIds.MantidQueen_BG22_402_G:
 			return MantidQueen;
@@ -302,9 +297,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.SunScreener_BG30_101:
 		case CardIds.SunScreener_BG30_101_G:
 			return SunScreener;
-		case CardIds.SkyPirateFlagbearer_BG30_119:
-		case CardIds.SkyPirateFlagbearer_BG30_119_G:
-			return SkyPirateFlagbearer;
 
 		default:
 			const candidate = cardMappings[cardId];

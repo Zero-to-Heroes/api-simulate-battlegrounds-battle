@@ -6,6 +6,7 @@ import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-in
 import { StartOfCombatCard } from '../../card.interface';
 
 export const AutomatonPortrait: StartOfCombatCard = {
+	cardIds: [CardIds.AutomatonPortrait_BG30_MagicItem_303],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerBoard.length < 7) {
 			const newMinions = spawnEntities(

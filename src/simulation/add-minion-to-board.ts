@@ -1,7 +1,13 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasAfterOtherSpawned, hasOnDespawned, hasOnOtherSpawned, hasOnSpawned } from '../cards/card.interface';
+import {
+	hasAfterOtherSpawned,
+	hasOnDespawned,
+	hasOnOtherSpawned,
+	hasOnOtherAuraSpawned as hasOnOtherSpawnedAura,
+	hasOnSpawned,
+} from '../cards/card.interface';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
@@ -25,7 +31,7 @@ export const addMinionsToBoard = (
 	for (const minionToAdd of [...minionsToAdd].reverse()) {
 		addMinionToBoard(board, boardHero, otherHero, index, minionToAdd, gameState, false);
 	}
-	handleAfterSpawnEffects(board, boardHero, otherHero, minionsToAdd, gameState);
+	handleAfterSpawnEffects(board, boardHero, minionsToAdd, gameState);
 };
 
 export const addMinionToBoard = (
@@ -45,7 +51,7 @@ export const addMinionToBoard = (
 	onMinionSummoned(boardHero, board, gameState);
 	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, gameState);
 	if (performAfterSpawnEffects) {
-		handleAfterSpawnEffects(board, boardHero, otherHero, [minionToAdd], gameState);
+		handleAfterSpawnEffects(board, boardHero, [minionToAdd], gameState);
 	}
 };
 
@@ -74,6 +80,17 @@ const handleSpawnEffect = (
 		// The case for Reborns, and these shouldn't proc on themselves
 		if (entity.entityId === spawned.entityId) {
 			continue;
+		}
+
+		const onOtherSpawnedImpl = cardMappings[entity.cardId];
+		if (hasOnOtherSpawned(onOtherSpawnedImpl)) {
+			onOtherSpawnedImpl.onOtherSpawned(entity, {
+				spawned: spawned,
+				hero: boardHero,
+				board: board,
+				otherHero: otherHero,
+				gameState,
+			});
 		}
 
 		switch (entity.cardId) {
@@ -124,12 +141,6 @@ const handleSpawnEffect = (
 					modifyStats(spawned, statsBonus, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
-				break;
-			case CardIds.ThunderingAbomination_BG30_124:
-			case CardIds.ThunderingAbomination_BG30_124_G:
-				const abomStatsMultiplier = entity.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
-				modifyStats(spawned, abomStatsMultiplier * 3, abomStatsMultiplier * 3, board, boardHero, gameState);
-				gameState.spectator.registerPowerTarget(entity, spawned, board, boardHero, otherHero);
 				break;
 		}
 	}
@@ -201,7 +212,7 @@ export const handleAddedMinionAuraEffect = (
 		// TODO: what if the additional part is a potential target for the aura effect?
 		// 2024-08-27: changing the order to first handleMinionAddedAuraEffect so that the automatons get boosted,
 		// then apply the aura
-		applyAurasToSelf(spawned, board, boardHero, otherHero, gameState);
+		applyAurasToSelf(spawned, board, boardHero, gameState);
 	}
 };
 
@@ -209,7 +220,6 @@ export const applyAurasToSelf = (
 	spawned: BoardEntity,
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
-	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
 	if (!!boardHero.questRewards?.length) {
@@ -291,12 +301,11 @@ export const applyAurasToSelf = (
 	// ];
 	for (const entity of board) {
 		const onOtherSpawnedImpl = cardMappings[entity.cardId];
-		if (hasOnOtherSpawned(onOtherSpawnedImpl)) {
-			onOtherSpawnedImpl.onOtherSpawned(entity, {
+		if (hasOnOtherSpawnedAura(onOtherSpawnedImpl)) {
+			onOtherSpawnedImpl.onOtherSpawnedAura(entity, {
 				spawned: spawned,
 				hero: boardHero,
 				board: board,
-				otherHero: otherHero,
 				gameState,
 			});
 		}
@@ -664,12 +673,11 @@ const handleMinionAddedAuraEffect = (
 const handleAfterSpawnEffects = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
-	otherHero: BgsPlayerEntity,
 	allSpawned: readonly BoardEntity[],
 	gameState: FullGameState,
 ): void => {
 	for (const spawned of allSpawned) {
-		handleAfterSpawnEffect(board, hero, otherHero, spawned, gameState);
+		handleAfterSpawnEffect(board, hero, spawned, gameState);
 	}
 	updateBoardwideAuras(board, hero, gameState);
 };
@@ -692,7 +700,6 @@ export const onMinionSummoned = (hero: BgsPlayerEntity, board: BoardEntity[], ga
 const handleAfterSpawnEffect = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
-	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
 ): void => {
@@ -704,35 +711,11 @@ const handleAfterSpawnEffect = (
 				spawned: spawned,
 				hero: hero,
 				board: board,
-				otherHero: otherHero,
 				gameState,
 			});
 		}
 
 		switch (entity.cardId) {
-			// case CardIds.MurlocTidecallerLegacy:
-			// case CardIds.MurlocTidecallerCore:
-			// 	const multiplier = entity.cardId === CardIds.MurlocTidecallerBattlegrounds ? 2 : 1;
-			// 	const buffAmount =
-			// 		multiplier * (isCorrectTribe(allCards.getCard(spawned.cardId).races, Race.MURLOC) ? 1 : 0);
-			// 	if (buffAmount > 0) {
-			// 		modifyAttack(entity, buffAmount, board, allCards);
-			// 		afterStatsUpdate(entity, board, allCards);
-			// 		spectator.registerPowerTarget(entity, entity, board);
-			// 	}
-			// 	break;
-			case CardIds.Swampstriker_BG22_401:
-			case CardIds.Swampstriker_BG22_401_G:
-				if (entity.entityId !== spawned.entityId) {
-					const multiplier2 = entity.cardId === CardIds.Swampstriker_BG22_401_G ? 2 : 1;
-					const buffAmount2 =
-						multiplier2 * (hasCorrectTribe(spawned, hero, Race.MURLOC, gameState.allCards) ? 1 : 0);
-					if (buffAmount2 > 0) {
-						modifyStats(entity, buffAmount2, 0, board, hero, gameState);
-						gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
-					}
-				}
-				break;
 			case CardIds.Felstomper_BG25_042:
 			case CardIds.Felstomper_BG25_042_G:
 			case CardIds.Deadstomper_BG28_634:
@@ -838,6 +821,12 @@ export interface OnOtherSpawnInput {
 	hero: BgsPlayerEntity;
 	board: BoardEntity[];
 	otherHero: BgsPlayerEntity;
+	gameState: FullGameState;
+}
+export interface OnOtherSpawnAuraInput {
+	spawned: BoardEntity;
+	hero: BgsPlayerEntity;
+	board: BoardEntity[];
 	gameState: FullGameState;
 }
 export interface OnDespawnInput {

@@ -8,6 +8,9 @@ import { OnAttackCard } from '../../card.interface';
 export const NeonAgent: OnAttackCard = {
 	cardIds: [TempCardIds.NeonAgent, TempCardIds.NeonAgent_G],
 	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (minion !== input.attacker) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		const cards = [];
 		const numberOfCards = minion.cardId === TempCardIds.NeonAgent_G ? 2 : 1;
 		for (let i = 0; i < numberOfCards; i++) {

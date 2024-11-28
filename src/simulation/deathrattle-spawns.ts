@@ -9,7 +9,6 @@ import {
 	addStatsToBoard,
 	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
-	getMinionsOfDifferentTypes,
 	getTeammateInitialState,
 	hasCorrectTribe,
 	stringifySimple,
@@ -245,42 +244,6 @@ export const spawnEntitiesFromDeathrattle = (
 								deadEntityCardId === CardIds.EternalSummoner_BG25_009_G
 									? CardIds.EternalKnight_BG25_008_G
 									: CardIds.EternalKnight_BG25_008,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
-					case CardIds.Scallywag_BGS_061:
-						spawnedEntities.push(
-							...spawnEntities(
-								CardIds.Scallywag_SkyPirateToken_BGS_061t,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
-					case CardIds.Scallywag_TB_BaconUps_141:
-						spawnedEntities.push(
-							...spawnEntities(
-								CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
@@ -1260,27 +1223,6 @@ export const spawnEntitiesFromDeathrattle = (
 							}
 						}
 						break;
-					case CardIds.RapscallionRecruiter_BG26_018:
-					case CardIds.RapscallionRecruiter_BG26_018_G:
-						spawnedEntities.push(
-							...spawnEntities(
-								deadEntity.cardId === CardIds.RapscallionRecruiter_BG26_018_G
-									? CardIds.Scallywag_TB_BaconUps_141
-									: CardIds.Scallywag_BGS_061,
-								3,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
 					case CardIds.CultistSthara_BG27_081:
 					case CardIds.CultistSthara_BG27_081_G:
 						const cultistStharaSpawnNumber = deadEntity.cardId === CardIds.CultistSthara_BG27_081_G ? 2 : 1;
@@ -1314,44 +1256,6 @@ export const spawnEntitiesFromDeathrattle = (
 							});
 							spawnedEntities.push(...spawns);
 						});
-						break;
-					case CardIds.AridAtrocity_BG29_864:
-					case CardIds.AridAtrocity_BG29_864_G:
-						const aridAtrocityStatsMultiplier =
-							deadEntity.cardId === CardIds.AridAtrocity_BG29_864_G ? 2 : 1;
-						const friendlyDeadEntities = gameState.sharedState.deaths.filter(
-							(e) => e.friendly === deadEntity.friendly,
-						);
-						const types = getMinionsOfDifferentTypes(
-							friendlyDeadEntities,
-							boardWithDeadEntityHero,
-							gameState,
-						);
-						const constaridAtrocityStats = aridAtrocityStatsMultiplier * 7 * types.length;
-						spawnedEntities.push(
-							...spawnEntities(
-								deadEntityCardId === CardIds.AridAtrocity_BG29_864_G
-									? CardIds.AridAtrocity_DesertedGolemToken_BG29_864_Gt
-									: CardIds.AridAtrocity_DesertedGolemToken_BG29_864t,
-								1,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
-								deadEntity.friendly,
-								false,
-								false,
-								true,
-							).map((e) => ({
-								...e,
-								attack: e.attack + constaridAtrocityStats,
-								health: e.health + constaridAtrocityStats,
-							})),
-						);
 						break;
 					case CardIds.Magnanimoose_BGDUO_105:
 					case CardIds.Magnanimoose_BGDUO_105_G:
@@ -1655,27 +1559,6 @@ export const spawnEntitiesFromEnchantments = (
 					spawnedEntities.push(
 						...spawnEntities(
 							CardIds.FlourishingFrostling_BG26_537,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e:
-				case CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119_Ge:
-					spawnedEntities.push(
-						...spawnEntities(
-							enchantment.cardId === CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e
-								? CardIds.Scallywag_SkyPirateToken_BGS_061t
-								: CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 							1,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,

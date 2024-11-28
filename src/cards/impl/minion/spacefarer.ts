@@ -14,7 +14,9 @@ export const Spacefarer: OnStatsChangedCard = {
 		if (!hasCorrectTribe(input.target, input.hero, Race.PIRATE, input.gameState.allCards)) {
 			return;
 		}
-		const mult = entity.cardId === TempCardIds.Spacefarer_G ? 2 : 1;
-		modifyStats(entity, 0, 3 * mult, input.board, input.hero, input.gameState);
+		if (input.attackAmount > 0) {
+			const mult = entity.cardId === TempCardIds.Spacefarer_G ? 2 : 1;
+			modifyStats(entity, 0, 3 * mult, input.board, input.hero, input.gameState);
+		}
 	},
 };

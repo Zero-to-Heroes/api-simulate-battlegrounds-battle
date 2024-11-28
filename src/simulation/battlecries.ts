@@ -20,7 +20,6 @@ import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { dealDamageToHero } from './damage-to-hero';
 import { spawnEntities } from './deathrattle-spawns';
-import { afterDiscover } from './discover';
 import { FullGameState } from './internal-game-state';
 import { SharedState } from './shared-state';
 import { performEntitySpawns } from './spawns';
@@ -80,14 +79,6 @@ export const triggerBattlecry = (
 			});
 		} else {
 			switch (entity.cardId) {
-				case CardIds.RazorfenGeomancer_BG20_100:
-				case CardIds.RazorfenGeomancer_BG20_100_G:
-					const razorFenCardsToAdd =
-						entity.cardId === CardIds.RazorfenGeomancer_BG20_100
-							? [CardIds.BloodGem]
-							: [CardIds.BloodGem, CardIds.BloodGem];
-					addCardsInHand(hero, board, razorFenCardsToAdd, gameState);
-					break;
 				case CardIds.RockpoolHunter_BG_UNG_073:
 				case CardIds.RockpoolHunter_TB_BaconUps_061:
 					const rockPoolTarget = getRandomAliveMinion(board, hero, Race.MURLOC, gameState.allCards);
@@ -96,14 +87,6 @@ export const triggerBattlecry = (
 						modifyStats(rockPoolTarget, rockpoolStats, rockpoolStats, board, hero, gameState);
 						gameState.spectator.registerPowerTarget(entity, rockPoolTarget, board, hero, otherHero);
 					}
-					break;
-				case CardIds.ShellCollector_BG23_002:
-				case CardIds.ShellCollector_BG23_002_G:
-					const shellCollectorCardsToAdd =
-						entity.cardId === CardIds.ShellCollector_BG23_002
-							? [CardIds.TheCoinCore]
-							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
-					addCardsInHand(hero, board, shellCollectorCardsToAdd, gameState);
 					break;
 				case CardIds.MenagerieMug_BGS_082:
 				case CardIds.MenagerieMug_TB_BaconUps_144:
@@ -130,13 +113,6 @@ export const triggerBattlecry = (
 						gameState,
 						3,
 					);
-					break;
-				case CardIds.NerubianDeathswarmer_BG25_011:
-				case CardIds.NerubianDeathswarmer_BG25_011_G:
-					const nerubianDeathswarmerStats = entity.cardId === CardIds.NerubianDeathswarmer_BG25_011 ? 1 : 2;
-					hero.globalInfo.UndeadAttackBonus =
-						(hero.globalInfo?.UndeadAttackBonus ?? 0) + nerubianDeathswarmerStats;
-					addStatsToBoard(entity, board, hero, nerubianDeathswarmerStats, 0, gameState, Race[Race.UNDEAD]);
 					break;
 				case CardIds.SparringPartner_BG_AT_069:
 				case CardIds.SparringPartner_BG_AT_069_G:
@@ -279,23 +255,6 @@ export const triggerBattlecry = (
 						}
 					}
 					break;
-				case CardIds.PrimalfinLookout_BGS_020:
-				case CardIds.PrimalfinLookout_TB_BaconUps_089:
-					const primalfinLoops = entity.cardId === CardIds.PrimalfinLookout_BGS_020 ? 1 : 2;
-					for (let i = 0; i < primalfinLoops; i++) {
-						const discoverOptions = [
-							gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
-							gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
-							gameState.cardsData.getRandomMinionForTribe(Race.MURLOC, hero.tavernTier ?? 1),
-						];
-						const picked = pickRandom(discoverOptions);
-						const others = discoverOptions.filter((e) => e !== picked);
-						addCardsInHand(hero, board, [picked], gameState);
-						afterDiscover(hero, board, picked, others, gameState);
-						gameState.spectator.registerPowerTarget(entity, hero, board, hero, otherHero);
-						break;
-					}
-					break;
 				case CardIds.StrongshellScavenger_BG_ICC_807:
 				case CardIds.StrongshellScavenger_TB_BaconUps_072:
 					const strongshellScavengerStats = entity.cardId === CardIds.StrongshellScavenger_BG_ICC_807 ? 2 : 4;
@@ -330,18 +289,6 @@ export const triggerBattlecry = (
 					modifyStats(bonemareTarget, bonemareStats, bonemareStats, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, bonemareTarget, board, hero, otherHero);
 					break;
-				case CardIds.KingBagurgle_BGS_030:
-				case CardIds.KingBagurgle_TB_BaconUps_100:
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
-						entity.cardId === CardIds.KingBagurgle_BGS_030 ? 3 : 6,
-						gameState,
-						Race[Race.MURLOC],
-					);
-					break;
 				// Not correct, but only used to trigger the "add cards in hand" effect
 				case CardIds.Murozond_BGS_043:
 				case CardIds.Murozond_TB_BaconUps_110:
@@ -358,14 +305,6 @@ export const triggerBattlecry = (
 							? [CardIds.TheCoinCore]
 							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
 					addCardsInHand(hero, board, tavernTempestCardsToAdd, gameState);
-					break;
-				case CardIds.OozelingGladiator_BG27_002:
-				case CardIds.OozelingGladiator_BG27_002_G:
-					const oozelingCardsToAdd =
-						entity.cardId === CardIds.OozelingGladiator_BG27_002
-							? [CardIds.TheCoinCore, CardIds.TheCoinCore]
-							: [CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore];
-					addCardsInHand(hero, board, oozelingCardsToAdd, gameState);
 					break;
 				case CardIds.UtherTheLightbringer_BG23_190:
 				case CardIds.UtherTheLightbringer_BG23_190_G:
@@ -491,41 +430,6 @@ export const triggerBattlecry = (
 					hero.globalInfo.BloodGemAttackBonus += sanguineChampionStats;
 					hero.globalInfo.BloodGemHealthBonus += sanguineChampionStats;
 					break;
-				case CardIds.Murky_BG24_012:
-				case CardIds.Murky_BG24_012_G:
-					const murkyScale = entity.cardId === CardIds.Murky_BG24_012 ? 1 : 2;
-					const murlocsControlled = board.filter((e) =>
-						hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards),
-					).length;
-					const murkyStats = murkyScale * 3 * murlocsControlled;
-					const murkyTarget = pickRandom(
-						board.filter((e) => hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards)),
-					);
-					if (!!murkyTarget) {
-						modifyStats(murkyTarget, murkyStats, murkyStats, board, hero, gameState);
-					}
-					break;
-				case CardIds.LovesickBalladist_BG26_814:
-				case CardIds.LovesickBalladist_BG26_814_G:
-					const balladistMultiplier = entity.cardId === CardIds.LovesickBalladist_BG26_814 ? 1 : 2;
-					const balladistStats = balladistMultiplier * (entity.scriptDataNum1 ?? 0);
-					const balladistTargets = allMinions.filter((e) =>
-						hasCorrectTribe(e, hero, Race.PIRATE, gameState.allCards),
-					);
-					const balladistTarget = pickRandom(balladistTargets);
-					if (balladistTarget) {
-						const targetBoard = board.includes(balladistTarget) ? board : otherBoard;
-						const targetHero = board.includes(balladistTarget) ? hero : otherHero;
-						modifyStats(balladistTarget, 0, balladistStats, targetBoard, targetHero, gameState);
-						gameState.spectator.registerPowerTarget(
-							entity,
-							balladistTarget,
-							targetBoard,
-							targetHero,
-							otherHero,
-						);
-					}
-					break;
 				case CardIds.FacelessDisciple_BG24_719:
 				case CardIds.FacelessDisciple_BG24_719_G:
 					const target = pickRandom(allMinions.filter((e) => !e.definitelyDead && e.health > 0));
@@ -619,12 +523,6 @@ export const triggerBattlecry = (
 						}
 					}
 					break;
-				case CardIds.RodeoPerformer_BG28_550:
-				case CardIds.RodeoPerformer_BG28_550_G:
-					const rodeoPerformerCardsToAdd =
-						entity.cardId === CardIds.RodeoPerformer_BG28_550_G ? [null] : [null, null];
-					addCardsInHand(hero, board, rodeoPerformerCardsToAdd, gameState);
-					break;
 				case CardIds.Eagill_BG28_630:
 				case CardIds.Eagill_BG28_630_G:
 					const eagillMultiplier = entity.cardId === CardIds.Eagill_BG28_630 ? 1 : 2;
@@ -671,23 +569,6 @@ export const triggerBattlecry = (
 						gameState.spectator.registerPowerTarget(entity, weebominationTarget, board, hero, otherHero);
 					}
 					break;
-				case CardIds.AssistantGuard_BG29_845:
-				case CardIds.AssistantGuard_BG29_845_G:
-					const assistantGuardMultiplier = entity.cardId === CardIds.AssistantGuard_BG29_845 ? 1 : 2;
-					const assistantGuardTarget = pickRandom(allMinions);
-					if (assistantGuardTarget) {
-						updateTaunt(assistantGuardTarget, true, board, hero, otherHero, gameState);
-						gameState.spectator.registerPowerTarget(entity, assistantGuardTarget, board, hero, otherHero);
-					}
-					addStatsToBoard(
-						entity,
-						board.filter((e) => !!e.taunt),
-						hero,
-						assistantGuardMultiplier * 2,
-						assistantGuardMultiplier * 3,
-						gameState,
-					);
-					break;
 				case CardIds.GoldshellWarden_BG29_803:
 				case CardIds.GoldshellWarden_BG29_803_G:
 					const goldshellMultiplier = entity.cardId === CardIds.GoldshellWarden_BG29_803_G ? 2 : 1;
@@ -706,23 +587,6 @@ export const triggerBattlecry = (
 					const shellWhistlerCardsToAdd =
 						entity.cardId === CardIds.ShellWhistler_BG26_045_G ? [null] : [null, null];
 					addCardsInHand(hero, board, shellWhistlerCardsToAdd, gameState);
-					break;
-				// case CardIds.ScrapScraper_BG26_148:
-				// case CardIds.ScrapScraper_BG26_148_G:
-				// 	const scraperToAddQuantity = entity.cardId === CardIds.ScrapScraper_BG26_148_G ? 2 : 1;
-				// 	const scraperCardsToAdd = [];
-				// 	for (let i = 0; i < scraperToAddQuantity; i++) {
-				// 		scraperCardsToAdd.push(pickRandom(gameState.cardsData.scrapScraperSpawns));
-				// 	}
-				// 	addCardsInHand(hero, board, scraperCardsToAdd, gameState);
-				// 	break;
-				case CardIds.GemSmuggler_BG25_155:
-				case CardIds.GemSmuggler_BG25_155_G:
-					// console.debug('triggering gem smuggler');
-					const gemSmugglerBloodGems = entity.cardId === CardIds.GemSmuggler_BG25_155 ? 1 : 2;
-					board
-						.filter((e) => e.entityId !== entity.entityId)
-						.forEach((e) => playBloodGemsOn(entity, e, gemSmugglerBloodGems, board, hero, gameState));
 					break;
 				case CardIds.DisguisedGraverobber_BG28_303:
 				case CardIds.DisguisedGraverobber_BG28_303_G:
@@ -858,19 +722,6 @@ export const triggerBattlecry = (
 						modifyStats(tuskarrTarget, attackBuff, healthBuff, board, hero, gameState);
 					}
 					break;
-				case CardIds.InspiringUnderdog_BG30_127:
-				case CardIds.InspiringUnderdog_BG30_127_G:
-					if (board.length > 0) {
-						const targets = board.filter((e) => gameState.cardsData.getTavernLevel(e.cardId) <= 3);
-						if (targets.length > 0) {
-							const multiplier = entity.cardId === CardIds.InspiringUnderdog_BG30_127 ? 1 : 2;
-							targets.forEach((target) => {
-								modifyStats(target, multiplier * 2, multiplier * 1, board, hero, gameState);
-								gameState.spectator.registerPowerTarget(entity, target, board, hero, otherHero);
-							});
-						}
-					}
-					break;
 				case CardIds.LuckyEgg_BG30_104:
 				case CardIds.LuckyEgg_BG30_104_G:
 					if (board.length > 0) {
@@ -935,24 +786,6 @@ export const triggerBattlecry = (
 						otherHero,
 						gameState,
 					);
-					break;
-				case CardIds.ParchedWanderer_BG30_756:
-				case CardIds.ParchedWanderer_BG30_756_G:
-					const wandererTarget = pickRandom(
-						board.filter((e) => hasCorrectTribe(e, hero, Race.MURLOC, gameState.allCards)),
-					);
-					if (!!wandererTarget) {
-						const wandererMultiplier = entity.cardId === CardIds.ParchedWanderer_BG30_756 ? 1 : 2;
-						updateTaunt(wandererTarget, true, board, hero, otherHero, gameState);
-						modifyStats(
-							wandererTarget,
-							wandererMultiplier * 3,
-							wandererMultiplier * 3,
-							board,
-							hero,
-							gameState,
-						);
-					}
 					break;
 				default:
 					// All hte Battlecry minions that arent implemented / have no effect on the board state

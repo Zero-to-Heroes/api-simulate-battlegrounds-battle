@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
@@ -8,13 +9,14 @@ import { copyEntity } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const KarazhanChessSet: StartOfCombatCard = {
+	cardIds: [CardIds.KarazhanChessSet_BG30_MagicItem_972],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		let hasTriggered = false;
 		if (input.playerBoard.length > 0) {
 			let minionsToCopy = 1;
 			for (let i = 0; i < Math.min(input.playerBoard.length, 7); i++) {
 				if (minionsToCopy <= 0) {
-					break;
+					return;
 				}
 				const entityToCoy = input.playerBoard[i];
 				const copy: BoardEntity = copyEntity(entityToCoy);

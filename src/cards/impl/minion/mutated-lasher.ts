@@ -1,11 +1,11 @@
 import { BoardEntity } from '../../../board-entity';
-import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
+import { OnOtherSpawnAuraInput } from '../../../simulation/add-minion-to-board';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
-import { DeathrattleEffectCard, OnOtherSpawnedCard } from '../../card.interface';
+import { DeathrattleEffectCard, OnOtherSpawnedAuraCard } from '../../card.interface';
 
-export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedCard = {
+export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedAuraCard = {
 	cardIds: [TempCardIds.MutatedLasher, TempCardIds.MutatedLasher_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === TempCardIds.MutatedLasher_G ? 2 : 1;
@@ -31,7 +31,7 @@ export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedCard = {
 				);
 			});
 	},
-	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
+	onOtherSpawnedAura: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => {
 		const mult = minion.cardId === TempCardIds.MutatedLasher_G ? 2 : 1;
 		if (input.gameState.cardsData.getTavernLevel(input.spawned.cardId) % 2 === 1) {
 			modifyStats(input.spawned, 2 * mult, 3 * mult, input.board, input.hero, input.gameState);

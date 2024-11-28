@@ -22,7 +22,14 @@ export const EfficientEngineer: BattlecryCard = {
 			const target = pickRandom(candidates);
 			const endOfTurnImpl = cardMappings[target.cardId];
 			if (hasEndOfTurn(endOfTurnImpl)) {
-				endOfTurnImpl.endOfTurn(target, input);
+				const numberOfLoops = input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901_G)
+					? 3
+					: input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901)
+					? 2
+					: 1;
+				for (let i = 0; i < numberOfLoops; i++) {
+					endOfTurnImpl.endOfTurn(target, input);
+				}
 			}
 		}
 	},

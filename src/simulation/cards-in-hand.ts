@@ -1,10 +1,10 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnCardAddedToHand } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom } from '../services/utils';
-import { buildSingleBoardEntity, getRandomAliveMinion } from '../utils';
+import { buildSingleBoardEntity } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { modifyStats } from './stats';
@@ -109,28 +109,6 @@ const onCardAddedToHandMinion = (
 			});
 		}
 	}
-	const peggys = board.filter(
-		(e) => e.cardId === CardIds.PeggySturdybone_BG25_032 || e.cardId === CardIds.PeggySturdybone_BG25_032_G,
-	);
-	peggys.forEach((peggy) => {
-		const pirate = getRandomAliveMinion(
-			board.filter((e) => e.entityId !== peggy.entityId),
-			playerEntity,
-			Race.PIRATE,
-			gameState.allCards,
-		);
-		if (pirate) {
-			modifyStats(
-				pirate,
-				peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
-				peggy.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
-				board,
-				playerEntity,
-				gameState,
-			);
-			gameState.spectator.registerPowerTarget(peggy, pirate, board, playerEntity, null);
-		}
-	});
 	const thornCaptains = board.filter(
 		(e) => e.cardId === CardIds.Thorncaptain_BG25_045 || e.cardId === CardIds.Thorncaptain_BG25_045_G,
 	);

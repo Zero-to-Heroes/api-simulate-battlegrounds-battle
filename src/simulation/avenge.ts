@@ -529,20 +529,6 @@ const handleAvenge = (
 				updateReborn(avenger, true, boardWithDeadEntity, boardWithDeadEntityHero, otherBoardHero, gameState);
 				updateTaunt(avenger, true, boardWithDeadEntity, boardWithDeadEntityHero, otherBoardHero, gameState);
 				break;
-			case CardIds.ChampionOfThePrimus_BG27_029:
-			case CardIds.ChampionOfThePrimus_BG27_029_G:
-				const championPrimusStat = avenger.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
-				boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += championPrimusStat;
-				addStatsToBoard(
-					avenger,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					championPrimusStat,
-					0,
-					gameState,
-					Race[Race.UNDEAD],
-				);
-				break;
 			case CardIds.PhaerixWrathOfTheSun_BG28_403:
 			case CardIds.PhaerixWrathOfTheSun_BG28_403_G:
 				const phaerixLoops = avenger.cardId === CardIds.PhaerixWrathOfTheSun_BG28_403_G ? 2 : 1;

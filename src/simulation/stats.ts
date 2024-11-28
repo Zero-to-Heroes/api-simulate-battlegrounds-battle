@@ -111,14 +111,6 @@ export const modifyStats = (
 					otherBoardHero,
 				);
 			});
-
-		if (
-			entity.cardId === CardIds.DefiantShipwright_BG21_018 ||
-			entity.cardId === CardIds.DefiantShipwright_BG21_018_G
-		) {
-			const stat = entity.cardId === CardIds.DefiantShipwright_BG21_018_G ? 2 : 1;
-			entity.health += stat;
-		}
 	}
 
 	if (realHealthAmount > 0) {

@@ -24,19 +24,22 @@ export const applyOnAttackEffects = (
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 
-	const onAttackImpl = cardMappings[attacker.cardId];
-	if (hasOnAttack(onAttackImpl)) {
-		const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAttack(attacker, {
-			attackingHero: attackingBoardHero,
-			attackingBoard: attackingBoard,
-			defendingEntity: defendingEntity,
-			defendingHero: defendingBoardHero,
-			defendingBoard: defendingBoard,
-			gameState,
-			playerIsFriendly: attackingBoardHero.friendly,
-		});
-		damageDoneByAttacker += dmgDoneByAttacker;
-		damageDoneByDefender += dmgDoneByDefender;
+	for (const boardEntity of attackingBoard) {
+		const onAttackImpl = cardMappings[attacker.cardId];
+		if (hasOnAttack(onAttackImpl)) {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAttack(boardEntity, {
+				attacker: attacker,
+				attackingHero: attackingBoardHero,
+				attackingBoard: attackingBoard,
+				defendingEntity: defendingEntity,
+				defendingHero: defendingBoardHero,
+				defendingBoard: defendingBoard,
+				gameState,
+				playerIsFriendly: attackingBoardHero.friendly,
+			});
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
+		}
 	}
 
 	// Damage happens before the entity is buffed, e.g. before an attack buff from Roaring Rallier
@@ -65,72 +68,6 @@ export const applyOnAttackEffects = (
 				attackingBoardHero,
 				gameState,
 			);
-		});
-	}
-
-	// Ripsnarl Captain
-	if (hasCorrectTribe(attacker, attackingBoardHero, Race.PIRATE, gameState.allCards)) {
-		const ripsnarls = attackingBoard.filter((e) => e.cardId === CardIds.RipsnarlCaptain_BGS_056);
-		const ripsnarlsTB = attackingBoard.filter(
-			(entity) => entity.cardId === CardIds.RipsnarlCaptain_TB_BaconUps_139,
-		);
-		ripsnarls.forEach((captain) => {
-			modifyStats(attacker, 3, 0, attackingBoard, attackingBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(
-				captain,
-				attacker,
-				attackingBoard,
-				attackingBoardHero,
-				defendingBoardHero,
-			);
-		});
-		ripsnarlsTB.forEach((captain) => {
-			modifyStats(attacker, 6, 0, attackingBoard, attackingBoardHero, gameState);
-			gameState.spectator.registerPowerTarget(
-				captain,
-				attacker,
-				attackingBoard,
-				attackingBoardHero,
-				defendingBoardHero,
-			);
-		});
-	}
-
-	// Dread Admiral Eliza
-	if (hasCorrectTribe(attacker, attackingBoardHero, Race.PIRATE, gameState.allCards)) {
-		const elizas = attackingBoard.filter(
-			(e) =>
-				e.cardId === CardIds.DreadAdmiralEliza_BGS_047 || e.cardId === CardIds.AdmiralElizaGoreblade_BG27_555,
-		);
-		const elizasTB = attackingBoard.filter(
-			(e) =>
-				e.cardId === CardIds.DreadAdmiralEliza_TB_BaconUps_134 ||
-				e.cardId === CardIds.AdmiralElizaGoreblade_BG27_555_G,
-		);
-
-		elizas.forEach((eliza) => {
-			attackingBoard.forEach((entity) => {
-				modifyStats(entity, 3, 1, attackingBoard, attackingBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					eliza,
-					entity,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
-			});
-		});
-		elizasTB.forEach((eliza) => {
-			attackingBoard.forEach((entity) => {
-				modifyStats(entity, 6, 2, attackingBoard, attackingBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					eliza,
-					entity,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
-			});
 		});
 	}
 
@@ -277,6 +214,7 @@ export const applyOnAttackEffects = (
 };
 
 export interface OnAttackInput {
+	attacker: BoardEntity;
 	attackingHero: BgsPlayerEntity;
 	attackingBoard: BoardEntity[];
 	defendingEntity: BoardEntity;

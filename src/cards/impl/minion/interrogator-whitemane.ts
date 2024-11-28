@@ -5,8 +5,10 @@ import { updateTaunt } from '../../../keywords/taunt';
 import { pickRandom } from '../../../services/utils';
 import { FullGameState } from '../../../simulation/internal-game-state';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const InterrogatorWhitemane = {
+export const InterrogatorWhitemane: StartOfCombatCard = {
+	cardIds: [CardIds.InterrogatorWhitemane_BG24_704, CardIds.InterrogatorWhitemane_BG24_704_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		if (input.opponentBoard.length > 0) {
 			const validTargets = input.opponentBoard.filter(

@@ -5,6 +5,7 @@ import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const RustyTrident: StartOfCombatCard = {
+	cardIds: [CardIds.RustyTrident_BG30_MagicItem_917],
 	startOfCombat: (trinket: BoardTrinket | BgsPlayerEntity, input: SoCInput) => {
 		input.playerBoard
 			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.NAGA, input.gameState.allCards))

@@ -2,8 +2,10 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { hasCorrectTribe } from '../../../utils';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const SkyPirateFlagbearer = {
+export const SkyPirateFlagbearer: StartOfCombatCard = {
+	cardIds: [CardIds.SkyPirateFlagbearer_BG30_119, CardIds.SkyPirateFlagbearer_BG30_119_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		input.playerBoard
 			.filter((e) => e.entityId !== minion.entityId)

@@ -7,7 +7,12 @@ import { OnStealthUpdatedInput } from '../keywords/stealth';
 import { OnTauntUpdatedInput } from '../keywords/taunt';
 import { OnVenomousUpdatedInput } from '../keywords/venomous';
 import { OnWindfuryUpdatedInput } from '../keywords/windfury';
-import { OnDespawnInput, OnOtherSpawnInput, OnSpawnInput } from '../simulation/add-minion-to-board';
+import {
+	OnDespawnInput,
+	OnOtherSpawnAuraInput,
+	OnOtherSpawnInput,
+	OnSpawnInput,
+} from '../simulation/add-minion-to-board';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
@@ -50,6 +55,12 @@ export interface OnSpawnedCard extends Card {
 }
 export const hasOnSpawned = (card: Card): card is OnSpawnedCard => (card as OnSpawnedCard)?.onSpawned !== undefined;
 
+export interface OnOtherSpawnedAuraCard extends Card {
+	onOtherSpawnedAura: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => void;
+}
+export const hasOnOtherAuraSpawned = (card: Card): card is OnOtherSpawnedAuraCard =>
+	(card as OnOtherSpawnedAuraCard)?.onOtherSpawnedAura !== undefined;
+
 export interface OnOtherSpawnedCard extends Card {
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => void;
 }
@@ -57,7 +68,7 @@ export const hasOnOtherSpawned = (card: Card): card is OnOtherSpawnedCard =>
 	(card as OnOtherSpawnedCard)?.onOtherSpawned !== undefined;
 
 export interface AfterOtherSpawnedCard extends Card {
-	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => void;
+	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => void;
 }
 export const hasAfterOtherSpawned = (card: Card): card is AfterOtherSpawnedCard =>
 	(card as AfterOtherSpawnedCard)?.afterOtherSpawned !== undefined;
