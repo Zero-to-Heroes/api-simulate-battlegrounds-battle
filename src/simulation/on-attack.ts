@@ -25,7 +25,7 @@ export const applyOnAttackEffects = (
 	let damageDoneByDefender = 0;
 
 	for (const boardEntity of attackingBoard) {
-		const onAttackImpl = cardMappings[attacker.cardId];
+		const onAttackImpl = cardMappings[boardEntity.cardId];
 		if (hasOnAttack(onAttackImpl)) {
 			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAttack(boardEntity, {
 				attacker: attacker,

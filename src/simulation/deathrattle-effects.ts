@@ -2,7 +2,10 @@
 import { AllCardsService, CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasDeathrattleEffect, hasDeathrattleEnchantmentEffect } from '../cards/card.interface';
+import {
+	hasDeathrattleEffect,
+	hasDeathrattleEnchantmentEffect as hasDeathrattleEffectEnchantmentEffect,
+} from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { grantRandomDivineShield, updateDivineShield } from '../keywords/divine-shield';
@@ -975,9 +978,9 @@ export const handleDeathrattleEffects = (
 
 	for (const enchantment of enchantments) {
 		const deathrattleImpl = cardMappings[enchantment.cardId];
-		if (hasDeathrattleEnchantmentEffect(deathrattleImpl)) {
+		if (hasDeathrattleEffectEnchantmentEffect(deathrattleImpl)) {
 			for (let i = 0; i < multiplier; i++) {
-				deathrattleImpl.deathrattleEnchantmentEffect(enchantment, deathrattleTriggeredInput);
+				deathrattleImpl.deathrattleEffectEnchantmentEffect(enchantment, deathrattleTriggeredInput);
 				onDeathrattleTriggered(deathrattleTriggeredInput);
 			}
 		}

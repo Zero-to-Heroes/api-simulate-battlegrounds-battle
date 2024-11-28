@@ -1,7 +1,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasDeathrattleSpawn } from '../cards/card.interface';
+import { hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom } from '../services/utils';
@@ -1362,8 +1362,32 @@ export const spawnEntitiesFromEnchantments = (
 		deadEntity,
 		gameState.sharedState,
 	);
+
+	const deathrattleTriggeredInput: DeathrattleTriggeredInput = {
+		boardWithDeadEntity,
+		boardWithDeadEntityHero,
+		deadEntity,
+		otherBoard,
+		otherBoardHero,
+		gameState,
+	};
+
 	const spawnedEntities: BoardEntity[] = [];
 	for (const enchantment of deadEntity.enchantments || []) {
+		const deathrattleImpl = cardMappings[enchantment.cardId];
+		if (hasDeathrattleSpawnEnchantment(deathrattleImpl)) {
+			for (let i = 0; i < multiplier; i++) {
+				const spawns = deathrattleImpl.deathrattleSpawnEnchantmentEffect(
+					enchantment,
+					deathrattleTriggeredInput,
+				);
+				if (!!spawns?.length) {
+					spawnedEntities.push(...spawns);
+				}
+				onDeathrattleTriggered(deathrattleTriggeredInput);
+			}
+		}
+
 		for (let i = 0; i < multiplier; i++) {
 			let deathrattleTriggered = true;
 			switch (enchantment.cardId) {

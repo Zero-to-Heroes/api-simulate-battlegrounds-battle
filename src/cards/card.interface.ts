@@ -109,14 +109,24 @@ export const hasDeathrattleEffect = (card: Card): card is DeathrattleEffectCard 
 	(card as DeathrattleEffectCard)?.deathrattleEffect !== undefined;
 
 export interface DeathrattleEnchantmentEffectCard extends Card {
-	deathrattleEnchantmentEffect: (
+	deathrattleEffectEnchantmentEffect: (
 		minion: { cardId: string; originEntityId?: number; repeats?: number },
 		input: DeathrattleTriggeredInput,
 	) => void;
 	cardIds: readonly string[];
 }
 export const hasDeathrattleEnchantmentEffect = (card: Card): card is DeathrattleEnchantmentEffectCard =>
-	(card as DeathrattleEnchantmentEffectCard)?.deathrattleEnchantmentEffect !== undefined;
+	(card as DeathrattleEnchantmentEffectCard)?.deathrattleEffectEnchantmentEffect !== undefined;
+
+export interface DeathrattleSpawnEnchantmentCard extends Card {
+	deathrattleSpawnEnchantmentEffect: (
+		minion: { cardId: string; originEntityId?: number; repeats?: number },
+		input: DeathrattleTriggeredInput,
+	) => readonly BoardEntity[];
+	cardIds: readonly string[];
+}
+export const hasDeathrattleSpawnEnchantment = (card: Card): card is DeathrattleSpawnEnchantmentCard =>
+	(card as DeathrattleSpawnEnchantmentCard)?.deathrattleSpawnEnchantmentEffect !== undefined;
 
 export interface OnCardAddedToHandCard extends Card {
 	onCardAddedToHand: (entity: BoardEntity | BgsQuestEntity, input: OnCardAddedToHandInput) => void;

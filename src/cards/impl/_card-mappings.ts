@@ -103,10 +103,6 @@ import { WanderingWight } from './minion/wandering-wight';
 import { WhelpSmuggler } from './minion/whelp-smuggler';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 
-export const cardMappings: {
-	[cardId: string]: Card;
-} = {};
-
 const cards = [
 	HoloRover,
 	ForestRover,
@@ -212,6 +208,8 @@ const cards = [
 	Mummifier,
 	ThunderingAbomination,
 ];
+
+export const cardMappings: { [cardId: string]: Card } = {};
 for (const card of cards) {
 	const cardIds = card.cardIds ?? [];
 	for (const cardId of cardIds) {
