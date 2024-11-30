@@ -224,14 +224,5 @@ export const applyOnBeingAttackedBuffs = (
 		)
 	) {
 		updateVenomous(defendingEntity, true, defendingBoard, defendingPlayerEntity, attackerHero, gameState);
-	} else if (
-		[CardIds.TransmutedBramblewitch_BG27_013, CardIds.TransmutedBramblewitch_BG27_013_G].includes(
-			attackerEntity.cardId as CardIds,
-		) &&
-		attackerEntity.abiityChargesLeft > 0
-	) {
-		// TODO: also modify all code that directly sets the stats of an entity
-		setEntityStats(defendingEntity, 3, 3, defendingBoard, defendingPlayerEntity, gameState);
-		attackerEntity.abiityChargesLeft--;
 	}
 };

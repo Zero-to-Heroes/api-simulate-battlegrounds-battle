@@ -73,6 +73,7 @@ import { OutbackSmolderer } from './minion/outback-smolderer';
 import { ParchedWanderer } from './minion/parched-wanderer';
 import { PeggySturdybone } from './minion/peggy-sturdybone';
 import { PrimalfinLookout } from './minion/primalfin-lookout';
+import { PrizedPromoDrake } from './minion/prized-promo-drake';
 import { RapscallionRecruiter } from './minion/rapscallion-recruiter';
 import { RazorfenGeomancer } from './minion/razorfen-geomancer';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
@@ -95,6 +96,7 @@ import { Spacefarer } from './minion/spacefarer';
 import { Swampstriker } from './minion/swampstriker';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
+import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
 import { TunnelBlaster } from './minion/tunnel-blaster';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
@@ -207,6 +209,8 @@ const cards = [
 	ChampionOfThePrimus,
 	Mummifier,
 	ThunderingAbomination,
+	PrizedPromoDrake,
+	TransmutedBramblewitch,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

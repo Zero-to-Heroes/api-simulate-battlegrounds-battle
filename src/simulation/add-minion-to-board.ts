@@ -394,7 +394,7 @@ export const applyAurasToSelf = (
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Don't count the yourself
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			modifyStats(spawned, 2 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
+			modifyStats(spawned, 2 * statsBonusAstral, 1 * statsBonusAstral, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
