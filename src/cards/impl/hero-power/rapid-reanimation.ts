@@ -1,6 +1,5 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
-import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { copyEntity } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
@@ -39,7 +38,8 @@ export const RapidReanimation: StartOfCombatCard = {
 				input.playerEntity.rapidReanimationIndexFromRight =
 					input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
 				const minionToCopy = copyEntity(minionThatWillDie);
-				removeAurasFromSelf(minionToCopy, input.playerBoard, input.playerEntity, input.gameState);
+				// We don't reapply auras when resummoning
+				// removeAurasFromSelf(minionToCopy, input.playerBoard, input.playerEntity, input.gameState);
 				input.playerEntity.rapidReanimationMinion = minionToCopy;
 				minionThatWillDie.definitelyDead = true;
 				input.gameState.spectator.registerPowerTarget(

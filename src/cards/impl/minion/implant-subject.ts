@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { OnDivineShieldUpdatedInput } from '../../../keywords/divine-shield';
@@ -5,7 +6,6 @@ import { OnRebornUpdatedInput } from '../../../keywords/reborn';
 import { OnTauntUpdatedInput } from '../../../keywords/taunt';
 import { FullGameState } from '../../../simulation/internal-game-state';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import {
 	OnDivineShieldUpdatedCard,
 	OnRebornUpdatedCard,
@@ -21,7 +21,7 @@ export const ImplantSubject: OnTauntUpdatedCard &
 	OnWindfuryUpdatedCard &
 	OnStealthUpdatedCard &
 	OnRebornUpdatedCard = {
-	cardIds: [TempCardIds.ImplantSubject, TempCardIds.ImplantSubject_G],
+	cardIds: [CardIds.ImplantSubject_BG31_147, CardIds.ImplantSubject_BG31_147_G],
 	onTauntUpdated: (
 		entity: BoardEntity,
 		impactedEntity: BoardEntity,
@@ -80,6 +80,6 @@ export const ImplantSubject: OnTauntUpdatedCard &
 };
 
 const updateEntity = (entity: BoardEntity, board: BoardEntity[], hero: BgsPlayerEntity, gameState: FullGameState) => {
-	const mult = entity.cardId === TempCardIds.ImplantSubject_G ? 2 : 1;
+	const mult = entity.cardId === CardIds.ImplantSubject_BG31_147_G ? 2 : 1;
 	modifyStats(entity, mult * 2, mult * 2, board, hero, gameState);
 };

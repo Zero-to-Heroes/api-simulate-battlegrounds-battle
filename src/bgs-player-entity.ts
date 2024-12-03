@@ -55,12 +55,11 @@ export interface BgsPlayerGlobalInfo {
 	AstralAutomatonsSummonedThisGame?: number;
 	ChoralAttackBuff?: number;
 	ChoralHealthBuff?: number;
-	// TODO: implement these when building the simulator input
-	BattlecriesTriggeredThisGame?: number;
 	BeetleAttackBuff?: number;
 	BeetleHealthBuff?: number;
 	MutatedLasherAttackBuff?: number;
 	MutatedLasherHealthBuff?: number;
+	BattlecriesTriggeredThisGame?: number;
 	FriendlyMinionsDeadLastCombat?: number;
 }
 

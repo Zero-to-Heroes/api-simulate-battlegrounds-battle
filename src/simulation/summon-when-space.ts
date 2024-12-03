@@ -310,18 +310,16 @@ const handleRapidReanimationForPlayer = (
 	if (hasSummoned) {
 		playerEntity.rapidReanimationMinion = null;
 		// Hard-coding a correction for Ancestral Automaton
-		// Update 2024-11-22: looks like the new summoned copy now correctly includes the boost
-		// https://replays.firestoneapp.com/?reviewId=295c1da2-44be-461e-8162-5a19eaa420a4&turn=7&action=2
-		// hasSummoned.forEach((entity) => {
-		// 	switch (entity.cardId) {
-		// 		case CardIds.AstralAutomaton_BG_TTN_401:
-		// 		case CardIds.AstralAutomaton_BG_TTN_401_G:
-		// 			const overstatMult = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401 ? 1 : 2;
-		// 			entity.attack = Math.max(1, entity.attack - 2 * overstatMult);
-		// 			entity.health = Math.max(0, entity.health - overstatMult);
-		// 			break;
-		// 	}
-		// });
+		hasSummoned.forEach((entity) => {
+			switch (entity.cardId) {
+				case CardIds.AstralAutomaton_BG_TTN_401:
+				case CardIds.AstralAutomaton_BG_TTN_401_G:
+					const overstatMult = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401 ? 1 : 2;
+					entity.attack = Math.max(1, entity.attack + 2 * overstatMult);
+					entity.health = Math.max(0, entity.health + overstatMult);
+					break;
+			}
+		});
 	}
 };
 

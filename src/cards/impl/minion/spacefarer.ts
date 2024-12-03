@@ -1,12 +1,11 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { modifyStats, OnStatsChangedInput } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { OnStatsChangedCard } from '../../card.interface';
 
 export const Spacefarer: OnStatsChangedCard = {
-	cardIds: [TempCardIds.Spacefarer, TempCardIds.Spacefarer_G],
+	cardIds: [CardIds.Spacefarer_BG31_820, CardIds.Spacefarer_BG31_820_G],
 	onStatsChanged: (entity: BoardEntity, input: OnStatsChangedInput) => {
 		if (input.target === entity) {
 			return;
@@ -15,7 +14,7 @@ export const Spacefarer: OnStatsChangedCard = {
 			return;
 		}
 		if (input.attackAmount > 0) {
-			const mult = entity.cardId === TempCardIds.Spacefarer_G ? 2 : 1;
+			const mult = entity.cardId === CardIds.Spacefarer_BG31_820_G ? 2 : 1;
 			modifyStats(entity, 0, 3 * mult, input.board, input.hero, input.gameState);
 		}
 	},

@@ -1,16 +1,19 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
-import { TempCardIds } from '../../../temp-card-ids';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const MoonsteelJuggernaut: EndOfTurnCard = {
-	cardIds: [TempCardIds.MoonsteelJuggernaut, TempCardIds.MoonsteelJuggernaut_G],
+	cardIds: [CardIds.MoonsteelJuggernaut_BG31_171, CardIds.MoonsteelJuggernaut_BG31_171_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const buff = minion.cardId === TempCardIds.MoonsteelJuggernaut_G ? 2 : 1;
+		const buff = minion.cardId === CardIds.MoonsteelJuggernaut_BG31_171_G ? 2 : 1;
 		const cards =
-			minion.cardId === TempCardIds.MoonsteelJuggernaut_G
-				? [TempCardIds.Satellite, TempCardIds.Satellite]
-				: [TempCardIds.Satellite];
+			minion.cardId === CardIds.MoonsteelJuggernaut_BG31_171_G
+				? [
+						CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t,
+						CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t,
+				  ]
+				: [CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t];
 		addCardsInHand(input.hero, input.board, cards, input.gameState);
 	},
 };

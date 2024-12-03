@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const BuzzingVermin: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.BuzzingVermin, TempCardIds.BuzzingVermin_G],
+	cardIds: [CardIds.BuzzingVermin_BG31_803, CardIds.BuzzingVermin_BG31_803_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
-		const numberOfSpawns = deadEntity.cardId === TempCardIds.BuzzingVermin_G ? 2 : 1;
-		return simplifiedSpawnEntities(TempCardIds.BeetleToken, numberOfSpawns, input);
+		const numberOfSpawns = deadEntity.cardId === CardIds.BuzzingVermin_BG31_803_G ? 2 : 1;
+		return simplifiedSpawnEntities(CardIds.BoonOfBeetles_BeetleToken_BG28_603t, numberOfSpawns, input);
 	},
 };

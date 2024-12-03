@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const NestSwarmer: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.NestSwarmer, TempCardIds.NestSwarmer_G],
+	cardIds: [CardIds.NestSwarmer_BG31_807, CardIds.NestSwarmer_BG31_807_G],
 	deathrattleSpawn: (deadEntity: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
-		const numberOfSpawns = deadEntity.cardId === TempCardIds.NestSwarmer_G ? 6 : 3;
-		return simplifiedSpawnEntities(TempCardIds.BeetleToken, numberOfSpawns, input);
+		const numberOfSpawns = deadEntity.cardId === CardIds.NestSwarmer_BG31_807_G ? 6 : 3;
+		return simplifiedSpawnEntities(CardIds.BoonOfBeetles_BeetleToken_BG28_603t, numberOfSpawns, input);
 	},
 };

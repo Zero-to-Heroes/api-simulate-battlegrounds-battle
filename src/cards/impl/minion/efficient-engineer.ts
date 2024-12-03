@@ -2,14 +2,13 @@ import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';
-import { TempCardIds } from '../../../temp-card-ids';
 import { BattlecryCard, hasEndOfTurn } from '../../card.interface';
 import { cardMappings } from '../_card-mappings';
 
 export const EfficientEngineer: BattlecryCard = {
-	cardIds: [TempCardIds.EfficientEngineer, TempCardIds.EfficientEngineer_G],
+	cardIds: [CardIds.EfficientEngineer_BG31_301, CardIds.EfficientEngineer_BG31_301_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
-		const mult = minion.cardId === TempCardIds.EfficientEngineer_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.EfficientEngineer_BG31_301_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const candidates = input.board
 				.filter((e) =>
@@ -20,15 +19,17 @@ export const EfficientEngineer: BattlecryCard = {
 						![CardIds.YoungMurkEye_BG22_403, CardIds.YoungMurkEye_BG22_403_G].includes(e.cardId as CardIds),
 				);
 			const target = pickRandom(candidates);
-			const endOfTurnImpl = cardMappings[target.cardId];
-			if (hasEndOfTurn(endOfTurnImpl)) {
-				const numberOfLoops = input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901_G)
-					? 3
-					: input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901)
-					? 2
-					: 1;
-				for (let i = 0; i < numberOfLoops; i++) {
-					endOfTurnImpl.endOfTurn(target, input);
+			if (target) {
+				const endOfTurnImpl = cardMappings[target.cardId];
+				if (hasEndOfTurn(endOfTurnImpl)) {
+					const numberOfLoops = input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901_G)
+						? 3
+						: input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901)
+						? 2
+						: 1;
+					for (let i = 0; i < numberOfLoops; i++) {
+						endOfTurnImpl.endOfTurn(target, input);
+					}
 				}
 			}
 		}

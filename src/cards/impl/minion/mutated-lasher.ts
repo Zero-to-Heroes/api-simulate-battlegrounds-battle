@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnAuraInput } from '../../../simulation/add-minion-to-board';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleEffectCard, OnOtherSpawnedAuraCard } from '../../card.interface';
 
 export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedAuraCard = {
-	cardIds: [TempCardIds.MutatedLasher, TempCardIds.MutatedLasher_G],
+	cardIds: [CardIds.MutatedLasher_BG31_852, CardIds.MutatedLasher_BG31_852_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const mult = minion.cardId === TempCardIds.MutatedLasher_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.MutatedLasher_BG31_852_G ? 2 : 1;
 		input.boardWithDeadEntityHero.globalInfo.MutatedLasherAttackBuff += 2 * mult;
 		input.boardWithDeadEntityHero.globalInfo.MutatedLasherHealthBuff += 3 * mult;
 		input.boardWithDeadEntity
@@ -32,7 +32,7 @@ export const MutatedLasher: DeathrattleEffectCard & OnOtherSpawnedAuraCard = {
 			});
 	},
 	onOtherSpawnedAura: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => {
-		const mult = minion.cardId === TempCardIds.MutatedLasher_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.MutatedLasher_BG31_852_G ? 2 : 1;
 		if (input.gameState.cardsData.getTavernLevel(input.spawned.cardId) % 2 === 1) {
 			modifyStats(input.spawned, 2 * mult, 3 * mult, input.board, input.hero, input.gameState);
 			input.gameState.spectator.registerPowerTarget(minion, input.spawned, input.board, input.hero, null);

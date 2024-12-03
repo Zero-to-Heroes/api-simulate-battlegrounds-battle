@@ -1,11 +1,11 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnDespawnInput, OnSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnDespawnedCard, OnSpawnedCard } from '../../card.interface';
 
 export const Beetle: OnSpawnedCard & OnDespawnedCard = {
-	cardIds: [TempCardIds.BeetleToken, TempCardIds.BeetleToken_G],
+	cardIds: [CardIds.BoonOfBeetles_BeetleToken_BG28_603t, CardIds.Beetle_BG28_603t_G],
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		modifyStats(
 			minion,

@@ -1,17 +1,17 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnAttackCard } from '../../card.interface';
 
 export const ArcaneCannoneer: OnAttackCard = {
-	cardIds: [TempCardIds.ArcaneCannoneer, TempCardIds.ArcaneCannoneer_G],
+	cardIds: [CardIds.ArcaneCannoneer_BG31_928, CardIds.ArcaneCannoneer_BG31_928_G],
 	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 		const baseBuff = minion.scriptDataNum1;
-		const mult = minion.cardId === TempCardIds.ArcaneCannoneer_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.ArcaneCannoneer_BG31_928_G ? 2 : 1;
 		const buff = baseBuff * mult;
 		dealDamageToMinion(
 			input.defendingEntity,

@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnAuraInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { AfterOtherSpawnedCard } from '../../card.interface';
 
 export const WanderingWight: AfterOtherSpawnedCard = {
-	cardIds: [TempCardIds.WanderingWight, TempCardIds.WanderingWight_G],
+	cardIds: [CardIds.WanderingWight_BG31_126, CardIds.WanderingWight_BG31_126_G],
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => {
-		const mult = minion.cardId === TempCardIds.WanderingWight ? 1 : 2;
+		const mult = minion.cardId === CardIds.WanderingWight_BG31_126 ? 1 : 2;
 		modifyStats(minion, 0, minion.attack * mult, input.board, input.hero, input.gameState);
 	},
 };

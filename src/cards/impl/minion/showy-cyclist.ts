@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { TempCardIds } from '../../../temp-card-ids';
 import { addStatsToBoard } from '../../../utils';
 import { DeathrattleEffectCard } from '../../card.interface';
 
 export const ShowyCyclist: DeathrattleEffectCard = {
-	cardIds: [TempCardIds.ShowyCyclist, TempCardIds.ShowyCyclist_G],
+	cardIds: [CardIds.ShowyCyclist_BG31_925, CardIds.ShowyCyclist_BG31_925_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const baseBuff = minion.scriptDataNum1;
-		const mult = minion.cardId === TempCardIds.ShowyCyclist_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.ShowyCyclist_BG31_925_G ? 2 : 1;
 		const buff = baseBuff * mult;
 		addStatsToBoard(
 			minion,
