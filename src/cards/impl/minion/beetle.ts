@@ -9,7 +9,7 @@ export const Beetle: OnSpawnedCard & OnDespawnedCard = {
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		modifyStats(
 			minion,
-			2 * (input.hero.globalInfo.BeetleAttackBuff ?? 0),
+			1 * (input.hero.globalInfo.BeetleAttackBuff ?? 0),
 			1 * (input.hero.globalInfo.BeetleHealthBuff ?? 0),
 			input.playerBoard,
 			input.hero,
