@@ -1,6 +1,7 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { updateTaunt } from '../keywords/taunt';
 import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
 import { spawnEntities } from './deathrattle-spawns';
@@ -247,6 +248,9 @@ const handleBoonOfBeetlesForPlayer = (
 				0,
 			);
 			if (hasSummoned) {
+				hasSummoned.forEach((entity) => {
+					updateTaunt(entity, true, playerBoard, playerEntity, opponentEntity, gameState);
+				});
 				secretEntity.scriptDataNum1--;
 			} else {
 				// No room to summon, we stop here
