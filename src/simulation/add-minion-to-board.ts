@@ -394,7 +394,7 @@ export const applyAurasToSelf = (
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Don't count the yourself
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			modifyStats(spawned, 2 * statsBonusAstral, 1 * statsBonusAstral, board, boardHero, gameState);
+			modifyStats(spawned, 2 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -577,7 +577,7 @@ export const removeAurasFromSelf = (
 			// and ancestral automaton only counts "other" automatons
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
 			entity.attack = Math.max(0, entity.attack - 2 * statsBonusAstral);
-			entity.health = Math.max(1, entity.health - 1 * statsBonusAstral);
+			entity.health = Math.max(1, entity.health - 2 * statsBonusAstral);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -664,7 +664,7 @@ const handleMinionAddedAuraEffect = (
 				)
 				.forEach((e) => {
 					const multiplierAstral = e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-					modifyStats(e, 2 * multiplierAstral, 1 * multiplierAstral, board, boardHero, gameState);
+					modifyStats(e, 2 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
 				});
 			break;
 	}

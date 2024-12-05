@@ -30,6 +30,7 @@ export interface BoardEntity {
 	}[];
 	pendingAttackBuffs?: number[];
 	scriptDataNum1?: number;
+	scriptDataNum2?: number;
 	inInitialState?: boolean;
 	// For Build-An-Undead and Zilliax
 	additionalCards?: readonly string[] | null;

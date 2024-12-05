@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';
 import runSimulation, { assignCards } from '../../src/simulate-bgs-battle';
-import { SharedState } from '../../src/simulation/shared-state';
 import { applyDebugState } from './apply-debug-state';
 import jsonEvent3 from './game.json';
 
@@ -24,7 +23,6 @@ const test = async () => {
 			currentTurn: 0,
 		},
 	} as any;
-	SharedState.debugEnabled = false;
 
 	applyDebugState();
 
