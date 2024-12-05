@@ -1,6 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { addStatsToBoard, getMinionsOfDifferentTypes } from '../../../utils';
+import { modifyStats } from '../../../simulation/stats';
+import { getMinionsOfDifferentTypes } from '../../../utils';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const LightfangEnforcer: EndOfTurnCard = {
@@ -8,6 +9,8 @@ export const LightfangEnforcer: EndOfTurnCard = {
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
 		const mult = minion.cardId === CardIds.LightfangEnforcer_TB_BaconUps_082 ? 2 : 1;
 		const targets = getMinionsOfDifferentTypes(input.board, input.hero, input.gameState);
-		addStatsToBoard(minion, targets, input.hero, 4 * mult, 4 * mult, input.gameState);
+		for (const entity of targets) {
+			modifyStats(entity, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
+		}
 	},
 };

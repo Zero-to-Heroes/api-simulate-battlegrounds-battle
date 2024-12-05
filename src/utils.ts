@@ -288,6 +288,10 @@ export const getRandomMinionWithHighestHealth = (board: BoardEntity[]): BoardEnt
 	return validMinions[Math.floor(Math.random() * validMinions.length)];
 };
 
+/**
+ * Only use if the full board gets the stats, or if you're able to filter use the tribe param.
+ * Otherwise some minions will be missing when applying onStatsUpdate effects
+ */
 export const addStatsToBoard = (
 	sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret,
 	board: BoardEntity[],

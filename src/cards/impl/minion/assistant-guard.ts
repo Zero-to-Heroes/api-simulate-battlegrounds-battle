@@ -3,7 +3,7 @@ import { BoardEntity } from '../../../board-entity';
 import { updateTaunt } from '../../../keywords/taunt';
 import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';
-import { addStatsToBoard } from '../../../utils';
+import { modifyStats } from '../../../simulation/stats';
 import { BattlecryCard } from '../../card.interface';
 
 export const AssistantGuard: BattlecryCard = {
@@ -22,13 +22,15 @@ export const AssistantGuard: BattlecryCard = {
 				input.otherHero,
 			);
 		}
-		addStatsToBoard(
-			minion,
-			input.board.filter((e) => !!e.taunt),
-			input.hero,
-			assistantGuardMultiplier * 2,
-			assistantGuardMultiplier * 3,
-			input.gameState,
-		);
+		for (const entity of input.board.filter((e) => !!e.taunt)) {
+			modifyStats(
+				entity,
+				assistantGuardMultiplier * 2,
+				assistantGuardMultiplier * 3,
+				input.board,
+				input.hero,
+				input.gameState,
+			);
+		}
 	},
 };
