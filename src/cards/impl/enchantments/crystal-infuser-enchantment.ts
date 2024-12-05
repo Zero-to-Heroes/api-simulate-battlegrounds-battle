@@ -5,11 +5,11 @@ import { DeathrattleEnchantmentEffectCard } from '../../card.interface';
 
 export const CrystalInfuserEnchantment: DeathrattleEnchantmentEffectCard = {
 	cardIds: [
-		CardIds.CrystalInfuser_InfusedEnchantment_BG31_325_Ge,
+		CardIds.CrystalInfuser_InfusedEnchantment_BG31_325e,
 		CardIds.CrystalInfuser_InfusedEnchantment_BG31_325_Ge,
 	],
 	deathrattleEffectEnchantmentEffect: (enchantment: { cardId: string }, input: DeathrattleTriggeredInput) => {
-		const mult = enchantment.cardId === CardIds.CrystalInfuser_InfusedEnchantment_BG31_325_Ge ? 1 : 2;
+		const mult = enchantment.cardId === CardIds.CrystalInfuser_InfusedEnchantment_BG31_325e ? 1 : 2;
 		const cards = [];
 		for (let i = 0; i < 2 * mult; i++) {
 			cards.push(CardIds.BloodGem);
