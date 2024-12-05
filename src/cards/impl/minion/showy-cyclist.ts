@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { addStatsToBoard } from '../../../utils';
@@ -17,6 +17,7 @@ export const ShowyCyclist: DeathrattleEffectCard = {
 			1 * buff,
 			1 * buff,
 			input.gameState,
+			Race[Race.NAGA],
 		);
 	},
 };
