@@ -8,7 +8,8 @@ export const ShowyCyclist: DeathrattleEffectCard = {
 	cardIds: [CardIds.ShowyCyclist_BG31_925, CardIds.ShowyCyclist_BG31_925_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const baseBuff = minion.scriptDataNum2;
-		const mult = minion.cardId === CardIds.ShowyCyclist_BG31_925_G ? 2 : 1;
+		// The info is already included in the scriptDataNum2
+		const mult = 1; // minion.cardId === CardIds.ShowyCyclist_BG31_925_G ? 2 : 1;
 		const buff = baseBuff * mult;
 		addStatsToBoard(
 			minion,
