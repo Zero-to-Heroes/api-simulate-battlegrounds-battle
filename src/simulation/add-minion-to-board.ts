@@ -299,6 +299,12 @@ export const applyAurasToSelf = (
 	// 	{ cardId: spawned.cardId, entityId: spawned.entityId },
 	// 	...(spawned.additionalCards ?? []).map((cardId) => ({ cardId, entityId: spawned.entityId })),
 	// ];
+
+	if (gameState.cardsData.getTavernLevel(spawned.cardId) % 2 === 1) {
+		const atkBuff = boardHero.globalInfo.MutatedLasherAttackBuff ?? 0;
+		const healthBuff = boardHero.globalInfo.MutatedLasherHealthBuff ?? 0;
+		modifyStats(spawned, atkBuff, healthBuff, board, boardHero, gameState);
+	}
 	for (const entity of board) {
 		const onOtherSpawnedImpl = cardMappings[entity.cardId];
 		if (hasOnOtherSpawnedAura(onOtherSpawnedImpl)) {
