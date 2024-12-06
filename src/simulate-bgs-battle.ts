@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
-import { hasDeathrattleEnchantmentEffect } from './cards/card.interface';
+import { hasDeathrattleEnchantmentEffect, hasDeathrattleSpawnEnchantment } from './cards/card.interface';
 import { CardsData } from './cards/cards-data';
 import { cardMappings } from './cards/impl/_card-mappings';
 import { cloneInput3 } from './input-clone';
@@ -253,7 +253,7 @@ export const isValidDeathrattleEnchantment = (cardId: string): boolean => {
 	}
 	if (validDeathrattleEnchantmentsFromMapping.length === 0) {
 		for (const cardImpl of Object.values(cardMappings)) {
-			if (hasDeathrattleEnchantmentEffect(cardImpl)) {
+			if (hasDeathrattleEnchantmentEffect(cardImpl) || hasDeathrattleSpawnEnchantment(cardImpl)) {
 				validDeathrattleEnchantmentsFromMapping.push(...cardImpl.cardIds);
 			}
 		}
