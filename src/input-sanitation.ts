@@ -112,6 +112,7 @@ const buildFinalInputForPlayer = (
 			: null) ??
 		playerInfo.player.heroPowerId;
 	playerInfo.player.cardId = isGhost ? CardIds.Kelthuzad_TB_BaconShop_HERO_KelThuzad : playerInfo.player.cardId;
+	playerInfo.player.hpLeft = Math.max(1, playerInfo.player.hpLeft);
 	// When using the simulator, the aura is not applied when receiving the board state.
 	setMissingAuras(board, playerInfo.player, cards);
 	// Avenge, maxHealth, etc.

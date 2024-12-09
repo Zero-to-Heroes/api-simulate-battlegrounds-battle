@@ -41,6 +41,7 @@ import { HummingBird } from './minion/humming-bird';
 import { HungrySnapjaw } from './minion/hungry-snapjaw';
 import { HunterOfGatherers } from './minion/hunter-of-gatherers';
 import { ImplantSubject } from './minion/implant-subject';
+import { ImposingPercussionist } from './minion/imposing-percussionist';
 import { ImpulsiveTrickster } from './minion/impulsive-trickster';
 import { IndomitableMount } from './minion/indomitable-mount';
 import { InspiringUnderdog } from './minion/inspiring-underdog';
@@ -211,6 +212,7 @@ const cards = [
 	ThunderingAbomination,
 	PrizedPromoDrake,
 	TransmutedBramblewitch,
+	ImposingPercussionist,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

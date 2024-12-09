@@ -46,9 +46,9 @@ export class Simulator {
 				opponentState.board = [];
 			}
 
-			const isPlayerBoardEmpty = playerState.board.length === 0;
-			const isOpponentBoardEmpty = opponentState.board.length === 0;
-			if (isPlayerBoardEmpty) {
+			const isPlayerDefeated = playerState.board.length === 0 || playerState.player.hpLeft <= 0;
+			const isOpponentDefeated = opponentState.board.length === 0 || opponentState.player.hpLeft <= 0;
+			if (isPlayerDefeated) {
 				playerBoard = playerState.teammate?.board;
 				playerState.board = [];
 				playerEntity = playerState.teammate?.player;
@@ -56,7 +56,7 @@ export class Simulator {
 				playerBoard = playerState.board;
 				playerEntity = playerState.player;
 			}
-			if (isOpponentBoardEmpty) {
+			if (isOpponentDefeated) {
 				opponentBoard = opponentState.teammate?.board;
 				opponentState.board = [];
 				opponentEntity = opponentState.teammate?.player;
@@ -64,15 +64,8 @@ export class Simulator {
 				opponentBoard = opponentState.board;
 				opponentEntity = opponentState.player;
 			}
-			// playerBoard = areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.board : playerState.board;
-			// playerEntity =
-			// 	areBothBoards0Attack || isPlayerBoardEmpty ? playerState.teammate?.player : playerState.player;
-			// opponentBoard =
-			// 	areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.board : opponentState.board;
-			// opponentEntity =
-			// 	areBothBoards0Attack || isOpponentBoardEmpty ? opponentState.teammate?.player : opponentState.player;
 			// So that gameState.player always refers to the active player
-			if (isPlayerBoardEmpty) {
+			if (isPlayerDefeated) {
 				// Reset deaths
 				this.gameState.sharedState.deaths = this.gameState.sharedState.deaths.filter(
 					(e) => e.friendly !== this.gameState.gameState.player.player.friendly,
@@ -87,7 +80,7 @@ export class Simulator {
 				// const initialPlayer = this.gameState.gameState.playerInitial;
 				// const initialPlayerTeammate = initialPlayer.teammate;
 			}
-			if (isOpponentBoardEmpty) {
+			if (isOpponentDefeated) {
 				// Reset deaths
 				this.gameState.sharedState.deaths = this.gameState.sharedState.deaths.filter(
 					(e) => e.friendly !== this.gameState.gameState.opponent.player.friendly,
@@ -114,7 +107,7 @@ export class Simulator {
 				result: 'tied',
 			} as SingleSimulationResult;
 		}
-		if (!playerBoard?.length) {
+		if (!playerBoard?.length || playerEntity.hpLeft <= 0) {
 			const damage =
 				this.buildBoardTotalDamage(opponentBoard, this.gameState.gameState.opponent?.teammate?.board) +
 				opponentEntity.tavernTier;
@@ -124,6 +117,7 @@ export class Simulator {
 				damageDealt: damage,
 			};
 		}
+
 		const damage =
 			this.buildBoardTotalDamage(playerBoard, this.gameState.gameState.player?.teammate?.board) +
 			playerEntity.tavernTier;
@@ -179,7 +173,12 @@ export class Simulator {
 		if (debugState?.active) {
 			this.currentAttacker = debugState.forcedCurrentAttacker ?? this.currentAttacker;
 		}
-		while (playerBoard.length > 0 && opponentBoard.length > 0) {
+		while (
+			playerBoard.length > 0 &&
+			opponentBoard.length > 0 &&
+			playerEntity.hpLeft > 0 &&
+			opponentEntity.hpLeft > 0
+		) {
 			handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			clearStealthIfNeeded(playerBoard, playerEntity, opponentBoard, opponentEntity, this.gameState);
 			// console.log('this.currentSpeedAttacker', this.currentAttacker);
