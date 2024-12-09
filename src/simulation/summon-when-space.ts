@@ -246,6 +246,7 @@ const handleBoonOfBeetlesForPlayer = (
 				gameState,
 				CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
 				0,
+				true,
 			);
 			if (hasSummoned) {
 				hasSummoned.forEach((entity) => {
@@ -279,6 +280,7 @@ const handleStableAmalgamationForPlayer = (
 				gameState,
 				CardIds.StableAmalgamation_TotallyNormalHorseToken_BG28_Reward_518t,
 				0,
+				true,
 			);
 			if (hasSummoned) {
 				rewardEntity.scriptDataNum1--;
@@ -309,6 +311,7 @@ const handleRapidReanimationForPlayer = (
 		gameState,
 		playerEntity.rapidReanimationMinion.cardId,
 		indexFromRight,
+		false, // Exact copy
 		playerEntity.rapidReanimationMinion,
 	);
 	if (hasSummoned) {
@@ -335,6 +338,7 @@ const handleSummon = (
 	gameState: FullGameState,
 	cardId: string,
 	indexFromRight: number,
+	applyAuras: boolean,
 	minion: BoardEntity = null,
 ): readonly BoardEntity[] => {
 	if (playerBoard.length >= 7) {
@@ -363,7 +367,7 @@ const handleSummon = (
 		opponentBoard,
 		opponentEntity,
 		gameState,
-		false,
+		applyAuras,
 	);
 	gameState.spectator.registerPowerTarget(playerEntity, newMinion, playerBoard, null, null);
 	return spawned;
