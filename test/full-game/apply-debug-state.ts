@@ -2,17 +2,21 @@ import { debugState } from '../../src/debug-state';
 
 export const applyDebugState = () => {
 	const state = debugState;
-	state.active = false;
-	state.forcedCurrentAttacker = 0;
+	state.active = true;
+	state.forcedCurrentAttacker = 1;
 	state.forcedFaceOffBase = [
-		{ attacker: { entityId: 5337 }, defender: { entityId: 6570 } },
-		{ attacker: { entityId: 4687 }, defender: { entityId: 6550 } },
-		{ attacker: { entityId: 4688 }, defender: { entityId: 6566 } },
-		{ attacker: { attack: 1, health: 1 }, defender: { entityId: 6558 } },
-		{ attacker: { entityId: 6562 }, defender: { entityId: 4690 } },
-		{ attacker: { entityId: 4689 }, defender: { entityId: 6562 } },
-		{ attacker: { entityId: 6566 }, defender: { entityId: 4686 } },
-		{ attacker: { attack: 5, health: 3 }, defender: { attack: 14, health: 4 } },
-		{ attacker: { entityId: 6550 }, defender: { attack: 3, health: 2 } },
+		{ attacker: { entityId: 10523 }, defender: { entityId: 8539 } },
+		{ attacker: { entityId: 8531 }, defender: { entityId: 10537 } },
+		{ attacker: { entityId: 10537 }, defender: { entityId: 8531 } },
+		{ attacker: { entityId: 8543 }, defender: { entityId: 10544 } },
+		{ attacker: { entityId: 10544 }, defender: { entityId: 8554 } },
+		{ attacker: { entityId: 9809 }, defender: { entityId: 10565 } },
+		{ attacker: { entityId: 10548 }, defender: { entityId: 8560 } },
+		{ attacker: { entityId: 9913 }, defender: { entityId: 10565 } },
+		{ attacker: { entityId: 10555 }, defender: { entityId: 8543 } },
+		{ attacker: { entityId: 8560 }, defender: { entityId: 10544 } },
+		{ attacker: { entityId: 10563 }, defender: { entityId: 9913 } },
+		{ attacker: { entityId: 8543 }, defender: { entityId: 10523 } },
+		{ attacker: { entityId: 10555 }, defender: { entityId: 9913 } },
 	];
 };
