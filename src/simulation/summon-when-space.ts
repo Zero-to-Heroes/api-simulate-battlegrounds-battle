@@ -323,7 +323,7 @@ const handleRapidReanimationForPlayer = (
 				case CardIds.AstralAutomaton_BG_TTN_401_G:
 					const overstatMult = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401 ? 1 : 2;
 					entity.attack = Math.max(1, entity.attack + 2 * overstatMult);
-					entity.health = Math.max(0, entity.health + overstatMult);
+					entity.health = Math.max(0, entity.health + 2 * overstatMult);
 					break;
 			}
 		});
