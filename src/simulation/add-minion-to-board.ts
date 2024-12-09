@@ -152,6 +152,7 @@ export const handleAddedMinionAuraEffect = (
 	spawned: BoardEntity,
 	gameState: FullGameState,
 	applySelfAuras = true,
+	isActuallySpawned = true,
 ): void => {
 	switch (boardHero.heroPowerId) {
 		case CardIds.SproutItOut:
@@ -175,35 +176,37 @@ export const handleAddedMinionAuraEffect = (
 		modifyStats(spawned, tumblingDisasterBonus, tumblingDisasterBonus, board, boardHero, gameState);
 	}
 
-	for (const trinket of boardHero.trinkets) {
-		switch (trinket.cardId) {
-			case CardIds.BlingtronsSunglasses_BG30_MagicItem_978:
-				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
-					const target = pickRandom(board.filter((e) => !e.divineShield));
-					if (!!target) {
-						updateDivineShield(target, board, boardHero, otherHero, true, gameState);
+	if (isActuallySpawned) {
+		for (const trinket of boardHero.trinkets) {
+			switch (trinket.cardId) {
+				case CardIds.BlingtronsSunglasses_BG30_MagicItem_978:
+					if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
+						const target = pickRandom(board.filter((e) => !e.divineShield));
+						if (!!target) {
+							updateDivineShield(target, board, boardHero, otherHero, true, gameState);
+						}
 					}
-				}
-				break;
-			case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
-			case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
-				if (!trinket.rememberedMinion) {
-					trinket.rememberedMinion = copyEntity(spawned);
-				}
-				break;
-			case CardIds.ReinforcedShield_BG30_MagicItem_886:
-				if (trinket.scriptDataNum1 > 0 && !spawned.divineShield) {
-					updateDivineShield(spawned, board, boardHero, otherHero, true, gameState);
-					trinket.scriptDataNum1--;
-				}
-				break;
+					break;
+				case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
+				case CardIds.TwinSkyLanterns_TwinSkyLanternsToken_BG30_MagicItem_822t2:
+					if (!trinket.rememberedMinion) {
+						trinket.rememberedMinion = copyEntity(spawned);
+					}
+					break;
+				case CardIds.ReinforcedShield_BG30_MagicItem_886:
+					if (trinket.scriptDataNum1 > 0 && !spawned.divineShield) {
+						updateDivineShield(spawned, board, boardHero, otherHero, true, gameState);
+						trinket.scriptDataNum1--;
+					}
+					break;
+			}
 		}
 	}
 
 	// Apply auras to board
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 	for (const spawnedCardId of cardIds) {
-		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, gameState);
+		handleMinionAddedAuraEffect(spawnedCardId, spawned, board, boardHero, gameState, isActuallySpawned);
 	}
 
 	// When we want to summon an "exact copy", we need to make sure we don't apply the aura twice
@@ -609,6 +612,7 @@ const handleMinionAddedAuraEffect = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
 	gameState: FullGameState,
+	isActuallySpawned = true,
 ): void => {
 	switch (spawnedCardId) {
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
@@ -660,7 +664,10 @@ const handleMinionAddedAuraEffect = (
 			break;
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
-			boardHero.globalInfo.AstralAutomatonsSummonedThisGame++;
+			// TODO: move this somewhere else
+			if (isActuallySpawned) {
+				boardHero.globalInfo.AstralAutomatonsSummonedThisGame++;
+			}
 			board
 				.filter((e) => e.entityId !== spawned.entityId)
 				.filter(

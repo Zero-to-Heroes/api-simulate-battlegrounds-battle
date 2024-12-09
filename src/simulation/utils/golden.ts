@@ -61,7 +61,7 @@ export const makeMinionGolden = (
 	modifyStats(target, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
-	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, otherHero, target, gameState);
+	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, otherHero, target, gameState, true, false);
 	const hasDivineShield = target.divineShield;
 	const hasReborn = target.reborn;
 	const avengeCurrent = target.avengeCurrent;
@@ -91,14 +91,23 @@ export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): 
 	return ref.premium || !!ref.battlegroundsNormalDbfId;
 };
 
+// This feels wrong, and is probably an indicator that auras are not applied at the right time
 const removeMinionAuraEffectsForGolden = (entity: BoardEntity, hero: BgsPlayerEntity) => {
 	switch (entity.cardId) {
 		case CardIds.EternalKnight_BG25_008:
 		case CardIds.EternalKnight_BG25_008_G:
-			const eternalKnightBuffToRemove = hero.globalInfo.EternalKnightsDeadThisGame ?? 0;
+			const eternalKnightBuffToRemove = hero.globalInfo.EternalKnightsDeadThisGame;
 			const eternalKnighMultiplier = entity.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
 			entity.health = Math.max(1, entity.health - eternalKnighMultiplier * eternalKnightBuffToRemove);
 			entity.attack = Math.max(0, entity.attack - eternalKnighMultiplier * eternalKnightBuffToRemove);
+			break;
+		case CardIds.AstralAutomaton_BG_TTN_401:
+		case CardIds.AstralAutomaton_BG_TTN_401_G:
+			const multiplierAstral = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
+			// Doesn't count self
+			const statsBonusAstralToRemove = hero.globalInfo.AstralAutomatonsSummonedThisGame - 1;
+			entity.health = Math.max(1, entity.health - 2 * multiplierAstral * statsBonusAstralToRemove);
+			entity.attack = Math.max(0, entity.attack - 2 * multiplierAstral * statsBonusAstralToRemove);
 			break;
 	}
 };
