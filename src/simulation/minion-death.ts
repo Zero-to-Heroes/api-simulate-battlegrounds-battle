@@ -109,10 +109,14 @@ export const onMinionDeadQuest = (
 	for (const quest of quests) {
 		switch (quest.CardId) {
 			case CardIds.ReenactTheMurder:
-				onQuestProgressUpdated(boardHero, quest, board, gameState);
+				if (deadEntity.friendly === boardHero.friendly) {
+					onQuestProgressUpdated(boardHero, quest, board, gameState);
+				}
 				break;
 			case CardIds.RoundUpTheSuspects:
-				onQuestProgressUpdated(boardHero, quest, board, gameState);
+				if (deadEntity.friendly !== boardHero.friendly) {
+					onQuestProgressUpdated(boardHero, quest, board, gameState);
+				}
 				break;
 		}
 	}
