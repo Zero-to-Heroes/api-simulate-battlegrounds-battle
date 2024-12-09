@@ -4,7 +4,7 @@ import { BoardEntity } from '../board-entity';
 import { hasOnStatsChanged } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { hasCorrectTribe } from '../utils';
-import { applyAurasToSelf } from './add-minion-to-board';
+import { applyAurasToSelf, removeAurasFromSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
@@ -18,6 +18,7 @@ export const setEntityStats = (
 	boardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	removeAurasFromSelf(entity, board, boardHero, gameState);
 	if (attack !== null) {
 		entity.attack = attack;
 		entity.maxAttack = attack;
