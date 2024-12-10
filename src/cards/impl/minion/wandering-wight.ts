@@ -8,6 +8,7 @@ export const WanderingWight: AfterOtherSpawnedCard = {
 	cardIds: [CardIds.WanderingWight_BG31_126, CardIds.WanderingWight_BG31_126_G],
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => {
 		const mult = minion.cardId === CardIds.WanderingWight_BG31_126 ? 1 : 2;
-		modifyStats(minion, 0, minion.attack * mult, input.board, input.hero, input.gameState);
+		modifyStats(input.spawned, 0, input.spawned.attack * mult, input.board, input.hero, input.gameState);
+		input.gameState.spectator.registerPowerTarget(minion, input.spawned, input.board, input.hero, null);
 	},
 };
