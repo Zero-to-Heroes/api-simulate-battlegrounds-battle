@@ -480,17 +480,13 @@ const performAttack = (
 	return { damageDoneByAttacker, damageDoneByDefender };
 };
 
+// TODO: Could it be possible to store the index of the entity that last attacked? Probably not, because minion
+// spawns would mess this up? Could we update the indexes as each entity spawns / dies?
 const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsService): BoardEntity => {
 	let validAttackers = attackingBoard.filter((entity) => canAttack(entity));
 	if (validAttackers.length === 0) {
 		return null;
 	}
-
-	// console.debug(
-	// 	'\nvalid attackers',
-	// 	stringifySimple(validAttackers, allCards),
-	// 	stringifySimple(attackingBoard, allCards),
-	// );
 
 	if (validAttackers.some((entity) => entity.attackImmediately)) {
 		validAttackers = validAttackers.filter((entity) => entity.attackImmediately);
@@ -500,7 +496,6 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
 	}
 	const attacker = validAttackers[0];
-	// console.debug('\t attacker', stringifySimpleCard(attacker, allCards));
 	return attacker;
 };
 

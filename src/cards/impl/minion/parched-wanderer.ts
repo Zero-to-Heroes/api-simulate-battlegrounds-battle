@@ -10,18 +10,24 @@ import { BattlecryCard } from '../../card.interface';
 export const ParchedWanderer: BattlecryCard = {
 	cardIds: [CardIds.ParchedWanderer_BG30_756, CardIds.ParchedWanderer_BG30_756_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
+		const allMinions = [...input.board, ...input.otherBoard];
 		const wandererTarget = pickRandom(
-			input.board.filter((e) => hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards)),
+			allMinions.filter((e) => hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards)),
 		);
 		if (!!wandererTarget) {
 			const wandererMultiplier = minion.cardId === CardIds.ParchedWanderer_BG30_756 ? 1 : 2;
-			updateTaunt(wandererTarget, true, input.board, input.hero, input.otherHero, input.gameState);
+			const targetBoard = input.board.find((entity) => entity.entityId === wandererTarget.entityId)
+				? input.board
+				: input.otherBoard;
+			const targetHero = targetBoard === input.board ? input.hero : input.otherHero;
+			const otherHero = targetBoard === input.board ? input.otherHero : input.hero;
+			updateTaunt(wandererTarget, true, targetBoard, targetHero, otherHero, input.gameState);
 			modifyStats(
 				wandererTarget,
+				wandererMultiplier * 2,
 				wandererMultiplier * 3,
-				wandererMultiplier * 3,
-				input.board,
-				input.hero,
+				targetBoard,
+				targetHero,
 				input.gameState,
 			);
 		}
