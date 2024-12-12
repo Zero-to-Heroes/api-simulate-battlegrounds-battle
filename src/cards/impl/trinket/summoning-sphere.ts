@@ -16,6 +16,7 @@ export const SummoningSphere = {
 		const clone: BoardEntity = addImpliedMechanics(
 			{
 				...highestHealthMinion,
+				entityId: input.gameState.sharedState.currentEntityId++,
 				lastAffectedByEntity: null,
 				definitelyDead: false,
 				attackImmediately: false,

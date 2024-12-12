@@ -1,6 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { AvengeInput } from '../../../simulation/avenge';
+import { SharedState } from '../../../simulation/shared-state';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
 import { addImpliedMechanics } from '../../../utils';
 import { AvengeCard } from '../../card.interface';
@@ -15,6 +16,7 @@ export const KarmicChameleon: AvengeCard = {
 			const clone: BoardEntity = addImpliedMechanics(
 				{
 					...minionToTheLeft,
+					entityId: input.gameState.sharedState.currentEntityId++,
 					lastAffectedByEntity: null,
 					definitelyDead: false,
 					attackImmediately: false,
@@ -24,7 +26,13 @@ export const KarmicChameleon: AvengeCard = {
 			if (minion.cardId === CardIds.KarmicChameleon_BG31_802_G) {
 				makeMinionGolden(clone, minion, input.board, input.hero, input.otherHero, input.gameState);
 			}
-			input.gameState.spectator.registerPowerTarget(clone, clone, input.board, input.hero, input.otherHero);
+			input.gameState.spectator.registerPowerTarget(
+				minion,
+				minionToTheLeft,
+				input.board,
+				input.hero,
+				input.otherHero,
+			);
 			input.board.splice(chameleonIndex, 1, clone);
 		}
 	},

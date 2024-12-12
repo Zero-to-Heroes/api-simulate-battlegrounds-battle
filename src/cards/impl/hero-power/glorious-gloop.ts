@@ -37,6 +37,7 @@ export const GloriousGloop: StartOfCombatCard = {
 			const clone: BoardEntity = addImpliedMechanics(
 				{
 					...highestTierMinion,
+					entityId: input.gameState.sharedState.currentEntityId++,
 					lastAffectedByEntity: null,
 					definitelyDead: false,
 					attackImmediately: false,

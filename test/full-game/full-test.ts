@@ -14,7 +14,7 @@ const test = async () => {
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
-			numberOfSimulations: 6000,
+			numberOfSimulations: 10000,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 10000,
 			itermediateResults: 0,
@@ -41,9 +41,9 @@ const test = async () => {
 	console.log('simulation took', Date.now() - start, 'ms');
 
 	const sample =
-		simulationResult.outcomeSamples.lost?.[0] ??
 		simulationResult.outcomeSamples.tied?.[0] ??
 		simulationResult.outcomeSamples.won?.[0] ??
+		simulationResult.outcomeSamples.lost?.[0] ??
 		null;
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
