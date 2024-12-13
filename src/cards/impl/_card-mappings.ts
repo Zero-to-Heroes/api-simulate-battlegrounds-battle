@@ -3,6 +3,7 @@ import { CrystalInfuserEnchantment } from './enchantments/crystal-infuser-enchan
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
+import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
 import { AssistantGuard } from './minion/assistant-guard';
 import { Bannerboar } from './minion/bannerboar';
@@ -93,10 +94,12 @@ import { SkyPirateFlagbearer } from './minion/sky-pirate-flagbearer';
 import { SkyPirateFlagbearerEnchantment } from './minion/sky-pirate-flagbearer-enchantment';
 import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
+import { SoulRewinder } from './minion/soul-rewinder';
 import { Spacefarer } from './minion/spacefarer';
 import { Swampstriker } from './minion/swampstriker';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
+import { Tichondrius } from './minion/tichondrius';
 import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
 import { TunnelBlaster } from './minion/tunnel-blaster';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
@@ -213,6 +216,9 @@ const cards = [
 	PrizedPromoDrake,
 	TransmutedBramblewitch,
 	ImposingPercussionist,
+	SoulRewinder,
+	Tichondrius,
+	Archimonde,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

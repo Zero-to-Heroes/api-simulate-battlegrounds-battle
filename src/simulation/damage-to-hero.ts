@@ -1,14 +1,8 @@
-import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasAfterHeroDamaged } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { FullGameState } from './internal-game-state';
-
-const REWIND_HERO_DAMAGE_CARDS = [
-	CardIds.SoulRewinder_BG26_174,
-	CardIds.SoulRewinder_BG26_174_G,
-	CardIds.Archimonde_BG31_873,
-	CardIds.Archimonde_BG31_873_G,
-];
 
 export const dealDamageToHero = (
 	source: BoardEntity,
@@ -17,8 +11,22 @@ export const dealDamageToHero = (
 	damage: number,
 	gameState: FullGameState,
 ) => {
-	if (board.some((e) => REWIND_HERO_DAMAGE_CARDS.includes(e.cardId as CardIds))) {
-		return;
+	for (const entity of board) {
+		const afterHeroDamagedImpl = cardMappings[entity.cardId];
+		if (hasAfterHeroDamaged(afterHeroDamagedImpl)) {
+			afterHeroDamagedImpl.afterHeroDamaged(entity, {
+				damage: damage,
+				board: board,
+				hero: hero,
+				gameState,
+			});
+		}
 	}
-	hero.hpLeft = hero.hpLeft - damage;
 };
+
+export interface AfterHeroDamagedInput {
+	damage: number;
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	gameState: FullGameState;
+}

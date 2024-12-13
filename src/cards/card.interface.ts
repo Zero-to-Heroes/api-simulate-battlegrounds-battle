@@ -16,6 +16,7 @@ import {
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
+import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../simulation/on-attack';
 import { SoCInput } from '../simulation/start-of-combat/start-of-combat-input';
@@ -207,3 +208,9 @@ export interface OnStatsChangedCard extends Card {
 }
 export const hasOnStatsChanged = (card: Card): card is OnStatsChangedCard =>
 	(card as OnStatsChangedCard)?.onStatsChanged !== undefined;
+
+export interface AfterHeroDamagedCard extends Card {
+	afterHeroDamaged: (entity: BoardEntity, input: AfterHeroDamagedInput) => void;
+}
+export const hasAfterHeroDamaged = (card: Card): card is AfterHeroDamagedCard =>
+	(card as AfterHeroDamagedCard)?.afterHeroDamaged !== undefined;
