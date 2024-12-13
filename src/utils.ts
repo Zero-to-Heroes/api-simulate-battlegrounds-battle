@@ -70,9 +70,7 @@ export const buildSingleBoardEntity = (
 					poisonous: hasMechanic(card, GameTag[GameTag.POISONOUS]),
 					venomous: hasMechanic(card, GameTag[GameTag.VENOMOUS]),
 					stealth: hasMechanic(card, GameTag[GameTag.STEALTH]),
-					windfury:
-						hasMechanic(card, GameTag[GameTag.WINDFURY]) ||
-						card.referencedTags?.includes(GameTag[GameTag.WINDFURY]),
+					windfury: hasMechanic(card, GameTag[GameTag.WINDFURY]),
 					enchantments: [],
 					pendingAttackBuffs: [],
 					friendly: friendly,

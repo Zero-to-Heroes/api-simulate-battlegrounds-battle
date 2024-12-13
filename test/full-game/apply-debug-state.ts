@@ -2,7 +2,7 @@ import { debugState } from '../../src/debug-state';
 
 export const applyDebugState = () => {
 	const state = debugState;
-	state.active = true;
+	state.active = false;
 	state.forcedCurrentAttacker = 1;
 	state.forcedFaceOffBase = [
 		{ attacker: { entityId: 10523 }, defender: { entityId: 8539 } },
