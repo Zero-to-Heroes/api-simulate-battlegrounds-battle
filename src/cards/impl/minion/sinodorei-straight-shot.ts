@@ -8,6 +8,9 @@ import { OnAttackCard } from '../../card.interface';
 export const SindoreiStraightShot: OnAttackCard = {
 	cardIds: [CardIds.SindoreiStraightShot_BG25_016, CardIds.SindoreiStraightShot_BG25_016_G],
 	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (minion !== input.attacker) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		updateTaunt(
 			input.defendingEntity,
 			false,
