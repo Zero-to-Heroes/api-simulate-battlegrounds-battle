@@ -6,7 +6,7 @@ import { DefaultChargesCard, OnCardAddedToHandCard } from '../../card.interface'
 
 export const SaltyHog: OnCardAddedToHandCard & DefaultChargesCard = {
 	cardIds: [CardIds.SaltyHog_BG31_332, CardIds.SaltyHog_BG31_332_G],
-	defaultCharges: (cardId: string) => 3,
+	defaultCharges: (entity: BoardEntity) => entity.scriptDataNum1 || 3,
 	onCardAddedToHand: (entity: BoardEntity, input: OnCardAddedToHandInput) => {
 		entity.abiityChargesLeft = entity.abiityChargesLeft - 1;
 		if (entity.abiityChargesLeft <= 0) {
@@ -15,7 +15,7 @@ export const SaltyHog: OnCardAddedToHandCard & DefaultChargesCard = {
 			for (const target of targets) {
 				modifyStats(target, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 			}
-			entity.abiityChargesLeft = SaltyHog.defaultCharges(entity.cardId);
+			entity.abiityChargesLeft = 3;
 		}
 	},
 };

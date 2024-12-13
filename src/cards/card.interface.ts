@@ -31,7 +31,7 @@ export interface Card {
 }
 
 export interface DefaultChargesCard extends Card {
-	defaultCharges: (cardId: string) => number;
+	defaultCharges: (entity: BoardEntity) => number;
 }
 export const hasDefaultCharges = (card: Card): card is DefaultChargesCard =>
 	(card as DefaultChargesCard)?.defaultCharges !== undefined;

@@ -483,7 +483,7 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 	// It's not an issue adding a charge for entities without a special ability
 	const defaultChargesImpl = cardMappings[entity.cardId];
 	if (hasDefaultCharges(defaultChargesImpl)) {
-		entity.abiityChargesLeft = defaultChargesImpl.defaultCharges(entity.cardId);
+		entity.abiityChargesLeft = defaultChargesImpl.defaultCharges(entity);
 	} else {
 		entity.abiityChargesLeft = [
 			CardIds.MarineMatriarch_BG29_610,
