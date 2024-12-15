@@ -2,6 +2,8 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnDeath } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { debugState } from '../debug-state';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
@@ -1065,6 +1067,28 @@ export const processMinionDeath = (
 			),
 		),
 	);
+
+	for (const deadEntity of deadEntities1) {
+		const onDeathImpl = cardMappings[deadEntity.cardId];
+		if (hasOnDeath(onDeathImpl)) {
+			onDeathImpl.onDeath(deadEntity, {
+				hero: board1Hero,
+				board: board1,
+				gameState: gameState,
+			});
+		}
+	}
+	for (const deadEntity of deadEntities2) {
+		const onDeathImpl = cardMappings[deadEntity.cardId];
+		if (hasOnDeath(onDeathImpl)) {
+			onDeathImpl.onDeath(deadEntity, {
+				hero: board2Hero,
+				board: board2,
+				gameState: gameState,
+			});
+		}
+	}
+
 	board1Hero.globalInfo.EternalKnightsDeadThisGame =
 		board1Hero.globalInfo.EternalKnightsDeadThisGame +
 		deadEntities1.filter(
@@ -1202,107 +1226,8 @@ const handleAfterMinionsDeathsForBoard = (
 	);
 };
 
-// TODO
-// const handleDeathrattlesForFirstBoard = (
-// 	firstBoard: BoardEntity[],
-// 	firstBoardHero: BgsPlayerEntity,
-// 	otherBoard: BoardEntity[],
-// 	otherBoardHero: BgsPlayerEntity,
-// 	deadMinionIndexesFromRight: readonly number[],
-// 	deadEntities: readonly BoardEntity[],
-// 	gameState: FullGameState,
-// ): void => {
-// 	// TODO: this can be buggy, in case multiple minions die, both at a 0 or negative final index from left
-// 	// In that case, the first minion will spawn at the left, then the next one will spawn again at the left
-// 	// thus inverting the expected order
-// 	// We still want to process the minions from left to right, but maybe we need to decrease the index from
-// 	// the right in case of multiple minions dying and dpawning at the same time
-// 	// let boardSizeBeforeDrSpawn = firstBoard.length;
-// 	for (let i = 0; i < deadMinionIndexesFromRight.length; i++) {
-// 		const entity = deadEntities[i];
-// 		const indexFromRight = deadMinionIndexesFromRight[i];
-// 		if (entity.health <= 0 || entity.definitelyDead) {
-// 			// console.log('\ndead entity', stringifySimpleCard(entity, allCards), indexFromRight);
-// 			// console.log(deadMinionIndexesFromRight);
-// 			// console.log(stringifySimple(firstBoard, allCards));
-// 			// Because we use the index from right, and spawn minions from left to right, we actually
-// 			// don't need to update the index after a minion has spawned
-// 			const modifiedIndexFromRight = Math.min(firstBoard.length, indexFromRight);
-// 			// console.log('spawning at', modifiedIndexFromRight, indexFromRight, totalSpawned, firstBoard.length);
-// 			buildBoardAfterDeathrattleSpawns(
-// 				firstBoard,
-// 				firstBoardHero,
-// 				entity,
-// 				modifiedIndexFromRight,
-// 				otherBoard,
-// 				otherBoardHero,
-// 				deadEntities,
-// 				gameState,
-// 			);
-// 		} else if (firstBoard.length > 0) {
-// 			// const newBoardD = [...firstBoard];
-// 			firstBoard.splice(firstBoard.length - indexFromRight, 1, entity);
-// 			// firstBoard = newBoardD;
-// 		}
-// 		// boardSizeBeforeDrSpawn = firstBoard.length;
-// 	}
-// 	// return [firstBoard, otherBoard];
-// };
-
-// const handleRebornForFirstBoard = (
-// 	firstBoard: BoardEntity[],
-// 	firstBoardHero: BgsPlayerEntity,
-// 	otherBoard: BoardEntity[],
-// 	otherBoardHero: BgsPlayerEntity,
-// 	deadMinionIndexesFromRight: readonly number[],
-// 	deadEntities: readonly BoardEntity[],
-// 	gameState: FullGameState,
-// ): void => {
-// 	// console.log('will handle reborn', stringifySimple(firstBoard, allCards), deadMinionIndexesFromRight);
-// 	for (let i = deadMinionIndexesFromRight.length - 1; i >= 0; i--) {
-// 		const entity = deadEntities[i];
-// 		const indexFromRight = deadMinionIndexesFromRight[i];
-// 		if (entity.health <= 0 || entity.definitelyDead) {
-// 			// console.log('dead entity', stringifySimpleCard(entity, allCards), indexFromRight);
-// 			buildBoardAfterRebornSpawns(
-// 				firstBoard,
-// 				firstBoardHero,
-// 				entity,
-// 				indexFromRight,
-// 				otherBoard,
-// 				otherBoardHero,
-// 				gameState,
-// 			);
-// 			// console.log('after rebord', stringifySimple(firstBoard, allCards));
-// 		} else if (firstBoard.length > 0) {
-// 			// const newBoardD = [...firstBoard];
-// 			firstBoard.splice(firstBoard.length - indexFromRight, 1, entity);
-// 			// firstBoard = newBoardD;
-// 		}
-// 	}
-// 	// return [firstBoard, otherBoard];
-// };
-
-// const handleAfterDeathEffectsForFirstBoard = (
-// 	firstBoard: BoardEntity[],
-// 	firstBoardHero: BgsPlayerEntity,
-// 	otherBoard: BoardEntity[],
-// 	otherBoardHero: BgsPlayerEntity,
-// 	deadMinionIndexesFromRight: readonly number[],
-// 	deadEntities: readonly BoardEntity[],
-// 	gameState: FullGameState,
-// ): void => {
-// 	for (let i = 0; i < deadMinionIndexesFromRight.length; i++) {
-// 		const entity = deadEntities[i];
-// 		const indexFromRight = deadMinionIndexesFromRight[i];
-// 		applyAfterDeathEffects(
-// 			entity,
-// 			indexFromRight,
-// 			firstBoard,
-// 			firstBoardHero,
-// 			otherBoard,
-// 			otherBoardHero,
-// 			gameState,
-// 		);
-// 	}
-// };
+export interface OnDeathInput {
+	readonly hero: BgsPlayerEntity;
+	readonly board: readonly BoardEntity[];
+	readonly gameState: FullGameState;
+}

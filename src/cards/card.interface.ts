@@ -13,6 +13,7 @@ import {
 	OnOtherSpawnInput,
 	OnSpawnInput,
 } from '../simulation/add-minion-to-board';
+import { OnDeathInput } from '../simulation/attack';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
@@ -214,3 +215,8 @@ export interface AfterHeroDamagedCard extends Card {
 }
 export const hasAfterHeroDamaged = (card: Card): card is AfterHeroDamagedCard =>
 	(card as AfterHeroDamagedCard)?.afterHeroDamaged !== undefined;
+
+export interface OnDeathCard extends Card {
+	onDeath: (entity: BoardEntity, input: OnDeathInput) => void;
+}
+export const hasOnDeath = (card: Card): card is OnDeathCard => (card as OnDeathCard)?.onDeath !== undefined;

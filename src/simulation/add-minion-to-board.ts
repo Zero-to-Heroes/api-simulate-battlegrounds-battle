@@ -369,8 +369,8 @@ export const applyAurasToSelf = (
 	if (hasOnSpawned(onSpawnedImpl)) {
 		onSpawnedImpl.onSpawned(spawned, {
 			hero: boardHero,
-			playerBoard: board,
-			board: gameState,
+			board: board,
+			gameState: gameState,
 		});
 	}
 	switch (spawned.cardId) {
@@ -826,8 +826,8 @@ const handleAfterSpawnEffect = (
 
 export interface OnSpawnInput {
 	hero: BgsPlayerEntity;
-	playerBoard: BoardEntity[];
-	board: FullGameState;
+	board: BoardEntity[];
+	gameState: FullGameState;
 }
 export interface OnOtherSpawnInput {
 	spawned: BoardEntity;

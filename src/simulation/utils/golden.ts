@@ -101,6 +101,13 @@ const removeMinionAuraEffectsForGolden = (entity: BoardEntity, hero: BgsPlayerEn
 			entity.health = Math.max(1, entity.health - eternalKnighMultiplier * eternalKnightBuffToRemove);
 			entity.attack = Math.max(0, entity.attack - eternalKnighMultiplier * eternalKnightBuffToRemove);
 			break;
+		case CardIds.SanlaynScribe_BGDUO31_208:
+		case CardIds.SanlaynScribe_BGDUO31_208_G:
+			const sanlaynBuffToRemove = hero.globalInfo.SanlaynScribesDeadThisGame;
+			const sanlaynMultiplier = entity.cardId === CardIds.SanlaynScribe_BGDUO31_208_G ? 2 : 1;
+			entity.health = Math.max(1, entity.health - sanlaynMultiplier * sanlaynBuffToRemove);
+			entity.attack = Math.max(0, entity.attack - sanlaynMultiplier * sanlaynBuffToRemove);
+			break;
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
 			const multiplierAstral = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;

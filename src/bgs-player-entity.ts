@@ -42,6 +42,7 @@ export interface BgsPlayerEntity {
 
 export interface BgsPlayerGlobalInfo {
 	EternalKnightsDeadThisGame?: number;
+	SanlaynScribesDeadThisGame?: number;
 	UndeadAttackBonus?: number;
 	FrostlingBonus?: number;
 	BloodGemAttackBonus?: number;

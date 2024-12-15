@@ -11,9 +11,9 @@ export const Beetle: OnSpawnedCard & OnDespawnedCard = {
 			minion,
 			1 * (input.hero.globalInfo.BeetleAttackBuff ?? 0),
 			1 * (input.hero.globalInfo.BeetleHealthBuff ?? 0),
-			input.playerBoard,
-			input.hero,
 			input.board,
+			input.hero,
+			input.gameState,
 		);
 	},
 	onDespawned: (minion: BoardEntity, input: OnDespawnInput) => {

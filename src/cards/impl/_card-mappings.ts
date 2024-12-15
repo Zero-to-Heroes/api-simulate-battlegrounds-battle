@@ -85,6 +85,7 @@ import { RodeoPerformer } from './minion/rodeo-performer';
 import { RunedProgenitor } from './minion/runed-progenitor';
 import { RylakMetalhead } from './minion/rylak-metalhead';
 import { SaltyHog } from './minion/salty-hog';
+import { SanlaynScribe } from './minion/sanlayn-scribe';
 import { Scallywag } from './minion/scallywag';
 import { ShellCollector } from './minion/shell-collector';
 import { ShowyCyclist } from './minion/showy-cyclist';
@@ -219,6 +220,7 @@ const cards = [
 	SoulRewinder,
 	Tichondrius,
 	Archimonde,
+	SanlaynScribe,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};
