@@ -18,7 +18,6 @@ import { EarthInvocation } from '../../cards/impl/hero-power/earth-invocation';
 import { EmbraceYourRage } from '../../cards/impl/hero-power/embrace-your-rage';
 import { FireInvocation } from '../../cards/impl/hero-power/fire-invocation';
 import { FragrantPhylactery } from '../../cards/impl/hero-power/fragrant-phylactery';
-import { GloriousGloop } from '../../cards/impl/hero-power/glorious-gloop';
 import { LightningInvocation } from '../../cards/impl/hero-power/lightning-invocation';
 import { RapidReanimation } from '../../cards/impl/hero-power/rapid-reanimation';
 import { RebornRites } from '../../cards/impl/hero-power/reborn-rites';
@@ -203,8 +202,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return RapidReanimation;
 		case CardIds.WaxWarband:
 			return WaxWarband;
-		case CardIds.FlobbidinousFloop_GloriousGloop_BGDUO_HERO_101p:
-			return GloriousGloop;
 		case CardIds.AimLeftToken:
 			return AimLeft;
 		case CardIds.AimRightToken:

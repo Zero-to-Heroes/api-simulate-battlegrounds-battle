@@ -88,7 +88,7 @@ export const isMinionGolden = (entity: BoardEntity, allCards: AllCardsService): 
 	const ref = allCards.getCard(entity.cardId);
 	// Some cards (like the Bettle token from Boon of Beetles) don't have a premium dbf id. However, we can still
 	// gild it
-	return ref.premium || !!ref.battlegroundsNormalDbfId;
+	return ref.premium;
 };
 
 // This feels wrong, and is probably an indicator that auras are not applied at the right time
