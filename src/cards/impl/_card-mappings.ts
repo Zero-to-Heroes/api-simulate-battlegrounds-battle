@@ -1,5 +1,6 @@
 import { Card } from '../card.interface';
 import { CrystalInfuserEnchantment } from './enchantments/crystal-infuser-enchantment';
+import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
@@ -139,6 +140,7 @@ const cards = [
 	ShowyCyclist,
 	ArcaneCannoneer,
 	MutatedLasher,
+	GloriousGloop,
 	SilverHandedRecruit,
 	SaltyHog,
 	Spacefarer,

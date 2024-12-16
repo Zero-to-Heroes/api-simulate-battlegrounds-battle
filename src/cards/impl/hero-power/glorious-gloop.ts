@@ -7,6 +7,7 @@ import { addImpliedMechanics, getTeammateInitialState } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const GloriousGloop: StartOfCombatCard = {
+	cardIds: [CardIds.FlobbidinousFloop_GloriousGloop_BGDUO_HERO_101p],
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerEntity.heroPowerUsed) {
