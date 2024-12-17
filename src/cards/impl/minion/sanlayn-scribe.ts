@@ -9,7 +9,7 @@ export const SanlaynScribe: OnSpawnedCard & OnDeathCard = {
 	cardIds: [CardIds.SanlaynScribe_BGDUO31_208, CardIds.SanlaynScribe_BGDUO31_208_G],
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		const mult = minion.cardId === CardIds.SanlaynScribe_BGDUO31_208 ? 1 : 2;
-		const statsBonus = mult * input.hero.globalInfo.EternalKnightsDeadThisGame;
+		const statsBonus = mult * input.hero.globalInfo.SanlaynScribesDeadThisGame;
 		modifyStats(minion, 4 * statsBonus, 4 * statsBonus, input.board, input.hero, input.gameState);
 	},
 	onDeath: (minion: BoardEntity, input: OnDeathInput) => {
