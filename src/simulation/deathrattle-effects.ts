@@ -359,7 +359,15 @@ export const handleDeathrattleEffects = (
 							const pickedTargetEntityIds = [];
 							for (let k = 0; k < 2; k++) {
 								const target = pickRandomAlive(
-									boardWithDeadEntity.filter((e) => !pickedTargetEntityIds.includes(e.entityId)),
+									boardWithDeadEntity
+										.filter(
+											(e) =>
+												![
+													CardIds.NightbaneIgnited_BG29_815,
+													CardIds.NightbaneIgnited_BG29_815_G,
+												].includes(e.cardId as CardIds),
+										)
+										.filter((e) => !pickedTargetEntityIds.includes(e.entityId)),
 								);
 								if (!!target) {
 									pickedTargetEntityIds.push(target.entityId);

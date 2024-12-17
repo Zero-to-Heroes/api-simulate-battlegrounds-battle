@@ -13,7 +13,7 @@ export const HunterOfGatherers: OnStatsChangedCard = {
 				input.board,
 				input.hero,
 				0,
-				minion.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 4 : 2,
+				minion.cardId === CardIds.HunterOfGatherers_BG25_027_G ? 2 : 1,
 				input.gameState,
 			);
 		}

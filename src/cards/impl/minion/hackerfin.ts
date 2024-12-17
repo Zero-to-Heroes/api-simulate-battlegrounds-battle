@@ -5,6 +5,9 @@ import { modifyStats } from '../../../simulation/stats';
 import { BattlecryCard } from '../../card.interface';
 import { hasKeyword, validBonusKeywords } from '../../cards-data';
 
+const baseAttackBuff = 3;
+const baseHealthBuff = 2;
+
 export const Hackerfin: BattlecryCard = {
 	cardIds: [CardIds.Hackerfin_BG31_148, CardIds.Hackerfin_BG31_148_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
@@ -18,8 +21,8 @@ export const Hackerfin: BattlecryCard = {
 			}
 			modifyStats(
 				minion,
-				totalKeywords * mult * 2,
-				totalKeywords * mult * 2,
+				totalKeywords * mult * baseAttackBuff,
+				totalKeywords * mult * baseHealthBuff,
 				input.board,
 				input.hero,
 				input.gameState,

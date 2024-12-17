@@ -8,13 +8,13 @@ import { StartOfCombatCard } from '../../card.interface';
 export const PrizedPromoDrake: StartOfCombatCard = {
 	cardIds: [CardIds.PrizedPromoDrake_BG21_014, CardIds.PrizedPromoDrake_BG21_014_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		const stats = minion.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 6 : 3;
+		const mult = minion.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 2 : 1;
 		const targets = input.playerBoard
 			.filter((e) => e.entityId !== minion.entityId)
 			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards));
 		if (!!targets.length) {
 			for (const entity of targets) {
-				modifyStats(entity, stats, stats, input.playerBoard, input.playerEntity, input.gameState);
+				modifyStats(entity, 5 * mult, 4 * mult, input.playerBoard, input.playerEntity, input.gameState);
 				input.gameState.spectator.registerPowerTarget(
 					minion,
 					entity,

@@ -10,7 +10,7 @@ export const ArcaneCannoneer: OnAttackCard = {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
-		const base = minion.cardId === CardIds.ArcaneCannoneer_BG31_928_G ? 2 : 1;
+		const base = minion.cardId === CardIds.ArcaneCannoneer_BG31_928_G ? 4 : 2;
 		const baseBuff = minion.scriptDataNum2 ?? base;
 		// The info is already included in the scriptDataNum2
 		const mult = 1;

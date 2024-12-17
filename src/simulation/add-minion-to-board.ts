@@ -164,7 +164,7 @@ export const handleAddedMinionAuraEffect = (
 			break;
 		case CardIds.Tinker_TB_BaconShop_HP_015:
 			if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
-				modifyStats(spawned, 2, 0, board, boardHero, gameState);
+				modifyStats(spawned, 3, 0, board, boardHero, gameState);
 			}
 			break;
 	}

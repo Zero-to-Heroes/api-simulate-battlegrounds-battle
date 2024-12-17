@@ -13,6 +13,7 @@ import { BirdBuddy } from './minion/bird-buddy';
 import { BlazingSkyfin } from './minion/blazing-skyfin';
 import { BoarGamer } from './minion/boar-gamer';
 import { BongoBopper } from './minion/bongo-bopper';
+import { BriarbackBookie } from './minion/briarback-bookie';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
 import { CadaverCaretaker } from './minion/cadaver-caretaker';
@@ -223,6 +224,7 @@ const cards = [
 	Tichondrius,
 	Archimonde,
 	SanlaynScribe,
+	BriarbackBookie,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};
