@@ -84,7 +84,7 @@ export const buildGameAction = (
 		playerRewardData:
 			isPlayerSireD && playerHero?.questRewardEntities?.length < 2
 				? null
-				: playerHero?.questRewardEntities?.[0]?.scriptDataNum1,
+				: playerHero?.questRewardEntities?.[0]?.scriptDataNum1 ?? 0,
 		playerTrinkets: playerHero?.trinkets,
 
 		opponentSecrets: (opponentHero?.secrets ?? []).filter((s) => !s.triggered),
@@ -107,7 +107,7 @@ export const buildGameAction = (
 		opponentRewardData:
 			isOpponentSireD && opponentHero?.questRewardEntities?.length < 2
 				? null
-				: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1,
+				: opponentHero?.questRewardEntities?.[0]?.scriptDataNum1 ?? 0,
 		opponentTrinkets: opponentHero?.trinkets,
 	} as GameAction;
 	return result;

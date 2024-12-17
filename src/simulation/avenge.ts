@@ -554,14 +554,14 @@ const handleAvenge = (
 					(e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505,
 				);
 				if (tumblingDisasterEntity) {
-					tumblingDisasterEntity.scriptDataNum1++;
+					tumblingDisasterEntity.scriptDataNum1 = (tumblingDisasterEntity.scriptDataNum1 ?? 0) + 1;
 				}
 				break;
 			case CardIds.CycleOfEnergy_BG28_Reward_504:
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 				break;
 			case CardIds.StableAmalgamation_BG28_Reward_518:
-				avenger.scriptDataNum1++;
+				avenger.scriptDataNum1 = (avenger.scriptDataNum1 ?? 0) + 1;
 				break;
 			case CardIds.MurglMkIi_BG29_991:
 			case CardIds.MurglMkIi_BG29_991_G:

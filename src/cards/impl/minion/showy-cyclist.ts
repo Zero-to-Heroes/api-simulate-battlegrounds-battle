@@ -7,9 +7,13 @@ import { DeathrattleEffectCard } from '../../card.interface';
 export const ShowyCyclist: DeathrattleEffectCard = {
 	cardIds: [CardIds.ShowyCyclist_BG31_925, CardIds.ShowyCyclist_BG31_925_G],
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const baseBuff = minion.scriptDataNum2;
+		const base = minion.cardId === CardIds.ShowyCyclist_BG31_925_G ? 2 : 1;
+		// Can be null when created in game
+		// This is not exact, and the actual info should somehow come from the game state, but at least we
+		// prevent issues
+		const baseBuff = minion.scriptDataNum2 ?? base;
 		// The info is already included in the scriptDataNum2
-		const mult = 1; // minion.cardId === CardIds.ShowyCyclist_BG31_925_G ? 2 : 1;
+		const mult = 1;
 		const buff = baseBuff * mult;
 		addStatsToBoard(
 			minion,

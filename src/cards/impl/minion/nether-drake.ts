@@ -10,6 +10,6 @@ export const NetherDrake: EndOfTurnCard = {
 		const steps = minion.cardId === CardIds.NetherDrake_BG24_003_G ? 2 : 1;
 		const buff = minion.scriptDataNum1 || steps;
 		addStatsToBoard(minion, input.board, input.hero, buff, 0, input.gameState, Race[Race.DRAGON]);
-		minion.scriptDataNum1 = minion.scriptDataNum1 + steps;
+		minion.scriptDataNum1 = (minion.scriptDataNum1 || steps) + steps;
 	},
 };

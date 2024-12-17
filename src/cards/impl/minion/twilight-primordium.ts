@@ -9,7 +9,7 @@ import { BattlecryCard } from '../../card.interface';
 export const TwilightPrimordium: BattlecryCard = {
 	cardIds: [CardIds.TwilightPrimordium_BG31_813, CardIds.TwilightPrimordium_BG31_813_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
-		const currentBuffValue = minion.scriptDataNum1;
+		const currentBuffValue = minion.scriptDataNum1 ?? 1;
 		const mult = minion.cardId === CardIds.TwilightPrimordium_BG31_813_G ? 2 : 1;
 		const candidates = [
 			...input.board.filter((e) => hasCorrectTribe(e, input.hero, Race.ELEMENTAL, input.gameState.allCards)),

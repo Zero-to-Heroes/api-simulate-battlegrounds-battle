@@ -183,7 +183,7 @@ export const setImplicitDataHero = (
 	hero.questRewardEntities = hero.questRewardEntities
 		? hero.questRewardEntities.map((reward: any) => ({
 				cardId: reward.CardId,
-				scriptDataNum1: reward.ScriptDataNum1,
+				scriptDataNum1: reward.ScriptDataNum1 ?? 0,
 				entityId: entityIdContainer.entityId--,
 				avengeDefault: cardsData.avengeValue(reward.CardId),
 				avengeCurrent: cardsData.avengeValue(reward.CardId),

@@ -145,7 +145,7 @@ const handleTwinSkyLanternsForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	const spawnNumber = trinket.scriptDataNum1;
+	const spawnNumber = trinket.scriptDataNum1 ?? 0;
 	const canTrigger = spawnNumber >= 1;
 	if (playerBoard.length <= 7 - spawnNumber && trinket.rememberedMinion && canTrigger) {
 		trinket.scriptDataNum1 = 0;
