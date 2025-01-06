@@ -267,11 +267,16 @@ export class CardsData {
 		return pickRandom(pool)?.id;
 	}
 
-	public getRandomMinionForTribe(tribe: Race, tavernLimitUpper: number): string {
+	public getRandomMinionForTribe(
+		tribe: Race,
+		tavernLimitUpper: number,
+		excludedCards: readonly string[] = [],
+	): string {
 		const pool = this.pool
 			.filter((m) => this.isValidTribe([tribe], m.races, false))
 			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
-			.filter((m) => m.techLevel <= tavernLimitUpper);
+			.filter((m) => m.techLevel <= tavernLimitUpper)
+			.filter((m) => !excludedCards.includes(m.id));
 		return pickRandom(pool)?.id;
 	}
 
