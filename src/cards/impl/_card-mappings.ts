@@ -24,6 +24,7 @@ import { CruiseController } from './minion/cruise-controller';
 import { DeathlyStriker } from './minion/deathly-striker';
 import { DefiantShipwright } from './minion/defiant-shipwright';
 import { DeflectoBot } from './minion/deflecto-bot';
+import { EchoingRoar } from './minion/echoing-roar';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { FairyGillmother } from './minion/fairy-gillmother';
@@ -216,6 +217,7 @@ const cards = [
 	SindoreiStraightShot,
 	ChampionOfThePrimus,
 	Mummifier,
+	EchoingRoar,
 	ThunderingAbomination,
 	PrizedPromoDrake,
 	TransmutedBramblewitch,

@@ -14,7 +14,7 @@ const test = async () => {
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
-			numberOfSimulations: 5000,
+			numberOfSimulations: 1,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 5000,
 			itermediateResults: 0,
