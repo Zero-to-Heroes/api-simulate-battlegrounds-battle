@@ -14,7 +14,7 @@ const test = async () => {
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
-			numberOfSimulations: 1,
+			numberOfSimulations: 5000,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 5000,
 			itermediateResults: 0,
@@ -36,7 +36,7 @@ const test = async () => {
 	const simulationResult = JSON.parse(result.body);
 	console.log('result', {
 		...simulationResult,
-		outcomeSamples: undefined,
+		// outcomeSamples: undefined,
 	});
 	console.log('simulation took', Date.now() - start, 'ms');
 

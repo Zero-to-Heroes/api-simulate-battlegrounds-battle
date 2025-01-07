@@ -8,16 +8,12 @@ export const SlyRaptor: DeathrattleSpawnCard = {
 	cardIds: [CardIds.SlyRaptor_BG25_806, CardIds.SlyRaptor_BG25_806_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const raptorStat = minion.cardId === CardIds.SlyRaptor_BG25_806_G ? 10 : 5;
-		const beastPool = input.gameState.cardsData.getRandomMinionForTribe(
+		const target = input.gameState.cardsData.getRandomMinionForTribe(
 			Race.BEAST,
 			input.boardWithDeadEntityHero.tavernTier,
 			SlyRaptor.cardIds,
 		);
-		const beastsFromRaptor = simplifiedSpawnEntities(
-			beastPool[Math.floor(Math.random() * beastPool.length)],
-			1,
-			input,
-		);
+		const beastsFromRaptor = simplifiedSpawnEntities(target, 1, input);
 		beastsFromRaptor.forEach((b) => {
 			b.attack = raptorStat;
 			b.health = raptorStat;
