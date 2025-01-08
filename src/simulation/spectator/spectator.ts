@@ -12,7 +12,7 @@ export class Spectator {
 	private tiedBattles: GameSample[];
 	private lostBattles: GameSample[];
 
-	constructor() {
+	constructor(private readonly enabled: boolean) {
 		this.actionsForCurrentBattle = [];
 		this.wonBattles = [];
 		this.tiedBattles = [];
@@ -30,6 +30,13 @@ export class Spectator {
 		lost: readonly GameSample[];
 		tied: readonly GameSample[];
 	} {
+		if (!this.enabled) {
+			return {
+				won: [],
+				lost: [],
+				tied: [],
+			};
+		}
 		return {
 			won: this.wonBattles?.map((battle) => this.cleanUpActions(battle)),
 			lost: this.lostBattles?.map((battle) => this.cleanUpActions(battle)),
@@ -47,6 +54,10 @@ export class Spectator {
 	}
 
 	public commitBattleResult(result: 'won' | 'lost' | 'tied'): void {
+		if (!this.enabled) {
+			this.actionsForCurrentBattle = [];
+			return;
+		}
 		if (
 			this.wonBattles.length >= MAX_SAMPLES &&
 			this.lostBattles.length >= MAX_SAMPLES &&
@@ -83,6 +94,9 @@ export class Spectator {
 		attackingBoardHero: BgsPlayerEntity,
 		defendingBoardHero: BgsPlayerEntity,
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		// console.debug(
 		// 	'\n register attack',
 		// 	stringifySimple(attackingBoard),
@@ -116,6 +130,9 @@ export class Spectator {
 		friendlyHero: BgsPlayerEntity,
 		opponentHero: BgsPlayerEntity,
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		const action: GameAction = buildGameAction(friendlyHero, opponentHero, {
 			type: 'start-of-combat',
 			playerBoard: this.sanitize(friendlyBoard),
@@ -131,6 +148,9 @@ export class Spectator {
 		opponentBoard: readonly BoardEntity[],
 		damage: number,
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		const action: GameAction = buildGameAction(null, null, {
 			type: 'player-attack',
 			playerBoard: this.sanitize(friendlyBoard),
@@ -151,6 +171,9 @@ export class Spectator {
 		opponentBoard: readonly BoardEntity[],
 		damage: number,
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		const action: GameAction = buildGameAction(null, null, {
 			type: 'opponent-attack',
 			playerBoard: this.sanitize(friendlyBoard),
@@ -172,6 +195,9 @@ export class Spectator {
 		damageTaken: number,
 		damagedEntityBoard: BoardEntity[],
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		if (!damagingEntity.entityId) {
 			// console.error('missing damaging entity id', damagingEntity.cardId);
 		}
@@ -201,6 +227,9 @@ export class Spectator {
 		hero1: BgsPlayerEntity,
 		hero2: BgsPlayerEntity,
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		if (!targetEntity) {
 			return;
 		}
@@ -229,6 +258,9 @@ export class Spectator {
 		boardOnWhichToSpawn: BoardEntity[],
 		spawnedEntities: readonly BoardEntity[],
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		if (!spawnedEntities || spawnedEntities.length === 0) {
 			return;
 		}
@@ -258,6 +290,9 @@ export class Spectator {
 		deadEntities2: BoardEntity[],
 		board2: BoardEntity[],
 	): void {
+		if (!this.enabled) {
+			return;
+		}
 		const deaths = [...(deadEntities1 || []), ...(deadEntities2 || [])];
 		if (!deaths || deaths.length === 0) {
 			return;
@@ -278,6 +313,9 @@ export class Spectator {
 	}
 
 	private collapseActions(actions: readonly GameAction[]): readonly GameAction[] {
+		if (!this.enabled) {
+			return [];
+		}
 		if (!actions || actions.length === 0) {
 			return [];
 		}

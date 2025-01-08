@@ -64,6 +64,7 @@ export const simulateBattle = function* (
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 8000;
 	const intermediateSteps = battleInput.options?.intermediateResults ?? 200;
+	const includeOutcomeSamples = battleInput.options?.includeOutcomeSamples ?? true;
 	const simulationResult: SimulationResult = {
 		wonLethal: 0,
 		won: 0,
@@ -81,7 +82,7 @@ export const simulateBattle = function* (
 		averageDamageLost: undefined,
 	};
 
-	const spectator = new Spectator();
+	const spectator = new Spectator(includeOutcomeSamples);
 	const inputReady = buildFinalInput(battleInput, cards, cardsData);
 	!battleInput.options?.skipInfoLogs && console.time('simulation');
 	const outcomes = {};
