@@ -14,7 +14,7 @@ export const PrizedPromoDrake: StartOfCombatCard = {
 			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards));
 		if (!!targets.length) {
 			for (const entity of targets) {
-				modifyStats(entity, 5 * mult, 4 * mult, input.playerBoard, input.playerEntity, input.gameState);
+				modifyStats(entity, 3 * mult, 3 * mult, input.playerBoard, input.playerEntity, input.gameState);
 				input.gameState.spectator.registerPowerTarget(
 					minion,
 					entity,

@@ -14,7 +14,7 @@ export const ForestRover: DeathrattleSpawnCard & BattlecryCard = {
 	},
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === CardIds.ForestRover_BG31_801_G ? 2 : 1;
-		input.hero.globalInfo.BeetleAttackBuff = input.hero.globalInfo.BeetleAttackBuff + 2 * mult;
+		input.hero.globalInfo.BeetleAttackBuff = input.hero.globalInfo.BeetleAttackBuff + 1 * mult;
 		input.hero.globalInfo.BeetleHealthBuff = input.hero.globalInfo.BeetleHealthBuff + 1 * mult;
 		input.board
 			.filter((e) =>

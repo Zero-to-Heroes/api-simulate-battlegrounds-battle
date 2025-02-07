@@ -16,7 +16,7 @@ export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleEffectCard = 
 		input.boardWithDeadEntityHero.globalInfo.BeetleAttackBuff =
 			input.boardWithDeadEntityHero.globalInfo.BeetleAttackBuff + 1 * mult;
 		input.boardWithDeadEntityHero.globalInfo.BeetleHealthBuff =
-			input.boardWithDeadEntityHero.globalInfo.BeetleHealthBuff + 2 * mult;
+			input.boardWithDeadEntityHero.globalInfo.BeetleHealthBuff + 1 * mult;
 		input.boardWithDeadEntity
 			.filter((e) =>
 				[CardIds.BoonOfBeetles_BeetleToken_BG28_603t, CardIds.Beetle_BG28_603t_G].includes(e.cardId as CardIds),

@@ -101,19 +101,6 @@ export const triggerBattlecry = (
 						3,
 					);
 					break;
-				case CardIds.MenagerieJug_BGS_083:
-				case CardIds.MenagerieJug_TB_BaconUps_145:
-					const menagerieJugStats = entity.cardId === CardIds.MenagerieJug_BGS_083 ? 2 : 4;
-					grantStatsToMinionsOfEachType(
-						entity,
-						board,
-						hero,
-						menagerieJugStats,
-						menagerieJugStats,
-						gameState,
-						3,
-					);
-					break;
 				case CardIds.SparringPartner_BG_AT_069:
 				case CardIds.SparringPartner_BG_AT_069_G:
 					const sparringPartnersTargets = allMinions.filter((e) => !e.taunt);

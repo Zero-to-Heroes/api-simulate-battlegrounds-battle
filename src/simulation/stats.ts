@@ -46,7 +46,7 @@ export const modifyStats = (
 	if (entity.cardId === CardIds.LocPrince_BG29_889 || entity.cardId === CardIds.LocPrince_BG29_889_G) {
 		const buff = entity.cardId === CardIds.LocPrince_BG29_889_G ? 2 : 1;
 		attackAmount += 2 * buff;
-		healthAmount += 2 * buff;
+		healthAmount += 1 * buff;
 	}
 
 	const otherBoardHero: BgsPlayerEntity =

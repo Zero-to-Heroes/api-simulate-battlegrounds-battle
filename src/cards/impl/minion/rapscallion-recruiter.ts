@@ -11,7 +11,7 @@ export const RapscallionRecruiter: DeathrattleSpawnCard = {
 			minion.cardId === CardIds.RapscallionRecruiter_BG26_018_G
 				? CardIds.Scallywag_TB_BaconUps_141
 				: CardIds.Scallywag_BGS_061,
-			3,
+			2,
 			input,
 		);
 	},

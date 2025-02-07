@@ -62,6 +62,7 @@ import { MarqueeTicker } from './minion/marquee-ticker';
 import { MechaJaraxxus } from './minion/mecha-jaraxxus';
 import { MechanizedGiftHorse } from './minion/mechanized-gift-horse';
 import { Mechorse } from './minion/mechorse';
+import { MenagerieJug } from './minion/menagerie-jug';
 import { MisfitDragonling } from './minion/misfit-dragonling';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { Mummifier } from './minion/mummifier';
@@ -218,6 +219,7 @@ const cards = [
 	ChampionOfThePrimus,
 	Mummifier,
 	EchoingRoar,
+	MenagerieJug,
 	ThunderingAbomination,
 	PrizedPromoDrake,
 	TransmutedBramblewitch,

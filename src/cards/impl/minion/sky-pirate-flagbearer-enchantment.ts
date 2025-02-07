@@ -11,8 +11,8 @@ export const SkyPirateFlagbearerEnchantment: DeathrattleSpawnEnchantmentCard = {
 	deathrattleSpawnEnchantmentEffect: (enchantment: { cardId: string }, input: DeathrattleTriggeredInput) => {
 		return simplifiedSpawnEntities(
 			enchantment.cardId === CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e
-				? CardIds.Scallywag_SkyPirateToken_BGS_061t
-				: CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
+				? CardIds.Scallywag_BGS_061
+				: CardIds.Scallywag_TB_BaconUps_141,
 			1,
 			input,
 		);

@@ -59,6 +59,10 @@ export const simulateBattle = function* (
 	cards: AllCardsService,
 	cardsData: CardsData,
 ): Generator<SimulationResult, SimulationResult, void> {
+	if (!cards?.getCards()?.length) {
+		console.error('[simulate-bgs-battle] reference cards are empty, cannot simulate battle', cards);
+		return null;
+	}
 	// !battleInput.options?.skipInfoLogs && console.time('full-sim');
 	const start = Date.now();
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;

@@ -6,7 +6,7 @@ import { hasCorrectTribe } from '../../../utils';
 import { BattlecryCard } from '../../card.interface';
 
 const baseAttackBuff = 3;
-const baseHealthBuff = 4;
+const baseHealthBuff = 3;
 
 export const KingBagurgle: BattlecryCard = {
 	cardIds: [CardIds.KingBagurgle_BGS_030, CardIds.KingBagurgle_TB_BaconUps_100],

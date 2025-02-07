@@ -11,7 +11,7 @@ export const AridAtrocity: DeathrattleSpawnCard = {
 		const aridAtrocityStatsMultiplier = minion.cardId === CardIds.AridAtrocity_BG29_864_G ? 2 : 1;
 		const friendlyDeadEntities = input.gameState.sharedState.deaths.filter((e) => e.friendly === minion.friendly);
 		const types = getMinionsOfDifferentTypes(friendlyDeadEntities, input.boardWithDeadEntityHero, input.gameState);
-		const constaridAtrocityStats = aridAtrocityStatsMultiplier * 7 * types.length;
+		const constaridAtrocityStats = aridAtrocityStatsMultiplier * 6 * types.length;
 		return simplifiedSpawnEntities(
 			minion.cardId === CardIds.AridAtrocity_BG29_864_G
 				? CardIds.AridAtrocity_DesertedGolemToken_BG29_864_Gt

@@ -8,7 +8,6 @@ export const SkyPirateFlagbearer: StartOfCombatCard = {
 	cardIds: [CardIds.SkyPirateFlagbearer_BG30_119, CardIds.SkyPirateFlagbearer_BG30_119_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		input.playerBoard
-			.filter((e) => e.entityId !== minion.entityId)
 			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.PIRATE, input.gameState.allCards))
 			.forEach((e) => {
 				e.enchantments = e.enchantments || [];
