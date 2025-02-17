@@ -1,4 +1,9 @@
 export declare const enum TempCardIds {
+	SharingIsCaring = 'SharingIsCaring',
+	Roach = 'Roach',
+	Roach_G = 'Roach_G',
+	LowFlier = 'LowFlier',
+	LowFlier_G = 'LowFlier_G',
 	Zergling = 'Zergling',
 	Zergling_G = 'Zergling_G',
 	Hydralisk = 'Hydralisk',

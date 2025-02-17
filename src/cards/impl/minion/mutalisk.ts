@@ -10,7 +10,8 @@ export const Mutalisk: OnMinionKilledCard = {
 		minion: BoardEntity,
 		input: OnMinionKilledInput,
 	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
-		modifyStats(minion, 4, 4, input.attackingBoard, input.attackingHero, input.gameState);
+		const mult = minion.cardId === TempCardIds.Mutalisk_G ? 2 : 1;
+		modifyStats(minion, 4 * mult, 4 * mult, input.attackingBoard, input.attackingHero, input.gameState);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

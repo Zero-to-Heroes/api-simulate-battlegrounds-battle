@@ -10,8 +10,9 @@ export const Hydralisk: OnAttackCard = {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
+		const mult = minion.cardId === TempCardIds.Hydralisk_G ? 2 : 1;
 		const buff = input.attackingHero.tavernTier;
-		modifyStats(minion, buff, 0, input.attackingBoard, input.attackingHero, input.gameState);
+		modifyStats(minion, buff * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

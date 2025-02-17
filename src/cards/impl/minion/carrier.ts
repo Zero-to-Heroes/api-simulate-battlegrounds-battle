@@ -19,7 +19,8 @@ export const Carrier: AvengeCard = {
 			otherBoardHero: input.otherHero,
 		};
 		const statBuff = minion.scriptDataNum1;
-		const spawned = simplifiedSpawnEntities(TempCardIds.Interceptor_BG, 1, spawnInput);
+		const numberOfSummons = minion.cardId === TempCardIds.Carrier_G ? 2 : 1;
+		const spawned = simplifiedSpawnEntities(TempCardIds.Interceptor_BG, numberOfSummons, spawnInput);
 		spawned.forEach((e) => {
 			modifyStats(e, statBuff, statBuff, input.board, input.hero, input.gameState);
 		});

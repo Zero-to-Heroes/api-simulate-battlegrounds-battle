@@ -1,4 +1,5 @@
 import { Card } from '../card.interface';
+import { SharingIsCaring } from './bg-spell/sharing-is-caring';
 import { CrystalInfuserEnchantment } from './enchantments/crystal-infuser-enchantment';
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
@@ -65,6 +66,7 @@ import { KingBagurgle } from './minion/king-bagurgle';
 import { LeeroyTheReckless } from './minion/leeroy-the-reckless';
 import { LightfangEnforcer } from './minion/lightfang-enforcer';
 import { LovesickBalladist } from './minion/lovesick-balladist';
+import { LowFlier } from './minion/low-flier';
 import { Lurker } from './minion/lurker';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
@@ -97,6 +99,7 @@ import { RazorfenGeomancer } from './minion/razorfen-geomancer';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
 import { RecklessCliffdiver } from './minion/reckless-cliffdiver';
 import { RipsnarlCaptain } from './minion/ripsnarl-captain';
+import { Roach } from './minion/roach';
 import { RodeoPerformer } from './minion/rodeo-performer';
 import { RunedProgenitor } from './minion/runed-progenitor';
 import { RylakMetalhead } from './minion/rylak-metalhead';
@@ -132,11 +135,14 @@ import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 
 const cards = [
+	SharingIsCaring,
+	LowFlier,
 	Zergling,
 	Hydralisk,
 	Baneling,
 	Mutalisk,
 	Lurker,
+	Roach,
 	Ultralisk,
 	Colossus,
 	Carrier,
