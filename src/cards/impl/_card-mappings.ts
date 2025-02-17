@@ -7,6 +7,7 @@ import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
 import { AssistantGuard } from './minion/assistant-guard';
+import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
 import { Beetle } from './minion/beetle';
 import { BirdBuddy } from './minion/bird-buddy';
@@ -17,9 +18,11 @@ import { BriarbackBookie } from './minion/briarback-bookie';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
 import { CadaverCaretaker } from './minion/cadaver-caretaker';
+import { Carrier } from './minion/carrier';
 import { ChampionOfThePrimus } from './minion/champion-of-the-primus';
 import { Charlga } from './minion/charlga';
 import { ClunkerJunker } from './minion/clunker-junker';
+import { Colossus } from './minion/colossus';
 import { CruiseController } from './minion/cruise-controller';
 import { DeathlyStriker } from './minion/deathly-striker';
 import { DefiantShipwright } from './minion/defiant-shipwright';
@@ -44,6 +47,8 @@ import { HoloRover } from './minion/holo-rover';
 import { HummingBird } from './minion/humming-bird';
 import { HungrySnapjaw } from './minion/hungry-snapjaw';
 import { HunterOfGatherers } from './minion/hunter-of-gatherers';
+import { Hydralisk } from './minion/hydralisk';
+import { Immortal } from './minion/immortal';
 import { ImplantSubject } from './minion/implant-subject';
 import { ImposingPercussionist } from './minion/imposing-percussionist';
 import { ImpulsiveTrickster } from './minion/impulsive-trickster';
@@ -57,6 +62,7 @@ import { KingBagurgle } from './minion/king-bagurgle';
 import { LeeroyTheReckless } from './minion/leeroy-the-reckless';
 import { LightfangEnforcer } from './minion/lightfang-enforcer';
 import { LovesickBalladist } from './minion/lovesick-balladist';
+import { Lurker } from './minion/lurker';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MechaJaraxxus } from './minion/mecha-jaraxxus';
@@ -65,8 +71,10 @@ import { Mechorse } from './minion/mechorse';
 import { MenagerieJug } from './minion/menagerie-jug';
 import { MisfitDragonling } from './minion/misfit-dragonling';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
+import { Mothership } from './minion/mothership';
 import { Mummifier } from './minion/mummifier';
 import { Murky } from './minion/murky';
+import { Mutalisk } from './minion/mutalisk';
 import { MutatedLasher } from './minion/mutated-lasher';
 import { NeonAgent } from './minion/neon-agent';
 import { NerubianDeathswarmer } from './minion/nerubian-deathswarmer';
@@ -109,12 +117,28 @@ import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
 import { TunnelBlaster } from './minion/tunnel-blaster';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
+import { Ultralisk } from './minion/ultralisk';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
+import { VoidRay } from './minion/void-ray';
 import { WanderingWight } from './minion/wandering-wight';
 import { WhelpSmuggler } from './minion/whelp-smuggler';
+import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
+import { Zergling } from './minion/zergling';
 
 const cards = [
+	Zergling,
+	Hydralisk,
+	Baneling,
+	Mutalisk,
+	Lurker,
+	Ultralisk,
+	Colossus,
+	Carrier,
+	Immortal,
+	VoidRay,
+	Mothership,
+	WildfireElemental,
 	HoloRover,
 	ForestRover,
 	Beetle,

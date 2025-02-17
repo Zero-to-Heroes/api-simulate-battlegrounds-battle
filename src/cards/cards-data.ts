@@ -280,6 +280,14 @@ export class CardsData {
 		return pickRandom(pool)?.id;
 	}
 
+	public getRandomProtossMinion(tavernLimitUpper: number): string {
+		const pool = this.pool
+			.filter((m) => m.mechanics?.includes(GameTag[GameTag.PROTOSS]))
+			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
+			.filter((m) => m.techLevel <= tavernLimitUpper);
+		return pickRandom(pool)?.id;
+	}
+
 	public isGolden(card: ReferenceCard): boolean {
 		return card.premium;
 	}

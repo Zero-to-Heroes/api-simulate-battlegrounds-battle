@@ -10,6 +10,7 @@ import { pickRandom, shuffleArray } from './services/utils';
 import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { modifyStats } from './simulation/stats';
+import { TempCardIds } from './temp-card-ids';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
@@ -18,11 +19,15 @@ const CLEAVE_IDS = [
 	CardIds.FoeReaper4000_TB_BaconUps_153,
 	CardIds.BladeCollector_BG26_817,
 	CardIds.BladeCollector_BG26_817_G,
+	TempCardIds.Ultralisk,
+	TempCardIds.Ultralisk_G,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
 	CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 	CardIds.Onyxia_OnyxianWhelpToken,
+	TempCardIds.Interceptor_BG,
+	TempCardIds.Interceptor_BG_G,
 	// The token doesn't attack immediately natively, only when spawned by the spell
 	// See http://replays.firestoneapp.com/?reviewId=8924452a-540a-4324-8306-46900c3f9f35&turn=22&action=38
 	// CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
@@ -472,8 +477,14 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 	entity.cleave = cleave;
 	entity.cantAttack = cantAttack;
 	entity.divineShield = entity.divineShield || entity.hadDivineShield;
-	entity.immuneWhenAttackCharges =
-		entity.cardId === CardIds.Warpwing_BG24_004 || entity.cardId === CardIds.Warpwing_BG24_004_G ? 99999 : null;
+	entity.immuneWhenAttackCharges = [
+		CardIds.Warpwing_BG24_004,
+		CardIds.Warpwing_BG24_004_G,
+		TempCardIds.Viper,
+		TempCardIds.Viper_G,
+	].includes(entity.cardId as CardIds)
+		? 99999
+		: null;
 	entity.frenzyChargesLeft =
 		entity.cardId === CardIds.BristlebackKnight_BG20_204_G
 			? 2

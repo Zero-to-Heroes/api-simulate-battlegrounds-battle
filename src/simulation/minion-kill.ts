@@ -1,6 +1,8 @@
 import { CardIds, CardType } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnMinionKilled } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { pickRandom } from '../services/utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -12,10 +14,33 @@ export const onMinionKill = (
 	killerHero: BgsPlayerEntity,
 	victimBoard: BoardEntity[],
 	victimHero: BgsPlayerEntity,
+	defenderNeighbours: readonly BoardEntity[],
 	gameState: FullGameState,
-): void => {
+): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 	// Can be null if killed by a hero power for instance
-	switch (killer?.cardId) {
+	if (!killer?.cardId) {
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+	}
+
+	let damageDoneByAttacker = 0;
+	let damageDoneByDefender = 0;
+	const onMinionKilledImpl = cardMappings[killer.cardId];
+	if (hasOnMinionKilled(onMinionKilledImpl)) {
+		const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKilledImpl.onMinionKilled(killer, {
+			minionKilled: victim,
+			attackingHero: killerHero,
+			attackingBoard: killerBoard,
+			defendingHero: victimHero,
+			defendingBoard: victimBoard,
+			defenderNeighbours: defenderNeighbours,
+			gameState,
+			playerIsFriendly: killerHero.friendly,
+		});
+		damageDoneByAttacker += dmgDoneByAttacker;
+		damageDoneByDefender += dmgDoneByDefender;
+	}
+
+	switch (killer.cardId) {
 		case CardIds.Murcules_BG27_023:
 		case CardIds.Murcules_BG27_023_G:
 			const murculesTarget = pickRandom(
@@ -70,4 +95,6 @@ export const onMinionKill = (
 				}
 			}
 	}
+
+	return { dmgDoneByAttacker: damageDoneByAttacker, dmgDoneByDefender: damageDoneByDefender };
 };

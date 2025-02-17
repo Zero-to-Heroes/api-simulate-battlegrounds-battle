@@ -372,26 +372,32 @@ const performAttack = (
 		}
 
 		if (defendingEntity.health <= 0 || defendingEntity.definitelyDead) {
-			onMinionKill(
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKill(
 				attackingEntity,
 				defendingEntity,
 				attackingBoard,
 				attackingBoardHero,
 				defendingBoard,
 				defendingBoardHero,
+				defenderNeighbours,
 				gameState,
 			);
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
 		}
 		if (attackingEntity.health <= 0 || attackingEntity.definitelyDead) {
-			onMinionKill(
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKill(
 				defendingEntity,
 				attackingEntity,
 				defendingBoard,
 				defendingBoardHero,
 				attackingBoard,
 				attackingBoardHero,
+				defenderNeighbours,
 				gameState,
 			);
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
 		}
 	}
 	// Cleave
@@ -424,53 +430,18 @@ const performAttack = (
 				);
 			}
 			if (neighbour.health <= 0 || neighbour.definitelyDead) {
-				onMinionKill(
+				const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKill(
 					attackingEntity,
 					neighbour,
 					attackingBoard,
 					attackingBoardHero,
 					defendingBoard,
 					defendingBoardHero,
+					defenderNeighbours,
 					gameState,
 				);
-			}
-		}
-	}
-	if (
-		(defendingEntity.health <= 0 || defendingEntity.definitelyDead) &&
-		(attackingEntity.cardId === CardIds.WildfireElemental_BGS_126 ||
-			attackingEntity.cardId === CardIds.WildfireElemental_TB_BaconUps_166)
-	) {
-		const excessDamage = -defendingEntity.health;
-		// console.log('neighbours', stringifySimple(neighbours, allCards));
-		if (defenderNeighbours.length > 0) {
-			if (attackingEntity.cardId === CardIds.WildfireElemental_BGS_126) {
-				const randomTarget = defenderNeighbours[Math.floor(Math.random() * defenderNeighbours.length)];
-				damageDoneByAttacker += dealDamageToMinion(
-					randomTarget,
-					defendingBoard,
-					defendingBoardHero,
-					defendingEntity.lastAffectedByEntity,
-					excessDamage,
-					attackingBoard,
-					attackingBoardHero,
-					gameState,
-				);
-			} else {
-				damageDoneByAttacker += defenderNeighbours
-					.map((neighbour) =>
-						dealDamageToMinion(
-							neighbour,
-							defendingBoard,
-							defendingBoardHero,
-							defendingEntity.lastAffectedByEntity,
-							excessDamage,
-							attackingBoard,
-							attackingBoardHero,
-							gameState,
-						),
-					)
-					.reduce((a, b) => a + b, 0);
+				damageDoneByAttacker += dmgDoneByAttacker;
+				damageDoneByDefender += dmgDoneByDefender;
 			}
 		}
 	}
@@ -676,7 +647,7 @@ export const dealDamageToMinion = (
 		target.lastAffectedByEntity = damageSource;
 
 		if (target.health <= 0 || target.definitelyDead) {
-			onMinionKill(damageSource, target, otherBoard, otherHero, board, hero, gameState);
+			onMinionKill(damageSource, target, otherBoard, otherHero, board, hero, [], gameState);
 		}
 	}
 	const defendingEntityIndex = board.map((entity) => entity.entityId).indexOf(target.entityId);
@@ -1230,4 +1201,14 @@ export interface OnDeathInput {
 	readonly hero: BgsPlayerEntity;
 	readonly board: readonly BoardEntity[];
 	readonly gameState: FullGameState;
+}
+export interface OnMinionKilledInput {
+	readonly minionKilled: BoardEntity;
+	readonly attackingHero: BgsPlayerEntity;
+	readonly attackingBoard: BoardEntity[];
+	readonly defendingHero: BgsPlayerEntity;
+	readonly defendingBoard: BoardEntity[];
+	readonly defenderNeighbours: readonly BoardEntity[];
+	readonly gameState: FullGameState;
+	readonly playerIsFriendly: boolean;
 }

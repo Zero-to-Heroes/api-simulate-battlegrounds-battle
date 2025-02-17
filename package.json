@@ -25,7 +25,7 @@
 	],
 	"dependencies": {
 		"@firestone-hs/hs-replay-xml-parser": "0.0.46",
-		"@firestone-hs/reference-data": "^2.0.92"
+		"@firestone-hs/reference-data": "^2.0.105"
 	},
 	"devDependencies": {
 		"@types/aws-lambda": "8.10.31",
