@@ -20,6 +20,7 @@ export const Sandy = {
 					copy,
 					input.playerBoard,
 					input.playerEntity,
+					input.opponentBoard,
 					input.opponentEntity,
 					input.gameState,
 				);

@@ -403,6 +403,7 @@ const handleAvenge = (
 						avenger,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
+						otherBoard,
 						otherBoardHero,
 						gameState,
 					);
@@ -423,6 +424,7 @@ const handleAvenge = (
 							avenger,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
+							otherBoard,
 							otherBoardHero,
 							gameState,
 						);

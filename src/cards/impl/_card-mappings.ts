@@ -18,6 +18,7 @@ import { BriarbackBookie } from './minion/briarback-bookie';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
 import { CadaverCaretaker } from './minion/cadaver-caretaker';
+import { CaptainBonerender } from './minion/captain-bonerender';
 import { Carrier } from './minion/carrier';
 import { ChampionOfThePrimus } from './minion/champion-of-the-primus';
 import { Charlga } from './minion/charlga';
@@ -138,6 +139,7 @@ const cards = [
 	Immortal,
 	VoidRay,
 	Mothership,
+	CaptainBonerender,
 	WildfireElemental,
 	HoloRover,
 	ForestRover,

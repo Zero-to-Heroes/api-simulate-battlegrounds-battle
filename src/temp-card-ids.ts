@@ -25,4 +25,6 @@ export declare const enum TempCardIds {
 	VoidRay_G = 'VoidRay_G',
 	Mothership = 'Mothership',
 	Mothership_G = 'Mothership_G',
+	CaptainBonerender = 'CaptainBonerender',
+	CaptainBonerender_G = 'CaptainBonerender_G',
 }

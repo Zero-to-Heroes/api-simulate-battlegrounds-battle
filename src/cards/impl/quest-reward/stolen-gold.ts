@@ -10,6 +10,7 @@ export const StolenGold = {
 				input.playerEntity,
 				input.playerBoard,
 				input.playerEntity,
+				input.opponentBoard,
 				input.opponentEntity,
 				input.gameState,
 			);
@@ -19,6 +20,7 @@ export const StolenGold = {
 					input.playerEntity,
 					input.playerBoard,
 					input.playerEntity,
+					input.opponentBoard,
 					input.opponentEntity,
 					input.gameState,
 				);

@@ -22,6 +22,7 @@ import { modifyStats, setEntityStats } from './stats';
 export const addMinionsToBoard = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
 	index: number,
 	minionsToAdd: readonly BoardEntity[],
@@ -29,14 +30,15 @@ export const addMinionsToBoard = (
 ): void => {
 	// board.splice(index, 0, ...minionsToAdd);
 	for (const minionToAdd of [...minionsToAdd].reverse()) {
-		addMinionToBoard(board, boardHero, otherHero, index, minionToAdd, gameState, false);
+		addMinionToBoard(board, boardHero, otherBoard, otherHero, index, minionToAdd, gameState, false);
 	}
-	handleAfterSpawnEffects(board, boardHero, minionsToAdd, gameState);
+	handleAfterSpawnEffects(board, boardHero, otherBoard, otherHero, minionsToAdd, gameState);
 };
 
 export const addMinionToBoard = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
 	index: number,
 	minionToAdd: BoardEntity,
@@ -46,18 +48,19 @@ export const addMinionToBoard = (
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
-	handleAddedMinionAuraEffect(board, boardHero, otherHero, minionToAdd, gameState, applySelfAuras);
+	handleAddedMinionAuraEffect(board, boardHero, otherBoard, otherHero, minionToAdd, gameState, applySelfAuras);
 	// Important to do this here, so that "attack immediately" minions can be taken into account by the quests
 	onMinionSummoned(boardHero, board, gameState);
-	handleSpawnEffect(board, boardHero, otherHero, minionToAdd, gameState);
+	handleSpawnEffect(board, boardHero, otherBoard, otherHero, minionToAdd, gameState);
 	if (performAfterSpawnEffects) {
-		handleAfterSpawnEffects(board, boardHero, [minionToAdd], gameState);
+		handleAfterSpawnEffects(board, boardHero, otherBoard, otherHero, [minionToAdd], gameState);
 	}
 };
 
 const handleSpawnEffect = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
@@ -88,6 +91,7 @@ const handleSpawnEffect = (
 				spawned: spawned,
 				hero: boardHero,
 				board: board,
+				otherBoard: otherBoard,
 				otherHero: otherHero,
 				gameState,
 			});
@@ -148,6 +152,7 @@ const handleSpawnEffect = (
 export const handleAddedMinionAuraEffect = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
@@ -686,11 +691,13 @@ const handleMinionAddedAuraEffect = (
 const handleAfterSpawnEffects = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
 	allSpawned: readonly BoardEntity[],
 	gameState: FullGameState,
 ): void => {
 	for (const spawned of allSpawned) {
-		handleAfterSpawnEffect(board, hero, spawned, gameState);
+		handleAfterSpawnEffect(board, hero, otherBoard, otherHero, spawned, gameState);
 	}
 	updateBoardwideAuras(board, hero, gameState);
 };
@@ -713,6 +720,8 @@ export const onMinionSummoned = (hero: BgsPlayerEntity, board: BoardEntity[], ga
 const handleAfterSpawnEffect = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
 ): void => {
@@ -724,6 +733,8 @@ const handleAfterSpawnEffect = (
 				spawned: spawned,
 				hero: hero,
 				board: board,
+				otherHero: otherHero,
+				otherBoard: otherBoard,
 				gameState,
 			});
 		}
@@ -834,6 +845,7 @@ export interface OnOtherSpawnInput {
 	hero: BgsPlayerEntity;
 	board: BoardEntity[];
 	otherHero: BgsPlayerEntity;
+	otherBoard: BoardEntity[];
 	gameState: FullGameState;
 }
 export interface OnOtherSpawnAuraInput {

@@ -408,7 +408,7 @@ export const triggerBattlecry = (
 						board.filter((e) => !isMinionGolden(e, gameState.allCards)),
 					);
 					if (captainSandersTarget) {
-						makeMinionGolden(captainSandersTarget, entity, board, hero, otherHero, gameState);
+						makeMinionGolden(captainSandersTarget, entity, board, hero, otherBoard, otherHero, gameState);
 					}
 					break;
 				case CardIds.SanguineChampion_BG23_017:

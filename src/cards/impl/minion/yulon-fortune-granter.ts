@@ -30,6 +30,7 @@ export const YulonFortuneGranter = {
 					minion,
 					input.playerBoard,
 					input.playerEntity,
+					input.opponentBoard,
 					input.opponentEntity,
 					input.gameState,
 				);
