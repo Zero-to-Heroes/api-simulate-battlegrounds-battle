@@ -51,6 +51,7 @@ export interface BgsPlayerGlobalInfo {
 	GoldrinnBuffHealth?: number;
 	TavernSpellsCastThisGame?: number;
 	PiratesPlayedThisGame?: number;
+	BeastsSummonedThisGame?: number;
 	PiratesSummonedThisGame?: number;
 	PirateAttackBonus?: number;
 	AstralAutomatonsSummonedThisGame?: number;

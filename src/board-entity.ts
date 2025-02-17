@@ -59,5 +59,7 @@ export interface BoardEntity {
 	// permanentHealth?: number;
 	tavernTier?: number;
 
+	memory?: any;
+
 	onCanceledSummon?: () => void;
 }

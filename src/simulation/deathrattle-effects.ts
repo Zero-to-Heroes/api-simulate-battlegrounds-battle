@@ -685,7 +685,9 @@ export const handleDeathrattleEffects = (
 				case CardIds.MysticSporebat_BG28_900:
 				case CardIds.MysticSporebat_BG28_900_G:
 					for (let i = 0; i < multiplier; i++) {
-						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+						const loops = deadEntityCardId === CardIds.MysticSporebat_BG28_900_G ? 2 : 1;
+						const cardsToAdd = Array(loops).fill(null);
+						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, cardsToAdd, gameState);
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;

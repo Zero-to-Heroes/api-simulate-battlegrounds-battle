@@ -10,6 +10,7 @@ import { AssistantGuard } from './minion/assistant-guard';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
 import { Beetle } from './minion/beetle';
+import { BellowingTyrant } from './minion/bellowing-tyrant';
 import { BirdBuddy } from './minion/bird-buddy';
 import { BlazingSkyfin } from './minion/blazing-skyfin';
 import { BoarGamer } from './minion/boar-gamer';
@@ -38,6 +39,7 @@ import { GemRat } from './minion/gem-rat';
 import { GemSmuggler } from './minion/gem-smuggler';
 import { GeneralDrakkisath } from './minion/general-drakkisath';
 import { GentleDjinni } from './minion/gentle-djinni';
+import { GentleStag } from './minion/gentle-stag';
 import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
 import { GreaseBot } from './minion/grease-bot';
 import { GrittyHeadhunter } from './minion/gritty-headhunter';
@@ -77,6 +79,7 @@ import { Mummifier } from './minion/mummifier';
 import { Murky } from './minion/murky';
 import { Mutalisk } from './minion/mutalisk';
 import { MutatedLasher } from './minion/mutated-lasher';
+import { MythraxTheUnraveler } from './minion/mythrax';
 import { NeonAgent } from './minion/neon-agent';
 import { NerubianDeathswarmer } from './minion/nerubian-deathswarmer';
 import { NestSwarmer } from './minion/nest-swarmer';
@@ -110,6 +113,7 @@ import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
 import { SoulRewinder } from './minion/soul-rewinder';
 import { Spacefarer } from './minion/spacefarer';
+import { StitchedSalvager } from './minion/stitched-salvager';
 import { Swampstriker } from './minion/swampstriker';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
@@ -140,6 +144,10 @@ const cards = [
 	VoidRay,
 	Mothership,
 	CaptainBonerender,
+	GentleStag,
+	BellowingTyrant,
+	StitchedSalvager,
+	MythraxTheUnraveler,
 	WildfireElemental,
 	HoloRover,
 	ForestRover,

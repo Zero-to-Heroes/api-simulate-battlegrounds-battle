@@ -210,6 +210,8 @@ export const setImplicitDataHero = (
 
 	hero.globalInfo.EternalKnightsDeadThisGame = hero.globalInfo.EternalKnightsDeadThisGame ?? 0;
 	hero.globalInfo.SanlaynScribesDeadThisGame = hero.globalInfo.SanlaynScribesDeadThisGame ?? 0;
+	hero.globalInfo.BeastsSummonedThisGame = hero.globalInfo.BeastsSummonedThisGame ?? 0;
+	hero.globalInfo.PiratesSummonedThisGame = hero.globalInfo.PiratesSummonedThisGame ?? 0;
 	hero.globalInfo.BattlecriesTriggeredThisGame = hero.globalInfo.BattlecriesTriggeredThisGame ?? 0;
 	hero.globalInfo.BeetleAttackBuff = hero.globalInfo.BeetleAttackBuff ?? 0;
 	hero.globalInfo.BeetleHealthBuff = hero.globalInfo.BeetleHealthBuff ?? 0;

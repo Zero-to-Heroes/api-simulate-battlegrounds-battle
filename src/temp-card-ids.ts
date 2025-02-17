@@ -27,4 +27,10 @@ export declare const enum TempCardIds {
 	Mothership_G = 'Mothership_G',
 	CaptainBonerender = 'CaptainBonerender',
 	CaptainBonerender_G = 'CaptainBonerender_G',
+	GentleStag = 'GentleStag',
+	GentleStag_G = 'GentleStag_G',
+	BellowingTyrant = 'BellowingTyrant',
+	BellowingTyrant_G = 'BellowingTyrant_G',
+	StitchedSalvager = 'StitchedSalvager',
+	StitchedSalvager_G = 'StitchedSalvager_G',
 }
