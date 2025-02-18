@@ -1,6 +1,8 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasRebornEffect } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { addStatsToBoard } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
@@ -65,6 +67,16 @@ export const handleRebornForEntity = (
 			e.attack = attack;
 			e.health = health;
 		});
+	}
+
+	for (const reborn of entitiesFromReborn) {
+		const rebornImpl = cardMappings[reborn.cardId];
+		if (hasRebornEffect(rebornImpl)) {
+			rebornImpl.rebornEffect(reborn, {
+				initialEntity: deadEntity,
+				gameState,
+			});
+		}
 	}
 
 	const entitiesThatWereReborn = performEntitySpawns(
@@ -151,3 +163,8 @@ export const handleRebornForEntity = (
 			});
 	}
 };
+
+export interface RebornEffectInput {
+	readonly initialEntity: BoardEntity;
+	readonly gameState: FullGameState;
+}

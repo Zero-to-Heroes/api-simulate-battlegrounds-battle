@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardSecret } from '../../../board-secret';
 import { pickRandom } from '../../../services/utils';
 import { findNearestEnemies } from '../../../simulation/attack';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const SharingIsCaring: StartOfCombatCard = {
-	cardIds: [TempCardIds.SharingIsCaring],
+	cardIds: [CardIds.SharingIsCaring_BG31_889],
 	startOfCombat: (secret: BoardSecret, input: SoCInput) => {
 		const friendlyMinion = input.playerBoard[0];
 		if (!friendlyMinion) {

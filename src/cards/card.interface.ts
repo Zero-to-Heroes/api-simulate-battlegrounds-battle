@@ -20,6 +20,7 @@ import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../simulation/on-attack';
+import { RebornEffectInput } from '../simulation/reborn';
 import { SoCInput } from '../simulation/start-of-combat/start-of-combat-input';
 import { OnStatsChangedInput } from '../simulation/stats';
 
@@ -91,6 +92,12 @@ export interface BattlecryCard extends Card {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => void;
 }
 export const hasBattlecry = (card: Card): card is BattlecryCard => (card as BattlecryCard)?.battlecry !== undefined;
+
+export interface RebornEffectCard extends Card {
+	rebornEffect: (minion: BoardEntity, input: RebornEffectInput) => void;
+}
+export const hasRebornEffect = (card: Card): card is RebornEffectCard =>
+	(card as RebornEffectCard)?.rebornEffect !== undefined;
 
 export interface OnBattlecryTriggeredCard extends Card {
 	onBattlecryTriggered: (minion: BoardEntity, input: OnBattlecryTriggeredInput) => void;

@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const Zergling: StartOfCombatCard = {
-	cardIds: [TempCardIds.Zergling, TempCardIds.Zergling_G],
+	cardIds: [CardIds.KerriganQueenOfBlades_ZerglingToken_BG31_HERO_811t2, CardIds.Zergling_BG31_HERO_811t2_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		let hasTriggered = false;
 		if (input.playerBoard.length < 7) {

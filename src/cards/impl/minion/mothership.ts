@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { AvengeInput } from '../../../simulation/avenge';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
-import { TempCardIds } from '../../../temp-card-ids';
 import { AvengeCard } from '../../card.interface';
 
 export const Mothership: AvengeCard = {
-	cardIds: [TempCardIds.Mothership, TempCardIds.Mothership_G],
+	cardIds: [CardIds.WarpGate_MothershipToken_BG31_HERO_802pt7, CardIds.Mothership_BG31_HERO_802pt7_G],
 	baseAvengeValue: (cardId: string) => 5,
 	avenge: (minion: BoardEntity, input: AvengeInput): void => {
-		const cards = minion.cardId === TempCardIds.Mothership_G ? 2 : 1;
+		const cards = minion.cardId === CardIds.Mothership_BG31_HERO_802pt7_G ? 2 : 1;
 		const cardsAdded = Array(cards).map(() =>
 			input.gameState.cardsData.getRandomProtossMinion(input.hero.tavernTier),
 		);

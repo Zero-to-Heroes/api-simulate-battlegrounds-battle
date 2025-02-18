@@ -1,11 +1,11 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToMinion, getNeighbours } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnAttackCard } from '../../card.interface';
 
 export const Colossus: OnAttackCard = {
-	cardIds: [TempCardIds.Colossus, TempCardIds.Colossus_G],
+	cardIds: [CardIds.WarpGate_ColossusToken_BG31_HERO_802pt, CardIds.Colossus_BG31_HERO_802pt_G],
 	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };

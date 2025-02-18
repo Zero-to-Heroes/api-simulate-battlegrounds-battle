@@ -1,18 +1,18 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnInput, removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity } from '../../../utils';
 import { AfterOtherSpawnedCard } from '../../card.interface';
 
 export const CaptainBonerender: AfterOtherSpawnedCard = {
-	cardIds: [TempCardIds.CaptainBonerender, TempCardIds.CaptainBonerender_G],
+	cardIds: [CardIds.CaptainBonerender_BG31_840, CardIds.CaptainBonerender_BG31_840_G],
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
-		if (CaptainBonerender.cardIds.includes(input.spawned.cardId as TempCardIds)) {
+		if (CaptainBonerender.cardIds.includes(input.spawned.cardId as CardIds)) {
 			return;
 		}
-		const mult = minion.cardId === TempCardIds.CaptainBonerender ? 1 : 2;
+		const mult = minion.cardId === CardIds.CaptainBonerender_BG31_840 ? 1 : 2;
 		for (let i = 0; i < mult; i++) {
 			if (input.board.length >= 7) {
 				break;

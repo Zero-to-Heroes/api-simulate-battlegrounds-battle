@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { AvengeInput } from '../../../simulation/avenge';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { AvengeCard } from '../../card.interface';
 
 export const Carrier: AvengeCard = {
-	cardIds: [TempCardIds.Carrier, TempCardIds.Carrier_G],
+	cardIds: [CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t, CardIds.Carrier_BG31_HERO_802pt1_G],
 	baseAvengeValue: (cardId: string) => 4,
 	avenge: (minion: BoardEntity, input: AvengeInput): void => {
 		const spawnInput: DeathrattleTriggeredInput = {
@@ -19,10 +19,14 @@ export const Carrier: AvengeCard = {
 			otherBoardHero: input.otherHero,
 		};
 		const statBuff = minion.scriptDataNum1;
-		const numberOfSummons = minion.cardId === TempCardIds.Carrier_G ? 2 : 1;
-		const spawned = simplifiedSpawnEntities(TempCardIds.Interceptor_BG, numberOfSummons, spawnInput);
+		const numberOfSummons = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 2 : 1;
+		const spawned = simplifiedSpawnEntities(
+			CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t,
+			numberOfSummons,
+			spawnInput,
+		);
 		spawned.forEach((e) => {
-			modifyStats(e, statBuff, statBuff, input.board, input.hero, input.gameState);
+			modifyStats(e, statBuff * 3, statBuff * 3, input.board, input.hero, input.gameState);
 		});
 	},
 };

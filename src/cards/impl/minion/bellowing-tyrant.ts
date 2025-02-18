@@ -1,16 +1,15 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnInput, OnSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { OnOtherSpawnedCard, OnSpawnedCard } from '../../card.interface';
 
 export const BellowingTyrant: OnSpawnedCard & OnOtherSpawnedCard = {
-	cardIds: [TempCardIds.BellowingTyrant, TempCardIds.BellowingTyrant_G],
+	cardIds: [CardIds.BellowingTyrant_BG31_361, CardIds.BellowingTyrant_BG31_361_G],
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		input.hero.globalInfo.BeastsSummonedThisGame += 1;
-		const mult = minion.cardId === TempCardIds.BellowingTyrant_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.BellowingTyrant_BG31_361_G ? 2 : 1;
 		const statsBonus = mult * input.hero.globalInfo.BeastsSummonedThisGame;
 		modifyStats(minion, 3 * statsBonus, 2 * mult, input.board, input.hero, input.gameState);
 	},
@@ -19,7 +18,7 @@ export const BellowingTyrant: OnSpawnedCard & OnOtherSpawnedCard = {
 			return;
 		}
 		input.hero.globalInfo.BeastsSummonedThisGame += 1;
-		const mult = minion.cardId === TempCardIds.BellowingTyrant_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.BellowingTyrant_BG31_361_G ? 2 : 1;
 		const statsBonus = mult * 1;
 		modifyStats(minion, 3 * statsBonus, 2 * mult, input.board, input.hero, input.gameState);
 	},

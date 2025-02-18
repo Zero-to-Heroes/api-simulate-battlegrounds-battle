@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { getNeighbours } from '../../../simulation/attack';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const Immortal: StartOfCombatCard = {
-	cardIds: [TempCardIds.Immortal, TempCardIds.Immortal_G],
+	cardIds: [CardIds.WarpGate_ImmortalToken_BG31_HERO_802pt4, CardIds.Immortal_BG31_HERO_802pt4_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		const multiplier = minion.cardId === TempCardIds.Immortal_G ? 2 : 1;
+		const multiplier = minion.cardId === CardIds.Immortal_BG31_HERO_802pt4_G ? 2 : 1;
 		const neighbours = getNeighbours(input.playerBoard, minion);
 		const neighboursAttack = neighbours.map((entity) => entity.attack).reduce((a, b) => a + b, 0);
 		const neighboursHealth = neighbours.map((entity) => entity.health).reduce((a, b) => a + b, 0);
