@@ -10,44 +10,46 @@ import { StartOfCombatCard } from '../../card.interface';
 export const WaxWarband: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		if (input.playerEntity.heroPowerUsed) {
-			if (input.playerBoard.length > 0) {
-				const boardWithTribes = input.playerBoard.filter(
-					(e) => !!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards).length,
-				);
-				const boardWithoutAll = boardWithTribes.filter(
-					(e) =>
-						!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards)?.includes(
-							Race.ALL,
-						),
-				);
-				const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, input.gameState.allCards);
-				const allMinions = [
-					...selectedMinions,
-					...boardWithTribes.filter((e) =>
-						getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards)?.includes(
-							Race.ALL,
-						),
-					),
-				];
-				allMinions.forEach((e) => {
-					modifyStats(
-						e,
-						input.gameState.cardsData.getTavernLevel(e.cardId),
-						input.gameState.cardsData.getTavernLevel(e.cardId),
-						input.playerBoard,
-						input.playerEntity,
-						input.gameState,
+		for (const heroPower of input.playerEntity.heroPowers) {
+			if (heroPower.used) {
+				if (input.playerBoard.length > 0) {
+					const boardWithTribes = input.playerBoard.filter(
+						(e) => !!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards).length,
 					);
-					input.gameState.spectator.registerPowerTarget(
-						input.playerEntity,
-						e,
-						input.playerBoard,
-						input.playerEntity,
-						input.opponentEntity,
+					const boardWithoutAll = boardWithTribes.filter(
+						(e) =>
+							!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards)?.includes(
+								Race.ALL,
+							),
 					);
-				});
-				return true;
+					const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, input.gameState.allCards);
+					const allMinions = [
+						...selectedMinions,
+						...boardWithTribes.filter((e) =>
+							getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards)?.includes(
+								Race.ALL,
+							),
+						),
+					];
+					allMinions.forEach((e) => {
+						modifyStats(
+							e,
+							input.gameState.cardsData.getTavernLevel(e.cardId),
+							input.gameState.cardsData.getTavernLevel(e.cardId),
+							input.playerBoard,
+							input.playerEntity,
+							input.gameState,
+						);
+						input.gameState.spectator.registerPowerTarget(
+							input.playerEntity,
+							e,
+							input.playerBoard,
+							input.playerEntity,
+							input.opponentEntity,
+						);
+					});
+					return true;
+				}
 			}
 		}
 	},

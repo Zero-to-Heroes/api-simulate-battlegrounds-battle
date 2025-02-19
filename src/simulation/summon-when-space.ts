@@ -194,39 +194,47 @@ const handleOzumatForPlayer = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): void => {
-	if (playerBoard.length < 7 && playerEntity.heroPowerActivated === false) {
-		const tentacularSize = +playerEntity.heroPowerInfo;
-		const tentacular = spawnEntities(
-			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
-			1,
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			gameState.allCards,
-			gameState.cardsData,
-			gameState.sharedState,
-			gameState.spectator,
-			friendly,
-			true,
-			false,
-			false,
-		);
-		tentacular[0].attack = tentacularSize;
-		tentacular[0].health = tentacularSize;
-		const indexFromRight = 0;
-		performEntitySpawns(
-			tentacular,
-			playerBoard,
-			playerEntity,
-			playerEntity,
-			indexFromRight,
-			opponentBoard,
-			opponentEntity,
-			gameState,
-		);
-		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
-		playerEntity.heroPowerActivated = true;
+	for (const heroPower of playerEntity.heroPowers) {
+		if (playerBoard.length < 7 && heroPower.activated === false) {
+			const tentacularSize = +heroPower.info;
+			const tentacular = spawnEntities(
+				CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
+				1,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState.allCards,
+				gameState.cardsData,
+				gameState.sharedState,
+				gameState.spectator,
+				friendly,
+				true,
+				false,
+				false,
+			);
+			tentacular[0].attack = tentacularSize;
+			tentacular[0].health = tentacularSize;
+			const indexFromRight = 0;
+			performEntitySpawns(
+				tentacular,
+				playerBoard,
+				playerEntity,
+				playerEntity,
+				indexFromRight,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+			);
+			gameState.spectator.registerPowerTarget(
+				playerEntity,
+				tentacular[0],
+				playerBoard,
+				playerEntity,
+				opponentEntity,
+			);
+			heroPower.activated = true;
+		}
 	}
 };
 

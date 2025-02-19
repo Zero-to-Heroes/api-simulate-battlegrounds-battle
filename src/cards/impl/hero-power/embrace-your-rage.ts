@@ -8,56 +8,58 @@ import { StartOfCombatCard } from '../../card.interface';
 export const EmbraceYourRage: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		if (input.playerEntity.heroPowerUsed) {
-			const createdCardId = input.playerEntity.heroPowerInfo as string;
-			if (!createdCardId?.length) {
-				return false;
-			}
+		for (const heroPower of input.playerEntity.heroPowers) {
+			if (heroPower.used) {
+				const createdCardId = heroPower.info as string;
+				if (!createdCardId?.length) {
+					return false;
+				}
 
-			const spawns = spawnEntities(
-				createdCardId,
-				1,
-				input.playerBoard,
-				input.playerEntity,
-				input.opponentBoard,
-				input.opponentEntity,
-				input.gameState.allCards,
-				input.gameState.cardsData,
-				input.gameState.sharedState,
-				input.gameState.spectator,
-				input.playerEntity.friendly,
-				false,
-				false,
-				false,
-			);
-			const indexFromRight = 0;
-			const spawned = performEntitySpawns(
-				spawns,
-				input.playerBoard,
-				input.playerEntity,
-				input.playerEntity,
-				indexFromRight,
-				input.opponentBoard,
-				input.opponentEntity,
-				input.gameState,
-			);
-			if (spawned?.length) {
-				input.gameState.spectator.registerPowerTarget(
-					input.playerEntity,
-					spawns[0],
+				const spawns = spawnEntities(
+					createdCardId,
+					1,
 					input.playerBoard,
 					input.playerEntity,
+					input.opponentBoard,
 					input.opponentEntity,
+					input.gameState.allCards,
+					input.gameState.cardsData,
+					input.gameState.sharedState,
+					input.gameState.spectator,
+					input.playerEntity.friendly,
+					false,
+					false,
+					false,
 				);
-				addCardsInHand(input.playerEntity, input.playerBoard, spawns, input.gameState);
-				input.gameState.spectator.registerPowerTarget(
-					input.playerEntity,
-					spawns[0],
+				const indexFromRight = 0;
+				const spawned = performEntitySpawns(
+					spawns,
 					input.playerBoard,
 					input.playerEntity,
+					input.playerEntity,
+					indexFromRight,
+					input.opponentBoard,
 					input.opponentEntity,
+					input.gameState,
 				);
-				return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
+				if (spawned?.length) {
+					input.gameState.spectator.registerPowerTarget(
+						input.playerEntity,
+						spawns[0],
+						input.playerBoard,
+						input.playerEntity,
+						input.opponentEntity,
+					);
+					addCardsInHand(input.playerEntity, input.playerBoard, spawns, input.gameState);
+					input.gameState.spectator.registerPowerTarget(
+						input.playerEntity,
+						spawns[0],
+						input.playerBoard,
+						input.playerEntity,
+						input.opponentEntity,
+					);
+					return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
+				}
 			}
 		}
 	},

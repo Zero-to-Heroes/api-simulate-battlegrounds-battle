@@ -6,9 +6,11 @@ import { StartOfCombatCard } from '../../card.interface';
 export const EarthInvocation: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		if (input.playerEntity.heroPowerUsed) {
-			applyEarthInvocationEnchantment(input.playerBoard, null, input.playerEntity, input.gameState);
-			return true;
+		for (const heroPower of input.playerEntity.heroPowers) {
+			if (heroPower.used) {
+				applyEarthInvocationEnchantment(input.playerBoard, null, input.playerEntity, input.gameState);
+				return true;
+			}
 		}
 	},
 };

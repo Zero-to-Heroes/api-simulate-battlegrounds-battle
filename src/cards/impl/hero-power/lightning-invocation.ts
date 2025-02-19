@@ -6,16 +6,18 @@ import { StartOfCombatCard } from '../../card.interface';
 export const LightningInvocation: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		if (input.playerEntity.heroPowerUsed) {
-			applyLightningInvocationEnchantment(
-				input.playerBoard,
-				input.playerEntity,
-				null,
-				input.opponentBoard,
-				input.opponentEntity,
-				input.gameState,
-			);
-			return true;
+		for (const heroPower of input.playerEntity.heroPowers) {
+			if (heroPower.used) {
+				applyLightningInvocationEnchantment(
+					input.playerBoard,
+					input.playerEntity,
+					null,
+					input.opponentBoard,
+					input.opponentEntity,
+					input.gameState,
+				);
+				return true;
+			}
 		}
 	},
 };

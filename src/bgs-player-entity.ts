@@ -18,12 +18,12 @@ export interface BgsPlayerEntity {
 	readonly heroPowerInfo?: number | string;
 	/** @deprecated */
 	heroPowerInfo2?: number;
-	// /** @deprecated */
-	avengeCurrent?: number;
-	// /** @deprecated */
-	avengeDefault?: number;
 	/** @deprecated */
+	avengeCurrent?: number;
+	/** @deprecated */
+	avengeDefault?: number;
 	// For Ozumat
+	/** @deprecated */
 	heroPowerActivated?: boolean;
 
 	friendly?: boolean;
@@ -53,10 +53,12 @@ export interface BgsHeroPower {
 	cardId: string;
 	entityId: number;
 	used: boolean;
-	info: number;
+	info: number | string;
 	info2: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
+	// For Ozumat's Tentacular
+	activated?: boolean;
 }
 
 export interface BgsPlayerGlobalInfo {
