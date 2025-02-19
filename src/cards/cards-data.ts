@@ -78,7 +78,8 @@ export class CardsData {
 		const poolWithGolden = this.allCards
 			.getCards()
 			.filter((card) => isBattlegroundsCard(card))
-			.filter((card) => card.isBaconPool)
+			// Premiums are not in bacon pool
+			.filter((card) => card.isBaconPool || this.allCards.getCard(card.battlegroundsNormalDbfId)?.isBaconPool)
 			.filter((card) => !!card.techLevel)
 			.filter((card) => card.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
