@@ -15,7 +15,7 @@ const test = async () => {
 		...jsonEvent3,
 		options: {
 			...jsonEvent3.options,
-			numberOfSimulations: 5000,
+			numberOfSimulations: 10000,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 5000,
 			itermediateResults: 0,
@@ -45,8 +45,8 @@ const test = async () => {
 
 	const sample =
 		simulationResult.outcomeSamples.tied?.[0] ??
-		simulationResult.outcomeSamples.won?.[0] ??
 		simulationResult.outcomeSamples.lost?.[0] ??
+		simulationResult.outcomeSamples.won?.[0] ??
 		null;
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
