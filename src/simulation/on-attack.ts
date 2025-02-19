@@ -30,7 +30,7 @@ export const applyOnAttackEffects = (
 	for (const boardEntity of attackingBoard) {
 		const onAttackImpl = cardMappings[boardEntity.cardId];
 		if (hasOnAttack(onAttackImpl)) {
-			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAttack(boardEntity, {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(boardEntity, {
 				attacker: attacker,
 				attackingHero: attackingBoardHero,
 				attackingBoard: attackingBoard,

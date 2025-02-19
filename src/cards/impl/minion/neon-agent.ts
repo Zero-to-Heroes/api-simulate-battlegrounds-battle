@@ -7,7 +7,10 @@ import { OnAttackCard } from '../../card.interface';
 
 export const NeonAgent: OnAttackCard = {
 	cardIds: [CardIds.NeonAgent_BG31_146, CardIds.NeonAgent_BG31_146_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+	onAnyMinionAttack: (
+		minion: BoardEntity,
+		input: OnAttackInput,
+	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}

@@ -6,7 +6,10 @@ import { OnAttackCard } from '../../card.interface';
 
 export const Colossus: OnAttackCard = {
 	cardIds: [CardIds.WarpGate_ColossusToken_BG31_HERO_802pt, CardIds.Colossus_BG31_HERO_802pt_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+	onAnyMinionAttack: (
+		minion: BoardEntity,
+		input: OnAttackInput,
+	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}

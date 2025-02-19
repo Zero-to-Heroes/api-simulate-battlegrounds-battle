@@ -6,7 +6,10 @@ import { OnAttackCard } from '../../card.interface';
 
 export const HoloRover: OnAttackCard = {
 	cardIds: [CardIds.HoloRover_BG31_175, CardIds.HoloRover_BG31_175_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+	onAnyMinionAttack: (
+		minion: BoardEntity,
+		input: OnAttackInput,
+	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}

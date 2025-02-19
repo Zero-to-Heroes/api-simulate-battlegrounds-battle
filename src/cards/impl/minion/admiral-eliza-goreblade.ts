@@ -7,7 +7,7 @@ import { OnAttackCard } from '../../card.interface';
 
 export const AdmiralElizaGoreblade: OnAttackCard = {
 	cardIds: [CardIds.AdmiralElizaGoreblade_BG27_555, CardIds.AdmiralElizaGoreblade_BG27_555_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		if (hasCorrectTribe(input.attacker, input.attackingHero, Race.PIRATE, input.gameState.allCards)) {
 			const mult = minion.cardId === CardIds.AdmiralElizaGoreblade_BG27_555_G ? 2 : 1;
 			input.attackingBoard.forEach((entity) => {

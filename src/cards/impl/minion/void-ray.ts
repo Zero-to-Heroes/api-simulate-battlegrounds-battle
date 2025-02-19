@@ -6,7 +6,7 @@ import { OnAttackCard } from '../../card.interface';
 
 export const VoidRay: OnAttackCard = {
 	cardIds: [CardIds.WarpGate_VoidRayToken_BG31_HERO_802pt5, CardIds.VoidRay_BG31_HERO_802pt5_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.VoidRay_BG31_HERO_802pt5_G ? 2 : 1;
 		modifyStats(input.attacker, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
 		modifyStats(minion, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);

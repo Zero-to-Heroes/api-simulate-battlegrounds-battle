@@ -67,13 +67,17 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		minion.windfury = input.initialEntity.windfury;
 		minion.poisonous = input.initialEntity.poisonous;
 	},
-	onAttack: (
+	onAnyMinionAttack: (
 		minion: BoardEntity,
 		input: OnAttackInput,
 	): {
 		dmgDoneByAttacker: number;
 		dmgDoneByDefender: number;
 	} => {
+		if (minion !== input.attacker) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
+
 		const advancedBallistics = minion.enchantments?.find(
 			(e) => e.cardId === CardIds.AdvancedBallistics_AdvancedBallisticsEnchantment_BG31_HERO_801ptde,
 		);

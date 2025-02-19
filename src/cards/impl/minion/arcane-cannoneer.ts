@@ -6,7 +6,10 @@ import { OnAttackCard } from '../../card.interface';
 
 export const ArcaneCannoneer: OnAttackCard = {
 	cardIds: [CardIds.ArcaneCannoneer_BG31_928, CardIds.ArcaneCannoneer_BG31_928_G],
-	onAttack: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+	onAnyMinionAttack: (
+		minion: BoardEntity,
+		input: OnAttackInput,
+	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (minion !== input.attacker) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
