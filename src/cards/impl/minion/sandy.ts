@@ -13,7 +13,7 @@ export const Sandy = {
 			const copy: BoardEntity = { ...minionToCopy, enchantments: [...minionToCopy.enchantments] };
 			const attackerIndex = input.playerBoard.indexOf(minion);
 			// Insert the copy in its place
-			input.playerBoard.splice(attackerIndex, 0, copy);
+			input.playerBoard.splice(attackerIndex, 1, copy);
 			if (isGolden) {
 				makeMinionGolden(
 					copy,
