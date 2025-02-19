@@ -98,6 +98,7 @@ export const buildGameAction = (
 		opponentHeroPowerCardId:
 			opponentHero?.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
 			(isOpponentSireD ? opponentHero.questRewardEntities?.[0]?.cardId : null) ??
+			opponentHero?.heroPowers[0]?.cardId ??
 			opponentHero?.heroPowerId,
 		opponentHeroPowerEntityId: 200000002,
 		opponentHeroPowerUsed: opponentHero?.heroPowerUsed,

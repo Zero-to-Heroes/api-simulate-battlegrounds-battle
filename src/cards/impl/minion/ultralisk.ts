@@ -7,7 +7,8 @@ import { StartOfCombatCard } from '../../card.interface';
 export const Ultralisk: StartOfCombatCard = {
 	cardIds: [CardIds.KerriganQueenOfBlades_UltraliskToken_BG31_HERO_811t10, CardIds.Ultralisk_BG31_HERO_811t10_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput): boolean => {
-		const multiplier = minion.cardId === CardIds.Ultralisk_BG31_HERO_811t10_G ? 3 : 2;
+		// We add the stats, so mults are -1
+		const multiplier = minion.cardId === CardIds.Ultralisk_BG31_HERO_811t10_G ? 2 : 1;
 		modifyStats(
 			minion,
 			multiplier * minion.attack,

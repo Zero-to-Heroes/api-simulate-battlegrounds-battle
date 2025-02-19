@@ -7,7 +7,8 @@ import { StartOfCombatCard } from '../../card.interface';
 export const CorruptedMyrmidon: StartOfCombatCard = {
 	cardIds: [CardIds.CorruptedMyrmidon_BG23_012, CardIds.CorruptedMyrmidon_BG23_012_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		const multiplier = minion.cardId === CardIds.CorruptedMyrmidon_BG23_012_G ? 3 : 2;
+		// We add these stats
+		const multiplier = minion.cardId === CardIds.CorruptedMyrmidon_BG23_012_G ? 2 : 1;
 		modifyStats(
 			minion,
 			multiplier * minion.attack,
