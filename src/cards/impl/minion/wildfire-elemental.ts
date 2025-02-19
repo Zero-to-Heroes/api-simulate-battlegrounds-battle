@@ -9,6 +9,10 @@ export const WildfireElemental: OnMinionKilledCard = {
 		minion: BoardEntity,
 		input: OnMinionKilledInput,
 	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (!minion.attacking) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
+
 		const excessDamage = -input.minionKilled.health;
 		let damageDoneByAttacker = 0;
 		// console.log('neighbours', stringifySimple(neighbours, allCards));
