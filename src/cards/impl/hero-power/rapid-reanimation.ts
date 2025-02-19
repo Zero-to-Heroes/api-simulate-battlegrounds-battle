@@ -6,9 +6,10 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const RapidReanimation: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
+	cardIds: [CardIds.TeronGorefiend_RapidReanimation],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
-			if (heroPower.used) {
+			if (RapidReanimation.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				// Getting the right enchantment can be tricky. The RapidReanimation enchantment can sometimes be
 				// in the Graveyard zone, so we can't filter them out. In that case, we can have multiple
 				// enchantments

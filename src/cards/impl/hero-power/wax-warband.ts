@@ -1,4 +1,4 @@
-import { ALL_BG_RACES, AllCardsService, Race } from '@firestone-hs/reference-data';
+import { ALL_BG_RACES, AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { shuffleArray } from '../../../services/utils';
@@ -9,9 +9,10 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const WaxWarband: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
+	cardIds: [CardIds.WaxWarband],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
-			if (heroPower.used) {
+			if (WaxWarband.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				if (input.playerBoard.length > 0) {
 					const boardWithTribes = input.playerBoard.filter(
 						(e) => !!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards).length,

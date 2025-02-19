@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
@@ -7,9 +8,10 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const EmbraceYourRage: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
+	cardIds: [CardIds.EmbraceYourRage],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
-			if (heroPower.used) {
+			if (EmbraceYourRage.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				const createdCardId = heroPower.info as string;
 				if (!createdCardId?.length) {
 					return false;

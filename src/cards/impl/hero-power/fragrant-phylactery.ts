@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { pickRandomLowestHealth } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
@@ -6,9 +7,10 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const FragrantPhylactery: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
+	cardIds: [CardIds.TamsinRoame_FragrantPhylactery],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
-			if (heroPower.used) {
+			if (FragrantPhylactery.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				const chosenEntity = pickRandomLowestHealth(input.playerBoard);
 				if (!chosenEntity) {
 					console.warn('could not pick any entity for tamsin');

@@ -11,7 +11,7 @@ export const GloriousGloop: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
-			if (heroPower.used) {
+			if (GloriousGloop.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				if (!input.playerBoard?.length) {
 					return false;
 				}

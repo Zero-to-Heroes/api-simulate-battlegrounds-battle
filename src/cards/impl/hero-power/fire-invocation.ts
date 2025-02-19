@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { applyFireInvocationEnchantment } from '../../../simulation/deathrattle-effects';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
@@ -5,9 +6,10 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const FireInvocation: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
+	cardIds: [CardIds.FireInvocationToken, CardIds.FireInvocation],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
-			if (heroPower.used) {
+			if (FireInvocation.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				applyFireInvocationEnchantment(
 					input.playerBoard,
 					input.playerEntity,
