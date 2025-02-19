@@ -2,6 +2,7 @@ import { GameAction } from './game-action';
 
 export interface GameSample {
 	readonly actions: readonly GameAction[];
+	readonly anomalies: readonly string[];
 	/*
 	readonly playerCardId: string;
 	readonly playerEntityId: number;

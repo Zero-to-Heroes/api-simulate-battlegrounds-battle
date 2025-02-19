@@ -164,7 +164,7 @@ export const simulateBattle = function* (
 	updateSimulationResult(simulationResult, inputReady);
 	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
 	spectator.prune();
-	simulationResult.outcomeSamples = spectator.buildOutcomeSamples();
+	simulationResult.outcomeSamples = spectator.buildOutcomeSamples(battleInput.gameState);
 	// !battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
 	return simulationResult;
 };

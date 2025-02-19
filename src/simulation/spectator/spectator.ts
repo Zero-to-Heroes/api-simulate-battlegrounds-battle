@@ -1,3 +1,4 @@
+import { BgsGameState } from '../../bgs-battle-info';
 import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
@@ -25,7 +26,7 @@ export class Spectator {
 		this.tiedBattles = this.tiedBattles.slice(0, MAX_SAMPLES);
 	}
 
-	public buildOutcomeSamples(): {
+	public buildOutcomeSamples(gameState: BgsGameState): {
 		won: readonly GameSample[];
 		lost: readonly GameSample[];
 		tied: readonly GameSample[];
@@ -38,17 +39,18 @@ export class Spectator {
 			};
 		}
 		return {
-			won: this.wonBattles?.map((battle) => this.cleanUpActions(battle)),
-			lost: this.lostBattles?.map((battle) => this.cleanUpActions(battle)),
-			tied: this.tiedBattles?.map((battle) => this.cleanUpActions(battle)),
+			won: this.wonBattles?.map((battle) => this.cleanUpActions(battle, gameState)),
+			lost: this.lostBattles?.map((battle) => this.cleanUpActions(battle, gameState)),
+			tied: this.tiedBattles?.map((battle) => this.cleanUpActions(battle, gameState)),
 		};
 	}
 
-	private cleanUpActions(battle: GameSample): GameSample {
+	private cleanUpActions(battle: GameSample, gameState: BgsGameState): GameSample {
 		const collapsed = this.collapseActions(battle.actions);
 		const result: GameSample = {
 			...battle,
 			actions: collapsed,
+			anomalies: gameState.anomalies,
 		};
 		return result;
 	}
@@ -72,6 +74,7 @@ export class Spectator {
 
 		const battle: GameSample = {
 			actions: actionsForBattle,
+			anomalies: [],
 		};
 		switch (result) {
 			case 'won':
