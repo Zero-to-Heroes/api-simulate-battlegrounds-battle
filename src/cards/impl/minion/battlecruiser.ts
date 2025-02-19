@@ -50,7 +50,7 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		return true;
 	},
 	rebornEffect: (minion: BoardEntity, input: RebornEffectInput) => {
-		const ultraCapacitor = minion.enchantments?.find(
+		const ultraCapacitor = input.initialEntity.enchantments?.find(
 			(e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje,
 		);
 		if (!ultraCapacitor) {
