@@ -85,14 +85,16 @@ export const onMinionDeadHeroPower = (
 	deadEntity: BoardEntity,
 	gameState: FullGameState,
 ) => {
-	if (
-		boardHero.heroPowerId === CardIds.IllTakeThat &&
-		boardHero.heroPowerUsed &&
-		boardHero.heroPowerInfo2 <= 0 &&
-		deadEntity.friendly !== boardHero.friendly
-	) {
-		addCardsInHand(boardHero, board, [deadEntity.cardId], gameState);
-		boardHero.heroPowerInfo2 = 1;
+	for (const heroPower of boardHero.heroPowers) {
+		if (
+			heroPower.cardId === CardIds.IllTakeThat &&
+			heroPower.used &&
+			heroPower.info2 <= 0 &&
+			deadEntity.friendly !== boardHero.friendly
+		) {
+			addCardsInHand(boardHero, board, [deadEntity.cardId], gameState);
+			heroPower.info2 = 1;
+		}
 	}
 };
 

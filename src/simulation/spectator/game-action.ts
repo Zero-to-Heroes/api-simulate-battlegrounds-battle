@@ -1,5 +1,5 @@
 import { CardIds } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
+import { BgsHeroPower, BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
 
@@ -26,11 +26,13 @@ export interface GameAction {
 	playerHeroPowerCardId: string;
 	playerHeroPowerEntityId: number;
 	playerHeroPowerUsed: boolean;
+	playerHeroPowers: readonly BgsHeroPower[];
 	opponentCardId: string;
 	opponentEntityId: number;
 	opponentHeroPowerCardId: string;
 	opponentHeroPowerEntityId: number;
 	opponentHeroPowerUsed: boolean;
+	opponentHeroPowers: readonly BgsHeroPower[];
 	playerRewardCardId: string;
 	playerRewardEntityId: number;
 	playerRewardData: number;
@@ -67,12 +69,15 @@ export const buildGameAction = (
 		playerSecrets: (playerHero?.secrets ?? []).filter((s) => !s.triggered),
 		playerCardId: playerHero?.cardId,
 		playerEntityId: playerHero?.entityId,
+
 		playerHeroPowerCardId:
 			playerHero?.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
 			(isPlayerSireD ? playerHero.questRewardEntities?.[0]?.cardId : null) ??
-			playerHero?.heroPowerId,
+			playerHero?.heroPowers[0]?.cardId,
 		playerHeroPowerEntityId: 100000002,
-		playerHeroPowerUsed: playerHero?.heroPowerUsed,
+		playerHeroPowerUsed: playerHero?.heroPowers[0]?.used,
+		playerHeroPowers: playerHero?.heroPowers,
+
 		playerRewardCardId:
 			isPlayerSireD && playerHero?.questRewardEntities?.length < 2
 				? null
@@ -96,6 +101,7 @@ export const buildGameAction = (
 			opponentHero?.heroPowerId,
 		opponentHeroPowerEntityId: 200000002,
 		opponentHeroPowerUsed: opponentHero?.heroPowerUsed,
+		opponentHeroPowers: opponentHero?.heroPowers,
 		opponentRewardCardId:
 			isOpponentSireD && opponentHero?.questRewardEntities?.length < 2
 				? null

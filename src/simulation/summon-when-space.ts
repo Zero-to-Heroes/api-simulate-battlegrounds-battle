@@ -44,15 +44,17 @@ const handleSummonsWhenSpaceForPlayer = (
 	if (targetEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
 		handleBoonOfBeetlesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
-	if (targetEntity.heroPowerId === CardIds.Ozumat_Tentacular) {
-		handleOzumatForPlayer(
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			targetEntity.friendly,
-			gameState,
-		);
+	for (const heroPower of targetEntity.heroPowers) {
+		if (heroPower.cardId === CardIds.Ozumat_Tentacular) {
+			handleOzumatForPlayer(
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				targetEntity.friendly,
+				gameState,
+			);
+		}
 	}
 	targetEntity.trinkets
 		.filter(

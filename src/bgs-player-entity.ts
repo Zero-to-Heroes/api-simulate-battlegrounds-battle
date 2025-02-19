@@ -6,12 +6,23 @@ export interface BgsPlayerEntity {
 	// readonly nonGhostCardId?: string;
 	hpLeft: number;
 	readonly tavernTier: number;
+	heroPowers: readonly BgsHeroPower[];
 
+	/** @deprecated */
 	heroPowerId?: string | undefined | null;
+	/** @deprecated */
 	readonly heroPowerEntityId?: number;
+	/** @deprecated */
 	readonly heroPowerUsed: boolean;
+	/** @deprecated */
 	readonly heroPowerInfo?: number | string;
+	/** @deprecated */
 	heroPowerInfo2?: number;
+	// /** @deprecated */
+	avengeCurrent?: number;
+	// /** @deprecated */
+	avengeDefault?: number;
+	/** @deprecated */
 	// For Ozumat
 	heroPowerActivated?: boolean;
 
@@ -29,8 +40,6 @@ export interface BgsPlayerEntity {
 	hand?: BoardEntity[];
 	secrets?: BoardSecret[];
 	trinkets?: BoardTrinket[];
-	avengeCurrent?: number;
-	avengeDefault?: number;
 	globalInfo?: BgsPlayerGlobalInfo;
 	startOfCombatDone?: boolean;
 
@@ -38,6 +47,16 @@ export interface BgsPlayerEntity {
 	rapidReanimationMinion?: BoardEntity;
 	rapidReanimationIndexFromLeft?: number;
 	rapidReanimationIndexFromRight?: number;
+}
+
+export interface BgsHeroPower {
+	cardId: string;
+	entityId: number;
+	used: boolean;
+	info: number;
+	info2: number;
+	avengeCurrent?: number;
+	avengeDefault?: number;
 }
 
 export interface BgsPlayerGlobalInfo {

@@ -1243,8 +1243,10 @@ export const handleAfterMinionKillsEffect = (
 	}
 	// Killed an enemy minion
 	if (killer.friendly !== deadEntity.friendly) {
-		if (otherBoardHero.heroPowerId === CardIds.Rokara_GloryOfCombat) {
-			modifyStats(killer, 1, 0, otherBoard, otherBoardHero, gameState);
+		for (const heroPower of otherBoardHero.heroPowers) {
+			if (heroPower.cardId === CardIds.Rokara_GloryOfCombat) {
+				modifyStats(killer, 1, 0, otherBoard, otherBoardHero, gameState);
+			}
 		}
 
 		// Icesnarl the Mighty

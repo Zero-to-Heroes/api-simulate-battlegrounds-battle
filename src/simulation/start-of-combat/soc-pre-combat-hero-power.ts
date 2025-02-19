@@ -3,7 +3,6 @@ import { BoardEntity } from '../../board-entity';
 import { FullGameState } from '../internal-game-state';
 import { handleSummonsWhenSpace } from '../summon-when-space';
 import { performStartOfCombatAction } from './soc-action-processor';
-import { getHeroPowerForHero } from './soc-hero-power';
 import { SoCInput } from './start-of-combat-input';
 
 export const handlePreCombatHeroPowers = (
@@ -82,8 +81,9 @@ const handlePreCombatHeroPowersForPlayer = (input: SoCInput): number => {
 		return input.currentAttacker;
 	}
 
-	const playerHeroPowerId = input.playerEntity.heroPowerId || getHeroPowerForHero(input.playerEntity.cardId);
-	performStartOfCombatAction(playerHeroPowerId, input.playerEntity, input, true, 'pre-combat');
+	for (const heroPower of input.playerEntity.heroPowers) {
+		performStartOfCombatAction(heroPower.cardId, input.playerEntity, input, true, 'pre-combat');
+	}
 
 	return input.currentAttacker;
 };

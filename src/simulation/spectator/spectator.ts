@@ -233,9 +233,6 @@ export class Spectator {
 		if (!targetEntity) {
 			return;
 		}
-		if (!sourceEntity.entityId && !(sourceEntity as BgsPlayerEntity).heroPowerId) {
-			// console.error('missing damaging entity id', sourceEntity.cardId);
-		}
 		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
 		const friendlyBoard = targetBoard?.every((entity) => entity.friendly) ? targetBoard : null;
 		const opponentBoard = targetBoard?.every((entity) => !entity.friendly) ? targetBoard : null;

@@ -1,5 +1,5 @@
 import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from '../bgs-player-entity';
+import { BgsHeroPower, BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasAvenge } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
@@ -66,17 +66,20 @@ export const applyAvengeEffects = (
 		);
 	}
 	// console.log('updating dead entity avenge counter', boardWithDeadEntityHero.avengeCurrent, stringifySimpleCard(deadEntity, allCards));
-	const heroAvenger = !!boardWithDeadEntityHero.avengeDefault && boardWithDeadEntityHero.avengeCurrent <= 0;
-	if (heroAvenger) {
-		handleHeroAvenge(
-			deadEntity,
-			boardWithDeadEntity,
-			boardWithDeadEntityHero,
-			otherBoard,
-			otherBoardHero,
-			candidatesEntitiesSpawnedFromAvenge,
-			gameState,
-		);
+	for (const heroPower of boardWithDeadEntityHero.heroPowers) {
+		const heroAvenger = !!heroPower.avengeDefault && heroPower.avengeCurrent <= 0;
+		if (heroAvenger) {
+			handleHeroAvenge(
+				deadEntity,
+				heroPower,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				otherBoard,
+				otherBoardHero,
+				candidatesEntitiesSpawnedFromAvenge,
+				gameState,
+			);
+		}
 	}
 
 	const questRewardAvengers = boardWithDeadEntityHero.questRewardEntities.filter(
@@ -150,8 +153,10 @@ export const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDea
 			entity.avengeCurrent -= 1;
 		}
 	}
-	if (!!boardWithDeadEntityHero.avengeDefault) {
-		boardWithDeadEntityHero.avengeCurrent -= 1;
+	for (const heroPower of boardWithDeadEntityHero.heroPowers) {
+		if (!!heroPower.avengeDefault) {
+			heroPower.avengeCurrent -= 1;
+		}
 	}
 
 	for (const reward of boardWithDeadEntityHero.questRewardEntities) {
@@ -670,6 +675,7 @@ const handleAvenge = (
 
 const handleHeroAvenge = (
 	deadEntity: BoardEntity,
+	heroPower: BgsHeroPower,
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
@@ -679,7 +685,7 @@ const handleHeroAvenge = (
 ) => {
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
 	// Not affected by Khadgar
-	switch (boardWithDeadEntityHero?.heroPowerId) {
+	switch (heroPower.cardId) {
 		case CardIds.Onyxia_Broodmother:
 			candidatesEntitiesSpawnedFromAvenge.push(
 				...spawnEntities(
@@ -727,7 +733,7 @@ const handleHeroAvenge = (
 			});
 			break;
 	}
-	boardWithDeadEntityHero.avengeCurrent += boardWithDeadEntityHero.avengeDefault;
+	heroPower.avengeCurrent += heroPower.avengeDefault;
 };
 
 export interface AvengeInput {

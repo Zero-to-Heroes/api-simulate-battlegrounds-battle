@@ -5,7 +5,6 @@ import { processMinionDeath, simulateAttack } from '../attack';
 import { FullGameState } from '../internal-game-state';
 import { modifyStats } from '../stats';
 import { handleSummonsWhenSpace } from '../summon-when-space';
-import { getHeroPowerForHero } from './soc-hero-power';
 
 export const handleIllidanHeroPowers = (
 	playerEntity: BgsPlayerEntity,
@@ -74,12 +73,20 @@ const handlePlayerIllidanHeroPowers = (
 	if (playerEntity.hpLeft <= 0) {
 		return currentAttacker;
 	}
-	const playerHeroPowerId = playerEntity.heroPowerId || getHeroPowerForHero(playerEntity.cardId);
-	if (playerHeroPowerId === CardIds.Wingmen && playerBoard.length > 0) {
-		// After Illidan triggers, it's always the other opponent's turn
-		// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
-		handleIllidanForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState, currentAttacker);
-		currentAttacker = friendly ? 1 : 0;
+	for (const heroPower of playerEntity.heroPowers) {
+		if (heroPower.cardId === CardIds.Wingmen && playerBoard.length > 0) {
+			// After Illidan triggers, it's always the other opponent's turn
+			// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
+			handleIllidanForPlayer(
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+				currentAttacker,
+			);
+			currentAttacker = friendly ? 1 : 0;
+		}
 	}
 	return currentAttacker;
 };

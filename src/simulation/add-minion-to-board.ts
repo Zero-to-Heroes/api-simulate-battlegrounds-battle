@@ -159,19 +159,21 @@ export const handleAddedMinionAuraEffect = (
 	applySelfAuras = true,
 	isActuallySpawned = true,
 ): void => {
-	switch (boardHero.heroPowerId) {
-		case CardIds.SproutItOut:
-			updateTaunt(spawned, true, board, boardHero, otherHero, gameState);
-			modifyStats(spawned, 1, 2, board, boardHero, gameState);
-			break;
-		case CardIds.KurtrusAshfallen_CloseThePortal:
-			modifyStats(spawned, 2, 2, board, boardHero, gameState);
-			break;
-		case CardIds.Tinker_TB_BaconShop_HP_015:
-			if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
-				modifyStats(spawned, 3, 0, board, boardHero, gameState);
-			}
-			break;
+	for (const heroPower of boardHero.heroPowers) {
+		switch (heroPower.cardId) {
+			case CardIds.SproutItOut:
+				updateTaunt(spawned, true, board, boardHero, otherHero, gameState);
+				modifyStats(spawned, 1, 2, board, boardHero, gameState);
+				break;
+			case CardIds.KurtrusAshfallen_CloseThePortal:
+				modifyStats(spawned, 2, 2, board, boardHero, gameState);
+				break;
+			case CardIds.Tinker_TB_BaconShop_HP_015:
+				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
+					modifyStats(spawned, 3, 0, board, boardHero, gameState);
+				}
+				break;
+		}
 	}
 
 	if (boardHero.questRewards?.includes(CardIds.TumblingDisaster_BG28_Reward_505)) {

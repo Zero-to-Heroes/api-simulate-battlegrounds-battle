@@ -14,12 +14,14 @@ const test = async () => {
 	const input: BgsBattleInfo = {
 		...jsonEvent3,
 		options: {
+			...jsonEvent3.options,
 			numberOfSimulations: 5000,
 			skipInfoLogs: false,
 			maxAcceptableDuration: 5000,
 			itermediateResults: 0,
 		},
 		gameState: {
+			...jsonEvent3.gameState,
 			currentTurn: 0,
 		},
 	} as any;

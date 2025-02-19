@@ -26,6 +26,12 @@ export const simplifiedSpawnEntities = (
 	input: DeathrattleTriggeredInput,
 	boardEntityToSpawn: BoardEntity = null,
 ): readonly BoardEntity[] => {
+	if (input.gameState.anomalies?.includes(CardIds.TheGoldenArena_BG27_Anomaly_801)) {
+		if (!input.gameState.allCards.getCard(cardId).premium) {
+			const premiumDbfId = input.gameState.allCards.getCard(cardId).battlegroundsPremiumDbfId;
+			cardId = input.gameState.allCards.getCard(premiumDbfId).id;
+		}
+	}
 	return spawnEntities(
 		cardId,
 		quantity,

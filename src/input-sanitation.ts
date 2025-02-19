@@ -1,7 +1,7 @@
 import { AllCardsService, CardIds, normalizeHeroCardId } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BgsBoardInfo } from './bgs-board-info';
-import { BgsPlayerEntity } from './bgs-player-entity';
+import { BgsHeroPower, BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
 import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
@@ -105,12 +105,23 @@ const buildFinalInputForPlayer = (
 	playerInfo.player.friendly = isPlayer;
 	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
 	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
-	playerInfo.player.heroPowerId =
-		playerInfo.player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
-		(normalizeHeroCardId(playerInfo.player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
-			? playerInfo.player.questRewardEntities?.[0]?.cardId
-			: null) ??
-		playerInfo.player.heroPowerId;
+	playerInfo.player.heroPowers = playerInfo.player.heroPowers?.map((hp, index) =>
+		sanitizeHeroPower(hp, index, playerInfo.player, cards),
+	) ?? [
+		{
+			cardId: playerInfo.player.heroPowerId,
+			entityId: playerInfo.player.heroPowerEntityId,
+			used: playerInfo.player.heroPowerUsed,
+			info: playerInfo.player.heroPowerInfo,
+			info2: playerInfo.player.heroPowerInfo2,
+		} as BgsHeroPower,
+	];
+	// playerInfo.player.heroPowerId =
+	// 	playerInfo.player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
+	// 	(normalizeHeroCardId(playerInfo.player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
+	// 		? playerInfo.player.questRewardEntities?.[0]?.cardId
+	// 		: null) ??
+	// 	playerInfo.player.heroPowerId;
 	playerInfo.player.cardId = isGhost ? CardIds.Kelthuzad_TB_BaconShop_HERO_KelThuzad : playerInfo.player.cardId;
 	playerInfo.player.hpLeft = Math.max(1, playerInfo.player.hpLeft);
 	// When using the simulator, the aura is not applied when receiving the board state.
@@ -121,6 +132,25 @@ const buildFinalInputForPlayer = (
 	// Avenge, globalInfo
 	setImplicitDataHero(playerInfo.player, cardsData, isPlayer, entityIdContainer);
 	return { board, hand, player: playerInfo.player };
+};
+
+const sanitizeHeroPower = (
+	hp: BgsHeroPower,
+	index: number,
+	player: BgsPlayerEntity,
+	cards: AllCardsService,
+): BgsHeroPower => {
+	if (index !== 0) {
+		return hp;
+	}
+
+	hp.cardId =
+		player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
+		(normalizeHeroCardId(player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
+			? player.questRewardEntities?.[0]?.cardId
+			: null) ??
+		hp.cardId;
+	return hp;
 };
 
 const buildFinalInputBoard = (

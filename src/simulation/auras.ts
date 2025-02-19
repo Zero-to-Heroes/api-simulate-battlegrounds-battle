@@ -38,30 +38,34 @@ export const setMissingTrinketAura = (board: BoardEntity[], boardHero: BgsPlayer
 };
 
 export const setMissingHeroPowerAura = (board: BoardEntity[], boardHero: BgsPlayerEntity): void => {
-	if (boardHero.heroPowerId === CardIds.TheSmokingGun) {
-		board
-			.filter(
-				(e) =>
-					!e.enchantments.find(
-						(ench) => ench.cardId === CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment,
-					),
-			)
-			.forEach((e) => {
-				e.attack += 4;
-			});
-	}
-	if (boardHero.heroPowerId === CardIds.VolatileVenom) {
-		board
-			.filter((e) => !e.enchantments.find((ench) => ench.cardId === CardIds.VolatileVenom_VolatileEnchantment))
-			.forEach((e) => {
-				e.attack += 7;
-				e.health += 7;
-				e.enchantments.push({
-					cardId: CardIds.VolatileVenom_VolatileEnchantment,
-					originEntityId: undefined,
-					timing: 0,
+	for (const heroPower of boardHero.heroPowers) {
+		if (heroPower.cardId === CardIds.TheSmokingGun) {
+			board
+				.filter(
+					(e) =>
+						!e.enchantments.find(
+							(ench) => ench.cardId === CardIds.TheSmokingGun_ArmedAndStillSmokingEnchantment,
+						),
+				)
+				.forEach((e) => {
+					e.attack += 4;
 				});
-			});
+		}
+		if (heroPower.cardId === CardIds.VolatileVenom) {
+			board
+				.filter(
+					(e) => !e.enchantments.find((ench) => ench.cardId === CardIds.VolatileVenom_VolatileEnchantment),
+				)
+				.forEach((e) => {
+					e.attack += 7;
+					e.health += 7;
+					e.enchantments.push({
+						cardId: CardIds.VolatileVenom_VolatileEnchantment,
+						originEntityId: undefined,
+						timing: 0,
+					});
+				});
+		}
 	}
 };
 
@@ -167,10 +171,12 @@ export const setImplicitDataHero = (
 	isPlayer: boolean,
 	entityIdContainer: { entityId: number },
 ): void => {
-	const avengeValue = cardsData.avengeValue(hero.heroPowerId);
-	if (avengeValue > 0) {
-		hero.avengeCurrent = avengeValue;
-		hero.avengeDefault = avengeValue;
+	for (const heroPower of hero.heroPowers) {
+		const avengeValue = cardsData.avengeValue(heroPower.cardId);
+		if (avengeValue > 0) {
+			heroPower.avengeCurrent = avengeValue;
+			heroPower.avengeDefault = avengeValue;
+		}
 	}
 	// Backward compatibility
 	if (!!hero.questRewards?.length && !Array.isArray(hero.questRewards)) {
@@ -178,7 +184,7 @@ export const setImplicitDataHero = (
 	}
 
 	// Because Denathrius can send a quest reward as its hero power (I think)
-	const heroPowerAsReward = hero.cardId === CardIds.SireDenathrius_BG24_HERO_100 ? hero.heroPowerId : null;
+	const heroPowerAsReward = hero.cardId === CardIds.SireDenathrius_BG24_HERO_100 ? hero.heroPowers[0]?.cardId : null;
 	hero.questRewards = [...(hero.questRewards ?? []), heroPowerAsReward].filter((e) => !!e);
 	hero.questRewardEntities = hero.questRewardEntities
 		? hero.questRewardEntities.map((reward: any) => ({
