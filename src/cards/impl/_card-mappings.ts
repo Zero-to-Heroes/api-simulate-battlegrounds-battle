@@ -10,6 +10,7 @@ import { AridAtrocity } from './minion/arid-atrocity';
 import { AssistantGuard } from './minion/assistant-guard';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
+import { Battlecruiser } from './minion/battlecruiser';
 import { Beetle } from './minion/beetle';
 import { BellowingTyrant } from './minion/bellowing-tyrant';
 import { BirdBuddy } from './minion/bird-buddy';
@@ -135,6 +136,7 @@ import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 
 const cards = [
+	Battlecruiser,
 	SharingIsCaring,
 	LowFlier,
 	Zergling,

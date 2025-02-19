@@ -78,7 +78,7 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 			(e) => e.cardId === CardIds.AdvancedBallistics_AdvancedBallisticsEnchantment_BG31_HERO_801ptde,
 		);
 		if (!advancedBallistics) {
-			return;
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
 		const buff = advancedBallistics.tagScriptDataNum1;
