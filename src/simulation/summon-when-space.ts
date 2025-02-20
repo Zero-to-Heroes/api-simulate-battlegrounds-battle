@@ -335,6 +335,12 @@ const handleRapidReanimationForPlayer = (
 					entity.attack = Math.max(1, entity.attack + 2 * overstatMult);
 					entity.health = Math.max(0, entity.health + 2 * overstatMult);
 					break;
+				case CardIds.EternalKnight_BG25_008:
+				case CardIds.EternalKnight_BG25_008_G:
+					const knightMult = entity.cardId === CardIds.EternalKnight_BG25_008 ? 1 : 2;
+					entity.attack = Math.max(1, entity.attack + 2 * knightMult);
+					entity.health = Math.max(0, entity.health + 2 * knightMult);
+					break;
 			}
 		});
 	}
