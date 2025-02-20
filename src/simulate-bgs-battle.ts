@@ -250,6 +250,7 @@ const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e,
 	CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e,
 	CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e,
+	CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee,
 ];
 const validDeathrattleEnchantmentsFromMapping = [];
 export const isValidDeathrattleEnchantment = (cardId: string): boolean => {
