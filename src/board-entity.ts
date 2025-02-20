@@ -49,7 +49,7 @@ export interface BoardEntity {
 	// Used only to handle murkeye aura?
 	previousAttack?: number;
 	lastAffectedByEntity?: BoardEntity;
-	attacking?: boolean;
+	// attacking?: boolean;
 	// Did it have divine shield at least once? (for Sinrunner Blanchy)
 	hadDivineShield?: boolean;
 	abiityChargesLeft?: number;

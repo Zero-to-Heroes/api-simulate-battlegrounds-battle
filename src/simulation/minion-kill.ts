@@ -66,7 +66,10 @@ export const onMinionKill = (
 			break;
 		case CardIds.TideOracleMorgl_BG27_513:
 		case CardIds.TideOracleMorgl_BG27_513_G:
-			if (killer.attacking) {
+			if (
+				gameState.sharedState.currentAttackerEntityId != null &&
+				gameState.sharedState.currentAttackerEntityId === killer.entityId
+			) {
 				const tideOracleMorgleTarget = pickRandom(
 					killerHero.hand
 						.filter((e) => !!e?.cardId)

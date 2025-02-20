@@ -45,7 +45,7 @@ export const simulateAttack = (
 
 	const attackingEntity = getAttackingEntity(attackingBoard, gameState.allCards);
 	if (attackingEntity) {
-		attackingEntity.attacking = true;
+		gameState.sharedState.currentAttackerEntityId = attackingEntity.entityId;
 		// Get the left entities now, otherwise things might break if the attacker dies and/or other
 		// entities pop
 		const attackingEntityIndex = attackingBoard.indexOf(attackingEntity);
@@ -94,7 +94,7 @@ export const simulateAttack = (
 				}
 			}
 		}
-		attackingEntity.attacking = false;
+		gameState.sharedState.currentAttackerEntityId = null;
 		attackingEntity.hasAttacked = 1;
 	}
 };
@@ -159,6 +159,7 @@ export const doFullAttack = (
 		damageDoneByDefender,
 		gameState,
 	);
+
 	processMinionDeath(
 		attackingBoard,
 		attackingBoardHero,
@@ -631,7 +632,7 @@ export const dealDamageToMinion = (
 		...(damageSource || {}),
 		entityId: -1,
 		attack: damage,
-		attacking: true,
+		// attacking: true,
 	} as BoardEntity;
 	const actualDamageDone = bumpEntities(target, fakeAttacker, board, hero, otherBoard, otherHero, gameState);
 	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
@@ -752,7 +753,7 @@ export const bumpEntities = (
 			const newSource = {
 				...entity,
 				attack: bumpInto.attack,
-				attacking: true,
+				// attacking: true,
 			} as BoardEntity;
 			const defenderHadDivineShield = newTarget.divineShield;
 			const damageDone = bumpEntities(

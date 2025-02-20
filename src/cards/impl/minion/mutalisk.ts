@@ -10,7 +10,7 @@ export const Mutalisk: OnMinionKilledCard = {
 		minion: BoardEntity,
 		input: OnMinionKilledInput,
 	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
-		if (!minion.attacking) {
+		if (input.gameState.sharedState.currentAttackerEntityId !== minion.entityId) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 

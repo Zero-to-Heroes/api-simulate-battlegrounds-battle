@@ -1322,7 +1322,11 @@ export const applyWheneverMinionDiesEffect = (
 	applyRotHideGnollEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 
 	// Overkill
-	if (deadEntity.health < 0 && deadEntity.lastAffectedByEntity?.attacking) {
+	if (
+		deadEntity.health < 0 &&
+		gameState.sharedState.currentAttackerEntityId != null &&
+		gameState.sharedState.currentAttackerEntityId === deadEntity.lastAffectedByEntity?.entityId
+	) {
 		if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_BGS_032) {
 			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 			if (targets.length > 0) {

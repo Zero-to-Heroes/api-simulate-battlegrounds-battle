@@ -54,7 +54,7 @@ export const buildSingleBoardEntity = (
 				entityId: sharedState.currentEntityId++,
 				definitelyDead: false,
 				avengeCurrent: entityToSpawn.avengeDefault,
-				attacking: false,
+				// attacking: false,
 				damageMultiplier: 1,
 				frenzyChargesLeft: 1,
 				friendly: friendly,

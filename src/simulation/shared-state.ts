@@ -5,6 +5,7 @@ export class SharedState {
 
 	public anomalies: readonly string[] = [];
 	public currentEntityId = 1;
+	public currentAttackerEntityId = null;
 	public deaths: BoardEntity[] = [];
 	public debug = false;
 

@@ -9,6 +9,7 @@ import jsonEvent3 from './game.json';
 
 console.log('starting test');
 const test = async () => {
+	Error.stackTraceLimit = Infinity;
 	console.log('preparing to run simulation');
 	const start = Date.now();
 	const input: BgsBattleInfo = {
@@ -19,6 +20,7 @@ const test = async () => {
 			skipInfoLogs: false,
 			maxAcceptableDuration: 5000,
 			itermediateResults: 0,
+			includeOutcomeSamples: true,
 		},
 		gameState: {
 			...jsonEvent3.gameState,
