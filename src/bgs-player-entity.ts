@@ -73,6 +73,7 @@ export interface BgsPlayerGlobalInfo {
 	TavernSpellsCastThisGame?: number;
 	PiratesPlayedThisGame?: number;
 	BeastsSummonedThisGame?: number;
+	MagnetizedThisGame?: number;
 	PiratesSummonedThisGame?: number;
 	PirateAttackBonus?: number;
 	AstralAutomatonsSummonedThisGame?: number;

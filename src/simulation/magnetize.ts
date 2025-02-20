@@ -31,6 +31,11 @@ export const magnetizeToTarget = (
 	target.windfury = target.windfury || modularCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
 	target.reborn = target.reborn || modularCard.mechanics?.includes(GameTag[GameTag.REBORN]);
 	target.stealth = target.stealth || modularCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
+	if ([CardIds.DrBoomsMonster_BG31_176, CardIds.DrBoomsMonster_BG31_176_G].includes(cardIdToMagnetize as CardIds)) {
+		const mult = cardIdToMagnetize === CardIds.DrBoomsMonster_BG31_176 ? 1 : 2;
+		target.attack += 2 * hero.globalInfo.MagnetizedThisGame * mult;
+		target.health += 2 * hero.globalInfo.MagnetizedThisGame * mult;
+	}
 
 	const magneticEnchantment = modularCard.enchantmentDbfId;
 	if (magneticEnchantment) {
