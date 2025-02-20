@@ -1,5 +1,6 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { copyEntity } from '../../../utils';
@@ -20,11 +21,15 @@ export const StitchedSalvager: StartOfCombatCard & DeathrattleSpawnCard = {
 			return;
 		}
 
-		minion.memory = targets.map((t) => copyEntity(t)) as readonly BoardEntity[];
+		minion.memory = targets.map((t) => {
+			const copy = copyEntity(t);
+			removeAurasFromSelf(copy, input.playerBoard, input.playerEntity, input.gameState);
+			return copy;
+		}) as readonly BoardEntity[];
 		for (const target of targets) {
 			target.definitelyDead = true;
 			input.gameState.spectator.registerPowerTarget(
-				input.playerEntity,
+				minion,
 				target,
 				input.playerBoard,
 				input.playerEntity,
@@ -34,6 +39,12 @@ export const StitchedSalvager: StartOfCombatCard & DeathrattleSpawnCard = {
 		return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
 	},
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
-		return (minion.memory ?? []) as BoardEntity[];
+		const spawns: BoardEntity[] = (minion.memory ?? []).map((e) => {
+			return copyEntity({
+				...e,
+				entityId: input.gameState.sharedState.currentEntityId++,
+			});
+		});
+		return spawns;
 	},
 };
