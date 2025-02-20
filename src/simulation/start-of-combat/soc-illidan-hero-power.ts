@@ -85,7 +85,8 @@ const handlePlayerIllidanHeroPowers = (
 				gameState,
 				currentAttacker,
 			);
-			currentAttacker = friendly ? 1 : 0;
+			// This is not true anymore: https://replays.firestoneapp.com/?reviewId=7282387d-66cd-458e-8ee1-e04c662e7bad&turn=5&action=1
+			// currentAttacker = friendly ? 1 : 0;
 		}
 	}
 	return currentAttacker;
