@@ -378,6 +378,12 @@ const handleNaturalDeathrattle = (
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
 			enchantments: [],
+			memory:
+				dr.memory == null
+					? null
+					: Array.isArray(dr.memory)
+					? dr.memory.map((mem) => ({ ...mem }))
+					: { ...dr.memory },
 		};
 		const spawns = handleNaturalDeathrattle(
 			entityToProcess,

@@ -1678,15 +1678,17 @@ export const rememberDeathrattles = (
 		return;
 	}
 
-	const hasMechorse = deadEntities.some(
-		(entity) => entity.cardId === CardIds.MechanizedGiftHorse_MechorseToken_BG27_008t,
-	);
 	const validDeathrattles = deadEntities
 		.filter(
 			(entity) =>
 				allCards.getCard(entity.cardId).mechanics?.includes(GameTag[GameTag.DEATHRATTLE]) || isFish(entity),
 		)
-		.map((entity) => ({ cardId: entity.cardId, repeats: 1, timing: sharedState.currentEntityId++ }));
+		.map((entity) => ({
+			cardId: entity.cardId,
+			repeats: 1,
+			timing: sharedState.currentEntityId++,
+			memory: entity.memory,
+		}));
 	const validEnchantments = deadEntities
 		.filter((entity) => entity.enchantments?.length)
 		.map((entity) => entity.enchantments)
