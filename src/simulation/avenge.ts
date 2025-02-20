@@ -185,13 +185,16 @@ const handleAvenge = (
 ) => {
 	const avengeImpl = cardMappings[avenger.cardId];
 	if (hasAvenge(avengeImpl)) {
-		avengeImpl.avenge(avenger, {
+		const newSpawns = avengeImpl.avenge(avenger, {
 			board: boardWithDeadEntity,
 			hero: boardWithDeadEntityHero,
 			otherBoard: otherBoard,
 			otherHero: otherBoardHero,
 			gameState,
 		});
+		if (Array.isArray(newSpawns) && newSpawns?.length) {
+			candidatesEntitiesSpawnedFromAvenge.push(...newSpawns);
+		}
 	} else {
 		// Don't forget to update the avenge data in cards-data
 		switch (avenger.cardId) {

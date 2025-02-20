@@ -7,9 +7,9 @@ import { modifyStats } from '../../../simulation/stats';
 import { AvengeCard } from '../../card.interface';
 
 export const Carrier: AvengeCard = {
-	cardIds: [CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t, CardIds.Carrier_BG31_HERO_802pt1_G],
+	cardIds: [CardIds.WarpGate_CarrierToken_BG31_HERO_802pt1, CardIds.Carrier_BG31_HERO_802pt1_G],
 	baseAvengeValue: (cardId: string) => 4,
-	avenge: (minion: BoardEntity, input: AvengeInput): void => {
+	avenge: (minion: BoardEntity, input: AvengeInput): readonly BoardEntity[] => {
 		const spawnInput: DeathrattleTriggeredInput = {
 			boardWithDeadEntity: input.board,
 			boardWithDeadEntityHero: input.hero,
@@ -26,7 +26,8 @@ export const Carrier: AvengeCard = {
 			spawnInput,
 		);
 		spawned.forEach((e) => {
-			modifyStats(e, statBuff * 3, statBuff * 3, input.board, input.hero, input.gameState);
+			modifyStats(e, statBuff, statBuff, input.board, input.hero, input.gameState);
 		});
+		return spawned;
 	},
 };

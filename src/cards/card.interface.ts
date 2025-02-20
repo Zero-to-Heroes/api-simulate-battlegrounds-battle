@@ -110,7 +110,7 @@ export const hasOnBattlecryTriggered = (card: Card): card is OnBattlecryTriggere
 	(card as OnBattlecryTriggeredCard)?.onBattlecryTriggered !== undefined;
 
 export interface AvengeCard extends Card {
-	avenge: (minion: BoardEntity, input: AvengeInput) => void;
+	avenge: (minion: BoardEntity, input: AvengeInput) => void | readonly BoardEntity[];
 	baseAvengeValue: (cardId: string) => number;
 }
 export const hasAvenge = (card: Card): card is AvengeCard => (card as AvengeCard)?.avenge !== undefined;
