@@ -23,7 +23,6 @@ export const magnetizeToTarget = (
 		hero,
 		gameState,
 	);
-	// TODO: Dr Boom's Monster?
 	target.taunt = target.taunt || modularCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	target.divineShield = target.divineShield || modularCard.mechanics?.includes(GameTag[GameTag.DIVINE_SHIELD]);
 	target.poisonous = target.poisonous || modularCard.mechanics?.includes(GameTag[GameTag.POISONOUS]);
@@ -31,11 +30,6 @@ export const magnetizeToTarget = (
 	target.windfury = target.windfury || modularCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
 	target.reborn = target.reborn || modularCard.mechanics?.includes(GameTag[GameTag.REBORN]);
 	target.stealth = target.stealth || modularCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
-	if ([CardIds.DrBoomsMonster_BG31_176, CardIds.DrBoomsMonster_BG31_176_G].includes(cardIdToMagnetize as CardIds)) {
-		const mult = cardIdToMagnetize === CardIds.DrBoomsMonster_BG31_176 ? 1 : 2;
-		target.attack += 2 * hero.globalInfo.MagnetizedThisGame * mult;
-		target.health += 2 * hero.globalInfo.MagnetizedThisGame * mult;
-	}
 
 	const magneticEnchantment = modularCard.enchantmentDbfId;
 	if (magneticEnchantment) {
@@ -45,5 +39,25 @@ export const magnetizeToTarget = (
 			originEntityId: modularCard.dbfId,
 			timing: gameState.sharedState.currentEntityId++,
 		});
+	}
+	if ([CardIds.DrBoomsMonster_BG31_176, CardIds.DrBoomsMonster_BG31_176_G].includes(cardIdToMagnetize as CardIds)) {
+		const mult = cardIdToMagnetize === CardIds.DrBoomsMonster_BG31_176 ? 1 : 2;
+		target.attack += 2 * hero.globalInfo.MagnetizedThisGame * mult;
+		target.health += 2 * hero.globalInfo.MagnetizedThisGame * mult;
+	}
+
+	// Dr Boom's Monster?
+	hero.globalInfo.MagnetizedThisGame = hero.globalInfo.MagnetizedThisGame + 1;
+	for (const entity of board) {
+		const drBoomBases =
+			(entity.cardId === CardIds.DrBoomsMonster_BG31_176 ? 1 : 0) +
+			entity.enchantments.filter((e) => e.cardId === CardIds.DrBoomsMonster_DrBoomsMonsterEnchantment_BG31_176e)
+				.length;
+		const drBoomGoldens =
+			(entity.cardId === CardIds.DrBoomsMonster_BG31_176_G ? 1 : 0) +
+			entity.enchantments.filter((e) => e.cardId === CardIds.DrBoomsMonster_DrBoomsMonsterEnchantment_BG31_176_Ge)
+				.length;
+		entity.attack += drBoomBases * 2 + drBoomGoldens * 4;
+		entity.health += drBoomBases * 2 + drBoomGoldens * 4;
 	}
 };
