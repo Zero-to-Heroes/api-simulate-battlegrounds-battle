@@ -1,6 +1,7 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { updateStealth } from '../keywords/stealth';
 import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
@@ -20,6 +21,10 @@ export const applyAfterAttackEffects = (
 	damageDoneByDefender: number,
 	gameState: FullGameState,
 ): void => {
+	// https://replays.firestoneapp.com/?reviewId=9c3ba0f2-d049-4f79-8ec2-7b20ec8d0f68&turn=11&action=5
+	// It looks like Stealth is removed only once the damage is dealt?
+	updateStealth(attackingEntity, false, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
+
 	let secretTriggered = null;
 	if (
 		(secretTriggered = defendingBoardHero.secrets?.find(

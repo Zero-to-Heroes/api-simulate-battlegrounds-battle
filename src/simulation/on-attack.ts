@@ -4,7 +4,6 @@ import { BoardEntity } from '../board-entity';
 import { hasOnAttack } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
-import { updateStealth } from '../keywords/stealth';
 import { pickRandom } from '../services/utils';
 import { hasCorrectTribe } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
@@ -22,8 +21,6 @@ export const applyOnAttackEffects = (
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): { damageDoneByAttacker: number; damageDoneByDefender: number } => {
-	updateStealth(attacker, false, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
-
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 
