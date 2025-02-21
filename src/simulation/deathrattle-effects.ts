@@ -1413,10 +1413,7 @@ export const applyWheneverMinionDiesEffect = (
 				otherBoardHero,
 				boardWithDeadEntity,
 				boardWithDeadEntityHero,
-				gameState.allCards,
-				gameState.cardsData,
-				gameState.sharedState,
-				gameState.spectator,
+				gameState,
 				!deadEntity.friendly,
 				false,
 			);
@@ -1429,10 +1426,7 @@ export const applyWheneverMinionDiesEffect = (
 				otherBoardHero,
 				boardWithDeadEntity,
 				boardWithDeadEntityHero,
-				gameState.allCards,
-				gameState.cardsData,
-				gameState.sharedState,
-				gameState.spectator,
+				gameState,
 				!deadEntity.friendly,
 				false,
 			);

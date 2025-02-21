@@ -725,10 +725,7 @@ export const triggerBattlecry = (
 							hero,
 							otherBoard,
 							otherHero,
-							gameState.allCards,
-							gameState.cardsData,
-							gameState.sharedState,
-							gameState.spectator,
+							gameState,
 							entity.friendly,
 							false,
 						);
@@ -755,10 +752,7 @@ export const triggerBattlecry = (
 						hero,
 						otherBoard,
 						otherHero,
-						gameState.allCards,
-						gameState.cardsData,
-						gameState.sharedState,
-						gameState.spectator,
+						gameState,
 						entity.friendly,
 						false,
 					);

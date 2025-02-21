@@ -16,10 +16,7 @@ export const AutomatonPortrait: StartOfCombatCard = {
 				input.playerEntity,
 				input.opponentBoard,
 				input.opponentEntity,
-				input.gameState.allCards,
-				input.gameState.cardsData,
-				input.gameState.sharedState,
-				input.gameState.spectator,
+				input.gameState,
 				input.playerEntity.friendly,
 				false,
 			);

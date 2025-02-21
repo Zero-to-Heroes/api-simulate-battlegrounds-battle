@@ -174,10 +174,7 @@ export const onMinionDeadQuest = (
 								boardHero,
 								otherBoard,
 								otherBoardHero,
-								gameState.allCards,
-								gameState.cardsData,
-								gameState.sharedState,
-								gameState.spectator,
+								gameState,
 								deadEntity.friendly,
 								false,
 							);
