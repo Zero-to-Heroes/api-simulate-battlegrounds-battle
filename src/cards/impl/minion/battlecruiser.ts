@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
@@ -21,14 +21,10 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		}
 
 		const damage = yamatoCannon.tagScriptDataNum1;
-		const target = getRandomMinionWithHighestHealth(input.opponentBoard);
-		if (!!target) {
-			const loops = !!minion.enchantments.find(
-				(e) => e.cardId === CardIds.Battlecruiser_MissilePod_BG31_HERO_801pti,
-			)
-				? 2
-				: 1;
-			for (let i = 0; i < loops; i++) {
+		const loops = minion.tags?.[GameTag.BACON_YAMATO_CANNON] === 1 ? 2 : 1;
+		for (let i = 0; i < loops; i++) {
+			const target = getRandomMinionWithHighestHealth(input.opponentBoard);
+			if (!!target) {
 				dealDamageToMinion(
 					target,
 					input.opponentBoard,

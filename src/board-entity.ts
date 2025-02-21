@@ -34,6 +34,7 @@ export interface BoardEntity {
 	inInitialState?: boolean;
 	// For Build-An-Undead and Zilliax
 	additionalCards?: readonly string[] | null;
+	tags?: { [tag: number]: number };
 
 	// We only store the card id, because we want all the attack and other data to be computed at runtime, based on the
 	// current stats of the Fish
