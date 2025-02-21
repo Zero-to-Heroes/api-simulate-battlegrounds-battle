@@ -558,14 +558,14 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 
 export const isFish = (entity: BoardEntity): boolean => {
 	return (
-		entity.cardId.startsWith(CardIds.AvatarOfNzoth_FishOfNzothToken) ||
-		entity.cardId.startsWith(CardIds.FishOfNzoth) ||
+		entity.cardId?.startsWith(CardIds.AvatarOfNzoth_FishOfNzothToken) ||
+		entity.cardId?.startsWith(CardIds.FishOfNzoth) ||
 		entity.additionalCards?.includes(CardIds.DevourerOfSouls_BG_RLK_538)
 	);
 };
 
 export const isPilotedWhirlOTron = (entity: BoardEntity): boolean => {
-	return entity.cardId.startsWith(CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy);
+	return entity.cardId?.startsWith(CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy);
 };
 
 export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {
