@@ -79,17 +79,14 @@ export const modifyStats = (
 				);
 				stormbringers.forEach((stormbringer) => {
 					const multiplier = stormbringer.cardId === CardIds.Stormbringer_BG26_966_G ? 2 : 1;
-					// This is never called?
-					(e) => {
-						e.attack += multiplier * realAttackAmount;
-						gameState.spectator.registerPowerTarget(
-							stormbringer,
-							entity,
-							friendlyBoard,
-							friendlyBoardHero,
-							otherBoardHero,
-						);
-					};
+					stormbringer.attack += multiplier * realAttackAmount;
+					gameState.spectator.registerPowerTarget(
+						stormbringer,
+						stormbringer,
+						friendlyBoard,
+						friendlyBoardHero,
+						otherBoardHero,
+					);
 				});
 			}
 		}
