@@ -14,7 +14,6 @@ import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
 import { orchestrateMinionDeathEffects } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
-import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
 import { makeMinionsDie } from './minion-death';
 import { onMinionKill } from './minion-kill';
@@ -632,11 +631,17 @@ export const dealDamageToMinion = (
 		// attacking: true,
 	} as BoardEntity;
 	const actualDamageDone = bumpEntities(target, fakeAttacker, board, hero, otherBoard, otherHero, gameState);
+
 	// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
 	// cause wrong results to happen
+	// TODO: why isn't it done in bumpEntities?
+	// Because of how "bump" works: we do it first for the attacker, then the defender, and we only want to update
+	// the divine shield once both bumps are done
+	// The problem is with the Frenzy: bumpEntities can trigger the frenzy, and which can act on the divine shield
 	if (fakeAttacker.attack > 0 && target.divineShield) {
 		updateDivineShield(target, board, hero, otherHero, false, gameState);
 	}
+
 	if (actualDamageDone > 0) {
 		// TODO: handle entities that have been spawned here to adjust the dead entity index from parent stack
 		const newSpawns = onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
@@ -806,10 +811,10 @@ export const bumpEntities = (
 	// but dies during the exchange (and Reckoning doesn't trigger then)
 
 	entity.lastAffectedByEntity = bumpInto;
-	if (entity.frenzyChargesLeft > 0 && entity.health > 0 && !entity.definitelyDead) {
-		applyFrenzy(entity, entityBoard, entityBoardHero, gameState);
-		entity.frenzyChargesLeft--;
-	}
+	// if (entity.frenzyChargesLeft > 0 && entity.health > 0 && !entity.definitelyDead) {
+	// 	applyFrenzy(entity, entityBoard, entityBoardHero, gameState);
+	// 	entity.frenzyChargesLeft--;
+	// }
 
 	// We spawn them here, because it says "whenever", and so happens right away
 	// FIXME: there could be a bug here, if a Cleave attacks several IGB at the same time. The current

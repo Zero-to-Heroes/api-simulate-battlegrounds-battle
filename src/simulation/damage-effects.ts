@@ -7,6 +7,7 @@ import { addStatsToBoard, grantStatsToMinionsOfEachType, hasCorrectTribe } from 
 import { dealDamageToRandomEnemy } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
+import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
@@ -31,6 +32,12 @@ export const onEntityDamaged = (
 		board?.[0]?.friendly === entity.friendly ? otherBoard : board?.[0]?.friendly === entity.friendly ? board : [];
 	const friendlyHero = friendlyBoard === board ? hero : otherHero;
 	const enemyHero = friendlyBoard === board ? otherHero : hero;
+
+	if (entity.frenzyChargesLeft > 0 && entity.health > 0 && !entity.definitelyDead) {
+		applyFrenzy(entity, friendlyBoard, friendlyHero, gameState);
+		entity.frenzyChargesLeft--;
+	}
+
 	switch (entity.cardId) {
 		case CardIds.WingedChimera_BG29_844:
 		case CardIds.WingedChimera_BG29_844_G:
