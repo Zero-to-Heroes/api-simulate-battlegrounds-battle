@@ -9,7 +9,15 @@ export const SanctumRester = {
 		const buff = minion.cardId === CardIds.SanctumRester_BG26_356_G ? 16 : 8;
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = input.playerBoard
-			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards))
+			.filter((e) =>
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.DRAGON,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
+			)
 			.filter((e) => e.entityId !== minion.entityId);
 		otherDragons.forEach((otherDragon) => {
 			modifyStats(otherDragon, 0, buff, input.playerBoard, input.playerEntity, input.gameState);

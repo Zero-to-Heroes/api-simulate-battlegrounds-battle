@@ -10,7 +10,9 @@ export const Spacefarer: OnStatsChangedCard = {
 		if (input.target === entity) {
 			return;
 		}
-		if (!hasCorrectTribe(input.target, input.hero, Race.PIRATE, input.gameState.allCards)) {
+		if (
+			!hasCorrectTribe(input.target, input.hero, Race.PIRATE, input.gameState.anomalies, input.gameState.allCards)
+		) {
 			return;
 		}
 		if (input.attackAmount > 0) {

@@ -72,7 +72,7 @@ export const applyOnAttackEffects = (
 	}
 
 	// Roaring Rallier
-	if (hasCorrectTribe(attacker, attackingBoardHero, Race.DRAGON, gameState.allCards)) {
+	if (hasCorrectTribe(attacker, attackingBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)) {
 		attackingBoard
 			.filter(
 				(e) => e.cardId === CardIds.RoaringRallier_BG29_816 || e.cardId === CardIds.RoaringRallier_BG29_816_G,
@@ -113,7 +113,7 @@ export const applyOnAttackEffects = (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708_G
 	) {
 		attackingBoard
-			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.PIRATE, gameState.allCards))
+			.filter((e) => hasCorrectTribe(e, attackingBoardHero, Race.PIRATE, gameState.anomalies, gameState.allCards))
 			.forEach((e) => {
 				modifyStats(
 					e,

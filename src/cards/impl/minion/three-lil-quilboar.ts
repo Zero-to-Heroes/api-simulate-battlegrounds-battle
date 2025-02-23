@@ -10,7 +10,13 @@ export const ThreeLilQuilboar: DeathrattleEffectCard = {
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const numberOfBloodGems = minion.cardId === CardIds.ThreeLilQuilboar_BG26_867_G ? 6 : 3;
 		for (const entity of input.boardWithDeadEntity.filter((e) =>
-			hasCorrectTribe(e, input.boardWithDeadEntityHero, Race.QUILBOAR, input.gameState.allCards),
+			hasCorrectTribe(
+				e,
+				input.boardWithDeadEntityHero,
+				Race.QUILBOAR,
+				input.gameState.anomalies,
+				input.gameState.allCards,
+			),
 		)) {
 			playBloodGemsOn(
 				minion,

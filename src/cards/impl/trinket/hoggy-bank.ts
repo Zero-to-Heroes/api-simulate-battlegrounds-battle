@@ -6,7 +6,15 @@ import { hasCorrectTribe } from '../../../utils';
 export const HoggyBank = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		input.playerBoard
-			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.QUILBOAR, input.gameState.allCards))
+			.filter((e) =>
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.QUILBOAR,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
+			)
 			.forEach((e) => {
 				e.enchantments = e.enchantments ?? [];
 				e.enchantments.push({

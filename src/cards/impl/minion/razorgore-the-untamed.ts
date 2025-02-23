@@ -10,7 +10,9 @@ export const RazorgoreTheUntamed: EndOfTurnCard = {
 	endOfTurn: (minion: BoardEntity, input: BattlecryInput) => {
 		const otherDragons = input.board
 			.filter((e) => e.entityId !== minion.entityId)
-			.filter((e) => hasCorrectTribe(e, input.hero, Race.DRAGON, input.gameState.allCards));
+			.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
+			);
 		const mult = minion.cardId === CardIds.RazorgoreTheUntamed_TB_BaconUps_106 ? 2 : 1;
 		if (otherDragons.length) {
 			modifyStats(

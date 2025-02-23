@@ -140,7 +140,8 @@ export const onMinionDeadQuest = (
 			case CardIds.TheEyeOfDalaran_BG30_MagicItem_981:
 				if (
 					deadEntity.friendly === boardHero.friendly &&
-					getEffectiveTribesForEntity(deadEntity, boardHero, gameState.allCards).length === 0
+					getEffectiveTribesForEntity(deadEntity, boardHero, gameState.anomalies, gameState.allCards)
+						.length === 0
 				) {
 					addCardsInHand(boardHero, board, [null], gameState);
 				}
@@ -149,7 +150,7 @@ export const onMinionDeadQuest = (
 				if (
 					deadEntity.friendly === boardHero.friendly &&
 					trinket.scriptDataNum1 > 0 &&
-					hasCorrectTribe(deadEntity, boardHero, Race.QUILBOAR, gameState.allCards)
+					hasCorrectTribe(deadEntity, boardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards)
 				) {
 					let bloodGemEnchantments = deadEntity.enchantments?.filter(
 						(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,

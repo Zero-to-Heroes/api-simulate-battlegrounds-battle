@@ -12,7 +12,7 @@ export const PeggySturdybone: OnCardAddedToHandCard = {
 			input.board.filter((e) => e.entityId !== minion.entityId),
 			input.hero,
 			Race.PIRATE,
-			input.gameState.allCards,
+			input.gameState,
 		);
 		if (pirate) {
 			modifyStats(

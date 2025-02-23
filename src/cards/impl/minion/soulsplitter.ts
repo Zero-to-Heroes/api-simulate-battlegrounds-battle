@@ -10,7 +10,15 @@ export const Soulsplitter = {
 		const numberOfTargets = minion.cardId === CardIds.Soulsplitter_BG25_023_G ? 2 : 1;
 		for (let i = 0; i < numberOfTargets; i++) {
 			const undeadsWithoutReborn = input.playerBoard
-				.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.UNDEAD, input.gameState.allCards))
+				.filter((e) =>
+					hasCorrectTribe(
+						e,
+						input.playerEntity,
+						Race.UNDEAD,
+						input.gameState.anomalies,
+						input.gameState.allCards,
+					),
+				)
 				.filter((e) => !e.reborn);
 			const chosenUndead = pickRandom(undeadsWithoutReborn);
 			if (chosenUndead) {

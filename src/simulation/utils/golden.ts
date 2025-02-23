@@ -24,7 +24,7 @@ export const makeMinionGolden = (
 	gameState.spectator.registerPowerTarget(source, target, targetBoard, null, null);
 
 	// console.log('before transforming minion', stringifySimple(targetBoard, allCards));
-	handleMinionRemovedAuraEffect(targetBoard, target, targetBoardHero, gameState.allCards, gameState.spectator);
+	handleMinionRemovedAuraEffect(targetBoard, target, targetBoardHero, gameState);
 	// Specific for making a minion golden
 	// This is not handled in handleMinionRemovedAuraEffect, though I'm not entirely sure why. Maybe because it's a self-effect only?
 	// Also, because of how I implemented auras and such, it's probably good to have something specific for golden

@@ -15,21 +15,33 @@ export const WaxWarband: StartOfCombatCard = {
 			if (WaxWarband.cardIds.includes(heroPower.cardId) && heroPower.used) {
 				if (input.playerBoard.length > 0) {
 					const boardWithTribes = input.playerBoard.filter(
-						(e) => !!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards).length,
+						(e) =>
+							!!getEffectiveTribesForEntity(
+								e,
+								input.playerEntity,
+								input.gameState.anomalies,
+								input.gameState.allCards,
+							).length,
 					);
 					const boardWithoutAll = boardWithTribes.filter(
 						(e) =>
-							!getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards)?.includes(
-								Race.ALL,
-							),
+							!getEffectiveTribesForEntity(
+								e,
+								input.playerEntity,
+								input.gameState.anomalies,
+								input.gameState.allCards,
+							)?.includes(Race.ALL),
 					);
 					const selectedMinions = selectMinions(boardWithoutAll, ALL_BG_RACES, input.gameState.allCards);
 					const allMinions = [
 						...selectedMinions,
 						...boardWithTribes.filter((e) =>
-							getEffectiveTribesForEntity(e, input.playerEntity, input.gameState.allCards)?.includes(
-								Race.ALL,
-							),
+							getEffectiveTribesForEntity(
+								e,
+								input.playerEntity,
+								input.gameState.anomalies,
+								input.gameState.allCards,
+							)?.includes(Race.ALL),
 						),
 					];
 					allMinions.forEach((e) => {

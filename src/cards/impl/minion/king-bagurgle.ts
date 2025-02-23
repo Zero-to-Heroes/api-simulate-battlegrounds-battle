@@ -14,7 +14,9 @@ export const KingBagurgle: BattlecryCard = {
 		const mult = minion.cardId === CardIds.KingBagurgle_BGS_030 ? 1 : 2;
 		const targets = input.board
 			.filter((e) => e.entityId !== minion.entityId)
-			.filter((e) => hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards));
+			.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
+			);
 		for (const entity of targets) {
 			modifyStats(entity, baseAttackBuff * mult, baseHealthBuff * mult, input.board, input.hero, input.gameState);
 		}

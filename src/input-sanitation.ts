@@ -19,23 +19,51 @@ export const buildFinalInput = (
 		board: playerBoard,
 		hand: playerHand,
 		player: playerEntity,
-	} = buildFinalInputForPlayer(battleInput.playerBoard, true, cards, cardsData, entityIdContainer);
+	} = buildFinalInputForPlayer(
+		battleInput.playerBoard,
+		true,
+		battleInput.gameState.anomalies,
+		cards,
+		cardsData,
+		entityIdContainer,
+	);
 	const {
 		board: playerTeammateBoard,
 		hand: playerTeammateHand,
 		player: playerTeammateEntity,
-	} = buildFinalInputForPlayer(battleInput.playerTeammateBoard, true, cards, cardsData, entityIdContainer);
+	} = buildFinalInputForPlayer(
+		battleInput.playerTeammateBoard,
+		true,
+		battleInput.gameState.anomalies,
+		cards,
+		cardsData,
+		entityIdContainer,
+	);
 
 	const {
 		board: opponentBoard,
 		hand: opponentHand,
 		player: opponentEntity,
-	} = buildFinalInputForPlayer(battleInput.opponentBoard, false, cards, cardsData, entityIdContainer);
+	} = buildFinalInputForPlayer(
+		battleInput.opponentBoard,
+		false,
+		battleInput.gameState.anomalies,
+		cards,
+		cardsData,
+		entityIdContainer,
+	);
 	const {
 		board: opponentTeammateBoard,
 		hand: opponentTeammateHand,
 		player: opponentTeammateEntity,
-	} = buildFinalInputForPlayer(battleInput.opponentTeammateBoard, false, cards, cardsData, entityIdContainer);
+	} = buildFinalInputForPlayer(
+		battleInput.opponentTeammateBoard,
+		false,
+		battleInput.gameState.anomalies,
+		cards,
+		cardsData,
+		entityIdContainer,
+	);
 
 	// We do this so that we can have mutated objects inside the simulation and still
 	// be able to start from a fresh copy for each simulation
@@ -80,6 +108,7 @@ export const buildFinalInput = (
 const buildFinalInputForPlayer = (
 	playerInfo: BgsBoardInfo,
 	isPlayer: boolean,
+	anomalies: readonly string[],
 	cards: AllCardsService,
 	cardsData: CardsData,
 	entityIdContainer: { entityId: number },
@@ -125,7 +154,7 @@ const buildFinalInputForPlayer = (
 	playerInfo.player.cardId = isGhost ? CardIds.Kelthuzad_TB_BaconShop_HERO_KelThuzad : playerInfo.player.cardId;
 	playerInfo.player.hpLeft = Math.max(1, playerInfo.player.hpLeft);
 	// When using the simulator, the aura is not applied when receiving the board state.
-	setMissingAuras(board, playerInfo.player, cards);
+	setMissingAuras(board, playerInfo.player, anomalies, cards);
 	// Avenge, maxHealth, etc.
 	// setImplicitData(playerBoard, cardsData);
 	// setImplicitData(opponentBoard, cardsData);

@@ -12,7 +12,15 @@ export const UltravioletAscendant: StartOfCombatCard = {
 		const attackBuff = minion.scriptDataNum1 ?? base;
 		const healthBuff = minion.scriptDataNum2 ?? base;
 		const candidates = input.playerBoard
-			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.ELEMENTAL, input.gameState.allCards))
+			.filter((e) =>
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.ELEMENTAL,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
+			)
 			.filter((e) => e.entityId !== minion.entityId);
 		for (const target of candidates) {
 			modifyStats(target, attackBuff, healthBuff, input.playerBoard, input.playerEntity, input.gameState);

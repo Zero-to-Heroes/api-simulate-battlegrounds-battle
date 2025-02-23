@@ -12,7 +12,9 @@ export const ParchedWanderer: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const allMinions = [...input.board, ...input.otherBoard];
 		const wandererTarget = pickRandom(
-			allMinions.filter((e) => hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards)),
+			allMinions.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
+			),
 		);
 		if (!!wandererTarget) {
 			const wandererMultiplier = minion.cardId === CardIds.ParchedWanderer_BG30_756 ? 1 : 2;

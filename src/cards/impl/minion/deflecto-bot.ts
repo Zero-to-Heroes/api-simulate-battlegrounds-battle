@@ -9,7 +9,9 @@ import { OnOtherSpawnedCard } from '../../card.interface';
 export const DeflectoBot: OnOtherSpawnedCard = {
 	cardIds: [CardIds.DeflectOBot_BGS_071, CardIds.DeflectOBot_TB_BaconUps_123],
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
-		if (hasCorrectTribe(input.spawned, input.hero, Race.MECH, input.gameState.allCards)) {
+		if (
+			hasCorrectTribe(input.spawned, input.hero, Race.MECH, input.gameState.anomalies, input.gameState.allCards)
+		) {
 			const statsBonus = minion.cardId === CardIds.DeflectOBot_TB_BaconUps_123 ? 4 : 2;
 			if (!minion.divineShield) {
 				updateDivineShield(minion, input.board, input.hero, input.otherHero, true, input.gameState);

@@ -12,7 +12,15 @@ export const Swampstriker: AfterOtherSpawnedCard = {
 			const multiplier2 = minion.cardId === CardIds.Swampstriker_BG22_401_G ? 2 : 1;
 			const buffAmount2 =
 				multiplier2 *
-				(hasCorrectTribe(input.spawned, input.hero, Race.MURLOC, input.gameState.allCards) ? 1 : 0);
+				(hasCorrectTribe(
+					input.spawned,
+					input.hero,
+					Race.MURLOC,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				)
+					? 1
+					: 0);
 			if (buffAmount2 > 0) {
 				modifyStats(minion, buffAmount2, 0, input.board, input.hero, input.gameState);
 				input.gameState.spectator.registerPowerTarget(minion, minion, input.board, null, null);

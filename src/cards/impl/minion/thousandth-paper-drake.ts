@@ -10,7 +10,7 @@ export const ThousandthPaperDrake = {
 		const loops = minion.cardId === CardIds.ThousandthPaperDrake_BG29_810_G ? 2 : 1;
 		const pickedTargets = [];
 		const dragons = input.playerBoard.filter((e) =>
-			hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards),
+			hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
 		);
 		for (let i = 0; i < loops; i++) {
 			const target = dragons.filter((e) => !pickedTargets.includes(e))[0];

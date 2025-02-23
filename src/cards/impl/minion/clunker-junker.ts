@@ -10,7 +10,7 @@ export const ClunkerJunker: BattlecryCard = {
 	cardIds: [CardIds.ClunkerJunker_BG29_503, CardIds.ClunkerJunker_BG29_503_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const boardWithMechs = input.board.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.MECH, input.gameState.allCards),
+			hasCorrectTribe(e, input.hero, Race.MECH, input.gameState.anomalies, input.gameState.allCards),
 		);
 		const junkerTarget = pickRandom(boardWithMechs);
 		if (junkerTarget) {

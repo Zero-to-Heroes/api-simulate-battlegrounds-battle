@@ -14,7 +14,9 @@ export const Smolderwing: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const allMinions = [...input.board, ...input.otherBoard];
 		const smolderwingTarget = pickRandom(
-			allMinions.filter((e) => hasCorrectTribe(e, input.hero, Race.DRAGON, input.gameState.allCards)),
+			allMinions.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
+			),
 		);
 		if (!!smolderwingTarget) {
 			const targetBoard = input.board.includes(smolderwingTarget) ? input.board : input.otherBoard;

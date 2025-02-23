@@ -14,7 +14,9 @@ export const BellowingTyrant: OnSpawnedCard & OnOtherSpawnedCard = {
 		modifyStats(minion, 3 * statsBonus, 2 * statsBonus, input.board, input.hero, input.gameState);
 	},
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
-		if (!hasCorrectTribe(input.spawned, input.hero, Race.BEAST, input.gameState.allCards)) {
+		if (
+			!hasCorrectTribe(input.spawned, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards)
+		) {
 			return;
 		}
 		input.hero.globalInfo.BeastsSummonedThisGame += 1;

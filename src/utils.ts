@@ -235,7 +235,7 @@ export const grantRandomStats = (
 			board.filter((e) => !!e.cardId).filter((e) => (excludeSource ? e.entityId !== source.entityId : true)),
 			hero,
 			race,
-			gameState.allCards,
+			gameState,
 		);
 		if (target) {
 			modifyStats(target, attack, health, board, hero, gameState);
@@ -252,10 +252,10 @@ export const getRandomAliveMinion = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
 	race: Race,
-	allCards: AllCardsService,
+	gameState: FullGameState,
 ): BoardEntity => {
 	const validTribes = board
-		.filter((e) => !race || hasCorrectTribe(e, hero, race, allCards))
+		.filter((e) => !race || hasCorrectTribe(e, hero, race, gameState.anomalies, gameState.allCards))
 		.filter((e) => e?.health > 0 && !e.definitelyDead);
 	if (!validTribes.length) {
 		return null;
@@ -268,10 +268,10 @@ export const getRandomRevivableMinion = (
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
 	race: Race,
-	allCards: AllCardsService,
+	gameState: FullGameState,
 ): BoardEntity => {
 	const validTribes = board
-		.filter((e) => !race || hasCorrectTribe(e, hero, race, allCards))
+		.filter((e) => !race || hasCorrectTribe(e, hero, race, gameState.anomalies, gameState.allCards))
 		.filter((e) => !e.definitelyDead);
 	if (!validTribes.length) {
 		return null;
@@ -305,7 +305,7 @@ export const addStatsToBoard = (
 	// permanentUpgrade = false,
 ): void => {
 	for (const entity of board) {
-		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.allCards)) {
+		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.anomalies, gameState.allCards)) {
 			modifyStats(entity, attack, health, board, hero, gameState);
 			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
 			// if (permanentUpgrade) {
@@ -327,7 +327,7 @@ export const addStatsToAliveBoard = (
 	// permanentUpgrade = false,
 ): void => {
 	for (const entity of board.filter((e) => e.health > 0 && !e.definitelyDead)) {
-		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.allCards)) {
+		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.anomalies, gameState.allCards)) {
 			modifyStats(entity, attack, health, board, hero, gameState);
 			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
 			// if (permanentUpgrade) {
@@ -365,7 +365,7 @@ export const getMinionsOfDifferentTypes = (
 	const result: BoardEntity[] = [];
 	if (board.length > 0) {
 		let boardCopy = board.filter(
-			(e) => !getEffectiveTribesForEntity(e, hero, gameState.allCards)?.includes(Race.ALL),
+			(e) => !getEffectiveTribesForEntity(e, hero, gameState.anomalies, gameState.allCards)?.includes(Race.ALL),
 		);
 		const allRaces = shuffleArray(ALL_BG_RACES);
 		let typesBuffed = 0;
@@ -373,9 +373,12 @@ export const getMinionsOfDifferentTypes = (
 		for (let i = 1; i <= 2; i++) {
 			for (const tribe of allRaces) {
 				const minionsWithRaces = boardCopy
-					.filter((e) => getEffectiveTribesForEntity(e, hero, gameState.allCards).length === i)
+					.filter(
+						(e) =>
+							getEffectiveTribesForEntity(e, hero, gameState.anomalies, gameState.allCards).length === i,
+					)
 					.filter((e) =>
-						getEffectiveTribesForEntity(e, hero, gameState.allCards).some(
+						getEffectiveTribesForEntity(e, hero, gameState.anomalies, gameState.allCards).some(
 							(r) => !racesProcessed.includes(Race[r]),
 						),
 					);
@@ -383,8 +386,8 @@ export const getMinionsOfDifferentTypes = (
 					return result;
 				}
 				const validMinion: BoardEntity = canRevive
-					? getRandomRevivableMinion(minionsWithRaces, hero, tribe, gameState.allCards)
-					: getRandomAliveMinion(minionsWithRaces, hero, tribe, gameState.allCards);
+					? getRandomRevivableMinion(minionsWithRaces, hero, tribe, gameState)
+					: getRandomAliveMinion(minionsWithRaces, hero, tribe, gameState);
 				if (validMinion) {
 					result.push(validMinion);
 					boardCopy = boardCopy.filter((e) => e !== validMinion);
@@ -395,7 +398,7 @@ export const getMinionsOfDifferentTypes = (
 		}
 		result.push(
 			...board.filter((e) => {
-				const effectiveTribes = getEffectiveTribesForEntity(e, hero, gameState.allCards);
+				const effectiveTribes = getEffectiveTribesForEntity(e, hero, gameState.anomalies, gameState.allCards);
 				return effectiveTribes?.includes(Race.ALL);
 			}),
 		);
@@ -411,9 +414,10 @@ export const hasCorrectTribe = (
 	entity: BoardEntity,
 	playerEntity: BgsPlayerEntity,
 	targetTribe: Race,
+	anomalies: readonly string[],
 	allCards: AllCardsService,
 ): boolean => {
-	const effectiveTribesForEntity = getEffectiveTribesForEntity(entity, playerEntity, allCards);
+	const effectiveTribesForEntity = getEffectiveTribesForEntity(entity, playerEntity, anomalies, allCards);
 	return (
 		effectiveTribesForEntity.length > 0 &&
 		(effectiveTribesForEntity.includes(targetTribe) || effectiveTribesForEntity.includes(Race.ALL))
@@ -423,12 +427,14 @@ export const hasCorrectTribe = (
 export const getEffectiveTribesForEntity = (
 	entity: BoardEntity,
 	playerEntity: BgsPlayerEntity,
+	anomalies: readonly string[],
 	allCards: AllCardsService,
 ): readonly Race[] => {
-	return [
-		...(allCards.getCard(entity.cardId).races?.map((r) => Race[r]) ?? []),
-		...getSpecialTribesForEntity(entity, playerEntity, allCards),
-	];
+	const nativeTribes = allCards.getCard(entity.cardId).races?.map((r) => Race[r]) ?? [];
+	if (!nativeTribes.length && anomalies?.includes(CardIds.IncubationMutation_BG31_Anomaly_112)) {
+		return [Race.ALL];
+	}
+	return [...nativeTribes, ...getSpecialTribesForEntity(entity, playerEntity, allCards)];
 };
 
 const getSpecialTribesForEntity = (

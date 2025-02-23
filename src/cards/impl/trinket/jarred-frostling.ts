@@ -8,7 +8,13 @@ export const JarredFrostling = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const elementals = shuffleArray(
 			input.playerBoard.filter((e) =>
-				hasCorrectTribe(e, input.playerEntity, Race.ELEMENTAL, input.gameState.allCards),
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.ELEMENTAL,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
 			),
 		);
 		if (!!elementals?.length) {

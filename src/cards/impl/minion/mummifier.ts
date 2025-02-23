@@ -15,7 +15,13 @@ export const Mummifier: DeathrattleEffectCard = {
 				.filter((e) => e.cardId !== CardIds.Mummifier_BG28_309 && e.cardId !== CardIds.Mummifier_BG28_309_G)
 				.filter((e) => !e.reborn)
 				.filter((e) =>
-					hasCorrectTribe(e, input.boardWithDeadEntityHero, Race.UNDEAD, input.gameState.allCards),
+					hasCorrectTribe(
+						e,
+						input.boardWithDeadEntityHero,
+						Race.UNDEAD,
+						input.gameState.anomalies,
+						input.gameState.allCards,
+					),
 				);
 			const target = pickRandom(targets);
 			if (target) {

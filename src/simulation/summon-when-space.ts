@@ -83,7 +83,7 @@ const handleBoomControllerForPlayer = (
 	if (playerBoard.length < 7 && trinket.scriptDataNum1 > 0) {
 		const candidate = gameState.sharedState.deaths
 			.filter((d) => d.friendly === playerEntity.friendly)
-			.filter((d) => hasCorrectTribe(d, playerEntity, Race.MECH, gameState.allCards))[0];
+			.filter((d) => hasCorrectTribe(d, playerEntity, Race.MECH, gameState.anomalies, gameState.allCards))[0];
 		if (!!candidate) {
 			const spawn = copyEntity(candidate);
 			removeAurasFromSelf(spawn, playerBoard, playerEntity, gameState);

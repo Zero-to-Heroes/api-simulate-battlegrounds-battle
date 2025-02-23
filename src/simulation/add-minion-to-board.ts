@@ -106,7 +106,7 @@ const handleSpawnEffect = (
 				}
 				break;
 			case CardIds.CobaltGuardian:
-				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 					if (!entity.divineShield) {
 						updateDivineShield(entity, board, boardHero, otherHero, true, gameState);
 					}
@@ -116,7 +116,7 @@ const handleSpawnEffect = (
 				break;
 			case CardIds.Bigfernal_BGS_204:
 			case CardIds.Bigfernal_TB_BaconUps_304:
-				if (hasCorrectTribe(spawned, boardHero, Race.DEMON, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, boardHero, Race.DEMON, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.Bigfernal_TB_BaconUps_304 ? 2 : 1;
 					modifyStats(entity, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
@@ -124,7 +124,7 @@ const handleSpawnEffect = (
 				break;
 			case CardIds.MamaBear_BGS_021:
 			case CardIds.MamaBear_TB_BaconUps_090:
-				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 8 : 4;
 					modifyStats(spawned, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
@@ -132,7 +132,7 @@ const handleSpawnEffect = (
 				break;
 			case CardIds.PapaBear_BG27_509:
 			case CardIds.PapaBear_BG27_509_G:
-				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.PapaBear_BG27_509_G ? 16 : 8;
 					modifyStats(spawned, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
@@ -140,7 +140,7 @@ const handleSpawnEffect = (
 				break;
 			case CardIds.PackLeader_BGS_017:
 			case CardIds.PackLeader_TB_BaconUps_086:
-				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.PackLeader_TB_BaconUps_086 ? 4 : 2;
 					modifyStats(spawned, statsBonus, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
@@ -169,7 +169,7 @@ export const handleAddedMinionAuraEffect = (
 				modifyStats(spawned, 2, 2, board, boardHero, gameState);
 				break;
 			case CardIds.Tinker_TB_BaconShop_HP_015:
-				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 					modifyStats(spawned, 3, 0, board, boardHero, gameState);
 				}
 				break;
@@ -187,7 +187,7 @@ export const handleAddedMinionAuraEffect = (
 		for (const trinket of boardHero.trinkets) {
 			switch (trinket.cardId) {
 				case CardIds.BlingtronsSunglasses_BG30_MagicItem_978:
-					if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.allCards)) {
+					if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 						const target = pickRandom(board.filter((e) => !e.divineShield));
 						if (!!target) {
 							updateDivineShield(target, board, boardHero, otherHero, true, gameState);
@@ -280,17 +280,17 @@ export const applyAurasToSelf = (
 		}
 	}
 
-	if (hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.allCards)) {
+	if (hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			modifyStats(spawned, boardHero.globalInfo.UndeadAttackBonus, 0, board, boardHero, gameState);
 		}
 	}
-	if (hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.allCards)) {
+	if (hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.PirateAttackBonus > 0) {
 			modifyStats(spawned, boardHero.globalInfo.PirateAttackBonus, 0, board, boardHero, gameState);
 		}
 	}
-	if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.allCards)) {
+	if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
 			modifyStats(
 				spawned,
@@ -329,7 +329,7 @@ export const applyAurasToSelf = (
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 				if (
-					hasCorrectTribe(spawned, boardHero, Race.MURLOC, gameState.allCards) &&
+					hasCorrectTribe(spawned, boardHero, Race.MURLOC, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					spawned.attack += entity.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
@@ -338,7 +338,7 @@ export const applyAurasToSelf = (
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				if (
-					hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.allCards) &&
+					hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					spawned.attack += entity.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
@@ -348,7 +348,7 @@ export const applyAurasToSelf = (
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
 				if (
-					hasCorrectTribe(spawned, boardHero, Race.DEMON, gameState.allCards) &&
+					hasCorrectTribe(spawned, boardHero, Race.DEMON, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					spawned.attack += entity.cardId === CardIds.Kathranatir_BG21_039_G ? 2 : 1;
@@ -363,7 +363,7 @@ export const applyAurasToSelf = (
 			case CardIds.SoreLoser_BG27_030:
 			case CardIds.SoreLoser_BG27_030_G:
 				if (
-					hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.allCards) &&
+					hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					spawned.attack += (entity.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
@@ -485,12 +485,12 @@ export const removeAurasFromSelf = (
 		});
 	}
 
-	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.allCards)) {
+	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.UndeadAttackBonus);
 		}
 	}
-	if (hasCorrectTribe(entity, boardHero, Race.BEAST, gameState.allCards)) {
+	if (hasCorrectTribe(entity, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
 			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.GoldrinnBuffAtk);
 			entity.health = Math.max(1, entity.health - boardHero.globalInfo.GoldrinnBuffHealth);
@@ -502,7 +502,7 @@ export const removeAurasFromSelf = (
 			case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 			case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.MURLOC, gameState.allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.MURLOC, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -514,7 +514,7 @@ export const removeAurasFromSelf = (
 			case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 			case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.PIRATE, gameState.allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -530,7 +530,7 @@ export const removeAurasFromSelf = (
 			case CardIds.Kathranatir_BG21_039:
 			case CardIds.Kathranatir_BG21_039_G:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.DEMON, gameState.allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.DEMON, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -551,7 +551,7 @@ export const removeAurasFromSelf = (
 			case CardIds.SoreLoser_BG27_030:
 			case CardIds.SoreLoser_BG27_030_G:
 				if (
-					hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.allCards) &&
+					hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== boardEntity.entityId
 				) {
 					entity.attack = Math.max(
@@ -625,7 +625,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.SouthseaCaptainLegacy_BG_NEW1_027:
 		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, gameState.allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards))
 				// Other
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
@@ -636,7 +636,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, gameState.allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, gameState.anomalies, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
@@ -645,7 +645,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.Kathranatir_BG21_039:
 		case CardIds.Kathranatir_BG21_039_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, gameState.allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, gameState.anomalies, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += spawned.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
@@ -663,7 +663,7 @@ const handleMinionAddedAuraEffect = (
 		case CardIds.SoreLoser_BG27_030:
 		case CardIds.SoreLoser_BG27_030_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, gameState.allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards))
 				.filter((e) => e.entityId !== spawned.entityId)
 				.forEach((e) => {
 					e.attack += (spawned.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
@@ -777,7 +777,7 @@ const handleAfterSpawnEffect = (
 			case CardIds.BananaSlamma_BG26_802:
 			case CardIds.BananaSlamma_BG26_802_G:
 				if (
-					hasCorrectTribe(spawned, hero, Race.BEAST, gameState.allCards) &&
+					hasCorrectTribe(spawned, hero, Race.BEAST, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					const bananaStatBuff = entity.cardId === CardIds.BananaSlamma_BG26_802_G ? 3 : 2;
@@ -802,7 +802,7 @@ const handleAfterSpawnEffect = (
 			case CardIds.ValithriaDreamwalker_TB_BaconShop_HERO_53_Buddy:
 			case CardIds.ValithriaDreamwalker_TB_BaconShop_HERO_53_Buddy_G:
 				if (
-					hasCorrectTribe(spawned, hero, Race.DRAGON, gameState.allCards) &&
+					hasCorrectTribe(spawned, hero, Race.DRAGON, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					const valithriaBuff =
@@ -815,7 +815,7 @@ const handleAfterSpawnEffect = (
 			// Putricide-only
 			case CardIds.ArmsDealer_BG26_RLK_824:
 				if (
-					hasCorrectTribe(spawned, hero, Race.UNDEAD, gameState.allCards) &&
+					hasCorrectTribe(spawned, hero, Race.UNDEAD, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
 					modifyStats(spawned, 1, 0, board, hero, gameState);
@@ -828,7 +828,7 @@ const handleAfterSpawnEffect = (
 	for (const trinket of hero.trinkets) {
 		switch (trinket.cardId) {
 			case CardIds.SlammaSticker_BG30_MagicItem_540:
-				if (hasCorrectTribe(spawned, hero, Race.BEAST, gameState.allCards)) {
+				if (hasCorrectTribe(spawned, hero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					setEntityStats(spawned, spawned.attack * 2, spawned.health * 2, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(hero, spawned, board, null, null);
 				}

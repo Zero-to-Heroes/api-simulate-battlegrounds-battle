@@ -8,7 +8,9 @@ export const RustyTrident: StartOfCombatCard = {
 	cardIds: [CardIds.RustyTrident_BG30_MagicItem_917],
 	startOfCombat: (trinket: BoardTrinket | BgsPlayerEntity, input: SoCInput) => {
 		input.playerBoard
-			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.NAGA, input.gameState.allCards))
+			.filter((e) =>
+				hasCorrectTribe(e, input.playerEntity, Race.NAGA, input.gameState.anomalies, input.gameState.allCards),
+			)
 			.forEach((e) => {
 				e.enchantments = e.enchantments ?? [];
 				e.enchantments.push({

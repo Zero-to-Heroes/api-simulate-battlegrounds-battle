@@ -1011,7 +1011,13 @@ export const spawnEntitiesFromDeathrattle = (
 							const hand =
 								boardWithDeadEntityHero.hand
 									?.filter((e) =>
-										hasCorrectTribe(e, boardWithDeadEntityHero, Race.MURLOC, gameState.allCards),
+										hasCorrectTribe(
+											e,
+											boardWithDeadEntityHero,
+											Race.MURLOC,
+											gameState.anomalies,
+											gameState.allCards,
+										),
 									)
 									.filter((e) => !!e?.cardId)
 									.filter((e) => !e.locked) ?? [];
@@ -1058,7 +1064,13 @@ export const spawnEntitiesFromDeathrattle = (
 						const cultistStharaSpawnCandidates = gameState.sharedState.deaths
 							.filter((entity) => entity.friendly === deadEntity.friendly)
 							.filter((entity) =>
-								hasCorrectTribe(entity, boardWithDeadEntityHero, Race.DEMON, gameState.allCards),
+								hasCorrectTribe(
+									entity,
+									boardWithDeadEntityHero,
+									Race.DEMON,
+									gameState.anomalies,
+									gameState.allCards,
+								),
 							)
 							.slice(0, cultistStharaSpawnNumber);
 						cultistStharaSpawnCandidates.forEach((candidate) => {

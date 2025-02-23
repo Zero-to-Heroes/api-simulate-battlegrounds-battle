@@ -16,7 +16,13 @@ export const OperaticBelcher: DeathrattleEffectCard = {
 				.filter((entity) => !entity.poisonous)
 				.filter((entity) => entity.health > 0 && !entity.definitelyDead)
 				.filter((entity) =>
-					hasCorrectTribe(entity, input.boardWithDeadEntityHero, Race.MURLOC, input.gameState.allCards),
+					hasCorrectTribe(
+						entity,
+						input.boardWithDeadEntityHero,
+						Race.MURLOC,
+						input.gameState.anomalies,
+						input.gameState.allCards,
+					),
 				);
 			if (possibleBelcherTargets.length > 0) {
 				const chosen = pickRandom(possibleBelcherTargets);

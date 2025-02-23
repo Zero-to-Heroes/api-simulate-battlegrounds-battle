@@ -43,7 +43,7 @@ export const updateDivineShield = (
 		const adapter = hero.trinkets
 			.filter((t) => t.cardId === CardIds.MechagonAdapter_BG30_MagicItem_910)
 			.filter((t) => t.scriptDataNum1 > 0)[0];
-		if (!!adapter && hasCorrectTribe(entity, hero, Race.MECH, gameState.allCards)) {
+		if (!!adapter && hasCorrectTribe(entity, hero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 			updateDivineShield(entity, board, hero, otherHero, true, gameState);
 			adapter.scriptDataNum1--;
 		}

@@ -7,8 +7,13 @@ import { updateStealth } from '../keywords/stealth';
 import { hasCorrectTribe } from '../utils';
 import { FullGameState } from './internal-game-state';
 
-export const setMissingAuras = (board: BoardEntity[], boardHero: BgsPlayerEntity, allCards: AllCardsService): void => {
-	setMissingMinionsAura(board, boardHero, allCards);
+export const setMissingAuras = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	anomalies: readonly string[],
+	allCards: AllCardsService,
+): void => {
+	setMissingMinionsAura(board, boardHero, anomalies, allCards);
 	setMissingHeroPowerAura(board, boardHero);
 	setMissingTrinketAura(board, boardHero);
 };
@@ -69,44 +74,49 @@ export const setMissingHeroPowerAura = (board: BoardEntity[], boardHero: BgsPlay
 	}
 };
 
-const setMissingMinionsAura = (board: BoardEntity[], boardHero: BgsPlayerEntity, allCards: AllCardsService): void => {
+const setMissingMinionsAura = (
+	board: BoardEntity[],
+	boardHero: BgsPlayerEntity,
+	anomalies: readonly string[],
+	allCards: AllCardsService,
+): void => {
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, anomalies, allCards)),
 		CardIds.SouthseaCaptainLegacy_BG_NEW1_027,
 		CardIds.SouthseaCaptain_YarrrVanillaEnchantment,
 		1,
 		1,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, anomalies, allCards)),
 		CardIds.SouthseaCaptainLegacy_TB_BaconUps_136,
 		CardIds.SouthseaCaptain_YarrrEnchantment,
 		2,
 		2,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, anomalies, allCards)),
 		CardIds.MurlocWarleaderLegacy_BG_EX1_507,
 		CardIds.MurlocWarleader_MrgglaarglLegacyEnchantment,
 		2,
 		0,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, anomalies, allCards)),
 		CardIds.MurlocWarleaderLegacy_BG_EX1_507,
 		CardIds.MurlocWarleader_MrgglaarglEnchantment,
 		4,
 		0,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, anomalies, allCards)),
 		CardIds.Kathranatir_BG21_039,
 		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e,
 		2,
 		0,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, anomalies, allCards)),
 		CardIds.Kathranatir_BG21_039_G,
 		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge,
 		4,
@@ -129,14 +139,14 @@ const setMissingMinionsAura = (board: BoardEntity[], boardHero: BgsPlayerEntity,
 		false,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, anomalies, allCards)),
 		CardIds.SoreLoser_BG27_030,
 		CardIds.SoreLoser_NoImWinningEnchantment_BG27_030e,
 		boardHero.tavernTier,
 		0,
 	);
 	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, allCards)),
+		board.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, anomalies, allCards)),
 		CardIds.SoreLoser_BG27_030_G,
 		CardIds.SoreLoser_NoImWinningEnchantment_BG27_030e,
 		2 * boardHero.tavernTier,

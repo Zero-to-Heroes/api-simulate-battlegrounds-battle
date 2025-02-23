@@ -13,7 +13,7 @@ export const LovesickBalladist: BattlecryCard = {
 		const balladistMultiplier = minion.cardId === CardIds.LovesickBalladist_BG26_814 ? 1 : 2;
 		const balladistStats = balladistMultiplier * (minion.scriptDataNum1 ?? 0);
 		const balladistTargets = allMinions.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.PIRATE, input.gameState.allCards),
+			hasCorrectTribe(e, input.hero, Race.PIRATE, input.gameState.anomalies, input.gameState.allCards),
 		);
 		const balladistTarget = pickRandom(balladistTargets);
 		if (balladistTarget) {

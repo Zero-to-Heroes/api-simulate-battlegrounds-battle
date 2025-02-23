@@ -55,7 +55,13 @@ export const modifyStats = (
 			: gameState.gameState.player.player;
 
 	const neighbours = getNeighbours(friendlyBoard, entity);
-	const poetMultipliers = hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.allCards)
+	const poetMultipliers = hasCorrectTribe(
+		entity,
+		friendlyBoardHero,
+		Race.DRAGON,
+		gameState.anomalies,
+		gameState.allCards,
+	)
 		? neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1
 		: 1;
 	const tarecgosaMultiplier = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
@@ -72,7 +78,7 @@ export const modifyStats = (
 	if (realAttackAmount > 0) {
 		entity.maxAttack += realAttackAmount;
 
-		if (hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.allCards)) {
+		if (hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)) {
 			if (entity.cardId !== CardIds.Stormbringer_BG26_966 && entity.cardId !== CardIds.Stormbringer_BG26_966_G) {
 				const stormbringers = friendlyBoard.filter(
 					(e) => e.cardId === CardIds.Stormbringer_BG26_966 || e.cardId === CardIds.Stormbringer_BG26_966_G,
@@ -248,7 +254,7 @@ const onStatUpdateMinions = (
 		}
 	}
 
-	if (hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.allCards)) {
+	if (hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.anomalies, gameState.allCards)) {
 		const masterOfRealities = friendlyBoard.filter(
 			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
 		);

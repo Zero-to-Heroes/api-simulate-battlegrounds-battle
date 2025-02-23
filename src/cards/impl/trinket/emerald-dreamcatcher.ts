@@ -8,7 +8,15 @@ export const EmeraldDreamcatcher = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const highestAttack = Math.max(...input.playerBoard.map((entity) => entity.attack));
 		input.playerBoard
-			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards))
+			.filter((e) =>
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.DRAGON,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
+			)
 			.forEach((e) => {
 				setEntityStats(e, highestAttack, null, input.playerBoard, input.playerEntity, input.gameState);
 			});

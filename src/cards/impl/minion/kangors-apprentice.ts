@@ -12,7 +12,13 @@ export const KangorsApprentice: DeathrattleSpawnCard = {
 		const cardIdsToSpawn = input.gameState.sharedState.deaths
 			.filter((entity) => entity.friendly === minion.friendly)
 			.filter((entity) =>
-				hasCorrectTribe(entity, input.boardWithDeadEntityHero, Race.MECH, input.gameState.allCards),
+				hasCorrectTribe(
+					entity,
+					input.boardWithDeadEntityHero,
+					Race.MECH,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
 			)
 			.slice(0, numberToSpawn)
 			.map((entity) => entity.cardId);

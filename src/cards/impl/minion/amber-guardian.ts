@@ -10,7 +10,15 @@ export const AmberGuardian = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
 		const otherDragons = input.playerBoard
-			.filter((e) => hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.allCards))
+			.filter((e) =>
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.DRAGON,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
+			)
 			.filter((e) => e.entityId !== minion.entityId);
 		const loops = minion.cardId === CardIds.AmberGuardian_BG24_500_G ? 2 : 1;
 		const dragonsToConsider = otherDragons;

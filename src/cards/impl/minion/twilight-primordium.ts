@@ -12,8 +12,12 @@ export const TwilightPrimordium: BattlecryCard = {
 		const currentBuffValue = minion.scriptDataNum1 ?? 1;
 		const mult = minion.cardId === CardIds.TwilightPrimordium_BG31_813_G ? 2 : 1;
 		const candidates = [
-			...input.board.filter((e) => hasCorrectTribe(e, input.hero, Race.ELEMENTAL, input.gameState.allCards)),
-			...input.otherBoard.filter((e) => hasCorrectTribe(e, input.hero, Race.ELEMENTAL, input.gameState.allCards)),
+			...input.board.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.ELEMENTAL, input.gameState.anomalies, input.gameState.allCards),
+			),
+			...input.otherBoard.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.ELEMENTAL, input.gameState.anomalies, input.gameState.allCards),
+			),
 		];
 		const target = pickRandom(candidates);
 		if (!!target) {

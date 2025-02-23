@@ -18,7 +18,7 @@ export const FountainChiller: BattlecryCard = {
 			}
 		}
 		const candidates = input.board.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards),
+			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
 		);
 		const target = pickRandom(candidates);
 		if (!!target) {

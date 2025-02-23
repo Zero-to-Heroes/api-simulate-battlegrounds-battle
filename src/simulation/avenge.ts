@@ -321,12 +321,7 @@ const handleAvenge = (
 				const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
 				for (let i = 0; i < poisonousIterations; i++) {
 					const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
-					const murloc = getRandomAliveMinion(
-						validTargets,
-						boardWithDeadEntityHero,
-						Race.MURLOC,
-						gameState.allCards,
-					);
+					const murloc = getRandomAliveMinion(validTargets, boardWithDeadEntityHero, Race.MURLOC, gameState);
 					if (murloc) {
 						updateVenomous(
 							murloc,
@@ -399,12 +394,7 @@ const handleAvenge = (
 							!!gameState.allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
 						);
 					});
-				const pirate = getRandomAliveMinion(
-					nonGoldenMinions,
-					boardWithDeadEntityHero,
-					Race.PIRATE,
-					gameState.allCards,
-				);
+				const pirate = getRandomAliveMinion(nonGoldenMinions, boardWithDeadEntityHero, Race.PIRATE, gameState);
 				if (pirate) {
 					makeMinionGolden(
 						pirate,
@@ -424,7 +414,7 @@ const handleAvenge = (
 						nonGoldenMinions,
 						boardWithDeadEntityHero,
 						Race.PIRATE,
-						gameState.allCards,
+						gameState,
 					);
 					if (pirate) {
 						makeMinionGolden(
@@ -456,7 +446,15 @@ const handleAvenge = (
 				const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
 				for (let i = 0; i < bristlebachMultiplier; i++) {
 					for (const entity of boardWithDeadEntity) {
-						if (hasCorrectTribe(entity, boardWithDeadEntityHero, Race.QUILBOAR, gameState.allCards)) {
+						if (
+							hasCorrectTribe(
+								entity,
+								boardWithDeadEntityHero,
+								Race.QUILBOAR,
+								gameState.anomalies,
+								gameState.allCards,
+							)
+						) {
 							playBloodGemsOn(
 								avenger,
 								entity,

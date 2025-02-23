@@ -1,10 +1,9 @@
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
-import { Spectator } from './spectator/spectator';
 
 export const removeMinionFromBoard = (
 	board: BoardEntity[],
@@ -13,7 +12,7 @@ export const removeMinionFromBoard = (
 	gameState: FullGameState,
 ): void => {
 	const removedEntity = board.splice(index, 1)[0];
-	handleMinionRemovedAuraEffect(board, removedEntity, boardHero, gameState.allCards, gameState.spectator);
+	handleMinionRemovedAuraEffect(board, removedEntity, boardHero, gameState);
 	updateBoardwideAuras(board, boardHero, gameState);
 };
 
@@ -21,14 +20,13 @@ export const handleMinionRemovedAuraEffect = (
 	board: BoardEntity[],
 	removed: BoardEntity,
 	boardHero: BgsPlayerEntity,
-	allCards: AllCardsService,
-	spectator: Spectator,
+	gameState: FullGameState,
 ): void => {
 	switch (removed.cardId) {
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, gameState.anomalies, gameState.allCards))
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.MurlocWarleaderLegacy_TB_BaconUps_008 ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
@@ -38,7 +36,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.SouthseaCaptainLegacy_TB_BaconUps_136:
 			// console.debug('removing southsea captain', stringifySimpleCard(removed, allCards), stringifySimple(board, allCards));
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards))
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.SouthseaCaptainLegacy_TB_BaconUps_136 ? 2 : 1;
 					e.attack = Math.max(0, e.attack - diff);
@@ -49,7 +47,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.Kathranatir_BG21_039:
 		case CardIds.Kathranatir_BG21_039_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, gameState.anomalies, gameState.allCards))
 				.forEach((e) => {
 					const diff = removed.cardId === CardIds.Kathranatir_BG21_039_G ? 4 : 2;
 					e.attack = Math.max(0, e.attack - diff);
@@ -67,7 +65,7 @@ export const handleMinionRemovedAuraEffect = (
 		case CardIds.SoreLoser_BG27_030:
 		case CardIds.SoreLoser_BG27_030_G:
 			board
-				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, allCards))
+				.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards))
 				.forEach((e) => {
 					const diff = (removed.cardId === CardIds.SoreLoser_BG27_030_G ? 2 : 1) * boardHero.tavernTier;
 					e.attack = Math.max(0, e.attack - diff);

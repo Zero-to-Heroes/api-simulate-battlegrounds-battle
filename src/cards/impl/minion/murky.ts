@@ -11,11 +11,13 @@ export const Murky: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const murkyScale = minion.cardId === CardIds.Murky_BG24_012 ? 1 : 2;
 		const murlocsControlled = input.board.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards),
+			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
 		).length;
 		const murkyStats = murkyScale * 3 * murlocsControlled;
 		const murkyTarget = pickRandom(
-			input.board.filter((e) => hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.allCards)),
+			input.board.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
+			),
 		);
 		if (!!murkyTarget) {
 			modifyStats(murkyTarget, murkyStats, murkyStats, input.board, input.hero, input.gameState);

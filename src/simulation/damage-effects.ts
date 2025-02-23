@@ -176,7 +176,7 @@ const handleOtherEntityEffects = (
 	spawnedEntities: BoardEntity[],
 	gameState: FullGameState,
 ) => {
-	if (hasCorrectTribe(entity, hero, Race.BEAST, gameState.allCards)) {
+	if (hasCorrectTribe(entity, hero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 		board
 			.filter(
 				(e) =>
