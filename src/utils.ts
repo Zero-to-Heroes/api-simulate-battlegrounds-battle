@@ -608,6 +608,8 @@ export const copyEntity = (entity: BoardEntity): BoardEntity => {
 		enchantments: (entity.enchantments ?? []).map((ench) => ({ ...ench })),
 		pendingAttackBuffs: [],
 		rememberedDeathrattles: (entity.rememberedDeathrattles ?? []).map((r) => ({ ...r })),
+		additionalCards: entity.additionalCards?.map((c) => c),
+		tags: entity.tags ? { ...entity.tags } : null,
 	};
 	return copy;
 };

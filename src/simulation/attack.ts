@@ -31,7 +31,7 @@ export const simulateAttack = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
-): void => {
+): BoardEntity => {
 	// console.debug(
 	// 	'\nsimulating attack',
 	// 	stringifySimple(attackingBoard, gameState.allCards),
@@ -96,6 +96,7 @@ export const simulateAttack = (
 		gameState.sharedState.currentAttackerEntityId = null;
 		attackingEntity.hasAttacked = 1;
 	}
+	return attackingEntity;
 };
 
 export const doFullAttack = (

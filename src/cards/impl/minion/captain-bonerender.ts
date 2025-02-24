@@ -9,18 +9,33 @@ import { AfterOtherSpawnedCard } from '../../card.interface';
 export const CaptainBonerender: AfterOtherSpawnedCard = {
 	cardIds: [CardIds.CaptainBonerender_BG31_840, CardIds.CaptainBonerender_BG31_840_G],
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
-		if (
-			CaptainBonerender.cardIds.includes(input.spawned.cardId as CardIds) ||
-			CaptainBonerender.cardIds.includes(input.spawned.lastAffectedByEntity?.cardId as CardIds)
-		) {
+		// Handle all copies in one go
+		const isAlreadyHandled = CaptainBonerender.cardIds.includes(
+			input.spawned.lastAffectedByEntity?.cardId as CardIds,
+		);
+		if (CaptainBonerender.cardIds.includes(input.spawned.cardId as CardIds) || isAlreadyHandled) {
 			return;
 		}
-		const mult = minion.cardId === CardIds.CaptainBonerender_BG31_840 ? 1 : 2;
-		for (let i = 0; i < mult; i++) {
+		input.spawned.lastAffectedByEntity = minion;
+		const numberOfCopies = input.board
+			.map((e) =>
+				e.cardId === CardIds.CaptainBonerender_BG31_840_G
+					? 2
+					: e.cardId === CardIds.CaptainBonerender_BG31_840
+					? 1
+					: 0,
+			)
+			.reduce((a, b) => a + b, 0);
+		// Do it first, so that modifications like "attack immediately" are not reflected in subsequent copies
+		const initialCopy = copyEntity(input.spawned);
+		// Technically not necessarily correct, but the main issue is with "attack immediately" tokens
+		// like Tumbling Assassin, which spawns to the right
+		const indexFromRight = input.board.length - input.board.indexOf(input.spawned) - 1;
+		for (let i = 0; i < numberOfCopies; i++) {
 			if (input.board.length >= 7) {
 				break;
 			}
-			const copy = copyEntity(input.spawned);
+			const copy = copyEntity(initialCopy);
 			removeAurasFromSelf(copy, input.board, input.hero, input.gameState);
 			const newMinions = spawnEntities(
 				copy.cardId,
@@ -39,7 +54,6 @@ export const CaptainBonerender: AfterOtherSpawnedCard = {
 			newMinions.forEach((spawn) => {
 				spawn.lastAffectedByEntity = minion;
 			});
-			const indexFromRight = input.board.length - input.board.indexOf(input.spawned) + 1;
 			const spawns = performEntitySpawns(
 				newMinions,
 				input.board,

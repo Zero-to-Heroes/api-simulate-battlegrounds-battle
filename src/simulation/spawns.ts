@@ -51,7 +51,7 @@ export const performEntitySpawns = (
 			// 	stringifySimple(opponentBoard, gameState.allCards),
 			// );
 			// Whenever we are already in a combat phase, we need to first clean up the state
-			simulateAttack(
+			const actualAttacker = simulateAttack(
 				boardWithKilledMinion,
 				boardWithKilledMinionHero,
 				opponentBoard,
@@ -66,7 +66,11 @@ export const performEntitySpawns = (
 			// );
 			// So that, even if the opponent's board is temporarily empty (e.g. no minion, but a token will
 			// spawn in the enchantments resolution phase), the minion won't attack right away again
-			newMinion.attackImmediately = false;
+			// In case of attack immediately + multiple spawns minins, it's possible that the minion for which
+			// we triggered the attack simulation was not the one who actually attacked
+			if (actualAttacker) {
+				actualAttacker.attackImmediately = false;
+			}
 		}
 		if (newMinion.health > 0 && !newMinion.definitelyDead) {
 			spawnedEntities.push(newMinion);
