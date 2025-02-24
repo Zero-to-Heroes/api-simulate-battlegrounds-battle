@@ -20,28 +20,34 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 			return false;
 		}
 
-		const damage = yamatoCannons.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
-		const loops = minion.tags?.[GameTag.BACON_YAMATO_CANNON] === 1 ? 2 : 1;
-		for (let i = 0; i < loops; i++) {
-			const target = getRandomMinionWithHighestHealth(input.opponentBoard);
-			if (!!target) {
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					target,
-					input.opponentBoard,
-					input.playerEntity,
-					input.opponentEntity,
-				);
-				dealDamageToMinion(
-					target,
-					input.opponentBoard,
-					input.opponentEntity,
-					minion,
-					damage,
-					input.playerBoard,
-					input.playerEntity,
-					input.gameState,
-				);
+		// Still not sure how these should be processed
+		// In some cases, it feels like it takes the sum of the damage, in other cases it runs them one after the other
+		// (but maybe that's just the replay aggregating the values)
+		// I'm not sure about the BACON_YAMATO_CANNON tag; it seems like it indicates multiple cannons, but I'm not sure
+		for (const yamatoCannon of yamatoCannons) {
+			const damage = yamatoCannon.tagScriptDataNum1;
+			const loops = minion.tags?.[GameTag.BACON_YAMATO_CANNON] === 1 ? 2 : 1;
+			for (let i = 0; i < loops; i++) {
+				const target = getRandomMinionWithHighestHealth(input.opponentBoard);
+				if (!!target) {
+					input.gameState.spectator.registerPowerTarget(
+						minion,
+						target,
+						input.opponentBoard,
+						input.playerEntity,
+						input.opponentEntity,
+					);
+					dealDamageToMinion(
+						target,
+						input.opponentBoard,
+						input.opponentEntity,
+						minion,
+						damage,
+						input.playerBoard,
+						input.playerEntity,
+						input.gameState,
+					);
+				}
 			}
 		}
 		return true;
