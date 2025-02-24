@@ -13,18 +13,25 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 	cardIds: [CardIds.LiftOff_BattlecruiserToken_BG31_HERO_801pt, CardIds.Battlecruiser_BG31_HERO_801pt_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// Enchantments can appear multiple times???
-		const yamatoCannon = [...(minion.enchantments ?? [])]
-			.reverse()
-			.find((e) => e.cardId === CardIds.YamatoCannon_YamatoCannonEnchantment_BG31_HERO_801ptce);
-		if (!yamatoCannon) {
+		const yamatoCannons = [...(minion.enchantments ?? [])]
+			// .reverse()
+			.filter((e) => e.cardId === CardIds.YamatoCannon_YamatoCannonEnchantment_BG31_HERO_801ptce);
+		if (!yamatoCannons?.length) {
 			return false;
 		}
 
-		const damage = yamatoCannon.tagScriptDataNum1;
+		const damage = yamatoCannons.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
 		const loops = minion.tags?.[GameTag.BACON_YAMATO_CANNON] === 1 ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			const target = getRandomMinionWithHighestHealth(input.opponentBoard);
 			if (!!target) {
+				input.gameState.spectator.registerPowerTarget(
+					minion,
+					target,
+					input.opponentBoard,
+					input.playerEntity,
+					input.opponentEntity,
+				);
 				dealDamageToMinion(
 					target,
 					input.opponentBoard,
@@ -35,22 +42,15 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 					input.playerEntity,
 					input.gameState,
 				);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					target,
-					input.opponentBoard,
-					input.playerEntity,
-					input.opponentEntity,
-				);
 			}
 		}
 		return true;
 	},
 	rebornEffect: (minion: BoardEntity, input: RebornEffectInput) => {
-		const ultraCapacitor = [...(input.initialEntity.enchantments ?? [])]
-			.reverse()
-			.find((e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje);
-		if (!ultraCapacitor) {
+		const ultraCapacitors = [...(input.initialEntity.enchantments ?? [])]
+			// .reverse()
+			.filter((e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje);
+		if (!ultraCapacitors?.length) {
 			return;
 		}
 
@@ -76,13 +76,13 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		}
 
 		const advancedBallistics = [...(minion.enchantments ?? [])]
-			.reverse()
-			.find((e) => e.cardId === CardIds.AdvancedBallistics_AdvancedBallisticsEnchantment_BG31_HERO_801ptde);
-		if (!advancedBallistics) {
+			// .reverse()
+			.filter((e) => e.cardId === CardIds.AdvancedBallistics_AdvancedBallisticsEnchantment_BG31_HERO_801ptde);
+		if (!advancedBallistics?.length) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
-		const buff = advancedBallistics.tagScriptDataNum1;
+		const buff = advancedBallistics.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
 		const targets = input.attackingBoard.filter((entity) => entity !== minion);
 		for (const target of targets) {
 			modifyStats(target, buff, 0, input.attackingBoard, input.attackingHero, input.gameState);
@@ -90,10 +90,10 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const caduceusReactor = [...(minion.enchantments ?? [])]
-			.reverse()
-			.find((e) => e.cardId === CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee);
-		if (!caduceusReactor) {
+		const caduceusReactors = [...(minion.enchantments ?? [])]
+			// .reverse()
+			.filter((e) => e.cardId === CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee);
+		if (!caduceusReactors?.length) {
 			return;
 		}
 
@@ -102,7 +102,7 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 			return;
 		}
 
-		const buff = caduceusReactor.tagScriptDataNum1;
+		const buff = caduceusReactors.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
 		modifyStats(target, buff, buff, input.boardWithDeadEntity, input.boardWithDeadEntityHero, input.gameState);
 		input.gameState.spectator.registerPowerTarget(
 			minion,
