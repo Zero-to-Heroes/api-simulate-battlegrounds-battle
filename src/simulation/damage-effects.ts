@@ -42,7 +42,7 @@ export const onEntityDamaged = (
 		case CardIds.WingedChimera_BG29_844:
 		case CardIds.WingedChimera_BG29_844_G:
 			if (entity.abiityChargesLeft > 0) {
-				const wingedChimeraModifier = entity.cardId === CardIds.WingedChimera_BG29_844_G ? 1 : 1;
+				const wingedChimeraModifier = entity.cardId === CardIds.WingedChimera_BG29_844_G ? 2 : 1;
 				grantStatsToMinionsOfEachType(
 					entity,
 					board,
