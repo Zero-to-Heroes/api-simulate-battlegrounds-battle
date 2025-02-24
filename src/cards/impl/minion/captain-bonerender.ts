@@ -9,7 +9,10 @@ import { AfterOtherSpawnedCard } from '../../card.interface';
 export const CaptainBonerender: AfterOtherSpawnedCard = {
 	cardIds: [CardIds.CaptainBonerender_BG31_840, CardIds.CaptainBonerender_BG31_840_G],
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
-		if (CaptainBonerender.cardIds.includes(input.spawned.cardId as CardIds)) {
+		if (
+			CaptainBonerender.cardIds.includes(input.spawned.cardId as CardIds) ||
+			CaptainBonerender.cardIds.includes(input.spawned.lastAffectedByEntity?.cardId as CardIds)
+		) {
 			return;
 		}
 		const mult = minion.cardId === CardIds.CaptainBonerender_BG31_840 ? 1 : 2;
@@ -33,7 +36,10 @@ export const CaptainBonerender: AfterOtherSpawnedCard = {
 				false,
 				copy,
 			);
-			const indexFromRight = input.board.length - input.board.indexOf(minion) - 1;
+			newMinions.forEach((spawn) => {
+				spawn.lastAffectedByEntity = minion;
+			});
+			const indexFromRight = input.board.length - input.board.indexOf(input.spawned) + 1;
 			const spawns = performEntitySpawns(
 				newMinions,
 				input.board,
@@ -44,6 +50,9 @@ export const CaptainBonerender: AfterOtherSpawnedCard = {
 				input.otherHero,
 				input.gameState,
 			);
+			spawns.forEach((spawn) => {
+				spawn.lastAffectedByEntity = minion;
+			});
 		}
 	},
 };

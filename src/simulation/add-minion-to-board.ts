@@ -727,8 +727,9 @@ const handleAfterSpawnEffect = (
 	spawned: BoardEntity,
 	gameState: FullGameState,
 ): void => {
-	// console.debug('after spawn', stringifySimpleCard(spawned, allCards), stringifySimple(board, allCards));
-	for (const entity of board) {
+	// So that spawns don't mess up the loop
+	const initialBoard = [...board];
+	for (const entity of initialBoard) {
 		const onAfterSpawnedImpl = cardMappings[entity.cardId];
 		if (hasAfterOtherSpawned(onAfterSpawnedImpl)) {
 			onAfterSpawnedImpl.afterOtherSpawned(entity, {
