@@ -34,9 +34,9 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		const aliveEntities = input.opponentBoard
 			.filter((entity) => entity.health > 0 && !entity.definitelyDead)
 			.map((e) => e.entityId);
-		let target = getRandomMinionWithHighestHealth(
+		const targetEntityId = getRandomMinionWithHighestHealth(
 			input.opponentBoardBefore.filter((e) => aliveEntities.includes(e.entityId)),
-		);
+		)?.entityId;
 		// const numberOfCannons = yamatoCannons.length;
 		const cannonDamage = Math.max(...yamatoCannons.map((e) => e.tagScriptDataNum1));
 		for (const yamatoCannon of yamatoCannons) {
@@ -45,10 +45,8 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 			// I don't understand how this relates to the number enchants in the cruiser itself
 			const loops = minion.tags?.[GameTag.BACON_YAMATO_CANNON] === 1 ? 2 : 1;
 			for (let i = 0; i < loops; i++) {
-				if (!target) {
-					continue;
-				}
-				if (target.health <= 0 || target.definitelyDead) {
+				let target = input.opponentBoard.find((entity) => entity.entityId === targetEntityId);
+				if (!target || target.health <= 0 || target.definitelyDead) {
 					target = getRandomMinionWithHighestHealth(input.opponentBoard);
 				}
 				if (!!target) {
