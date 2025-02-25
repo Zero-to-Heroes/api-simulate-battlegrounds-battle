@@ -32,9 +32,9 @@ export const CaptainBonerender: AfterOtherSpawnedCard = {
 		// like Tumbling Assassin, which spawns to the right
 		const indexFromRight = input.board.length - input.board.indexOf(input.spawned) - 1;
 		for (let i = 0; i < numberOfCopies; i++) {
-			if (input.board.length >= 7) {
-				break;
-			}
+			// if (input.board.length >= 7) {
+			// 	break;
+			// }
 			const copy = copyEntity(initialCopy);
 			removeAurasFromSelf(copy, input.board, input.hero, input.gameState);
 			const newMinions = spawnEntities(
