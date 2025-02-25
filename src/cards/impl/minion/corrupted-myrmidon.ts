@@ -9,10 +9,14 @@ export const CorruptedMyrmidon: StartOfCombatCard = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// We add these stats
 		const multiplier = minion.cardId === CardIds.CorruptedMyrmidon_BG23_012_G ? 2 : 1;
+		// Tt remembers the "max stats" it had, and adds these, instead of the current ones.
+		// // Or alternatively, that the stat gain is computed before other effects happen, then is applied
+		// https://replays.firestoneapp.com/?reviewId=10a78c2e-d16d-4593-86c8-15eb4cc81a3e&turn=11&action=1
+		// I'll go with the max stats for now, since it's easier to implement
 		modifyStats(
 			minion,
-			multiplier * minion.attack,
-			multiplier * minion.health,
+			multiplier * minion.maxAttack,
+			multiplier * minion.maxHealth,
 			input.playerBoard,
 			input.playerEntity,
 			input.gameState,
