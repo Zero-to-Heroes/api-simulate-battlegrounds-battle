@@ -17,15 +17,31 @@ export const CaptainBonerender: AfterOtherSpawnedCard = {
 			return;
 		}
 		input.spawned.lastAffectedByEntity = minion;
-		const numberOfCopies = input.board
-			.map((e) =>
-				e.cardId === CardIds.CaptainBonerender_BG31_840_G
-					? 2
-					: e.cardId === CardIds.CaptainBonerender_BG31_840
-					? 1
-					: 0,
-			)
-			.reduce((a, b) => a + b, 0);
+
+		// Seems weird, but looking at a real game this feels like this is how it works
+		// https://replays.firestoneapp.com/?reviewId=b9eeb0a6-f5f1-424f-ba7a-7941d890f6bd&turn=21&action=1
+		let numberOfSpawns = 1;
+		for (let i = 0; i < input.board.length; i++) {
+			if (
+				input.board[i].cardId !== CardIds.CaptainBonerender_BG31_840 &&
+				input.board[i].cardId !== CardIds.CaptainBonerender_BG31_840_G
+			) {
+				continue;
+			}
+			const newSpawns = input.board[i].cardId === CardIds.CaptainBonerender_BG31_840_G ? 2 : 1;
+			const spawnsChain = buildSpawnsChain(newSpawns, input.board.slice(i + 1));
+			numberOfSpawns += spawnsChain;
+		}
+		const numberOfCopies = numberOfSpawns - 1;
+		// const numberOfCopies = input.board
+		// 	.map((e) =>
+		// 		e.cardId === CardIds.CaptainBonerender_BG31_840_G
+		// 			? 2
+		// 			: e.cardId === CardIds.CaptainBonerender_BG31_840
+		// 			? 1
+		// 			: 0,
+		// 	)
+		// 	.reduce((a, b) => a + b, 0);
 		// Do it first, so that modifications like "attack immediately" are not reflected in subsequent copies
 		const initialCopy = copyEntity(input.spawned);
 		// Technically not necessarily correct, but the main issue is with "attack immediately" tokens
@@ -69,4 +85,22 @@ export const CaptainBonerender: AfterOtherSpawnedCard = {
 			});
 		}
 	},
+};
+
+const buildSpawnsChain = (numberOfSpawns: number, board: readonly BoardEntity[]): number => {
+	let spawns = numberOfSpawns;
+	for (let k = 0; k < numberOfSpawns; k++) {
+		for (let i = 0; i < board.length; i++) {
+			if (
+				board[i].cardId !== CardIds.CaptainBonerender_BG31_840 &&
+				board[i].cardId !== CardIds.CaptainBonerender_BG31_840_G
+			) {
+				continue;
+			}
+			const newSpawns = board[i].cardId === CardIds.CaptainBonerender_BG31_840_G ? 2 : 1;
+			const spawnsChain = buildSpawnsChain(newSpawns, board.slice(i + 1));
+			spawns += spawnsChain;
+		}
+	}
+	return spawns;
 };
