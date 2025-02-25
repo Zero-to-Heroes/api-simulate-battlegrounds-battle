@@ -71,6 +71,10 @@ export const performEntitySpawns = (
 			if (actualAttacker) {
 				actualAttacker.attackImmediately = false;
 			}
+			// Can happen if the attackImmediately minion spawns first, opponent board is empty, then opponent minino spawns
+			else {
+				newMinion.attackImmediately = false;
+			}
 		}
 		if (newMinion.health > 0 && !newMinion.definitelyDead) {
 			spawnedEntities.push(newMinion);
