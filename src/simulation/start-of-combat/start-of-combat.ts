@@ -55,8 +55,8 @@ export const handleStartOfCombat = (
 		'Secret',
 		'Minion',
 	];
-	let playerBoardBefore = playerBoard;
-	let opponentBoardBefore = opponentBoard;
+	let playerBoardBefore = playerBoard.map((e) => ({ ...e }));
+	let opponentBoardBefore = opponentBoard.map((e) => ({ ...e }));
 	for (const phase of phases) {
 		currentAttacker = handlePhase(
 			phase,

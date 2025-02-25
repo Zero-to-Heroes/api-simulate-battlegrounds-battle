@@ -24,11 +24,33 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		// In some cases, it feels like it takes the sum of the damage, in other cases it runs them one after the other
 		// (but maybe that's just the replay aggregating the values)
 		// I'm not sure about the BACON_YAMATO_CANNON tag; it seems like it indicates multiple cannons, but I'm not sure
+		// Other issues: looks like that if there are multiple cannon enchantments but no divine shield, everything is applied to the same target
+		// So it looks as if the target is selected first, then everything targets it
+		// https://replays.firestoneapp.com/?reviewId=e8f38ab0-3380-4275-88d8-0715d69d3f08&turn=21&action=1
+		// Even more than that: the target is the same between multiple battlecruisers
+		// https://replays.firestoneapp.com/?reviewId=cbfd6fe9-1a58-400a-a593-6b8852df5427&turn=9&action=0
+		// However I'm pretty sure I've seen another behavior
+		// Get the highest health opponent minion at the start of the phase
+		const aliveEntities = input.opponentBoard
+			.filter((entity) => entity.health > 0 && !entity.definitelyDead)
+			.map((e) => e.entityId);
+		let target = getRandomMinionWithHighestHealth(
+			input.opponentBoardBefore.filter((e) => aliveEntities.includes(e.entityId)),
+		);
+		// const numberOfCannons = yamatoCannons.length;
+		const cannonDamage = Math.max(...yamatoCannons.map((e) => e.tagScriptDataNum1));
 		for (const yamatoCannon of yamatoCannons) {
-			const damage = yamatoCannon.tagScriptDataNum1;
+			// const damage = yamatoCannon.tagScriptDataNum1;
+			// Could this simply be tagScriptDataNum2 on the battlecruiser?
+			// I don't understand how this relates to the number enchants in the cruiser itself
 			const loops = minion.tags?.[GameTag.BACON_YAMATO_CANNON] === 1 ? 2 : 1;
 			for (let i = 0; i < loops; i++) {
-				const target = getRandomMinionWithHighestHealth(input.opponentBoard);
+				if (!target) {
+					continue;
+				}
+				if (target.health <= 0 || target.definitelyDead) {
+					target = getRandomMinionWithHighestHealth(input.opponentBoard);
+				}
 				if (!!target) {
 					input.gameState.spectator.registerPowerTarget(
 						minion,
@@ -42,7 +64,7 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 						input.opponentBoard,
 						input.opponentEntity,
 						minion,
-						damage,
+						cannonDamage,
 						input.playerBoard,
 						input.playerEntity,
 						input.gameState,
