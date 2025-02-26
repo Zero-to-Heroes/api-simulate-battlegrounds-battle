@@ -87,6 +87,16 @@ const handlePlayerIllidanHeroPowers = (
 			);
 			// This is not true anymore: https://replays.firestoneapp.com/?reviewId=7282387d-66cd-458e-8ee1-e04c662e7bad&turn=5&action=1
 			// currentAttacker = friendly ? 1 : 0;
+			// In fact there is some adjustment going on: https://replays.firestoneapp.com/?reviewId=929f676f-47f6-494b-9619-df04174a0150&turn=11&action=0
+			// So trying another logic
+			currentAttacker = (currentAttacker + 1) % 2;
+			// if (friendly && currentAttacker === 1) {
+			// 	currentAttacker = 0;
+			// } else if (!friendly && currentAttacker === 0) {
+			// 	currentAttacker = 1;
+			// }
+			// friendly = true, currentAttacker = 0 => currentAttacker = 1
+			// friendly = true, currentAttacker = 1 => currentAttacker = 0
 		}
 	}
 	return currentAttacker;
