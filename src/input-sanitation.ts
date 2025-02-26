@@ -134,17 +134,17 @@ const buildFinalInputForPlayer = (
 	playerInfo.player.friendly = isPlayer;
 	playerInfo.player.globalInfo = playerInfo.player.globalInfo ?? {};
 	playerInfo.player.globalInfo.PirateAttackBonus = playerInfo.player.globalInfo.PirateAttackBonus ?? 0;
-	playerInfo.player.heroPowers = playerInfo.player.heroPowers?.map((hp, index) =>
-		sanitizeHeroPower(hp, index, playerInfo.player, cards),
-	) ?? [
-		{
-			cardId: playerInfo.player.heroPowerId,
-			entityId: playerInfo.player.heroPowerEntityId,
-			used: playerInfo.player.heroPowerUsed,
-			info: playerInfo.player.heroPowerInfo,
-			info2: playerInfo.player.heroPowerInfo2,
-		} as BgsHeroPower,
-	];
+	playerInfo.player.heroPowers = playerInfo.player.heroPowers?.length
+		? playerInfo.player.heroPowers.map((hp, index) => sanitizeHeroPower(hp, index, playerInfo.player, cards))
+		: [
+				{
+					cardId: playerInfo.player.heroPowerId,
+					entityId: playerInfo.player.heroPowerEntityId,
+					used: playerInfo.player.heroPowerUsed,
+					info: playerInfo.player.heroPowerInfo,
+					info2: playerInfo.player.heroPowerInfo2,
+				} as BgsHeroPower,
+		  ];
 	// playerInfo.player.heroPowerId =
 	// 	playerInfo.player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
 	// 	(normalizeHeroCardId(playerInfo.player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
