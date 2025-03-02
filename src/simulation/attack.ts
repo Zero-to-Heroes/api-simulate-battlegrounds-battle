@@ -1200,7 +1200,7 @@ const handleAfterMinionsDeathsForBoard = (
 
 export interface OnDeathInput {
 	readonly hero: BgsPlayerEntity;
-	readonly board: readonly BoardEntity[];
+	readonly board: BoardEntity[];
 	readonly gameState: FullGameState;
 }
 export interface OnMinionKilledInput {

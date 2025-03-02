@@ -602,6 +602,12 @@ export const getTeammateInitialState = (gameState: GameState, hero: BgsPlayerEnt
 		: null;
 };
 
+export const getTeamInitialStates = (gameState: GameState, hero: BgsPlayerEntity): PlayerState[] => {
+	return gameState.playerInitial.player?.friendly === hero?.friendly
+		? [gameState.playerInitial, gameState.playerInitial.teammate].filter((p) => p)
+		: [gameState.opponentInitial, gameState.opponentInitial.teammate].filter((p) => p);
+};
+
 export const copyEntity = (entity: BoardEntity): BoardEntity => {
 	const copy: BoardEntity = {
 		...entity,
