@@ -50,7 +50,6 @@ export const makeMinionGolden = (
 	// too early
 	// TODO: add a replay with Tarec to illustrate the difference with Defiant Shipwright, and
 	// check if there is something different with Tarec
-	const refGoldenCard = gameState.allCards.getCard(target.cardId);
 	target.cardId = goldenCard.id;
 
 	// The rule for golden minions is to add the base stats
@@ -76,7 +75,7 @@ export const makeMinionGolden = (
 	// remove its divine shield / reborn status
 	// Gilding a reborn Risen Rider results into a golden Risen Rider with reborn
 	// http://replays.firestoneapp.com/?reviewId=c553c3e7-01e2-494d-80f8-69f33c08fb39&turn=7&action=4
-	target.reborn = hasReborn || refGoldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
+	target.reborn = hasReborn || goldenCard.mechanics?.includes(GameTag[GameTag.REBORN]);
 	// target.windfury = refGoldenCard.mechanics?.includes(GameTag[GameTag.WINDFURY]);
 	// target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	// target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
