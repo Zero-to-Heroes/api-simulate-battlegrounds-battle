@@ -6,7 +6,7 @@ import { AvengeCard } from '../../card.interface';
 
 export const ChampionOfThePrimus: AvengeCard = {
 	cardIds: [CardIds.ChampionOfThePrimus_BG27_029, CardIds.ChampionOfThePrimus_BG27_029_G],
-	baseAvengeValue: (cardId: string) => 2,
+	baseAvengeValue: (cardId: string) => 3,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const championPrimusStat = minion.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
 		input.hero.globalInfo.UndeadAttackBonus += championPrimusStat;

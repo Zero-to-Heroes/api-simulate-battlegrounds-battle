@@ -5,6 +5,7 @@ import { OnDivineShieldUpdatedInput } from '../../../keywords/divine-shield';
 import { OnRebornUpdatedInput } from '../../../keywords/reborn';
 import { OnTauntUpdatedInput } from '../../../keywords/taunt';
 import { FullGameState } from '../../../simulation/internal-game-state';
+import { RebornEffectInput } from '../../../simulation/reborn';
 import { modifyStats } from '../../../simulation/stats';
 import {
 	OnDivineShieldUpdatedCard,
@@ -13,6 +14,7 @@ import {
 	OnTauntUpdatedCard,
 	OnVenomousUpdatedCard,
 	OnWindfuryUpdatedCard,
+	RebornEffectCard,
 } from '../../card.interface';
 
 export const ImplantSubject: OnTauntUpdatedCard &
@@ -20,6 +22,7 @@ export const ImplantSubject: OnTauntUpdatedCard &
 	OnVenomousUpdatedCard &
 	OnWindfuryUpdatedCard &
 	OnStealthUpdatedCard &
+	RebornEffectCard &
 	OnRebornUpdatedCard = {
 	cardIds: [CardIds.ImplantSubject_BG31_147, CardIds.ImplantSubject_BG31_147_G],
 	onTauntUpdated: (
@@ -46,6 +49,9 @@ export const ImplantSubject: OnTauntUpdatedCard &
 		if (previousValue && !impactedEntity.reborn) {
 			updateEntity(entity, input.board, input.hero, input.gameState);
 		}
+	},
+	rebornEffect: (entity: BoardEntity, input: RebornEffectInput) => {
+		updateEntity(entity, input.boardWithKilledMinion, input.boardWithKilledMinionHero, input.gameState);
 	},
 	onStealthUpdated: (
 		entity: BoardEntity,

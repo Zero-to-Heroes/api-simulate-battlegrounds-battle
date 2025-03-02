@@ -20,6 +20,7 @@ import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../simulation/on-attack';
+import { OnMinionAttackedInput } from '../simulation/on-being-attacked';
 import { RebornEffectInput } from '../simulation/reborn';
 import { SoCInput } from '../simulation/start-of-combat/start-of-combat-input';
 import { OnStatsChangedInput } from '../simulation/stats';
@@ -56,6 +57,12 @@ export interface OnAttackCard extends Card {
 }
 export const hasOnAttack = (card: Card): card is OnAttackCard =>
 	(card as OnAttackCard)?.onAnyMinionAttack !== undefined;
+
+export interface OnMinionAttackedCard extends Card {
+	onAttacked: (minion: BoardEntity, input: OnMinionAttackedInput) => void;
+}
+export const hasOnMinionAttacked = (card: Card): card is OnMinionAttackedCard =>
+	(card as OnMinionAttackedCard)?.onAttacked !== undefined;
 
 export interface OnSpawnedCard extends Card {
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => void;

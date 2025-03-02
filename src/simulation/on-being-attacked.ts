@@ -1,6 +1,8 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnMinionAttacked } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
 import { addStatsToBoard } from '../utils';
@@ -89,6 +91,21 @@ export const applyOnBeingAttackedBuffs = (
 		}
 	}
 
+	for (const entity of defendingBoard) {
+		const onBeingAttackedImpl = cardMappings[entity.cardId];
+		if (hasOnMinionAttacked(onBeingAttackedImpl)) {
+			onBeingAttackedImpl.onAttacked(entity, {
+				defendingEntity: defendingEntity,
+				attacker: attackerEntity,
+				attackingHero: attackerHero,
+				attackingBoard: attackerBoard,
+				defendingHero: defendingPlayerEntity,
+				defendingBoard: defendingBoard,
+				gameState,
+			});
+		}
+	}
+
 	if (defendingEntity.taunt) {
 		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj_BGS_111);
 		const goldenChampions = defendingBoard.filter(
@@ -109,29 +126,6 @@ export const applyOnBeingAttackedBuffs = (
 			gameState.spectator.registerPowerTarget(
 				entity,
 				entity,
-				defendingBoard,
-				attackerHero,
-				defendingPlayerEntity,
-			);
-		});
-
-		const arms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_BGS_110);
-		const goldenArms = defendingBoard.filter((entity) => entity.cardId === CardIds.ArmOfTheEmpire_TB_BaconUps_302);
-		arms.forEach((arm) => {
-			modifyStats(defendingEntity, 2, 0, defendingBoard, defendingPlayerEntity, gameState);
-			gameState.spectator.registerPowerTarget(
-				arm,
-				defendingEntity,
-				defendingBoard,
-				attackerHero,
-				defendingPlayerEntity,
-			);
-		});
-		goldenArms.forEach((arm) => {
-			modifyStats(defendingEntity, 4, 0, defendingBoard, defendingPlayerEntity, gameState);
-			gameState.spectator.registerPowerTarget(
-				arm,
-				defendingEntity,
 				defendingBoard,
 				attackerHero,
 				defendingPlayerEntity,
@@ -226,3 +220,13 @@ export const applyOnBeingAttackedBuffs = (
 		updateVenomous(defendingEntity, true, defendingBoard, defendingPlayerEntity, attackerHero, gameState);
 	}
 };
+
+export interface OnMinionAttackedInput {
+	attacker: BoardEntity;
+	attackingHero: BgsPlayerEntity;
+	attackingBoard: BoardEntity[];
+	defendingEntity: BoardEntity;
+	defendingHero: BgsPlayerEntity;
+	defendingBoard: BoardEntity[];
+	gameState: FullGameState;
+}

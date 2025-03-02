@@ -66,11 +66,15 @@ export const handleRebornForEntity = (
 		});
 	}
 
-	for (const reborn of entitiesFromReborn) {
-		const rebornImpl = cardMappings[reborn.cardId];
+	for (const entity of boardWithKilledMinion) {
+		const rebornImpl = cardMappings[entity.cardId];
 		if (hasRebornEffect(rebornImpl)) {
-			rebornImpl.rebornEffect(reborn, {
-				initialEntity: deadEntity,
+			rebornImpl.rebornEffect(entity, {
+				rebornEntity: deadEntity,
+				boardWithKilledMinion,
+				boardWithKilledMinionHero,
+				opponentBoard,
+				opponentBoardHero,
 				gameState,
 			});
 		}
@@ -162,6 +166,10 @@ export const handleRebornForEntity = (
 };
 
 export interface RebornEffectInput {
-	readonly initialEntity: BoardEntity;
+	readonly rebornEntity: BoardEntity;
+	readonly boardWithKilledMinion: BoardEntity[];
+	readonly boardWithKilledMinionHero: BgsPlayerEntity;
+	readonly opponentBoard: BoardEntity[];
+	readonly opponentBoardHero: BgsPlayerEntity;
 	readonly gameState: FullGameState;
 }

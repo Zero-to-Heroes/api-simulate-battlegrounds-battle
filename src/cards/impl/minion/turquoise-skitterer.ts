@@ -6,7 +6,7 @@ import { modifyStats } from '../../../simulation/stats';
 import { DeathrattleEffectCard, DeathrattleSpawnCard } from '../../card.interface';
 
 const atkBuff = 1;
-const hpBuff = 1;
+const hpBuff = 2;
 
 export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleEffectCard = {
 	cardIds: [CardIds.TurquoiseSkitterer_BG31_809, CardIds.TurquoiseSkitterer_BG31_809_G],

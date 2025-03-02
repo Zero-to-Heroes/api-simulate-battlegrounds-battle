@@ -73,22 +73,22 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		return true;
 	},
 	rebornEffect: (minion: BoardEntity, input: RebornEffectInput) => {
-		const ultraCapacitors = [...(input.initialEntity.enchantments ?? [])]
+		const ultraCapacitors = [...(input.rebornEntity.enchantments ?? [])]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje);
 		if (!ultraCapacitors?.length) {
 			return;
 		}
 
-		minion.enchantments = input.initialEntity.enchantments;
-		minion.attack = input.initialEntity.maxAttack;
-		minion.maxAttack = input.initialEntity.maxAttack;
-		minion.health = input.initialEntity.maxHealth;
-		minion.maxHealth = input.initialEntity.maxHealth;
-		minion.divineShield = input.initialEntity.hadDivineShield;
-		minion.taunt = input.initialEntity.taunt;
-		minion.windfury = input.initialEntity.windfury;
-		minion.poisonous = input.initialEntity.poisonous;
+		minion.enchantments = input.rebornEntity.enchantments;
+		minion.attack = input.rebornEntity.maxAttack;
+		minion.maxAttack = input.rebornEntity.maxAttack;
+		minion.health = input.rebornEntity.maxHealth;
+		minion.maxHealth = input.rebornEntity.maxHealth;
+		minion.divineShield = input.rebornEntity.hadDivineShield;
+		minion.taunt = input.rebornEntity.taunt;
+		minion.windfury = input.rebornEntity.windfury;
+		minion.poisonous = input.rebornEntity.poisonous;
 	},
 	onAnyMinionAttack: (
 		minion: BoardEntity,

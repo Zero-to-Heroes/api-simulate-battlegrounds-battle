@@ -743,23 +743,6 @@ const handleAfterSpawnEffect = (
 		}
 
 		switch (entity.cardId) {
-			case CardIds.Felstomper_BG25_042:
-			case CardIds.Felstomper_BG25_042_G:
-			case CardIds.Deadstomper_BG28_634:
-			case CardIds.Deadstomper_BG28_634_G:
-				// console.debug('felstomper');
-				if (entity.entityId !== spawned.entityId) {
-					const felstomperBuff =
-						entity.cardId === CardIds.Felstomper_BG25_042_G ||
-						entity.cardId === CardIds.Deadstomper_BG28_634_G
-							? 6
-							: 3;
-					board.forEach((e) => {
-						modifyStats(e, felstomperBuff, 0, board, hero, gameState);
-						gameState.spectator.registerPowerTarget(entity, e, board, null, null);
-					});
-				}
-				break;
 			case CardIds.XyloBones_BG26_172:
 			case CardIds.XyloBones_BG26_172_G:
 				if (entity.entityId !== spawned.entityId) {

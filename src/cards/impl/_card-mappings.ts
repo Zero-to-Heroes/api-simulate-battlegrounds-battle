@@ -28,6 +28,7 @@ import { Charlga } from './minion/charlga';
 import { ClunkerJunker } from './minion/clunker-junker';
 import { Colossus } from './minion/colossus';
 import { CruiseController } from './minion/cruise-controller';
+import { Deadstomper } from './minion/deadstomper';
 import { DeathlyStriker } from './minion/deathly-striker';
 import { DefiantShipwright } from './minion/defiant-shipwright';
 import { DeflectoBot } from './minion/deflecto-bot';
@@ -35,6 +36,7 @@ import { EchoingRoar } from './minion/echoing-roar';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { FairyGillmother } from './minion/fairy-gillmother';
+import { FireworksFanatic } from './minion/fireworks-fanatic';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
 import { GemRat } from './minion/gem-rat';
@@ -134,8 +136,12 @@ import { WhelpSmuggler } from './minion/whelp-smuggler';
 import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
+import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
 
 const cards = [
+	FireworksFanatic,
+	Deadstomper,
+	ArmOfTheEmpire,
 	Battlecruiser,
 	SharingIsCaring,
 	LowFlier,

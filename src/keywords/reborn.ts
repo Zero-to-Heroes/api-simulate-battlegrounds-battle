@@ -13,8 +13,11 @@ export const updateReborn = (
 	gameState: FullGameState,
 ): void => {
 	const previousValue = entity.reborn;
-	entity.reborn = newValue;
+	if (newValue === previousValue) {
+		return;
+	}
 
+	entity.reborn = newValue;
 	for (const boardEntity of board) {
 		const onRebornUpdatedImpl = cardMappings[boardEntity.cardId];
 		if (hasOnRebornUpdated(onRebornUpdatedImpl)) {

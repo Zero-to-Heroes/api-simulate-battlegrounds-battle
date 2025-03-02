@@ -25,8 +25,8 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
 	CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 	CardIds.Onyxia_OnyxianWhelpToken,
-	CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t,
-	CardIds.Interceptor_BG31_HERO_802pt1t_G,
+	// CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t,
+	// CardIds.Interceptor_BG31_HERO_802pt1t_G,
 	// The token doesn't attack immediately natively, only when spawned by the spell
 	// See http://replays.firestoneapp.com/?reviewId=8924452a-540a-4324-8306-46900c3f9f35&turn=22&action=38
 	// CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,

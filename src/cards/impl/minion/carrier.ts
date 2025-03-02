@@ -18,17 +18,17 @@ export const Carrier: AvengeCard = {
 			otherBoard: input.otherBoard,
 			otherBoardHero: input.otherHero,
 		};
+		const singleStatBuff = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 6 : 3;
 		const statBuff = minion.scriptDataNum1 ?? 0;
-		const numberOfSummons = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 2 : 1;
-		const spawned = simplifiedSpawnEntities(
-			CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t,
-			numberOfSummons,
-			spawnInput,
-		);
+		const cardId =
+			minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G
+				? CardIds.Interceptor_BG31_HERO_802pt1t_G
+				: CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t;
+		const spawned = simplifiedSpawnEntities(cardId, 1, spawnInput);
 		spawned.forEach((e) => {
 			modifyStats(e, statBuff, statBuff, input.board, input.hero, input.gameState);
 		});
-		minion.scriptDataNum1 = statBuff + 3;
+		minion.scriptDataNum1 = statBuff + singleStatBuff;
 		return spawned;
 	},
 };
