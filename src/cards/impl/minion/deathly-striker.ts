@@ -11,7 +11,7 @@ export const DeathlyStriker: AvengeCard & DeathrattleSpawnCard = {
 	baseAvengeValue: (cardId: string) => 4,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.DeathlyStriker_BG31_835 ? 1 : 2;
-		const cards = [];
+		const cards: string[] = [];
 		for (let i = 0; i < mult; i++) {
 			cards.push(input.gameState.cardsData.getRandomMinionForTribe(Race.UNDEAD, input.hero.tavernTier));
 		}
@@ -19,6 +19,7 @@ export const DeathlyStriker: AvengeCard & DeathrattleSpawnCard = {
 		for (const card of addedCards) {
 			card.locked = false;
 			card.lastAffectedByEntity = minion;
+			input.gameState.spectator.registerPowerTarget(minion, card, input.board, input.hero, input.otherHero);
 		}
 	},
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
@@ -27,7 +28,7 @@ export const DeathlyStriker: AvengeCard & DeathrattleSpawnCard = {
 		);
 		const spawned: BoardEntity[] = [];
 		for (const target of targets) {
-			spawned.push(...simplifiedSpawnEntities(target.cardId, 1, input, { ...target }));
+			spawned.push(...simplifiedSpawnEntities(target.cardId, 1, input));
 			target.locked = true;
 		}
 		return spawned;
