@@ -89,14 +89,14 @@ const handlePlayerIllidanHeroPowers = (
 			// currentAttacker = friendly ? 1 : 0;
 			// In fact there is some adjustment going on: https://replays.firestoneapp.com/?reviewId=929f676f-47f6-494b-9619-df04174a0150&turn=11&action=0
 			// So trying another logic
-			currentAttacker = (currentAttacker + 1) % 2;
-			// if (friendly && currentAttacker === 1) {
-			// 	currentAttacker = 0;
-			// } else if (!friendly && currentAttacker === 0) {
-			// 	currentAttacker = 1;
-			// }
-			// friendly = true, currentAttacker = 0 => currentAttacker = 1
-			// friendly = true, currentAttacker = 1 => currentAttacker = 0
+			// currentAttacker = (currentAttacker + 1) % 2;
+			// This isn't correct. The following game is a case of:
+			// The player with the fewer minions is Illidan, so isn't the "first attacker"
+			// Wingmen triggers
+			// The non-Illidan side then attacks first
+			// https://replays.firestoneapp.com/?reviewId=45f40e73-4be9-419f-9093-0c2d91a7bac2&turn=5&action=0
+			// So for now, just randomizing the attacker to try and avoid "impossible" scenarios as much as possible
+			currentAttacker = Math.random() < 0.5 ? 0 : 1;
 		}
 	}
 	return currentAttacker;
