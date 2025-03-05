@@ -194,7 +194,9 @@ export const setImplicitDataHero = (
 	}
 
 	// Because Denathrius can send a quest reward as its hero power (I think)
-	const heroPowerAsReward = hero.cardId === CardIds.SireDenathrius_BG24_HERO_100 ? hero.heroPowers[0]?.cardId : null;
+	// For now deactivating this, until I have a scenario where this matters. It feels like
+	// this should be a display issue only, as quest rewards are also handled in the code
+	const heroPowerAsReward = null; // hero.cardId === CardIds.SireDenathrius_BG24_HERO_100 ? hero.heroPowers[0]?.cardId : null;
 	hero.questRewards = [...(hero.questRewards ?? []), heroPowerAsReward].filter((e) => !!e);
 	hero.questRewardEntities = hero.questRewardEntities
 		? hero.questRewardEntities.map((reward: any) => ({
