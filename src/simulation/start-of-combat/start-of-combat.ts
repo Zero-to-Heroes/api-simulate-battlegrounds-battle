@@ -49,6 +49,10 @@ export const handleStartOfCombat = (
 		// power. “Precombat” (Al’Akir, Y’Shaarj), then Illidan, then others.
 		// Update: this seems to have changed: https://x.com/LoewenMitchell/status/1737588920139825335?s=20
 		// now you have all hero powers trigger in a first phase, then you have Illidan, and once everything has triggered, you have Tavish
+		// All Hero powers are split up in to 3 categories:
+		// 1st - Precombat Hero Power Triggers  (things we want to go before Illidan e.g. Lich King)
+		// 2nd - Hero Power Triggers First In Combat (Illidan)
+		// 3rd - All other Start of Combat Hero Powers
 		'PreCombatHeroPower',
 		'IllidanHeroPower',
 		'HeroPower',

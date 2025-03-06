@@ -5,6 +5,7 @@ import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-in
 import { StartOfCombatCard } from '../../card.interface';
 
 export const RebornRites: StartOfCombatCard = {
+	// Confirmed to be pre-combat on 2024-03-06
 	startOfCombatTiming: 'pre-combat',
 	cardIds: [CardIds.RebornRites],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {

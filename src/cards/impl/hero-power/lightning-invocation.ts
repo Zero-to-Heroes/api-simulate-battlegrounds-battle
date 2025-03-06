@@ -5,7 +5,7 @@ import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-in
 import { StartOfCombatCard } from '../../card.interface';
 
 export const LightningInvocation: StartOfCombatCard = {
-	startOfCombatTiming: 'pre-combat',
+	startOfCombatTiming: 'start-of-combat',
 	cardIds: [CardIds.LightningInvocationToken, CardIds.LightningInvocation],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const heroPower of input.playerEntity.heroPowers) {
