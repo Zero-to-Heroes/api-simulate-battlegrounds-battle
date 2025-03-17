@@ -68,6 +68,7 @@ export const simulateBattle = function* (
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 8000;
 	const intermediateSteps = battleInput.options?.intermediateResults ?? 200;
+	const damageConfidence = battleInput.options?.damageConfidence ?? 0.9;
 	const includeOutcomeSamples = battleInput.options?.includeOutcomeSamples ?? true;
 	const simulationResult: SimulationResult = {
 		wonLethal: 0,
@@ -75,8 +76,12 @@ export const simulateBattle = function* (
 		tied: 0,
 		lost: 0,
 		lostLethal: 0,
+		damageWons: [],
 		damageWon: 0,
+		damageWonRange: null,
+		damageLosts: [],
 		damageLost: 0,
+		damageLostRange: null,
 		wonLethalPercent: undefined,
 		wonPercent: undefined,
 		tiedPercent: undefined,
@@ -137,12 +142,14 @@ export const simulateBattle = function* (
 		if (battleResult.result === 'won') {
 			simulationResult.won++;
 			simulationResult.damageWon += battleResult.damageDealt;
+			simulationResult.damageWons.push(battleResult.damageDealt);
 			if (battleResult.damageDealt >= battleInput.opponentBoard.player.hpLeft) {
 				simulationResult.wonLethal++;
 			}
 		} else if (battleResult.result === 'lost') {
 			simulationResult.lost++;
 			simulationResult.damageLost += battleResult.damageDealt;
+			simulationResult.damageLosts.push(battleResult.damageDealt);
 			outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
 			if (
 				battleInput.playerBoard.player.hpLeft &&
@@ -157,19 +164,23 @@ export const simulateBattle = function* (
 
 		// Yield intermediate result every 200 iterations
 		if (!!intermediateSteps && i > 0 && i % intermediateSteps === 0) {
-			updateSimulationResult(simulationResult, inputReady);
+			updateSimulationResult(simulationResult, inputReady, damageConfidence);
 			yield simulationResult;
 		}
 	}
-	updateSimulationResult(simulationResult, inputReady);
+	updateSimulationResult(simulationResult, inputReady, damageConfidence);
 	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
 	spectator.prune();
 	simulationResult.outcomeSamples = spectator.buildOutcomeSamples(battleInput.gameState);
+	// Avoid sending this verbose data
+
+	simulationResult.damageWons = [];
+	simulationResult.damageLosts = [];
 	// !battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
 	return simulationResult;
 };
 
-const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBattleInfo) => {
+const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBattleInfo, damageConfidence: number) => {
 	const totalMatches = simulationResult.won + simulationResult.tied + simulationResult.lost;
 	simulationResult.wonPercent = checkRounding(
 		Math.round((10 * (100 * simulationResult.won)) / totalMatches) / 10,
@@ -199,10 +210,15 @@ const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBa
 
 	// simulationResult.wonLethalPercent = Math.round((10 * (100 * simulationResult.wonLethal)) / totalMatches) / 10;
 	// simulationResult.lostLethalPercent = Math.round((10 * (100 * simulationResult.lostLethal)) / totalMatches) / 10;
-	simulationResult.averageDamageWon = simulationResult.won ? simulationResult.damageWon / simulationResult.won : 0;
-	simulationResult.averageDamageLost = simulationResult.lost
-		? simulationResult.damageLost / simulationResult.lost
-		: 0;
+	const totalDamageWon = simulationResult.damageWons.reduce((a, b) => a + b, 0);
+	const totalDamageLost = simulationResult.damageLosts.reduce((a, b) => a + b, 0);
+	const damageWonRange = calculateDamageRange(simulationResult.damageWons, damageConfidence);
+	const damageLostRange = calculateDamageRange(simulationResult.damageLosts, damageConfidence);
+	simulationResult.averageDamageWon = simulationResult.won ? totalDamageWon / simulationResult.won : 0;
+	simulationResult.averageDamageLost = simulationResult.lost ? totalDamageLost / simulationResult.lost : 0;
+	simulationResult.damageWonRange = simulationResult.won ? damageWonRange : null;
+	simulationResult.damageLostRange = simulationResult.lost ? damageLostRange : null;
+
 	if (
 		simulationResult.averageDamageWon > 0 &&
 		simulationResult.averageDamageWon < input.playerBoard.player.tavernTier
@@ -215,6 +231,26 @@ const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBa
 	) {
 		console.warn('average damage lost issue');
 	}
+};
+
+const calculateDamageRange = (damageArray: number[], damageConfidence: number): { min: number; max: number } => {
+	if (damageArray.length === 0) {
+		return { min: 0, max: 0 };
+	}
+
+	// Sort the array
+	const sortedDamage = [...damageArray].sort((a, b) => a - b);
+
+	// Calculate the 10th and 90th percentiles
+	const percentile = (arr: number[], p: number) => {
+		const index = Math.floor(p * arr.length);
+		return arr[index];
+	};
+
+	const minDamage = percentile(sortedDamage, 1 - damageConfidence);
+	const maxDamage = percentile(sortedDamage, damageConfidence);
+
+	return { min: minDamage, max: maxDamage };
 };
 
 const checkRounding = (roundedValue: number, initialValue: number, totalValue: number): number => {

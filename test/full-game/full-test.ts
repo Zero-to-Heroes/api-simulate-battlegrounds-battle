@@ -21,6 +21,7 @@ const test = async () => {
 			maxAcceptableDuration: 5000,
 			itermediateResults: 0,
 			includeOutcomeSamples: true,
+			damageConfidence: 0.95,
 		},
 		gameState: {
 			...jsonEvent3.gameState,
