@@ -13,7 +13,7 @@ export const MythraxTheUnraveler: EndOfTurnCard = {
 			modifyStats(
 				minion,
 				mult * 2 * differentTypes,
-				mult * 1 * differentTypes,
+				mult * 2 * differentTypes,
 				input.board,
 				input.hero,
 				input.gameState,

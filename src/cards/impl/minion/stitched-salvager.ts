@@ -21,11 +21,16 @@ export const StitchedSalvager: StartOfCombatCard & DeathrattleSpawnCard = {
 			return;
 		}
 
-		minion.memory = targets.map((t) => {
-			const copy = copyEntity(t);
-			removeAurasFromSelf(copy, input.playerBoard, input.playerEntity, input.gameState);
-			return copy;
-		}) as readonly BoardEntity[];
+		minion.memory = targets
+			.filter(
+				(t) =>
+					t.cardId !== CardIds.StitchedSalvager_BG31_999_G && t.cardId !== CardIds.StitchedSalvager_BG31_999,
+			)
+			.map((t) => {
+				const copy = copyEntity(t);
+				removeAurasFromSelf(copy, input.playerBoard, input.playerEntity, input.gameState);
+				return copy;
+			}) as readonly BoardEntity[];
 		for (const target of targets) {
 			target.definitelyDead = true;
 			input.gameState.spectator.registerPowerTarget(

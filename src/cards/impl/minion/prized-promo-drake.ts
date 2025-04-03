@@ -9,17 +9,9 @@ export const PrizedPromoDrake: StartOfCombatCard = {
 	cardIds: [CardIds.PrizedPromoDrake_BG21_014, CardIds.PrizedPromoDrake_BG21_014_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const mult = minion.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 2 : 1;
-		const targets = input.playerBoard
-			.filter((e) => e.entityId !== minion.entityId)
-			.filter((e) =>
-				hasCorrectTribe(
-					e,
-					input.playerEntity,
-					Race.DRAGON,
-					input.gameState.anomalies,
-					input.gameState.allCards,
-				),
-			);
+		const targets = input.playerBoard.filter((e) =>
+			hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
+		);
 		if (!!targets.length) {
 			for (const entity of targets) {
 				modifyStats(entity, 3 * mult, 3 * mult, input.playerBoard, input.playerEntity, input.gameState);
