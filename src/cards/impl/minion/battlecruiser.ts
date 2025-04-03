@@ -7,9 +7,9 @@ import { RebornEffectInput } from '../../../simulation/reborn';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
 import { getRandomMinionWithHighestHealth } from '../../../utils';
-import { DeathrattleEffectCard, OnAttackCard, RebornEffectCard, StartOfCombatCard } from '../../card.interface';
+import { DeathrattleEffectCard, OnAttackCard, RebornSelfEffectCard, StartOfCombatCard } from '../../card.interface';
 
-export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard & DeathrattleEffectCard = {
+export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackCard & DeathrattleEffectCard = {
 	cardIds: [CardIds.LiftOff_BattlecruiserToken_BG31_HERO_801pt, CardIds.Battlecruiser_BG31_HERO_801pt_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// Enchantments can appear multiple times???
@@ -72,7 +72,7 @@ export const Battlecruiser: StartOfCombatCard & RebornEffectCard & OnAttackCard 
 		}
 		return true;
 	},
-	rebornEffect: (minion: BoardEntity, input: RebornEffectInput) => {
+	rebornSelfEffect: (minion: BoardEntity, input: RebornEffectInput) => {
 		const ultraCapacitors = [...(input.rebornEntity.enchantments ?? [])]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje);

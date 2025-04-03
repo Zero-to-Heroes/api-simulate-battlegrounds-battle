@@ -110,6 +110,12 @@ export interface RebornEffectCard extends Card {
 export const hasRebornEffect = (card: Card): card is RebornEffectCard =>
 	(card as RebornEffectCard)?.rebornEffect !== undefined;
 
+export interface RebornSelfEffectCard extends Card {
+	rebornSelfEffect: (minion: BoardEntity, input: RebornEffectInput) => void;
+}
+export const hasRebornSelfEffect = (card: Card): card is RebornSelfEffectCard =>
+	(card as RebornSelfEffectCard)?.rebornSelfEffect !== undefined;
+
 export interface OnBattlecryTriggeredCard extends Card {
 	onBattlecryTriggered: (minion: BoardEntity, input: OnBattlecryTriggeredInput) => void;
 }

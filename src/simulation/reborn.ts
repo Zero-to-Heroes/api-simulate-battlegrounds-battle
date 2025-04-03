@@ -1,7 +1,7 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasRebornEffect } from '../cards/card.interface';
+import { hasRebornEffect, hasRebornSelfEffect } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { addStatsToBoard } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
@@ -64,6 +64,20 @@ export const handleRebornForEntity = (
 			e.attack = attack;
 			e.health = health;
 		});
+	}
+
+	for (const entity of entitiesFromReborn) {
+		const rebornImpl = cardMappings[entity.cardId];
+		if (hasRebornSelfEffect(rebornImpl)) {
+			rebornImpl.rebornSelfEffect(entity, {
+				rebornEntity: deadEntity,
+				boardWithKilledMinion,
+				boardWithKilledMinionHero,
+				opponentBoard,
+				opponentBoardHero,
+				gameState,
+			});
+		}
 	}
 
 	for (const entity of boardWithKilledMinion) {
