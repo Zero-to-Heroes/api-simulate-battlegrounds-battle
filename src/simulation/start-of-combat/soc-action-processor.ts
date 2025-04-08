@@ -105,6 +105,10 @@ export const performStartOfCombatAction = (
 						input.opponentBoard,
 						input.opponentEntity,
 						input.gameState,
+						// See https://replays.firestoneapp.com/?reviewId=2eacbbc2-7dfa-487b-951d-0fa6d31d175e&turn=25&action=1
+						// It looks like it doesn't look for the "summons when space" between Stitched Salvager's SoC and
+						// Hawkstrider Herald SoC
+						true,
 					);
 				}
 				if (typeof hasTriggered !== 'boolean' && hasTriggered.shouldRecomputeCurrentAttacker) {
