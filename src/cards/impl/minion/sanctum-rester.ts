@@ -8,19 +8,11 @@ export const SanctumRester = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const buff = minion.cardId === CardIds.SanctumRester_BG26_356_G ? 20 : 10;
 		// First try to get a target without divine shield, and if none is available, pick one with divine shield
-		const otherDragons = input.playerBoard
-			.filter((e) =>
-				hasCorrectTribe(
-					e,
-					input.playerEntity,
-					Race.DRAGON,
-					input.gameState.anomalies,
-					input.gameState.allCards,
-				),
-			)
-			.filter((e) => e.entityId !== minion.entityId);
-		otherDragons.forEach((otherDragon) => {
-			modifyStats(otherDragon, 0, buff, input.playerBoard, input.playerEntity, input.gameState);
+		const dragons = input.playerBoard.filter((e) =>
+			hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
+		);
+		dragons.forEach((otherDragon) => {
+			modifyStats(otherDragon, buff, 0, input.playerBoard, input.playerEntity, input.gameState);
 			input.gameState.spectator.registerPowerTarget(
 				minion,
 				otherDragon,
