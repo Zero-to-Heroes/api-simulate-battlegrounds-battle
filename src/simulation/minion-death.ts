@@ -5,6 +5,7 @@ import { pickMultipleRandomAlive } from '../services/utils';
 import { getEffectiveTribesForEntity, hasCorrectTribe } from '../utils';
 import { updateAvengeCounters } from './avenge';
 import { addCardsInHand } from './cards-in-hand';
+import { handleWheneverMinionsKillEffect } from './deathrattle-effects';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
@@ -24,6 +25,8 @@ export const makeMinionsDie = (
 	const deadMinionIndexesFromRight: number[] = [];
 	const deadEntities: BoardEntity[] = [];
 	const initialBoardLength = board.length;
+
+	handleWheneverMinionsKillEffect(board, boardHero, otherBoard, otherBoardHero, gameState);
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].health <= 0 || board[i].definitelyDead) {
 			deadMinionIndexesFromLeft.push(i);

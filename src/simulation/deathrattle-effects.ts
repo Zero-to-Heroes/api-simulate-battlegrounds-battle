@@ -1227,6 +1227,64 @@ const applyRecurringNightmareDeathrattleEffect = (
 	}
 };
 
+// Some minions like Icesnarl can revive themselves when killing a minion, so it needs to be handled before
+// we actually make the minion die
+export const handleWheneverMinionsKillEffect = (
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	handleWheneverMinionsKillEffectForBoard(board, hero, otherBoard, otherHero, gameState);
+	handleWheneverMinionsKillEffectForBoard(otherBoard, otherHero, board, hero, gameState);
+};
+
+const handleWheneverMinionsKillEffectForBoard = (
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].health <= 0 || board[i].definitelyDead) {
+			const futureDeadEntity = board[i];
+			const killer = futureDeadEntity.lastAffectedByEntity;
+			if (!killer) {
+				return;
+			}
+
+			// Killed an enemy minion
+			if (killer.friendly !== futureDeadEntity.friendly) {
+				for (const heroPower of otherHero.heroPowers) {
+					if (heroPower.cardId === CardIds.Rokara_GloryOfCombat) {
+						modifyStats(killer, 1, 0, otherBoard, otherHero, gameState);
+					}
+				}
+
+				// Icesnarl the Mighty
+				otherBoard
+					.filter(
+						(e) =>
+							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy ||
+							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G,
+					)
+					.forEach((icesnarl) => {
+						modifyStats(
+							icesnarl,
+							0,
+							icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1,
+							board,
+							hero,
+							gameState,
+						);
+					});
+			}
+		}
+	}
+};
+
 export const handleAfterMinionKillsEffect = (
 	deadEntity: BoardEntity,
 	deadEntityIndexFromRight: number,
@@ -1236,40 +1294,14 @@ export const handleAfterMinionKillsEffect = (
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	const killer = deadEntity.lastAffectedByEntity;
-	if (!killer) {
-		return;
-	}
-	// Killed an enemy minion
-	if (killer.friendly !== deadEntity.friendly) {
-		for (const heroPower of otherBoardHero.heroPowers) {
-			if (heroPower.cardId === CardIds.Rokara_GloryOfCombat) {
-				modifyStats(killer, 1, 0, otherBoard, otherBoardHero, gameState);
-			}
-		}
-
-		// Icesnarl the Mighty
-		// The timing here might be off, as the following replay suggests that the effect should trigger
-		// before Sr. Tomb Diver's deathrattle is applied
-		// http://replays.firestoneapp.com/?reviewId=ebb4e2d6-11b4-44f4-a052-3be2c63dd38f&turn=11&action=6
-		// Update 2024-30-06: lived tgus ub ab "after minion kills" trigger, let's see how that works
-		otherBoard
-			.filter(
-				(e) =>
-					e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy ||
-					e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G,
-			)
-			.forEach((icesnarl) => {
-				modifyStats(
-					icesnarl,
-					0,
-					icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					gameState,
-				);
-			});
-	}
+	// Moved to "whenever kills", as these can revive the minion that kills
+	// const killer = deadEntity.lastAffectedByEntity;
+	// if (!killer) {
+	// 	return;
+	// }
+	// // Killed an enemy minion
+	// if (killer.friendly !== deadEntity.friendly) {
+	// }
 };
 
 export const applyWheneverMinionDiesEffect = (
