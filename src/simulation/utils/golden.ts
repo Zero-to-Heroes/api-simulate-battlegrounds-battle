@@ -116,5 +116,11 @@ const removeMinionAuraEffectsForGolden = (entity: BoardEntity, hero: BgsPlayerEn
 			entity.health = Math.max(1, entity.health - 2 * multiplierAstral * statsBonusAstralToRemove);
 			entity.attack = Math.max(0, entity.attack - 2 * multiplierAstral * statsBonusAstralToRemove);
 			break;
+		case CardIds.DrBoomsMonster_BG31_176:
+		case CardIds.DrBoomsMonster_BG31_176_G:
+			const multiplierDrBoom = entity.cardId === CardIds.DrBoomsMonster_BG31_176_G ? 2 : 1;
+			entity.health = Math.max(1, entity.health - 2 * hero.globalInfo.MagnetizedThisGame * multiplierDrBoom);
+			entity.attack = Math.max(0, entity.attack - 2 * hero.globalInfo.MagnetizedThisGame * multiplierDrBoom);
+			break;
 	}
 };

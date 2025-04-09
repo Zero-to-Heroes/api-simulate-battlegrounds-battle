@@ -691,6 +691,18 @@ const handleMinionAddedAuraEffect = (
 					modifyStats(e, 2 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
 				});
 			break;
+		case CardIds.DrBoomsMonster_BG31_176:
+		case CardIds.DrBoomsMonster_BG31_176_G:
+			const multiplierDrBoom = spawned.cardId === CardIds.DrBoomsMonster_BG31_176_G ? 2 : 1;
+			modifyStats(
+				spawned,
+				2 * boardHero.globalInfo.MagnetizedThisGame * multiplierDrBoom,
+				2 * boardHero.globalInfo.MagnetizedThisGame * multiplierDrBoom,
+				board,
+				boardHero,
+				gameState,
+			);
+			break;
 	}
 };
 
