@@ -819,8 +819,8 @@ export const handleDeathrattleEffects = (
 					break;
 				case CardIds.MoroesStewardOfDeath_BG28_304:
 				case CardIds.MoroesStewardOfDeath_BG28_304_G:
-					const moroesBuffAtk = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 4 : 2;
-					const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 8 : 4;
+					const moroesBuffAtk = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 6 : 3;
+					const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 10 : 5;
 					for (let i = 0; i < multiplier; i++) {
 						addStatsToBoard(
 							deadEntity,

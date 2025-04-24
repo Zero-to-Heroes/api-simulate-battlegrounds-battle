@@ -637,21 +637,6 @@ const handleAvenge = (
 					Race.UNDEAD,
 					boardWithDeadEntityHero.tavernTier,
 				);
-				candidatesEntitiesSpawnedFromAvenge.push(
-					...spawnEntities(
-						randomUndead,
-						1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						gameState,
-						deadEntity.friendly,
-						false,
-						false,
-						false,
-					),
-				);
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [randomUndead], gameState);
 				break;
 		}

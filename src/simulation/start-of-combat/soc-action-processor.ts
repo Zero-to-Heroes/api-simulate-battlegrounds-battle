@@ -51,7 +51,6 @@ import { EvilTwin } from '../../cards/impl/quest-reward/evil-twin';
 import { StaffOfOrigination } from '../../cards/impl/quest-reward/staff-of-origination';
 import { StolenGold } from '../../cards/impl/quest-reward/stolen-gold';
 import { FleetingVigor } from '../../cards/impl/spell/fleeting-vigor';
-import { ArtisanalUrn } from '../../cards/impl/trinket/artisanal-urn';
 import { AutomatonPortrait } from '../../cards/impl/trinket/automaton-portrait';
 import { BronzeTimepiece } from '../../cards/impl/trinket/bronze-timepiece';
 import { EmeraldDreamcatcher } from '../../cards/impl/trinket/emerald-dreamcatcher';
@@ -162,9 +161,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return ShipInABottle;
 		case CardIds.EternalPortrait_BG30_MagicItem_301:
 			return EternalPortrait;
-		case CardIds.ArtisanalUrn_BG30_MagicItem_989:
-		case CardIds.ArtisanalUrn_ArtisanalUrnToken_BG30_MagicItem_989t:
-			return ArtisanalUrn;
 		case CardIds.RivendarePortrait_BG30_MagicItem_310:
 			return RivendarePortrait;
 		case CardIds.TinyfinOnesie_BG30_MagicItem_441:

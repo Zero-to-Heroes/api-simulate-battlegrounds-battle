@@ -32,13 +32,16 @@ import { Charlga } from './minion/charlga';
 import { ClunkerJunker } from './minion/clunker-junker';
 import { Colossus } from './minion/colossus';
 import { CruiseController } from './minion/cruise-controller';
+import { DastardlyDrust } from './minion/dastardly-drust';
 import { Deadstomper } from './minion/deadstomper';
 import { DeathlyStriker } from './minion/deathly-striker';
 import { DefiantShipwright } from './minion/defiant-shipwright';
 import { DeflectoBot } from './minion/deflecto-bot';
+import { DrustfallenButcher } from './minion/drustfallen-butcher';
 import { EchoingRoar } from './minion/echoing-roar';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
+import { EliteNavigator } from './minion/elite-navigator';
 import { FairyGillmother } from './minion/fairy-gillmother';
 import { FireForgedEvoker } from './minion/fire-forged-evoker';
 import { FirescaleHoarder } from './minion/firescale-hoarder';
@@ -50,6 +53,7 @@ import { GemSmuggler } from './minion/gem-smuggler';
 import { GeneralDrakkisath } from './minion/general-drakkisath';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { GentleStag } from './minion/gentle-stag';
+import { GoldGrubber } from './minion/goldgrubber';
 import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
 import { GreaseBot } from './minion/grease-bot';
 import { Greenskeeper } from './minion/greenskeeper';
@@ -82,6 +86,7 @@ import { LowFlier } from './minion/low-flier';
 import { Lurker } from './minion/lurker';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
+import { MawCaster } from './minion/maw-caster';
 import { MechaJaraxxus } from './minion/mecha-jaraxxus';
 import { MechagnomeInterpreter } from './minion/mechagnome-interpreter';
 import { MechanizedGiftHorse } from './minion/mechanized-gift-horse';
@@ -102,6 +107,7 @@ import { NestSwarmer } from './minion/nest-swarmer';
 import { NetherDrake } from './minion/nether-drake';
 import { NightmareParTeaGuest } from './minion/nightmare-par-tea-guest';
 import { Niuzao } from './minion/niuzao';
+import { NoisulOfTheManyFaces } from './minion/noisul-of-the-many-faces';
 import { OozelingGladiator } from './minion/oozeling-gladiator';
 import { OperaticBelcher } from './minion/operatic-belcher';
 import { OutbackSmolderer } from './minion/outback-smolderer';
@@ -137,6 +143,7 @@ import { Spacefarer } from './minion/spacefarer';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
 import { StitchedSalvager } from './minion/stitched-salvager';
+import { SurfingSlyvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
@@ -155,19 +162,32 @@ import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
+import { BalefulIncense } from './trinket/baleful-incense';
 import { BattleHorn } from './trinket/battle-horn';
+import { BirdFeeder } from './trinket/bird-feeder';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
+import { UnholySanctum } from './trinket/unholy-sanctum';
 import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	FireworksFanatic,
 	DivineSignet,
 	Greenskeeper,
+	MawCaster,
+	DastardlyDrust,
+	EliteNavigator,
+	SurfingSlyvar,
+	GoldGrubber,
+	UnholySanctum,
+	DrustfallenButcher,
+	NoisulOfTheManyFaces,
 	FirescaleHoarder,
 	IgnitionSpecialist,
+	BalefulIncense,
 	SpiritedWhimsydrake,
+	BirdFeeder,
 	FireForgedEvoker,
 	BronzeSteward,
 	MetallicHunter,

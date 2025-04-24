@@ -133,7 +133,7 @@ export const hasOnBattlecryTriggered = (card: Card): card is OnBattlecryTriggere
 	(card as OnBattlecryTriggeredCard)?.onBattlecryTriggered !== undefined;
 
 export interface AvengeCard extends Card {
-	avenge: (minion: BoardEntity, input: AvengeInput) => void | readonly BoardEntity[];
+	avenge: (minion: BoardEntity | BoardTrinket, input: AvengeInput) => void | readonly BoardEntity[];
 	baseAvengeValue: (cardId: string) => number;
 }
 export const hasAvenge = (card: Card): card is AvengeCard => (card as AvengeCard)?.avenge !== undefined;
@@ -149,6 +149,12 @@ export interface DeathrattleEffectCard extends Card {
 }
 export const hasDeathrattleEffect = (card: Card): card is DeathrattleEffectCard =>
 	(card as DeathrattleEffectCard)?.deathrattleEffect !== undefined;
+
+export interface DeathrattleTriggeredCard extends Card {
+	onDeathrattleTriggered: (minion: BoardEntity | BoardTrinket, input: DeathrattleTriggeredInput) => void;
+}
+export const hasOnDeathrattleTriggered = (card: Card): card is DeathrattleTriggeredCard =>
+	(card as DeathrattleTriggeredCard)?.onDeathrattleTriggered !== undefined;
 
 export interface DeathrattleEnchantmentEffectCard extends Card {
 	deathrattleEffectEnchantmentEffect: (

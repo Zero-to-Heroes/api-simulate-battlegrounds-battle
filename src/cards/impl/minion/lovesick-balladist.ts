@@ -20,6 +20,9 @@ export const LovesickBalladist: BattlecryCard = {
 			const targetBoard = input.board.includes(balladistTarget) ? input.board : input.otherBoard;
 			const targetHero = input.board.includes(balladistTarget) ? input.hero : input.otherHero;
 			modifyStats(balladistTarget, minion, 0, balladistStats, targetBoard, targetHero, input.gameState);
+			if (input.hero.trinkets?.some((t) => t.cardId === CardIds.BalladistPortrait_BG30_MagicItem_987)) {
+				modifyStats(balladistTarget, minion, balladistStats, 0, targetBoard, targetHero, input.gameState);
+			}
 		}
 		return true;
 	},
