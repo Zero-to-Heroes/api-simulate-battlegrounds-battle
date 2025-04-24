@@ -1,4 +1,5 @@
 export declare const enum TempCardIds {
+	EclecticShrine = 'EclecticShrine',
 	LokholarFrostforgeer = 'LokholarFrostforgeer',
 	LokholarFrostforgeer_G = 'LokholarFrostforgeer_G',
 	FountainPen = 'FountainPen',

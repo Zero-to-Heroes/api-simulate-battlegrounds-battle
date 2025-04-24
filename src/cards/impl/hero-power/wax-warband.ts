@@ -63,7 +63,7 @@ export const WaxWarband: StartOfCombatCard = {
 };
 
 // Not perfect, as I don't think this solves the issue where some cards are mutually exclusive
-const selectMinions = (minions: BoardEntity[], tribes: Race[], allCards: AllCardsService): BoardEntity[] => {
+export const selectMinions = (minions: BoardEntity[], tribes: Race[], allCards: AllCardsService): BoardEntity[] => {
 	// Step 1
 	const minionsByTribe: { [tribe: string]: BoardEntity[] } = {};
 	for (const minion of minions) {

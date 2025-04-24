@@ -140,6 +140,7 @@ import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
+import { EclecticShrine } from './trinket/eclectic-shrine';
 
 const cards = [
 	FireworksFanatic,
@@ -177,6 +178,7 @@ const cards = [
 	EfficientEngineer,
 	NetherDrake,
 	ElectricSynthesizer,
+	EclecticShrine,
 	OutbackSmolderer,
 	RazorgoreTheUntamed,
 	UltravioletAscendant,
