@@ -40,5 +40,6 @@ export const BubbleGunner: BattlecryCard = {
 					break;
 			}
 		}
+		return true;
 	},
 };

@@ -36,5 +36,6 @@ export const ElectricSynthesizer: StartOfCombatCard & BattlecryCard = {
 		for (const entity of otherDragons) {
 			modifyStats(entity, minion, buff, buff, input.board, input.hero, input.gameState);
 		}
+		return true;
 	},
 };

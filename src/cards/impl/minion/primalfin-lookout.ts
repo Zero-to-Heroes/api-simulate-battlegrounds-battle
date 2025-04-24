@@ -22,5 +22,6 @@ export const PrimalfinLookout: BattlecryCard = {
 			afterDiscover(input.hero, input.board, picked, others, input.gameState);
 			input.gameState.spectator.registerPowerTarget(minion, input.hero, input.board, input.hero, input.otherHero);
 		}
+		return true;
 	},
 };

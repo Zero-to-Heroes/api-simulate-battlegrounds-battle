@@ -43,6 +43,7 @@ export const EfficientEngineer: BattlecryCard = {
 				}
 			}
 		}
+		return true;
 	},
 };
 

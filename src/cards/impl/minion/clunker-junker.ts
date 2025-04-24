@@ -23,5 +23,6 @@ export const ClunkerJunker: BattlecryCard = {
 				magnetizeToTarget(junkerTarget, minion, minionToMagnetize, input.board, input.hero, input.gameState);
 			}
 		}
+		return true;
 	},
 };

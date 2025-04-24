@@ -9,5 +9,6 @@ export const RodeoPerformer: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const rodeoPerformerCardsToAdd = minion.cardId === CardIds.RodeoPerformer_BG28_550_G ? [null] : [null, null];
 		addCardsInHand(input.hero, input.board, rodeoPerformerCardsToAdd, input.gameState);
+		return true;
 	},
 };

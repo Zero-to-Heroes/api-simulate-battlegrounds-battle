@@ -34,5 +34,6 @@ export const ParchedWanderer: BattlecryCard = {
 				input.gameState,
 			);
 		}
+		return true;
 	},
 };

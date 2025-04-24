@@ -67,17 +67,20 @@ export const triggerBattlecry = (
 	const totalTriggers = computeBattlecryMultiplier(board, hero, gameState.sharedState);
 	for (let z = 0; z < totalTriggers; z++) {
 		let hasTriggered = true;
-
 		const battlecryImpl = cardMappings[entity.cardId];
+
+		let hasBattlecryTrigger = false;
 		if (hasBattlecry(battlecryImpl)) {
-			battlecryImpl.battlecry(entity, {
+			hasBattlecryTrigger = battlecryImpl.battlecry(entity, {
 				hero: hero,
 				board: board,
 				otherHero: otherHero,
 				otherBoard: otherBoard,
 				gameState,
 			});
-		} else {
+		}
+
+		if (!hasBattlecryTrigger) {
 			switch (entity.cardId) {
 				case CardIds.RockpoolHunter_BG_UNG_073:
 				case CardIds.RockpoolHunter_TB_BaconUps_061:

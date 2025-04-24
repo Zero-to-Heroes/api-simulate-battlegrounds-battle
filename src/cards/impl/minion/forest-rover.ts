@@ -23,5 +23,6 @@ export const ForestRover: DeathrattleSpawnCard & BattlecryCard = {
 			.forEach((e) => {
 				modifyStats(e, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
 			});
+		return true;
 	},
 };

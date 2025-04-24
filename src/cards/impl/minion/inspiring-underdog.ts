@@ -14,5 +14,6 @@ export const InspiringUnderdog: BattlecryCard = {
 				modifyStats(target, minion, multiplier * 3, multiplier * 1, input.board, input.hero, input.gameState);
 			});
 		}
+		return true;
 	},
 };

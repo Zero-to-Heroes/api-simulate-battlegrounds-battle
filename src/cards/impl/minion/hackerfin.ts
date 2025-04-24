@@ -29,5 +29,6 @@ export const Hackerfin: BattlecryCard = {
 				input.gameState,
 			);
 		}
+		return true;
 	},
 };

@@ -15,5 +15,6 @@ export const GeneralDrakkisath: BattlecryCard = {
 						CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t,
 				  ];
 		addCardsInHand(input.hero, input.board, generalDrakkisathCardsToAdd, input.gameState);
+		return true;
 	},
 };

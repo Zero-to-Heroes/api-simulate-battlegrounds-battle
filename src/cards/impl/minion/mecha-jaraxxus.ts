@@ -9,5 +9,6 @@ export const MechaJaraxxus: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mechaJaraxxusCardsToAdd = minion.cardId === CardIds.MechaJaraxxus_BG25_807 ? [null] : [null, null];
 		addCardsInHand(input.hero, input.board, mechaJaraxxusCardsToAdd, input.gameState);
+		return true;
 	},
 };

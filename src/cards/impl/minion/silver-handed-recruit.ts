@@ -14,5 +14,6 @@ export const SilverHandedRecruit: BattlecryCard = {
 				modifyStats(e, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
 				input.gameState.spectator.registerPowerTarget(minion, e, input.board, input.hero, null);
 			});
+		return true;
 	},
 };

@@ -100,7 +100,9 @@ export const hasDeathrattleSpawn = (card: Card): card is DeathrattleSpawnCard =>
 	(card as DeathrattleSpawnCard)?.deathrattleSpawn !== undefined;
 
 export interface BattlecryCard extends Card {
-	battlecry: (minion: BoardEntity, input: BattlecryInput) => void;
+	// boolean return type is used only for conditional battlecries (eg cards that only work as battlecries if a specific trinket
+	// is in game)
+	battlecry: (minion: BoardEntity, input: BattlecryInput) => boolean;
 }
 export const hasBattlecry = (card: Card): card is BattlecryCard => (card as BattlecryCard)?.battlecry !== undefined;
 

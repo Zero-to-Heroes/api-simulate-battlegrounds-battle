@@ -22,5 +22,6 @@ export const Murky: BattlecryCard = {
 		if (!!murkyTarget) {
 			modifyStats(murkyTarget, minion, murkyStats, murkyStats, input.board, input.hero, input.gameState);
 		}
+		return true;
 	},
 };

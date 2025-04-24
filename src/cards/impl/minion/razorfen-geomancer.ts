@@ -12,5 +12,6 @@ export const RazorfenGeomancer: BattlecryCard = {
 				? [CardIds.BloodGem]
 				: [CardIds.BloodGem, CardIds.BloodGem];
 		addCardsInHand(input.hero, input.board, razorFenCardsToAdd, input.gameState);
+		return true;
 	},
 };

@@ -12,5 +12,6 @@ export const GrittyHeadhunter: BattlecryCard = {
 				? [CardIds.MaraudersContract_BG31_891, CardIds.MaraudersContract_BG31_891]
 				: [CardIds.MaraudersContract_BG31_891];
 		addCardsInHand(input.hero, input.board, cards, input.gameState);
+		return true;
 	},
 };

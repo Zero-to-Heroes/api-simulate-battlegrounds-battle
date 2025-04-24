@@ -33,5 +33,6 @@ export const AssistantGuard: BattlecryCard = {
 				input.gameState,
 			);
 		}
+		return true;
 	},
 };

@@ -26,5 +26,6 @@ export const Smolderwing: BattlecryCard = {
 			const smolderwingStats = 5 * smolderwingMultiplier;
 			modifyStats(smolderwingTarget, minion, smolderwingStats, 0, targetBoard, targetHero, input.gameState);
 		}
+		return true;
 	},
 };

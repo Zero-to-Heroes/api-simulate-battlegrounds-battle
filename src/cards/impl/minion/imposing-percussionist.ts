@@ -17,5 +17,6 @@ export const ImposingPercussionist: BattlecryCard = {
 			input.gameState.cardsData.getTavernLevel(discover),
 			input.gameState,
 		);
+		return true;
 	},
 };

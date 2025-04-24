@@ -12,5 +12,6 @@ export const OozelingGladiator: BattlecryCard = {
 				? [CardIds.TheCoinCore, CardIds.TheCoinCore]
 				: [CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore];
 		addCardsInHand(input.hero, input.board, oozelingCardsToAdd, input.gameState);
+		return true;
 	},
 };

@@ -9,5 +9,6 @@ export const MenagerieJug: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === CardIds.MenagerieJug_BGS_083 ? 1 : 2;
 		grantStatsToMinionsOfEachType(minion, input.board, input.hero, 3 * mult, 3 * mult, input.gameState, 3);
+		return true;
 	},
 };

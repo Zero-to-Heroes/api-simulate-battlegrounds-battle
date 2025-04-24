@@ -15,5 +15,6 @@ export const WispInTheShell: BattlecryCard = {
 			const buff = 2 * mult * baseValue;
 			modifyStats(target, minion, buff, buff, input.board, input.hero, input.gameState);
 		}
+		return true;
 	},
 };

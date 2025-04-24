@@ -11,5 +11,6 @@ export const GemSmuggler: BattlecryCard = {
 		input.board
 			.filter((e) => e.entityId !== minion.entityId)
 			.forEach((e) => playBloodGemsOn(minion, e, gemSmugglerBloodGems, input.board, input.hero, input.gameState));
+		return true;
 	},
 };

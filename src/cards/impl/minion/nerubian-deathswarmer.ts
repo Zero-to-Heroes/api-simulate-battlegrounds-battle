@@ -19,5 +19,6 @@ export const NerubianDeathswarmer: BattlecryCard = {
 			input.gameState,
 			Race[Race.UNDEAD],
 		);
+		return true;
 	},
 };

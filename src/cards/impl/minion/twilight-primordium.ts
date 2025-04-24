@@ -31,5 +31,6 @@ export const TwilightPrimordium: BattlecryCard = {
 				input.gameState,
 			);
 		}
+		return true;
 	},
 };

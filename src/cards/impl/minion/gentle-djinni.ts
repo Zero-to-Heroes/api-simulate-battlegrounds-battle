@@ -15,6 +15,7 @@ export const GentleDjinni: BattlecryCard & DeathrattleEffectCard = {
 			cards.push(pickRandom(input.gameState.cardsData.gentleDjinniSpawns));
 		}
 		addCardsInHand(input.hero, input.board, cards, input.gameState);
+		return true;
 	},
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const cards = [];

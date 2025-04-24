@@ -12,5 +12,6 @@ export const ShellCollector: BattlecryCard = {
 				? [CardIds.TheCoinCore]
 				: [CardIds.TheCoinCore, CardIds.TheCoinCore];
 		addCardsInHand(input.hero, input.board, shellCollectorCardsToAdd, input.gameState);
+		return true;
 	},
 };

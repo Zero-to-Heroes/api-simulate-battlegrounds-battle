@@ -28,5 +28,6 @@ export const KingBagurgle: BattlecryCard = {
 				input.gameState,
 			);
 		}
+		return true;
 	},
 };

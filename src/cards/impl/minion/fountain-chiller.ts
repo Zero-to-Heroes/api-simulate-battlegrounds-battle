@@ -32,5 +32,6 @@ export const FountainChiller: BattlecryCard = {
 				input.gameState,
 			);
 		}
+		return true;
 	},
 };
