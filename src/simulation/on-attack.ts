@@ -97,7 +97,7 @@ export const applyOnAttackEffects = (
 			)
 			.forEach((rallier) => {
 				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
-				modifyStats(attacker, rallier, 3 * stats, stats, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(attacker, rallier, 3 * stats, 1 * stats, attackingBoard, attackingBoardHero, gameState);
 			});
 	}
 

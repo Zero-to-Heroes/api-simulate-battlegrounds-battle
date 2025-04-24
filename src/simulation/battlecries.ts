@@ -848,6 +848,10 @@ const extractUniqueTribes = (board: BoardEntity[], allCards: AllCardsService): r
 	return uniqueTribes;
 };
 
+export const hasMinionBattlecry = (entity: BoardEntity, gameState: FullGameState): boolean => {
+	return gameState.allCards.getCard(entity.cardId)?.mechanics?.includes(GameTag[GameTag.BATTLECRY]) ?? false;
+};
+
 export interface BattlecryInput {
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;

@@ -21,6 +21,7 @@ import { BlazingSkyfin } from './minion/blazing-skyfin';
 import { BoarGamer } from './minion/boar-gamer';
 import { BongoBopper } from './minion/bongo-bopper';
 import { BriarbackBookie } from './minion/briarback-bookie';
+import { BronzeSteward } from './minion/bronze-steward';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuzzingVermin } from './minion/buzzing-vermin';
 import { CadaverCaretaker } from './minion/cadaver-caretaker';
@@ -39,6 +40,8 @@ import { EchoingRoar } from './minion/echoing-roar';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { FairyGillmother } from './minion/fairy-gillmother';
+import { FireForgedEvoker } from './minion/fire-forged-evoker';
+import { FirescaleHoarder } from './minion/firescale-hoarder';
 import { FireworksFanatic } from './minion/fireworks-fanatic';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
@@ -49,6 +52,7 @@ import { GentleDjinni } from './minion/gentle-djinni';
 import { GentleStag } from './minion/gentle-stag';
 import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
 import { GreaseBot } from './minion/grease-bot';
+import { Greenskeeper } from './minion/greenskeeper';
 import { GrittyHeadhunter } from './minion/gritty-headhunter';
 import { Hackerfin } from './minion/hackerfin';
 import { HandlessForsaken } from './minion/handless-forsaken';
@@ -58,6 +62,7 @@ import { HummingBird } from './minion/humming-bird';
 import { HungrySnapjaw } from './minion/hungry-snapjaw';
 import { HunterOfGatherers } from './minion/hunter-of-gatherers';
 import { Hydralisk } from './minion/hydralisk';
+import { IgnitionSpecialist } from './minion/ignition-specialist';
 import { Immortal } from './minion/immortal';
 import { ImplantSubject } from './minion/implant-subject';
 import { ImposingPercussionist } from './minion/imposing-percussionist';
@@ -129,6 +134,7 @@ import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
 import { SoulRewinder } from './minion/soul-rewinder';
 import { Spacefarer } from './minion/spacefarer';
+import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
 import { StitchedSalvager } from './minion/stitched-salvager';
 import { Swampstriker } from './minion/swampstriker';
@@ -158,6 +164,12 @@ import { YulonSticker } from './trinket/yulon-sticker';
 const cards = [
 	FireworksFanatic,
 	DivineSignet,
+	Greenskeeper,
+	FirescaleHoarder,
+	IgnitionSpecialist,
+	SpiritedWhimsydrake,
+	FireForgedEvoker,
+	BronzeSteward,
 	MetallicHunter,
 	YulonSticker,
 	BattleHorn,

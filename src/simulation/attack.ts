@@ -154,6 +154,7 @@ export const doFullAttack = (
 		attackingBoard,
 		attackingBoardHero,
 		defendingEntity,
+		defendingBoard,
 		defendingBoardHero,
 		damageDoneByAttacker,
 		damageDoneByDefender,

@@ -1,6 +1,8 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnAfterAttack } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateStealth } from '../keywords/stealth';
 import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
@@ -16,6 +18,7 @@ export const applyAfterAttackEffects = (
 	attackingBoard: BoardEntity[],
 	attackingBoardHero: BgsPlayerEntity,
 	defendingEntity: BoardEntity,
+	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	damageDoneByAttacker: number,
 	damageDoneByDefender: number,
@@ -24,6 +27,22 @@ export const applyAfterAttackEffects = (
 	// https://replays.firestoneapp.com/?reviewId=9c3ba0f2-d049-4f79-8ec2-7b20ec8d0f68&turn=11&action=5
 	// It looks like Stealth is removed only once the damage is dealt?
 	updateStealth(attackingEntity, false, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
+
+	for (const boardEntity of attackingBoard) {
+		const onAfterAttackImpl = cardMappings[boardEntity.cardId];
+		if (hasOnAfterAttack(onAfterAttackImpl)) {
+			onAfterAttackImpl.onAnyMinionAfterAttack(boardEntity, {
+				attacker: attackingEntity,
+				attackingHero: attackingBoardHero,
+				attackingBoard: attackingBoard,
+				defendingEntity: defendingEntity,
+				defendingBoard: defendingBoard,
+				defendingHero: defendingBoardHero,
+				gameState,
+				playerIsFriendly: attackingBoardHero.friendly,
+			});
+		}
+	}
 
 	let secretTriggered = null;
 	if (
@@ -147,3 +166,14 @@ const applyOnAttackQuest = (
 		}
 	}
 };
+
+export interface OnAfterAttackInput {
+	attacker: BoardEntity;
+	attackingHero: BgsPlayerEntity;
+	attackingBoard: BoardEntity[];
+	defendingEntity: BoardEntity;
+	defendingBoard: BoardEntity[];
+	defendingHero: BgsPlayerEntity;
+	gameState: FullGameState;
+	playerIsFriendly: boolean;
+}
