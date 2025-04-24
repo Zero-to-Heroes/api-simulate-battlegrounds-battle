@@ -69,6 +69,7 @@ import { KarmicChameleon } from './minion/karmic-chameleon';
 import { KingBagurgle } from './minion/king-bagurgle';
 import { LeeroyTheReckless } from './minion/leeroy-the-reckless';
 import { LightfangEnforcer } from './minion/lightfang-enforcer';
+import { LokholarFrostforgeer } from './minion/lokholar-frostforger';
 import { LovesickBalladist } from './minion/lovesick-balladist';
 import { LowFlier } from './minion/low-flier';
 import { Lurker } from './minion/lurker';
@@ -186,6 +187,7 @@ const cards = [
 	RecklessCliffdiver,
 	FountainChiller,
 	NeonAgent,
+	LokholarFrostforgeer,
 	ImplantSubject,
 	Hackerfin,
 	BubbleGunner,
