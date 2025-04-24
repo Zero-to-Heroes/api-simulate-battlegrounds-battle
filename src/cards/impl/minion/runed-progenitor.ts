@@ -22,7 +22,7 @@ export const RunedProgenitor: DeathrattleSpawnCard & AvengeCard = {
 				[CardIds.BoonOfBeetles_BeetleToken_BG28_603t, CardIds.Beetle_BG28_603t_G].includes(e.cardId as CardIds),
 			)
 			.forEach((e) => {
-				modifyStats(e, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+				modifyStats(e, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 			});
 	},
 };

@@ -22,7 +22,7 @@ export const Swampstriker: AfterOtherSpawnedCard = {
 					? 1
 					: 0);
 			if (buffAmount2 > 0) {
-				modifyStats(minion, buffAmount2, 0, input.board, input.hero, input.gameState);
+				modifyStats(minion, minion, buffAmount2, 0, input.board, input.hero, input.gameState);
 				input.gameState.spectator.registerPowerTarget(minion, minion, input.board, null, null);
 			}
 		}

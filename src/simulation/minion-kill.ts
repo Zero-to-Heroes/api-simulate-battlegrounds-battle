@@ -52,14 +52,14 @@ export const onMinionKill = (
 			);
 			if (murculesTarget) {
 				const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
-				modifyStats(murculesTarget, murculesStats, murculesStats, killerBoard, killerHero, gameState);
+				modifyStats(murculesTarget, killer, murculesStats, murculesStats, killerBoard, killerHero, gameState);
 				gameState.spectator.registerPowerTarget(killer, murculesTarget, killerBoard, killerHero, victimHero);
 			}
 			break;
 		case CardIds.Mannoroth_BG27_507:
 		case CardIds.Mannoroth_BG27_507_G:
 			if (killer.health > 0 && !killer.definitelyDead && killer.abiityChargesLeft > 0) {
-				modifyStats(killer, victim.attack, victim.maxHealth, killerBoard, killerHero, gameState);
+				modifyStats(killer, killer, victim.attack, victim.maxHealth, killerBoard, killerHero, gameState);
 				gameState.spectator.registerPowerTarget(killer, killer, killerBoard, killerHero, victimHero);
 				killer.abiityChargesLeft--;
 			}
@@ -82,6 +82,7 @@ export const onMinionKill = (
 					const tideOracleMorgleMultiplier = killer.cardId === CardIds.TideOracleMorgl_BG27_513 ? 1 : 2;
 					modifyStats(
 						tideOracleMorgleTarget,
+						killer,
 						tideOracleMorgleMultiplier * victim.attack,
 						tideOracleMorgleMultiplier * victim.maxHealth,
 						killerBoard,

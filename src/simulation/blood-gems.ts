@@ -50,7 +50,7 @@ export const playBloodGemsOn = (
 	}
 
 	for (let i = 0; i < quantity; i++) {
-		modifyStats(target, bloodGemAttack, bloodGemHealth, board, hero, gameState);
+		modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
 		bloodGemEnchantment.tagScriptDataNum1 += bloodGemAttack;
 		bloodGemEnchantment.tagScriptDataNum2 += bloodGemHealth;
 	}

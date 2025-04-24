@@ -24,13 +24,13 @@ export const FountainChiller: BattlecryCard = {
 		if (!!target) {
 			modifyStats(
 				target,
+				minion,
 				2 * totalKeywords * mult,
 				totalKeywords * mult,
 				input.board,
 				input.hero,
 				input.gameState,
 			);
-			input.gameState.spectator.registerPowerTarget(minion, target, input.board, input.hero, input.otherHero);
 		}
 	},
 };

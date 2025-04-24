@@ -15,18 +15,12 @@ export const CorruptedMyrmidon: StartOfCombatCard = {
 		// I'll go with the max stats for now, since it's easier to implement
 		modifyStats(
 			minion,
+			minion,
 			multiplier * minion.maxAttack,
 			multiplier * minion.maxHealth,
 			input.playerBoard,
 			input.playerEntity,
 			input.gameState,
-		);
-		input.gameState.spectator.registerPowerTarget(
-			minion,
-			minion,
-			input.playerBoard,
-			input.playerEntity,
-			input.opponentEntity,
 		);
 		return true;
 	},

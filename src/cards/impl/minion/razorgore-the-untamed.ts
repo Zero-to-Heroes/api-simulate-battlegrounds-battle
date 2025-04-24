@@ -17,13 +17,13 @@ export const RazorgoreTheUntamed: EndOfTurnCard = {
 		if (otherDragons.length) {
 			modifyStats(
 				minion,
+				minion,
 				mult * otherDragons.length,
 				mult * 2 * otherDragons.length,
 				input.board,
 				input.hero,
 				input.gameState,
 			);
-			input.gameState.spectator.registerPowerTarget(minion, minion, input.board, input.hero, input.otherHero);
 		}
 	},
 };

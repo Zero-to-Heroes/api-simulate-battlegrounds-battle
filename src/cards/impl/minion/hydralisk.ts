@@ -12,7 +12,7 @@ export const Hydralisk: OnAttackCard = {
 		}
 		const mult = minion.cardId === CardIds.Hydralisk_BG31_HERO_811t4_G ? 2 : 1;
 		const buff = input.attackingHero.tavernTier;
-		modifyStats(minion, buff * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
+		modifyStats(minion, minion, buff * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

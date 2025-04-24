@@ -11,18 +11,12 @@ export const Vaelastrasz = {
 			.forEach((e) => {
 				modifyStats(
 					e,
+					minion,
 					vaelastraszBonus,
 					vaelastraszBonus,
 					input.playerBoard,
 					input.playerEntity,
 					input.gameState,
-				);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					e,
-					input.playerBoard,
-					input.playerEntity,
-					input.opponentEntity,
 				);
 			});
 		return true;

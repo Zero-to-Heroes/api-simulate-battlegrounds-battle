@@ -19,14 +19,7 @@ export const LovesickBalladist: BattlecryCard = {
 		if (balladistTarget) {
 			const targetBoard = input.board.includes(balladistTarget) ? input.board : input.otherBoard;
 			const targetHero = input.board.includes(balladistTarget) ? input.hero : input.otherHero;
-			modifyStats(balladistTarget, 0, balladistStats, targetBoard, targetHero, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
-				balladistTarget,
-				targetBoard,
-				targetHero,
-				input.otherHero,
-			);
+			modifyStats(balladistTarget, minion, 0, balladistStats, targetBoard, targetHero, input.gameState);
 		}
 	},
 };

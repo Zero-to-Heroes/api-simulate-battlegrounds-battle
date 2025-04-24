@@ -26,7 +26,7 @@ export const Carrier: AvengeCard = {
 				: CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t;
 		const spawned = simplifiedSpawnEntities(cardId, 1, spawnInput);
 		spawned.forEach((e) => {
-			modifyStats(e, statBuff, statBuff, input.board, input.hero, input.gameState);
+			modifyStats(e, minion, statBuff, statBuff, input.board, input.hero, input.gameState, false);
 		});
 		minion.scriptDataNum1 = statBuff + singleStatBuff;
 		return spawned;

@@ -17,18 +17,12 @@ export const ElderTaggawag = {
 			const multiplier = minion.cardId === CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G ? 2 : 1;
 			modifyStats(
 				minion,
+				minion,
 				highestAttackOnBoard * multiplier,
 				highestHealthOnBoard * multiplier,
 				input.playerBoard,
 				input.playerEntity,
 				input.gameState,
-			);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
-				minion,
-				input.playerBoard,
-				input.playerEntity,
-				input.opponentEntity,
 			);
 		}
 		return true;

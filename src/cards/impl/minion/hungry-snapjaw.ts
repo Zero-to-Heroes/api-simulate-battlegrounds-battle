@@ -19,7 +19,7 @@ export const HungrySnapjaw: AfterOtherSpawnedCard = {
 			) &&
 			minion.entityId !== input.spawned.entityId
 		) {
-			modifyStats(minion, 0, 1 * mult, input.board, input.hero, input.gameState);
+			modifyStats(minion, minion, 0, 1 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

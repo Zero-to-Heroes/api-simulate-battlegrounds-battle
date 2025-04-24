@@ -23,13 +23,13 @@ export const TwilightPrimordium: BattlecryCard = {
 		if (!!target) {
 			modifyStats(
 				target,
+				minion,
 				2 * mult * currentBuffValue,
 				2 * mult * currentBuffValue,
 				input.board,
 				input.hero,
 				input.gameState,
 			);
-			input.gameState.spectator.registerPowerTarget(minion, target, input.board, input.hero, input.otherHero);
 		}
 	},
 };

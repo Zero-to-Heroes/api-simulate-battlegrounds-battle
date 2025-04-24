@@ -16,8 +16,7 @@ export const DeflectoBot: OnOtherSpawnedCard = {
 			if (!minion.divineShield) {
 				updateDivineShield(minion, input.board, input.hero, input.otherHero, true, input.gameState);
 			}
-			modifyStats(minion, statsBonus, 0, input.board, input.hero, input.gameState);
-			input.gameState.spectator.registerPowerTarget(minion, minion, input.board, input.hero, input.otherHero);
+			modifyStats(minion, minion, statsBonus, 0, input.board, input.hero, input.gameState);
 		}
 	},
 };

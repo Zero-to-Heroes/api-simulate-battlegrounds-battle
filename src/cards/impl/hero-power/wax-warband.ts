@@ -47,18 +47,12 @@ export const WaxWarband: StartOfCombatCard = {
 					allMinions.forEach((e) => {
 						modifyStats(
 							e,
+							trinket,
 							input.gameState.cardsData.getTavernLevel(e.cardId),
 							input.gameState.cardsData.getTavernLevel(e.cardId),
 							input.playerBoard,
 							input.playerEntity,
 							input.gameState,
-						);
-						input.gameState.spectator.registerPowerTarget(
-							input.playerEntity,
-							e,
-							input.playerBoard,
-							input.playerEntity,
-							input.opponentEntity,
 						);
 					});
 					return true;

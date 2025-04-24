@@ -27,7 +27,7 @@ export const IrateRooster = {
 					input.opponentEntity,
 					input.gameState,
 				);
-				modifyStats(neighbour, 4, 0, input.playerBoard, input.playerEntity, input.gameState);
+				modifyStats(neighbour, minion, 4, 0, input.playerBoard, input.playerEntity, input.gameState);
 			}
 		}
 		return true;

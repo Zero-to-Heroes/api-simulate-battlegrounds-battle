@@ -13,7 +13,7 @@ export const WispInTheShell: BattlecryCard = {
 			const mult = minion.cardId === CardIds.WispInTheShell_BG31_841 ? 1 : 2;
 			const baseValue = 1 + (input.hero.globalInfo.FriendlyMinionsDeadLastCombat ?? 0);
 			const buff = 2 * mult * baseValue;
-			modifyStats(target, buff, buff, input.board, input.hero, input.gameState);
+			modifyStats(target, minion, buff, buff, input.board, input.hero, input.gameState);
 		}
 	},
 };

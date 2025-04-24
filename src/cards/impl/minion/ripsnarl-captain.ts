@@ -18,13 +18,14 @@ export const RipsnarlCaptain: OnAttackCard = {
 			)
 		) {
 			const mult = minion.cardId === CardIds.RipsnarlCaptain_TB_BaconUps_139 ? 2 : 1;
-			modifyStats(input.attacker, 3 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
+			modifyStats(
 				input.attacker,
+				minion,
+				3 * mult,
+				0,
 				input.attackingBoard,
 				input.attackingHero,
-				input.defendingHero,
+				input.gameState,
 			);
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };

@@ -126,14 +126,7 @@ export const handleRebornForEntity = (
 			entitiesThatWereReborn
 				.filter((e) => e.entityId !== arfus.entityId && e.rebornFromEntityId !== arfus.entityId)
 				.forEach((e) => {
-					modifyStats(e, attackBonus, 0, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
-					gameState.spectator.registerPowerTarget(
-						arfus,
-						e,
-						boardWithKilledMinion,
-						boardWithKilledMinionHero,
-						opponentBoardHero,
-					);
+					modifyStats(e, arfus, attackBonus, 0, boardWithKilledMinion, boardWithKilledMinionHero, gameState);
 				});
 		});
 
@@ -162,18 +155,12 @@ export const handleRebornForEntity = (
 				const multiplier = e.cardId === CardIds.JellyBelly_BG25_005_G ? 2 : 1;
 				modifyStats(
 					e,
+					e,
 					multiplier * 3,
 					multiplier * 3,
 					boardWithKilledMinion,
 					boardWithKilledMinionHero,
 					gameState,
-				);
-				gameState.spectator.registerPowerTarget(
-					e,
-					e,
-					boardWithKilledMinion,
-					boardWithKilledMinionHero,
-					opponentBoardHero,
 				);
 			});
 	}

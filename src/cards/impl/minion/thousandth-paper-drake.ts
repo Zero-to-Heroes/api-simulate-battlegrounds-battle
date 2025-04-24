@@ -15,7 +15,7 @@ export const ThousandthPaperDrake = {
 		for (let i = 0; i < loops; i++) {
 			const target = dragons.filter((e) => !pickedTargets.includes(e))[0];
 			if (!!target) {
-				modifyStats(target, 1, 2, input.playerBoard, input.playerEntity, input.gameState);
+				modifyStats(target, minion, 1, 2, input.playerBoard, input.playerEntity, input.gameState);
 				updateWindfury(
 					minion,
 					true,
@@ -23,13 +23,6 @@ export const ThousandthPaperDrake = {
 					input.playerEntity,
 					input.opponentEntity,
 					input.gameState,
-				);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					target,
-					input.playerBoard,
-					input.playerEntity,
-					input.opponentEntity,
 				);
 				pickedTargets.push(target);
 			}

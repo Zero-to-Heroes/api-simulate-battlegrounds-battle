@@ -11,18 +11,12 @@ export const Crabby = {
 		neighbours.forEach((entity) => {
 			modifyStats(
 				entity,
+				minion,
 				multiplier * (input.playerEntity.deadEyeDamageDone ?? 0),
 				multiplier * (input.playerEntity.deadEyeDamageDone ?? 0),
 				input.playerBoard,
 				input.playerEntity,
 				input.gameState,
-			);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
-				entity,
-				input.playerBoard,
-				input.playerEntity,
-				input.opponentEntity,
 			);
 		});
 		return true;

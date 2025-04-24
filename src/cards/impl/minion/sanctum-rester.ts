@@ -12,14 +12,7 @@ export const SanctumRester = {
 			hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
 		);
 		dragons.forEach((otherDragon) => {
-			modifyStats(otherDragon, buff, 0, input.playerBoard, input.playerEntity, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
-				otherDragon,
-				input.playerBoard,
-				input.playerEntity,
-				input.opponentEntity,
-			);
+			modifyStats(otherDragon, minion, buff, 0, input.playerBoard, input.playerEntity, input.gameState);
 		});
 		return true;
 	},

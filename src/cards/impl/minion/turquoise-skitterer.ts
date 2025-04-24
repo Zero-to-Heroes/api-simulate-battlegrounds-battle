@@ -27,6 +27,7 @@ export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleEffectCard = 
 			.forEach((e) => {
 				modifyStats(
 					e,
+					minion,
 					atkBuff * mult,
 					hpBuff * mult,
 					input.boardWithDeadEntity,

@@ -134,8 +134,15 @@ export const onMinionDeadQuest = (
 					const quantity = trinket.cardId === CardIds.AllianceKeychain_BG30_MagicItem_433 ? 1 : 2;
 					const targets = pickMultipleRandomAlive(board, quantity);
 					for (const target of targets) {
-						modifyStats(target, deadEntity.maxAttack, deadEntity.maxHealth, board, boardHero, gameState);
-						gameState.spectator.registerPowerTarget(boardHero, target, board, boardHero, otherBoardHero);
+						modifyStats(
+							target,
+							boardHero,
+							deadEntity.maxAttack,
+							deadEntity.maxHealth,
+							board,
+							boardHero,
+							gameState,
+						);
 					}
 					trinket.scriptDataNum1--;
 				}

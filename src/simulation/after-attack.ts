@@ -102,7 +102,7 @@ export const applyAfterAttackEffects = (
 	attackingBoard
 		.filter((e) => e.additionalCards?.includes(CardIds.FesterootHulk_BG_GIL_655))
 		.forEach((e) => {
-			modifyStats(e, 1, 0, attackingBoard, attackingBoardHero, gameState);
+			modifyStats(e, e, 1, 0, attackingBoard, attackingBoardHero, gameState);
 		});
 
 	applyOnAttackQuest(attackingEntity, attackingBoard, attackingBoardHero, gameState);

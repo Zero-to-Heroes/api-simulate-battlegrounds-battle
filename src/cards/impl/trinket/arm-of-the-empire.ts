@@ -9,13 +9,14 @@ export const ArmOfTheEmpire: OnMinionAttackedCard = {
 	onAttacked: (minion: BoardEntity, input: OnMinionAttackedInput) => {
 		if (input.defendingEntity.taunt) {
 			const mult = minion.cardId === CardIds.ArmOfTheEmpire_TB_BaconUps_302 ? 2 : 1;
-			modifyStats(input.defendingEntity, 3 * mult, 0, input.defendingBoard, input.defendingHero, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
+			modifyStats(
 				input.defendingEntity,
+				minion,
+				3 * mult,
+				0,
 				input.defendingBoard,
-				input.attackingHero,
 				input.defendingHero,
+				input.gameState,
 			);
 		}
 	},

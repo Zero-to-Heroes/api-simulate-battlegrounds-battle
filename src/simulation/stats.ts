@@ -1,15 +1,15 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from '../bgs-player-entity';
+import { BgsHeroPower, BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { BoardSecret } from '../board-secret';
 import { hasOnStatsChanged } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { TempCardIds } from '../temp-card-ids';
 import { hasCorrectTribe } from '../utils';
 import { applyAurasToSelf, removeAurasFromSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
-import { Spectator } from './spectator/spectator';
-import { TempCardIds } from '../temp-card-ids';
 
 export const setEntityStats = (
 	entity: BoardEntity,
@@ -33,12 +33,13 @@ export const setEntityStats = (
 
 export const modifyStats = (
 	entity: BoardEntity,
+	source: BoardEntity | BoardSecret | BoardTrinket | BgsPlayerEntity | BgsHeroPower,
 	attackAmount: number,
 	healthAmount: number,
 	friendlyBoard: BoardEntity[],
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
-	spectator: Spectator = null,
+	registerSpectator = true,
 ): void => {
 	if (attackAmount === 0 && healthAmount === 0) {
 		return;
@@ -50,7 +51,18 @@ export const modifyStats = (
 		healthAmount += 1 * buff;
 	}
 
-	if (friendlyBoardHero.trinkets?.some(t => t.cardId === TempCardIds.))
+	if (friendlyBoardHero.trinkets?.some((t) => t.cardId === TempCardIds.FountainPen)) {
+		if (
+			entity?.entityId !== source?.entityId &&
+			hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.anomalies, gameState.allCards) &&
+			// Safeguard
+			attackAmount >= 0 &&
+			healthAmount >= 0
+		) {
+			attackAmount += 1;
+			healthAmount += 1;
+		}
+	}
 
 	const otherBoardHero: BgsPlayerEntity =
 		gameState.gameState.player.player === friendlyBoardHero
@@ -154,6 +166,7 @@ export const modifyStats = (
 		mishmashes.forEach((mishmash) => {
 			modifyStats(
 				mishmash,
+				mishmash,
 				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realAttackAmount,
 				(mishmash.cardId === CardIds.Mishmash_TB_BaconShop_HERO_33_Buddy_G ? 2 : 1) * realHealthAmount,
 				friendlyBoard,
@@ -172,6 +185,10 @@ export const modifyStats = (
 		otherBoardHero,
 		gameState,
 	);
+
+	if (registerSpectator && !!source) {
+		gameState.spectator.registerPowerTarget(source, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
+	}
 };
 
 const onStatsUpdate = (
@@ -263,6 +280,7 @@ const onStatUpdateMinions = (
 		);
 		masterOfRealities.forEach((master) => {
 			modifyStats(
+				master,
 				master,
 				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
 				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,

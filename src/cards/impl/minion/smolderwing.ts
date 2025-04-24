@@ -24,7 +24,7 @@ export const Smolderwing: BattlecryCard = {
 			const smolderwingMultiplier =
 				minion.cardId === CardIds.GeneralDrakkisath_SmolderwingToken_BG25_309t ? 1 : 2;
 			const smolderwingStats = 5 * smolderwingMultiplier;
-			modifyStats(smolderwingTarget, smolderwingStats, 0, targetBoard, targetHero, input.gameState);
+			modifyStats(smolderwingTarget, minion, smolderwingStats, 0, targetBoard, targetHero, input.gameState);
 		}
 	},
 };

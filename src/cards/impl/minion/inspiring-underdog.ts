@@ -11,8 +11,7 @@ export const InspiringUnderdog: BattlecryCard = {
 		if (targets.length > 0) {
 			const multiplier = minion.cardId === CardIds.InspiringUnderdog_BG30_127 ? 1 : 2;
 			targets.forEach((target) => {
-				modifyStats(target, multiplier * 3, multiplier * 1, input.board, input.hero, input.gameState);
-				input.gameState.spectator.registerPowerTarget(minion, target, input.board, input.hero, input.otherHero);
+				modifyStats(target, minion, multiplier * 3, multiplier * 1, input.board, input.hero, input.gameState);
 			});
 		}
 	},

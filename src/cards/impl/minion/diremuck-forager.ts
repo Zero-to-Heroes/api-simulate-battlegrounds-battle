@@ -21,13 +21,14 @@ export const DiremuckForager = {
 			// reflect the values they have in hand
 			// if (target?.friendly || !target?.inInitialState) {
 			const diremuckBuff = minion.cardId === CardIds.DiremuckForager_BG27_556_G ? 4 : 2;
-			modifyStats(target, diremuckBuff, diremuckBuff, input.playerBoard, input.playerEntity, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
+			modifyStats(
 				target,
+				minion,
+				diremuckBuff,
+				diremuckBuff,
 				input.playerBoard,
 				input.playerEntity,
-				input.opponentEntity,
+				input.gameState,
 			);
 			// }
 			if (input.playerBoard.length < 7) {

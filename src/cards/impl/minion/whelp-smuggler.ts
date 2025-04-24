@@ -18,14 +18,7 @@ export const WhelpSmuggler: OnStatsChangedCard = {
 			input.attackAmount > 0
 		) {
 			const buff = minion.cardId === CardIds.WhelpSmuggler_BG21_013_G ? 2 : 1;
-			modifyStats(input.target, 0, buff, input.board, input.hero, input.gameState);
-			input.gameState.spectator.registerPowerTarget(
-				minion,
-				input.target,
-				input.board,
-				input.hero,
-				input.otherHero,
-			);
+			modifyStats(input.target, minion, 0, buff, input.board, input.hero, input.gameState);
 		}
 	},
 };

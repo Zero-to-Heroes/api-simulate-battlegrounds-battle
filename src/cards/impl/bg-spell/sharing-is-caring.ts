@@ -32,6 +32,7 @@ export const SharingIsCaring: StartOfCombatCard = {
 		const target = pickRandom(targets);
 		modifyStats(
 			friendlyMinion,
+			secret,
 			target.attack,
 			target.health,
 			input.playerBoard,

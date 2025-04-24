@@ -111,7 +111,7 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackC
 		const buff = advancedBallistics.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
 		const targets = input.attackingBoard.filter((entity) => entity !== minion);
 		for (const target of targets) {
-			modifyStats(target, buff, 0, input.attackingBoard, input.attackingHero, input.gameState);
+			modifyStats(target, minion, buff, 0, input.attackingBoard, input.attackingHero, input.gameState);
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
@@ -129,13 +129,14 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackC
 		}
 
 		const buff = caduceusReactors.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
-		modifyStats(target, buff, buff, input.boardWithDeadEntity, input.boardWithDeadEntityHero, input.gameState);
-		input.gameState.spectator.registerPowerTarget(
-			minion,
+		modifyStats(
 			target,
+			minion,
+			buff,
+			buff,
 			input.boardWithDeadEntity,
 			input.boardWithDeadEntityHero,
-			input.otherBoardHero,
+			input.gameState,
 		);
 	},
 };

@@ -10,8 +10,7 @@ export const Deadstomper: AfterOtherSpawnedCard = {
 		if (minion.entityId !== input.spawned.entityId) {
 			const mult = minion.cardId === CardIds.Deadstomper_BG28_634_G ? 2 : 1;
 			input.board.forEach((e) => {
-				modifyStats(e, 4 * mult, 0, input.board, input.hero, input.gameState);
-				input.gameState.spectator.registerPowerTarget(minion, e, input.board, null, null);
+				modifyStats(e, minion, 4 * mult, 0, input.board, input.hero, input.gameState);
 			});
 		}
 	},

@@ -11,7 +11,7 @@ export const BellowingTyrant: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCa
 		input.hero.globalInfo.BeastsSummonedThisGame += 1;
 		const mult = minion.cardId === CardIds.BellowingTyrant_BG31_361_G ? 2 : 1;
 		const statsBonus = mult * input.hero.globalInfo.BeastsSummonedThisGame;
-		modifyStats(minion, 3 * statsBonus, 2 * statsBonus, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, 3 * statsBonus, 2 * statsBonus, input.board, input.hero, input.gameState);
 	},
 	onDespawned: (minion: BoardEntity, input: OnDespawnInput) => {
 		const mult = minion.cardId === CardIds.BellowingTyrant_BG31_361_G ? 2 : 1;
@@ -27,6 +27,6 @@ export const BellowingTyrant: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCa
 		input.hero.globalInfo.BeastsSummonedThisGame += 1;
 		const mult = minion.cardId === CardIds.BellowingTyrant_BG31_361_G ? 2 : 1;
 		const statsBonus = mult * 1;
-		modifyStats(minion, 3 * statsBonus, 2 * statsBonus, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, 3 * statsBonus, 2 * statsBonus, input.board, input.hero, input.gameState);
 	},
 };

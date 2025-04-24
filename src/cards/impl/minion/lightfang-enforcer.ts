@@ -10,7 +10,7 @@ export const LightfangEnforcer: EndOfTurnCard = {
 		const mult = minion.cardId === CardIds.LightfangEnforcer_TB_BaconUps_082 ? 2 : 1;
 		const targets = getMinionsOfDifferentTypes(input.board, input.hero, input.gameState);
 		for (const entity of targets) {
-			modifyStats(entity, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
+			modifyStats(entity, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

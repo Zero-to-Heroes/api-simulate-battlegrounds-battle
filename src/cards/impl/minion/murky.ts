@@ -20,7 +20,7 @@ export const Murky: BattlecryCard = {
 			),
 		);
 		if (!!murkyTarget) {
-			modifyStats(murkyTarget, murkyStats, murkyStats, input.board, input.hero, input.gameState);
+			modifyStats(murkyTarget, minion, murkyStats, murkyStats, input.board, input.hero, input.gameState);
 		}
 	},
 };

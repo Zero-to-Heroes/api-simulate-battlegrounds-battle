@@ -9,7 +9,6 @@ export const GentleStag: OnOtherSpawnedCard = {
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
 		const mult = minion.cardId === CardIds.GentleStag_BG31_369_G ? 2 : 1;
 		const target = input.board[input.board.length - 1];
-		modifyStats(target, mult * 1, mult * 1, input.board, input.hero, input.gameState);
-		input.gameState.spectator.registerPowerTarget(minion, target, input.board, input.hero, input.otherHero);
+		modifyStats(target, minion, mult * 1, mult * 1, input.board, input.hero, input.gameState);
 	},
 };

@@ -30,18 +30,12 @@ export const FragrantPhylactery: StartOfCombatCard = {
 				newBoard.forEach((e) => {
 					modifyStats(
 						e,
+						trinket,
 						chosenEntity.attack,
 						chosenEntity.health,
 						newBoard,
 						input.playerEntity,
 						input.gameState,
-					);
-					input.gameState.spectator.registerPowerTarget(
-						chosenEntity,
-						e,
-						newBoard,
-						input.playerEntity,
-						input.opponentEntity,
 					);
 				});
 				// Tamsin's hero power somehow happens before the current attacker is chosen.

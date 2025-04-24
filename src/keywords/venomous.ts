@@ -25,7 +25,7 @@ export const updateVenomous = (
 		);
 		belcherPortraits.forEach((p) => {
 			const buff = p.cardId === CardIds.BelcherPortrait_BelcherPortraitToken_BG30_MagicItem_432t ? 14 : 4;
-			modifyStats(entity, buff, buff, board, hero, gameState);
+			modifyStats(entity, p, buff, buff, board, hero, gameState);
 			gameState.spectator.registerPowerTarget(p, entity, board, null, null);
 		});
 	}

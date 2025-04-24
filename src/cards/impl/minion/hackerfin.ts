@@ -21,6 +21,7 @@ export const Hackerfin: BattlecryCard = {
 			}
 			modifyStats(
 				minion,
+				minion,
 				totalKeywords * mult * baseAttackBuff,
 				totalKeywords * mult * baseHealthBuff,
 				input.board,

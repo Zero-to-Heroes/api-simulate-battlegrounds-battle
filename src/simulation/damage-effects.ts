@@ -67,8 +67,7 @@ export const onEntityDamaged = (
 		case CardIds.TrustyPup_BG29_800:
 		case CardIds.TrustyPup_BG29_800_G:
 			const trustyPupStats = entity.cardId === CardIds.TrustyPup_BG29_800_G ? 2 : 1;
-			modifyStats(entity, trustyPupStats, 0, board, hero, gameState);
-			gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
+			modifyStats(entity, entity, trustyPupStats, 0, board, hero, gameState);
 			break;
 		case CardIds.SilverGoose_BG29_801:
 		case CardIds.SilverGoose_BG29_801_G:
@@ -187,8 +186,7 @@ const handleOtherEntityEffects = (
 				const stats = e.cardId === CardIds.IridescentSkyblazer_BG29_806_G ? 2 : 1;
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
 				if (!!target) {
-					modifyStats(target, 2 * stats, stats, board, hero, gameState);
-					gameState.spectator.registerPowerTarget(e, target, board, hero, otherHero);
+					modifyStats(target, e, 2 * stats, stats, board, hero, gameState);
 				}
 			});
 		board
@@ -199,8 +197,7 @@ const handleOtherEntityEffects = (
 			.filter((e) => e.entityId !== entity.entityId)
 			.forEach((e) => {
 				const stats = e.cardId === CardIds.TrigoreTheLasher_BG29_807_G ? 2 : 1;
-				modifyStats(e, 0, 2 * stats, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(e, e, board, hero, otherHero);
+				modifyStats(e, e, 0, 2 * stats, board, hero, gameState);
 			});
 	}
 
@@ -214,8 +211,7 @@ const handleOtherEntityEffects = (
 			const target = pickRandomAlive(board);
 			if (!!target) {
 				const buff = carving.cardId === CardIds.TigerCarving_TigerCarvingToken_BG30_MagicItem_427t ? 4 : 2;
-				modifyStats(target, buff, 0, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(carving, target, board, hero, otherHero);
+				modifyStats(target, carving, buff, 0, board, hero, gameState);
 			}
 		});
 };

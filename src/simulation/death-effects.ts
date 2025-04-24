@@ -73,8 +73,7 @@ const handleSecrets = (
 			case CardIds.Avenge_TB_Bacon_Secrets_08:
 				secret.triggered = true;
 				const avengeTarget = pickRandomAlive(boardWithDeadEntity);
-				modifyStats(avengeTarget, 3, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				gameState.spectator.registerPowerTarget(secret, avengeTarget, boardWithDeadEntity, null, null);
+				modifyStats(avengeTarget, secret, 3, 2, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				break;
 			case CardIds.Redemption_TB_Bacon_Secrets_10:
 				secret.triggered = true;

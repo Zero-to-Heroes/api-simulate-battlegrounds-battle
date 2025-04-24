@@ -7,12 +7,10 @@ export const AllWillBurn: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		for (const entity of input.playerBoard) {
-			modifyStats(entity, 2, 0, input.playerBoard, input.playerEntity, input.gameState);
-			input.gameState.spectator.registerPowerTarget(input.playerEntity, entity, input.playerBoard, null, null);
+			modifyStats(entity, trinket, 2, 0, input.playerBoard, input.playerEntity, input.gameState);
 		}
 		for (const entity of input.opponentBoard) {
-			modifyStats(entity, 2, 0, input.opponentBoard, input.opponentEntity, input.gameState);
-			input.gameState.spectator.registerPowerTarget(input.playerEntity, entity, input.opponentBoard, null, null);
+			modifyStats(entity, trinket, 2, 0, input.opponentBoard, input.opponentEntity, input.gameState);
 		}
 		return true;
 	},

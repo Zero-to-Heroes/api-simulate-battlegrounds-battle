@@ -197,8 +197,7 @@ export const grantRandomAttack = (
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = candidateBoard[Math.floor(Math.random() * candidateBoard.length)];
-		modifyStats(target, additionalAttack, 0, candidateBoard, hero, gameState);
-		gameState.spectator.registerPowerTarget(source, target, board, null, null);
+		modifyStats(target, source, additionalAttack, 0, candidateBoard, hero, gameState);
 	}
 };
 
@@ -215,8 +214,7 @@ export const grantRandomHealth = (
 		.filter((e) => e.health > 0 && !e.definitelyDead);
 	if (candidateBoard.length > 0) {
 		const target = pickRandom(candidateBoard);
-		modifyStats(target, 0, health, board, hero, gameState);
-		gameState.spectator.registerPowerTarget(source, target, board, null, null);
+		modifyStats(target, source, 0, health, board, hero, gameState);
 	}
 };
 
@@ -238,10 +236,7 @@ export const grantRandomStats = (
 			gameState,
 		);
 		if (target) {
-			modifyStats(target, attack, health, board, hero, gameState);
-			if (gameState.spectator) {
-				gameState.spectator.registerPowerTarget(source, target, board, null, null);
-			}
+			modifyStats(target, source, attack, health, board, hero, gameState);
 			return target;
 		}
 	}
@@ -306,8 +301,7 @@ export const addStatsToBoard = (
 ): void => {
 	for (const entity of board) {
 		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.anomalies, gameState.allCards)) {
-			modifyStats(entity, attack, health, board, hero, gameState);
-			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
+			modifyStats(entity, sourceEntity, attack, health, board, hero, gameState);
 			// if (permanentUpgrade) {
 			// 	entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
 			// 	entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
@@ -328,12 +322,7 @@ export const addStatsToAliveBoard = (
 ): void => {
 	for (const entity of board.filter((e) => e.health > 0 && !e.definitelyDead)) {
 		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.anomalies, gameState.allCards)) {
-			modifyStats(entity, attack, health, board, hero, gameState);
-			gameState.spectator?.registerPowerTarget(sourceEntity, entity, board, null, null);
-			// if (permanentUpgrade) {
-			// 	entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
-			// 	entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
-			// }
+			modifyStats(entity, sourceEntity, attack, health, board, hero, gameState);
 		}
 	}
 };
@@ -350,8 +339,7 @@ export const grantStatsToMinionsOfEachType = (
 ): void => {
 	const minionsToBuff = getMinionsOfDifferentTypes(board, hero, gameState, canRevive, numberOfDifferentTypes);
 	for (const entity of minionsToBuff) {
-		modifyStats(entity, attack, health, board, hero, gameState);
-		gameState.spectator.registerPowerTarget(source, entity, board, null, null);
+		modifyStats(entity, source, attack, health, board, hero, gameState);
 	}
 };
 

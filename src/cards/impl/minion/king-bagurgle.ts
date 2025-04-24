@@ -18,7 +18,15 @@ export const KingBagurgle: BattlecryCard = {
 				hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
 			);
 		for (const entity of targets) {
-			modifyStats(entity, baseAttackBuff * mult, baseHealthBuff * mult, input.board, input.hero, input.gameState);
+			modifyStats(
+				entity,
+				minion,
+				baseAttackBuff * mult,
+				baseHealthBuff * mult,
+				input.board,
+				input.hero,
+				input.gameState,
+			);
 		}
 	},
 };

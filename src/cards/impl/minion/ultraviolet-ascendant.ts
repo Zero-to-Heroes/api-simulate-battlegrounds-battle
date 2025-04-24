@@ -23,7 +23,7 @@ export const UltravioletAscendant: StartOfCombatCard = {
 			)
 			.filter((e) => e.entityId !== minion.entityId);
 		for (const target of candidates) {
-			modifyStats(target, attackBuff, healthBuff, input.playerBoard, input.playerEntity, input.gameState);
+			modifyStats(target, minion, attackBuff, healthBuff, input.playerBoard, input.playerEntity, input.gameState);
 		}
 		return true;
 	},

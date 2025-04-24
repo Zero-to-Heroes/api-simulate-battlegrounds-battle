@@ -8,6 +8,7 @@ export const TinyfinOnesie = {
 		if (highestHealthMinionInHand && input.playerBoard.length > 0) {
 			modifyStats(
 				input.playerBoard[0],
+				trinket,
 				highestHealthMinionInHand.attack,
 				highestHealthMinionInHand.health,
 				input.playerBoard,

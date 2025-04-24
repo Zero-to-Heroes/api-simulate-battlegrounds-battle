@@ -25,6 +25,7 @@ export const AssistantGuard: BattlecryCard = {
 		for (const entity of input.board.filter((e) => !!e.taunt)) {
 			modifyStats(
 				entity,
+				minion,
 				assistantGuardMultiplier * 2,
 				assistantGuardMultiplier * 3,
 				input.board,

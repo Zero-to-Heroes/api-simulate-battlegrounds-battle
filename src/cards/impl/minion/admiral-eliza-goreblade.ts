@@ -19,13 +19,14 @@ export const AdmiralElizaGoreblade: OnAttackCard = {
 		) {
 			const mult = minion.cardId === CardIds.AdmiralElizaGoreblade_BG27_555_G ? 2 : 1;
 			input.attackingBoard.forEach((entity) => {
-				modifyStats(entity, 3 * mult, 1 * mult, input.attackingBoard, input.attackingHero, input.gameState);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
+				modifyStats(
 					entity,
+					minion,
+					3 * mult,
+					1 * mult,
 					input.attackingBoard,
 					input.attackingHero,
-					input.defendingHero,
+					input.gameState,
 				);
 			});
 		}

@@ -29,6 +29,7 @@ export const afterDiscover = (
 					.reduce((a, b) => a + b, 0);
 				modifyStats(
 					entity,
+					entity,
 					baseTotalAttack * felfinMultiplier,
 					baseTotalHealth * felfinMultiplier,
 					board,

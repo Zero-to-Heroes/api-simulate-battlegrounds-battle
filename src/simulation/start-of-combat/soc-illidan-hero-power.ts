@@ -121,17 +121,9 @@ const handleIllidanForPlayer = (
 	const secondAttacker = minionsAtStart > 1 ? playerBoard[playerBoard.length - 1] : null;
 
 	// Stats updates
-	modifyStats(firstAttacker, 2, 1, playerBoard, playerEntity, gameState);
-	gameState.spectator.registerPowerTarget(firstAttacker, firstAttacker, playerBoard, playerEntity, opponentEntity);
+	modifyStats(firstAttacker, playerEntity, 2, 1, playerBoard, playerEntity, gameState);
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
-		modifyStats(secondAttacker, 2, 1, playerBoard, playerEntity, gameState);
-		gameState.spectator.registerPowerTarget(
-			secondAttacker,
-			secondAttacker,
-			playerBoard,
-			playerEntity,
-			opponentEntity,
-		);
+		modifyStats(secondAttacker, playerEntity, 2, 1, playerBoard, playerEntity, gameState);
 	}
 
 	// Attacks

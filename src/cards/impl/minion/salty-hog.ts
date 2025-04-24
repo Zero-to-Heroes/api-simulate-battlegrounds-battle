@@ -13,8 +13,7 @@ export const SaltyHog: OnCardAddedToHandCard & DefaultChargesCard = {
 			const mult = entity.cardId === CardIds.SaltyHog_BG31_332_G ? 2 : 1;
 			const targets = input.board.filter((e) => e.entityId !== entity.entityId);
 			for (const target of targets) {
-				modifyStats(target, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
-				input.gameState.spectator.registerPowerTarget(entity, target, input.board, input.hero, null);
+				modifyStats(target, entity, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
 			}
 			entity.abiityChargesLeft = 3;
 		}

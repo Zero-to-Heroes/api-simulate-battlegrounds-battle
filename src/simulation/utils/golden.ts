@@ -58,7 +58,7 @@ export const makeMinionGolden = (
 	// UPDATE 2024-06-20: Defiant Shipwright (2/5) going golden (4/10) actually ends up at 4/12 because
 	// of the +2 health bonus
 	// http://replays.firestoneapp.com/?reviewId=283dc44c-5fc8-40fb-af89-7d752a39f9b9&turn=7&action=1
-	modifyStats(target, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
+	modifyStats(target, null, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, otherBoard, otherHero, target, gameState, true, false);

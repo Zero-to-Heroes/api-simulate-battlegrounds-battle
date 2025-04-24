@@ -14,14 +14,7 @@ export const PrizedPromoDrake: StartOfCombatCard = {
 		);
 		if (!!targets.length) {
 			for (const entity of targets) {
-				modifyStats(entity, 3 * mult, 3 * mult, input.playerBoard, input.playerEntity, input.gameState);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					entity,
-					input.playerBoard,
-					input.playerEntity,
-					input.opponentEntity,
-				);
+				modifyStats(entity, minion, 3 * mult, 3 * mult, input.playerBoard, input.playerEntity, input.gameState);
 			}
 			return true;
 		}

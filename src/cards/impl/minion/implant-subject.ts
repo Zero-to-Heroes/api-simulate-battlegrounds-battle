@@ -87,5 +87,5 @@ export const ImplantSubject: OnTauntUpdatedCard &
 
 const updateEntity = (entity: BoardEntity, board: BoardEntity[], hero: BgsPlayerEntity, gameState: FullGameState) => {
 	const mult = entity.cardId === CardIds.ImplantSubject_BG31_147_G ? 2 : 1;
-	modifyStats(entity, 1 * mult, 1 * mult, board, hero, gameState);
+	modifyStats(entity, entity, 1 * mult, 1 * mult, board, hero, gameState);
 };

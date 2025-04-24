@@ -18,8 +18,15 @@ export const RivendarePortrait = {
 						e.cardId === CardIds.TitusRivendare_BG25_354 || e.cardId === CardIds.TitusRivendare_BG25_354_G,
 				)
 				.forEach((e) => {
-					modifyStats(e, 0, buffBonus * e.health, input.playerBoard, input.playerEntity, input.gameState);
-					input.gameState.spectator.registerPowerTarget(trinket, e, input.playerBoard, null, null);
+					modifyStats(
+						e,
+						trinket,
+						0,
+						buffBonus * e.health,
+						input.playerBoard,
+						input.playerEntity,
+						input.gameState,
+					);
 				});
 			rivendareTrinkets.forEach((t) => (t.scriptDataNum1 = 99));
 			return true;

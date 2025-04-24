@@ -17,13 +17,13 @@ export const PeggySturdybone: OnCardAddedToHandCard = {
 		if (pirate) {
 			modifyStats(
 				pirate,
+				minion,
 				minion.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
 				minion.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
 				input.board,
 				input.hero,
 				input.gameState,
 			);
-			input.gameState.spectator.registerPowerTarget(minion, pirate, input.board, input.hero, null);
 		}
 	},
 };

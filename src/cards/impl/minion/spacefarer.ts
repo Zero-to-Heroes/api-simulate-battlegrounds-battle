@@ -17,7 +17,7 @@ export const Spacefarer: OnStatsChangedCard = {
 		}
 		if (input.attackAmount > 0) {
 			const mult = entity.cardId === CardIds.Spacefarer_BG31_820_G ? 2 : 1;
-			modifyStats(entity, 0, 3 * mult, input.board, input.hero, input.gameState);
+			modifyStats(entity, entity, 0, 3 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

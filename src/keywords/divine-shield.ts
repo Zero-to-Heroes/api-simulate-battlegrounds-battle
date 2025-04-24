@@ -64,16 +64,16 @@ export const updateDivineShield = (
 
 		for (let i = 0; i < board.length; i++) {
 			if (board[i].cardId === CardIds.BolvarFireblood_ICC_858) {
-				modifyStats(board[i], 2, 0, board, hero, gameState);
+				modifyStats(board[i], board[i], 2, 0, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
 			} else if (board[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
-				modifyStats(board[i], 4, 0, board, hero, gameState);
+				modifyStats(board[i], board[i], 4, 0, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
 			} else if (board[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
-				modifyStats(board[i], 2, 2, board, hero, gameState);
+				modifyStats(board[i], board[i], 2, 2, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
 			} else if (board[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
-				modifyStats(board[i], 4, 4, board, hero, gameState);
+				modifyStats(board[i], board[i], 4, 4, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
 			} else if (
 				board[i].entityId !== entity.entityId &&

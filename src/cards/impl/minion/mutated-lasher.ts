@@ -18,18 +18,12 @@ export const MutatedLasher: DeathrattleEffectCard = {
 			.forEach((e) => {
 				modifyStats(
 					e,
+					minion,
 					baseAttackBuff * mult,
 					baseHealthBuff * mult,
 					input.boardWithDeadEntity,
 					input.boardWithDeadEntityHero,
 					input.gameState,
-				);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					e,
-					input.boardWithDeadEntity,
-					input.boardWithDeadEntityHero,
-					input.otherBoardHero,
 				);
 			});
 	},

@@ -79,35 +79,37 @@ export const applyOnAttackEffects = (
 			)
 			.forEach((rallier) => {
 				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
-				modifyStats(attacker, 3 * stats, stats, attackingBoard, attackingBoardHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					rallier,
-					attacker,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
+				modifyStats(attacker, rallier, 3 * stats, stats, attackingBoard, attackingBoardHero, gameState);
 			});
 	}
 
 	if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
 		// For now the utility method only works additively, so we hack around it
-		modifyStats(attacker, 2 * attacker.attack - attacker.attack, 0, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(
+			attacker,
+			null,
+			2 * attacker.attack - attacker.attack,
+			0,
+			attackingBoard,
+			attackingBoardHero,
+			gameState,
+		);
 	} else if (attacker.cardId === CardIds.GlyphGuardian_TB_BaconUps_115) {
-		modifyStats(attacker, 3 * attacker.attack - attacker.attack, 0, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(
+			attacker,
+			null,
+			3 * attacker.attack - attacker.attack,
+			0,
+			attackingBoard,
+			attackingBoardHero,
+			gameState,
+		);
 	} else if (
 		attacker.cardId === CardIds.GlimGuardian_BG29_888 ||
 		attacker.cardId === CardIds.GlimGuardian_BG29_888_G
 	) {
 		const multiplier = attacker.cardId === CardIds.GlimGuardian_BG29_888_G ? 2 : 1;
-		modifyStats(attacker, 2 * multiplier, 1 * multiplier, attackingBoard, attackingBoardHero, gameState);
-		gameState.spectator.registerPowerTarget(
-			attacker,
-			attacker,
-			attackingBoard,
-			attackingBoardHero,
-			defendingBoardHero,
-		);
+		modifyStats(attacker, attacker, 2 * multiplier, 1 * multiplier, attackingBoard, attackingBoardHero, gameState);
 	} else if (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708 ||
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708_G
@@ -117,18 +119,12 @@ export const applyOnAttackEffects = (
 			.forEach((e) => {
 				modifyStats(
 					e,
+					attacker,
 					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attacker.cardId === CardIds.VanessaVancleef_BG24_708_G ? 4 : 2,
 					attackingBoard,
 					attackingBoardHero,
 					gameState,
-				);
-				gameState.spectator.registerPowerTarget(
-					attacker,
-					e,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
 				);
 			});
 	} else if (
@@ -205,7 +201,7 @@ export const applyOnAttackEffects = (
 	for (const trinket of attackingBoardHero.trinkets) {
 		switch (trinket.cardId) {
 			case CardIds.CeremonialSword_BG30_MagicItem_925:
-				modifyStats(attacker, 4, 0, attackingBoard, attackingBoardHero, gameState);
+				modifyStats(attacker, trinket, 4, 0, attackingBoard, attackingBoardHero, gameState);
 				break;
 		}
 	}

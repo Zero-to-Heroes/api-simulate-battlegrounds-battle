@@ -24,6 +24,7 @@ export const ImpulsiveTrickster: DeathrattleEffectCard = {
 				for (const neighbour of neighbours) {
 					modifyStats(
 						neighbour,
+						minion,
 						0,
 						minion.maxHealth,
 						input.boardWithDeadEntity,

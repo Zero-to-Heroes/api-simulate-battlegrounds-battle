@@ -204,18 +204,12 @@ const handleAvenge = (
 				neighbours.forEach((entity) => {
 					modifyStats(
 						entity,
+						avenger,
 						avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2,
 						avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1,
 						boardWithDeadEntity,
 						boardWithDeadEntityHero,
 						gameState,
-					);
-					gameState.spectator.registerPowerTarget(
-						avenger,
-						entity,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoardHero,
 					);
 				});
 				break;
@@ -479,18 +473,12 @@ const handleAvenge = (
 				const abominationMultiplier = avenger.cardId === CardIds.HungeringAbomination_BG25_014_G ? 2 : 1;
 				modifyStats(
 					avenger,
+					avenger,
 					abominationMultiplier * 1,
 					abominationMultiplier * 2,
 					boardWithDeadEntity,
 					boardWithDeadEntityHero,
 					gameState,
-				);
-				gameState.spectator.registerPowerTarget(
-					avenger,
-					avenger,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
 				);
 				break;
 			case CardIds.IceSickle:
@@ -705,7 +693,7 @@ const handleHeroAvenge = (
 			boardWithDeadEntity
 				// .filter((entity) => !entity.definitelyDead && entity.health > 0)
 				.forEach((entity) => {
-					modifyStats(entity, 0, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+					modifyStats(entity, heroPower, 0, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 					gameState.spectator.registerPowerTarget(
 						boardWithDeadEntityHero,
 						entity,
@@ -717,7 +705,7 @@ const handleHeroAvenge = (
 			break;
 		case CardIds.Drekthar_LeadTheFrostwolves:
 			boardWithDeadEntity.forEach((entity) => {
-				modifyStats(entity, 1, 0, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
+				modifyStats(entity, heroPower, 1, 0, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 				gameState.spectator.registerPowerTarget(
 					boardWithDeadEntityHero,
 					entity,

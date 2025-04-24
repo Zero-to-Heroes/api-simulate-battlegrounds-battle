@@ -112,24 +112,10 @@ export const applyOnBeingAttackedBuffs = (
 			(entity) => entity.cardId === CardIds.ChampionOfYshaarj_TB_BaconUps_301,
 		);
 		champions.forEach((entity) => {
-			modifyStats(entity, 1, 2, defendingBoard, defendingPlayerEntity, gameState);
-			gameState.spectator.registerPowerTarget(
-				entity,
-				entity,
-				defendingBoard,
-				attackerHero,
-				defendingPlayerEntity,
-			);
+			modifyStats(entity, entity, 1, 2, defendingBoard, defendingPlayerEntity, gameState);
 		});
 		goldenChampions.forEach((entity) => {
-			modifyStats(entity, 2, 4, defendingBoard, defendingPlayerEntity, gameState);
-			gameState.spectator.registerPowerTarget(
-				entity,
-				entity,
-				defendingBoard,
-				attackerHero,
-				defendingPlayerEntity,
-			);
+			modifyStats(entity, entity, 2, 4, defendingBoard, defendingPlayerEntity, gameState);
 		});
 
 		defendingBoard
@@ -148,26 +134,12 @@ export const applyOnBeingAttackedBuffs = (
 	if (defendingEntity.cardId === CardIds.TormentedRitualist_BGS_201) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		neighbours.forEach((entity) => {
-			modifyStats(entity, 1, 1, defendingBoard, defendingPlayerEntity, gameState);
-			gameState.spectator.registerPowerTarget(
-				defendingEntity,
-				entity,
-				defendingBoard,
-				attackerHero,
-				defendingPlayerEntity,
-			);
+			modifyStats(entity, defendingEntity, 1, 1, defendingBoard, defendingPlayerEntity, gameState);
 		});
 	} else if (defendingEntity.cardId === CardIds.TormentedRitualist_TB_BaconUps_257) {
 		const neighbours = getNeighbours(defendingBoard, defendingEntity);
 		neighbours.forEach((entity) => {
-			modifyStats(entity, 2, 2, defendingBoard, defendingPlayerEntity, gameState);
-			gameState.spectator.registerPowerTarget(
-				defendingEntity,
-				entity,
-				defendingBoard,
-				attackerHero,
-				defendingPlayerEntity,
-			);
+			modifyStats(entity, defendingEntity, 2, 2, defendingBoard, defendingPlayerEntity, gameState);
 		});
 	} else if (
 		defendingEntity.cardId === CardIds.DozyWhelp_BG24_300 ||
@@ -175,18 +147,12 @@ export const applyOnBeingAttackedBuffs = (
 	) {
 		modifyStats(
 			defendingEntity,
+			defendingEntity,
 			defendingEntity.cardId === CardIds.DozyWhelp_BG24_300_G ? 2 : 1,
 			0,
 			defendingBoard,
 			defendingPlayerEntity,
 			gameState,
-		);
-		gameState.spectator.registerPowerTarget(
-			defendingEntity,
-			defendingEntity,
-			defendingBoard,
-			attackerHero,
-			defendingPlayerEntity,
 		);
 	} else if (
 		[CardIds.AdaptableBarricade_BG27_022, CardIds.AdaptableBarricade_BG27_022_G].includes(

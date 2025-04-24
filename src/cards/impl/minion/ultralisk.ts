@@ -11,18 +11,12 @@ export const Ultralisk: StartOfCombatCard = {
 		const multiplier = minion.cardId === CardIds.Ultralisk_BG31_HERO_811t10_G ? 2 : 1;
 		modifyStats(
 			minion,
+			minion,
 			multiplier * minion.attack,
 			multiplier * minion.health,
 			input.playerBoard,
 			input.playerEntity,
 			input.gameState,
-		);
-		input.gameState.spectator.registerPowerTarget(
-			minion,
-			minion,
-			input.playerBoard,
-			input.playerEntity,
-			input.opponentEntity,
 		);
 		return true;
 	},

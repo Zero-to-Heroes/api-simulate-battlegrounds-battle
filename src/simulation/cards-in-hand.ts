@@ -115,13 +115,13 @@ const onCardAddedToHandMinion = (
 	thornCaptains.forEach((captain) => {
 		modifyStats(
 			captain,
+			captain,
 			0,
 			captain.cardId === CardIds.Thorncaptain_BG25_045_G ? 2 : 1,
 			board,
 			playerEntity,
 			gameState,
 		);
-		gameState.spectator.registerPowerTarget(captain, captain, board, playerEntity, null);
 	});
 };
 

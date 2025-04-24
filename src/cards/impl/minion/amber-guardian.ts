@@ -36,14 +36,7 @@ export const AmberGuardian = {
 						input.gameState,
 					);
 				}
-				modifyStats(otherDragon, 2, 2, input.playerBoard, input.playerEntity, input.gameState);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					otherDragon,
-					input.playerBoard,
-					input.playerEntity,
-					input.opponentEntity,
-				);
+				modifyStats(otherDragon, minion, 2, 2, input.playerBoard, input.playerEntity, input.gameState);
 				dragonsToConsider.splice(dragonsToConsider.indexOf(otherDragon), 1);
 			}
 		}

@@ -8,6 +8,6 @@ export const BlazingSkyfin: OnBattlecryTriggeredCard = {
 	cardIds: [CardIds.BlazingSkyfin_BG25_040, CardIds.BlazingSkyfin_BG25_040_G],
 	onBattlecryTriggered: (minion: BoardEntity, input: BattlecryInput) => {
 		const buff = minion.cardId === CardIds.BlazingSkyfin_BG25_040 ? 1 : 2;
-		modifyStats(minion, buff, buff, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, buff, buff, input.board, input.hero, input.gameState);
 	},
 };

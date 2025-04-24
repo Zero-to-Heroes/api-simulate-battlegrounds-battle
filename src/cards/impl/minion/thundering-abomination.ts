@@ -10,12 +10,12 @@ export const ThunderingAbomination: OnOtherSpawnedCard = {
 		const abomStatsMultiplier = minion.cardId === CardIds.ThunderingAbomination_BG30_124_G ? 2 : 1;
 		modifyStats(
 			input.spawned,
+			minion,
 			abomStatsMultiplier * 3,
 			abomStatsMultiplier * 3,
 			input.board,
 			input.hero,
 			input.gameState,
 		);
-		input.gameState.spectator.registerPowerTarget(minion, input.spawned, input.board, input.hero, input.otherHero);
 	},
 };

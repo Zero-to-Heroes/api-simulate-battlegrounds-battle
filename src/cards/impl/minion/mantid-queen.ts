@@ -22,7 +22,7 @@ export const MantidQueen = {
 				const buffType = getRandomMantidQueenBuffType(minion);
 				switch (buffType) {
 					case 'stats':
-						modifyStats(minion, 5, 5, input.playerBoard, input.playerEntity, input.gameState);
+						modifyStats(minion, minion, 5, 5, input.playerBoard, input.playerEntity, input.gameState);
 						break;
 					case 'reborn':
 						updateReborn(

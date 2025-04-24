@@ -72,10 +72,10 @@ const handleSpawnEffect = (
 		const manyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps_BG22_HERO_305_Buddy);
 		const goldenManyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps_BG22_HERO_305_Buddy_G);
 		manyWhelps.forEach((entity) => {
-			modifyStats(entity, 2, 2, board, boardHero, gameState);
+			modifyStats(entity, entity, 2, 2, board, boardHero, gameState);
 		});
 		goldenManyWhelps.forEach((entity) => {
-			modifyStats(entity, 4, 4, board, boardHero, gameState);
+			modifyStats(entity, entity, 4, 4, board, boardHero, gameState);
 		});
 	}
 
@@ -102,7 +102,7 @@ const handleSpawnEffect = (
 			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G:
 				if (gameState.allCards.getCard(spawned.cardId).techLevel === boardHero.tavernTier) {
 					const statsBonus = entity.cardId === CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
-					modifyStats(spawned, statsBonus, statsBonus, board, boardHero, gameState);
+					modifyStats(spawned, entity, statsBonus, statsBonus, board, boardHero, gameState);
 				}
 				break;
 			case CardIds.CobaltGuardian:
@@ -110,7 +110,7 @@ const handleSpawnEffect = (
 					if (!entity.divineShield) {
 						updateDivineShield(entity, board, boardHero, otherHero, true, gameState);
 					}
-					modifyStats(entity, 2, 0, board, boardHero, gameState);
+					modifyStats(entity, entity, 2, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -118,7 +118,7 @@ const handleSpawnEffect = (
 			case CardIds.Bigfernal_TB_BaconUps_304:
 				if (hasCorrectTribe(spawned, boardHero, Race.DEMON, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.Bigfernal_TB_BaconUps_304 ? 2 : 1;
-					modifyStats(entity, statsBonus, statsBonus, board, boardHero, gameState);
+					modifyStats(entity, entity, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -126,7 +126,7 @@ const handleSpawnEffect = (
 			case CardIds.MamaBear_TB_BaconUps_090:
 				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 8 : 4;
-					modifyStats(spawned, statsBonus, statsBonus, board, boardHero, gameState);
+					modifyStats(spawned, entity, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -134,7 +134,7 @@ const handleSpawnEffect = (
 			case CardIds.PapaBear_BG27_509_G:
 				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.PapaBear_BG27_509_G ? 16 : 8;
-					modifyStats(spawned, statsBonus, statsBonus, board, boardHero, gameState);
+					modifyStats(spawned, entity, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -142,7 +142,7 @@ const handleSpawnEffect = (
 			case CardIds.PackLeader_TB_BaconUps_086:
 				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 					const statsBonus = entity.cardId === CardIds.PackLeader_TB_BaconUps_086 ? 4 : 2;
-					modifyStats(spawned, statsBonus, 0, board, boardHero, gameState);
+					modifyStats(spawned, entity, statsBonus, 0, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}
 				break;
@@ -164,16 +164,16 @@ export const handleAddedMinionAuraEffect = (
 			case CardIds.SproutItOut:
 				if (isActuallySpawned) {
 					updateTaunt(spawned, true, board, boardHero, otherHero, gameState);
-					modifyStats(spawned, 1, 2, board, boardHero, gameState);
+					modifyStats(spawned, boardHero, 1, 2, board, boardHero, gameState);
 				}
 				break;
 			case CardIds.KurtrusAshfallen_CloseThePortal:
-				modifyStats(spawned, 2, 2, board, boardHero, gameState);
+				modifyStats(spawned, boardHero, 2, 2, board, boardHero, gameState);
 				break;
 			case CardIds.Tinker_TB_BaconShop_HP_015:
 				if (isActuallySpawned) {
 					if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
-						modifyStats(spawned, 3, 0, board, boardHero, gameState);
+						modifyStats(spawned, boardHero, 3, 0, board, boardHero, gameState);
 					}
 				}
 				break;
@@ -184,7 +184,7 @@ export const handleAddedMinionAuraEffect = (
 		const tumblingDisasterBonus =
 			boardHero.questRewardEntities?.find((e) => e.cardId === CardIds.TumblingDisaster_BG28_Reward_505)
 				?.scriptDataNum1 || 1;
-		modifyStats(spawned, tumblingDisasterBonus, tumblingDisasterBonus, board, boardHero, gameState);
+		modifyStats(spawned, boardHero, tumblingDisasterBonus, tumblingDisasterBonus, board, boardHero, gameState);
 	}
 
 	if (isActuallySpawned) {
@@ -286,23 +286,43 @@ export const applyAurasToSelf = (
 
 	if (hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
-			modifyStats(spawned, boardHero.globalInfo.UndeadAttackBonus, 0, board, boardHero, gameState);
+			modifyStats(
+				spawned,
+				spawned,
+				boardHero.globalInfo.UndeadAttackBonus,
+				0,
+				board,
+				boardHero,
+				gameState,
+				false,
+			);
 		}
 	}
 	if (hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.PirateAttackBonus > 0) {
-			modifyStats(spawned, boardHero.globalInfo.PirateAttackBonus, 0, board, boardHero, gameState);
+			modifyStats(
+				spawned,
+				spawned,
+				boardHero.globalInfo.PirateAttackBonus,
+				0,
+				board,
+				boardHero,
+				gameState,
+				false,
+			);
 		}
 	}
 	if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.GoldrinnBuffAtk > 0) {
 			modifyStats(
 				spawned,
+				spawned,
 				boardHero.globalInfo.GoldrinnBuffAtk,
 				boardHero.globalInfo.GoldrinnBuffHealth,
 				board,
 				boardHero,
 				gameState,
+				false,
 			);
 			gameState.spectator.registerPowerTarget(boardHero, spawned, board, null, null);
 		}
@@ -317,7 +337,7 @@ export const applyAurasToSelf = (
 	if (gameState.cardsData.getTavernLevel(spawned.cardId) % 2 === 1) {
 		const atkBuff = boardHero.globalInfo.MutatedLasherAttackBuff ?? 0;
 		const healthBuff = boardHero.globalInfo.MutatedLasherHealthBuff ?? 0;
-		modifyStats(spawned, atkBuff, healthBuff, board, boardHero, gameState);
+		modifyStats(spawned, spawned, atkBuff, healthBuff, board, boardHero, gameState, false);
 	}
 	for (const entity of board) {
 		const onOtherSpawnedImpl = cardMappings[entity.cardId];
@@ -389,39 +409,48 @@ export const applyAurasToSelf = (
 		case CardIds.EternalKnight_BG25_008_G:
 			const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
 			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
-			modifyStats(spawned, statsBonusKnight, statsBonusKnight, board, boardHero, gameState);
+			modifyStats(spawned, null, statsBonusKnight, statsBonusKnight, board, boardHero, gameState, false);
 			break;
 		case CardIds.EnsorcelledFungus_BG28_555:
 		case CardIds.EnsorcelledFungus_BG28_555_G:
 			const multiplierFungus = spawned.cardId === CardIds.EnsorcelledFungus_BG28_555_G ? 2 : 1;
 			const statsBonusFungus = multiplierFungus * boardHero.globalInfo.TavernSpellsCastThisGame;
-			modifyStats(spawned, statsBonusFungus, 2 * statsBonusFungus, board, boardHero, gameState);
+			modifyStats(spawned, null, statsBonusFungus, 2 * statsBonusFungus, board, boardHero, gameState, false);
 			break;
 		case CardIds.FlourishingFrostling_BG26_537:
 		case CardIds.FlourishingFrostling_BG26_537_G:
 			const multiplierFrostling = spawned.cardId === CardIds.FlourishingFrostling_BG26_537_G ? 2 : 1;
 			const statsBonusFrostling = multiplierFrostling * boardHero.globalInfo.FrostlingBonus;
-			modifyStats(spawned, 2 * statsBonusFrostling, statsBonusFrostling, board, boardHero, gameState);
+			modifyStats(
+				spawned,
+				null,
+				2 * statsBonusFrostling,
+				statsBonusFrostling,
+				board,
+				boardHero,
+				gameState,
+				false,
+			);
 			break;
 		case CardIds.SaltyLooter_BGS_081:
 		case CardIds.SaltyLooter_TB_BaconUps_143:
 			const multiplierLooter = spawned.cardId === CardIds.SaltyLooter_TB_BaconUps_143 ? 2 : 1;
 			const statsBonusLooter = multiplierLooter * boardHero.globalInfo.PiratesSummonedThisGame;
-			modifyStats(spawned, 2 * statsBonusLooter, 2 * multiplierLooter, board, boardHero, gameState);
+			modifyStats(spawned, null, 2 * statsBonusLooter, 2 * multiplierLooter, board, boardHero, gameState, false);
 			break;
 		case CardIds.AstralAutomaton_BG_TTN_401:
 		case CardIds.AstralAutomaton_BG_TTN_401_G:
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Don't count the yourself
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			modifyStats(spawned, 2 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState);
+			modifyStats(spawned, null, 2 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState, false);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
 			const multiplierGnoll = spawned.cardId === CardIds.RotHideGnoll_BG25_013_G ? 2 : 1;
 			const statsBonusGnoll =
 				multiplierGnoll * gameState.sharedState.deaths.filter((e) => e.friendly === spawned.friendly).length;
-			modifyStats(spawned, statsBonusGnoll, 0, board, boardHero, gameState);
+			modifyStats(spawned, null, statsBonusGnoll, 0, board, boardHero, gameState, false);
 			break;
 	}
 };
@@ -688,7 +717,7 @@ const handleMinionAddedAuraEffect = (
 				)
 				.forEach((e) => {
 					const multiplierAstral = e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-					modifyStats(e, 2 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState);
+					modifyStats(e, e, 2 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState, false);
 				});
 			break;
 		case CardIds.DrBoomsMonster_BG31_176:
@@ -696,11 +725,13 @@ const handleMinionAddedAuraEffect = (
 			const multiplierDrBoom = spawned.cardId === CardIds.DrBoomsMonster_BG31_176_G ? 2 : 1;
 			modifyStats(
 				spawned,
+				spawned,
 				2 * boardHero.globalInfo.MagnetizedThisGame * multiplierDrBoom,
 				2 * boardHero.globalInfo.MagnetizedThisGame * multiplierDrBoom,
 				board,
 				boardHero,
 				gameState,
+				false,
 			);
 			break;
 	}
@@ -763,7 +794,7 @@ const handleAfterSpawnEffect = (
 			case CardIds.XyloBones_BG26_172_G:
 				if (entity.entityId !== spawned.entityId) {
 					const xylobonesBuff = entity.cardId === CardIds.XyloBones_BG26_172_G ? 4 : 2;
-					modifyStats(entity, 0, xylobonesBuff, board, hero, gameState);
+					modifyStats(entity, entity, 0, xylobonesBuff, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
 				}
 				break;
@@ -807,7 +838,7 @@ const handleAfterSpawnEffect = (
 				) {
 					const valithriaBuff =
 						entity.cardId === CardIds.ValithriaDreamwalker_TB_BaconShop_HERO_53_Buddy_G ? 3 : 2;
-					modifyStats(entity, valithriaBuff, valithriaBuff, board, hero, gameState);
+					modifyStats(entity, entity, valithriaBuff, valithriaBuff, board, hero, gameState);
 					gameState.spectator.registerPowerTarget(entity, spawned, board, null, null);
 				}
 				break;
@@ -818,7 +849,7 @@ const handleAfterSpawnEffect = (
 					hasCorrectTribe(spawned, hero, Race.UNDEAD, gameState.anomalies, gameState.allCards) &&
 					entity.entityId !== spawned.entityId
 				) {
-					modifyStats(spawned, 1, 0, board, hero, gameState);
+					modifyStats(spawned, spawned, 1, 0, board, hero, gameState, false);
 					gameState.spectator.registerPowerTarget(entity, entity, board, null, null);
 				}
 				break;

@@ -16,11 +16,13 @@ export const HoardingHatespawn = {
 			target.maxHealth = Math.max(0, target.maxHealth - stats);
 			modifyStats(
 				minion,
+				minion,
 				previousAttack - target.attack,
 				previousHealth - target.health,
 				input.playerBoard,
 				input.playerEntity,
 				input.gameState,
+				false,
 			);
 			input.gameState.spectator.registerPowerTarget(
 				minion,

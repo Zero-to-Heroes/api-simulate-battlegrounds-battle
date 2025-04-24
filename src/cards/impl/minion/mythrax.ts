@@ -12,13 +12,13 @@ export const MythraxTheUnraveler: EndOfTurnCard = {
 			const mult = minion.cardId === CardIds.MythraxTheUnraveler_TB_BaconUps_258 ? 2 : 1;
 			modifyStats(
 				minion,
+				minion,
 				mult * 2 * differentTypes,
 				mult * 2 * differentTypes,
 				input.board,
 				input.hero,
 				input.gameState,
 			);
-			input.gameState.spectator.registerPowerTarget(minion, minion, input.board, input.hero, input.otherHero);
 		}
 	},
 };

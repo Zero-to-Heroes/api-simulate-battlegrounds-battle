@@ -11,7 +11,7 @@ export const SanlaynScribe: OnSpawnedCard & OnDeathCard = {
 	onSpawned: (minion: BoardEntity, input: OnSpawnInput) => {
 		const mult = minion.cardId === CardIds.SanlaynScribe_BGDUO31_208 ? 1 : 2;
 		const statsBonus = mult * input.hero.globalInfo.SanlaynScribesDeadThisGame;
-		modifyStats(minion, 4 * statsBonus, 4 * statsBonus, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, 4 * statsBonus, 4 * statsBonus, input.board, input.hero, input.gameState);
 	},
 	onDeath: (minion: BoardEntity, input: OnDeathInput) => {
 		input.hero.globalInfo.SanlaynScribesDeadThisGame = input.hero.globalInfo.SanlaynScribesDeadThisGame + 1;
@@ -23,7 +23,7 @@ export const SanlaynScribe: OnSpawnedCard & OnDeathCard = {
 			)
 			.forEach((entity) => {
 				const mult = entity.cardId === CardIds.SanlaynScribe_BGDUO31_208 ? 1 : 2;
-				modifyStats(entity, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
+				modifyStats(entity, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
 			});
 		// Update the initial states to work with sandy
 		getTeamInitialStates(input.gameState.gameState, input.hero).forEach((team) => {

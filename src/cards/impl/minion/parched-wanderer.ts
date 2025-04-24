@@ -26,6 +26,7 @@ export const ParchedWanderer: BattlecryCard = {
 			updateTaunt(wandererTarget, true, targetBoard, targetHero, otherHero, input.gameState);
 			modifyStats(
 				wandererTarget,
+				minion,
 				wandererMultiplier * 2,
 				wandererMultiplier * 3,
 				targetBoard,

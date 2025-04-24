@@ -9,6 +9,6 @@ export const Lurker: AvengeCard = {
 	baseAvengeValue: (cardId: string) => 1,
 	avenge: (minion: BoardEntity, input: AvengeInput): void => {
 		const mult = minion.cardId === CardIds.Lurker_BG31_HERO_811t7_G ? 2 : 1;
-		modifyStats(minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
 	},
 };

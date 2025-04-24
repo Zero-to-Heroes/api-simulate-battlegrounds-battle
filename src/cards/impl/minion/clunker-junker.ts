@@ -20,7 +20,7 @@ export const ClunkerJunker: BattlecryCard = {
 					input.hero.tavernTier ?? 1,
 				);
 				input.gameState.spectator.registerPowerTarget(minion, junkerTarget, input.board, null, null);
-				magnetizeToTarget(junkerTarget, minionToMagnetize, input.board, input.hero, input.gameState);
+				magnetizeToTarget(junkerTarget, minion, minionToMagnetize, input.board, input.hero, input.gameState);
 			}
 		}
 	},

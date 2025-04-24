@@ -14,18 +14,12 @@ export const Immortal: StartOfCombatCard = {
 		const neighboursHealth = neighbours.map((entity) => entity.health).reduce((a, b) => a + b, 0);
 		modifyStats(
 			minion,
+			minion,
 			multiplier * neighboursAttack,
 			multiplier * neighboursHealth,
 			input.playerBoard,
 			input.playerEntity,
 			input.gameState,
-		);
-		input.gameState.spectator.registerPowerTarget(
-			minion,
-			minion,
-			input.playerBoard,
-			input.playerEntity,
-			input.opponentEntity,
 		);
 		return true;
 	},

@@ -22,7 +22,7 @@ export const ElectricSynthesizer: StartOfCombatCard & BattlecryCard = {
 			.filter((e) => e.entityId !== minion.entityId);
 		const buff = minion.cardId === CardIds.ElectricSynthesizer_BG26_963_G ? 2 : 1;
 		for (const entity of otherDragons) {
-			modifyStats(entity, buff, buff, input.playerBoard, input.playerEntity, input.gameState);
+			modifyStats(entity, minion, buff, buff, input.playerBoard, input.playerEntity, input.gameState);
 		}
 		return true;
 	},
@@ -34,7 +34,7 @@ export const ElectricSynthesizer: StartOfCombatCard & BattlecryCard = {
 			.filter((e) => e.entityId !== minion.entityId);
 		const buff = minion.cardId === CardIds.ElectricSynthesizer_BG26_963_G ? 2 : 1;
 		for (const entity of otherDragons) {
-			modifyStats(entity, buff, buff, input.board, input.hero, input.gameState);
+			modifyStats(entity, minion, buff, buff, input.board, input.hero, input.gameState);
 		}
 	},
 };

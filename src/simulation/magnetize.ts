@@ -6,6 +6,7 @@ import { modifyStats } from './stats';
 
 export const magnetizeToTarget = (
 	target: BoardEntity,
+	source: BoardEntity,
 	cardIdToMagnetize: string,
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
@@ -17,6 +18,7 @@ export const magnetizeToTarget = (
 	const modularCard = gameState.allCards.getCard(cardIdToMagnetize);
 	modifyStats(
 		target,
+		source,
 		modularCard.attack + 2 * electromagneticDevices,
 		modularCard.health + 2 * electromagneticDevices,
 		board,

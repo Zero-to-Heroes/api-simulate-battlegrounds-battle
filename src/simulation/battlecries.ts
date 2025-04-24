@@ -84,8 +84,7 @@ export const triggerBattlecry = (
 					const rockPoolTarget = getRandomAliveMinion(board, hero, Race.MURLOC, gameState);
 					if (!!rockPoolTarget) {
 						const rockpoolStats = entity.cardId === CardIds.RockpoolHunter_BG_UNG_073 ? 1 : 2;
-						modifyStats(rockPoolTarget, rockpoolStats, rockpoolStats, board, hero, gameState);
-						gameState.spectator.registerPowerTarget(entity, rockPoolTarget, board, hero, otherHero);
+						modifyStats(rockPoolTarget, entity, rockpoolStats, rockpoolStats, board, hero, gameState);
 					}
 					break;
 				case CardIds.MenagerieMug_BGS_082:
@@ -116,13 +115,13 @@ export const triggerBattlecry = (
 						const twilightEmissaryStats = entity.cardId === CardIds.TwilightEmissary_BGS_038 ? 2 : 4;
 						modifyStats(
 							twilightEmissaryTarget,
+							entity,
 							twilightEmissaryStats,
 							twilightEmissaryStats,
 							board,
 							hero,
 							gameState,
 						);
-						gameState.spectator.registerPowerTarget(entity, twilightEmissaryTarget, board, hero, otherHero);
 					}
 					break;
 				case CardIds.BloodsailCannoneer_BGS_053:
@@ -202,8 +201,7 @@ export const triggerBattlecry = (
 					for (let i = 0; i < smoggerLoops; i++) {
 						const smoggerTarget = getRandomAliveMinion(board, hero, Race.ELEMENTAL, gameState);
 						const smoggerStats = hero.tavernTier ?? 3;
-						modifyStats(smoggerTarget, smoggerStats, smoggerStats, board, hero, gameState);
-						gameState.spectator.registerPowerTarget(entity, smoggerTarget, board, hero, otherHero);
+						modifyStats(smoggerTarget, entity, smoggerStats, smoggerStats, board, hero, gameState);
 					}
 					break;
 				case CardIds.AnnihilanBattlemaster_BGS_010:
@@ -213,8 +211,7 @@ export const triggerBattlecry = (
 					const hpMissing = startingHp - hero.hpLeft;
 					const annihilanStats =
 						(entity.cardId === CardIds.AnnihilanBattlemaster_BGS_010 ? 2 : 4) * hpMissing;
-					modifyStats(entity, 0, annihilanStats, board, hero, gameState);
-					gameState.spectator.registerPowerTarget(entity, entity, board, hero, otherHero);
+					modifyStats(entity, entity, 0, annihilanStats, board, hero, gameState);
 					break;
 				case CardIds.Necrolyte_BG20_202:
 				case CardIds.Necrolyte_BG20_202_G:
@@ -251,13 +248,13 @@ export const triggerBattlecry = (
 					strongshellScavengerTargets.forEach((target) => {
 						modifyStats(
 							target,
+							entity,
 							strongshellScavengerStats,
 							strongshellScavengerStats,
 							board,
 							hero,
 							gameState,
 						);
-						gameState.spectator.registerPowerTarget(entity, target, board, hero, otherHero);
 					});
 					break;
 				case CardIds.VigilantStoneborn_BG24_023:
@@ -265,16 +262,14 @@ export const triggerBattlecry = (
 					const vigilantStonebornTarget = pickRandom(board);
 					const vigilantStonebornStats = entity.cardId === CardIds.VigilantStoneborn_BG24_023 ? 6 : 12;
 					updateTaunt(vigilantStonebornTarget, true, board, hero, otherHero, gameState);
-					modifyStats(vigilantStonebornTarget, 0, vigilantStonebornStats, board, hero, gameState);
-					gameState.spectator.registerPowerTarget(entity, vigilantStonebornTarget, board, hero, otherHero);
+					modifyStats(vigilantStonebornTarget, entity, 0, vigilantStonebornStats, board, hero, gameState);
 					break;
 				case CardIds.Bonemare_BG26_ICC_705:
 				case CardIds.Bonemare_BG26_ICC_705_G:
 					const bonemareTarget = pickRandom(board);
 					const bonemareStats = entity.cardId === CardIds.Bonemare_BG26_ICC_705 ? 4 : 8;
 					updateTaunt(bonemareTarget, true, board, hero, otherHero, gameState);
-					modifyStats(bonemareTarget, bonemareStats, bonemareStats, board, hero, gameState);
-					gameState.spectator.registerPowerTarget(entity, bonemareTarget, board, hero, otherHero);
+					modifyStats(bonemareTarget, entity, bonemareStats, bonemareStats, board, hero, gameState);
 					break;
 				// Not correct, but only used to trigger the "add cards in hand" effect
 				case CardIds.Murozond_BGS_043:
@@ -323,18 +318,12 @@ export const triggerBattlecry = (
 					const boardForTarget = board.includes(livingConstellationTarget) ? board : otherBoard;
 					modifyStats(
 						livingConstellationTarget,
+						entity,
 						livingConstellationStats,
 						livingConstellationStats,
 						boardForTarget,
 						hero,
 						gameState,
-					);
-					gameState.spectator.registerPowerTarget(
-						entity,
-						livingConstellationTarget,
-						boardForTarget,
-						hero,
-						otherHero,
 					);
 					break;
 				case CardIds.FairyTaleCaroler_BG26_001:
@@ -381,18 +370,12 @@ export const triggerBattlecry = (
 						const emergentFlameStats = (entity.scriptDataNum1 ?? 1) * emergentFlameMultiplier;
 						modifyStats(
 							emergentFlameTarget,
+							entity,
 							emergentFlameStats,
 							emergentFlameStats,
 							targetBoard,
 							targetHero,
 							gameState,
-						);
-						gameState.spectator.registerPowerTarget(
-							entity,
-							emergentFlameTarget,
-							targetBoard,
-							hero,
-							otherHero,
 						);
 					}
 					break;
@@ -482,7 +465,7 @@ export const triggerBattlecry = (
 						const adapt = pickRandom(adapts);
 						switch (adapt) {
 							case CardIds.FlamingClawsToken:
-								modifyStats(entity, 3, 0, board, hero, gameState);
+								modifyStats(entity, entity, 3, 0, board, hero, gameState, false);
 								break;
 							case CardIds.LivingSporesToken:
 								entity.enchantments = entity.enchantments ?? [];
@@ -501,13 +484,13 @@ export const triggerBattlecry = (
 								entity.poisonous = true;
 								break;
 							case CardIds.RockyCarapaceToken:
-								modifyStats(entity, 0, 3, board, hero, gameState);
+								modifyStats(entity, entity, 0, 3, board, hero, gameState, false);
 								break;
 							case CardIds.CracklingShieldToken:
 								updateDivineShield(entity, board, hero, otherHero, true, gameState);
 								break;
 							case CardIds.VolcanicMightToken:
-								modifyStats(entity, 1, 1, board, hero, gameState);
+								modifyStats(entity, entity, 1, 1, board, hero, gameState, false);
 								break;
 						}
 					}
@@ -519,13 +502,13 @@ export const triggerBattlecry = (
 					if (eagillBoardTarget) {
 						modifyStats(
 							eagillBoardTarget,
+							entity,
 							2 * eagillMultiplier,
 							3 * eagillMultiplier,
 							board,
 							hero,
 							gameState,
 						);
-						gameState.spectator.registerPowerTarget(entity, eagillBoardTarget, board, hero, otherHero);
 					}
 					const eagillHandTarget = pickRandom(
 						hero.hand.filter(
@@ -536,13 +519,13 @@ export const triggerBattlecry = (
 					if (eagillHandTarget) {
 						modifyStats(
 							eagillHandTarget,
+							entity,
 							2 * eagillMultiplier,
 							3 * eagillMultiplier,
 							board,
 							hero,
 							gameState,
 						);
-						gameState.spectator.registerPowerTarget(entity, eagillHandTarget, board, hero, otherHero);
 					}
 					break;
 				case CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy:
@@ -554,8 +537,7 @@ export const triggerBattlecry = (
 						const heroMaxHealth = gameState.allCards.getCard(hero.cardId)?.health ?? 40;
 						const heroMissingHealth = heroMaxHealth - hero.hpLeft;
 						const weebominationBuff = weebominationMultiplier * heroMissingHealth;
-						modifyStats(weebominationTarget, 0, weebominationBuff, board, hero, gameState);
-						gameState.spectator.registerPowerTarget(entity, weebominationTarget, board, hero, otherHero);
+						modifyStats(weebominationTarget, entity, 0, weebominationBuff, board, hero, gameState);
 					}
 					break;
 				case CardIds.GoldshellWarden_BG29_803:
@@ -639,8 +621,15 @@ export const triggerBattlecry = (
 						const multiplier = entity.cardId === CardIds.OrcEstraConductor_BGDUO_119 ? 1 : 2;
 						const attackStats = 2 * (entity.scriptDataNum1 ?? 1) * multiplier;
 						const healthStats = 2 * (entity.scriptDataNum1 ?? 1) * multiplier;
-						modifyStats(conductorTarget, attackStats, healthStats, targetBoard, targetHero, gameState);
-						gameState.spectator.registerPowerTarget(entity, conductorTarget, targetBoard, hero, otherHero);
+						modifyStats(
+							conductorTarget,
+							entity,
+							attackStats,
+							healthStats,
+							targetBoard,
+							targetHero,
+							gameState,
+						);
 					}
 					break;
 				case CardIds.FacelessOne_BGDUO_HERO_100_Buddy:
@@ -683,7 +672,7 @@ export const triggerBattlecry = (
 					board
 						.filter((e) => e.entityId !== entity.entityId)
 						.forEach((e) => {
-							modifyStats(e, vaelastraszBonus, vaelastraszBonus, board, hero, gameState);
+							modifyStats(e, entity, vaelastraszBonus, vaelastraszBonus, board, hero, gameState);
 						});
 					break;
 				case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy:
@@ -698,8 +687,7 @@ export const triggerBattlecry = (
 						const healthBuff = nathanosTarget.health * buffMultiplier;
 						const buffTargets = getNeighbours(board, nathanosTarget);
 						buffTargets.forEach((e) => {
-							modifyStats(e, attackBuff, healthBuff, board, hero, gameState);
-							gameState.spectator.registerPowerTarget(entity, e, board, null, null);
+							modifyStats(e, entity, attackBuff, healthBuff, board, hero, gameState);
 						});
 					}
 					break;
@@ -712,7 +700,7 @@ export const triggerBattlecry = (
 							entity.cardId === CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy ? 1 : 2;
 						const attackBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
 						const healthBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
-						modifyStats(tuskarrTarget, attackBuff, healthBuff, board, hero, gameState);
+						modifyStats(tuskarrTarget, entity, attackBuff, healthBuff, board, hero, gameState);
 					}
 					break;
 				case CardIds.LuckyEgg_BG30_104:

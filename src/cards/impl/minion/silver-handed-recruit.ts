@@ -11,7 +11,7 @@ export const SilverHandedRecruit: BattlecryCard = {
 		input.board
 			.filter((e) => input.gameState.cardsData.getTavernLevel(e.cardId) % 2 === 0)
 			.forEach((e) => {
-				modifyStats(e, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
+				modifyStats(e, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
 				input.gameState.spectator.registerPowerTarget(minion, e, input.board, input.hero, null);
 			});
 	},
