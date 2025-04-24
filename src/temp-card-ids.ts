@@ -1,5 +1,7 @@
 export declare const enum TempCardIds {
 	FountainPen = 'FountainPen',
+	FountainPen_G = 'FountainPen_G',
+	DrakkariPortrait = 'DrakkariPortrait',
 	StharaSticker = 'StharaSticker',
 	FelementalPortrait = 'FelementalPortrait',
 	ImpulsiveTricksterPortrait = 'ImpulsiveTricksterPortrait',

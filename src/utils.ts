@@ -10,6 +10,7 @@ import { pickRandom, shuffleArray } from './services/utils';
 import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { modifyStats } from './simulation/stats';
+import { TempCardIds } from './temp-card-ids';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
@@ -445,6 +446,11 @@ const getSpecialTribesForEntity = (
 		case CardIds.BrannBronzebeard_TB_BaconUps_045:
 			return playerEntity.trinkets.some((t) => t.cardId === CardIds.BronzebeardPortrait_BG30_MagicItem_418)
 				? [Race.DRAGON, Race.MURLOC]
+				: [];
+		case CardIds.DrakkariEnchanter_BG26_ICC_901:
+		case CardIds.DrakkariEnchanter_BG26_ICC_901_G:
+			return playerEntity.trinkets.some((t) => t.cardId === TempCardIds.DrakkariPortrait)
+				? [Race.MECH, Race.ELEMENTAL]
 				: [];
 	}
 	return [];

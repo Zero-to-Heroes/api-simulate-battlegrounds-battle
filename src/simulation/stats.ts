@@ -51,7 +51,12 @@ export const modifyStats = (
 		healthAmount += 1 * buff;
 	}
 
-	if (friendlyBoardHero.trinkets?.some((t) => t.cardId === TempCardIds.FountainPen)) {
+	// TODO: There probably will be a player enchant for this, as it also needs to handle Amplifying Lightspawn
+	if (
+		friendlyBoardHero.trinkets?.some(
+			(t) => t.cardId === TempCardIds.FountainPen || t.cardId === TempCardIds.FountainPen_G,
+		)
+	) {
 		if (
 			entity?.entityId !== source?.entityId &&
 			hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.anomalies, gameState.allCards) &&
@@ -59,8 +64,11 @@ export const modifyStats = (
 			attackAmount >= 0 &&
 			healthAmount >= 0
 		) {
-			attackAmount += 1;
-			healthAmount += 1;
+			const buff =
+				friendlyBoardHero.trinkets?.filter((t) => t.cardId === TempCardIds.FountainPen).length +
+				friendlyBoardHero.trinkets?.filter((t) => t.cardId === TempCardIds.FountainPen_G).length * 2;
+			attackAmount += buff;
+			healthAmount += buff;
 		}
 	}
 
