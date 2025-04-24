@@ -301,4 +301,8 @@ export class CardsData {
 			.map((race) => getRaceEnum(race))
 			.some((raceEnum) => raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum));
 	}
+
+	public getRandomTavernSpell(): string {
+		return null;
+	}
 }

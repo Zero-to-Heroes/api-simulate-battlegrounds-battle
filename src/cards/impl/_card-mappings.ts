@@ -9,6 +9,8 @@ import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
 import { AshenCorruptor } from './minion/ashen-corruptor';
 import { AssistantGuard } from './minion/assistant-guard';
+import { AutoAssembler } from './minion/auto-assembler';
+import { AutoAssemblerEnchantment } from './minion/auto-assembler-enchantment';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
 import { Battlecruiser } from './minion/battlecruiser';
@@ -76,9 +78,11 @@ import { Lurker } from './minion/lurker';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MechaJaraxxus } from './minion/mecha-jaraxxus';
+import { MechagnomeInterpreter } from './minion/mechagnome-interpreter';
 import { MechanizedGiftHorse } from './minion/mechanized-gift-horse';
 import { Mechorse } from './minion/mechorse';
 import { MenagerieJug } from './minion/menagerie-jug';
+import { MetallicHunter } from './minion/metallic-hunter';
 import { MisfitDragonling } from './minion/misfit-dragonling';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { Mothership } from './minion/mothership';
@@ -104,6 +108,7 @@ import { RapscallionRecruiter } from './minion/rapscallion-recruiter';
 import { RazorfenGeomancer } from './minion/razorfen-geomancer';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
 import { RecklessCliffdiver } from './minion/reckless-cliffdiver';
+import { RicketyRepairbot } from './minion/rickety-repairbot';
 import { RipsnarlCaptain } from './minion/ripsnarl-captain';
 import { Roach } from './minion/roach';
 import { RodeoPerformer } from './minion/rodeo-performer';
@@ -124,6 +129,7 @@ import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
 import { SoulRewinder } from './minion/soul-rewinder';
 import { Spacefarer } from './minion/spacefarer';
+import { SpringySpriggan } from './minion/springy-spriggan';
 import { StitchedSalvager } from './minion/stitched-salvager';
 import { Swampstriker } from './minion/swampstriker';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
@@ -143,10 +149,18 @@ import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
+import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 
 const cards = [
 	FireworksFanatic,
+	DivineSignet,
+	MetallicHunter,
+	SpringySpriggan,
+	RicketyRepairbot,
+	MechagnomeInterpreter,
+	AutoAssembler,
+	AutoAssemblerEnchantment,
 	Deadstomper,
 	ArmOfTheEmpire,
 	Battlecruiser,

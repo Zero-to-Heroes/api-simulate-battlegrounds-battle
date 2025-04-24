@@ -19,6 +19,7 @@ import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlec
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
+import { OnBeforeMagnetizeInput } from '../simulation/magnetize';
 import { OnAttackInput } from '../simulation/on-attack';
 import { OnMinionAttackedInput } from '../simulation/on-being-attacked';
 import { RebornEffectInput } from '../simulation/reborn';
@@ -170,7 +171,7 @@ export const hasEndOfTurn = (card: Card): card is EndOfTurnCard => (card as EndO
 export type EndOfTurnInput = BattlecryInput;
 
 export interface OnDivineShieldUpdatedCard extends Card {
-	onDivineShieldUpdated: (entity: BoardEntity, input: OnDivineShieldUpdatedInput) => void;
+	onDivineShieldUpdated: (entity: BoardEntity | BoardTrinket, input: OnDivineShieldUpdatedInput) => void;
 }
 export const hasOnDivineShieldUpdated = (card: Card): card is OnDivineShieldUpdatedCard =>
 	(card as OnDivineShieldUpdatedCard)?.onDivineShieldUpdated !== undefined;
@@ -261,3 +262,9 @@ export interface OnMinionKilledCard extends Card {
 }
 export const hasOnMinionKilled = (card: Card): card is OnMinionKilledCard =>
 	(card as OnMinionKilledCard)?.onMinionKilled !== undefined;
+
+export interface OnBeforeMagnetizeCard extends Card {
+	onBeforeMagnetize: (entity: BoardEntity, input: OnBeforeMagnetizeInput) => void;
+}
+export const hasOnBeforeMagnetize = (card: Card): card is OnBeforeMagnetizeCard =>
+	(card as OnBeforeMagnetizeCard)?.onBeforeMagnetize !== undefined;

@@ -95,3 +95,7 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 
 	return array;
 };
+
+export type Mutable<T> = {
+	-readonly [P in keyof T]: T[P];
+};

@@ -17,9 +17,6 @@ export const updateDivineShield = (
 	newValue: boolean,
 	gameState: FullGameState,
 ): void => {
-	// if ((entity.divineShield ?? false) === newValue) {
-	// 	return;
-	// }
 	entity.hadDivineShield = newValue || entity.divineShield || entity.hadDivineShield;
 	entity.divineShield = newValue;
 	if (entity.divineShield) {
@@ -46,6 +43,20 @@ export const updateDivineShield = (
 		if (!!adapter && hasCorrectTribe(entity, hero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 			updateDivineShield(entity, board, hero, otherHero, true, gameState);
 			adapter.scriptDataNum1--;
+		}
+
+		for (const trinket of hero.trinkets ?? []) {
+			const onDivineShieldUpdatedImpl = cardMappings[trinket.cardId];
+			if (hasOnDivineShieldUpdated(onDivineShieldUpdatedImpl)) {
+				onDivineShieldUpdatedImpl.onDivineShieldUpdated(trinket, {
+					board: board,
+					hero: hero,
+					otherHero: otherHero,
+					gameState: gameState,
+					target: entity,
+					previousValue: entity.hadDivineShield,
+				});
+			}
 		}
 
 		for (const boardEntity of board) {

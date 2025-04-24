@@ -1,6 +1,10 @@
-import { CardIds, GameTag } from '@firestone-hs/reference-data';
+import { CardIds, GameTag, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnBeforeMagnetize } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
+import { Mutable } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -15,12 +19,28 @@ export const magnetizeToTarget = (
 	const electromagneticDevices = hero.trinkets.filter(
 		(t) => t.cardId === CardIds.ElectromagneticDevice_BG30_MagicItem_709,
 	).length;
-	const modularCard = gameState.allCards.getCard(cardIdToMagnetize);
+	const greaterElecromagneticDevices = hero.trinkets.filter(
+		(t) => t.cardId === TempCardIds.ElectromagneticDevice_G,
+	).length;
+
+	const modularCard = { ...gameState.allCards.getCard(cardIdToMagnetize) };
+	for (const boardEntity of board) {
+		const onBeforeMagnetizeImpl = cardMappings[boardEntity.cardId];
+		if (hasOnBeforeMagnetize(onBeforeMagnetizeImpl)) {
+			onBeforeMagnetizeImpl.onBeforeMagnetize(boardEntity, {
+				board: board,
+				hero: hero,
+				magnetizedCard: modularCard,
+				gameState: gameState,
+			});
+		}
+	}
+
 	modifyStats(
 		target,
 		source,
-		modularCard.attack + 2 * electromagneticDevices,
-		modularCard.health + 2 * electromagneticDevices,
+		modularCard.attack + 2 * electromagneticDevices + 4 * greaterElecromagneticDevices,
+		modularCard.health + 2 * electromagneticDevices + 4 * greaterElecromagneticDevices,
 		board,
 		hero,
 		gameState,
@@ -63,3 +83,10 @@ export const magnetizeToTarget = (
 		entity.health += drBoomBases * 2 + drBoomGoldens * 4;
 	}
 };
+
+export interface OnBeforeMagnetizeInput {
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	magnetizedCard: Mutable<ReferenceCard>;
+	gameState: FullGameState;
+}
