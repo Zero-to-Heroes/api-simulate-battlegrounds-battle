@@ -2,6 +2,7 @@ import { AllCardsService, CardIds, GameTag } from '@firestone-hs/reference-data'
 import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';
+import { TempCardIds } from '../../../temp-card-ids';
 import { BattlecryCard, hasEndOfTurn } from '../../card.interface';
 import { cardMappings } from '../_card-mappings';
 
@@ -29,13 +30,17 @@ export const EfficientEngineer: BattlecryCard = {
 				for (const cardId of endOfTurnCandidates) {
 					const endOfTurnImpl = cardMappings[cardId];
 					if (hasEndOfTurn(endOfTurnImpl)) {
-						const numberOfLoops = input.board.some(
+						const baseLoops =
+							1 +
+							(input.hero.trinkets?.filter((t) => t.cardId === TempCardIds.GhastlySticker).length ?? 0);
+						const minionLoops = input.board.some(
 							(e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901_G,
 						)
 							? 3
 							: input.board.some((e) => e.cardId === CardIds.DrakkariEnchanter_BG26_ICC_901)
 							? 2
 							: 1;
+						const numberOfLoops = baseLoops * minionLoops;
 						for (let i = 0; i < numberOfLoops; i++) {
 							endOfTurnImpl.endOfTurn(target, input);
 						}

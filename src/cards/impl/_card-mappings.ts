@@ -91,6 +91,7 @@ import { NeonAgent } from './minion/neon-agent';
 import { NerubianDeathswarmer } from './minion/nerubian-deathswarmer';
 import { NestSwarmer } from './minion/nest-swarmer';
 import { NetherDrake } from './minion/nether-drake';
+import { NightmareParTeaGuest } from './minion/nightmare-par-tea-guest';
 import { Niuzao } from './minion/niuzao';
 import { OozelingGladiator } from './minion/oozeling-gladiator';
 import { OperaticBelcher } from './minion/operatic-belcher';
@@ -135,6 +136,7 @@ import { TwilightPrimordium } from './minion/twilight-primordium';
 import { Ultralisk } from './minion/ultralisk';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
 import { VoidRay } from './minion/void-ray';
+import { VorkaiGuardian } from './minion/vorkai-guardian';
 import { WanderingWight } from './minion/wandering-wight';
 import { WhelpSmuggler } from './minion/whelp-smuggler';
 import { WildfireElemental } from './minion/wildfire-elemental';
@@ -181,6 +183,8 @@ const cards = [
 	ElectricSynthesizer,
 	EclecticShrine,
 	SelflessHero,
+	NightmareParTeaGuest,
+	VorkaiGuardian,
 	OutbackSmolderer,
 	RazorgoreTheUntamed,
 	UltravioletAscendant,
