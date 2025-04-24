@@ -111,6 +111,7 @@ import { RylakMetalhead } from './minion/rylak-metalhead';
 import { SaltyHog } from './minion/salty-hog';
 import { SanlaynScribe } from './minion/sanlayn-scribe';
 import { Scallywag } from './minion/scallywag';
+import { SelflessHero } from './minion/selfless-hero';
 import { Shadowdancer } from './minion/shadowdancer';
 import { ShellCollector } from './minion/shell-collector';
 import { ShowyCyclist } from './minion/showy-cyclist';
@@ -179,6 +180,7 @@ const cards = [
 	NetherDrake,
 	ElectricSynthesizer,
 	EclecticShrine,
+	SelflessHero,
 	OutbackSmolderer,
 	RazorgoreTheUntamed,
 	UltravioletAscendant,

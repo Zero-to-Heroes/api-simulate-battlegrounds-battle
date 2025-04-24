@@ -8,7 +8,7 @@ import {
 } from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { grantRandomDivineShield, updateDivineShield } from '../keywords/divine-shield';
+import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { updateWindfury } from '../keywords/windfury';
 import { pickMultipleRandomDifferent, pickRandom, pickRandomAlive, pickRandomLowestHealth } from '../services/utils';
@@ -176,37 +176,6 @@ export const handleDeathrattleEffects = (
 			}
 		} else {
 			switch (deadEntityCardId) {
-				case CardIds.SelflessHero_BG_OG_221:
-					for (let i = 0; i < multiplier; i++) {
-						grantRandomDivineShield(
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoardHero,
-							gameState,
-						);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
-				case CardIds.SelflessHero_TB_BaconUps_014:
-					for (let i = 0; i < multiplier; i++) {
-						grantRandomDivineShield(
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoardHero,
-							gameState,
-						);
-						grantRandomDivineShield(
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoardHero,
-							gameState,
-						);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
 				case CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy:
 				case CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy_G:
 					const iterations = deadEntityCardId === CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
