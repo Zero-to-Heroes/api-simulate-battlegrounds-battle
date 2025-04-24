@@ -7,6 +7,7 @@ import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
+import { AshenCorruptor } from './minion/ashen-corruptor';
 import { AssistantGuard } from './minion/assistant-guard';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
@@ -109,6 +110,7 @@ import { RylakMetalhead } from './minion/rylak-metalhead';
 import { SaltyHog } from './minion/salty-hog';
 import { SanlaynScribe } from './minion/sanlayn-scribe';
 import { Scallywag } from './minion/scallywag';
+import { Shadowdancer } from './minion/shadowdancer';
 import { ShellCollector } from './minion/shell-collector';
 import { ShowyCyclist } from './minion/showy-cyclist';
 import { SilverHandedRecruit } from './minion/silver-handed-recruit';
@@ -277,6 +279,8 @@ const cards = [
 	Archimonde,
 	SanlaynScribe,
 	BriarbackBookie,
+	Shadowdancer,
+	AshenCorruptor,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

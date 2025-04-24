@@ -7,7 +7,7 @@ import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-in
 export const HawkstriderHerald = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const multiplier = minion.cardId === CardIds.HawkstriderHerald_BG27_079_G ? 2 : 1;
-		const candidates = getValidDeathrattles(input.playerBoard, input.gameState).slice(0, 2);
+		const candidates = getValidDeathrattles(input.playerBoard, input.playerEntity, input.gameState).slice(0, 2);
 		for (const entity of candidates) {
 			for (let i = 0; i < multiplier; i++) {
 				input.gameState.spectator.registerPowerTarget(

@@ -13,7 +13,7 @@ import {
 	OnOtherSpawnInput,
 	OnSpawnInput,
 } from '../simulation/add-minion-to-board';
-import { OnDeathInput, OnMinionKilledInput } from '../simulation/attack';
+import { OnAfterDeathInput, OnDeathInput, OnMinionKilledInput } from '../simulation/attack';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
@@ -244,6 +244,12 @@ export interface OnDeathCard extends Card {
 	onDeath: (entity: BoardEntity, input: OnDeathInput) => void;
 }
 export const hasOnDeath = (card: Card): card is OnDeathCard => (card as OnDeathCard)?.onDeath !== undefined;
+
+export interface OnAfterDeathCard extends Card {
+	onAfterDeath: (entity: BoardEntity | BoardTrinket, input: OnAfterDeathInput) => void;
+}
+export const hasOnAfterDeath = (card: Card): card is OnAfterDeathCard =>
+	(card as OnAfterDeathCard)?.onAfterDeath !== undefined;
 
 export interface OnMinionKilledCard extends Card {
 	onMinionKilled: (

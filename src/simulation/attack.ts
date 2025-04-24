@@ -2,7 +2,7 @@
 import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasOnDeath } from '../cards/card.interface';
+import { hasOnAfterDeath, hasOnDeath } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { debugState } from '../debug-state';
 import { updateDivineShield } from '../keywords/divine-shield';
@@ -1160,6 +1160,21 @@ const handleAfterMinionsDeathsForBoard = (
 	gameState: FullGameState,
 ) => {
 	const candidateEntities = [];
+
+	for (const trinket of friendlyHeroEntity.trinkets ?? []) {
+		const onAfterDeathImpl = cardMappings[trinket.cardId];
+		if (hasOnAfterDeath(onAfterDeathImpl)) {
+			onAfterDeathImpl.onAfterDeath(trinket, {
+				hero: friendlyHeroEntity,
+				board: friendlyBoard,
+				otherHero: otherHeroEntity,
+				otherBoard: otherBoard,
+				deadEntities: friendlyDeadEntities,
+				gameState: gameState,
+			});
+		}
+	}
+
 	let secretTriggered = null;
 	if (
 		(secretTriggered = friendlyHeroEntity.secrets?.find(
@@ -1201,6 +1216,14 @@ const handleAfterMinionsDeathsForBoard = (
 export interface OnDeathInput {
 	readonly hero: BgsPlayerEntity;
 	readonly board: BoardEntity[];
+	readonly gameState: FullGameState;
+}
+export interface OnAfterDeathInput {
+	readonly hero: BgsPlayerEntity;
+	readonly board: BoardEntity[];
+	readonly otherHero: BgsPlayerEntity;
+	readonly otherBoard: BoardEntity[];
+	readonly deadEntities: BoardEntity[];
 	readonly gameState: FullGameState;
 }
 export interface OnMinionKilledInput {

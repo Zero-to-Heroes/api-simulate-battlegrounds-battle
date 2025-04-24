@@ -9,6 +9,7 @@ import { getNeighbours } from './attack';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { Spectator } from './spectator/spectator';
+import { TempCardIds } from '../temp-card-ids';
 
 export const setEntityStats = (
 	entity: BoardEntity,
@@ -48,6 +49,8 @@ export const modifyStats = (
 		attackAmount += 2 * buff;
 		healthAmount += 1 * buff;
 	}
+
+	if (friendlyBoardHero.trinkets?.some(t => t.cardId === TempCardIds.))
 
 	const otherBoardHero: BgsPlayerEntity =
 		gameState.gameState.player.player === friendlyBoardHero

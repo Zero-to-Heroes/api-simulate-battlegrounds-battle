@@ -70,7 +70,7 @@ export const applyAfterAttackEffects = (
 	) {
 		const loops = attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
 		const targetBoard = attackingBoard.filter((e) => e.entityId !== attackingEntity.entityId);
-		const validDeathrattles = getValidDeathrattles(targetBoard, gameState);
+		const validDeathrattles = getValidDeathrattles(targetBoard, attackingBoardHero, gameState);
 		const leftMost = validDeathrattles[0];
 		if (!!leftMost) {
 			for (let i = 0; i < loops; i++) {
