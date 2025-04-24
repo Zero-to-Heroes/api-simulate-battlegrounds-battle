@@ -9,8 +9,9 @@ import {
 } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { groupByFunction, pickRandom } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
-import { hasAvenge } from './card.interface';
+import { hasAvenge, hasDefaultScriptDataNum } from './card.interface';
 import { cardMappings } from './impl/_card-mappings';
 
 export const WHELP_CARD_IDS = [
@@ -223,6 +224,10 @@ export class CardsData {
 	}
 
 	public defaultScriptDataNum(cardId: string): number {
+		const defaultScriptDataNumImpl = cardMappings[cardId];
+		if (hasDefaultScriptDataNum(defaultScriptDataNumImpl)) {
+			return defaultScriptDataNumImpl.defaultScriptDataNum(cardId);
+		}
 		switch (cardId) {
 			case CardIds.TumblingDisaster_BG28_Reward_505:
 			case CardIds.TwinSkyLanterns_BG30_MagicItem_822:
@@ -237,6 +242,7 @@ export class CardsData {
 			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				return 2;
 			case CardIds.MechagonAdapter_BG30_MagicItem_910:
+			case TempCardIds.FaerieDragonScale:
 				return 3;
 			case CardIds.ReinforcedShield_BG30_MagicItem_886:
 				return 4;

@@ -149,13 +149,19 @@ import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
+import { BattleHorn } from './trinket/battle-horn';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
+import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
+import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	FireworksFanatic,
 	DivineSignet,
 	MetallicHunter,
+	YulonSticker,
+	BattleHorn,
+	FaerieDragonScale,
 	SpringySpriggan,
 	RicketyRepairbot,
 	MechagnomeInterpreter,

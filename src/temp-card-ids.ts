@@ -1,4 +1,8 @@
 export declare const enum TempCardIds {
+	ValdrakkenWindChimes = 'ValdrakkenWindChimes',
+	FaerieDragonScale = 'FaerieDragonScale',
+	YulonSticker = 'YulonSticker',
+	BattleHorn = 'BattleHorn',
 	AutoAssembler_Enchantment = 'AutoAssembler_Enchantment',
 	AutoAssembler_Enchantment_G = 'AutoAssembler_Enchantment_G',
 	AutoAssembler = 'AutoAssembler',

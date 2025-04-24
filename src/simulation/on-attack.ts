@@ -24,6 +24,24 @@ export const applyOnAttackEffects = (
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 
+	for (const trinket of attackingBoardHero.trinkets ?? []) {
+		const onAttackImpl = cardMappings[trinket.cardId];
+		if (hasOnAttack(onAttackImpl)) {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(trinket, {
+				attacker: attacker,
+				attackingHero: attackingBoardHero,
+				attackingBoard: attackingBoard,
+				defendingEntity: defendingEntity,
+				defendingHero: defendingBoardHero,
+				defendingBoard: defendingBoard,
+				gameState,
+				playerIsFriendly: attackingBoardHero.friendly,
+			});
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
+		}
+	}
+
 	for (const boardEntity of attackingBoard) {
 		const onAttackImpl = cardMappings[boardEntity.cardId];
 		if (hasOnAttack(onAttackImpl)) {

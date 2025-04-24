@@ -52,7 +52,7 @@ export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';
 // Whenever this attacks
 export interface OnAttackCard extends Card {
 	onAnyMinionAttack: (
-		minion: BoardEntity,
+		minion: BoardEntity | BoardTrinket,
 		input: OnAttackInput,
 	) => { dmgDoneByAttacker: number; dmgDoneByDefender: number };
 }
@@ -130,6 +130,12 @@ export interface AvengeCard extends Card {
 	baseAvengeValue: (cardId: string) => number;
 }
 export const hasAvenge = (card: Card): card is AvengeCard => (card as AvengeCard)?.avenge !== undefined;
+
+export interface DefaultScriptDataNumCard extends Card {
+	defaultScriptDataNum: (cardId: string) => number;
+}
+export const hasDefaultScriptDataNum = (card: Card): card is DefaultScriptDataNumCard =>
+	(card as DefaultScriptDataNumCard)?.defaultScriptDataNum !== undefined;
 
 export interface DeathrattleEffectCard extends Card {
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => void;
