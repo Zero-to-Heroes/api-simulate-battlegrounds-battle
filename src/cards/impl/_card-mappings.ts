@@ -5,6 +5,7 @@ import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { Alleycat } from './minion/alleycat';
 import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
+import { ApprenticeOfSefin } from './minion/apprentice-of-sefin';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
@@ -62,8 +63,10 @@ import { GentleStag } from './minion/gentle-stag';
 import { GlowgulletWarlord } from './minion/glowgullet-warlord';
 import { GoldGrubber } from './minion/goldgrubber';
 import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
+import { GormlingGourmet } from './minion/gormling-gourmet';
 import { GreaseBot } from './minion/grease-bot';
 import { Greenskeeper } from './minion/greenskeeper';
+import { GrimscaleElegist } from './minion/grimscale-elegist';
 import { GrittyHeadhunter } from './minion/gritty-headhunter';
 import { Hackerfin } from './minion/hackerfin';
 import { HandlessForsaken } from './minion/handless-forsaken';
@@ -105,6 +108,7 @@ import { MonstrousMacaw } from './minion/monstrous-macaw';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { Mothership } from './minion/mothership';
 import { Mummifier } from './minion/mummifier';
+import { MurkbrineExpeditioner } from './minion/murkbrine-expeditioner';
 import { Murky } from './minion/murky';
 import { Mutalisk } from './minion/mutalisk';
 import { MutatedLasher } from './minion/mutated-lasher';
@@ -177,9 +181,11 @@ import { Zergling } from './minion/zergling';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
 import { BalefulIncense } from './trinket/baleful-incense';
+import { BassgillPortrait } from './trinket/bassgill-portrait';
 import { BattleHorn } from './trinket/battle-horn';
 import { BeetleBand } from './trinket/beetle-band';
 import { BirdFeeder } from './trinket/bird-feeder';
+import { CrochetedSungill } from './trinket/crocheted-sungill';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
@@ -191,8 +197,14 @@ import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	FireworksFanatic,
+	BassgillPortrait,
+	ApprenticeOfSefin,
+	GormlingGourmet,
+	GrimscaleElegist,
+	MurkbrineExpeditioner,
 	DivineSignet,
 	SilithidBurrower,
+	CrochetedSungill,
 	BeetleBand,
 	HeraldSticker,
 	AllPurposeKibble,

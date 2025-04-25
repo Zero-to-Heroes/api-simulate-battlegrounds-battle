@@ -1,25 +1,30 @@
-import { Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
+import { BoardEntity } from '../../../board-entity';
+import { pickRandom } from '../../../services/utils';
 import { OnAfterDeathInput } from '../../../simulation/attack';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { TempCardIds } from '../../../temp-card-ids';
-import { hasCorrectTribe } from '../../../utils';
 import { DefaultScriptDataNumCard, OnAfterDeathCard } from '../../card.interface';
 
-export const StharaSticker: OnAfterDeathCard & DefaultScriptDataNumCard = {
-	cardIds: [TempCardIds.StharaSticker],
+export const CrochetedSungill: OnAfterDeathCard & DefaultScriptDataNumCard = {
+	cardIds: [TempCardIds.CrochetedSungill],
 	defaultScriptDataNum: (cardId: string) => 1,
 	onAfterDeath: (trinket: BoardTrinket, input: OnAfterDeathInput) => {
 		if (input.board.length > 0 || trinket.scriptDataNum1 <= 0) {
 			return;
 		}
-
-		const candidate = input.gameState.sharedState.deaths
-			.filter((entity) => entity.friendly === input.hero.friendly)
-			.filter((entity) =>
-				hasCorrectTribe(entity, input.hero, Race.DEMON, input.gameState.anomalies, input.gameState.allCards),
-			)[0];
+		const hand =
+			input.hero.hand?.filter((e) => !!e?.cardId) ??
+			// .filter((e) => !e.locked) // Not sure about this
+			[];
+		const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
+		const highestHealthMinions = highestHealth ? hand.filter((c) => c.health === highestHealth) : null;
+		const candidate = !!highestHealthMinions?.length
+			? pickRandom(highestHealthMinions)
+			: hand.filter((c) => c.cardId).length
+			? pickRandom(hand.filter((c) => c.cardId))
+			: null;
 		if (!candidate) {
 			return;
 		}
@@ -33,13 +38,10 @@ export const StharaSticker: OnAfterDeathCard & DefaultScriptDataNumCard = {
 			input.gameState,
 			input.hero.friendly,
 			false,
-		).map((e) => ({
-			...e,
-			attack: candidate.maxAttack,
-			health: candidate.maxHealth,
-			maxHealth: candidate.maxHealth,
-			maxAttack: candidate.maxAttack,
-		}));
+			false,
+			true,
+			{ ...candidate } as BoardEntity,
+		);
 		performEntitySpawns(
 			spawns,
 			input.board,

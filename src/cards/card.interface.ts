@@ -90,7 +90,7 @@ export const hasOnOtherSpawned = (card: Card): card is OnOtherSpawnedCard =>
 	(card as OnOtherSpawnedCard)?.onOtherSpawned !== undefined;
 
 export interface AfterOtherSpawnedCard extends Card {
-	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => void;
+	afterOtherSpawned: (minion: BoardEntity | BoardTrinket, input: OnOtherSpawnInput) => void;
 }
 export const hasAfterOtherSpawned = (card: Card): card is AfterOtherSpawnedCard =>
 	(card as AfterOtherSpawnedCard)?.afterOtherSpawned !== undefined;

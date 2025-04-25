@@ -783,6 +783,21 @@ const handleAfterSpawnEffect = (
 ): void => {
 	// So that spawns don't mess up the loop
 	const initialBoard = [...board];
+
+	for (const trinket of hero.trinkets ?? []) {
+		const onAfterSpawnedImpl = cardMappings[trinket.cardId];
+		if (hasAfterOtherSpawned(onAfterSpawnedImpl)) {
+			onAfterSpawnedImpl.afterOtherSpawned(trinket, {
+				spawned: spawned,
+				hero: hero,
+				board: board,
+				otherHero: otherHero,
+				otherBoard: otherBoard,
+				gameState,
+			});
+		}
+	}
+
 	for (const entity of initialBoard) {
 		const onAfterSpawnedImpl = cardMappings[entity.cardId];
 		if (hasAfterOtherSpawned(onAfterSpawnedImpl)) {
