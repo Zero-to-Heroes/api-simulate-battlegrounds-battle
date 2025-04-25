@@ -6,7 +6,7 @@ import { BattlecryCard } from '../../card.interface';
 import { hasKeyword, validBonusKeywords } from '../../cards-data';
 
 const baseAttackBuff = 3;
-const baseHealthBuff = 2;
+const baseHealthBuff = 3;
 
 export const Hackerfin: BattlecryCard = {
 	cardIds: [CardIds.Hackerfin_BG31_148, CardIds.Hackerfin_BG31_148_G],

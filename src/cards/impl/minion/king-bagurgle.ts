@@ -5,8 +5,8 @@ import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
 import { BattlecryCard } from '../../card.interface';
 
-const baseAttackBuff = 3;
-const baseHealthBuff = 3;
+const baseAttackBuff = 2;
+const baseHealthBuff = 2;
 
 export const KingBagurgle: BattlecryCard = {
 	cardIds: [CardIds.KingBagurgle_BGS_030, CardIds.KingBagurgle_TB_BaconUps_100],

@@ -1,4 +1,6 @@
 export declare const enum TempCardIds {
+	FlightyScout = 'FlightyScout',
+	FlightyScout_G = 'FlightyScout_G',
 	GrimscaleElegist = 'GrimscaleElegist',
 	GrimscaleElegist_G = 'GrimscaleElegist_G',
 	SeafoodStew = 'SeafoodStew',

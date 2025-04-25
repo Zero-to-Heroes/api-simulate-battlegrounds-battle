@@ -48,6 +48,11 @@ export interface StartOfCombatCard extends Card {
 }
 export const hasStartOfCombat = (card: Card): card is StartOfCombatCard =>
 	(card as StartOfCombatCard)?.startOfCombat !== undefined;
+export interface StartOfCombatFromHandCard extends StartOfCombatCard {
+	startOfCombatFromHand: true;
+}
+export const hasStartOfCombatFromHand = (card: Card): card is StartOfCombatFromHandCard =>
+	(card as StartOfCombatFromHandCard)?.startOfCombatFromHand !== undefined;
 export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';
 
 // Whenever this attacks

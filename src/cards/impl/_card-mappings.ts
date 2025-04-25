@@ -53,6 +53,7 @@ import { FaunaWhisperer } from './minion/fauna-whisperer';
 import { FireForgedEvoker } from './minion/fire-forged-evoker';
 import { FirescaleHoarder } from './minion/firescale-hoarder';
 import { FireworksFanatic } from './minion/fireworks-fanatic';
+import { FlightyScout } from './minion/flighty-scout';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
 import { GemRat } from './minion/gem-rat';
@@ -200,6 +201,7 @@ const cards = [
 	BassgillPortrait,
 	ApprenticeOfSefin,
 	GormlingGourmet,
+	FlightyScout,
 	GrimscaleElegist,
 	MurkbrineExpeditioner,
 	DivineSignet,

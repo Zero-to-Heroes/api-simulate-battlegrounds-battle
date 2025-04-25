@@ -1,5 +1,7 @@
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
+import { hasStartOfCombatFromHand } from '../../cards/card.interface';
+import { cardMappings } from '../../cards/impl/_card-mappings';
 import { FullGameState } from '../internal-game-state';
 import { handleSummonsWhenSpace } from '../summon-when-space';
 import { performStartOfCombatAction } from './soc-action-processor';
@@ -16,8 +18,14 @@ export const handleStartOfCombatMinions = (
 	gameState: FullGameState,
 ): number => {
 	let attackerForStart = Math.random() < 0.5 ? 0 : 1;
-	const playerAttackers = [...playerBoard];
-	const opponentAttackers = [...opponentBoard];
+	const playerAttackers = [
+		...playerBoard,
+		...playerEntity.hand.filter((e) => hasStartOfCombatFromHand(cardMappings[e.cardId])),
+	];
+	const opponentAttackers = [
+		...opponentBoard,
+		...playerEntity.hand.filter((e) => hasStartOfCombatFromHand(cardMappings[e.cardId])),
+	];
 
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		let shouldUpdateNextPlayer = false;
