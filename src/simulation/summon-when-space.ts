@@ -2,6 +2,7 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateTaunt } from '../keywords/taunt';
+import { TempCardIds } from '../temp-card-ids';
 import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
 import { spawnEntities } from './deathrattle-spawns';
@@ -70,6 +71,48 @@ const handleSummonsWhenSpaceForPlayer = (
 		.forEach((t) => {
 			handleBoomControllerForPlayer(t, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
+	playerBoard
+		.filter((e) => e.cardId === TempCardIds.SharptoothSnapper || e.cardId === TempCardIds.SharptoothSnapper_G)
+		.filter((e) => e.scriptDataNum1 > 0)
+		.forEach((e) => {
+			handleSharptoothSnapperForPlayer(e, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		});
+};
+
+const handleSharptoothSnapperForPlayer = (
+	entity: BoardEntity,
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	if (playerBoard.length < 7) {
+		const mult = entity.cardId === TempCardIds.SharptoothSnapper ? 1 : 2;
+		const candidates = spawnEntities(
+			TempCardIds.SharptoothSnapper_Token,
+			1 * mult,
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+			playerEntity.friendly,
+			true,
+		);
+		candidates.forEach((t) => (t.attackImmediately = true));
+		const actualSpawns = performEntitySpawns(
+			candidates,
+			playerBoard,
+			playerEntity,
+			playerEntity,
+			0,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+		);
+		entity.scriptDataNum1 = 0;
+	}
 };
 
 const handleBoomControllerForPlayer = (

@@ -6,8 +6,6 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateStealth } from '../keywords/stealth';
 import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
-import { processDeathrattleForMinion } from './deathrattle-orchestration';
-import { getValidDeathrattles } from './deathrattle-utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { modifyStats } from './stats';
@@ -78,35 +76,6 @@ export const applyAfterAttackEffects = (
 		attackingEntity.cardId === CardIds.IncorporealCorporal_BG26_RLK_117_G
 	) {
 		attackingEntity.definitelyDead = true;
-	} else if (
-		attackingEntity.cardId === CardIds.MonstrousMacaw_BGS_078 ||
-		attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135
-	) {
-		const loops = attackingEntity.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
-		const targetBoard = attackingBoard.filter((e) => e.entityId !== attackingEntity.entityId);
-		const validDeathrattles = getValidDeathrattles(targetBoard, attackingBoardHero, gameState);
-		const leftMost = validDeathrattles[0];
-		if (!!leftMost) {
-			for (let i = 0; i < loops; i++) {
-				gameState.spectator.registerPowerTarget(
-					attackingEntity,
-					leftMost,
-					attackingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
-				const indexFromRight = attackingBoard.length - (attackingBoard.indexOf(leftMost) + 1);
-				processDeathrattleForMinion(
-					leftMost,
-					indexFromRight,
-					[leftMost],
-					leftMost.friendly ? gameState.gameState.player : gameState.gameState.opponent,
-					leftMost.friendly ? gameState.gameState.opponent : gameState.gameState.player,
-					gameState,
-					false,
-				);
-			}
-		}
 	}
 	// Putricide-only
 	else if (attackingEntity.additionalCards?.includes(CardIds.IncorporealCorporal_BG26_RLK_117)) {

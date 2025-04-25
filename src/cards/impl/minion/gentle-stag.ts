@@ -1,14 +1,20 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
+import { hasCorrectTribe } from '../../../utils';
 import { OnOtherSpawnedCard } from '../../card.interface';
 
 export const GentleStag: OnOtherSpawnedCard = {
 	cardIds: [CardIds.GentleStag_BG31_369, CardIds.GentleStag_BG31_369_G],
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
 		const mult = minion.cardId === CardIds.GentleStag_BG31_369_G ? 2 : 1;
-		const target = input.board[input.board.length - 1];
-		modifyStats(target, minion, mult * 1, mult * 1, input.board, input.hero, input.gameState);
+		const beasts = input.board.filter((e) =>
+			hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
+		);
+		const target = beasts[beasts.length - 1];
+		if (target) {
+			modifyStats(target, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+		}
 	},
 };

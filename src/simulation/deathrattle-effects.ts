@@ -278,22 +278,6 @@ export const handleDeathrattleEffects = (
 						onDeathrattleTriggered(deathrattleTriggeredInput);
 					}
 					break;
-				case CardIds.SilithidBurrower_BG29_871:
-				case CardIds.SilithidBurrower_BG29_871_G:
-					const silithidStats = deadEntity.cardId === CardIds.SilithidBurrower_BG29_871_G ? 2 : 1;
-					for (let i = 0; i < multiplier; i++) {
-						addStatsToBoard(
-							deadEntity,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							silithidStats,
-							silithidStats,
-							gameState,
-							Race[Race.BEAST],
-						);
-						onDeathrattleTriggered(deathrattleTriggeredInput);
-					}
-					break;
 				case CardIds.FiendishServant_YOD_026:
 					for (let i = 0; i < multiplier; i++) {
 						grantRandomAttack(

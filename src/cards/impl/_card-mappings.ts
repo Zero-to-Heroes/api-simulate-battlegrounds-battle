@@ -3,6 +3,7 @@ import { SharingIsCaring } from './bg-spell/sharing-is-caring';
 import { CrystalInfuserEnchantment } from './enchantments/crystal-infuser-enchantment';
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
+import { Alleycat } from './minion/alleycat';
 import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Archimonde } from './minion/archimonde';
@@ -100,6 +101,7 @@ import { Mechorse } from './minion/mechorse';
 import { MenagerieJug } from './minion/menagerie-jug';
 import { MetallicHunter } from './minion/metallic-hunter';
 import { MisfitDragonling } from './minion/misfit-dragonling';
+import { MonstrousMacaw } from './minion/monstrous-macaw';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { Mothership } from './minion/mothership';
 import { Mummifier } from './minion/mummifier';
@@ -138,6 +140,8 @@ import { SelflessHero } from './minion/selfless-hero';
 import { Shadowdancer } from './minion/shadowdancer';
 import { ShellCollector } from './minion/shell-collector';
 import { ShowyCyclist } from './minion/showy-cyclist';
+import { SilithidBurrower } from './minion/silithid-burrower';
+import { SilkyShimmermoth } from './minion/silky-shimmermoth';
 import { SilverHandedRecruit } from './minion/silver-handed-recruit';
 import { SindoreiStraightShot } from './minion/sinodorei-straight-shot';
 import { SkulkingBristlemane } from './minion/skulking-bristlemane';
@@ -170,13 +174,16 @@ import { WhelpSmuggler } from './minion/whelp-smuggler';
 import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
+import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
 import { BalefulIncense } from './trinket/baleful-incense';
 import { BattleHorn } from './trinket/battle-horn';
+import { BeetleBand } from './trinket/beetle-band';
 import { BirdFeeder } from './trinket/bird-feeder';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
+import { HeraldSticker } from './trinket/herald-sticker';
 import { HogwashBasin } from './trinket/hogwash-basin';
 import { UnholySanctum } from './trinket/unholy-sanctum';
 import { VashjirAnemone } from './trinket/vashjir-anemone';
@@ -185,9 +192,16 @@ import { YulonSticker } from './trinket/yulon-sticker';
 const cards = [
 	FireworksFanatic,
 	DivineSignet,
+	SilithidBurrower,
+	BeetleBand,
+	HeraldSticker,
+	AllPurposeKibble,
+	SilkyShimmermoth,
+	Alleycat,
 	FaunaWhisperer,
 	SlumberSorcerer,
 	CoilskarSapper,
+	MonstrousMacaw,
 	HogwashBasin,
 	DreamingThornweaver,
 	SkulkingBristlemane,

@@ -16,6 +16,7 @@ import { addCardsInHand } from './cards-in-hand';
 import { computeDeathrattleMultiplier } from './deathrattle-effects';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
 import { FullGameState } from './internal-game-state';
+import { performEntitySpawns } from './spawns';
 
 export const simplifiedSpawnEntities = (
 	cardId: string,
@@ -36,6 +37,40 @@ export const simplifiedSpawnEntities = (
 		false,
 		false,
 		boardEntityToSpawn,
+	);
+};
+
+export const simplifiedSpawnEntitiesWithAddToBoard = (
+	cardId: string,
+	quantity: number,
+	input: DeathrattleTriggeredInput,
+	source: BoardEntity,
+	indexFromRight: number,
+	boardEntityToSpawn: BoardEntity = null,
+): void => {
+	const spawns = spawnEntities(
+		cardId,
+		quantity,
+		input.boardWithDeadEntity,
+		input.boardWithDeadEntityHero,
+		input.otherBoard,
+		input.otherBoardHero,
+		input.gameState,
+		input.deadEntity.friendly,
+		false,
+		false,
+		false,
+		boardEntityToSpawn,
+	);
+	performEntitySpawns(
+		spawns,
+		input.boardWithDeadEntity,
+		input.boardWithDeadEntityHero,
+		source,
+		indexFromRight,
+		input.otherBoard,
+		input.otherBoardHero,
+		input.gameState,
 	);
 };
 
