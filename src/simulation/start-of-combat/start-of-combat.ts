@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
-import { TempCardIds } from '../../temp-card-ids';
 import { FullGameState } from '../internal-game-state';
 import { applyAfterStatsUpdate } from '../stats';
 import { StartOfCombatPhase } from './phases';
@@ -96,7 +96,9 @@ const handlePhase = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	const loops = playerEntity.trinkets?.some((t) => t.cardId === TempCardIds.ValdrakkenWindChimes) ? 2 : 1;
+	const loops = playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
+		? 2
+		: 1;
 	for (let i = 0; i < loops; i++) {
 		switch (phase) {
 			case 'QuestReward':

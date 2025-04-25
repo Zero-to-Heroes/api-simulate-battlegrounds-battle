@@ -1,12 +1,11 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 import { selectMinions } from '../hero-power/wax-warband';
 
 export const FaunaWhisperer: EndOfTurnCard = {
-	cardIds: [TempCardIds.FaunaWhisperer, TempCardIds.FaunaWhisperer_G],
+	cardIds: [CardIds.FaunaWhisperer_BG32_837, CardIds.FaunaWhisperer_BG32_837_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
 		const index = input.board.indexOf(minion);
 		if (index === 0) {
@@ -15,7 +14,7 @@ export const FaunaWhisperer: EndOfTurnCard = {
 		const targets: BoardEntity[] = [];
 		targets.push(input.board[index - 1]);
 
-		if (minion.cardId === TempCardIds.FaunaWhisperer_G && index < input.board.length - 1) {
+		if (minion.cardId === CardIds.FaunaWhisperer_BG32_837_G && index < input.board.length - 1) {
 			targets.push(input.board[index + 1]);
 		}
 

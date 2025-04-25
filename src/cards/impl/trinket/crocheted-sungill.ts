@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { OnAfterDeathInput } from '../../../simulation/attack';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DefaultScriptDataNumCard, OnAfterDeathCard } from '../../card.interface';
 
 export const CrochetedSungill: OnAfterDeathCard & DefaultScriptDataNumCard = {
-	cardIds: [TempCardIds.CrochetedSungill],
+	cardIds: [CardIds.CrochetedSungill_BG32_MagicItem_960],
 	defaultScriptDataNum: (cardId: string) => 1,
 	onAfterDeath: (trinket: BoardTrinket, input: OnAfterDeathInput) => {
 		if (input.board.length > 0 || trinket.scriptDataNum1 <= 0) {

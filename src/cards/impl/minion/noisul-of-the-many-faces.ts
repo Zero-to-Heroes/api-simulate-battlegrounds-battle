@@ -1,14 +1,13 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { shuffleArray } from '../../../services/utils';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { OnOtherSpawnedCard } from '../../card.interface';
 
 export const NoisulOfTheManyFaces: OnOtherSpawnedCard = {
-	cardIds: [TempCardIds.NoisulOfTheManyFaces, TempCardIds.NoisulOfTheManyFaces_G],
+	cardIds: [CardIds.NoisulOfTheManyFaces_BG32_325, CardIds.NoisulOfTheManyFaces_BG32_325_G],
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
 		if (
 			!hasCorrectTribe(
@@ -25,7 +24,7 @@ export const NoisulOfTheManyFaces: OnOtherSpawnedCard = {
 			hasCorrectTribe(e, input.hero, Race.UNDEAD, input.gameState.anomalies, input.gameState.allCards),
 		);
 		const targets = shuffleArray(undead).slice(0, 4);
-		const mult = minion.cardId === TempCardIds.NoisulOfTheManyFaces_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.NoisulOfTheManyFaces_BG32_325_G ? 2 : 1;
 		for (const target of targets) {
 			modifyStats(target, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
 		}

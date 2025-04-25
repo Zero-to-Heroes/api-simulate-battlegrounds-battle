@@ -1,4 +1,4 @@
-import { GameTag, Race } from '@firestone-hs/reference-data';
+import { CardIds, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
@@ -11,13 +11,12 @@ import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { FullGameState } from '../../../simulation/internal-game-state';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { BattlecryCard } from '../../card.interface';
 import { validBonusKeywords } from '../../cards-data';
 
 export const ApprenticeOfSefin: BattlecryCard = {
-	cardIds: [TempCardIds.ApprenticeOfSefin, TempCardIds.ApprenticeOfSefin_G],
+	cardIds: [CardIds.ApprenticeOfSefin_BG32_332, CardIds.ApprenticeOfSefin_BG32_332_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const murlocs = input.board.filter((e) =>
 			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
@@ -27,7 +26,7 @@ export const ApprenticeOfSefin: BattlecryCard = {
 			return true;
 		}
 
-		const mult = minion.cardId === TempCardIds.ApprenticeOfSefin_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.ApprenticeOfSefin_BG32_332_G ? 2 : 1;
 		grantRandomBonusKeywords(target, mult, input.board, input.hero, input.otherHero, input.gameState);
 		modifyStats(target, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
 		return true;

@@ -2,7 +2,6 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
-import { TempCardIds } from '../temp-card-ids';
 import { hasMechanic } from '../utils';
 import { FullGameState } from './internal-game-state';
 
@@ -16,7 +15,7 @@ export const getValidDeathrattles = (
 			return true;
 		}
 		if (
-			hero.trinkets?.some((t) => t.cardId === TempCardIds.FelementalPortrait) &&
+			hero.trinkets?.some((t) => t.cardId === CardIds.FelementalPortrait_BG32_MagicItem_830) &&
 			(entity.cardId === CardIds.Felemental_BG25_041 || entity.cardId === CardIds.Felemental_BG25_041_G)
 		) {
 			return true;

@@ -11,7 +11,6 @@ import { FullGameState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { Simulator } from './simulation/simulator';
 import { Spectator } from './simulation/spectator/spectator';
-import { TempCardIds } from './temp-card-ids';
 
 let globalCards = new AllCardsService();
 
@@ -288,8 +287,8 @@ const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e,
 	CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e,
 	CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee,
-	TempCardIds.AutoAssembler_Enchantment,
-	TempCardIds.AutoAssembler_Enchantment_G,
+	CardIds.AutoAssembler_AutoAssemblerEnchantment_BG32_172e,
+	CardIds.AutoAssembler_AutoAssemblerEnchantment_BG32_172_Ge,
 ];
 const validDeathrattleEnchantmentsFromMapping = [];
 export const isValidDeathrattleEnchantment = (cardId: string): boolean => {

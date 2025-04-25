@@ -160,7 +160,7 @@ import { Spacefarer } from './minion/spacefarer';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
 import { StitchedSalvager } from './minion/stitched-salvager';
-import { SurfingSlyvar } from './minion/surfing-slyvar';
+import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
 import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
@@ -228,7 +228,7 @@ const cards = [
 	MawCaster,
 	DastardlyDrust,
 	EliteNavigator,
-	SurfingSlyvar,
+	SurfingSylvar,
 	GoldGrubber,
 	UnholySanctum,
 	DrustfallenButcher,

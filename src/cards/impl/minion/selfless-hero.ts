@@ -3,13 +3,12 @@ import { BoardEntity } from '../../../board-entity';
 import { grantRandomDivineShield } from '../../../keywords/divine-shield';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { TempCardIds } from '../../../temp-card-ids';
 import { BattlecryCard, DeathrattleEffectCard } from '../../card.interface';
 
 export const SelflessHero: BattlecryCard & DeathrattleEffectCard = {
 	cardIds: [CardIds.SelflessHero_BG_OG_221, CardIds.SelflessHero_TB_BaconUps_014],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
-		if (!input.hero.trinkets?.some((t) => t.cardId === TempCardIds.SelflessPortrait)) {
+		if (!input.hero.trinkets?.some((t) => t.cardId === CardIds.SelflessPortrait_BG32_MagicItem_804)) {
 			return false;
 		}
 		const mult = minion.cardId === CardIds.SelflessHero_TB_BaconUps_014 ? 2 : 1;

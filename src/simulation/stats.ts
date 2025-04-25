@@ -4,7 +4,6 @@ import { BoardEntity } from '../board-entity';
 import { BoardSecret } from '../board-secret';
 import { hasOnStatsChanged } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { TempCardIds } from '../temp-card-ids';
 import { hasCorrectTribe } from '../utils';
 import { applyAurasToSelf, removeAurasFromSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
@@ -51,25 +50,15 @@ export const modifyStats = (
 		healthAmount += 1 * buff;
 	}
 
-	// TODO: There probably will be a player enchant for this, as it also needs to handle Amplifying Lightspawn
 	if (
-		friendlyBoardHero.trinkets?.some(
-			(t) => t.cardId === TempCardIds.FountainPen || t.cardId === TempCardIds.FountainPen_G,
-		)
+		entity?.entityId !== source?.entityId &&
+		hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.anomalies, gameState.allCards) &&
+		// Safeguard
+		attackAmount >= 0 &&
+		healthAmount >= 0
 	) {
-		if (
-			entity?.entityId !== source?.entityId &&
-			hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.anomalies, gameState.allCards) &&
-			// Safeguard
-			attackAmount >= 0 &&
-			healthAmount >= 0
-		) {
-			const buff =
-				friendlyBoardHero.trinkets?.filter((t) => t.cardId === TempCardIds.FountainPen).length +
-				friendlyBoardHero.trinkets?.filter((t) => t.cardId === TempCardIds.FountainPen_G).length * 2;
-			attackAmount += buff;
-			healthAmount += buff;
-		}
+		attackAmount += friendlyBoardHero.globalInfo.ElementalAttackBuff;
+		healthAmount += friendlyBoardHero.globalInfo.ElementalHealthBuff;
 	}
 
 	const otherBoardHero: BgsPlayerEntity =

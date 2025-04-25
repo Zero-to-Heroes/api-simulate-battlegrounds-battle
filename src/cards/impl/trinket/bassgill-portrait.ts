@@ -1,13 +1,12 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { AfterOtherSpawnedCard } from '../../card.interface';
 
 export const BassgillPortrait: AfterOtherSpawnedCard = {
-	cardIds: [TempCardIds.BassgillPortrait],
+	cardIds: [CardIds.BassgillPortrait_BG32_MagicItem_301],
 	afterOtherSpawned: (trinket: BoardTrinket, input: OnOtherSpawnInput) => {
 		if (
 			!hasCorrectTribe(

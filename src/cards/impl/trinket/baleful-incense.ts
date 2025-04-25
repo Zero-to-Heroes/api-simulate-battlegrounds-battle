@@ -1,13 +1,12 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { updateReborn } from '../../../keywords/reborn';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const BalefulIncense: StartOfCombatCard = {
-	cardIds: [TempCardIds.BalefulIncense],
+	cardIds: [CardIds.BalefulIncense_BG32_MagicItem_360],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const undead = input.playerBoard.filter((e) =>
 			hasCorrectTribe(e, input.playerEntity, Race.UNDEAD, input.gameState.anomalies, input.gameState.allCards),

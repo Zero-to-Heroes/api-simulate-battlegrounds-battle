@@ -9,7 +9,6 @@ import { updateTaunt } from '../keywords/taunt';
 import { updateVenomous } from '../keywords/venomous';
 import { pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	getRandomAliveMinion,
@@ -443,7 +442,7 @@ const handleAvenge = (
 					for (const entity of boardWithDeadEntity) {
 						const isValidTarget =
 							boardWithDeadEntityHero.trinkets?.some(
-								(t) => t.cardId === TempCardIds.BristlebachPortrait,
+								(t) => t.cardId === CardIds.BristlebachPortrait_BG32_MagicItem_274,
 							) ||
 							hasCorrectTribe(
 								entity,

@@ -1,12 +1,12 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { getValidDeathrattles } from '../../../simulation/deathrattle-utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { TempCardIds } from '../../../temp-card-ids';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const HeraldSticker: StartOfCombatCard = {
-	cardIds: [TempCardIds.HeraldSticker],
+	cardIds: [CardIds.HeraldSticker_BG32_MagicItem_306],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const candidates = getValidDeathrattles(input.playerBoard, input.playerEntity, input.gameState).slice(0, 2);
 		for (const entity of candidates) {

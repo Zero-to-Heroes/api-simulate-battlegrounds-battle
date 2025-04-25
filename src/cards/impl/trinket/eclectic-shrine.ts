@@ -1,15 +1,14 @@
-import { ALL_BG_RACES, Race } from '@firestone-hs/reference-data';
+import { ALL_BG_RACES, CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { getEffectiveTribesForEntity } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 import { selectMinions } from '../hero-power/wax-warband';
 
 export const EclecticShrine: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
-	cardIds: [TempCardIds.EclecticShrine],
+	cardIds: [CardIds.EclecticShrine_BG32_MagicItem_280],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerBoard.length > 0) {
 			const boardWithTribes = input.playerBoard.filter(

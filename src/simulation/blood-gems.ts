@@ -3,7 +3,6 @@ import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { getMinionsOfDifferentTypes } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -35,8 +34,8 @@ export const playBloodGemsOn = (
 			.length *
 			2;
 
-	const crones = board.filter((e) => e.cardId === TempCardIds.NeedlingCrone).length;
-	const goldenCrones = board.filter((e) => e.cardId === TempCardIds.NeedlingCrone_G).length;
+	const crones = board.filter((e) => e.cardId === CardIds.NeedlingCrone_BG32_432).length;
+	const goldenCrones = board.filter((e) => e.cardId === CardIds.NeedlingCrone_BG32_432_G).length;
 	const cronesMult = Math.pow(2, crones) * Math.pow(3, goldenCrones);
 	const bloodGemAttack = bloodGemBaseAttack * cronesMult;
 	const bloodGemHealth = bloodGemBaseHealth * cronesMult;

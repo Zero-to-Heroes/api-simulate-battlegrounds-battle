@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity } from '../../../utils';
 import { StartOfCombatFromHandCard } from '../../card.interface';
 
 export const FlightyScout: StartOfCombatFromHandCard = {
-	cardIds: [TempCardIds.FlightyScout, TempCardIds.FlightyScout_G],
+	cardIds: [CardIds.FlightyScout_BG32_330, CardIds.FlightyScout_BG32_330_G],
 	startOfCombatFromHand: true,
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		if (!input.playerEntity.hand.includes(minion)) {
@@ -15,7 +15,7 @@ export const FlightyScout: StartOfCombatFromHandCard = {
 		}
 
 		const copy = copyEntity(minion);
-		if (minion.cardId === TempCardIds.FlightyScout_G) {
+		if (minion.cardId === CardIds.FlightyScout_BG32_330_G) {
 			copy.attack = 2 * copy.attack;
 			copy.health = 2 * copy.health;
 		}

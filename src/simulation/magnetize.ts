@@ -4,7 +4,6 @@ import { BoardEntity } from '../board-entity';
 import { hasOnBeforeMagnetize } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { Mutable } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -20,7 +19,7 @@ export const magnetizeToTarget = (
 		(t) => t.cardId === CardIds.ElectromagneticDevice_BG30_MagicItem_709,
 	).length;
 	const greaterElecromagneticDevices = hero.trinkets.filter(
-		(t) => t.cardId === TempCardIds.ElectromagneticDevice_G,
+		(t) => t.cardId === CardIds.ElectromagneticDevice_ElectromagneticDeviceToken_BG30_MagicItem_709t,
 	).length;
 
 	const modularCard = { ...gameState.allCards.getCard(cardIdToMagnetize) };

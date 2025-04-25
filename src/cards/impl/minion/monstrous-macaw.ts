@@ -4,7 +4,6 @@ import { OnAfterAttackInput } from '../../../simulation/after-attack';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { getValidDeathrattles } from '../../../simulation/deathrattle-utils';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnAfterAttackCard } from '../../card.interface';
 
 export const MonstrousMacaw: OnAfterAttackCard = {
@@ -42,7 +41,7 @@ export const MonstrousMacaw: OnAfterAttackCard = {
 			}
 		}
 
-		if (input.attackingHero.trinkets?.some((t) => t.cardId === TempCardIds.MacawPortrait)) {
+		if (input.attackingHero.trinkets?.some((t) => t.cardId === CardIds.MacawPortrait_BG32_MagicItem_803)) {
 			const validBattlecries = targetBoard.filter((e) => hasMinionBattlecry(e, input.gameState));
 			const leftMostBattlecry = validBattlecries[0];
 			if (!!leftMostBattlecry) {

@@ -3,14 +3,13 @@ import { BoardEntity } from '../../../board-entity';
 import { updateTaunt } from '../../../keywords/taunt';
 import { AvengeInput } from '../../../simulation/avenge';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { AvengeCard } from '../../card.interface';
 
 export const BeetleBand: AvengeCard = {
-	cardIds: [TempCardIds.BeetleBand, TempCardIds.BeetleBand_Greater],
-	baseAvengeValue: (cardId: string) => (cardId === TempCardIds.BeetleBand ? 5 : 6),
+	cardIds: [CardIds.BeetleBand_BG32_MagicItem_860, CardIds.BeetleBand_BeetleBandToken_BG32_MagicItem_860t],
+	baseAvengeValue: (cardId: string) => (cardId === CardIds.BeetleBand_BG32_MagicItem_860 ? 5 : 6),
 	avenge: (trinket: BoardEntity, input: AvengeInput): readonly BoardEntity[] => {
-		const number = trinket.cardId === TempCardIds.BeetleBand ? 1 : 2;
+		const number = trinket.cardId === CardIds.BeetleBand_BG32_MagicItem_860 ? 1 : 2;
 		const spawns = spawnEntities(
 			CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
 			number,

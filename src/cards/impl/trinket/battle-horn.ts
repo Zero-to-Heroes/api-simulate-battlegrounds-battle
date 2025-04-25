@@ -1,14 +1,13 @@
-import { GameTag } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { AvengeInput } from '../../../simulation/avenge';
 import { triggerBattlecry } from '../../../simulation/battlecries';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasMechanic } from '../../../utils';
 import { AvengeCard } from '../../card.interface';
 
 export const BattleHorn: AvengeCard = {
-	cardIds: [TempCardIds.BattleHorn],
+	cardIds: [CardIds.BattleHorn_BG32_MagicItem_415],
 	baseAvengeValue: (cardId: string) => 3,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const battlecries = input.board.filter((e) =>

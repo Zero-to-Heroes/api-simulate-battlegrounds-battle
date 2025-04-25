@@ -1,16 +1,15 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { BattlecryCard, DeathrattleEffectCard } from '../../card.interface';
 
 export const BronzeSteward: BattlecryCard & DeathrattleEffectCard = {
-	cardIds: [TempCardIds.BronzeSteward, TempCardIds.BronzeSteward_G],
+	cardIds: [CardIds.BronzeSteward_BG32_824, CardIds.BronzeSteward_BG32_824_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
-		const mult = minion.cardId === TempCardIds.BronzeSteward_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.BronzeSteward_BG32_824_G ? 2 : 1;
 		const targets = input.board
 			.filter((e) => e.entityId !== minion.entityId)
 			.filter((e) =>
@@ -22,7 +21,7 @@ export const BronzeSteward: BattlecryCard & DeathrattleEffectCard = {
 		return true;
 	},
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const mult = minion.cardId === TempCardIds.BronzeSteward_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.BronzeSteward_BG32_824_G ? 2 : 1;
 		const targets = input.boardWithDeadEntity
 			.filter((e) => e.entityId !== minion.entityId)
 			.filter((e) =>

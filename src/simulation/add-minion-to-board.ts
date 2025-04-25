@@ -13,7 +13,6 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { addStatsToBoard, copyEntity, hasCorrectTribe } from '../utils';
 import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
@@ -267,7 +266,7 @@ export const applyAurasToSelf = (
 					spawned.attack += 6;
 					spawned.health += 4;
 					break;
-				case TempCardIds.DazzlingDagger:
+				case CardIds.DazzlingDagger_BG32_MagicItem_934:
 					spawned.attack += trinket.scriptDataNum1 || 1;
 					break;
 				case CardIds.HordeKeychainToken_BG30_MagicItem_843t:
@@ -503,7 +502,7 @@ export const removeAurasFromSelf = (
 					entity.attack = Math.max(0, entity.attack - 6);
 					entity.health = Math.max(1, entity.health - 4);
 					break;
-				case TempCardIds.DazzlingDagger:
+				case CardIds.DazzlingDagger_BG32_MagicItem_934:
 					entity.attack = Math.max(0, entity.attack - (trinket.scriptDataNum1 || 1));
 					break;
 				case CardIds.HordeKeychainToken_BG30_MagicItem_843t:

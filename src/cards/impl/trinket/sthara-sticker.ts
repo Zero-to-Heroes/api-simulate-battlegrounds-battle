@@ -1,14 +1,13 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { OnAfterDeathInput } from '../../../simulation/attack';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { DefaultScriptDataNumCard, OnAfterDeathCard } from '../../card.interface';
 
 export const StharaSticker: OnAfterDeathCard & DefaultScriptDataNumCard = {
-	cardIds: [TempCardIds.StharaSticker],
+	cardIds: [CardIds.StharaSticker_BG32_MagicItem_907],
 	defaultScriptDataNum: (cardId: string) => 1,
 	onAfterDeath: (trinket: BoardTrinket, input: OnAfterDeathInput) => {
 		if (input.board.length > 0 || trinket.scriptDataNum1 <= 0) {

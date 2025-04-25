@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { AvengeInput } from '../../../simulation/avenge';
-import { TempCardIds } from '../../../temp-card-ids';
 import { addStatsToBoard } from '../../../utils';
 import { AvengeCard } from '../../card.interface';
 
 export const BirdFeeder: AvengeCard = {
-	cardIds: [TempCardIds.BirdFeeder, TempCardIds.BirdFeeder_Greater],
+	cardIds: [CardIds.BirdFeeder_BG32_MagicItem_864, CardIds.BirdFeeder_BirdFeederToken_BG32_MagicItem_864t],
 	baseAvengeValue: (cardId: string) => 2,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
-		const buff = minion.cardId === TempCardIds.BirdFeeder ? 1 : 4;
+		const buff = minion.cardId === CardIds.BirdFeeder_BG32_MagicItem_864 ? 1 : 4;
 		addStatsToBoard(input.hero, input.board, input.hero, buff, buff, input.gameState);
 	},
 };

@@ -1,14 +1,13 @@
-import { CardType } from '@firestone-hs/reference-data';
+import { CardIds, CardType } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const GrimscaleElegist: EndOfTurnCard = {
-	cardIds: [TempCardIds.GrimscaleElegist, TempCardIds.GrimscaleElegist_G],
+	cardIds: [CardIds.GrimscaleElegist_BG32_331, CardIds.GrimscaleElegist_BG32_331_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const mult = minion.cardId === TempCardIds.GrimscaleElegist ? 1 : 2;
+		const mult = minion.cardId === CardIds.GrimscaleElegist_BG32_331 ? 1 : 2;
 
 		const boardTarget = pickRandom(input.board);
 		modifyStats(boardTarget, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);

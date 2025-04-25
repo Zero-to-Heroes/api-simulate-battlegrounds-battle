@@ -3,7 +3,6 @@ import { BoardEntity } from '../../../board-entity';
 import { getNeighbours } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { grantRandomHealth } from '../../../utils';
 import { DeathrattleEffectCard } from '../../card.interface';
 
@@ -12,7 +11,7 @@ export const ImpulsiveTrickster: DeathrattleEffectCard = {
 	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const tricksterMultiplier = minion.cardId === CardIds.ImpulsiveTrickster_BG21_006_G ? 2 : 1;
 		const hasImpulsivePortrait = input.boardWithDeadEntityHero.trinkets?.some(
-			(t) => t.cardId === TempCardIds.ImpulsiveTricksterPortrait,
+			(t) => t.cardId === CardIds.ImpulsivePortrait_BG32_MagicItem_820,
 		);
 		for (let j = 0; j < tricksterMultiplier; j++) {
 			if (hasImpulsivePortrait) {

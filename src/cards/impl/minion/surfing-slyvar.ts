@@ -1,14 +1,14 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { getNeighbours } from '../../../simulation/attack';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { isGolden } from '../../../utils';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
-export const SurfingSlyvar: EndOfTurnCard = {
-	cardIds: [TempCardIds.SurfingSlyvar, TempCardIds.SurfingSlyvar_G],
+export const SurfingSylvar: EndOfTurnCard = {
+	cardIds: [CardIds.SurfingSylvar_BG32_235, CardIds.SurfingSylvar_BG32_235_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const mult = minion.cardId === TempCardIds.SurfingSlyvar_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.SurfingSylvar_BG32_235_G ? 2 : 1;
 		const goldenMinions = input.board.filter((e) => isGolden(e.cardId, input.gameState.allCards)).length;
 		const neighbours = getNeighbours(input.board, minion);
 		for (let i = 0; i < goldenMinions + 1; i++) {

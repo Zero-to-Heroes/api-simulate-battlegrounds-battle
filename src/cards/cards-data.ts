@@ -9,7 +9,6 @@ import {
 } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 import { hasAvenge, hasDefaultScriptDataNum } from './card.interface';
 import { cardMappings } from './impl/_card-mappings';
@@ -242,7 +241,7 @@ export class CardsData {
 			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				return 2;
 			case CardIds.MechagonAdapter_BG30_MagicItem_910:
-			case TempCardIds.FaerieDragonScale:
+			case CardIds.FaerieDragonScale_BG32_MagicItem_363:
 				return 3;
 			case CardIds.ReinforcedShield_BG30_MagicItem_886:
 				return 4;

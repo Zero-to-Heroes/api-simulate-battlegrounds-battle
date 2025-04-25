@@ -1,11 +1,10 @@
-import { CardType } from '@firestone-hs/reference-data';
+import { CardIds, CardType } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnStatsChangedInput } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnStatsChangedCard } from '../../card.interface';
 
 export const MurkbrineExpeditioner: OnStatsChangedCard = {
-	cardIds: [TempCardIds.MurkbrineExpeditioner, TempCardIds.MurkbrineExpeditioner_G],
+	cardIds: [CardIds.MurkbrineExpeditioner_BG32_335, CardIds.MurkbrineExpeditioner_BG32_335_G],
 	onStatsChanged: (minion: BoardEntity, input: OnStatsChangedInput) => {
 		if (input.target !== minion || input.attackAmount < 0 || input.healthAmount < 0) {
 			return;

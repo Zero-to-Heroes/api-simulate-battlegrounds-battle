@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { shuffleArray } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
-import { TempCardIds } from '../../../temp-card-ids';
 import { isGolden } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const YulonSticker: StartOfCombatCard = {
-	cardIds: [TempCardIds.YulonSticker],
+	cardIds: [CardIds.YulonSticker_BG32_MagicItem_419],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const candidateBoard = input.playerBoard.filter((e) => !isGolden(e.cardId, input.gameState.allCards));
 		// Because we pick one at random from all the ones that have the lowest tier

@@ -81,6 +81,8 @@ export interface BgsPlayerGlobalInfo {
 	ChoralHealthBuff?: number;
 	BeetleAttackBuff?: number;
 	BeetleHealthBuff?: number;
+	ElementalAttackBuff?: number;
+	ElementalHealthBuff?: number;
 	MutatedLasherAttackBuff?: number;
 	MutatedLasherHealthBuff?: number;
 	BattlecriesTriggeredThisGame?: number;
