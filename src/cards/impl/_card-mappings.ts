@@ -31,6 +31,7 @@ import { Carrier } from './minion/carrier';
 import { ChampionOfThePrimus } from './minion/champion-of-the-primus';
 import { Charlga } from './minion/charlga';
 import { ClunkerJunker } from './minion/clunker-junker';
+import { CoilskarSapper } from './minion/coilskar-sapper';
 import { Colossus } from './minion/colossus';
 import { CorruptedBristler } from './minion/corrupted-bristler';
 import { CruiseController } from './minion/cruise-controller';
@@ -46,6 +47,7 @@ import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { EliteNavigator } from './minion/elite-navigator';
 import { FairyGillmother } from './minion/fairy-gillmother';
+import { FaunaWhisperer } from './minion/fauna-whisperer';
 import { FireForgedEvoker } from './minion/fire-forged-evoker';
 import { FirescaleHoarder } from './minion/firescale-hoarder';
 import { FireworksFanatic } from './minion/fireworks-fanatic';
@@ -141,6 +143,7 @@ import { SindoreiStraightShot } from './minion/sinodorei-straight-shot';
 import { SkulkingBristlemane } from './minion/skulking-bristlemane';
 import { SkyPirateFlagbearer } from './minion/sky-pirate-flagbearer';
 import { SkyPirateFlagbearerEnchantment } from './minion/sky-pirate-flagbearer-enchantment';
+import { SlumberSorcerer } from './minion/slumber-sorcerer';
 import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
 import { SoulRewinder } from './minion/soul-rewinder';
@@ -176,16 +179,21 @@ import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
 import { HogwashBasin } from './trinket/hogwash-basin';
 import { UnholySanctum } from './trinket/unholy-sanctum';
+import { VashjirAnemone } from './trinket/vashjir-anemone';
 import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	FireworksFanatic,
 	DivineSignet,
+	FaunaWhisperer,
+	SlumberSorcerer,
+	CoilskarSapper,
 	HogwashBasin,
 	DreamingThornweaver,
 	SkulkingBristlemane,
 	Bonker,
 	Thorncaller,
+	VashjirAnemone,
 	GlowgulletWarlord,
 	CorruptedBristler,
 	Greenskeeper,

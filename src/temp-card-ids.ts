@@ -1,4 +1,13 @@
 export declare const enum TempCardIds {
+	CoilskarSapper = 'CoilskarSapper',
+	CoilskarSapper_G = 'CoilskarSapper_G',
+	ShiftingTide = 'ShiftingTide',
+	SlumberSorcerer = 'SlumberSorcerer',
+	SlumberSorcerer_G = 'SlumberSorcerer_G',
+	FaunaWhisperer = 'FaunaWhisperer',
+	FaunaWhisperer_G = 'FaunaWhisperer_G',
+	DazzlingDagger = 'DazzlingDagger',
+	VashjirAnemone = 'VashjirAnemone',
 	SkulkingBristlemane = 'SkulkingBristlemane',
 	SkulkingBristlemane_G = 'SkulkingBristlemane_G',
 	GlowgulletWarlord = 'GlowgulletWarlord',
