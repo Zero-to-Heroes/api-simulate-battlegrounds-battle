@@ -3,6 +3,7 @@ import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { pickRandom } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import { getMinionsOfDifferentTypes } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -20,19 +21,25 @@ export const playBloodGemsOn = (
 		gameState.spectator.registerPowerTarget(source, target, board, null, null);
 	}
 
-	const bloodGemAttack =
+	const bloodGemBaseAttack =
 		1 +
 		(hero.globalInfo?.BloodGemAttackBonus ?? 0) +
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker_BG30_MagicItem_988).length * 3 +
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker_GreatBoarStickerToken_BG30_MagicItem_988t)
 			.length *
 			2;
-	const bloodGemHealth =
+	const bloodGemBaseHealth =
 		1 +
 		(hero.globalInfo?.BloodGemHealthBonus ?? 0) +
 		hero.trinkets.filter((t) => t.cardId === CardIds.GreatBoarSticker_GreatBoarStickerToken_BG30_MagicItem_988t)
 			.length *
 			2;
+
+	const crones = board.filter((e) => e.cardId === TempCardIds.NeedlingCrone).length;
+	const goldenCrones = board.filter((e) => e.cardId === TempCardIds.NeedlingCrone_G).length;
+	const cronesMult = Math.pow(2, crones) * Math.pow(3, goldenCrones);
+	const bloodGemAttack = bloodGemBaseAttack * cronesMult;
+	const bloodGemHealth = bloodGemBaseHealth * cronesMult;
 
 	let bloodGemEnchantment =
 		target.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??

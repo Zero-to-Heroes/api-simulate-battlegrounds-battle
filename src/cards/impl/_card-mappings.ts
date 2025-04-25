@@ -20,6 +20,7 @@ import { BirdBuddy } from './minion/bird-buddy';
 import { BlazingSkyfin } from './minion/blazing-skyfin';
 import { BoarGamer } from './minion/boar-gamer';
 import { BongoBopper } from './minion/bongo-bopper';
+import { Bonker } from './minion/bonker';
 import { BriarbackBookie } from './minion/briarback-bookie';
 import { BronzeSteward } from './minion/bronze-steward';
 import { BubbleGunner } from './minion/bubble-gunner';
@@ -31,12 +32,14 @@ import { ChampionOfThePrimus } from './minion/champion-of-the-primus';
 import { Charlga } from './minion/charlga';
 import { ClunkerJunker } from './minion/clunker-junker';
 import { Colossus } from './minion/colossus';
+import { CorruptedBristler } from './minion/corrupted-bristler';
 import { CruiseController } from './minion/cruise-controller';
 import { DastardlyDrust } from './minion/dastardly-drust';
 import { Deadstomper } from './minion/deadstomper';
 import { DeathlyStriker } from './minion/deathly-striker';
 import { DefiantShipwright } from './minion/defiant-shipwright';
 import { DeflectoBot } from './minion/deflecto-bot';
+import { DreamingThornweaver } from './minion/dreaming-thornweaver';
 import { DrustfallenButcher } from './minion/drustfallen-butcher';
 import { EchoingRoar } from './minion/echoing-roar';
 import { EfficientEngineer } from './minion/efficient-engineer';
@@ -53,6 +56,7 @@ import { GemSmuggler } from './minion/gem-smuggler';
 import { GeneralDrakkisath } from './minion/general-drakkisath';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { GentleStag } from './minion/gentle-stag';
+import { GlowgulletWarlord } from './minion/glowgullet-warlord';
 import { GoldGrubber } from './minion/goldgrubber';
 import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
 import { GreaseBot } from './minion/grease-bot';
@@ -134,6 +138,7 @@ import { ShellCollector } from './minion/shell-collector';
 import { ShowyCyclist } from './minion/showy-cyclist';
 import { SilverHandedRecruit } from './minion/silver-handed-recruit';
 import { SindoreiStraightShot } from './minion/sinodorei-straight-shot';
+import { SkulkingBristlemane } from './minion/skulking-bristlemane';
 import { SkyPirateFlagbearer } from './minion/sky-pirate-flagbearer';
 import { SkyPirateFlagbearerEnchantment } from './minion/sky-pirate-flagbearer-enchantment';
 import { SlyRaptor } from './minion/sly-raptor';
@@ -145,6 +150,7 @@ import { SpringySpriggan } from './minion/springy-spriggan';
 import { StitchedSalvager } from './minion/stitched-salvager';
 import { SurfingSlyvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
+import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
 import { Tichondrius } from './minion/tichondrius';
@@ -168,12 +174,20 @@ import { BirdFeeder } from './trinket/bird-feeder';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
+import { HogwashBasin } from './trinket/hogwash-basin';
 import { UnholySanctum } from './trinket/unholy-sanctum';
 import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	FireworksFanatic,
 	DivineSignet,
+	HogwashBasin,
+	DreamingThornweaver,
+	SkulkingBristlemane,
+	Bonker,
+	Thorncaller,
+	GlowgulletWarlord,
+	CorruptedBristler,
 	Greenskeeper,
 	MawCaster,
 	DastardlyDrust,

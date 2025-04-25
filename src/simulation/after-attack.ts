@@ -6,7 +6,6 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateStealth } from '../keywords/stealth';
 import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
-import { addCardsInHand } from './cards-in-hand';
 import { processDeathrattleForMinion } from './deathrattle-orchestration';
 import { getValidDeathrattles } from './deathrattle-utils';
 import { FullGameState } from './internal-game-state';
@@ -64,11 +63,7 @@ export const applyAfterAttackEffects = (
 		}
 	}
 
-	if (attackingEntity.cardId === CardIds.Bonker_BG20_104 || attackingEntity.cardId === CardIds.Bonker_BG20_104_G) {
-		const quantity = attackingEntity.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
-		const cards = quantity === 1 ? [CardIds.BloodGem] : [CardIds.BloodGem, CardIds.BloodGem];
-		addCardsInHand(attackingBoardHero, attackingBoard, cards, gameState);
-	} else if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
+	if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
 		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(
 			attackingEntity,

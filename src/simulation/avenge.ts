@@ -9,6 +9,7 @@ import { updateTaunt } from '../keywords/taunt';
 import { updateVenomous } from '../keywords/venomous';
 import { pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	getRandomAliveMinion,
@@ -440,15 +441,18 @@ const handleAvenge = (
 				const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
 				for (let i = 0; i < bristlebachMultiplier; i++) {
 					for (const entity of boardWithDeadEntity) {
-						if (
+						const isValidTarget =
+							boardWithDeadEntityHero.trinkets?.some(
+								(t) => t.cardId === TempCardIds.BristlebachPortrait,
+							) ||
 							hasCorrectTribe(
 								entity,
 								boardWithDeadEntityHero,
 								Race.QUILBOAR,
 								gameState.anomalies,
 								gameState.allCards,
-							)
-						) {
+							);
+						if (isValidTarget) {
 							playBloodGemsOn(
 								avenger,
 								entity,
