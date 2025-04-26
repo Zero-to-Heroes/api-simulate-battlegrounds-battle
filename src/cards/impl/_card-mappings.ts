@@ -4,6 +4,7 @@ import { CrystalInfuserEnchantment } from './enchantments/crystal-infuser-enchan
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { Alleycat } from './minion/alleycat';
+import { AmplifyingLightspawn } from './minion/amplifying-lightspawn';
 import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
 import { ApprenticeOfSefin } from './minion/apprentice-of-sefin';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
@@ -62,6 +63,7 @@ import { GeneralDrakkisath } from './minion/general-drakkisath';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { GentleStag } from './minion/gentle-stag';
 import { GlowgulletWarlord } from './minion/glowgullet-warlord';
+import { GlowingCinder } from './minion/glowing-cinder';
 import { GoldGrubber } from './minion/goldgrubber';
 import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
 import { GormlingGourmet } from './minion/gormling-gourmet';
@@ -139,6 +141,7 @@ import { RodeoPerformer } from './minion/rodeo-performer';
 import { RunedProgenitor } from './minion/runed-progenitor';
 import { RylakMetalhead } from './minion/rylak-metalhead';
 import { SaltyHog } from './minion/salty-hog';
+import { SandSwirler } from './minion/sand-swirler';
 import { SanlaynScribe } from './minion/sanlayn-scribe';
 import { Scallywag } from './minion/scallywag';
 import { SelflessHero } from './minion/selfless-hero';
@@ -219,6 +222,9 @@ const cards = [
 	HogwashBasin,
 	DreamingThornweaver,
 	SkulkingBristlemane,
+	AmplifyingLightspawn,
+	GlowingCinder,
+	SandSwirler,
 	Bonker,
 	Thorncaller,
 	VashjirAnemone,
