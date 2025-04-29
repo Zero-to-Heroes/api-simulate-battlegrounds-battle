@@ -36,7 +36,7 @@ export const playBloodGemsOn = (
 
 	const crones = board.filter((e) => e.cardId === CardIds.NeedlingCrone_BG32_432).length;
 	const goldenCrones = board.filter((e) => e.cardId === CardIds.NeedlingCrone_BG32_432_G).length;
-	const cronesMult = Math.pow(2, crones) * Math.pow(3, goldenCrones);
+	const cronesMult = goldenCrones > 0 ? 3 : crones > 0 ? 2 : 1;
 	const bloodGemAttack = bloodGemBaseAttack * cronesMult;
 	const bloodGemHealth = bloodGemBaseHealth * cronesMult;
 

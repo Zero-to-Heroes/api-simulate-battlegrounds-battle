@@ -24,7 +24,7 @@ export const handleStartOfCombatMinions = (
 	];
 	const opponentAttackers = [
 		...opponentBoard,
-		...playerEntity.hand.filter((e) => hasStartOfCombatFromHand(cardMappings[e.cardId])),
+		...opponentEntity.hand.filter((e) => hasStartOfCombatFromHand(cardMappings[e.cardId])),
 	];
 
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {

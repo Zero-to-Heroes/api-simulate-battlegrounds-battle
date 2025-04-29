@@ -52,7 +52,13 @@ export const modifyStats = (
 
 	if (
 		entity?.entityId !== source?.entityId &&
-		hasCorrectTribe(entity, friendlyBoardHero, Race.ELEMENTAL, gameState.anomalies, gameState.allCards) &&
+		hasCorrectTribe(
+			source as BoardEntity,
+			friendlyBoardHero,
+			Race.ELEMENTAL,
+			gameState.anomalies,
+			gameState.allCards,
+		) &&
 		// Safeguard
 		attackAmount >= 0 &&
 		healthAmount >= 0

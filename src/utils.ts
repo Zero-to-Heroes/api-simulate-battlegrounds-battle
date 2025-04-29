@@ -405,6 +405,9 @@ export const hasCorrectTribe = (
 	anomalies: readonly string[],
 	allCards: AllCardsService,
 ): boolean => {
+	if (entity == null) {
+		return false;
+	}
 	const effectiveTribesForEntity = getEffectiveTribesForEntity(entity, playerEntity, anomalies, allCards);
 	return (
 		effectiveTribesForEntity.length > 0 &&
