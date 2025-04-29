@@ -399,6 +399,7 @@ const handleNaturalDeathrattle = (
 
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
 		deadEntity,
+		modifiedIndexFromRight,
 		deadEntityPlayerState.board,
 		deadEntityPlayerState.player,
 		otherPlayerState.board,
