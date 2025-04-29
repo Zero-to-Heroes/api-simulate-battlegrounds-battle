@@ -190,7 +190,11 @@ const buildFinalInputBoard = (
 ): { board: BoardEntity[]; hand: BoardEntity[] } => {
 	const board = playerInfo.board
 		.map((entity) => fixEnchantments(entity, cards))
-		.map((entity) => ({ ...entity, inInitialState: true }))
+		.map((entity) => ({
+			...entity,
+			inInitialState: true,
+			scriptDataNum1: cardsData.defaultScriptDataNum(entity.cardId) || entity.scriptDataNum1,
+		}))
 		.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: isPlayer } as BoardEntity));
 	const hand =
 		playerInfo.player.hand
