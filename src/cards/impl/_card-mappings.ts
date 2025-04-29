@@ -176,6 +176,7 @@ import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TwilightPrimordium } from './minion/twilight-primordium';
 import { Ultralisk } from './minion/ultralisk';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
+import { ValiantTiger } from './minion/valiant-tiger';
 import { VoidRay } from './minion/void-ray';
 import { VorkaiGuardian } from './minion/vorkai-guardian';
 import { WanderingWight } from './minion/wandering-wight';
@@ -224,6 +225,7 @@ const cards = [
 	DreamingThornweaver,
 	SkulkingBristlemane,
 	SharptoothSnapper,
+	ValiantTiger,
 	AmplifyingLightspawn,
 	GlowingCinder,
 	SandSwirler,
