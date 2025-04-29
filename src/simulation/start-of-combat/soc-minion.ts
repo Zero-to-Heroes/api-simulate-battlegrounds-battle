@@ -34,7 +34,7 @@ export const handleStartOfCombatMinions = (
 			if (attacker.health <= 0 || attacker.definitelyDead) {
 				continue;
 			}
-			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, {
+			const input = {
 				playerBoard: playerBoard,
 				playerEntity: playerEntity,
 				opponentBoard: opponentBoard,
@@ -42,9 +42,11 @@ export const handleStartOfCombatMinions = (
 				playerBoardBefore: playerBoardBefore,
 				opponentBoardBefore: opponentBoardBefore,
 				playerIsFriendly: true,
-				currentAttacker: 0,
+				currentAttacker: currentAttacker,
 				gameState,
-			});
+			};
+			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, input);
+			currentAttacker = input.currentAttacker;
 		} else if (attackerForStart === 0 && playerAttackers.length === 0) {
 			shouldUpdateNextPlayer = true;
 		} else if (attackerForStart === 1 && opponentAttackers.length > 0) {
@@ -52,7 +54,7 @@ export const handleStartOfCombatMinions = (
 			if (attacker.health <= 0 || attacker.definitelyDead) {
 				continue;
 			}
-			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, {
+			const input = {
 				playerBoard: opponentBoard,
 				playerEntity: opponentEntity,
 				opponentBoard: playerBoard,
@@ -60,9 +62,11 @@ export const handleStartOfCombatMinions = (
 				playerBoardBefore: opponentBoardBefore,
 				opponentBoardBefore: playerBoardBefore,
 				playerIsFriendly: false,
-				currentAttacker: 0,
+				currentAttacker: currentAttacker,
 				gameState,
-			});
+			};
+			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, input);
+			currentAttacker = input.currentAttacker;
 		} else if (attackerForStart === 1 && opponentAttackers.length === 0) {
 			shouldUpdateNextPlayer = true;
 		}
