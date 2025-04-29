@@ -1175,6 +1175,19 @@ const handleAfterMinionsDeathsForBoard = (
 			});
 		}
 	}
+	for (const entity of friendlyBoard) {
+		const onAfterDeathImpl = cardMappings[entity.cardId];
+		if (hasOnAfterDeath(onAfterDeathImpl)) {
+			onAfterDeathImpl.onAfterDeath(entity, {
+				hero: friendlyHeroEntity,
+				board: friendlyBoard,
+				otherHero: otherHeroEntity,
+				otherBoard: otherBoard,
+				deadEntities: friendlyDeadEntities,
+				gameState: gameState,
+			});
+		}
+	}
 
 	let secretTriggered = null;
 	if (
