@@ -45,6 +45,6 @@ export const FlightyScout: StartOfCombatFromHandCard = {
 			input.gameState,
 		);
 
-		return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
+		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 };
