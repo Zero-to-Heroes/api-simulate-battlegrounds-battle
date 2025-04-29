@@ -74,7 +74,6 @@ const handleSummonsWhenSpaceForPlayer = (
 		.filter(
 			(e) => e.cardId === CardIds.SharptoothSnapper_BG32_201 || e.cardId === CardIds.SharptoothSnapper_BG32_201_G,
 		)
-		.filter((e) => e.scriptDataNum1 > 0)
 		.forEach((e) => {
 			handleSharptoothSnapperForPlayer(e, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
@@ -88,11 +87,10 @@ const handleSharptoothSnapperForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	if (playerBoard.length < 7) {
-		const mult = entity.cardId === CardIds.SharptoothSnapper_BG32_201 ? 1 : 2;
+	while (playerBoard.length < 7 && entity.scriptDataNum1 > 0) {
 		const candidates = spawnEntities(
 			CardIds.SharptoothSnapper_PiranhaToken_BG32_201t,
-			1 * mult,
+			1,
 			playerBoard,
 			playerEntity,
 			opponentBoard,
@@ -112,7 +110,7 @@ const handleSharptoothSnapperForPlayer = (
 			opponentEntity,
 			gameState,
 		);
-		entity.scriptDataNum1 = 0;
+		entity.scriptDataNum1--;
 	}
 };
 

@@ -146,6 +146,7 @@ import { SanlaynScribe } from './minion/sanlayn-scribe';
 import { Scallywag } from './minion/scallywag';
 import { SelflessHero } from './minion/selfless-hero';
 import { Shadowdancer } from './minion/shadowdancer';
+import { SharptoothSnapper } from './minion/sharptooth-snapper';
 import { ShellCollector } from './minion/shell-collector';
 import { ShowyCyclist } from './minion/showy-cyclist';
 import { SilithidBurrower } from './minion/silithid-burrower';
@@ -222,6 +223,7 @@ const cards = [
 	HogwashBasin,
 	DreamingThornweaver,
 	SkulkingBristlemane,
+	SharptoothSnapper,
 	AmplifyingLightspawn,
 	GlowingCinder,
 	SandSwirler,
