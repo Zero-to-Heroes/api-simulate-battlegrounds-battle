@@ -2,11 +2,11 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { DeathrattleEffectCard } from '../../card.interface';
+import { DeathrattleSpawnCard } from '../../card.interface';
 
-export const TunnelBlaster: DeathrattleEffectCard = {
+export const TunnelBlaster: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TunnelBlaster_BG_DAL_775, CardIds.TunnelBlaster_BG_DAL_775_G],
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const loops = minion.cardId === CardIds.TunnelBlaster_BG_DAL_775_G ? 2 : 1;
 		// In case there are spawns, don't target them
 		const minionsToDamage = [...input.boardWithDeadEntity, ...input.otherBoard];
@@ -27,5 +27,6 @@ export const TunnelBlaster: DeathrattleEffectCard = {
 				);
 			}
 		}
+		return [];
 	},
 };

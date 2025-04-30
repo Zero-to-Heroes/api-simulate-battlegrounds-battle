@@ -1,7 +1,7 @@
 import { CardIds, CardType, GameTag, hasMechanic, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasDeathrattleEffect, hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';
+import { hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
@@ -1197,18 +1197,6 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						);
 						break;
-					default:
-						hasTriggered = false;
-						break;
-				}
-			}
-
-			if (hasDeathrattleEffect(spawnEntityImpl)) {
-				for (let i = 0; i < multiplier; i++) {
-					spawnEntityImpl.deathrattleEffect(deadEntity, deathrattleTriggeredInput);
-				}
-			} else {
-				switch (deadEntityCardId) {
 					case CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy:
 					case CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy_G:
 						const iterations =

@@ -5,11 +5,11 @@ import { getNeighbours } from '../../../simulation/attack';
 import { triggerBattlecry } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { hasMechanic } from '../../../utils';
-import { DeathrattleEffectCard } from '../../card.interface';
+import { DeathrattleSpawnCard } from '../../card.interface';
 
-export const RylakMetalhead: DeathrattleEffectCard = {
+export const RylakMetalhead: DeathrattleSpawnCard = {
 	cardIds: [CardIds.RylakMetalhead_BG26_801, CardIds.RylakMetalhead_BG26_801_G],
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const debug = getNeighbours(input.boardWithDeadEntity, minion, input.deadEntityIndexFromRight).map(
 			(e) => input.gameState.allCards.getCard(e.cardId).name,
 		);
@@ -37,5 +37,6 @@ export const RylakMetalhead: DeathrattleEffectCard = {
 				input.gameState,
 			);
 		}
+		return [];
 	},
 };

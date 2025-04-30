@@ -7,9 +7,9 @@ import { RebornEffectInput } from '../../../simulation/reborn';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
 import { getRandomMinionWithHighestHealth } from '../../../utils';
-import { DeathrattleEffectCard, OnAttackCard, RebornSelfEffectCard, StartOfCombatCard } from '../../card.interface';
+import { DeathrattleSpawnCard, OnAttackCard, RebornSelfEffectCard, StartOfCombatCard } from '../../card.interface';
 
-export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackCard & DeathrattleEffectCard = {
+export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.LiftOff_BattlecruiserToken_BG31_HERO_801pt, CardIds.Battlecruiser_BG31_HERO_801pt_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// Enchantments can appear multiple times???
@@ -115,17 +115,17 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackC
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const caduceusReactors = [...(minion.enchantments ?? [])]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee);
 		if (!caduceusReactors?.length) {
-			return;
+			return [];
 		}
 
 		const target = input.boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead)[0];
 		if (!target) {
-			return;
+			return [];
 		}
 
 		const buff = caduceusReactors.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
@@ -138,5 +138,6 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackC
 			input.boardWithDeadEntityHero,
 			input.gameState,
 		);
+		return [];
 	},
 };

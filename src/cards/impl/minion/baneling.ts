@@ -2,11 +2,11 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToRandomEnemy } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { DeathrattleEffectCard } from '../../card.interface';
+import { DeathrattleSpawnCard } from '../../card.interface';
 
-export const Baneling: DeathrattleEffectCard = {
+export const Baneling: DeathrattleSpawnCard = {
 	cardIds: [CardIds.KerriganQueenOfBlades_BanelingToken_BG31_HERO_811t5, CardIds.Baneling_BG31_HERO_811t5_G],
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const loops = minion.cardId === CardIds.Baneling_BG31_HERO_811t5_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			const damage = minion.attack;
@@ -20,5 +20,6 @@ export const Baneling: DeathrattleEffectCard = {
 				input.gameState,
 			);
 		}
+		return [];
 	},
 };

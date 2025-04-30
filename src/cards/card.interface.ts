@@ -149,12 +149,6 @@ export interface DefaultScriptDataNumCard extends Card {
 export const hasDefaultScriptDataNum = (card: Card): card is DefaultScriptDataNumCard =>
 	(card as DefaultScriptDataNumCard)?.defaultScriptDataNum !== undefined;
 
-export interface DeathrattleEffectCard extends Card {
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => void;
-}
-export const hasDeathrattleEffect = (card: Card): card is DeathrattleEffectCard =>
-	(card as DeathrattleEffectCard)?.deathrattleEffect !== undefined;
-
 export interface DeathrattleTriggeredCard extends Card {
 	onDeathrattleTriggered: (minion: BoardEntity | BoardTrinket, input: DeathrattleTriggeredInput) => void;
 }

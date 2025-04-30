@@ -4,11 +4,11 @@ import { updateVenomous } from '../../../keywords/venomous';
 import { pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { hasCorrectTribe } from '../../../utils';
-import { DeathrattleEffectCard } from '../../card.interface';
+import { DeathrattleSpawnCard } from '../../card.interface';
 
-export const OperaticBelcher: DeathrattleEffectCard = {
+export const OperaticBelcher: DeathrattleSpawnCard = {
 	cardIds: [CardIds.OperaticBelcher_BG26_888, CardIds.OperaticBelcher_BG26_888_G],
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const belcherMultiplier = minion.cardId === CardIds.OperaticBelcher_BG26_888_G ? 2 : 1;
 		for (let j = 0; j < belcherMultiplier; j++) {
 			const possibleBelcherTargets = input.boardWithDeadEntity
@@ -43,5 +43,6 @@ export const OperaticBelcher: DeathrattleEffectCard = {
 				);
 			}
 		}
+		return [];
 	},
 };

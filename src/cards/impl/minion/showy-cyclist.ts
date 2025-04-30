@@ -2,11 +2,11 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { addStatsToBoard } from '../../../utils';
-import { DeathrattleEffectCard } from '../../card.interface';
+import { DeathrattleSpawnCard } from '../../card.interface';
 
-export const ShowyCyclist: DeathrattleEffectCard = {
+export const ShowyCyclist: DeathrattleSpawnCard = {
 	cardIds: [CardIds.ShowyCyclist_BG31_925, CardIds.ShowyCyclist_BG31_925_G],
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const base = minion.cardId === CardIds.ShowyCyclist_BG31_925_G ? 2 : 1;
 		// Can be null when created in game
 		// This is not exact, and the actual info should somehow come from the game state, but at least we
@@ -24,5 +24,6 @@ export const ShowyCyclist: DeathrattleEffectCard = {
 			input.gameState,
 			Race[Race.NAGA],
 		);
+		return [];
 	},
 };

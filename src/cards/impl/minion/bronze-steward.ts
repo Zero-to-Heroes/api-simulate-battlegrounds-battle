@@ -4,9 +4,9 @@ import { BattlecryInput } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { BattlecryCard, DeathrattleEffectCard } from '../../card.interface';
+import { BattlecryCard, DeathrattleSpawnCard } from '../../card.interface';
 
-export const BronzeSteward: BattlecryCard & DeathrattleEffectCard = {
+export const BronzeSteward: BattlecryCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.BronzeSteward_BG32_824, CardIds.BronzeSteward_BG32_824_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === CardIds.BronzeSteward_BG32_824_G ? 2 : 1;
@@ -20,7 +20,7 @@ export const BronzeSteward: BattlecryCard & DeathrattleEffectCard = {
 		});
 		return true;
 	},
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.BronzeSteward_BG32_824_G ? 2 : 1;
 		const targets = input.boardWithDeadEntity
 			.filter((e) => e.entityId !== minion.entityId)
@@ -44,5 +44,6 @@ export const BronzeSteward: BattlecryCard & DeathrattleEffectCard = {
 				input.gameState,
 			);
 		});
+		return [];
 	},
 };

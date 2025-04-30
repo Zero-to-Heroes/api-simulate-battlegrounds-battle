@@ -4,11 +4,11 @@ import { updateReborn } from '../../../keywords/reborn';
 import { pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { hasCorrectTribe } from '../../../utils';
-import { DeathrattleEffectCard } from '../../card.interface';
+import { DeathrattleSpawnCard } from '../../card.interface';
 
-export const Mummifier: DeathrattleEffectCard = {
+export const Mummifier: DeathrattleSpawnCard = {
 	cardIds: [CardIds.Mummifier_BG28_309, CardIds.Mummifier_BG28_309_G],
-	deathrattleEffect: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mummifierBuff = minion.cardId === CardIds.Mummifier_BG28_309_G ? 2 : 1;
 		for (let j = 0; j < mummifierBuff; j++) {
 			const targets = input.boardWithDeadEntity
@@ -42,5 +42,6 @@ export const Mummifier: DeathrattleEffectCard = {
 				);
 			}
 		}
+		return [];
 	},
 };
