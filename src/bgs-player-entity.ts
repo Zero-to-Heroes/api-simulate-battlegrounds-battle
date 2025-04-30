@@ -70,6 +70,7 @@ export interface BgsPlayerGlobalInfo {
 	BloodGemHealthBonus?: number;
 	GoldrinnBuffAtk?: number;
 	GoldrinnBuffHealth?: number;
+	SpellsCastThisGame?: number;
 	TavernSpellsCastThisGame?: number;
 	PiratesPlayedThisGame?: number;
 	BeastsSummonedThisGame?: number;
