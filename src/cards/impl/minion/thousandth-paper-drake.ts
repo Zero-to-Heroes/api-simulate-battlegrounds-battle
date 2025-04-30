@@ -17,7 +17,7 @@ export const ThousandthPaperDrake = {
 			if (!!target) {
 				modifyStats(target, minion, 1, 2, input.playerBoard, input.playerEntity, input.gameState);
 				updateWindfury(
-					minion,
+					target,
 					true,
 					input.playerBoard,
 					input.playerEntity,
@@ -25,6 +25,13 @@ export const ThousandthPaperDrake = {
 					input.gameState,
 				);
 				pickedTargets.push(target);
+				input.gameState.spectator.registerPowerTarget(
+					minion,
+					target,
+					input.playerBoard,
+					input.playerEntity,
+					input.opponentEntity,
+				);
 			}
 		}
 		return true;
