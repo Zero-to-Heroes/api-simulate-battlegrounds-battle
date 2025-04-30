@@ -14,6 +14,7 @@ export const FaerieDragonScale: OnAttackCard & DefaultScriptDataNumCard = {
 	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (trinket.scriptDataNum1 > 0) {
 			if (
+				!input.attacker.divineShield &&
 				hasCorrectTribe(
 					input.attacker,
 					input.attackingHero,
