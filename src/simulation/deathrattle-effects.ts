@@ -2,16 +2,13 @@
 import { AllCardsService, CardIds, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasDeathrattleEnchantmentEffect as hasDeathrattleEffectEnchantmentEffect } from '../cards/card.interface';
 import { CardsData } from '../cards/cards-data';
-import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateTaunt } from '../keywords/taunt';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import { grantRandomStats, hasCorrectTribe, isFish, isGolden } from '../utils';
 import { dealDamageToMinion, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
-import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { groupLeapfroggerDeathrattles } from './remembered-deathrattle';
@@ -54,136 +51,6 @@ export const computeDeathrattleMultiplier = (
 			tombs +
 			echoesOfArgus);
 	return multiplier;
-};
-
-// export const handleDeathrattles = (
-// 	boardWithKilledMinion: BoardEntity[],
-// 	boardWithKilledMinionHero: BgsPlayerEntity,
-// 	deadEntity: BoardEntity,
-// 	deadMinionIndexFromRight2: number,
-// 	opponentBoard: BoardEntity[],
-// 	opponentBoardHero: BgsPlayerEntity,
-// 	entitiesDeadThisAttack: readonly BoardEntity[],
-// 	gameState: InternalGameState,
-// ) => {};
-
-export const handleDeathrattleEffects = (
-	boardWithDeadEntity: BoardEntity[],
-	boardWithDeadEntityHero: BgsPlayerEntity,
-	deadEntity: BoardEntity,
-	deadEntityIndexFromRight: number,
-	otherBoard: BoardEntity[],
-	otherBoardHero: BgsPlayerEntity,
-	gameState: FullGameState,
-): void => {
-	const multiplier = computeDeathrattleMultiplier(
-		boardWithDeadEntity,
-		boardWithDeadEntityHero,
-		deadEntity,
-		gameState.sharedState,
-	);
-	const deathrattleTriggeredInput: DeathrattleTriggeredInput = {
-		boardWithDeadEntity,
-		boardWithDeadEntityHero,
-		deadEntity,
-		otherBoard,
-		otherBoardHero,
-		deadEntityIndexFromRight,
-		gameState,
-	};
-
-	// We do it on a case by case basis so that we deal all the damage in one go for instance
-	// and avoid proccing deathrattle spawns between the times the damage triggers
-	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
-
-	// We compute the enchantments first, so that we don't include enchantments created by the just-processed
-	// deathrattles
-	// It's important to first copy the enchantments, otherwise you could end up
-	// in an infinite loop - since new enchants are added after each step
-	const enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
-		...(deadEntity.enchantments ?? []),
-		// These seem to be first processed separately
-		// ...(deadEntity.rememberedDeathrattles ?? []),
-	].sort((a, b) => a.timing - b.timing);
-
-	for (const enchantment of enchantments) {
-		const deathrattleImpl = cardMappings[enchantment.cardId];
-		if (hasDeathrattleEffectEnchantmentEffect(deathrattleImpl)) {
-			for (let i = 0; i < multiplier; i++) {
-				deathrattleImpl.deathrattleEffectEnchantmentEffect(enchantment, deathrattleTriggeredInput);
-				onDeathrattleTriggered(deathrattleTriggeredInput);
-			}
-		}
-		switch (enchantment.cardId) {
-			case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
-				for (let i = 0; i < multiplier; i++) {
-					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-				}
-				break;
-			case CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e:
-				for (let i = 0; i < multiplier; i++) {
-					addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
-				}
-				break;
-			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
-			case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
-				// console.log('\t', 'Leapfrogger enchantment', enchantment.repeats);
-				applyLeapFroggerEffect(
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity,
-					enchantment.cardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
-					gameState,
-					enchantment.repeats || 1,
-				);
-				onDeathrattleTriggered(deathrattleTriggeredInput);
-				break;
-			case CardIds.EarthRecollectionEnchantment:
-				for (let i = 0; i < multiplier; i++) {
-					applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, gameState);
-					onDeathrattleTriggered(deathrattleTriggeredInput);
-				}
-				break;
-			case CardIds.FireRecollectionEnchantment:
-				for (let i = 0; i < multiplier; i++) {
-					applyFireInvocationEnchantment(
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						deadEntity,
-						deadEntity,
-						gameState,
-					);
-					onDeathrattleTriggered(deathrattleTriggeredInput);
-				}
-				break;
-			case CardIds.WaterRecollectionEnchantment:
-				for (let i = 0; i < multiplier; i++) {
-					applyWaterInvocationEnchantment(
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoardHero,
-						deadEntity,
-						deadEntity,
-						gameState,
-					);
-					onDeathrattleTriggered(deathrattleTriggeredInput);
-				}
-				break;
-			case CardIds.LightningRecollectionEnchantment:
-				for (let i = 0; i < multiplier; i++) {
-					applyLightningInvocationEnchantment(
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						deadEntity,
-						otherBoard,
-						otherBoardHero,
-						gameState,
-					);
-					onDeathrattleTriggered(deathrattleTriggeredInput);
-				}
-				break;
-		}
-	}
 };
 
 export const applyLightningInvocationEnchantment = (

@@ -21,8 +21,12 @@ import {
 import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies, processMinionDeath } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import {
+	applyEarthInvocationEnchantment,
+	applyFireInvocationEnchantment,
 	applyLeapFroggerEffect,
+	applyLightningInvocationEnchantment,
 	applyRecurringNightmareDeathrattleEffect,
+	applyWaterInvocationEnchantment,
 	computeDeathrattleMultiplier,
 } from './deathrattle-effects';
 import { DeathrattleTriggeredInput, onDeathrattleTriggered } from './deathrattle-on-trigger';
@@ -186,15 +190,27 @@ export const spawnEntitiesFromDeathrattle = (
 
 	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
-	for (let i = 0; i < multiplier; i++) {
-		const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
-		// console.debug(
-		// 	'spawn triggers',
-		// 	gameState.allCards.getCard(deadEntity.cardId).name,
-		// 	cardIds.map((c) => gameState.allCards.getCard(c).name),
-		// 	cardIds,
-		// );
-		for (const deadEntityCardId of cardIds) {
+	// console.debug(
+	// 	'spawn triggers',
+	// 	gameState.allCards.getCard(deadEntity.cardId).name,
+	// 	cardIds.map((c) => gameState.allCards.getCard(c).name),
+	// 	cardIds,
+	// );
+
+	// We compute the enchantments first, so that we don't include enchantments created by the just-processed
+	// deathrattles
+	// It's important to first copy the enchantments, otherwise you could end up
+	// in an infinite loop - since new enchants are added after each step
+	const enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
+		...(deadEntity.enchantments ?? []),
+		// These seem to be first processed separately
+		// ...(deadEntity.rememberedDeathrattles ?? []),
+	].sort((a, b) => a.timing - b.timing);
+
+	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? []), ...enchantments.map((e) => e.cardId)];
+
+	for (const deadEntityCardId of cardIds) {
+		for (let i = 0; i < multiplier; i++) {
 			let hasTriggered = true;
 			const spawnEntityImpl = cardMappings[deadEntityCardId];
 			if (hasDeathrattleSpawn(spawnEntityImpl)) {
@@ -1842,6 +1858,57 @@ export const spawnEntitiesFromDeathrattle = (
 					// Add all the deathrattles that don't have an effect on combat
 					// case CardIds.FieryFelblood_BG29_877:
 					// case CardIds.FieryFelblood_BG29_877_G:
+					// Enchantments
+					case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
+						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+						break;
+					case CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e:
+						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
+						break;
+					case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
+					case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
+						// console.log('\t', 'Leapfrogger enchantment', enchantment.repeats);
+						applyLeapFroggerEffect(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							deadEntity,
+							deadEntityCardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
+							gameState,
+							1, //enchantment.repeats || 1,
+						);
+						break;
+					case CardIds.EarthRecollectionEnchantment:
+						applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, gameState);
+						break;
+					case CardIds.FireRecollectionEnchantment:
+						applyFireInvocationEnchantment(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							deadEntity,
+							deadEntity,
+							gameState,
+						);
+						break;
+					case CardIds.WaterRecollectionEnchantment:
+						applyWaterInvocationEnchantment(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							otherBoardHero,
+							deadEntity,
+							deadEntity,
+							gameState,
+						);
+						break;
+					case CardIds.LightningRecollectionEnchantment:
+						applyLightningInvocationEnchantment(
+							boardWithDeadEntity,
+							boardWithDeadEntityHero,
+							deadEntity,
+							otherBoard,
+							otherBoardHero,
+							gameState,
+						);
+						break;
 					default:
 						if (!hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag.DEATHRATTLE)) {
 							hasTriggered = false;

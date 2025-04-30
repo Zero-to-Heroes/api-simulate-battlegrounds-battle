@@ -3,11 +3,7 @@ import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
-import {
-	applyWheneverMinionDiesEffect,
-	handleAfterMinionKillsEffect,
-	handleDeathrattleEffects,
-} from './deathrattle-effects';
+import { applyWheneverMinionDiesEffect, handleAfterMinionKillsEffect } from './deathrattle-effects';
 import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { handleRebornForEntity } from './reborn';
@@ -421,15 +417,16 @@ const handleNaturalDeathrattle = (
 		gameState,
 	);
 	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
-	handleDeathrattleEffects(
-		deadEntityPlayerState.board,
-		deadEntityPlayerState.player,
-		deadEntity,
-		modifiedIndexFromRight,
-		otherPlayerState.board,
-		otherPlayerState.player,
-		gameState,
-	);
+	// TODO: revisit this once Leapfroggers are in the game again
+	// handleDeathrattleEffects(
+	// 	deadEntityPlayerState.board,
+	// 	deadEntityPlayerState.player,
+	// 	deadEntity,
+	// 	modifiedIndexFromRight,
+	// 	otherPlayerState.board,
+	// 	otherPlayerState.player,
+	// 	gameState,
+	// );
 
 	return actualSpawns;
 };

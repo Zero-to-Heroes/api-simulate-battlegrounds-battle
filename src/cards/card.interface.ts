@@ -155,15 +155,15 @@ export interface DeathrattleTriggeredCard extends Card {
 export const hasOnDeathrattleTriggered = (card: Card): card is DeathrattleTriggeredCard =>
 	(card as DeathrattleTriggeredCard)?.onDeathrattleTriggered !== undefined;
 
-export interface DeathrattleEnchantmentEffectCard extends Card {
-	deathrattleEffectEnchantmentEffect: (
-		minion: { cardId: string; originEntityId?: number; repeats?: number },
-		input: DeathrattleTriggeredInput,
-	) => void;
-	cardIds: readonly string[];
-}
-export const hasDeathrattleEnchantmentEffect = (card: Card): card is DeathrattleEnchantmentEffectCard =>
-	(card as DeathrattleEnchantmentEffectCard)?.deathrattleEffectEnchantmentEffect !== undefined;
+// export interface DeathrattleEnchantmentEffectCard extends Card {
+// 	deathrattleEffectEnchantmentEffect: (
+// 		minion: { cardId: string; originEntityId?: number; repeats?: number },
+// 		input: DeathrattleTriggeredInput,
+// 	) => void;
+// 	cardIds: readonly string[];
+// }
+// export const hasDeathrattleEnchantmentEffect = (card: Card): card is DeathrattleEnchantmentEffectCard =>
+// 	(card as DeathrattleEnchantmentEffectCard)?.deathrattleEffectEnchantmentEffect !== undefined;
 
 export interface DeathrattleSpawnEnchantmentCard extends Card {
 	deathrattleSpawnEnchantmentEffect: (
