@@ -1910,7 +1910,7 @@ export const spawnEntitiesFromDeathrattle = (
 						);
 						break;
 					default:
-						if (!hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag.DEATHRATTLE)) {
+						if (!hasMechanic(gameState.allCards.getCard(deadEntityCardId), GameTag.DEATHRATTLE)) {
 							hasTriggered = false;
 						}
 						break;
