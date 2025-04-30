@@ -76,6 +76,7 @@ import { HandlessForsaken } from './minion/handless-forsaken';
 import { HarmlessBonehead } from './minion/harmless-bonehead';
 import { HoloRover } from './minion/holo-rover';
 import { HummingBird } from './minion/humming-bird';
+import { Humongozz } from './minion/humongozz';
 import { HungrySnapjaw } from './minion/hungry-snapjaw';
 import { HunterOfGatherers } from './minion/hunter-of-gatherers';
 import { Hydralisk } from './minion/hydralisk';
@@ -241,6 +242,7 @@ const cards = [
 	SurfingSylvar,
 	GoldGrubber,
 	UnholySanctum,
+	Humongozz,
 	DrustfallenButcher,
 	NoisulOfTheManyFaces,
 	FirescaleHoarder,

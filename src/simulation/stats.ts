@@ -1,4 +1,4 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
 import { BgsHeroPower, BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { BoardSecret } from '../board-secret';
@@ -65,6 +65,16 @@ export const modifyStats = (
 	) {
 		attackAmount += friendlyBoardHero.globalInfo.ElementalAttackBuff;
 		healthAmount += friendlyBoardHero.globalInfo.ElementalHealthBuff;
+	}
+	if (
+		entity?.entityId !== source?.entityId &&
+		gameState.allCards.getCard(source?.cardId).type?.toUpperCase() === CardType[CardType.BATTLEGROUND_SPELL] &&
+		// Safeguard
+		attackAmount >= 0 &&
+		healthAmount >= 0
+	) {
+		attackAmount += friendlyBoardHero.globalInfo.TavernSpellAttackBuff;
+		healthAmount += friendlyBoardHero.globalInfo.TavernSpellHealthBuff;
 	}
 
 	const otherBoardHero: BgsPlayerEntity =
