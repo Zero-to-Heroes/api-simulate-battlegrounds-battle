@@ -15,6 +15,8 @@ import { groupLeapfroggerDeathrattles } from './remembered-deathrattle';
 import { SharedState } from './shared-state';
 import { modifyStats } from './stats';
 
+const DEATHRATTLES_REQUIRE_MEMORY = [CardIds.StitchedSalvager_BG31_999, CardIds.StitchedSalvager_BG31_999_G];
+
 export const computeDeathrattleMultiplier = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
@@ -711,11 +713,19 @@ export const rememberDeathrattles = (
 		return;
 	}
 
+	// Some infinite loops going on?
+	if (fish.rememberedDeathrattles?.length > 100) {
+		return;
+	}
+
 	const validDeathrattles = deadEntities
 		.filter(
 			(entity) =>
-				allCards.getCard(entity.cardId).mechanics?.includes(GameTag[GameTag.DEATHRATTLE]) || isFish(entity),
+				allCards.getCard(entity.cardId).mechanics?.includes(GameTag[GameTag.DEATHRATTLE]) &&
+				// Fish are handled via remembered deathrattles
+				!isFish(entity),
 		)
+		.filter((e) => !DEATHRATTLES_REQUIRE_MEMORY.includes(e.cardId as CardIds) || e.memory)
 		.map((entity) => ({
 			cardId: entity.cardId,
 			repeats: 1,
@@ -738,6 +748,7 @@ export const rememberDeathrattles = (
 			.filter((e) => !!e.rememberedDeathrattles?.length)
 			// If the fish has reborn, it will inherit its own Deathrattles, and we don't want that
 			.filter((e) => e.entityId !== fish.rebornFromEntityId)
+			.filter((e) => !DEATHRATTLES_REQUIRE_MEMORY.includes(e.cardId as CardIds) || e.memory)
 			.flatMap((e) => e.rememberedDeathrattles) ?? [];
 	const newDeathrattles = [...validDeathrattles, ...validEnchantments, ...deadEntityRememberedDeathrattles];
 
