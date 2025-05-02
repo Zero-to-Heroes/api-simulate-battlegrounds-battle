@@ -183,6 +183,7 @@ export const spawnEntitiesFromDeathrattle = (
 		boardWithDeadEntity,
 		boardWithDeadEntityHero,
 		deadEntity,
+		deadEntityIndexFromRight: deadEntityIndexFromRight,
 		otherBoard,
 		otherBoardHero,
 		gameState,
