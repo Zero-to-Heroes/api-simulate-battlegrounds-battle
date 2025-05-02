@@ -10,7 +10,7 @@ export const FlightyScout: StartOfCombatFromHandCard = {
 	cardIds: [CardIds.FlightyScout_BG32_330, CardIds.FlightyScout_BG32_330_G],
 	startOfCombatFromHand: true,
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		if (!input.playerEntity.hand.includes(minion)) {
+		if (!input.playerEntity.hand.includes(minion) || minion.locked) {
 			return { hasTriggered: false, shouldRecomputeCurrentAttacker: false };
 		}
 
