@@ -8,7 +8,7 @@ export const CorruptedBristler: DeathrattleSpawnCard = {
 	cardIds: [CardIds.CorruptedBristler_BG32_431, CardIds.CorruptedBristler_BG32_431_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		let bloodGemEnchantments = minion.enchantments?.filter(
-			(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
+			(e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment,
 		);
 		if (bloodGemEnchantments?.length === 0) {
 			bloodGemEnchantments = minion.enchantments?.filter(
