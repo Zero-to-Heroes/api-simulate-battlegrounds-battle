@@ -121,7 +121,8 @@ const buildFinalInputForPlayer = (
 	const isGhost = playerInfo.player?.hpLeft != null && playerInfo.player.hpLeft <= 0;
 	playerInfo.player.secrets = (playerInfo.player.secrets ?? playerInfo.secrets)?.filter((e) => !!e?.cardId) ?? [];
 	// Add the scriptDataNum1 only on the start of combat phase, so that it doesn't trigger too soon
-	playerInfo.player.secrets.forEach((secret) => (secret.scriptDataNum1 = 0));
+	// Don't do this, as secrets like Fleeting Vigor use this info to tell how much buff it will apply
+	// playerInfo.player.secrets.forEach((secret) => (secret.scriptDataNum1 = 0));
 	// Trinkets don't seem to trigger when facing the ghost
 	// http://replays.firestoneapp.com/?reviewId=4ad32e03-2620-4fb1-8b43-cad55afd30fc&turn=27&action=2
 	// One of the trinkets is Blood Golem Sticker, and no Blood Golem is summoned
