@@ -41,7 +41,7 @@ export const EclecticShrine: StartOfCombatCard = {
 					)?.includes(Race.ALL),
 				),
 			];
-			const stats = 2 * (trinket.scriptDataNum1 ?? 1);
+			const stats = trinket.scriptDataNum1 ?? 2;
 			allMinions.forEach((e) => {
 				modifyStats(e, trinket, stats, stats, input.playerBoard, input.playerEntity, input.gameState);
 			});

@@ -217,7 +217,7 @@ export const setImplicitDataHero = (
 		...trinket,
 		avengeDefault: cardsData.avengeValue(trinket.cardId),
 		avengeCurrent: cardsData.avengeValue(trinket.cardId),
-		scriptDataNum1: cardsData.defaultScriptDataNum(trinket.cardId),
+		scriptDataNum1: cardsData.defaultScriptDataNum(trinket.cardId) || trinket.scriptDataNum1,
 	}));
 	// 0 is not a valid entityId
 	hero.entityId = hero.entityId || entityIdContainer.entityId--;
