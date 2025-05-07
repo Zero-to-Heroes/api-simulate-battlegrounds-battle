@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { FullGameState } from '../internal-game-state';
@@ -58,12 +59,17 @@ export const handleStartOfCombatQuestRewards = (
 };
 
 const handleStartOfCombatQuestRewardsForPlayer = (input: SoCInput): number => {
-	if (input.playerEntity.startOfCombatDone) {
-		return input.currentAttacker;
-	}
+	const loops = input.playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
+		? 2
+		: 1;
+	for (let i = 0; i < loops; i++) {
+		if (input.playerEntity.startOfCombatDone) {
+			return input.currentAttacker;
+		}
 
-	for (const reward of input.playerEntity.questRewards) {
-		performStartOfCombatAction(reward, input.playerEntity, input, false);
+		for (const reward of input.playerEntity.questRewards) {
+			performStartOfCombatAction(reward, input.playerEntity, input, false);
+		}
 	}
 
 	return input.currentAttacker;

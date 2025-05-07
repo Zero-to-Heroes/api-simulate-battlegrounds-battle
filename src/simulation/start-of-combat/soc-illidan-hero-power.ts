@@ -70,33 +70,38 @@ const handlePlayerIllidanHeroPowers = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): number => {
-	if (playerEntity.hpLeft <= 0) {
-		return currentAttacker;
-	}
-	for (const heroPower of playerEntity.heroPowers) {
-		if (heroPower.cardId === CardIds.Wingmen && playerBoard.length > 0) {
-			// After Illidan triggers, it's always the other opponent's turn
-			// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
-			handleIllidanForPlayer(
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				gameState,
-				currentAttacker,
-			);
-			// This is not true anymore: https://replays.firestoneapp.com/?reviewId=7282387d-66cd-458e-8ee1-e04c662e7bad&turn=5&action=1
-			// currentAttacker = friendly ? 1 : 0;
-			// In fact there is some adjustment going on: https://replays.firestoneapp.com/?reviewId=929f676f-47f6-494b-9619-df04174a0150&turn=11&action=0
-			// So trying another logic
-			// currentAttacker = (currentAttacker + 1) % 2;
-			// This isn't correct. The following game is a case of:
-			// The player with the fewer minions is Illidan, so isn't the "first attacker"
-			// Wingmen triggers
-			// The non-Illidan side then attacks first
-			// https://replays.firestoneapp.com/?reviewId=45f40e73-4be9-419f-9093-0c2d91a7bac2&turn=5&action=0
-			// So for now, just randomizing the attacker to try and avoid "impossible" scenarios as much as possible
-			currentAttacker = Math.random() < 0.5 ? 0 : 1;
+	const loops = playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
+		? 2
+		: 1;
+	for (let i = 0; i < loops; i++) {
+		if (playerEntity.hpLeft <= 0) {
+			return currentAttacker;
+		}
+		for (const heroPower of playerEntity.heroPowers) {
+			if (heroPower.cardId === CardIds.Wingmen && playerBoard.length > 0) {
+				// After Illidan triggers, it's always the other opponent's turn
+				// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
+				handleIllidanForPlayer(
+					playerBoard,
+					playerEntity,
+					opponentBoard,
+					opponentEntity,
+					gameState,
+					currentAttacker,
+				);
+				// This is not true anymore: https://replays.firestoneapp.com/?reviewId=7282387d-66cd-458e-8ee1-e04c662e7bad&turn=5&action=1
+				// currentAttacker = friendly ? 1 : 0;
+				// In fact there is some adjustment going on: https://replays.firestoneapp.com/?reviewId=929f676f-47f6-494b-9619-df04174a0150&turn=11&action=0
+				// So trying another logic
+				// currentAttacker = (currentAttacker + 1) % 2;
+				// This isn't correct. The following game is a case of:
+				// The player with the fewer minions is Illidan, so isn't the "first attacker"
+				// Wingmen triggers
+				// The non-Illidan side then attacks first
+				// https://replays.firestoneapp.com/?reviewId=45f40e73-4be9-419f-9093-0c2d91a7bac2&turn=5&action=0
+				// So for now, just randomizing the attacker to try and avoid "impossible" scenarios as much as possible
+				currentAttacker = Math.random() < 0.5 ? 0 : 1;
+			}
 		}
 	}
 	return currentAttacker;

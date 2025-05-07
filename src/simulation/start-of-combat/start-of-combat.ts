@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { FullGameState } from '../internal-game-state';
@@ -96,85 +95,90 @@ const handlePhase = (
 	currentAttacker: number,
 	gameState: FullGameState,
 ): number => {
-	const loops = playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
-		? 2
-		: 1;
-	for (let i = 0; i < loops; i++) {
-		switch (phase) {
-			case 'QuestReward':
-				return handleStartOfCombatQuestRewards(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'Anomalies':
-				return handleStartOfCombatAnomalies(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'Trinket':
-				return handleStartOfCombatTrinkets(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'PreCombatHeroPower':
-				return handlePreCombatHeroPowers(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'IllidanHeroPower':
-				return handleIllidanHeroPowers(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'HeroPower':
-				return handleStartOfCombatHeroPowers(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'Secret':
-				return handleStartOfCombatSecrets(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					gameState,
-				);
-			case 'Minion':
-				return handleStartOfCombatMinions(
-					playerEntity,
-					playerBoard,
-					opponentEntity,
-					opponentBoard,
-					currentAttacker,
-					playerBoardBefore,
-					opponentBoardBefore,
-					gameState,
-				);
-		}
+	switch (phase) {
+		case 'QuestReward':
+			currentAttacker = handleStartOfCombatQuestRewards(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'Anomalies':
+			currentAttacker = handleStartOfCombatAnomalies(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'Trinket':
+			currentAttacker = handleStartOfCombatTrinkets(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'PreCombatHeroPower':
+			currentAttacker = handlePreCombatHeroPowers(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'IllidanHeroPower':
+			currentAttacker = handleIllidanHeroPowers(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'HeroPower':
+			currentAttacker = handleStartOfCombatHeroPowers(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'Secret':
+			currentAttacker = handleStartOfCombatSecrets(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				gameState,
+			);
+			break;
+		case 'Minion':
+			currentAttacker = handleStartOfCombatMinions(
+				playerEntity,
+				playerBoard,
+				opponentEntity,
+				opponentBoard,
+				currentAttacker,
+				playerBoardBefore,
+				opponentBoardBefore,
+				gameState,
+			);
+			break;
 	}
+
+	return currentAttacker;
 };

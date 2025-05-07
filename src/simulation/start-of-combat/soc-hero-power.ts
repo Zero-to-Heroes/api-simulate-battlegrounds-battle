@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { FullGameState } from '../internal-game-state';
@@ -59,12 +60,17 @@ export const handleStartOfCombatHeroPowers = (
 };
 
 const handlePlayerStartOfCombatHeroPowers = (input: SoCInput): number => {
-	if (input.playerEntity.startOfCombatDone || input.playerEntity.hpLeft <= 0) {
-		return input.currentAttacker;
-	}
+	const loops = input.playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
+		? 2
+		: 1;
+	for (let i = 0; i < loops; i++) {
+		if (input.playerEntity.startOfCombatDone || input.playerEntity.hpLeft <= 0) {
+			return input.currentAttacker;
+		}
 
-	for (const heroPower of input.playerEntity.heroPowers) {
-		performStartOfCombatAction(heroPower.cardId, input.playerEntity, input, true, 'start-of-combat');
+		for (const heroPower of input.playerEntity.heroPowers) {
+			performStartOfCombatAction(heroPower.cardId, input.playerEntity, input, true, 'start-of-combat');
+		}
 	}
 	return input.currentAttacker;
 };

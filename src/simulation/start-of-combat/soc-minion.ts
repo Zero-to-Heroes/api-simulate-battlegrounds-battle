@@ -1,3 +1,4 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { hasStartOfCombatFromHand } from '../../cards/card.interface';
@@ -84,10 +85,16 @@ export const handleStartOfCombatMinions = (
 // Since this also runs before HP start of combat, we probably also use the state as it was before HP were triggered, like
 // Tamsin's Phylactery.
 export const performStartOfCombatMinionsForPlayer = (minion: BoardEntity, input: SoCInput): boolean => {
-	if (input.playerEntity.startOfCombatDone) {
-		return false;
-	}
+	const loops = input.playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
+		? 2
+		: 1;
+	let hasProcessed = false;
+	for (let i = 0; i < loops; i++) {
+		if (input.playerEntity.startOfCombatDone) {
+			return false;
+		}
 
-	const hasProcessed = performStartOfCombatAction(minion.cardId, minion, input, true);
+		hasProcessed = performStartOfCombatAction(minion.cardId, minion, input, true) || hasProcessed;
+	}
 	return hasProcessed;
 };
