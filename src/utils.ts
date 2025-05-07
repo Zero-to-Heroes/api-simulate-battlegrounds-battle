@@ -81,6 +81,9 @@ export const buildSingleBoardEntity = (
 					attackImmediately: attackImmediately,
 					avengeCurrent: cardsData.avengeValue(cardId),
 					avengeDefault: cardsData.avengeValue(cardId),
+					scriptDataNum1: originalEntity?.scriptDataNum1 ?? 0,
+					// This is useful for Showy Cycilst, but I wonder if this could cause some issues otherwise
+					scriptDataNum2: originalEntity?.scriptDataNum2 ?? 0,
 				} as BoardEntity,
 				cardsData,
 		  );
