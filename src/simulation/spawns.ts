@@ -1,4 +1,4 @@
-import { BgsPlayerEntity } from '../bgs-player-entity';
+import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { addMinionToBoard } from './add-minion-to-board';
 import { simulateAttack } from './attack';
@@ -9,7 +9,7 @@ export const performEntitySpawns = (
 	candidateEntities: readonly BoardEntity[],
 	boardWithKilledMinion: BoardEntity[],
 	boardWithKilledMinionHero: BgsPlayerEntity,
-	spawnSourceEntity: BoardEntity | BgsPlayerEntity,
+	spawnSourceEntity: BoardEntity | BgsPlayerEntity | BoardTrinket,
 	spawnSourceEntityIndexFromRight: number,
 	opponentBoard: BoardEntity[],
 	opponentBoardHero: BgsPlayerEntity,
