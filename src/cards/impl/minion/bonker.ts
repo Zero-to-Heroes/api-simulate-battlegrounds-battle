@@ -12,7 +12,7 @@ export const Bonker: OnAttackCard = {
 		}
 
 		const mult = minion.cardId === CardIds.Bonker_BG20_104_G ? 2 : 1;
-		for (const target of input.attackingBoard) {
+		for (const target of input.attackingBoard.filter((e) => e.entityId !== minion.entityId)) {
 			playBloodGemsOn(minion, target, 1 * mult, input.attackingBoard, input.attackingHero, input.gameState);
 		}
 
