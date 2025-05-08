@@ -45,6 +45,7 @@ export const FlightyScout: StartOfCombatFromHandCard = {
 			input.gameState,
 		);
 
+		// This is a bug, it should recompute the first attacker
 		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 };
