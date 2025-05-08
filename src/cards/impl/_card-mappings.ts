@@ -187,6 +187,7 @@ import { WispInTheShell } from './minion/wisp-in-the-shell';
 import { Zergling } from './minion/zergling';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
+import { ArtisanalUrn } from './trinket/artisanal-urn';
 import { BalefulIncense } from './trinket/baleful-incense';
 import { BassgillPortrait } from './trinket/bassgill-portrait';
 import { BattleHorn } from './trinket/battle-horn';
@@ -243,6 +244,7 @@ const cards = [
 	GoldGrubber,
 	UnholySanctum,
 	Humongozz,
+	ArtisanalUrn,
 	DrustfallenButcher,
 	NoisulOfTheManyFaces,
 	FirescaleHoarder,
