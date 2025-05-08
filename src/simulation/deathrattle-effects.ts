@@ -222,7 +222,8 @@ export const handleWheneverMinionsKillEffect = (
 	gameState: FullGameState,
 ): void => {
 	handleWheneverMinionsKillEffectForBoard(board, hero, otherBoard, otherHero, gameState);
-	handleWheneverMinionsKillEffectForBoard(otherBoard, otherHero, board, hero, gameState);
+	// It's called once for each board already, so don't duplicate it here
+	// handleWheneverMinionsKillEffectForBoard(otherBoard, otherHero, board, hero, gameState);
 };
 
 const handleWheneverMinionsKillEffectForBoard = (

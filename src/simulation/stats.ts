@@ -167,6 +167,10 @@ export const modifyStats = (
 		});
 	}
 
+	if (registerSpectator && !!source) {
+		gameState.spectator.registerPowerTarget(source, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
+	}
+
 	if (
 		entity.cardId === CardIds.Menagerist_AmalgamToken ||
 		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
@@ -201,10 +205,6 @@ export const modifyStats = (
 		otherBoardHero,
 		gameState,
 	);
-
-	if (registerSpectator && !!source) {
-		gameState.spectator.registerPowerTarget(source, entity, friendlyBoard, friendlyBoardHero, otherBoardHero);
-	}
 };
 
 const onStatsUpdate = (
