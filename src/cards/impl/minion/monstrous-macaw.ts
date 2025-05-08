@@ -9,6 +9,10 @@ import { OnAfterAttackCard } from '../../card.interface';
 export const MonstrousMacaw: OnAfterAttackCard = {
 	cardIds: [CardIds.MonstrousMacaw_BGS_078, CardIds.MonstrousMacaw_TB_BaconUps_135],
 	onAnyMinionAfterAttack: (minion: BoardEntity, input: OnAfterAttackInput) => {
+		if (input.attacker !== minion) {
+			return;
+		}
+
 		const loops = minion.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
 		const targetBoard = input.attackingBoard.filter((e) => e.entityId !== minion.entityId);
 
