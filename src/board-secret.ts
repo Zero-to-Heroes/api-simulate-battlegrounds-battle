@@ -4,4 +4,5 @@ export interface BoardSecret {
 	triggered?: boolean;
 	scriptDataNum1?: number;
 	scriptDataNum2?: number;
+	triggersLeft?: number;
 }

@@ -279,8 +279,8 @@ const handleBoonOfBeetlesForPlayer = (
 	gameState: FullGameState,
 ) => {
 	const secretEntity = playerEntity.secrets.find((entity) => entity.cardId === CardIds.BoonOfBeetles_BG28_603);
-	if (secretEntity && secretEntity.scriptDataNum1 > 0) {
-		while (secretEntity.scriptDataNum1 > 0) {
+	if (secretEntity && secretEntity.triggersLeft > 0) {
+		while (secretEntity.triggersLeft > 0) {
 			const hasSummoned = handleSummon(
 				playerBoard,
 				playerEntity,
@@ -295,7 +295,7 @@ const handleBoonOfBeetlesForPlayer = (
 				hasSummoned.forEach((entity) => {
 					updateTaunt(entity, true, playerBoard, playerEntity, opponentEntity, gameState);
 				});
-				secretEntity.scriptDataNum1--;
+				secretEntity.triggersLeft--;
 			} else {
 				// No room to summon, we stop here
 				break;
