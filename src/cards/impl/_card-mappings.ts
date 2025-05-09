@@ -199,6 +199,7 @@ import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
 import { HeraldSticker } from './trinket/herald-sticker';
 import { HogwashBasin } from './trinket/hogwash-basin';
+import { StharaSticker } from './trinket/sthara-sticker';
 import { UnholySanctum } from './trinket/unholy-sanctum';
 import { VashjirAnemone } from './trinket/vashjir-anemone';
 import { YulonSticker } from './trinket/yulon-sticker';
@@ -395,6 +396,7 @@ const cards = [
 	ChampionOfThePrimus,
 	Mummifier,
 	EchoingRoar,
+	StharaSticker,
 	MenagerieJug,
 	ThunderingAbomination,
 	PrizedPromoDrake,
