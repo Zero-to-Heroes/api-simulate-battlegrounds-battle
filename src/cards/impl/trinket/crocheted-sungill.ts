@@ -17,10 +17,10 @@ export const CrochetedSungill: OnAfterDeathCard & DefaultScriptDataNumCard = {
 		const hand =
 			input.hero.hand
 				?.filter((e) => !!e?.cardId)
-				// Looks like if Bassgill summons it, it can't be resummoned
-				//  https://replays.firestoneapp.com/?reviewId=0422ad36-87f4-44f0-9020-073116b51d2e&turn=13&action=4
-				.filter((e) => !e.locked) ?? // Not sure about this
-			[];
+				// If Bassgill summons it, it can't be resummoned
+				// https://replays.firestoneapp.com/?reviewId=0422ad36-87f4-44f0-9020-073116b51d2e&turn=13&action=4
+				// and confirmed by the devs
+				.filter((e) => !e.locked) ?? [];
 		const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
 		const highestHealthMinions = highestHealth ? hand.filter((c) => c.health === highestHealth) : null;
 		const candidate = !!highestHealthMinions?.length

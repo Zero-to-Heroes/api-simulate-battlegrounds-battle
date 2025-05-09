@@ -20,12 +20,13 @@ export const handleStartOfCombatMinions = (
 ): number => {
 	let attackerForStart = Math.random() < 0.5 ? 0 : 1;
 	const playerAttackers = [
-		...playerBoard,
+		// Hand triggers first
 		...playerEntity.hand.filter((e) => hasStartOfCombatFromHand(cardMappings[e.cardId])),
+		...playerBoard,
 	];
 	const opponentAttackers = [
-		...opponentBoard,
 		...opponentEntity.hand.filter((e) => hasStartOfCombatFromHand(cardMappings[e.cardId])),
+		...opponentBoard,
 	];
 
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
