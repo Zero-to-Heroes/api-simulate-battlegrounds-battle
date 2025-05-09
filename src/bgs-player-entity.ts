@@ -103,6 +103,7 @@ export interface BoardTrinket {
 	cardId: string;
 	entityId: number;
 	scriptDataNum1: number;
+	scriptDataNum2?: number;
 	scriptDataNum6?: number;
 	rememberedMinion?: BoardEntity;
 	avengeDefault?: number;

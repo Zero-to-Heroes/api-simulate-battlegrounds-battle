@@ -7,7 +7,8 @@ import { StartOfCombatCard } from '../../card.interface';
 export const VashjirAnemone: StartOfCombatCard = {
 	cardIds: [CardIds.VashjirAnemone_BG32_MagicItem_932],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		const buff = 1 + Math.floor((input.playerEntity.globalInfo.SpellsCastThisGame ?? 0) / 4);
+		const buff =
+			trinket.scriptDataNum2 ?? 1 + Math.floor((input.playerEntity.globalInfo.SpellsCastThisGame ?? 0) / 4);
 		addStatsToBoard(trinket, input.playerBoard, input.playerEntity, 0, buff, input.gameState);
 		return true;
 	},
