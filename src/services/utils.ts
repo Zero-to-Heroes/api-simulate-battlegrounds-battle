@@ -96,6 +96,18 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 	return array;
 };
 
+export const findLast = <T>(
+	array: readonly T[],
+	predicate: (value: T, index: number, obj: readonly T[]) => unknown,
+): T => {
+	const filtred = array.filter(predicate);
+	if (!filtred?.length) {
+		return null;
+	}
+	const last = filtred[filtred.length - 1];
+	return last;
+};
+
 export type Mutable<T> = {
 	-readonly [P in keyof T]: T[P];
 };

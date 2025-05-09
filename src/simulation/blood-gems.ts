@@ -2,7 +2,7 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateDivineShield } from '../keywords/divine-shield';
-import { pickRandom } from '../services/utils';
+import { findLast, pickRandom } from '../services/utils';
 import { getMinionsOfDifferentTypes } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -41,8 +41,8 @@ export const playBloodGemsOn = (
 	const bloodGemHealth = bloodGemBaseHealth * cronesMult;
 
 	let bloodGemEnchantment =
-		target.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??
-		target.enchantments?.find((e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment);
+		findLast(target.enchantments, (e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??
+		findLast(target.enchantments, (e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment);
 	if (!bloodGemEnchantment) {
 		bloodGemEnchantment = {
 			cardId: CardIds.BloodGem_BloodGemEnchantment,
