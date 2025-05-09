@@ -50,8 +50,15 @@ export const computeBattlecryMultiplier = (
 	const gilneanWarHorns =
 		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.GilneanWarHorn)?.length ?? 0;
 	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
+	const warDrum = boardHero.trinkets?.find(
+		(t) => t.cardId === CardIds.WarDrum_BG32_MagicItem_416 && t.scriptDataNum1 > 0,
+	);
 
-	const multiplier = echoesOfArgus + Math.max(goldenBrannBonus, brannBonus, 1) + gilneanWarHorns;
+	let multiplier = echoesOfArgus + Math.max(goldenBrannBonus, brannBonus, 1) + gilneanWarHorns;
+	if (warDrum) {
+		multiplier = multiplier * 2;
+		warDrum.scriptDataNum1--;
+	}
 	return multiplier;
 };
 
