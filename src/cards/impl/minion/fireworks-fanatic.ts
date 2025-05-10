@@ -21,7 +21,7 @@ export const FireworksFanatic: OnCardAddedToHandCard = {
 				.some((e) => e.cardId === input.addedCard.cardId);
 		if (doWeAlreadyHaveThisCard) {
 			const mult = entity.cardId === CardIds.FireworksFanatic_BG25_922_G ? 2 : 1;
-			addStatsToBoard(entity, input.board, input.hero, 1 * mult, 1 * mult, input.gameState);
+			addStatsToBoard(entity, input.board, input.hero, 2 * mult, 2 * mult, input.gameState);
 		}
 	},
 };
