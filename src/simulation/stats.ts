@@ -39,6 +39,8 @@ export const modifyStats = (
 	friendlyBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 	registerSpectator = true,
+	// All stat modifications become enchantments, excepted the ones coming from gilding a minion
+	isEnchantment = true,
 ): void => {
 	if (attackAmount === 0 && healthAmount === 0) {
 		return;
@@ -86,16 +88,12 @@ export const modifyStats = (
 			: gameState.gameState.player.player;
 
 	const neighbours = getNeighbours(friendlyBoard, entity);
-	const poetMultipliers = hasCorrectTribe(
-		entity,
-		friendlyBoardHero,
-		Race.DRAGON,
-		gameState.anomalies,
-		gameState.allCards,
-	)
-		? neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1
-		: 1;
-	const tarecgosaMultiplier = entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
+	const poetMultipliers =
+		isEnchantment &&
+		hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)
+			? neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1
+			: 1;
+	const tarecgosaMultiplier = isEnchantment && entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
 
 	const realAttackAmount = attackAmount * poetMultipliers * tarecgosaMultiplier;
 	const realHealthAmount = healthAmount * poetMultipliers * tarecgosaMultiplier;

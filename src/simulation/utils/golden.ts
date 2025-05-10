@@ -58,7 +58,10 @@ export const makeMinionGolden = (
 	// UPDATE 2024-06-20: Defiant Shipwright (2/5) going golden (4/10) actually ends up at 4/12 because
 	// of the +2 health bonus
 	// http://replays.firestoneapp.com/?reviewId=283dc44c-5fc8-40fb-af89-7d752a39f9b9&turn=7&action=1
-	modifyStats(target, null, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState);
+	// BUT (2025-05-10) Tarecgosa going golden just becomes a 10/10, it doesn't get the x2 from the buff
+	// Maybe that's because it's not an enchantment, so let's just hard-code this here
+	// (bug: it won't work with Poets)
+	modifyStats(target, null, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState, true, false);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, otherBoard, otherHero, target, gameState, true, false);
