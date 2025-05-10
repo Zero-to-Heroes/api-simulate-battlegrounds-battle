@@ -6,7 +6,7 @@ import { CardsData } from '../cards/cards-data';
 import { updateTaunt } from '../keywords/taunt';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
-import { grantRandomStats, hasCorrectTribe, isFish, isGolden } from '../utils';
+import { grantRandomStats, hasCorrectTribe, isDead, isFish, isGolden } from '../utils';
 import { dealDamageToMinion, dealDamageToRandomEnemy, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
@@ -244,7 +244,9 @@ const handleWheneverMinionsKillEffectForBoard = (
 			// Killed an enemy minion
 			if (killer.friendly !== futureDeadEntity.friendly) {
 				for (const heroPower of otherHero.heroPowers) {
-					if (heroPower.cardId === CardIds.Rokara_GloryOfCombat) {
+					// Can't be used to resurrect a dead minion
+					// https://replays.firestoneapp.com/?reviewId=d1fffee8-0bc3-40f5-9a59-85eef8367095&turn=11&action=4
+					if (heroPower.cardId === CardIds.Rokara_GloryOfCombat && !isDead(killer)) {
 						modifyStats(killer, otherHero, 1, 0, otherBoard, otherHero, gameState);
 					}
 				}

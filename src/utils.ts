@@ -618,3 +618,7 @@ export const copyEntity = (entity: BoardEntity): BoardEntity => {
 	};
 	return copy;
 };
+
+export const isDead = (entity: BoardEntity): boolean => {
+	return entity.health <= 0 || entity.definitelyDead;
+};
