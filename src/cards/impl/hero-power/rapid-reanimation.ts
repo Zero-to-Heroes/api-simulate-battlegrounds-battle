@@ -39,9 +39,8 @@ export const RapidReanimation: StartOfCombatCard = {
 					// Looks like even this is wrong:
 					// http://replays.firestoneapp.com/?reviewId=9a46ab39-ccf0-478c-a010-68f2abb06c6f&turn=9&action=0
 					const rapidReanimationIndexFromLeft = input.playerBoard.indexOf(minionThatWillDie);
-					// This is a bug in HS, but changing it for now so that sims match what the game does
-					input.playerEntity.rapidReanimationIndexFromRight = 0;
-					// input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
+					input.playerEntity.rapidReanimationIndexFromRight =
+						input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
 					const minionToCopy = copyEntity(minionThatWillDie);
 					// We don't reapply auras when resummoning
 					// Actually we should: a dead Goldrinn is then buffed by the auras upon resummon
