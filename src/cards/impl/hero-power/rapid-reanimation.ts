@@ -38,7 +38,12 @@ export const RapidReanimation: StartOfCombatCard = {
 					// the index seems to be right-based at least in some cases
 					// Looks like even this is wrong:
 					// http://replays.firestoneapp.com/?reviewId=9a46ab39-ccf0-478c-a010-68f2abb06c6f&turn=9&action=0
-					const rapidReanimationIndexFromLeft = input.playerBoard.indexOf(minionThatWillDie);
+					// Still looks like a HS bug where the minion is resurrected to the right of its supposed position
+					const rapidReanimationIndexFromLeft =
+						input.playerBoard.indexOf(minionThatWillDie) === input.playerBoard.length - 1
+							? input.playerBoard.indexOf(minionThatWillDie)
+							: input.playerBoard.indexOf(minionThatWillDie) + 1;
+					// input.playerBoard.indexOf(minionThatWillDie)
 					input.playerEntity.rapidReanimationIndexFromRight =
 						input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
 					const minionToCopy = copyEntity(minionThatWillDie);
