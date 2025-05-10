@@ -8,8 +8,16 @@ import { StartOfCombatCard } from '../../card.interface';
 export const BalefulIncense: StartOfCombatCard = {
 	cardIds: [CardIds.BalefulIncense_BG32_MagicItem_360],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		const undead = input.playerBoard.filter((e) =>
-			hasCorrectTribe(e, input.playerEntity, Race.UNDEAD, input.gameState.anomalies, input.gameState.allCards),
+		const undead = input.playerBoard.filter(
+			(e) =>
+				!e.reborn &&
+				hasCorrectTribe(
+					e,
+					input.playerEntity,
+					Race.UNDEAD,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
 		);
 		const left = undead[0];
 		if (!!left) {
