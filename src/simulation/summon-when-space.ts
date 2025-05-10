@@ -79,7 +79,7 @@ const handleSummonsWhenSpaceForPlayer = (
 		});
 };
 
-const handleSharptoothSnapperForPlayer = (
+export const handleSharptoothSnapperForPlayer = (
 	entity: BoardEntity,
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
@@ -105,7 +105,7 @@ const handleSharptoothSnapperForPlayer = (
 			playerBoard,
 			playerEntity,
 			playerEntity,
-			0,
+			playerBoard.length - 1 - playerBoard.indexOf(entity),
 			opponentBoard,
 			opponentEntity,
 			gameState,
