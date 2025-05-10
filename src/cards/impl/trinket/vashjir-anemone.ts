@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { addStatsToBoard } from '../../../utils';
@@ -9,7 +9,7 @@ export const VashjirAnemone: StartOfCombatCard = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const buff =
 			trinket.scriptDataNum2 ?? 1 + Math.floor((input.playerEntity.globalInfo.SpellsCastThisGame ?? 0) / 4);
-		addStatsToBoard(trinket, input.playerBoard, input.playerEntity, 0, buff, input.gameState);
+		addStatsToBoard(trinket, input.playerBoard, input.playerEntity, 0, buff, input.gameState, Race[Race.NAGA]);
 		return true;
 	},
 };
