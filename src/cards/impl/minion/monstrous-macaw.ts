@@ -18,8 +18,8 @@ export const MonstrousMacaw: OnAfterAttackCard = {
 
 		const validDeathrattles = getValidDeathrattles(targetBoard, input.attackingHero, input.gameState);
 		const leftMostDeathrattle = validDeathrattles[0];
-		if (!!leftMostDeathrattle) {
-			for (let i = 0; i < loops; i++) {
+		for (let i = 0; i < loops; i++) {
+			if (!!leftMostDeathrattle) {
 				input.gameState.spectator.registerPowerTarget(
 					minion,
 					leftMostDeathrattle,
@@ -43,27 +43,27 @@ export const MonstrousMacaw: OnAfterAttackCard = {
 					false,
 				);
 			}
-		}
 
-		if (input.attackingHero.trinkets?.some((t) => t.cardId === CardIds.MacawPortrait_BG32_MagicItem_803)) {
-			const validBattlecries = targetBoard.filter((e) => hasMinionBattlecry(e, input.gameState));
-			const leftMostBattlecry = validBattlecries[0];
-			if (!!leftMostBattlecry) {
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					leftMostBattlecry,
-					input.attackingBoard,
-					input.attackingHero,
-					input.defendingHero,
-				);
-				triggerBattlecry(
-					input.attackingBoard,
-					input.attackingHero,
-					leftMostBattlecry,
-					input.defendingBoard,
-					input.defendingHero,
-					input.gameState,
-				);
+			if (input.attackingHero.trinkets?.some((t) => t.cardId === CardIds.MacawPortrait_BG32_MagicItem_803)) {
+				const validBattlecries = targetBoard.filter((e) => hasMinionBattlecry(e, input.gameState));
+				const leftMostBattlecry = validBattlecries[0];
+				if (!!leftMostBattlecry) {
+					input.gameState.spectator.registerPowerTarget(
+						minion,
+						leftMostBattlecry,
+						input.attackingBoard,
+						input.attackingHero,
+						input.defendingHero,
+					);
+					triggerBattlecry(
+						input.attackingBoard,
+						input.attackingHero,
+						leftMostBattlecry,
+						input.defendingBoard,
+						input.defendingHero,
+						input.gameState,
+					);
+				}
 			}
 		}
 	},
