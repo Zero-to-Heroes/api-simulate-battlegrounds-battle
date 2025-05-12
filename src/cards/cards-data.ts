@@ -80,7 +80,6 @@ export class CardsData {
 			.filter((card) => isBattlegroundsCard(card))
 			// Premiums are not in bacon pool
 			.filter((card) => card.isBaconPool || this.allCards.getCard(card.battlegroundsNormalDbfId)?.isBaconPool)
-			.filter((card) => !!card.techLevel)
 			.filter((card) => card.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
 			.filter((card) => card.set !== 'Vanilla')
