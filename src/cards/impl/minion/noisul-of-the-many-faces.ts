@@ -1,6 +1,5 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { shuffleArray } from '../../../services/utils';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
@@ -20,13 +19,12 @@ export const NoisulOfTheManyFaces: OnOtherSpawnedCard = {
 		) {
 			return;
 		}
-		const undead = input.board.filter((e) =>
+		const targets = input.board.filter((e) =>
 			hasCorrectTribe(e, input.hero, Race.UNDEAD, input.gameState.anomalies, input.gameState.allCards),
 		);
-		const targets = shuffleArray(undead).slice(0, 4);
 		const mult = minion.cardId === CardIds.NoisulOfTheManyFaces_BG32_325_G ? 2 : 1;
 		for (const target of targets) {
-			modifyStats(target, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
+			modifyStats(target, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

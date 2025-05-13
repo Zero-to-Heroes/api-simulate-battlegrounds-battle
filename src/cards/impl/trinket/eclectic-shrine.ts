@@ -41,11 +41,13 @@ export const EclecticShrine: StartOfCombatCard = {
 					)?.includes(Race.ALL),
 				),
 			];
-			const stats = trinket.scriptDataNum1 ?? 2;
+			const atk = trinket.scriptDataNum1 ?? 3;
+			const health = trinket.scriptDataNum1 ?? 2;
 			allMinions.forEach((e) => {
-				modifyStats(e, trinket, stats, stats, input.playerBoard, input.playerEntity, input.gameState);
+				modifyStats(e, trinket, atk, health, input.playerBoard, input.playerEntity, input.gameState);
 			});
 			trinket.scriptDataNum1++;
+			trinket.scriptDataNum2++;
 			return true;
 		}
 	},

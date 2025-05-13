@@ -14,7 +14,7 @@ export const UnholySanctum: DeathrattleTriggeredCard = {
 				target,
 				trinket,
 				3 * mult,
-				3 * mult,
+				2 * mult,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,
 				input.gameState,

@@ -116,7 +116,7 @@ const removeMinionAuraEffectsForGolden = (entity: BoardEntity, hero: BgsPlayerEn
 			const multiplierAstral = entity.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Doesn't count self
 			const statsBonusAstralToRemove = hero.globalInfo.AstralAutomatonsSummonedThisGame - 1;
-			entity.health = Math.max(1, entity.health - 2 * multiplierAstral * statsBonusAstralToRemove);
+			entity.health = Math.max(1, entity.health - 3 * multiplierAstral * statsBonusAstralToRemove);
 			entity.attack = Math.max(0, entity.attack - 2 * multiplierAstral * statsBonusAstralToRemove);
 			break;
 		case CardIds.DrBoomsMonster_BG31_176:

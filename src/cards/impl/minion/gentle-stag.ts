@@ -14,7 +14,7 @@ export const GentleStag: OnOtherSpawnedCard = {
 		);
 		const target = beasts[beasts.length - 1];
 		if (target) {
-			modifyStats(target, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+			modifyStats(target, minion, 3 * mult, 3 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

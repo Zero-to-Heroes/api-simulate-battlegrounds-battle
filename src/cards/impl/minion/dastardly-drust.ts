@@ -18,10 +18,13 @@ export const DastardlyDrust: OnCardAddedToHandCard = {
 			)
 		) {
 			const mult = minion.cardId === CardIds.DastardlyDrust_BG32_234_G ? 2 : 1;
-			const targets = input.board.filter((e) => e.entityId !== minion.entityId);
+			const targets = input.board;
 			for (const target of targets) {
-				const buff = isGolden(target.cardId, input.gameState.allCards) ? 2 * mult : 1 * mult;
-				modifyStats(target, minion, 1 * buff, 1 * buff, input.board, input.hero, input.gameState);
+				if (isGolden(target.cardId, input.gameState.allCards)) {
+					modifyStats(target, minion, 2 * mult, 3 * mult, input.board, input.hero, input.gameState);
+				} else {
+					modifyStats(target, minion, 1 * mult, 2 * mult, input.board, input.hero, input.gameState);
+				}
 			}
 		}
 	},

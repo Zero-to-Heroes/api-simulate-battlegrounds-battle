@@ -23,8 +23,8 @@ export const ValiantTiger: DeathrattleSpawnCard = {
 			modifyStats(
 				target,
 				minion,
-				4 * mult,
-				3 * mult,
+				5 * mult,
+				5 * mult,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,
 				input.gameState,

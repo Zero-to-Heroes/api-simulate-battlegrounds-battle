@@ -1,4 +1,4 @@
-import { CardIds, GameTag, Race } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
@@ -8,27 +8,19 @@ import { updateTaunt } from '../../../keywords/taunt';
 import { updateVenomous } from '../../../keywords/venomous';
 import { updateWindfury } from '../../../keywords/windfury';
 import { pickRandom } from '../../../services/utils';
-import { BattlecryInput } from '../../../simulation/battlecries';
 import { FullGameState } from '../../../simulation/internal-game-state';
 import { modifyStats } from '../../../simulation/stats';
-import { hasCorrectTribe } from '../../../utils';
-import { BattlecryCard } from '../../card.interface';
+import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 import { validBonusKeywords } from '../../cards-data';
 
-export const ApprenticeOfSefin: BattlecryCard = {
+export const ApprenticeOfSefin: EndOfTurnCard = {
 	cardIds: [CardIds.ApprenticeOfSefin_BG32_332, CardIds.ApprenticeOfSefin_BG32_332_G],
-	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
-		const murlocs = input.board.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
-		);
-		const target = pickRandom(murlocs);
-		if (!target) {
-			return true;
-		}
-
+	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
 		const mult = minion.cardId === CardIds.ApprenticeOfSefin_BG32_332_G ? 2 : 1;
-		grantRandomBonusKeywords(target, mult, input.board, input.hero, input.otherHero, input.gameState);
-		modifyStats(target, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
+		for (let i = 0; i < mult; i++) {
+			grantRandomBonusKeywords(minion, mult, input.board, input.hero, input.otherHero, input.gameState);
+		}
+		modifyStats(minion, minion, 4, 4, input.board, input.hero, input.gameState);
 		return true;
 	},
 };

@@ -214,9 +214,10 @@ export class CardsData {
 			case CardIds.RelentlessMurghoul_BG27_010_G:
 			case CardIds.StaffOfTheScourge_BG30_MagicItem_437:
 				return 5;
-			case CardIds.BleedingHeart_BG30_MagicItem_713:
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
+			case CardIds.BleedingHeart_BG30_MagicItem_713:
+				return 8;
 		}
 		return 0;
 	}
@@ -237,13 +238,13 @@ export class CardsData {
 			case CardIds.PromoPortrait_BG30_MagicItem_918:
 				return 1;
 			case CardIds.JarOGems_BG30_MagicItem_546:
-			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 				return 2;
+			case CardIds.BloodGolemSticker_BG30_MagicItem_442:
 			case CardIds.MechagonAdapter_BG30_MagicItem_910:
 			case CardIds.FaerieDragonScale_BG32_MagicItem_363:
 				return 3;
 			case CardIds.ReinforcedShield_BG30_MagicItem_886:
-				return 4;
+				return 5;
 			default:
 				return 0;
 		}

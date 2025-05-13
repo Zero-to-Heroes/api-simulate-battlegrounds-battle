@@ -263,8 +263,8 @@ export const applyAurasToSelf = (
 					spawned.health += 1;
 					break;
 				case CardIds.FeralTalisman_FeralTalismanToken_BG30_MagicItem_880t:
-					spawned.attack += 6;
-					spawned.health += 4;
+					spawned.attack += 8;
+					spawned.health += 5;
 					break;
 				case CardIds.DazzlingDagger_BG32_MagicItem_934:
 					spawned.attack += trinket.scriptDataNum1 || 1;
@@ -446,7 +446,7 @@ export const applyAurasToSelf = (
 			const multiplierAstral = spawned.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
 			// Don't count the yourself
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			modifyStats(spawned, null, 2 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState, false);
+			modifyStats(spawned, null, 3 * statsBonusAstral, 2 * statsBonusAstral, board, boardHero, gameState, false);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
 		case CardIds.RotHideGnoll_BG25_013_G:
@@ -499,8 +499,8 @@ export const removeAurasFromSelf = (
 					entity.health = Math.max(1, entity.health - 1);
 					break;
 				case CardIds.FeralTalisman_FeralTalismanToken_BG30_MagicItem_880t:
-					entity.attack = Math.max(0, entity.attack - 6);
-					entity.health = Math.max(1, entity.health - 4);
+					entity.attack = Math.max(0, entity.attack - 8);
+					entity.health = Math.max(1, entity.health - 5);
 					break;
 				case CardIds.DazzlingDagger_BG32_MagicItem_934:
 					entity.attack = Math.max(0, entity.attack - (trinket.scriptDataNum1 || 1));
@@ -631,7 +631,7 @@ export const removeAurasFromSelf = (
 			// We remove 1 because the AstralAutomatonsSummonedThisGame also includes the current one
 			// and ancestral automaton only counts "other" automatons
 			const statsBonusAstral = multiplierAstral * (boardHero.globalInfo.AstralAutomatonsSummonedThisGame - 1);
-			entity.attack = Math.max(0, entity.attack - 2 * statsBonusAstral);
+			entity.attack = Math.max(0, entity.attack - 3 * statsBonusAstral);
 			entity.health = Math.max(1, entity.health - 2 * statsBonusAstral);
 			break;
 		case CardIds.RotHideGnoll_BG25_013:
@@ -723,7 +723,7 @@ const handleMinionAddedAuraEffect = (
 				)
 				.forEach((e) => {
 					const multiplierAstral = e.cardId === CardIds.AstralAutomaton_BG_TTN_401_G ? 2 : 1;
-					modifyStats(e, e, 2 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState, false);
+					modifyStats(e, e, 3 * multiplierAstral, 2 * multiplierAstral, board, boardHero, gameState, false);
 				});
 			break;
 		case CardIds.DrBoomsMonster_BG31_176:

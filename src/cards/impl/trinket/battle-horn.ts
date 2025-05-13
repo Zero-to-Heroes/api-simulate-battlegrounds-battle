@@ -8,7 +8,7 @@ import { AvengeCard } from '../../card.interface';
 
 export const BattleHorn: AvengeCard = {
 	cardIds: [CardIds.BattleHorn_BG32_MagicItem_415],
-	baseAvengeValue: (cardId: string) => 3,
+	baseAvengeValue: (cardId: string) => 2,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const battlecries = input.board.filter((e) =>
 			hasMechanic(input.gameState.allCards.getCard(e.cardId), GameTag[GameTag.BATTLECRY]),

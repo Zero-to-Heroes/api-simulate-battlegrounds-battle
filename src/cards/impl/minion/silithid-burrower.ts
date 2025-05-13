@@ -7,7 +7,7 @@ import { AvengeCard, DeathrattleSpawnCard } from '../../card.interface';
 
 export const SilithidBurrower: DeathrattleSpawnCard & AvengeCard = {
 	cardIds: [CardIds.SilithidBurrower_BG29_871, CardIds.SilithidBurrower_BG29_871_G],
-	baseAvengeValue: (cardId: string) => 3,
+	baseAvengeValue: (cardId: string) => 1,
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const baseBuff = minion.scriptDataNum1 || 1;
 		addStatsToBoard(

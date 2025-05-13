@@ -16,7 +16,7 @@ export const BronzeSteward: BattlecryCard & DeathrattleSpawnCard = {
 				hasCorrectTribe(e, input.hero, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
 			);
 		targets.forEach((target) => {
-			modifyStats(target, minion, 7 * mult, 0, input.board, input.hero, input.gameState);
+			modifyStats(target, minion, 10 * mult, 0, input.board, input.hero, input.gameState);
 		});
 		return true;
 	},
@@ -37,7 +37,7 @@ export const BronzeSteward: BattlecryCard & DeathrattleSpawnCard = {
 			modifyStats(
 				target,
 				minion,
-				7 * mult,
+				10 * mult,
 				0,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,

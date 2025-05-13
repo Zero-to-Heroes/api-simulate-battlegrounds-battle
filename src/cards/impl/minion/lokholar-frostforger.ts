@@ -10,7 +10,7 @@ export const LokholarFrostforgeer: EndOfTurnCard = {
 		for (let i = 0; i < mult; i++) {
 			const targets = input.board.filter((e) => e.entityId !== minion.entityId);
 			for (const target of targets) {
-				modifyStats(target, minion, 2, 2, input.board, input.hero, input.gameState);
+				modifyStats(target, minion, 3, 2, input.board, input.hero, input.gameState);
 			}
 		}
 	},
