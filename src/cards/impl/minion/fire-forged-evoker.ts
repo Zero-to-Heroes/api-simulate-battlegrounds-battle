@@ -8,7 +8,7 @@ export const FireForgedEvoker: StartOfCombatCard = {
 	cardIds: [CardIds.FireForgedEvoker_BG32_822, CardIds.FireForgedEvoker_BG32_822_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const mult = minion.cardId === CardIds.FireForgedEvoker_BG32_822_G ? 2 : 1;
-		const buff = mult + minion.scriptDataNum2;
+		const buff = mult + (minion.scriptDataNum2 ?? input.playerEntity.globalInfo.SpellsCastThisGame ?? 0);
 		addStatsToBoard(
 			minion,
 			input.playerBoard,
