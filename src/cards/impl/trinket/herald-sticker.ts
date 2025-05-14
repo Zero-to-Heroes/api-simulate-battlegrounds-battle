@@ -8,7 +8,7 @@ import { StartOfCombatCard } from '../../card.interface';
 export const HeraldSticker: StartOfCombatCard = {
 	cardIds: [CardIds.HeraldSticker_BG32_MagicItem_306],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		const candidates = getValidDeathrattles(input.playerBoard, input.playerEntity, input.gameState).slice(0, 2);
+		const candidates = getValidDeathrattles(input.playerBoard, input.playerEntity, input.gameState);
 		for (const entity of candidates) {
 			input.gameState.spectator.registerPowerTarget(
 				trinket,
