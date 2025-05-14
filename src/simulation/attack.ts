@@ -149,6 +149,18 @@ export const doFullAttack = (
 	);
 	const damageDoneByAttacker = damageDoneByAttacker1 + damageDoneByAttacker2;
 	const damageDoneByDefender = damageDoneByDefender1 + damageDoneByDefender2;
+
+	processMinionDeath(
+		attackingBoard,
+		attackingBoardHero,
+		defendingBoard,
+		defendingBoardHero,
+		gameState,
+		isAttackingImmediately,
+	);
+
+	// Process this after the minions die and deathrattles are triggered/spawned
+	// https://replays.firestoneapp.com/?reviewId=dd4e9dbe-abca-434a-ab94-04777cbedefe&turn=29&action=3
 	applyAfterAttackEffects(
 		attackingEntity,
 		attackingBoard,
@@ -159,15 +171,6 @@ export const doFullAttack = (
 		damageDoneByAttacker,
 		damageDoneByDefender,
 		gameState,
-	);
-
-	processMinionDeath(
-		attackingBoard,
-		attackingBoardHero,
-		defendingBoard,
-		defendingBoardHero,
-		gameState,
-		isAttackingImmediately,
 	);
 	applyAfterStatsUpdate(gameState);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, (attackingEntity.immuneWhenAttackCharges ?? 0) - 1);
