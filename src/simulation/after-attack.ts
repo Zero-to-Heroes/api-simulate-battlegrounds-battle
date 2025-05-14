@@ -25,7 +25,20 @@ export const applyAfterAttackEffects = (
 	// It looks like Stealth is removed only once the damage is dealt?
 	updateStealth(attackingEntity, false, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 
-	for (const boardEntity of attackingBoard) {
+	const onAfterAttackImpl = cardMappings[attackingEntity.cardId];
+	if (hasOnAfterAttack(onAfterAttackImpl)) {
+		onAfterAttackImpl.onAnyMinionAfterAttack(attackingEntity, {
+			attacker: attackingEntity,
+			attackingHero: attackingBoardHero,
+			attackingBoard: attackingBoard,
+			defendingEntity: defendingEntity,
+			defendingBoard: defendingBoard,
+			defendingHero: defendingBoardHero,
+			gameState,
+			playerIsFriendly: attackingBoardHero.friendly,
+		});
+	}
+	for (const boardEntity of attackingBoard.filter((e) => e.entityId !== attackingEntity.entityId)) {
 		const onAfterAttackImpl = cardMappings[boardEntity.cardId];
 		if (hasOnAfterAttack(onAfterAttackImpl)) {
 			onAfterAttackImpl.onAnyMinionAfterAttack(boardEntity, {
@@ -38,6 +51,30 @@ export const applyAfterAttackEffects = (
 				gameState,
 				playerIsFriendly: attackingBoardHero.friendly,
 			});
+		}
+	}
+
+	const trinkets = attackingBoardHero.trinkets ?? [];
+	for (const trinket of trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.JarOGems_BG30_MagicItem_546:
+				trinket.scriptDataNum1--;
+				if (trinket.scriptDataNum1 <= 0) {
+					for (const entity of attackingBoard.filter((e) =>
+						hasCorrectTribe(e, attackingBoardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards),
+					)) {
+						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
+						gameState.spectator.registerPowerTarget(
+							trinket,
+							entity,
+							attackingBoard,
+							attackingBoardHero,
+							attackingBoardHero,
+						);
+					}
+					trinket.scriptDataNum1 = gameState.cardsData.defaultScriptDataNum(trinket.cardId);
+				}
+				break;
 		}
 	}
 
@@ -102,30 +139,6 @@ const applyOnAttackQuest = (
 		switch (quest.CardId) {
 			case CardIds.CrackTheCase:
 				onQuestProgressUpdated(attackingBoardHero, quest, attackingBoard, gameState);
-				break;
-		}
-	}
-
-	const trinkets = attackingBoardHero.trinkets ?? [];
-	for (const trinket of trinkets) {
-		switch (trinket.cardId) {
-			case CardIds.JarOGems_BG30_MagicItem_546:
-				trinket.scriptDataNum1--;
-				if (trinket.scriptDataNum1 <= 0) {
-					for (const entity of attackingBoard.filter((e) =>
-						hasCorrectTribe(e, attackingBoardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards),
-					)) {
-						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
-						gameState.spectator.registerPowerTarget(
-							trinket,
-							entity,
-							attackingBoard,
-							attackingBoardHero,
-							attackingBoardHero,
-						);
-					}
-					trinket.scriptDataNum1 = gameState.cardsData.defaultScriptDataNum(trinket.cardId);
-				}
 				break;
 		}
 	}

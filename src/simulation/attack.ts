@@ -161,6 +161,7 @@ export const doFullAttack = (
 
 	// Process this after the minions die and deathrattles are triggered/spawned
 	// https://replays.firestoneapp.com/?reviewId=dd4e9dbe-abca-434a-ab94-04777cbedefe&turn=29&action=3
+	// BUT: the attacking entity's afterAttack (like Macaw) needs to be processed
 	applyAfterAttackEffects(
 		attackingEntity,
 		attackingBoard,
