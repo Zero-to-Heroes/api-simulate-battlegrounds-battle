@@ -8,16 +8,9 @@ export const FireForgedEvoker: StartOfCombatCard = {
 	cardIds: [CardIds.FireForgedEvoker_BG32_822, CardIds.FireForgedEvoker_BG32_822_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const mult = minion.cardId === CardIds.FireForgedEvoker_BG32_822_G ? 2 : 1;
-		const buff = mult + (minion.scriptDataNum2 ?? input.playerEntity.globalInfo.SpellsCastThisGame ?? 0);
-		addStatsToBoard(
-			minion,
-			input.playerBoard,
-			input.playerEntity,
-			2 * buff,
-			1 * buff,
-			input.gameState,
-			Race[Race.DRAGON],
-		);
+		const atk = minion.scriptDataNum1 ?? 2 * mult * (1 + input.playerEntity.globalInfo.SpellsCastThisGame);
+		const health = minion.scriptDataNum2 ?? 1 * mult * (1 + input.playerEntity.globalInfo.SpellsCastThisGame);
+		addStatsToBoard(minion, input.playerBoard, input.playerEntity, atk, health, input.gameState, Race[Race.DRAGON]);
 		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 };
