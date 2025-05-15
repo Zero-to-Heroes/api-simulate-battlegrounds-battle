@@ -452,6 +452,8 @@ const handleNaturalDeathrattle = (
 			...deadEntity,
 			rememberedDeathrattles: undefined,
 			deathrattleRepeats: dr.repeats ?? 1,
+			scriptDataNum1: dr.scriptDataNum1,
+			scriptDataNum2: dr.scriptDataNum2,
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
 			enchantments: [],

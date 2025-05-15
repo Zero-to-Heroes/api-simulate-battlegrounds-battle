@@ -734,6 +734,8 @@ export const rememberDeathrattles = (
 			repeats: 1,
 			timing: sharedState.currentEntityId++,
 			memory: entity.memory,
+			scriptDataNum1: entity.scriptDataNum1,
+			scriptDataNum2: entity.scriptDataNum2,
 		}));
 	const validEnchantments = deadEntities
 		.filter((entity) => entity.enchantments?.length)
