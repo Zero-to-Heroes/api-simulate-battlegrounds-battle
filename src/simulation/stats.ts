@@ -171,6 +171,7 @@ export const modifyStats = (
 
 	if (
 		entity.cardId === CardIds.Menagerist_AmalgamToken ||
+		entity.cardId === CardIds.Amalgam ||
 		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A ||
 		entity.cardId === CardIds.Cuddlgam_TB_BaconShop_HP_033t_SKIN_A_G ||
 		entity.cardId === CardIds.AbominableAmalgam_TB_BaconShop_HP_033t_SKIN_D ||
