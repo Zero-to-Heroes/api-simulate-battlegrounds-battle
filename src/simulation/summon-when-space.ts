@@ -248,6 +248,8 @@ const handleOzumatForPlayer = (
 			);
 			tentacular[0].attack = tentacularSize;
 			tentacular[0].health = tentacularSize;
+			tentacular[0].maxHealth = tentacularSize;
+			tentacular[0].maxAttack = tentacularSize;
 			const indexFromRight = 0;
 			performEntitySpawns(
 				tentacular,
