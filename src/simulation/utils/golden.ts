@@ -5,7 +5,6 @@ import { addImpliedMechanics } from '../../utils';
 import { handleAddedMinionAuraEffect } from '../add-minion-to-board';
 import { FullGameState } from '../internal-game-state';
 import { handleMinionRemovedAuraEffect } from '../remove-minion-from-board';
-import { modifyStats } from '../stats';
 
 export const makeMinionGolden = (
 	target: BoardEntity,
@@ -61,7 +60,12 @@ export const makeMinionGolden = (
 	// BUT (2025-05-10) Tarecgosa going golden just becomes a 10/10, it doesn't get the x2 from the buff
 	// Maybe that's because it's not an enchantment, so let's just hard-code this here
 	// (bug: it won't work with Poets)
-	modifyStats(target, null, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState, true, false);
+	// Update 2025-05-05: Whelp Smuggler going golden doesn't not trigger the other whelp smuggler stat buff
+	// https://replays.firestoneapp.com/?reviewId=253ddf7c-be1b-44f4-aa78-9a23442d3687&turn=15&action=0
+	// So I'm just modifying the stats here without triggering any side-effects
+	target.attack += refCard.attack;
+	target.health += refCard.health;
+	// modifyStats(target, null, refCard.attack, refCard.health, targetBoard, targetBoardHero, gameState, true, false);
 
 	// console.log('before adding new effect', stringifySimple(targetBoard, allCards));
 	handleAddedMinionAuraEffect(targetBoard, targetBoardHero, otherBoard, otherHero, target, gameState, true, false);
