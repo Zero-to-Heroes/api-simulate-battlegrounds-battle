@@ -3,7 +3,6 @@ import { BoardEntity } from '../../../board-entity';
 import { updateTaunt } from '../../../keywords/taunt';
 import { AvengeInput } from '../../../simulation/avenge';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
-import { performEntitySpawns } from '../../../simulation/spawns';
 import { AvengeCard } from '../../card.interface';
 
 export const BeetleBand: AvengeCard = {
@@ -24,19 +23,20 @@ export const BeetleBand: AvengeCard = {
 		);
 		spawns.forEach((spawn) => {
 			updateTaunt(spawn, true, input.board, input.hero, input.otherHero, input.gameState);
+			spawn.spawnIndexFromRight = 0;
 		});
 
 		// Because they spawn to the right, we handle them here instead of higher up
-		performEntitySpawns(
-			spawns,
-			input.board,
-			input.hero,
-			trinket,
-			0,
-			input.otherBoard,
-			input.otherHero,
-			input.gameState,
-		);
-		return [];
+		// performEntitySpawns(
+		// 	spawns,
+		// 	input.board,
+		// 	input.hero,
+		// 	trinket,
+		// 	0,
+		// 	input.otherBoard,
+		// 	input.otherHero,
+		// 	input.gameState,
+		// );
+		return spawns;
 	},
 };

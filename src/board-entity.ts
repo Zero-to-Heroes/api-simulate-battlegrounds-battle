@@ -55,6 +55,7 @@ export interface BoardEntity {
 	hadDivineShield?: boolean;
 	abiityChargesLeft?: number;
 	indexFromLeftAtTimeOfDeath?: number;
+	spawnIndexFromRight?: number;
 
 	// permanentAttack?: number;
 	// permanentHealth?: number;

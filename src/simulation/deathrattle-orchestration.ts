@@ -158,6 +158,8 @@ const processDeathrattles = (deathrattleInput: DeathrattleInput, processAvenge =
 	// Process one player first, then the other
 	for (let i = 0; i < 2; i++) {
 		const deadEntities = playerDeadEntities[i];
+		// Issue: we should process all deathrattles first, then all avenge. If multiple minions die at the same time,
+		// the current implementation processes the first minion completely (DR + avenge), then the second one
 		if (deadEntities.length >= 0) {
 			// Entities are processed left to right
 			// TODO: in fact, the processing order is summoning order, so maybe we can just use the entityId
@@ -166,24 +168,31 @@ const processDeathrattles = (deathrattleInput: DeathrattleInput, processAvenge =
 			// This doesn't actually work: http://replays.firestoneapp.com/?reviewId=ec5428bf-a599-4f4c-bea9-8acad5075cb8&turn=11&action=6
 			// deadEntities.sort((a, b) => a.entityId - b.entityId);
 			// So we would need to find another proxy for the order
-			for (let j = 0; j < deadEntities.length; j++) {
-				const deadEntity = deadEntities[j];
-				const deadEntityAttack = deadEntity.attack;
-				const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
-				const modifiedIndexFromRight = Math.min(playerStates[i].board.length, indexFromRight);
-				const deadEntityPlayerState = playerStates[i];
-				const otherPlayerState = playerStates[1 - i];
-				const spawns = processDeathrattleForMinion(
-					deadEntity,
-					indexFromRight,
-					deadEntities,
-					deadEntityPlayerState,
-					otherPlayerState,
-					deathrattleInput.gameState,
-					processAvenge,
-				);
-				entitiesFromDeathrattles.push(...spawns);
-			}
+			const spawns = processDeathrattleForMinions(
+				deadEntities,
+				playerDeadEntityIndexesFromRight[i],
+				playerStates[i],
+				playerStates[1 - i],
+				deathrattleInput,
+				processAvenge,
+			);
+			entitiesFromDeathrattles.push(...spawns);
+			// for (let j = 0; j < deadEntities.length; j++) {
+			// 	const deadEntity = deadEntities[j];
+			// 	const indexFromRight = playerDeadEntityIndexesFromRight[i][j];
+			// 	const deadEntityPlayerState = playerStates[i];
+			// 	const otherPlayerState = playerStates[1 - i];
+			// 	const spawns = processDeathrattleForMinion(
+			// 		deadEntity,
+			// 		indexFromRight,
+			// 		deadEntities,
+			// 		deadEntityPlayerState,
+			// 		otherPlayerState,
+			// 		deathrattleInput.gameState,
+			// 		processAvenge,
+			// 	);
+			// 	entitiesFromDeathrattles.push(...spawns);
+			// }
 		}
 	}
 	return entitiesFromDeathrattles;
@@ -300,6 +309,78 @@ const processFeathermaneForMinion = (
 	return allSpawns;
 };
 
+const processDeathrattleForMinions = (
+	deadEntities: BoardEntity[],
+	playerDeadEntityIndexesFromRight: number[],
+	deadEntityPlayerState: PlayerState,
+	otherPlayerState: PlayerState,
+	input: DeathrattleInput,
+	processAvenge = true,
+) => {
+	const entitiesFromDeathrattles: BoardEntity[] = [];
+
+	// Natural deathrattles & enchantments
+	for (let j = 0; j < deadEntities.length; j++) {
+		const deadEntity = deadEntities[j];
+		const indexFromRight = playerDeadEntityIndexesFromRight[j];
+		const drEntities = handleNaturalDeathrattle(
+			deadEntity,
+			indexFromRight,
+			deadEntities,
+			deadEntityPlayerState,
+			otherPlayerState,
+			input.gameState,
+		);
+		const enchEntities = handleEnchantmentsDeathrattle(
+			deadEntity,
+			indexFromRight,
+			deadEntities,
+			deadEntityPlayerState,
+			otherPlayerState,
+			input.gameState,
+		);
+
+		entitiesFromDeathrattles.push(...drEntities, ...enchEntities);
+	}
+
+	// Avenge
+	let avengeEntities = [];
+	if (processAvenge) {
+		for (let j = 0; j < deadEntities.length; j++) {
+			const deadEntity = deadEntities[j];
+			const indexFromRight = playerDeadEntityIndexesFromRight[j];
+			avengeEntities = applyAvengeEffects(
+				deadEntity,
+				indexFromRight,
+				deadEntityPlayerState.board,
+				deadEntityPlayerState.player,
+				otherPlayerState.board,
+				otherPlayerState.player,
+				input.gameState,
+				entitiesFromDeathrattles,
+			);
+		}
+	}
+
+	const allAfterDeathEntities = [];
+	for (let j = 0; j < deadEntities.length; j++) {
+		const deadEntity = deadEntities[j];
+		const indexFromRight = playerDeadEntityIndexesFromRight[j];
+		const afterDeathEntities = applyAfterDeathEffects(
+			deadEntity,
+			indexFromRight,
+			deadEntityPlayerState.board,
+			deadEntityPlayerState.player,
+			otherPlayerState.board,
+			otherPlayerState.player,
+			input.gameState,
+		);
+		allAfterDeathEntities.push(...afterDeathEntities);
+	}
+
+	return [...entitiesFromDeathrattles, ...avengeEntities, ...allAfterDeathEntities];
+};
+
 export const processDeathrattleForMinion = (
 	deadEntity: BoardEntity,
 	indexFromRight: number,
@@ -327,8 +408,9 @@ export const processDeathrattleForMinion = (
 	);
 	// Avenge trigger before reborn
 	// http://replays.firestoneapp.com/?reviewId=5bb20eb8-e0ca-47ab-adc7-13134716d568&turn=7&action=6
+	let avengeEntities = [];
 	if (processAvenge) {
-		applyAvengeEffects(
+		avengeEntities = applyAvengeEffects(
 			deadEntity,
 			indexFromRight,
 			deadEntityPlayerState.board,
@@ -351,7 +433,7 @@ export const processDeathrattleForMinion = (
 		otherPlayerState.player,
 		gameState,
 	);
-	return [...drEntities, ...enchEntities, ...afterDeathEntities];
+	return [...drEntities, ...enchEntities, ...avengeEntities, ...afterDeathEntities];
 };
 
 const handleNaturalDeathrattle = (

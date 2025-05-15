@@ -36,7 +36,7 @@ export const applyAvengeEffects = (
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 	entitiesSpawnedFromMinionDeath: BoardEntity[],
-): void => {
+): BoardEntity[] => {
 	const candidatesEntitiesSpawnedFromAvenge: BoardEntity[] = [];
 	// updateAvengeCounters(boardWithDeadEntity, boardWithDeadEntityHero);
 	const avengers = boardWithDeadEntity
@@ -145,6 +145,8 @@ export const applyAvengeEffects = (
 				addStatsToBoard(ghoul, boardWithDeadEntity, boardWithDeadEntityHero, 2 * buff, 2 * buff, gameState);
 			});
 	}
+
+	return candidatesEntitiesSpawnedFromAvenge;
 };
 
 export const updateAvengeCounters = (board: readonly BoardEntity[], boardWithDeadEntityHero: BgsPlayerEntity) => {
