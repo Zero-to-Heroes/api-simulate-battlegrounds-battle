@@ -10,6 +10,15 @@ export const ChampionOfThePrimus: AvengeCard = {
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const championPrimusStat = minion.cardId === CardIds.ChampionOfThePrimus_BG27_029_G ? 2 : 1;
 		input.hero.globalInfo.UndeadAttackBonus += championPrimusStat;
-		addStatsToBoard(minion, input.board, input.hero, championPrimusStat, 0, input.gameState, Race[Race.UNDEAD]);
+		addStatsToBoard(
+			minion,
+			input.board,
+			input.hero,
+			championPrimusStat,
+			0,
+			input.gameState,
+			Race[Race.UNDEAD],
+			false,
+		);
 	},
 };

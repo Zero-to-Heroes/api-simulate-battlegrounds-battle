@@ -300,15 +300,16 @@ export const addStatsToBoard = (
 	health: number,
 	gameState: FullGameState,
 	tribe?: string,
-	// permanentUpgrade = false,
+	countsAsStatsGain = true,
 ): void => {
 	for (const entity of board) {
 		if (!tribe || hasCorrectTribe(entity, hero, Race[tribe], gameState.anomalies, gameState.allCards)) {
-			modifyStats(entity, sourceEntity, attack, health, board, hero, gameState);
-			// if (permanentUpgrade) {
-			// 	entity.permanentAttack = (entity.permanentAttack ?? 0) + attack;
-			// 	entity.permanentHealth = (entity.permanentHealth ?? 0) + health;
-			// }
+			if (countsAsStatsGain) {
+				modifyStats(entity, sourceEntity, attack, health, board, hero, gameState);
+			} else {
+				entity.attack += attack;
+				entity.health += health;
+			}
 		}
 	}
 };

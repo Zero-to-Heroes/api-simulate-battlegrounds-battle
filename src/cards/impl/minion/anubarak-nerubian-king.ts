@@ -18,6 +18,7 @@ export const AnubarakNerubianKing: DeathrattleSpawnCard = {
 			0,
 			input.gameState,
 			Race[Race.UNDEAD],
+			false,
 		);
 		return [];
 	},
