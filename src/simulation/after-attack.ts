@@ -54,50 +54,6 @@ export const applyAfterAttackEffects = (
 		}
 	}
 
-	const trinkets = attackingBoardHero.trinkets ?? [];
-	for (const trinket of trinkets) {
-		switch (trinket.cardId) {
-			case CardIds.JarOGems_BG30_MagicItem_546:
-				trinket.scriptDataNum1--;
-				if (trinket.scriptDataNum1 <= 0) {
-					for (const entity of attackingBoard.filter((e) =>
-						hasCorrectTribe(e, attackingBoardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards),
-					)) {
-						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
-						gameState.spectator.registerPowerTarget(
-							trinket,
-							entity,
-							attackingBoard,
-							attackingBoardHero,
-							attackingBoardHero,
-						);
-					}
-					trinket.scriptDataNum1 = gameState.cardsData.defaultScriptDataNum(trinket.cardId);
-				}
-				break;
-		}
-	}
-
-	let secretTriggered = null;
-	if (
-		(secretTriggered = defendingBoardHero.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.Reckoning_TB_Bacon_Secrets_14,
-		)) != null
-	) {
-		// console.log('triggering secret?', damageDoneByAttacker, stringifySimpleCard(attackingEntity, allCards));
-		if (damageDoneByAttacker >= 3 && !(attackingEntity.health <= 0 || attackingEntity.definitelyDead)) {
-			secretTriggered.triggered = true;
-			attackingEntity.definitelyDead = true;
-			gameState.spectator.registerPowerTarget(
-				secretTriggered,
-				attackingEntity,
-				attackingBoard,
-				defendingBoardHero,
-				attackingBoardHero,
-			);
-		}
-	}
-
 	if (attackingEntity.cardId === CardIds.Yrel_BG23_350 || attackingEntity.cardId === CardIds.Yrel_BG23_350_G) {
 		const modifier = attackingEntity.cardId === CardIds.Yrel_BG23_350_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(
@@ -125,7 +81,63 @@ export const applyAfterAttackEffects = (
 			modifyStats(e, e, 1, 0, attackingBoard, attackingBoardHero, gameState);
 		});
 
+	let secretTriggered = null;
+	if (
+		(secretTriggered = defendingBoardHero.secrets?.find(
+			(secret) => !secret.triggered && secret?.cardId === CardIds.Reckoning_TB_Bacon_Secrets_14,
+		)) != null
+	) {
+		// console.log('triggering secret?', damageDoneByAttacker, stringifySimpleCard(attackingEntity, allCards));
+		if (damageDoneByAttacker >= 3 && !(attackingEntity.health <= 0 || attackingEntity.definitelyDead)) {
+			secretTriggered.triggered = true;
+			attackingEntity.definitelyDead = true;
+			gameState.spectator.registerPowerTarget(
+				secretTriggered,
+				attackingEntity,
+				attackingBoard,
+				defendingBoardHero,
+				attackingBoardHero,
+			);
+		}
+	}
+
 	applyOnAttackQuest(attackingEntity, attackingBoard, attackingBoardHero, gameState);
+};
+
+export const applyAfterAttackTrinkets = (
+	attackingEntity: BoardEntity,
+	attackingBoard: BoardEntity[],
+	attackingBoardHero: BgsPlayerEntity,
+	defendingEntity: BoardEntity,
+	defendingBoard: BoardEntity[],
+	defendingBoardHero: BgsPlayerEntity,
+	damageDoneByAttacker: number,
+	damageDoneByDefender: number,
+	gameState: FullGameState,
+): void => {
+	const trinkets = attackingBoardHero.trinkets ?? [];
+	for (const trinket of trinkets) {
+		switch (trinket.cardId) {
+			case CardIds.JarOGems_BG30_MagicItem_546:
+				trinket.scriptDataNum1--;
+				if (trinket.scriptDataNum1 <= 0) {
+					for (const entity of attackingBoard.filter((e) =>
+						hasCorrectTribe(e, attackingBoardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards),
+					)) {
+						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
+						gameState.spectator.registerPowerTarget(
+							trinket,
+							entity,
+							attackingBoard,
+							attackingBoardHero,
+							attackingBoardHero,
+						);
+					}
+					trinket.scriptDataNum1 = gameState.cardsData.defaultScriptDataNum(trinket.cardId);
+				}
+				break;
+		}
+	}
 };
 
 const applyOnAttackQuest = (

@@ -9,7 +9,7 @@ import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { addImpliedMechanics, hasCorrectTribe, isFish } from '../utils';
-import { applyAfterAttackEffects } from './after-attack';
+import { applyAfterAttackEffects, applyAfterAttackTrinkets } from './after-attack';
 import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
 import { orchestrateMinionDeathEffects } from './deathrattle-orchestration';
@@ -150,6 +150,30 @@ export const doFullAttack = (
 	const damageDoneByAttacker = damageDoneByAttacker1 + damageDoneByAttacker2;
 	const damageDoneByDefender = damageDoneByDefender1 + damageDoneByDefender2;
 
+	// Process this after the minions die and deathrattles are triggered/spawned
+	// https://replays.firestoneapp.com/?reviewId=dd4e9dbe-abca-434a-ab94-04777cbedefe&turn=29&action=3
+	// BUT: the attacking entity's afterAttack (like Macaw) needs to be processed
+	// To recap:
+	// - Jar o'Gems procs after the deathrattles have spawned
+	// - When Monstrous Macaw procs a deathrattle, it is still on board, thus limiting the spawn room
+	// So not sure what the exact timings are. It could be:
+	// 1. Trigger minion's after attack
+	// 2. Make minions die
+	// 3. Process trinkets after attack
+	// I have asked on Discord - for now I will consider a "minion after attack" phase and a "trinket after attack" phase.
+	// I'm not sure about the secrets / trinkets, they will need to be adapted
+	applyAfterAttackEffects(
+		attackingEntity,
+		attackingBoard,
+		attackingBoardHero,
+		defendingEntity,
+		defendingBoard,
+		defendingBoardHero,
+		damageDoneByAttacker,
+		damageDoneByDefender,
+		gameState,
+	);
+
 	processMinionDeath(
 		attackingBoard,
 		attackingBoardHero,
@@ -159,10 +183,7 @@ export const doFullAttack = (
 		isAttackingImmediately,
 	);
 
-	// Process this after the minions die and deathrattles are triggered/spawned
-	// https://replays.firestoneapp.com/?reviewId=dd4e9dbe-abca-434a-ab94-04777cbedefe&turn=29&action=3
-	// BUT: the attacking entity's afterAttack (like Macaw) needs to be processed
-	applyAfterAttackEffects(
+	applyAfterAttackTrinkets(
 		attackingEntity,
 		attackingBoard,
 		attackingBoardHero,
