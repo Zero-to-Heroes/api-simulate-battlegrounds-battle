@@ -165,6 +165,7 @@ export const spawnEntitiesFromDeathrattle = (
 	entitiesDeadThisAttack: readonly BoardEntity[],
 	gameState: FullGameState,
 ): readonly BoardEntity[] => {
+	const finalSpawns: BoardEntity[] = [];
 	// Because if the baron dies because of a cleave, it still applies its effect to the other entities that died this turn
 	// TOOD: I need a replay for this
 	// If the Titus dies, its effect doesn't apply to the other deathrattle effects that die at the same time
@@ -189,7 +190,6 @@ export const spawnEntitiesFromDeathrattle = (
 		gameState,
 	};
 
-	const spawnedEntities: BoardEntity[] = [];
 	// const otherBoardSpawnedEntities: BoardEntity[] = [];
 	// console.debug(
 	// 	'spawn triggers',
@@ -211,6 +211,8 @@ export const spawnEntitiesFromDeathrattle = (
 	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? []), ...enchantments.map((e) => e.cardId)];
 
 	for (const deadEntityCardId of cardIds) {
+		const spawnedEntities: BoardEntity[] = [];
+
 		for (let i = 0; i < multiplier; i++) {
 			let hasTriggered = true;
 			const spawnEntityImpl = cardMappings[deadEntityCardId];
@@ -1917,12 +1919,27 @@ export const spawnEntitiesFromDeathrattle = (
 						break;
 				}
 			}
+
+			// It seems that spawns are done before the "whenever a deathrattle triggers" effects proc
+			// https://replays.firestoneapp.com/?reviewId=0e41ba87-02a8-44a7-b8d3-27c6ab36c678&turn=11&action=22
+			const actualSpawns = performEntitySpawns(
+				spawnedEntities,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				deadEntity,
+				deadEntityIndexFromRight,
+				otherBoard,
+				otherBoardHero,
+				gameState,
+			);
+			finalSpawns.push(...actualSpawns);
+
 			if (hasTriggered) {
 				onDeathrattleTriggered(deathrattleTriggeredInput);
 			}
 		}
 	}
-	return spawnedEntities;
+	return finalSpawns;
 };
 
 export const spawnEntitiesFromEnchantments = (

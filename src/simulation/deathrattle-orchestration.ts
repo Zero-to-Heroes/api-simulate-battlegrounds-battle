@@ -445,8 +445,8 @@ const handleNaturalDeathrattle = (
 	gameState: FullGameState,
 ): readonly BoardEntity[] => {
 	const modifiedIndexFromRight = Math.min(deadEntityPlayerState.board.length, indexFromRight);
-	const allSpawns = [];
-	const spawnsToSpawn = [];
+	// const allSpawns = [];
+	// const spawnsToSpawn = [];
 	for (const dr of deadEntity.rememberedDeathrattles ?? []) {
 		const entityToProcess: BoardEntity = {
 			...deadEntity,
@@ -474,7 +474,7 @@ const handleNaturalDeathrattle = (
 		);
 		// The spawns have already been processed in the "handleNaturalDeathrattle" method
 		// spawnsToSpawn.push(...spawns);
-		allSpawns.push(...spawns);
+		// allSpawns.push(...spawns);
 	}
 
 	const entitiesFromNativeDeathrattle: readonly BoardEntity[] = spawnEntitiesFromDeathrattle(
@@ -487,19 +487,19 @@ const handleNaturalDeathrattle = (
 		deadEntities,
 		gameState,
 	);
-	allSpawns.push(...entitiesFromNativeDeathrattle);
-	spawnsToSpawn.push(...entitiesFromNativeDeathrattle);
+	// allSpawns.push(...entitiesFromNativeDeathrattle);
+	// spawnsToSpawn.push(...entitiesFromNativeDeathrattle);
 	// Some candidate entities are not spawned, and so are ignored in further processing
-	const actualSpawns = performEntitySpawns(
-		spawnsToSpawn,
-		deadEntityPlayerState.board,
-		deadEntityPlayerState.player,
-		deadEntity,
-		modifiedIndexFromRight,
-		otherPlayerState.board,
-		otherPlayerState.player,
-		gameState,
-	);
+	// const actualSpawns = performEntitySpawns(
+	// 	spawnsToSpawn,
+	// 	deadEntityPlayerState.board,
+	// 	deadEntityPlayerState.player,
+	// 	deadEntity,
+	// 	modifiedIndexFromRight,
+	// 	otherPlayerState.board,
+	// 	otherPlayerState.player,
+	// 	gameState,
+	// );
 	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
 	// TODO: revisit this once Leapfroggers are in the game again
 	// handleDeathrattleEffects(
@@ -512,7 +512,7 @@ const handleNaturalDeathrattle = (
 	// 	gameState,
 	// );
 
-	return actualSpawns;
+	return entitiesFromNativeDeathrattle;
 };
 
 const handleEnchantmentsDeathrattle = (
