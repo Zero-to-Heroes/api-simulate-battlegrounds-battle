@@ -11,11 +11,11 @@ export const InterrogatorWhitemane: StartOfCombatCard = {
 	cardIds: [CardIds.InterrogatorWhitemane_BG24_704, CardIds.InterrogatorWhitemane_BG24_704_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		if (input.opponentBoard.length > 0) {
-			const validTargets = input.opponentBoard.filter(
-				(e) => input.gameState.cardsData.getTavernLevel(e.cardId) >= 5,
-			);
 			const numberOfPicks = minion.cardId === CardIds.InterrogatorWhitemane_BG24_704_G ? 2 : 1;
 			for (let i = 0; i < numberOfPicks; i++) {
+				const validTargets = input.opponentBoard.filter(
+					(e) => input.gameState.cardsData.getTavernLevel(e.cardId) >= 5 && !e.taunt,
+				);
 				const target = pickRandom(validTargets);
 				if (!!target) {
 					castImpure(
@@ -26,8 +26,8 @@ export const InterrogatorWhitemane: StartOfCombatCard = {
 						input.opponentEntity,
 						input.gameState,
 					);
-					const targetIndex = validTargets.findIndex((e) => e.entityId === target.entityId);
-					validTargets.splice(targetIndex, 1);
+					// const targetIndex = validTargets.findIndex((e) => e.entityId === target.entityId);
+					// validTargets.splice(targetIndex, 1);
 				}
 			}
 		}
