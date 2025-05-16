@@ -30,13 +30,12 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackC
 		// Even more than that: the target is the same between multiple battlecruisers
 		// https://replays.firestoneapp.com/?reviewId=cbfd6fe9-1a58-400a-a593-6b8852df5427&turn=9&action=0
 		// However I'm pretty sure I've seen another behavior
+
 		// Get the highest health opponent minion at the start of the phase
-		const aliveEntities = input.opponentBoard
-			.filter((entity) => entity.health > 0 && !entity.definitelyDead)
-			.map((e) => e.entityId);
-		const targetEntityId = getRandomMinionWithHighestHealth(
-			input.opponentBoardBefore.filter((e) => aliveEntities.includes(e.entityId)),
-		)?.entityId;
+		// Update 2025-05-16: it looks like it now takes the highest health current minion
+		// https://replays.firestoneapp.com/?reviewId=c2620528-e0de-4862-9b11-cf055440b2b8&turn=19&action=2
+		const aliveEntities = input.opponentBoard.filter((entity) => entity.health > 0 && !entity.definitelyDead);
+		const targetEntityId = getRandomMinionWithHighestHealth(aliveEntities)?.entityId;
 		// const numberOfCannons = yamatoCannons.length;
 		const cannonDamage = Math.max(...yamatoCannons.map((e) => e.tagScriptDataNum1));
 		for (const yamatoCannon of yamatoCannons) {
