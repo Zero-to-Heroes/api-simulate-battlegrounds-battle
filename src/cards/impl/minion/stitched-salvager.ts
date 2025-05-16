@@ -41,7 +41,9 @@ export const StitchedSalvager: StartOfCombatCard & DeathrattleSpawnCard = {
 				input.opponentEntity,
 			);
 		}
-		return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
+		// https://replays.firestoneapp.com/?reviewId=fb20ead1-624f-4fcb-84e2-8b8c1f4d6b73&turn=21&action=2
+		// The side with the Stitched Salvager still attacks first, even with a board reduced to 6 minions
+		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const spawns: BoardEntity[] = (minion.memory ?? []).map((e) => {
