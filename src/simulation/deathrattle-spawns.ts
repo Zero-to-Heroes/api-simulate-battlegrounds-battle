@@ -211,9 +211,8 @@ export const spawnEntitiesFromDeathrattle = (
 	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? []), ...enchantments.map((e) => e.cardId)];
 
 	for (const deadEntityCardId of cardIds) {
-		const spawnedEntities: BoardEntity[] = [];
-
 		for (let i = 0; i < multiplier; i++) {
+			const spawnedEntities: BoardEntity[] = [];
 			let hasTriggered = true;
 			const spawnEntityImpl = cardMappings[deadEntityCardId];
 			if (hasDeathrattleSpawn(spawnEntityImpl)) {
@@ -1922,17 +1921,19 @@ export const spawnEntitiesFromDeathrattle = (
 
 			// It seems that spawns are done before the "whenever a deathrattle triggers" effects proc
 			// https://replays.firestoneapp.com/?reviewId=0e41ba87-02a8-44a7-b8d3-27c6ab36c678&turn=11&action=22
-			const actualSpawns = performEntitySpawns(
-				spawnedEntities,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				deadEntity,
-				deadEntityIndexFromRight,
-				otherBoard,
-				otherBoardHero,
-				gameState,
-			);
-			finalSpawns.push(...actualSpawns);
+			if (spawnedEntities?.length > 0) {
+				const actualSpawns = performEntitySpawns(
+					spawnedEntities,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					deadEntity,
+					deadEntityIndexFromRight,
+					otherBoard,
+					otherBoardHero,
+					gameState,
+				);
+				finalSpawns.push(...actualSpawns);
+			}
 
 			if (hasTriggered) {
 				onDeathrattleTriggered(deathrattleTriggeredInput);
