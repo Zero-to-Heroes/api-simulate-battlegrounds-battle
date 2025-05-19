@@ -24,20 +24,23 @@ export const onMinionKill = (
 
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
-	const onMinionKilledImpl = cardMappings[killer.cardId];
-	if (hasOnMinionKilled(onMinionKilledImpl)) {
-		const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKilledImpl.onMinionKilled(killer, {
-			minionKilled: victim,
-			attackingHero: killerHero,
-			attackingBoard: killerBoard,
-			defendingHero: victimHero,
-			defendingBoard: victimBoard,
-			defenderNeighbours: defenderNeighbours,
-			gameState,
-			playerIsFriendly: killerHero.friendly,
-		});
-		damageDoneByAttacker += dmgDoneByAttacker;
-		damageDoneByDefender += dmgDoneByDefender;
+	for (const boardEntity of killerBoard) {
+		const onMinionKilledImpl = cardMappings[boardEntity.cardId];
+		if (hasOnMinionKilled(onMinionKilledImpl)) {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKilledImpl.onMinionKilled(boardEntity, {
+				killer: killer,
+				minionKilled: victim,
+				attackingHero: killerHero,
+				attackingBoard: killerBoard,
+				defendingHero: victimHero,
+				defendingBoard: victimBoard,
+				defenderNeighbours: defenderNeighbours,
+				gameState,
+				playerIsFriendly: killerHero.friendly,
+			});
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
+		}
 	}
 
 	switch (killer.cardId) {

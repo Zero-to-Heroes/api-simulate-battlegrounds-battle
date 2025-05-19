@@ -1266,6 +1266,7 @@ export interface OnAfterDeathInput {
 	readonly gameState: FullGameState;
 }
 export interface OnMinionKilledInput {
+	readonly killer: BoardEntity;
 	readonly minionKilled: BoardEntity;
 	readonly attackingHero: BgsPlayerEntity;
 	readonly attackingBoard: BoardEntity[];

@@ -13,11 +13,5 @@ export const Mutalisk: OnMinionKilledCard = {
 		const mult = minion.cardId === CardIds.Mutalisk_BG31_HERO_811t6_G ? 2 : 1;
 		modifyStats(minion, minion, 1 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		// if (input.gameState.sharedState.currentAttackerEntityId !== minion.entityId) {
-		// 	return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		// }
-
-		// modifyStats(minion, 4 * mult, 4 * mult, input.attackingBoard, input.attackingHero, input.gameState);
-		// return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };
