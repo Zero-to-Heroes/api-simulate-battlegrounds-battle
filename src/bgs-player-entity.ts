@@ -13,7 +13,7 @@ export interface BgsPlayerEntity {
 	/** @deprecated */
 	readonly heroPowerEntityId?: number;
 	/** @deprecated */
-	readonly heroPowerUsed: boolean;
+	readonly heroPowerUsed?: boolean;
 	/** @deprecated */
 	readonly heroPowerInfo?: number | string;
 	/** @deprecated */

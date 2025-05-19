@@ -721,6 +721,8 @@ export const rememberDeathrattles = (
 		return;
 	}
 
+	const debug = deadEntities.some((e) => e.cardId === CardIds.CorruptedBristler_BG32_431);
+
 	const validDeathrattles = deadEntities
 		.filter(
 			(entity) =>

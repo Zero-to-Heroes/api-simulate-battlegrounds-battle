@@ -456,7 +456,8 @@ const handleNaturalDeathrattle = (
 			scriptDataNum2: dr.scriptDataNum2,
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
-			enchantments: [],
+			// For Corrupted Bristler
+			enchantments: deadEntity.enchantments.filter((e) => e.cardId?.startsWith(CardIds.BloodGem)) ?? [],
 			memory:
 				dr.memory == null
 					? null
