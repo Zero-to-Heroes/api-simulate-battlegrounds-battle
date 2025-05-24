@@ -1,7 +1,7 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { BattlecryInput } from '../../../simulation/battlecries';
-import { addStatsToBoard } from '../../../utils';
+import { modifyStats } from '../../../simulation/stats';
 import { BattlecryCard } from '../../card.interface';
 import { hasKeyword, validBonusKeywords } from '../../cards-data';
 
@@ -23,15 +23,10 @@ export const Hackerfin: BattlecryCard = {
 			}
 		}
 		const baseBuff = 1 + totalWarbandKeywords;
-		addStatsToBoard(
-			minion,
-			input.board,
-			input.hero,
-			baseBuff * mult,
-			baseBuff * mult,
-			input.gameState,
-			Race[Race.MURLOC],
-		);
+		const targetBoard = input.board.filter((e) => e.entityId !== minion.entityId);
+		for (const target of targetBoard) {
+			modifyStats(target, minion, baseBuff * mult, baseBuff * mult, input.board, input.hero, input.gameState);
+		}
 		return true;
 	},
 };

@@ -13,7 +13,7 @@ export const Murky: BattlecryCard = {
 		const murlocsControlled = input.board.filter((e) =>
 			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
 		).length;
-		const murkyStats = murkyScale * 4 * murlocsControlled;
+		const murkyStats = murkyScale * 6 * murlocsControlled;
 		const murkyTarget = pickRandom(
 			input.board.filter((e) =>
 				hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),

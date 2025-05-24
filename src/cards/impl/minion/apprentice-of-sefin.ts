@@ -20,7 +20,7 @@ export const ApprenticeOfSefin: EndOfTurnCard = {
 		for (let i = 0; i < mult; i++) {
 			grantRandomBonusKeywords(minion, mult, input.board, input.hero, input.otherHero, input.gameState);
 		}
-		modifyStats(minion, minion, 4, 4, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
 		return true;
 	},
 };

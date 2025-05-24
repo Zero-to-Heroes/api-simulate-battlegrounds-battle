@@ -8,6 +8,6 @@ export const MechagnomeInterpreter: OnBeforeMagnetizeCard = {
 	onBeforeMagnetize: (entity: BoardEntity, input: OnBeforeMagnetizeInput) => {
 		const mult = entity.cardId === CardIds.MechagnomeInterpreter_BG31_177_G ? 2 : 1;
 		input.magnetizedCard.attack += 2 * mult;
-		input.magnetizedCard.health += 3 * mult;
+		input.magnetizedCard.health += 2 * mult;
 	},
 };

@@ -602,7 +602,7 @@ const applyEternalKnightEffect = (board: BoardEntity[], hero: BgsPlayerEntity, g
 			board[i].cardId === CardIds.EternalKnight_BG25_008_G
 		) {
 			const multiplier = board[i].cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
-			modifyStats(board[i], null, multiplier * 1, multiplier * 1, board, hero, gameState);
+			modifyStats(board[i], null, multiplier * 2, multiplier * 1, board, hero, gameState);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}

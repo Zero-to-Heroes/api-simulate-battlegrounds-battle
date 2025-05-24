@@ -217,7 +217,7 @@ export class CardsData {
 			case CardIds.StableAmalgamation_BG28_Reward_518:
 				return 7;
 			case CardIds.BleedingHeart_BG30_MagicItem_713:
-				return 8;
+				return 9;
 		}
 		return 0;
 	}
