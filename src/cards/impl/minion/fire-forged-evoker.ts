@@ -17,7 +17,7 @@ export const FireForgedEvoker: StartOfCombatCard = {
 				hasCorrectTribe(
 					e,
 					input.playerEntity,
-					Race.DRAENEI,
+					Race.DRAGON,
 					input.gameState.anomalies,
 					input.gameState.allCards,
 				),
