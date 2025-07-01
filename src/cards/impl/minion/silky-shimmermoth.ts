@@ -14,7 +14,7 @@ export const SilkyShimmermoth: OnStatsChangedCard & DeathrattleSpawnCard = {
 		}
 
 		const mult = minion.cardId === CardIds.SilkyShimmermoth_BG32_204 ? 1 : 2;
-		input.hero.globalInfo.BeetleAttackBuff += 2 * mult;
+		input.hero.globalInfo.BeetleAttackBuff += 3 * mult;
 		input.hero.globalInfo.BeetleHealthBuff += 2 * mult;
 	},
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {

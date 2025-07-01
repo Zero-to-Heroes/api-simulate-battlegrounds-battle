@@ -6,7 +6,15 @@ export const BronzeTimepiece = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerBoard.length > 0) {
 			input.playerBoard.forEach((entity) => {
-				modifyStats(entity, trinket, 0, entity.attack, input.playerBoard, input.playerEntity, input.gameState);
+				modifyStats(
+					entity,
+					trinket,
+					0,
+					Math.ceil(entity.attack / 2),
+					input.playerBoard,
+					input.playerEntity,
+					input.gameState,
+				);
 			});
 			return true;
 		}
