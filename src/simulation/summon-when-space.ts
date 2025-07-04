@@ -87,7 +87,7 @@ export const handleSharptoothSnapperForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	while (playerBoard.length < 7 && entity.scriptDataNum1 > 0) {
+	while (playerBoard.length < 7 && entity.abiityChargesLeft > 0) {
 		const candidates = spawnEntities(
 			CardIds.SharptoothSnapper_PiranhaToken_BG32_201t,
 			1,
@@ -110,7 +110,7 @@ export const handleSharptoothSnapperForPlayer = (
 			opponentEntity,
 			gameState,
 		);
-		entity.scriptDataNum1--;
+		entity.abiityChargesLeft--;
 	}
 };
 
