@@ -707,11 +707,12 @@ export const applyMonstrosity = (
 
 export const rememberDeathrattles = (
 	fish: BoardEntity,
-	deadEntities: readonly BoardEntity[],
+	inputDeadEntities: readonly BoardEntity[],
 	cardsData: CardsData,
 	allCards: AllCardsService,
 	sharedState: SharedState,
 ): void => {
+	const deadEntities = inputDeadEntities.filter((e) => !isFish(e));
 	if (!deadEntities?.length) {
 		return;
 	}
@@ -724,12 +725,7 @@ export const rememberDeathrattles = (
 	const debug = deadEntities.some((e) => e.cardId === CardIds.CorruptedBristler_BG32_431);
 
 	const validDeathrattles = deadEntities
-		.filter(
-			(entity) =>
-				allCards.getCard(entity.cardId).mechanics?.includes(GameTag[GameTag.DEATHRATTLE]) &&
-				// Fish are handled via remembered deathrattles
-				!isFish(entity),
-		)
+		.filter((entity) => allCards.getCard(entity.cardId).mechanics?.includes(GameTag[GameTag.DEATHRATTLE]))
 		.filter((e) => !DEATHRATTLES_REQUIRE_MEMORY.includes(e.cardId as CardIds) || e.memory)
 		.map((entity) => ({
 			cardId: entity.cardId,
