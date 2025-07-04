@@ -369,11 +369,18 @@ export const getMinionsOfDifferentTypes = (
 						(e) =>
 							getEffectiveTribesForEntity(e, hero, gameState.anomalies, gameState.allCards).length === i,
 					)
+					.filter((e) => hasCorrectTribe(e, hero, tribe, gameState.anomalies, gameState.allCards))
 					.filter((e) =>
 						getEffectiveTribesForEntity(e, hero, gameState.anomalies, gameState.allCards).some(
-							(r) => !racesProcessed.includes(Race[r]),
+							(r) => !racesProcessed.includes(r),
 						),
 					);
+				const debug = getEffectiveTribesForEntity(
+					minionsWithRaces[0],
+					hero,
+					gameState.anomalies,
+					gameState.allCards,
+				);
 				if (typesBuffed >= numberOfDifferentTypes) {
 					return result;
 				}
@@ -425,6 +432,9 @@ export const getEffectiveTribesForEntity = (
 	anomalies: readonly string[],
 	allCards: AllCardsService,
 ): readonly Race[] => {
+	if (!entity?.cardId) {
+		return [];
+	}
 	const nativeTribes = allCards.getCard(entity.cardId).races?.map((r) => Race[r]) ?? [];
 	if (!nativeTribes.length && anomalies?.includes(CardIds.IncubationMutation_BG31_Anomaly_112)) {
 		return [Race.ALL];
