@@ -15,15 +15,41 @@ export const handleSummonsWhenSpace = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	handleSummonsWhenSpaceForPlayer(playerEntity, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
-	handleSummonsWhenSpaceForPlayer(
-		opponentEntity,
-		opponentBoard,
-		opponentEntity,
-		playerBoard,
-		playerEntity,
-		gameState,
-	);
+	if (Math.random() < 0.5) {
+		handleSummonsWhenSpaceForPlayer(
+			playerEntity,
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+		);
+		handleSummonsWhenSpaceForPlayer(
+			opponentEntity,
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			gameState,
+		);
+	} else {
+		handleSummonsWhenSpaceForPlayer(
+			opponentEntity,
+			opponentBoard,
+			opponentEntity,
+			playerBoard,
+			playerEntity,
+			gameState,
+		);
+		handleSummonsWhenSpaceForPlayer(
+			playerEntity,
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+		);
+	}
 };
 
 // TODO: Twin Sky Lanterns wait for 2 spaces
