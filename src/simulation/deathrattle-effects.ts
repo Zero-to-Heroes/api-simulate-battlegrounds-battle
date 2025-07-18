@@ -3,6 +3,7 @@ import { AllCardsService, CardIds, GameTag, Race } from '@firestone-hs/reference
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
+import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
 import { updateTaunt } from '../keywords/taunt';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
@@ -602,7 +603,15 @@ const applyEternalKnightEffect = (board: BoardEntity[], hero: BgsPlayerEntity, g
 			board[i].cardId === CardIds.EternalKnight_BG25_008_G
 		) {
 			const multiplier = board[i].cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
-			modifyStats(board[i], null, multiplier * 2, multiplier * 1, board, hero, gameState);
+			modifyStats(
+				board[i],
+				null,
+				multiplier * eternalKnightAttack,
+				multiplier * eternalKnightHealth,
+				board,
+				hero,
+				gameState,
+			);
 			gameState.spectator.registerPowerTarget(board[i], board[i], board, null, null);
 		}
 	}

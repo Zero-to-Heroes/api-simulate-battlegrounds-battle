@@ -4,6 +4,9 @@ import { updateReborn } from '../../../keywords/reborn';
 import { updateTaunt } from '../../../keywords/taunt';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
+export const eternalKnightAttack = 3;
+export const eternalKnightHealth = 1;
+
 export const EternalPortrait = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const candidates = input.playerBoard

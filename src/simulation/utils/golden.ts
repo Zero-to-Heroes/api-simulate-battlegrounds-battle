@@ -1,6 +1,7 @@
 import { AllCardsService, CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
+import { eternalKnightAttack, eternalKnightHealth } from '../../cards/impl/trinket/eternal-portrait';
 import { addImpliedMechanics } from '../../utils';
 import { handleAddedMinionAuraEffect } from '../add-minion-to-board';
 import { FullGameState } from '../internal-game-state';
@@ -105,8 +106,14 @@ const removeMinionAuraEffectsForGolden = (entity: BoardEntity, hero: BgsPlayerEn
 		case CardIds.EternalKnight_BG25_008_G:
 			const eternalKnightBuffToRemove = hero.globalInfo.EternalKnightsDeadThisGame;
 			const eternalKnighMultiplier = entity.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
-			entity.health = Math.max(1, entity.health - eternalKnighMultiplier * eternalKnightBuffToRemove);
-			entity.attack = Math.max(0, entity.attack - 2 * eternalKnighMultiplier * eternalKnightBuffToRemove);
+			entity.health = Math.max(
+				1,
+				entity.health - eternalKnightHealth * eternalKnighMultiplier * eternalKnightBuffToRemove,
+			);
+			entity.attack = Math.max(
+				0,
+				entity.attack - eternalKnightAttack * eternalKnighMultiplier * eternalKnightBuffToRemove,
+			);
 			break;
 		case CardIds.SanlaynScribe_BGDUO31_208:
 		case CardIds.SanlaynScribe_BGDUO31_208_G:

@@ -1753,8 +1753,8 @@ export const spawnEntitiesFromDeathrattle = (
 						break;
 					case CardIds.MoroesStewardOfDeath_BG28_304:
 					case CardIds.MoroesStewardOfDeath_BG28_304_G:
-						const moroesBuffAtk = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 6 : 3;
-						const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 10 : 5;
+						const moroesBuffAtk = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 8 : 4;
+						const moroesBuffHealth = deadEntity.cardId === CardIds.MoroesStewardOfDeath_BG28_304_G ? 12 : 6;
 						addStatsToBoard(
 							deadEntity,
 							boardWithDeadEntity,

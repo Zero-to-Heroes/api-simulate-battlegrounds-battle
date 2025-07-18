@@ -10,6 +10,7 @@ import {
 } from '../cards/card.interface';
 import { WHELP_CARD_IDS } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { pickRandom } from '../services/utils';
@@ -412,7 +413,16 @@ export const applyAurasToSelf = (
 		case CardIds.EternalKnight_BG25_008_G:
 			const multiplierKnight = spawned.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
 			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
-			modifyStats(spawned, null, 2 * statsBonusKnight, 1 * statsBonusKnight, board, boardHero, gameState, false);
+			modifyStats(
+				spawned,
+				null,
+				eternalKnightAttack * statsBonusKnight,
+				eternalKnightHealth * statsBonusKnight,
+				board,
+				boardHero,
+				gameState,
+				false,
+			);
 			break;
 		case CardIds.EnsorcelledFungus_BG28_555:
 		case CardIds.EnsorcelledFungus_BG28_555_G:
@@ -608,8 +618,8 @@ export const removeAurasFromSelf = (
 		case CardIds.EternalKnight_BG25_008_G:
 			const multiplierKnight = entity.cardId === CardIds.EternalKnight_BG25_008_G ? 2 : 1;
 			const statsBonusKnight = multiplierKnight * boardHero.globalInfo.EternalKnightsDeadThisGame;
-			entity.attack = Math.max(0, entity.attack - 2 * statsBonusKnight);
-			entity.health = Math.max(1, entity.health - statsBonusKnight);
+			entity.attack = Math.max(0, entity.attack - eternalKnightAttack * statsBonusKnight);
+			entity.health = Math.max(1, entity.health - eternalKnightHealth * statsBonusKnight);
 			break;
 		case CardIds.EnsorcelledFungus_BG28_555:
 		case CardIds.EnsorcelledFungus_BG28_555_G:
