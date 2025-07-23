@@ -40,26 +40,28 @@ export const playBloodGemsOn = (
 	const bloodGemAttack = bloodGemBaseAttack * cronesMult;
 	const bloodGemHealth = bloodGemBaseHealth * cronesMult;
 
-	let bloodGemEnchantment =
-		findLast(target.enchantments, (e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment) ??
-		findLast(target.enchantments, (e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment);
-	if (!bloodGemEnchantment) {
-		bloodGemEnchantment = {
-			cardId: CardIds.BloodGem_BloodGemEnchantment,
-			originEntityId: source.entityId,
-			timing: 0,
-			tagScriptDataNum1: 0,
-			tagScriptDataNum2: 0,
-		};
-		target.enchantments = target.enchantments ?? [];
-		target.enchantments.push(bloodGemEnchantment);
-	}
+	const applyBloodGemEnchantment = (enchantmentCardId: string) => {
+		let enchantment = findLast(target.enchantments, (e) => e.cardId === enchantmentCardId);
+		if (!enchantment) {
+			enchantment = {
+				cardId: enchantmentCardId,
+				originEntityId: source.entityId,
+				timing: 0,
+				tagScriptDataNum1: 0,
+				tagScriptDataNum2: 0,
+			};
+			target.enchantments = target.enchantments ?? [];
+			target.enchantments.push(enchantment);
+		}
+		for (let i = 0; i < quantity; i++) {
+			modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
+			enchantment.tagScriptDataNum1 += bloodGemAttack;
+			enchantment.tagScriptDataNum2 += bloodGemHealth;
+		}
+	};
 
-	for (let i = 0; i < quantity; i++) {
-		modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
-		bloodGemEnchantment.tagScriptDataNum1 += bloodGemAttack;
-		bloodGemEnchantment.tagScriptDataNum2 += bloodGemHealth;
-	}
+	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemEnchantment);
+	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemsEnchantment);
 
 	for (let i = 0; i < quantity; i++) {
 		switch (target.cardId) {
