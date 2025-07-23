@@ -11,8 +11,32 @@ export const CorruptedBristler: DeathrattleSpawnCard = {
 		// See corrupted-bristler.jsonc
 		let bloodGemAttack = 0;
 		let bloodGemHealth = 0;
+		// Got another one with this:
+		// {
+		// 	"originEntityId": 21600,
+		// 	"cardId": "BG20_GEMe",
+		// 	"tagScriptDataNum1": 985,
+		// 	"tagScriptDataNum2": 864,
+		// 	"timing": 0
+		// },
+		// {
+		// 	"originEntityId": 21603,
+		// 	"cardId": "BG20_GEMe2",
+		// 	"tagScriptDataNum1": 1113,
+		// 	"tagScriptDataNum2": 1000,
+		// 	"timing": 0
+		// },
+		// {
+		// 	"originEntityId": 21604,
+		// 	"cardId": "BG20_GEMe",
+		// 	"tagScriptDataNum1": 128,
+		// 	"tagScriptDataNum2": 136,
+		// 	"timing": 0
+		// },
+		// GEMe2 seems to be the sum of GEMe
+		// The summons were 1145 / 1034
 		let bloodGemEnchantments = minion.enchantments?.filter(
-			(e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment,
+			(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
 		);
 		if (!!bloodGemEnchantments?.length) {
 			const lastEnchantment = bloodGemEnchantments[bloodGemEnchantments.length - 1];
