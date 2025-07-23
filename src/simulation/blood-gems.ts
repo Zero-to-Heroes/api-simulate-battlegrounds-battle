@@ -54,7 +54,6 @@ export const playBloodGemsOn = (
 			target.enchantments.push(enchantment);
 		}
 		for (let i = 0; i < quantity; i++) {
-			modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
 			enchantment.tagScriptDataNum1 += bloodGemAttack;
 			enchantment.tagScriptDataNum2 += bloodGemHealth;
 		}
@@ -62,6 +61,8 @@ export const playBloodGemsOn = (
 
 	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemEnchantment);
 	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemsEnchantment);
+
+	modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
 
 	for (let i = 0; i < quantity; i++) {
 		switch (target.cardId) {
