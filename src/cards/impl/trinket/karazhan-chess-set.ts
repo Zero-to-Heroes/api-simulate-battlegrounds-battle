@@ -16,7 +16,7 @@ export const KarazhanChessSet: StartOfCombatCard = {
 			let minionsToCopy = 1;
 			for (let i = 0; i < Math.min(input.playerBoard.length, 7); i++) {
 				if (minionsToCopy <= 0) {
-					return;
+					break;
 				}
 				const entityToCoy = input.playerBoard[i];
 				const copy: BoardEntity = copyEntity(entityToCoy);
