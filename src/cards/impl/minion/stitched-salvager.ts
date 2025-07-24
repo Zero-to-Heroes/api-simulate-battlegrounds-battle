@@ -10,13 +10,17 @@ export const StitchedSalvager: StartOfCombatCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.StitchedSalvager_BG31_999, CardIds.StitchedSalvager_BG31_999_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const minionIndex = input.playerBoard.indexOf(minion);
-		const targets = [];
+		let targets = [];
 		if (minionIndex > 0) {
 			targets.push(input.playerBoard[minionIndex - 1]);
 		}
 		if (minion.cardId === CardIds.StitchedSalvager_BG31_999_G && minionIndex < input.playerBoard.length - 1) {
 			targets.push(input.playerBoard[minionIndex + 1]);
 		}
+
+		targets = targets.filter(
+			(t) => t.cardId !== CardIds.StitchedSalvager_BG31_999_G && t.cardId !== CardIds.StitchedSalvager_BG31_999,
+		);
 		if (!targets.length) {
 			return;
 		}

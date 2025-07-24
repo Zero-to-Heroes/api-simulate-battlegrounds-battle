@@ -62,7 +62,9 @@ export const playBloodGemsOn = (
 	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemEnchantment);
 	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemsEnchantment);
 
-	modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
+	for (let i = 0; i < quantity; i++) {
+		modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
+	}
 
 	for (let i = 0; i < quantity; i++) {
 		switch (target.cardId) {
