@@ -9,7 +9,7 @@ export const WildfireElemental: OnMinionKilledCard = {
 		minion: BoardEntity,
 		input: OnMinionKilledInput,
 	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
-		if (input.killer !== minion) {
+		if (input.killer !== minion || !input.killerIsAttacking) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 

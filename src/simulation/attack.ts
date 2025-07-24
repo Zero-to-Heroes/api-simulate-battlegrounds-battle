@@ -398,6 +398,7 @@ const performAttack = (
 		if (defendingEntity.health <= 0 || defendingEntity.definitelyDead) {
 			const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKill(
 				attackingEntity,
+				true,
 				defendingEntity,
 				attackingBoard,
 				attackingBoardHero,
@@ -412,6 +413,7 @@ const performAttack = (
 		if (attackingEntity.health <= 0 || attackingEntity.definitelyDead) {
 			const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKill(
 				defendingEntity,
+				false,
 				attackingEntity,
 				defendingBoard,
 				defendingBoardHero,
@@ -456,6 +458,7 @@ const performAttack = (
 			if (neighbour.health <= 0 || neighbour.definitelyDead) {
 				const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKill(
 					attackingEntity,
+					true,
 					neighbour,
 					attackingBoard,
 					attackingBoardHero,
@@ -677,7 +680,7 @@ export const dealDamageToMinion = (
 		target.lastAffectedByEntity = damageSource;
 
 		if (target.health <= 0 || target.definitelyDead) {
-			onMinionKill(damageSource, target, otherBoard, otherHero, board, hero, [], gameState);
+			onMinionKill(damageSource, false, target, otherBoard, otherHero, board, hero, [], gameState);
 		}
 	}
 	const defendingEntityIndex = board.map((entity) => entity.entityId).indexOf(target.entityId);
@@ -1267,6 +1270,7 @@ export interface OnAfterDeathInput {
 }
 export interface OnMinionKilledInput {
 	readonly killer: BoardEntity;
+	readonly killerIsAttacking: boolean;
 	readonly minionKilled: BoardEntity;
 	readonly attackingHero: BgsPlayerEntity;
 	readonly attackingBoard: BoardEntity[];

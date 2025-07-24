@@ -9,6 +9,7 @@ import { modifyStats } from './stats';
 
 export const onMinionKill = (
 	killer: BoardEntity,
+	killerIsAttacking: boolean,
 	victim: BoardEntity,
 	killerBoard: BoardEntity[],
 	killerHero: BgsPlayerEntity,
@@ -29,6 +30,7 @@ export const onMinionKill = (
 		if (hasOnMinionKilled(onMinionKilledImpl)) {
 			const { dmgDoneByAttacker, dmgDoneByDefender } = onMinionKilledImpl.onMinionKilled(boardEntity, {
 				killer: killer,
+				killerIsAttacking: killerIsAttacking,
 				minionKilled: victim,
 				attackingHero: killerHero,
 				attackingBoard: killerBoard,
