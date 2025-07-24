@@ -55,6 +55,7 @@ import { FireForgedEvoker } from './minion/fire-forged-evoker';
 import { FirescaleHoarder } from './minion/firescale-hoarder';
 import { FireworksFanatic } from './minion/fireworks-fanatic';
 import { FlightyScout } from './minion/flighty-scout';
+import { FloatingWatcher } from './minion/floating-watcher';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
 import { GemRat } from './minion/gem-rat';
@@ -221,6 +222,7 @@ const cards = [
 	SilkyShimmermoth,
 	Alleycat,
 	FaunaWhisperer,
+	FloatingWatcher,
 	SlumberSorcerer,
 	CoilskarSapper,
 	MonstrousMacaw,

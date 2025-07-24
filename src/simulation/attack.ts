@@ -706,12 +706,6 @@ export const getDefendingEntity = (
 				}
 		}
 	}
-	// if (attackingEntity.entityId === 4946) {
-	// 	let def = null;
-	// 	if (!!(def = defendingBoard.find((e) => e.entityId === 7170))) {
-	// 		return def;
-	// 	}
-	// }
 
 	let possibleDefenders: readonly BoardEntity[];
 	if (
