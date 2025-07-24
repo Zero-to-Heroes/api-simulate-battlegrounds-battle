@@ -44,6 +44,8 @@ export const Zergling: StartOfCombatCard = {
 				hasTriggered = true;
 			}
 		}
-		return { hasTriggered: hasTriggered, shouldRecomputeCurrentAttacker: hasTriggered };
+		// Doesn't recompute the first attacker:
+		// https://replays.firestoneapp.com/?reviewId=3cdf06e9-192d-49be-b1f8-e47e46704b2b&turn=9&action=0
+		return { hasTriggered: hasTriggered, shouldRecomputeCurrentAttacker: false };
 	},
 };
