@@ -86,10 +86,12 @@ export interface BgsPlayerGlobalInfo {
 	ElementalHealthBuff?: number;
 	TavernSpellHealthBuff?: number;
 	TavernSpellAttackBuff?: number;
+
 	MutatedLasherAttackBuff?: number;
 	MutatedLasherHealthBuff?: number;
 	BattlecriesTriggeredThisGame?: number;
 	FriendlyMinionsDeadLastCombat?: number;
+	AdditionalAttack?: number;
 }
 
 export interface BgsQuestEntity {

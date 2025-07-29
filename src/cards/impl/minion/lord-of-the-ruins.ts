@@ -1,0 +1,28 @@
+import { Race } from '@firestone-hs/reference-data';
+import { BoardEntity } from '../../../board-entity';
+import { AfterDealDamageInput } from '../../../simulation/damage-effects';
+import { modifyStats } from '../../../simulation/stats';
+import { TempCardIds } from '../../../temp-card-ids';
+import { hasCorrectTribe } from '../../../utils';
+import { AfterDealDamageCard } from '../../card.interface';
+
+export const LordOfTheRuins: AfterDealDamageCard = {
+	cardIds: [TempCardIds.LordOfTheRuins, TempCardIds.LordOfTheRuins],
+	afterDealDamage: (minion: BoardEntity, input: AfterDealDamageInput) => {
+		const mult = minion.cardId === TempCardIds.LordOfTheRuins_G ? 2 : 1;
+		if (
+			hasCorrectTribe(
+				input.damageDealer,
+				input.hero,
+				Race.DEMON,
+				input.gameState.anomalies,
+				input.gameState.allCards,
+			)
+		) {
+			const targets = input.board.filter((e) => e !== input.damageDealer);
+			for (const target of targets) {
+				modifyStats(minion, target, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+			}
+		}
+	},
+};

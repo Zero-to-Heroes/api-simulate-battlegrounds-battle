@@ -1,5 +1,5 @@
 import { BgsPlayerEntity, BgsQuestEntity, BoardTrinket } from '../bgs-player-entity';
-import { BoardEntity } from '../board-entity';
+import { BoardEnchantment, BoardEntity } from '../board-entity';
 import { BoardSecret } from '../board-secret';
 import { OnDivineShieldUpdatedInput } from '../keywords/divine-shield';
 import { OnRebornUpdatedInput } from '../keywords/reborn';
@@ -18,6 +18,7 @@ import { OnAfterDeathInput, OnDeathInput, OnMinionKilledInput } from '../simulat
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
+import { AfterDealDamageInput } from '../simulation/damage-effects';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { OnBeforeMagnetizeInput } from '../simulation/magnetize';
@@ -58,7 +59,7 @@ export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';
 // Whenever this attacks
 export interface OnAttackCard extends Card {
 	onAnyMinionAttack: (
-		minion: BoardEntity | BoardTrinket,
+		minion: BoardEntity | BoardTrinket | BoardEnchantment,
 		input: OnAttackInput,
 	) => { dmgDoneByAttacker: number; dmgDoneByDefender: number };
 }
@@ -149,6 +150,7 @@ export interface DefaultScriptDataNumCard extends Card {
 export const hasDefaultScriptDataNum = (card: Card): card is DefaultScriptDataNumCard =>
 	(card as DefaultScriptDataNumCard)?.defaultScriptDataNum !== undefined;
 
+/** To use when another deathrattle is triggered */
 export interface DeathrattleTriggeredCard extends Card {
 	onDeathrattleTriggered: (minion: BoardEntity | BoardTrinket, input: DeathrattleTriggeredInput) => void;
 }
@@ -260,6 +262,12 @@ export interface AfterHeroDamagedCard extends Card {
 }
 export const hasAfterHeroDamaged = (card: Card): card is AfterHeroDamagedCard =>
 	(card as AfterHeroDamagedCard)?.afterHeroDamaged !== undefined;
+
+export interface AfterDealDamageCard extends Card {
+	afterDealDamage: (entity: BoardEntity, input: AfterDealDamageInput) => void;
+}
+export const hasAfterDealDamage = (card: Card): card is AfterDealDamageCard =>
+	(card as AfterDealDamageCard)?.afterDealDamage !== undefined;
 
 export interface OnDeathCard extends Card {
 	onDeath: (entity: BoardEntity, input: OnDeathInput) => void;

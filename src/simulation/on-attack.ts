@@ -58,6 +58,24 @@ export const applyOnAttackEffects = (
 			damageDoneByAttacker += dmgDoneByAttacker;
 			damageDoneByDefender += dmgDoneByDefender;
 		}
+		const enchantments = boardEntity.enchantments;
+		for (const enchantment of enchantments) {
+			const onAttackImpl = cardMappings[enchantment.cardId];
+			if (hasOnAttack(onAttackImpl)) {
+				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(enchantment, {
+					attacker: attacker,
+					attackingHero: attackingBoardHero,
+					attackingBoard: attackingBoard,
+					defendingEntity: defendingEntity,
+					defendingHero: defendingBoardHero,
+					defendingBoard: defendingBoard,
+					gameState,
+					playerIsFriendly: attackingBoardHero.friendly,
+				});
+				damageDoneByAttacker += dmgDoneByAttacker;
+				damageDoneByDefender += dmgDoneByDefender;
+			}
+		}
 	}
 
 	// Damage happens before the entity is buffed, e.g. before an attack buff from Roaring Rallier

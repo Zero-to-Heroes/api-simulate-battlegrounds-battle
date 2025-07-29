@@ -19,15 +19,7 @@ export interface BoardEntity {
 	cleave?: boolean;
 	windfury?: boolean;
 	stealth?: boolean;
-	enchantments?: {
-		cardId: string;
-		originEntityId?: number;
-		tagScriptDataNum1?: number;
-		tagScriptDataNum2?: number;
-		timing: number;
-		repeats?: number;
-		value?: number;
-	}[];
+	enchantments?: BoardEnchantment[];
 	pendingAttackBuffs?: number[];
 	scriptDataNum1?: number;
 	scriptDataNum2?: number;
@@ -71,4 +63,14 @@ export interface BoardEntity {
 	memory?: any;
 
 	onCanceledSummon?: () => void;
+}
+
+export interface BoardEnchantment {
+	cardId: string;
+	originEntityId?: number;
+	tagScriptDataNum1?: number;
+	tagScriptDataNum2?: number;
+	timing: number;
+	repeats?: number;
+	value?: number;
 }

@@ -274,10 +274,8 @@ export const spawnEntitiesFromDeathrattle = (
 					case CardIds.PiggybackImp_BG_AV_309_G:
 						spawnedEntities.push(
 							...spawnEntities(
-								deadEntityCardId === CardIds.PiggybackImp_BG_AV_309_G
-									? CardIds.PiggybackImp_BackpiggyImpToken_BG_AV_309t
-									: CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
-								1,
+								CardIds.PiggybackImp_BackpiggyImpToken_AV_309t,
+								deadEntityCardId === CardIds.PiggybackImp_BG_AV_309_G ? 2 : 1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
 								otherBoard,
@@ -325,8 +323,8 @@ export const spawnEntitiesFromDeathrattle = (
 					case CardIds.IckyImp_BG21_029_G:
 						spawnedEntities.push(
 							...spawnEntities(
-								CardIds.ImpGangBoss_ImpToken_TB_BaconUps_030t,
-								2,
+								CardIds.ImpGangBoss_ImpToken_BRM_006t,
+								4,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
 								otherBoard,
@@ -1746,7 +1744,7 @@ export const spawnEntitiesFromDeathrattle = (
 							deadEntity,
 							boardWithDeadEntity,
 							boardWithDeadEntityHero,
-							motleyBuff * 2,
+							motleyBuff * 1,
 							motleyBuff * 1,
 							gameState,
 						);

@@ -237,6 +237,8 @@ export const applyAurasToSelf = (
 	boardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	spawned.attack += boardHero.globalInfo.AdditionalAttack;
+
 	if (!!boardHero.questRewards?.length) {
 		for (const quest of boardHero.questRewards) {
 			switch (quest) {
@@ -476,6 +478,8 @@ export const removeAurasFromSelf = (
 	boardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	entity.attack -= Math.max(0, boardHero.globalInfo.AdditionalAttack);
+
 	if (!!boardHero.questRewards?.length) {
 		for (const quest of boardHero.questRewards) {
 			switch (quest) {

@@ -8,7 +8,7 @@ import { AvengeCard, DeathrattleSpawnCard } from '../../card.interface';
 
 export const DeathlyStriker: AvengeCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.DeathlyStriker_BG31_835, CardIds.DeathlyStriker_BG31_835_G],
-	baseAvengeValue: (cardId: string) => 4,
+	baseAvengeValue: (cardId: string) => 5,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.DeathlyStriker_BG31_835 ? 1 : 2;
 		const cards: string[] = [];

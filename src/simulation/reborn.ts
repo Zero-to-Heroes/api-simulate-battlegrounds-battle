@@ -156,8 +156,8 @@ export const handleRebornForEntity = (
 				modifyStats(
 					e,
 					e,
-					multiplier * 3,
-					multiplier * 3,
+					multiplier * 1,
+					multiplier * 2,
 					boardWithKilledMinion,
 					boardWithKilledMinionHero,
 					gameState,

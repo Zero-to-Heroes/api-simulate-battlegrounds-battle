@@ -379,6 +379,7 @@ const performAttack = (
 				attackingBoardHero,
 				defendingBoard,
 				defendingBoardHero,
+				defendingEntity,
 				damageDoneByDefender,
 				gameState,
 			);
@@ -390,6 +391,7 @@ const performAttack = (
 				defendingBoardHero,
 				attackingBoard,
 				attackingBoardHero,
+				attackingEntity,
 				damageDoneByAttacker,
 				gameState,
 			);
@@ -451,6 +453,7 @@ const performAttack = (
 					defendingBoardHero,
 					attackingBoard,
 					attackingBoardHero,
+					attackingEntity,
 					thisAttackDamage,
 					gameState,
 				);
@@ -674,7 +677,16 @@ export const dealDamageToMinion = (
 
 	if (actualDamageDone > 0) {
 		// TODO: handle entities that have been spawned here to adjust the dead entity index from parent stack
-		const newSpawns = onEntityDamaged(target, board, hero, otherBoard, otherHero, actualDamageDone, gameState);
+		const newSpawns = onEntityDamaged(
+			target,
+			board,
+			hero,
+			otherBoard,
+			otherHero,
+			damageSource,
+			actualDamageDone,
+			gameState,
+		);
 	}
 	if (!isDeadBeforeDamage && actualDamageDone > 0) {
 		target.lastAffectedByEntity = damageSource;
@@ -796,7 +808,16 @@ export const bumpEntities = (
 				updateDivineShield(newTarget, otherBoard, otherHero, entityBoardHero, false, gameState);
 			}
 			if (damageDone > 0) {
-				onEntityDamaged(newTarget, otherBoard, otherHero, entityBoard, entityBoardHero, damageDone, gameState);
+				onEntityDamaged(
+					newTarget,
+					otherBoard,
+					otherHero,
+					entityBoard,
+					entityBoardHero,
+					newSource,
+					damageDone,
+					gameState,
+				);
 			}
 			return damageDone;
 		}

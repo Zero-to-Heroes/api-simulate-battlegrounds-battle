@@ -242,6 +242,7 @@ export const setImplicitDataHero = (
 	hero.globalInfo.MutatedLasherAttackBuff = hero.globalInfo.MutatedLasherAttackBuff ?? 0;
 	hero.globalInfo.MutatedLasherHealthBuff = hero.globalInfo.MutatedLasherHealthBuff ?? 0;
 	hero.globalInfo.TavernSpellsCastThisGame = hero.globalInfo.TavernSpellsCastThisGame ?? 0;
+	hero.globalInfo.AdditionalAttack = hero.globalInfo.AdditionalAttack ?? 0;
 	hero.globalInfo.SpellsCastThisGame = hero.globalInfo.SpellsCastThisGame ?? 0;
 	hero.globalInfo.UndeadAttackBonus = hero.globalInfo.UndeadAttackBonus ?? 0;
 	hero.globalInfo.FrostlingBonus = hero.globalInfo.FrostlingBonus ?? 0;

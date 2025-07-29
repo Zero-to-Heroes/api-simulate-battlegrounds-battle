@@ -7,8 +7,15 @@ import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/
 import { updateTaunt } from '../keywords/taunt';
 import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
-import { grantRandomStats, hasCorrectTribe, isDead, isFish, isGolden } from '../utils';
-import { dealDamageToMinion, dealDamageToRandomEnemy, getNeighbours } from './attack';
+import {
+	getRandomMinionWithHighestHealth,
+	grantRandomStats,
+	hasCorrectTribe,
+	isDead,
+	isFish,
+	isGolden,
+} from '../utils';
+import { dealDamageToMinion, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
@@ -536,11 +543,13 @@ const applySoulJugglerEffect = (
 	}
 	const jugglers = boardWithJugglers.filter((entity) => entity.cardId === CardIds.SoulJuggler_BGS_002);
 	for (const juggler of jugglers) {
-		dealDamageToRandomEnemy(
+		const target = getRandomMinionWithHighestHealth(boardToAttack);
+		dealDamageToMinion(
+			target,
 			boardToAttack,
 			boardToAttackHero,
 			juggler,
-			3,
+			4,
 			boardWithJugglers,
 			boardWithJugglersHero,
 			gameState,
@@ -548,24 +557,19 @@ const applySoulJugglerEffect = (
 	}
 	const goldenJugglers = boardWithJugglers.filter((entity) => entity.cardId === CardIds.SoulJuggler_TB_BaconUps_075);
 	for (const juggler of goldenJugglers) {
-		dealDamageToRandomEnemy(
-			boardToAttack,
-			boardToAttackHero,
-			juggler,
-			3,
-			boardWithJugglers,
-			boardWithJugglersHero,
-			gameState,
-		);
-		dealDamageToRandomEnemy(
-			boardToAttack,
-			boardToAttackHero,
-			juggler,
-			3,
-			boardWithJugglers,
-			boardWithJugglersHero,
-			gameState,
-		);
+		for (let i = 0; i < 2; i++) {
+			const target = getRandomMinionWithHighestHealth(boardToAttack);
+			dealDamageToMinion(
+				target,
+				boardToAttack,
+				boardToAttackHero,
+				juggler,
+				4,
+				boardWithJugglers,
+				boardWithJugglersHero,
+				gameState,
+			);
+		}
 	}
 	// processMinionDeath(
 	// 	boardWithJugglers,

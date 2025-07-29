@@ -273,6 +273,14 @@ export class CardsData {
 		return pickRandom(pool)?.id;
 	}
 
+	public getRandomDivineShield(tavernLimitUpper: number) {
+		const divineShieldPool = this.pool
+			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
+			.filter((m) => hasMechanic(m, GameTag[GameTag.DIVINE_SHIELD]));
+		const pool = divineShieldPool.filter((m) => m.techLevel <= tavernLimitUpper);
+		return pickRandom(pool)?.id;
+	}
+
 	public getRandomMinionForTribe(
 		tribe: Race,
 		tavernLimitUpper: number,
