@@ -240,6 +240,7 @@ import { YorikSmite } from './minion/yorik-smite';
 import { YoungMurkEye } from './minion/young-murk-eye';
 import { Yrel } from './minion/yrel';
 import { Zergling } from './minion/zergling';
+import { StandAsOne } from './quest-reward/stand-as-one';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
 import { ArtisanalUrn } from './trinket/artisanal-urn';
@@ -261,6 +262,7 @@ import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	RaptorElder,
+	StandAsOne,
 	AvalancheCaller,
 	BileSpitter,
 	BigwigBandit,

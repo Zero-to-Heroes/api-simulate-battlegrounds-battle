@@ -1,4 +1,7 @@
 export declare const enum TempCardIds {
+	StrengthAndHonor = 'StrengthAndHonor',
+	StandAsOne = 'StandAsOne',
+	SecretsOfNorgannon = 'SecretsOfNorgannon',
 	AvalancheCaller = 'AvalancheCaller',
 	AvalancheCaller_G = 'AvalancheCaller_G',
 	MountingAvalanche = 'MountingAvalanche',

@@ -7,6 +7,7 @@ import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { updateWindfury } from '../keywords/windfury';
 import { pickRandom, pickRandomAlive } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -424,9 +425,11 @@ export const triggerBattlecry = (
 						const minionTier = gameState.cardsData.getTavernLevel(target.cardId);
 						const targetTier =
 							entity.cardId === CardIds.FacelessDisciple_BG24_719 ? minionTier + 1 : minionTier + 2;
-						const maxTier = !!gameState.anomalies?.includes(CardIds.SecretsOfNorgannon_BG27_Anomaly_504)
-							? 7
-							: 6;
+						const maxTier =
+							!!gameState.anomalies?.includes(CardIds.SecretsOfNorgannon_BG27_Anomaly_504) ||
+							hero.questRewardEntities?.some((r) => r.cardId === TempCardIds.SecretsOfNorgannon)
+								? 7
+								: 6;
 						const newMinionId = gameState.cardsData.getRandomMinionForTavernTier(
 							Math.min(maxTier, targetTier),
 						);
