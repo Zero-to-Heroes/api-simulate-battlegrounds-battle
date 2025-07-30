@@ -1,14 +1,14 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { OnAfterAttackInput } from '../../../simulation/after-attack';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
-import { OnAfterAttackCard } from '../../card.interface';
+import { OnAttackInput } from '../../../simulation/on-attack';
+import { OnAttackCard } from '../../card.interface';
 
-export const Greenskeeper: OnAfterAttackCard = {
+export const Greenskeeper: OnAttackCard = {
 	cardIds: [CardIds.Greenskeeper_BG30_008, CardIds.Greenskeeper_BG30_008_G],
-	onAnyMinionAfterAttack: (minion: BoardEntity, input: OnAfterAttackInput) => {
+	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		if (minion !== input.attacker) {
-			return;
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
 		const battlecries = input.attackingBoard.filter((e) => hasMinionBattlecry(e, input.gameState));
@@ -23,5 +23,7 @@ export const Greenskeeper: OnAfterAttackCard = {
 				input.gameState,
 			);
 		}
+
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

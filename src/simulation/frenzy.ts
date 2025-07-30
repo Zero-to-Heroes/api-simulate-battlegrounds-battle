@@ -3,7 +3,6 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateDivineShield } from '../keywords/divine-shield';
-import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
 
 export const applyFrenzy = (
@@ -26,13 +25,5 @@ export const applyFrenzy = (
 				gameState,
 			);
 		}
-	} else if (
-		entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101 ||
-		entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101_G
-	) {
-		const cardsToAdd = Array(entityWithFrenzy.cardId === CardIds.Roadboar_BG20_101_G ? 2 : 1).fill(
-			CardIds.BloodGem,
-		);
-		addCardsInHand(entityWithFrenzyBoardHero, entityWithFrenzyBoard, cardsToAdd, gameState);
 	}
 };

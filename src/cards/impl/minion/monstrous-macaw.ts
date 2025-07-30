@@ -1,16 +1,16 @@
 import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { OnAfterAttackInput } from '../../../simulation/after-attack';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { getValidDeathrattles } from '../../../simulation/deathrattle-utils';
-import { OnAfterAttackCard } from '../../card.interface';
+import { OnAttackInput } from '../../../simulation/on-attack';
+import { OnAttackCard } from '../../card.interface';
 
-export const MonstrousMacaw: OnAfterAttackCard = {
+export const MonstrousMacaw: OnAttackCard = {
 	cardIds: [CardIds.MonstrousMacaw_BGS_078, CardIds.MonstrousMacaw_TB_BaconUps_135],
-	onAnyMinionAfterAttack: (minion: BoardEntity, input: OnAfterAttackInput) => {
+	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		if (input.attacker !== minion) {
-			return;
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
 		const loops = minion.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
@@ -66,5 +66,6 @@ export const MonstrousMacaw: OnAfterAttackCard = {
 				}
 			}
 		}
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

@@ -49,6 +49,7 @@ export const addMinionToBoard = (
 ): void => {
 	board.splice(index, 0, minionToAdd);
 	// Minion has already been removed from the board in the previous step
+	// Update the global "SummonedThisGame/Combat" info here
 	handleAddedMinionAuraEffect(board, boardHero, otherBoard, otherHero, minionToAdd, gameState, applySelfAuras);
 	// Important to do this here, so that "attack immediately" minions can be taken into account by the quests
 	onMinionSummoned(boardHero, board, gameState);
@@ -228,6 +229,16 @@ export const handleAddedMinionAuraEffect = (
 		// 2024-08-27: changing the order to first handleMinionAddedAuraEffect so that the automatons get boosted,
 		// then apply the aura
 		applyAurasToSelf(spawned, board, boardHero, gameState);
+	}
+
+	if (isActuallySpawned) {
+		if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
+			boardHero.globalInfo.BeastsSummonedThisCombat++;
+			boardHero.globalInfo.BeastsSummonedThisGame++;
+		}
+		if (hasCorrectTribe(spawned, boardHero, Race.PIRATE, gameState.anomalies, gameState.allCards)) {
+			boardHero.globalInfo.PiratesSummonedThisGame++;
+		}
 	}
 };
 

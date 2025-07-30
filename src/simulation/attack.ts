@@ -8,6 +8,7 @@ import { debugState } from '../debug-state';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
 import { groupByFunction, pickRandom } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import { addImpliedMechanics, hasCorrectTribe, isFish } from '../utils';
 import { applyAfterAttackEffects, applyAfterAttackTrinkets } from './after-attack';
 import { onEntityDamaged } from './damage-effects';
@@ -722,7 +723,9 @@ export const getDefendingEntity = (
 	let possibleDefenders: readonly BoardEntity[];
 	if (
 		attackingEntity.cardId === CardIds.ZappSlywick_BGS_022 ||
-		attackingEntity.cardId === CardIds.ZappSlywick_TB_BaconUps_091
+		attackingEntity.cardId === CardIds.ZappSlywick_TB_BaconUps_091 ||
+		attackingEntity.cardId === TempCardIds.MercilessMammoth ||
+		attackingEntity.cardId === TempCardIds.MercilessMammoth_G
 	) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);

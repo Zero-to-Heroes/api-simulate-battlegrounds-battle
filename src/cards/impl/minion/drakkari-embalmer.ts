@@ -18,7 +18,9 @@ export const DrakkariEmbalmer: BattlecryCard = {
 				)
 				.filter((e) => !e.reborn);
 			const target = pickRandom(candidates);
-			updateReborn(target, true, input.board, input.hero, input.otherHero, input.gameState);
+			if (!!target) {
+				updateReborn(target, true, input.board, input.hero, input.otherHero, input.gameState);
+			}
 		}
 		return true;
 	},

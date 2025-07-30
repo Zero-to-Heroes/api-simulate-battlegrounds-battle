@@ -10,7 +10,7 @@ export const GoldGrubber: EndOfTurnCard = {
 		const mult = minion.cardId === CardIds.Goldgrubber_TB_BaconUps_130 ? 2 : 1;
 		const goldenMinions = input.board.filter((e) => isGolden(e.cardId, input.gameState.allCards)).length;
 		for (let i = 0; i < goldenMinions; i++) {
-			modifyStats(minion, minion, 3 * mult, 3 * mult, input.board, input.hero, input.gameState);
+			modifyStats(minion, minion, 3 * mult, 2 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

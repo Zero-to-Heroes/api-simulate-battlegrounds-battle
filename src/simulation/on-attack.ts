@@ -29,6 +29,7 @@ export const applyOnAttackEffects = (
 		if (hasOnAttack(onAttackImpl)) {
 			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(trinket, {
 				attacker: attacker,
+				isSelfAttacking: false,
 				attackingHero: attackingBoardHero,
 				attackingBoard: attackingBoard,
 				defendingEntity: defendingEntity,
@@ -47,6 +48,7 @@ export const applyOnAttackEffects = (
 		if (hasOnAttack(onAttackImpl)) {
 			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(boardEntity, {
 				attacker: attacker,
+				isSelfAttacking: attacker === boardEntity,
 				attackingHero: attackingBoardHero,
 				attackingBoard: attackingBoard,
 				defendingEntity: defendingEntity,
@@ -64,6 +66,7 @@ export const applyOnAttackEffects = (
 			if (hasOnAttack(onAttackImpl)) {
 				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(enchantment, {
 					attacker: attacker,
+					isSelfAttacking: attacker === boardEntity,
 					attackingHero: attackingBoardHero,
 					attackingBoard: attackingBoard,
 					defendingEntity: defendingEntity,
@@ -114,8 +117,10 @@ export const applyOnAttackEffects = (
 				(e) => e.cardId === CardIds.RoaringRallier_BG29_816 || e.cardId === CardIds.RoaringRallier_BG29_816_G,
 			)
 			.forEach((rallier) => {
-				const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
-				modifyStats(attacker, rallier, 3 * stats, 1 * stats, attackingBoard, attackingBoardHero, gameState);
+				if (rallier !== attacker) {
+					const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
+					modifyStats(attacker, rallier, 3 * stats, 1 * stats, attackingBoard, attackingBoardHero, gameState);
+				}
 			});
 	}
 
@@ -145,7 +150,7 @@ export const applyOnAttackEffects = (
 		attacker.cardId === CardIds.GlimGuardian_BG29_888_G
 	) {
 		const multiplier = attacker.cardId === CardIds.GlimGuardian_BG29_888_G ? 2 : 1;
-		modifyStats(attacker, attacker, 2 * multiplier, 1 * multiplier, attackingBoard, attackingBoardHero, gameState);
+		modifyStats(attacker, attacker, 2 * multiplier, 0, attackingBoard, attackingBoardHero, gameState);
 	} else if (
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708 ||
 		attacker.cardId === CardIds.VanessaVancleef_BG24_708_G
@@ -247,6 +252,7 @@ export const applyOnAttackEffects = (
 
 export interface OnAttackInput {
 	attacker: BoardEntity;
+	isSelfAttacking: boolean;
 	attackingHero: BgsPlayerEntity;
 	attackingBoard: BoardEntity[];
 	defendingEntity: BoardEntity;

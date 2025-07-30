@@ -1,8 +1,6 @@
 import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasOnAfterAttack } from '../cards/card.interface';
-import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateStealth } from '../keywords/stealth';
 import { hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
@@ -25,34 +23,34 @@ export const applyAfterAttackEffects = (
 	// It looks like Stealth is removed only once the damage is dealt?
 	updateStealth(attackingEntity, false, attackingBoard, attackingBoardHero, defendingBoardHero, gameState);
 
-	const onAfterAttackImpl = cardMappings[attackingEntity.cardId];
-	if (hasOnAfterAttack(onAfterAttackImpl)) {
-		onAfterAttackImpl.onAnyMinionAfterAttack(attackingEntity, {
-			attacker: attackingEntity,
-			attackingHero: attackingBoardHero,
-			attackingBoard: attackingBoard,
-			defendingEntity: defendingEntity,
-			defendingBoard: defendingBoard,
-			defendingHero: defendingBoardHero,
-			gameState,
-			playerIsFriendly: attackingBoardHero.friendly,
-		});
-	}
-	for (const boardEntity of attackingBoard.filter((e) => e.entityId !== attackingEntity.entityId)) {
-		const onAfterAttackImpl = cardMappings[boardEntity.cardId];
-		if (hasOnAfterAttack(onAfterAttackImpl)) {
-			onAfterAttackImpl.onAnyMinionAfterAttack(boardEntity, {
-				attacker: attackingEntity,
-				attackingHero: attackingBoardHero,
-				attackingBoard: attackingBoard,
-				defendingEntity: defendingEntity,
-				defendingBoard: defendingBoard,
-				defendingHero: defendingBoardHero,
-				gameState,
-				playerIsFriendly: attackingBoardHero.friendly,
-			});
-		}
-	}
+	// const onAfterAttackImpl = cardMappings[attackingEntity.cardId];
+	// if (hasOnAfterAttack(onAfterAttackImpl)) {
+	// 	onAfterAttackImpl.onAnyMinionAfterAttack(attackingEntity, {
+	// 		attacker: attackingEntity,
+	// 		attackingHero: attackingBoardHero,
+	// 		attackingBoard: attackingBoard,
+	// 		defendingEntity: defendingEntity,
+	// 		defendingBoard: defendingBoard,
+	// 		defendingHero: defendingBoardHero,
+	// 		gameState,
+	// 		playerIsFriendly: attackingBoardHero.friendly,
+	// 	});
+	// }
+	// for (const boardEntity of attackingBoard.filter((e) => e.entityId !== attackingEntity.entityId)) {
+	// 	const onAfterAttackImpl = cardMappings[boardEntity.cardId];
+	// 	if (hasOnAfterAttack(onAfterAttackImpl)) {
+	// 		onAfterAttackImpl.onAnyMinionAfterAttack(boardEntity, {
+	// 			attacker: attackingEntity,
+	// 			attackingHero: attackingBoardHero,
+	// 			attackingBoard: attackingBoard,
+	// 			defendingEntity: defendingEntity,
+	// 			defendingBoard: defendingBoard,
+	// 			defendingHero: defendingBoardHero,
+	// 			gameState,
+	// 			playerIsFriendly: attackingBoardHero.friendly,
+	// 		});
+	// 	}
+	// }
 
 	if (
 		attackingEntity.cardId === CardIds.IncorporealCorporal_BG26_RLK_117 ||
