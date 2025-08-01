@@ -5,7 +5,6 @@ import { hasOnAttack } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
 import { pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { hasCorrectTribe } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
@@ -28,7 +27,8 @@ export const applyOnAttackEffects = (
 	// This assumes that only "Rally" effects trigger on attack
 	const rallyLoops =
 		1 +
-		(attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === TempCardIds.StrengthAndHonor).length ?? 0);
+		(attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
+			.length ?? 0);
 	for (let i = 0; i < rallyLoops; i++) {
 		for (const trinket of attackingBoardHero.trinkets ?? []) {
 			const onAttackImpl = cardMappings[trinket.cardId];
@@ -140,31 +140,29 @@ export const applyOnAttackEffects = (
 				});
 		}
 
-		if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
-			// For now the utility method only works additively, so we hack around it
-			modifyStats(
-				attacker,
-				null,
-				2 * attacker.attack - attacker.attack,
-				0,
-				attackingBoard,
-				attackingBoardHero,
-				gameState,
-			);
-		} else if (attacker.cardId === CardIds.GlyphGuardian_TB_BaconUps_115) {
-			modifyStats(
-				attacker,
-				null,
-				3 * attacker.attack - attacker.attack,
-				0,
-				attackingBoard,
-				attackingBoardHero,
-				gameState,
-			);
-		} else if (
-			attacker.cardId === CardIds.GlimGuardian_BG29_888 ||
-			attacker.cardId === CardIds.GlimGuardian_BG29_888_G
-		) {
+		// if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
+		// 	// For now the utility method only works additively, so we hack around it
+		// 	modifyStats(
+		// 		attacker,
+		// 		null,
+		// 		2 * attacker.attack - attacker.attack,
+		// 		0,
+		// 		attackingBoard,
+		// 		attackingBoardHero,
+		// 		gameState,
+		// 	);
+		// } else if (attacker.cardId === CardIds.GlyphGuardian_TB_BaconUps_115) {
+		// 	modifyStats(
+		// 		attacker,
+		// 		null,
+		// 		3 * attacker.attack - attacker.attack,
+		// 		0,
+		// 		attackingBoard,
+		// 		attackingBoardHero,
+		// 		gameState,
+		// 	);
+		// } else
+		if (attacker.cardId === CardIds.GlimGuardian_BG29_888 || attacker.cardId === CardIds.GlimGuardian_BG29_888_G) {
 			const multiplier = attacker.cardId === CardIds.GlimGuardian_BG29_888_G ? 2 : 1;
 			modifyStats(attacker, attacker, 2 * multiplier, 0, attackingBoard, attackingBoardHero, gameState);
 		} else if (

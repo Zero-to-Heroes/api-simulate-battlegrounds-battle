@@ -14,8 +14,8 @@ import { hasAvenge, hasDefaultScriptDataNum } from './card.interface';
 import { cardMappings } from './impl/_card-mappings';
 
 export const WHELP_CARD_IDS = [
-	CardIds.RedWhelp_BGS_019,
-	CardIds.RedWhelp_TB_BaconUps_102,
+	// CardIds.RedWhelp_BGS_019,
+	// CardIds.RedWhelp_TB_BaconUps_102,
 	CardIds.Onyxia_OnyxianWhelpToken,
 ];
 
@@ -159,10 +159,10 @@ export class CardsData {
 			// Not technically an avenge, but behaves as if
 			// case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
 			// case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
-			case CardIds.IceSickle:
-				return 1;
-			case CardIds.GhoulOfTheFeast_BG25_002:
-			case CardIds.GhoulOfTheFeast_BG25_002_G:
+			// case CardIds.IceSickle:
+			// 	return 1;
+			// case CardIds.GhoulOfTheFeast_BG25_002:
+			// case CardIds.GhoulOfTheFeast_BG25_002_G:
 			case CardIds.MechanoTank_BG21_023:
 			case CardIds.MechanoTank_BG21_023_G:
 			case CardIds.PalescaleCrocolisk_BG21_001:
@@ -191,10 +191,10 @@ export class CardsData {
 			case CardIds.Onyxia_Broodmother:
 			case CardIds.ImpatientDoomsayer_BG21_007:
 			case CardIds.ImpatientDoomsayer_BG21_007_G:
-			case CardIds.Sisefin_BG21_009:
-			case CardIds.Sisefin_BG21_009_G:
-			case CardIds.TonyTwoTusk_BG21_031:
-			case CardIds.TonyTwoTusk_BG21_031_G:
+			// case CardIds.Sisefin_BG21_009:
+			// case CardIds.Sisefin_BG21_009_G:
+			// case CardIds.TonyTwoTusk_BG21_031:
+			// case CardIds.TonyTwoTusk_BG21_031_G:
 			// case CardIds.ScrapScraper_BG26_148:
 			// case CardIds.ScrapScraper_BG26_148_G:
 			case CardIds.RelentlessSentry_BG25_003:

@@ -278,10 +278,10 @@ const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.WaterRecollectionEnchantment,
 	CardIds.EarthInvocation_ElementEarthEnchantment, // Summon a 1/1
 	CardIds.LightningInvocation, // Deal 1 damage to 5 enemy minions
-	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e,
-	CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
-	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
-	CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge,
+	// CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e,
+	// CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge,
+	// CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
+	// CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge,
 	CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e,
 	CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e,
 	CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e,

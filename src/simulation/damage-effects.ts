@@ -1,13 +1,11 @@
-import { CardIds, CardType, Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasAfterDealDamage } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { pickRandom, pickRandomAlive } from '../services/utils';
-import { addStatsToBoard, grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
-import { dealDamageToRandomEnemy } from './attack';
-import { addCardsInHand } from './cards-in-hand';
+import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { applyFrenzy } from './frenzy';
 import { FullGameState } from './internal-game-state';
@@ -61,11 +59,11 @@ export const onEntityDamaged = (
 				damagedEntity.abiityChargesLeft--;
 			}
 			break;
-		case CardIds.UnforgivingTreant_BG29_846:
-		case CardIds.UnforgivingTreant_BG29_846_G:
-			const treantModifier = damagedEntity.cardId === CardIds.UnforgivingTreant_BG29_846_G ? 2 : 1;
-			addStatsToBoard(damagedEntity, board, hero, treantModifier * 2, 0, gameState);
-			break;
+		// case CardIds.UnforgivingTreant_BG29_846:
+		// case CardIds.UnforgivingTreant_BG29_846_G:
+		// 	const treantModifier = damagedEntity.cardId === CardIds.UnforgivingTreant_BG29_846_G ? 2 : 1;
+		// 	addStatsToBoard(damagedEntity, board, hero, treantModifier * 2, 0, gameState);
+		// 	break;
 		case CardIds.Untameabull_BG29_878:
 		case CardIds.Untameabull_BG29_878_G:
 			updateDivineShield(damagedEntity, board, hero, otherHero, true, gameState);
@@ -94,72 +92,72 @@ export const onEntityDamaged = (
 				),
 			);
 			break;
-		case CardIds.CraftyAranasi_BG29_821:
-		case CardIds.CraftyAranasi_BG29_821_G:
-			const aranasiLoops = damagedEntity.cardId === CardIds.CraftyAranasi_BG29_821_G ? 2 : 1;
-			for (let i = 0; i < aranasiLoops; i++) {
-				dealDamageToRandomEnemy(
-					enemyBoard,
-					enemyHero,
-					damagedEntity,
-					5,
-					friendlyBoard,
-					friendlyHero,
-					gameState,
-				);
-			}
-			break;
-		case CardIds.MarineMatriarch_BG29_610:
-		case CardIds.MarineMatriarch_BG29_610_G:
-			if (damagedEntity.abiityChargesLeft > 0) {
-				const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.MarineMatriarch_BG29_610_G ? 2 : 1;
-				const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
-				addCardsInHand(hero, board, cardsToAdd, gameState);
-				damagedEntity.abiityChargesLeft--;
-			}
-			break;
-		case CardIds.VeryHungryWinterfinner_BG29_300:
-		case CardIds.VeryHungryWinterfinner_BG29_300_G:
-			const winterfinnerStats = damagedEntity.cardId === CardIds.VeryHungryWinterfinner_BG29_300_G ? 2 : 1;
-			const minionInHand = pickRandom(
-				hero.hand.filter(
-					(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-				),
-			);
-			if (!!minionInHand) {
-				minionInHand.attack += 2 * winterfinnerStats;
-				minionInHand.health += winterfinnerStats;
-				minionInHand.maxHealth += winterfinnerStats;
-				gameState.spectator.registerPowerTarget(damagedEntity, minionInHand, board, hero, otherHero);
-			}
-			break;
-		case CardIds.SoftHeartedSiren_BG26_590:
-		case CardIds.SoftHeartedSiren_BG26_590_G:
-			if (damagedEntity.abiityChargesLeft > 0) {
-				const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.SoftHeartedSiren_BG26_590_G ? 2 : 1;
-				const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
-				addCardsInHand(hero, board, cardsToAdd, gameState);
-				damagedEntity.abiityChargesLeft--;
-			}
-			break;
-		case CardIds.LongJohnCopper_BG29_831:
-		case CardIds.LongJohnCopper_BG29_831_G:
-			if (damagedEntity.abiityChargesLeft > 0) {
-				const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.LongJohnCopper_BG29_831_G ? 2 : 1;
-				const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
-				addCardsInHand(hero, board, cardsToAdd, gameState);
-				damagedEntity.abiityChargesLeft--;
-			}
-			break;
-		case CardIds.BristlingBuffoon_BG29_160:
-		case CardIds.BristlingBuffoon_BG29_160_G:
-			if (damagedEntity.abiityChargesLeft > 0) {
-				const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.BristlingBuffoon_BG29_160_G ? 2 : 1;
-				const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => CardIds.BloodGem);
-				addCardsInHand(hero, board, cardsToAdd, gameState);
-				damagedEntity.abiityChargesLeft--;
-			}
-			break;
+		// case CardIds.CraftyAranasi_BG29_821:
+		// case CardIds.CraftyAranasi_BG29_821_G:
+		// 	const aranasiLoops = damagedEntity.cardId === CardIds.CraftyAranasi_BG29_821_G ? 2 : 1;
+		// 	for (let i = 0; i < aranasiLoops; i++) {
+		// 		dealDamageToRandomEnemy(
+		// 			enemyBoard,
+		// 			enemyHero,
+		// 			damagedEntity,
+		// 			5,
+		// 			friendlyBoard,
+		// 			friendlyHero,
+		// 			gameState,
+		// 		);
+		// 	}
+		// 	break;
+		// case CardIds.MarineMatriarch_BG29_610:
+		// case CardIds.MarineMatriarch_BG29_610_G:
+		// 	if (damagedEntity.abiityChargesLeft > 0) {
+		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.MarineMatriarch_BG29_610_G ? 2 : 1;
+		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
+		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
+		// 		damagedEntity.abiityChargesLeft--;
+		// 	}
+		// 	break;
+		// case CardIds.VeryHungryWinterfinner_BG29_300:
+		// case CardIds.VeryHungryWinterfinner_BG29_300_G:
+		// 	const winterfinnerStats = damagedEntity.cardId === CardIds.VeryHungryWinterfinner_BG29_300_G ? 2 : 1;
+		// 	const minionInHand = pickRandom(
+		// 		hero.hand.filter(
+		// 			(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+		// 		),
+		// 	);
+		// 	if (!!minionInHand) {
+		// 		minionInHand.attack += 2 * winterfinnerStats;
+		// 		minionInHand.health += winterfinnerStats;
+		// 		minionInHand.maxHealth += winterfinnerStats;
+		// 		gameState.spectator.registerPowerTarget(damagedEntity, minionInHand, board, hero, otherHero);
+		// 	}
+		// 	break;
+		// case CardIds.SoftHeartedSiren_BG26_590:
+		// case CardIds.SoftHeartedSiren_BG26_590_G:
+		// 	if (damagedEntity.abiityChargesLeft > 0) {
+		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.SoftHeartedSiren_BG26_590_G ? 2 : 1;
+		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
+		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
+		// 		damagedEntity.abiityChargesLeft--;
+		// 	}
+		// 	break;
+		// case CardIds.LongJohnCopper_BG29_831:
+		// case CardIds.LongJohnCopper_BG29_831_G:
+		// 	if (damagedEntity.abiityChargesLeft > 0) {
+		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.LongJohnCopper_BG29_831_G ? 2 : 1;
+		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
+		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
+		// 		damagedEntity.abiityChargesLeft--;
+		// 	}
+		// 	break;
+		// case CardIds.BristlingBuffoon_BG29_160:
+		// case CardIds.BristlingBuffoon_BG29_160_G:
+		// 	if (damagedEntity.abiityChargesLeft > 0) {
+		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.BristlingBuffoon_BG29_160_G ? 2 : 1;
+		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => CardIds.BloodGem);
+		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
+		// 		damagedEntity.abiityChargesLeft--;
+		// 	}
+		// 	break;
 	}
 
 	handleOtherEntityEffects(damagedEntity, board, hero, otherBoard, otherHero, spawnedEntities, gameState);

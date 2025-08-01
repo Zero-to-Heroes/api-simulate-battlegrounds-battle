@@ -1,13 +1,13 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const AllSeeingElder: StartOfCombatCard = {
-	cardIds: [TempCardIds.AllSeeingElder, TempCardIds.AllSeeingElder_G],
+	cardIds: [CardIds.AllSeeingElder_BG33_300, CardIds.AllSeeingElder_BG33_300_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		const multiplier = minion.cardId === TempCardIds.AllSeeingElder_G ? 2 : 1;
+		const multiplier = minion.cardId === CardIds.AllSeeingElder_BG33_300_G ? 2 : 1;
 		const attackToGain = input.playerBoard[0].attack;
 		const healthToGain = input.playerBoard[input.playerBoard.length - 1].health;
 		for (let i = 0; i < multiplier; i++) {

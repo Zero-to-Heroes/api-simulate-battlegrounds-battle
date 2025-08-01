@@ -20,25 +20,25 @@ export const setMissingAuras = (
 
 export const setMissingTrinketAura = (board: BoardEntity[], boardHero: BgsPlayerEntity): void => {
 	for (const trinket of boardHero.trinkets ?? []) {
-		switch (trinket.cardId) {
-			case CardIds.WindrunnerNecklace_BG30_MagicItem_997:
-			case CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t:
-				const enchantment =
-					trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997
-						? CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e
-						: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2;
-				const buff = trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 20;
-				const target = board[0];
-				if (!!target && !target.enchantments?.find((e) => e.cardId === enchantment)) {
-					target.attack += buff;
-					target.enchantments.push({
-						cardId: enchantment,
-						originEntityId: trinket.entityId,
-						timing: 0,
-					});
-				}
-				break;
-		}
+		// switch (trinket.cardId) {
+		// 	case CardIds.WindrunnerNecklace_BG30_MagicItem_997:
+		// 	case CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t:
+		// 		const enchantment =
+		// 			trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997
+		// 				? CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e
+		// 				: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2;
+		// 		const buff = trinket.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 20;
+		// 		const target = board[0];
+		// 		if (!!target && !target.enchantments?.find((e) => e.cardId === enchantment)) {
+		// 			target.attack += buff;
+		// 			target.enchantments.push({
+		// 				cardId: enchantment,
+		// 				originEntityId: trinket.entityId,
+		// 				timing: 0,
+		// 			});
+		// 		}
+		// 		break;
+		// }
 	}
 };
 
@@ -101,27 +101,27 @@ const setMissingMinionsAura = (
 		2,
 		0,
 	);
-	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, anomalies, allCards)),
-		CardIds.MurlocWarleaderLegacy_BG_EX1_507,
-		CardIds.MurlocWarleader_MrgglaarglEnchantment,
-		4,
-		0,
-	);
-	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, anomalies, allCards)),
-		CardIds.Kathranatir_BG21_039,
-		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e,
-		2,
-		0,
-	);
-	setMissingAura(
-		board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, anomalies, allCards)),
-		CardIds.Kathranatir_BG21_039_G,
-		CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge,
-		4,
-		0,
-	);
+	// setMissingAura(
+	// 	board.filter((e) => hasCorrectTribe(e, boardHero, Race.MURLOC, anomalies, allCards)),
+	// 	CardIds.MurlocWarleaderLegacy_BG_EX1_507,
+	// 	CardIds.MurlocWarleader_MrgglaarglEnchantment,
+	// 	4,
+	// 	0,
+	// );
+	// setMissingAura(
+	// 	board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, anomalies, allCards)),
+	// 	CardIds.Kathranatir_BG21_039,
+	// 	CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039e,
+	// 	2,
+	// 	0,
+	// );
+	// setMissingAura(
+	// 	board.filter((e) => hasCorrectTribe(e, boardHero, Race.DEMON, anomalies, allCards)),
+	// 	CardIds.Kathranatir_BG21_039_G,
+	// 	CardIds.Kathranatir_GraspOfKathranatirEnchantment_BG21_039_Ge,
+	// 	4,
+	// 	0,
+	// );
 	setMissingAura(
 		board.filter((e) => e.divineShield),
 		CardIds.CyborgDrake_BG25_043,
@@ -130,14 +130,14 @@ const setMissingMinionsAura = (
 		0,
 		false,
 	);
-	setMissingAura(
-		board.filter((e) => e.divineShield),
-		CardIds.CyborgDrake_BG25_043_G,
-		CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043_Ge,
-		12,
-		0,
-		false,
-	);
+	// setMissingAura(
+	// 	board.filter((e) => e.divineShield),
+	// 	CardIds.CyborgDrake_BG25_043_G,
+	// 	CardIds.CyborgDrake_CyborgEnhancementEnchantment_BG25_043_Ge,
+	// 	12,
+	// 	0,
+	// 	false,
+	// );
 	setMissingAura(
 		board.filter((e) => hasCorrectTribe(e, boardHero, Race.UNDEAD, anomalies, allCards)),
 		CardIds.SoreLoser_BG27_030,
@@ -287,48 +287,48 @@ export const updateBoardwideAuras = (
 		return;
 	}
 
-	board
-		.filter((entity) =>
-			entity.enchantments.some(
-				(ench) =>
-					ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e ||
-					ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
-			),
-		)
-		.forEach((e) => {
-			const enchantments = e.enchantments.filter(
-				(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e,
-			).length;
-			const greaterEnchantments = e.enchantments.filter(
-				(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
-			).length;
-			e.attack = Math.max(0, e.attack - enchantments * 8 - greaterEnchantments * 15);
-			e.enchantments = e.enchantments
-				.filter(
-					(ench) =>
-						ench.cardId !== CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e,
-				)
-				.filter(
-					(ench) =>
-						ench.cardId !== CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
-				);
-		});
-	boardHero.trinkets
-		.filter(
-			(t) =>
-				t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ||
-				t.cardId === CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t,
-		)
-		.forEach((t) => {
-			const buff = t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 15;
-			board[0].attack = board[0].attack + buff;
-			board[0].enchantments.push({
-				cardId:
-					t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997
-						? CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e
-						: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
-				originEntityId: t.entityId,
-				timing: gameState.sharedState.currentEntityId++,
-			});
-		});
+	// board
+	// 	.filter((entity) =>
+	// 		entity.enchantments.some(
+	// 			(ench) =>
+	// 				ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e ||
+	// 				ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
+	// 		),
+	// 	)
+	// 	.forEach((e) => {
+	// 		const enchantments = e.enchantments.filter(
+	// 			(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e,
+	// 		).length;
+	// 		const greaterEnchantments = e.enchantments.filter(
+	// 			(ench) => ench.cardId === CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
+	// 		).length;
+	// 		e.attack = Math.max(0, e.attack - enchantments * 8 - greaterEnchantments * 15);
+	// 		e.enchantments = e.enchantments
+	// 			.filter(
+	// 				(ench) =>
+	// 					ench.cardId !== CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e,
+	// 			)
+	// 			.filter(
+	// 				(ench) =>
+	// 					ench.cardId !== CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
+	// 			);
+	// 	});
+	// boardHero.trinkets
+	// 	.filter(
+	// 		(t) =>
+	// 			t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ||
+	// 			t.cardId === CardIds.WindrunnerNecklace_WindrunnerNecklaceToken_BG30_MagicItem_997t,
+	// 	)
+	// 	.forEach((t) => {
+	// 		const buff = t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997 ? 8 : 15;
+	// 		board[0].attack = board[0].attack + buff;
+	// 		board[0].enchantments.push({
+	// 			cardId:
+	// 				t.cardId === CardIds.WindrunnerNecklace_BG30_MagicItem_997
+	// 					? CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e
+	// 					: CardIds.WindrunnerNecklace_RunningLikeTheWindEnchantment_BG30_MagicItem_997e2,
+	// 			originEntityId: t.entityId,
+	// 			timing: gameState.sharedState.currentEntityId++,
+	// 		});
+	// 	});
 };

@@ -3,11 +3,8 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasBattlecry, hasOnBattlecryTriggered } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
-import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
-import { updateWindfury } from '../keywords/windfury';
 import { pickRandom, pickRandomAlive } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -17,7 +14,6 @@ import {
 	hasCorrectTribe,
 } from '../utils';
 import { getNeighbours } from './attack';
-import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { dealDamageToHero } from './damage-to-hero';
 import { spawnEntities } from './deathrattle-spawns';
@@ -171,18 +167,18 @@ export const triggerBattlecry = (
 						Race[Race.MURLOC],
 					);
 					break;
-				case CardIds.FelfinNavigator_BG_BT_010:
-				case CardIds.FelfinNavigator_TB_BaconUps_124:
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						entity.cardId === CardIds.FelfinNavigator_TB_BaconUps_124 ? 2 : 1,
-						entity.cardId === CardIds.FelfinNavigator_TB_BaconUps_124 ? 2 : 1,
-						gameState,
-						Race[Race.MURLOC],
-					);
-					break;
+				// case CardIds.FelfinNavigator_BG_BT_010:
+				// case CardIds.FelfinNavigator_TB_BaconUps_124:
+				// 	addStatsToBoard(
+				// 		entity,
+				// 		board.filter((e) => e.entityId != entity.entityId),
+				// 		hero,
+				// 		entity.cardId === CardIds.FelfinNavigator_TB_BaconUps_124 ? 2 : 1,
+				// 		entity.cardId === CardIds.FelfinNavigator_TB_BaconUps_124 ? 2 : 1,
+				// 		gameState,
+				// 		Race[Race.MURLOC],
+				// 	);
+				// 	break;
 				case CardIds.KeyboardIgniter_BG26_522:
 				case CardIds.KeyboardIgniter_BG26_522_G:
 					const numberOfTimesToTrigger = entity.cardId === CardIds.KeyboardIgniter_BG26_522 ? 1 : 2;
@@ -216,7 +212,7 @@ export const triggerBattlecry = (
 					}
 					break;
 				case CardIds.AnnihilanBattlemaster_BGS_010:
-				case CardIds.AnnihilanBattlemaster_TB_BaconUps_083:
+					// case CardIds.AnnihilanBattlemaster_TB_BaconUps_083:
 					// TODO: pass damage taken info
 					const startingHp = hero.cardId === CardIds.Patchwerk_TB_BaconShop_HERO_34 ? 60 : 30;
 					const hpMissing = startingHp - hero.hpLeft;
@@ -224,32 +220,32 @@ export const triggerBattlecry = (
 						(entity.cardId === CardIds.AnnihilanBattlemaster_BGS_010 ? 2 : 4) * hpMissing;
 					modifyStats(entity, entity, 0, annihilanStats, board, hero, gameState);
 					break;
-				case CardIds.Necrolyte_BG20_202:
-				case CardIds.Necrolyte_BG20_202_G:
-					// console.debug('triggering necrolyte', entity.entityId);
-					const necrolyteBloodGems = entity.cardId === CardIds.Necrolyte_BG20_202 ? 2 : 4;
-					const necrolyteTarget = pickRandom(board);
-					playBloodGemsOn(entity, necrolyteTarget, necrolyteBloodGems, board, hero, gameState);
-					gameState.spectator.registerPowerTarget(entity, necrolyteTarget, board, hero, otherHero);
+				// case CardIds.Necrolyte_BG20_202:
+				// case CardIds.Necrolyte_BG20_202_G:
+				// 	// console.debug('triggering necrolyte', entity.entityId);
+				// 	const necrolyteBloodGems = entity.cardId === CardIds.Necrolyte_BG20_202 ? 2 : 4;
+				// 	const necrolyteTarget = pickRandom(board);
+				// 	playBloodGemsOn(entity, necrolyteTarget, necrolyteBloodGems, board, hero, gameState);
+				// 	gameState.spectator.registerPowerTarget(entity, necrolyteTarget, board, hero, otherHero);
 
-					const necrolyteTargetNeighbours = getNeighbours(board, necrolyteTarget);
-					for (const neighbour of necrolyteTargetNeighbours) {
-						const bloodGemStatsEnchantment = neighbour.enchantments?.find(
-							(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
-						);
-						if (bloodGemStatsEnchantment) {
-							const atk = bloodGemStatsEnchantment.tagScriptDataNum1 ?? 0;
-							const heath = bloodGemStatsEnchantment.tagScriptDataNum2 ?? 0;
-							neighbour.attack = Math.max(0, neighbour.attack - atk);
-							neighbour.health = Math.max(1, neighbour.health - heath);
-							neighbour.maxHealth = Math.max(1, neighbour.maxHealth - heath);
-							necrolyteTarget.attack += atk;
-							necrolyteTarget.health += heath;
-							necrolyteTarget.maxHealth += heath;
-							gameState.spectator.registerPowerTarget(necrolyteTarget, neighbour, board, hero, otherHero);
-						}
-					}
-					break;
+				// 	const necrolyteTargetNeighbours = getNeighbours(board, necrolyteTarget);
+				// 	for (const neighbour of necrolyteTargetNeighbours) {
+				// 		const bloodGemStatsEnchantment = neighbour.enchantments?.find(
+				// 			(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
+				// 		);
+				// 		if (bloodGemStatsEnchantment) {
+				// 			const atk = bloodGemStatsEnchantment.tagScriptDataNum1 ?? 0;
+				// 			const heath = bloodGemStatsEnchantment.tagScriptDataNum2 ?? 0;
+				// 			neighbour.attack = Math.max(0, neighbour.attack - atk);
+				// 			neighbour.health = Math.max(1, neighbour.health - heath);
+				// 			neighbour.maxHealth = Math.max(1, neighbour.maxHealth - heath);
+				// 			necrolyteTarget.attack += atk;
+				// 			necrolyteTarget.health += heath;
+				// 			necrolyteTarget.maxHealth += heath;
+				// 			gameState.spectator.registerPowerTarget(necrolyteTarget, neighbour, board, hero, otherHero);
+				// 		}
+				// 	}
+				// 	break;
 				case CardIds.StrongshellScavenger_BG_ICC_807:
 				case CardIds.StrongshellScavenger_TB_BaconUps_072:
 					const strongshellScavengerStats = entity.cardId === CardIds.StrongshellScavenger_BG_ICC_807 ? 2 : 4;
@@ -268,20 +264,20 @@ export const triggerBattlecry = (
 						);
 					});
 					break;
-				case CardIds.VigilantStoneborn_BG24_023:
-				case CardIds.VigilantStoneborn_BG24_023_G:
-					const vigilantStonebornTarget = pickRandom(board);
-					const vigilantStonebornStats = entity.cardId === CardIds.VigilantStoneborn_BG24_023 ? 6 : 12;
-					updateTaunt(vigilantStonebornTarget, true, board, hero, otherHero, gameState);
-					modifyStats(vigilantStonebornTarget, entity, 0, vigilantStonebornStats, board, hero, gameState);
-					break;
-				case CardIds.Bonemare_BG26_ICC_705:
-				case CardIds.Bonemare_BG26_ICC_705_G:
-					const bonemareTarget = pickRandom(board);
-					const bonemareStats = entity.cardId === CardIds.Bonemare_BG26_ICC_705 ? 4 : 8;
-					updateTaunt(bonemareTarget, true, board, hero, otherHero, gameState);
-					modifyStats(bonemareTarget, entity, bonemareStats, bonemareStats, board, hero, gameState);
-					break;
+				// case CardIds.VigilantStoneborn_BG24_023:
+				// case CardIds.VigilantStoneborn_BG24_023_G:
+				// 	const vigilantStonebornTarget = pickRandom(board);
+				// 	const vigilantStonebornStats = entity.cardId === CardIds.VigilantStoneborn_BG24_023 ? 6 : 12;
+				// 	updateTaunt(vigilantStonebornTarget, true, board, hero, otherHero, gameState);
+				// 	modifyStats(vigilantStonebornTarget, entity, 0, vigilantStonebornStats, board, hero, gameState);
+				// 	break;
+				// case CardIds.Bonemare_BG26_ICC_705:
+				// case CardIds.Bonemare_BG26_ICC_705_G:
+				// 	const bonemareTarget = pickRandom(board);
+				// 	const bonemareStats = entity.cardId === CardIds.Bonemare_BG26_ICC_705 ? 4 : 8;
+				// 	updateTaunt(bonemareTarget, true, board, hero, otherHero, gameState);
+				// 	modifyStats(bonemareTarget, entity, bonemareStats, bonemareStats, board, hero, gameState);
+				// 	break;
 				// Not correct, but only used to trigger the "add cards in hand" effect
 				case CardIds.Murozond_BGS_043:
 				case CardIds.Murozond_TB_BaconUps_110:
@@ -307,19 +303,19 @@ export const triggerBattlecry = (
 					utherTarget.health = utherStats;
 					utherTarget.maxHealth = utherStats;
 					break;
-				case CardIds.IronGroundskeeper_BG27_000:
-				case CardIds.IronGroundskeeper_BG27_000_G:
-					const ironGroundskeeperTargets = allMinions;
-					const ironGroundskeeperTarget = pickRandom(ironGroundskeeperTargets);
-					updateTaunt(
-						ironGroundskeeperTarget,
-						!ironGroundskeeperTarget.taunt,
-						board,
-						hero,
-						otherHero,
-						gameState,
-					);
-					break;
+				// case CardIds.IronGroundskeeper_BG27_000:
+				// case CardIds.IronGroundskeeper_BG27_000_G:
+				// 	const ironGroundskeeperTargets = allMinions;
+				// 	const ironGroundskeeperTarget = pickRandom(ironGroundskeeperTargets);
+				// 	updateTaunt(
+				// 		ironGroundskeeperTarget,
+				// 		!ironGroundskeeperTarget.taunt,
+				// 		board,
+				// 		hero,
+				// 		otherHero,
+				// 		gameState,
+				// 	);
+				// 	break;
 				case CardIds.LivingConstellation_BG27_001:
 				case CardIds.LivingConstellation_BG27_001_G:
 					const differentTypes = extractUniqueTribes(board, gameState.allCards);
@@ -337,36 +333,36 @@ export const triggerBattlecry = (
 						gameState,
 					);
 					break;
-				case CardIds.FairyTaleCaroler_BG26_001:
-				case CardIds.FairyTaleCaroler_BG26_001_G:
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
-						entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
-						gameState,
-					);
-					break;
-				case CardIds.SparkLing_BG27_019:
-				case CardIds.SparkLing_BG27_019_G:
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
-						entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
-						gameState,
-					);
-					addStatsToBoard(
-						entity,
-						otherBoard,
-						hero,
-						entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
-						entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
-						gameState,
-					);
-					break;
+				// case CardIds.FairyTaleCaroler_BG26_001:
+				// case CardIds.FairyTaleCaroler_BG26_001_G:
+				// 	addStatsToBoard(
+				// 		entity,
+				// 		board.filter((e) => e.entityId != entity.entityId),
+				// 		hero,
+				// 		entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
+				// 		entity.cardId === CardIds.FairyTaleCaroler_BG26_001 ? 2 : 4,
+				// 		gameState,
+				// 	);
+				// 	break;
+				// case CardIds.SparkLing_BG27_019:
+				// case CardIds.SparkLing_BG27_019_G:
+				// 	addStatsToBoard(
+				// 		entity,
+				// 		board.filter((e) => e.entityId != entity.entityId),
+				// 		hero,
+				// 		entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+				// 		entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+				// 		gameState,
+				// 	);
+				// 	addStatsToBoard(
+				// 		entity,
+				// 		otherBoard,
+				// 		hero,
+				// 		entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+				// 		entity.cardId === CardIds.SparkLing_BG27_019 ? 1 : 2,
+				// 		gameState,
+				// 	);
+				// 	break;
 				case CardIds.EmergentFlame_BG27_018:
 				case CardIds.EmergentFlame_BG27_018_G:
 					const emergentFlameTarget = pickRandom(
@@ -427,7 +423,7 @@ export const triggerBattlecry = (
 							entity.cardId === CardIds.FacelessDisciple_BG24_719 ? minionTier + 1 : minionTier + 2;
 						const maxTier =
 							!!gameState.anomalies?.includes(CardIds.SecretsOfNorgannon_BG27_Anomaly_504) ||
-							hero.questRewardEntities?.some((r) => r.cardId === TempCardIds.SecretsOfNorgannon)
+							hero.questRewardEntities?.some((r) => r.cardId === CardIds.NorgannonsReward_BG33_Reward_010)
 								? 7
 								: 6;
 						const newMinionId = gameState.cardsData.getRandomMinionForTavernTier(
@@ -455,63 +451,63 @@ export const triggerBattlecry = (
 						gameState.spectator.registerPowerTarget(entity, newMinion, targetBoard, hero, otherHero);
 					}
 					break;
-				case CardIds.Amalgadon_BGS_069:
-				case CardIds.Amalgadon_TB_BaconUps_121:
-					const numberOfTribes = extractUniqueTribes(board, gameState.allCards).length;
-					const amalgadonMultiplier = entity.cardId === CardIds.Amalgadon_BGS_069 ? 1 : 2;
-					const totalAdapts = amalgadonMultiplier * numberOfTribes;
-					for (let i = 0; i < totalAdapts; i++) {
-						const adapts = [
-							CardIds.FlamingClawsToken,
-							CardIds.LivingSporesToken,
-							CardIds.VolcanicMightToken,
-							CardIds.RockyCarapaceToken,
-						];
-						if (!entity.divineShield) {
-							adapts.push(CardIds.CracklingShieldToken);
-						}
-						if (!entity.windfury) {
-							adapts.push(CardIds.LightningSpeedToken);
-						}
-						if (!entity.taunt) {
-							adapts.push(CardIds.MassiveToken);
-						}
-						if (!entity.venomous && !entity.poisonous) {
-							adapts.push(CardIds.PoisonSpitToken);
-						}
-						const adapt = pickRandom(adapts);
-						switch (adapt) {
-							case CardIds.FlamingClawsToken:
-								modifyStats(entity, entity, 3, 0, board, hero, gameState, false);
-								break;
-							case CardIds.LivingSporesToken:
-								entity.enchantments = entity.enchantments ?? [];
-								entity.enchantments.push({
-									cardId: CardIds.LivingSpores_LivingSporesEnchantment,
-									timing: 0,
-								});
-								break;
-							case CardIds.LightningSpeedToken:
-								updateWindfury(entity, true, board, hero, otherHero, gameState);
-								break;
-							case CardIds.MassiveToken:
-								updateTaunt(entity, true, board, hero, otherHero, gameState);
-								break;
-							case CardIds.PoisonSpitToken:
-								entity.poisonous = true;
-								break;
-							case CardIds.RockyCarapaceToken:
-								modifyStats(entity, entity, 0, 3, board, hero, gameState, false);
-								break;
-							case CardIds.CracklingShieldToken:
-								updateDivineShield(entity, board, hero, otherHero, true, gameState);
-								break;
-							case CardIds.VolcanicMightToken:
-								modifyStats(entity, entity, 1, 1, board, hero, gameState, false);
-								break;
-						}
-					}
-					break;
+				// case CardIds.Amalgadon_BGS_069:
+				// case CardIds.Amalgadon_TB_BaconUps_121:
+				// 	const numberOfTribes = extractUniqueTribes(board, gameState.allCards).length;
+				// 	const amalgadonMultiplier = entity.cardId === CardIds.Amalgadon_BGS_069 ? 1 : 2;
+				// 	const totalAdapts = amalgadonMultiplier * numberOfTribes;
+				// 	for (let i = 0; i < totalAdapts; i++) {
+				// 		const adapts = [
+				// 			CardIds.FlamingClawsToken,
+				// 			CardIds.LivingSporesToken,
+				// 			CardIds.VolcanicMightToken,
+				// 			CardIds.RockyCarapaceToken,
+				// 		];
+				// 		if (!entity.divineShield) {
+				// 			adapts.push(CardIds.CracklingShieldToken);
+				// 		}
+				// 		if (!entity.windfury) {
+				// 			adapts.push(CardIds.LightningSpeedToken);
+				// 		}
+				// 		if (!entity.taunt) {
+				// 			adapts.push(CardIds.MassiveToken);
+				// 		}
+				// 		if (!entity.venomous && !entity.poisonous) {
+				// 			adapts.push(CardIds.PoisonSpitToken);
+				// 		}
+				// 		const adapt = pickRandom(adapts);
+				// 		switch (adapt) {
+				// 			case CardIds.FlamingClawsToken:
+				// 				modifyStats(entity, entity, 3, 0, board, hero, gameState, false);
+				// 				break;
+				// 			case CardIds.LivingSporesToken:
+				// 				entity.enchantments = entity.enchantments ?? [];
+				// 				entity.enchantments.push({
+				// 					cardId: CardIds.LivingSpores_LivingSporesEnchantment,
+				// 					timing: 0,
+				// 				});
+				// 				break;
+				// 			case CardIds.LightningSpeedToken:
+				// 				updateWindfury(entity, true, board, hero, otherHero, gameState);
+				// 				break;
+				// 			case CardIds.MassiveToken:
+				// 				updateTaunt(entity, true, board, hero, otherHero, gameState);
+				// 				break;
+				// 			case CardIds.PoisonSpitToken:
+				// 				entity.poisonous = true;
+				// 				break;
+				// 			case CardIds.RockyCarapaceToken:
+				// 				modifyStats(entity, entity, 0, 3, board, hero, gameState, false);
+				// 				break;
+				// 			case CardIds.CracklingShieldToken:
+				// 				updateDivineShield(entity, board, hero, otherHero, true, gameState);
+				// 				break;
+				// 			case CardIds.VolcanicMightToken:
+				// 				modifyStats(entity, entity, 1, 1, board, hero, gameState, false);
+				// 				break;
+				// 		}
+				// 	}
+				// 	break;
 				case CardIds.Eagill_BG28_630:
 				case CardIds.Eagill_BG28_630_G:
 					const eagillMultiplier = entity.cardId === CardIds.Eagill_BG28_630 ? 1 : 2;
@@ -557,19 +553,19 @@ export const triggerBattlecry = (
 						modifyStats(weebominationTarget, entity, 0, weebominationBuff, board, hero, gameState);
 					}
 					break;
-				case CardIds.GoldshellWarden_BG29_803:
-				case CardIds.GoldshellWarden_BG29_803_G:
-					const goldshellMultiplier = entity.cardId === CardIds.GoldshellWarden_BG29_803_G ? 2 : 1;
-					addStatsToBoard(
-						entity,
-						board.filter((e) => e.entityId != entity.entityId),
-						hero,
-						goldshellMultiplier * 2,
-						goldshellMultiplier * 4,
-						gameState,
-						Race[Race.BEAST],
-					);
-					break;
+				// case CardIds.GoldshellWarden_BG29_803:
+				// case CardIds.GoldshellWarden_BG29_803_G:
+				// 	const goldshellMultiplier = entity.cardId === CardIds.GoldshellWarden_BG29_803_G ? 2 : 1;
+				// 	addStatsToBoard(
+				// 		entity,
+				// 		board.filter((e) => e.entityId != entity.entityId),
+				// 		hero,
+				// 		goldshellMultiplier * 2,
+				// 		goldshellMultiplier * 4,
+				// 		gameState,
+				// 		Race[Race.BEAST],
+				// 	);
+				// 	break;
 				case CardIds.ShellWhistler_BG26_045:
 				case CardIds.ShellWhistler_BG26_045_G:
 					const shellWhistlerCardsToAdd =

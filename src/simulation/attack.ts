@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnAfterDeath, hasOnDeath } from '../cards/card.interface';
@@ -8,8 +8,7 @@ import { debugState } from '../debug-state';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
-import { addImpliedMechanics, hasCorrectTribe, isFish } from '../utils';
+import { addImpliedMechanics, isFish } from '../utils';
 import { applyAfterAttackEffects, applyAfterAttackTrinkets } from './after-attack';
 import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
@@ -199,9 +198,9 @@ export const doFullAttack = (
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, (attackingEntity.immuneWhenAttackCharges ?? 0) - 1);
 	if (
 		defendingEntity.health > 0 &&
-		!defendingEntity.definitelyDead &&
-		(defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
-			defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
+		!defendingEntity.definitelyDead
+		// && (defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
+		// 	defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
 	) {
 		defendingEntity.attackImmediately = true;
 		if (defendingEntity.attackImmediately) {
@@ -222,63 +221,64 @@ const performAttack = (
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 
-	if (hasCorrectTribe(attackingEntity, attackingBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)) {
-		const prestors = attackingBoard
-			.filter((e) => e.entityId !== attackingEntity.entityId)
-			.filter(
-				(e) =>
-					e.cardId === CardIds.PrestorsPyrospawn_BG21_012 ||
-					e.cardId === CardIds.PrestorsPyrospawn_BG21_012_G,
-			);
-		prestors.forEach((prestor) => {
-			gameState.spectator.registerPowerTarget(
-				prestor,
-				defendingEntity,
-				defendingBoard,
-				attackingBoardHero,
-				defendingBoardHero,
-			);
-			damageDoneByAttacker += dealDamageToMinion(
-				defendingEntity,
-				defendingBoard,
-				defendingBoardHero,
-				prestor,
-				prestor.cardId === CardIds.PrestorsPyrospawn_BG21_012_G ? 6 : 3,
-				attackingBoard,
-				attackingBoardHero,
-				gameState,
-			);
-		});
-	}
-	if (
-		attackingEntity.cardId === CardIds.Atramedes_BG23_362 ||
-		attackingEntity.cardId === CardIds.Atramedes_BG23_362_G
-	) {
-		const targets = [defendingEntity, ...getNeighbours(defendingBoard, defendingEntity)];
-		const multiplier = attackingEntity.cardId === CardIds.Atramedes_BG23_362_G ? 2 : 1;
+	// if (hasCorrectTribe(attackingEntity, attackingBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)) {
+	// 	const prestors = attackingBoard
+	// 		.filter((e) => e.entityId !== attackingEntity.entityId)
+	// 		.filter(
+	// 			(e) =>
+	// 				e.cardId === CardIds.PrestorsPyrospawn_BG21_012 ||
+	// 				e.cardId === CardIds.PrestorsPyrospawn_BG21_012_G,
+	// 		);
+	// 	prestors.forEach((prestor) => {
+	// 		gameState.spectator.registerPowerTarget(
+	// 			prestor,
+	// 			defendingEntity,
+	// 			defendingBoard,
+	// 			attackingBoardHero,
+	// 			defendingBoardHero,
+	// 		);
+	// 		damageDoneByAttacker += dealDamageToMinion(
+	// 			defendingEntity,
+	// 			defendingBoard,
+	// 			defendingBoardHero,
+	// 			prestor,
+	// 			prestor.cardId === CardIds.PrestorsPyrospawn_BG21_012_G ? 6 : 3,
+	// 			attackingBoard,
+	// 			attackingBoardHero,
+	// 			gameState,
+	// 		);
+	// 	});
+	// }
+	// if (
+	// 	attackingEntity.cardId === CardIds.Atramedes_BG23_362 ||
+	// 	attackingEntity.cardId === CardIds.Atramedes_BG23_362_G
+	// ) {
+	// 	const targets = [defendingEntity, ...getNeighbours(defendingBoard, defendingEntity)];
+	// 	const multiplier = attackingEntity.cardId === CardIds.Atramedes_BG23_362_G ? 2 : 1;
 
-		for (let i = 0; i < multiplier; i++) {
-			targets.forEach((target) => {
-				gameState.spectator.registerPowerTarget(
-					attackingEntity,
-					target,
-					defendingBoard,
-					attackingBoardHero,
-					defendingBoardHero,
-				);
-				damageDoneByAttacker += dealDamageToMinion(
-					target,
-					defendingBoard,
-					defendingBoardHero,
-					attackingEntity,
-					3,
-					attackingBoard,
-					attackingBoardHero,
-					gameState,
-				);
-			});
-		}
-	} else if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
+	// 	for (let i = 0; i < multiplier; i++) {
+	// 		targets.forEach((target) => {
+	// 			gameState.spectator.registerPowerTarget(
+	// 				attackingEntity,
+	// 				target,
+	// 				defendingBoard,
+	// 				attackingBoardHero,
+	// 				defendingBoardHero,
+	// 			);
+	// 			damageDoneByAttacker += dealDamageToMinion(
+	// 				target,
+	// 				defendingBoard,
+	// 				defendingBoardHero,
+	// 				attackingEntity,
+	// 				3,
+	// 				attackingBoard,
+	// 				attackingBoardHero,
+	// 				gameState,
+	// 			);
+	// 		});
+	// 	}
+	// } else
+	if ([CardIds.BabyKrush_BG22_001, CardIds.BabyKrush_BG22_001_G].includes(attackingEntity.cardId as CardIds)) {
 		const spawns = spawnEntities(
 			attackingEntity.cardId === CardIds.BabyKrush_BG22_001_G
 				? CardIds.BabyKrush_BG22_001_G
@@ -724,8 +724,8 @@ export const getDefendingEntity = (
 	if (
 		attackingEntity.cardId === CardIds.ZappSlywick_BGS_022 ||
 		attackingEntity.cardId === CardIds.ZappSlywick_TB_BaconUps_091 ||
-		attackingEntity.cardId === TempCardIds.MercilessMammoth ||
-		attackingEntity.cardId === TempCardIds.MercilessMammoth_G
+		attackingEntity.cardId === CardIds.MercilessMammoth_BG33_845 ||
+		attackingEntity.cardId === CardIds.MercilessMammoth_BG33_845_G
 	) {
 		const minAttack = Math.min(...defendingBoard.map((entity) => entity.attack));
 		possibleDefenders = defendingBoard.filter((entity) => entity.attack === minAttack);
@@ -750,17 +750,17 @@ export const getDefendingEntity = (
 		}
 	}
 
-	let chosenDefender = pickRandom(possibleDefenders);
-	if (chosenDefender?.taunt) {
-		const elistras = defendingBoard.filter(
-			(entity) =>
-				entity.cardId === CardIds.ElistraTheImmortal_BGS_205 ||
-				entity.cardId === CardIds.ElistraTheImmortal_TB_BaconUps_306,
-		);
-		if (elistras.length > 0) {
-			chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
-		}
-	}
+	const chosenDefender = pickRandom(possibleDefenders);
+	// if (chosenDefender?.taunt) {
+	// 	const elistras = defendingBoard.filter(
+	// 		(entity) =>
+	// 			entity.cardId === CardIds.ElistraTheImmortal_BGS_205 ||
+	// 			entity.cardId === CardIds.ElistraTheImmortal_TB_BaconUps_306,
+	// 	);
+	// 	if (elistras.length > 0) {
+	// 		chosenDefender = elistras[Math.floor(Math.random() * elistras.length)];
+	// 	}
+	// }
 	return chosenDefender;
 };
 
@@ -837,11 +837,11 @@ export const bumpEntities = (
 	// surviving following a buff like Spawn.
 	gameState.spectator.registerDamageDealt(bumpInto, entity, damageDealt, entityBoard);
 
-	if (entity.cardId === CardIds.Bubblette_BG_TID_713 && bumpInto.attack === 1) {
-		entity.definitelyDead = true;
-	} else if (entity.cardId === CardIds.Bubblette_BG_TID_713_G && bumpInto.attack === 2) {
-		entity.definitelyDead = true;
-	}
+	// if (entity.cardId === CardIds.Bubblette_BG_TID_713 && bumpInto.attack === 1) {
+	// 	entity.definitelyDead = true;
+	// } else if (entity.cardId === CardIds.Bubblette_BG_TID_713_G && bumpInto.attack === 2) {
+	// 	entity.definitelyDead = true;
+	// }
 	// Do it last, so that other effects are still processed
 	if (bumpInto.poisonous) {
 		// So that further buffs don't revive it
@@ -1235,32 +1235,32 @@ const handleAfterMinionsDeathsForBoard = (
 		}
 	}
 
-	let secretTriggered = null;
-	if (
-		(secretTriggered = friendlyHeroEntity.secrets?.find(
-			(secret) => !secret.triggered && secret?.cardId === CardIds.MagicBlackSoulstone,
-		)) != null
-	) {
-		if (friendlyBoard.length === 0) {
-			secretTriggered.triggered = true;
-			for (let i = 0; i < 2; i++) {
-				const toSummon = pickRandom(gameState.cardsData.demonSpawns);
-				candidateEntities.push(
-					...spawnEntities(
-						toSummon,
-						1,
-						friendlyBoard,
-						friendlyHeroEntity,
-						otherBoard,
-						otherHeroEntity,
-						gameState,
-						friendlyHeroEntity.friendly,
-						false,
-					),
-				);
-			}
-		}
-	}
+	const secretTriggered = null;
+	// if (
+	// 	(secretTriggered = friendlyHeroEntity.secrets?.find(
+	// 		(secret) => !secret.triggered && secret?.cardId === CardIds.MagicBlackSoulstone,
+	// 	)) != null
+	// ) {
+	// 	if (friendlyBoard.length === 0) {
+	// 		secretTriggered.triggered = true;
+	// 		for (let i = 0; i < 2; i++) {
+	// 			const toSummon = pickRandom(gameState.cardsData.demonSpawns);
+	// 			candidateEntities.push(
+	// 				...spawnEntities(
+	// 					toSummon,
+	// 					1,
+	// 					friendlyBoard,
+	// 					friendlyHeroEntity,
+	// 					otherBoard,
+	// 					otherHeroEntity,
+	// 					gameState,
+	// 					friendlyHeroEntity.friendly,
+	// 					false,
+	// 				),
+	// 			);
+	// 		}
+	// 	}
+	// }
 	performEntitySpawns(
 		candidateEntities,
 		friendlyBoard,

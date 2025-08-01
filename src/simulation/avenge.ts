@@ -1,4 +1,4 @@
-import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
+import { CardIds, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsHeroPower, BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasAvenge } from '../cards/card.interface';
@@ -6,15 +6,12 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { grantRandomDivineShield } from '../keywords/divine-shield';
 import { updateReborn } from '../keywords/reborn';
 import { updateTaunt } from '../keywords/taunt';
-import { updateVenomous } from '../keywords/venomous';
 import { pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
 	addStatsToBoard,
-	getRandomAliveMinion,
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
-	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	hasMechanic,
 } from '../utils';
@@ -25,7 +22,6 @@ import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
-import { isMinionGolden, makeMinionGolden } from './utils/golden';
 
 export const applyAvengeEffects = (
 	deadEntity: BoardEntity,
@@ -44,12 +40,12 @@ export const applyAvengeEffects = (
 		// Get Tony to be processed first, because of the "when turned golden, the minion ignores the death for the avenge counter"
 		// behavior
 		.sort((a, b) => {
-			if (a.cardId === CardIds.TonyTwoTusk_BG21_031 || a.cardId === CardIds.TonyTwoTusk_BG21_031_G) {
-				return -1;
-			}
-			if (b.cardId === CardIds.TonyTwoTusk_BG21_031 || b.cardId === CardIds.TonyTwoTusk_BG21_031_G) {
-				return 1;
-			}
+			// if (a.cardId === CardIds.TonyTwoTusk_BG21_031 || a.cardId === CardIds.TonyTwoTusk_BG21_031_G) {
+			// 	return -1;
+			// }
+			// if (b.cardId === CardIds.TonyTwoTusk_BG21_031 || b.cardId === CardIds.TonyTwoTusk_BG21_031_G) {
+			// 	return 1;
+			// }
 			return 0;
 		});
 	for (const avenger of avengers) {
@@ -312,31 +308,31 @@ const handleAvenge = (
 				const thorncallerCardsToAdd = Array(thorncallerToAddQuantity).fill(CardIds.BloodGem);
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, thorncallerCardsToAdd, gameState);
 				break;
-			case CardIds.Sisefin_BG21_009:
-			case CardIds.Sisefin_BG21_009_G:
-				const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
-				for (let i = 0; i < poisonousIterations; i++) {
-					const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
-					const murloc = getRandomAliveMinion(validTargets, boardWithDeadEntityHero, Race.MURLOC, gameState);
-					if (murloc) {
-						updateVenomous(
-							murloc,
-							true,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoardHero,
-							gameState,
-						);
-						gameState.spectator.registerPowerTarget(
-							avenger,
-							murloc,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoardHero,
-						);
-					}
-				}
-				break;
+			// case CardIds.Sisefin_BG21_009:
+			// case CardIds.Sisefin_BG21_009_G:
+			// 	const poisonousIterations = avenger.cardId === CardIds.Sisefin_BG21_009_G ? 2 : 1;
+			// 	for (let i = 0; i < poisonousIterations; i++) {
+			// 		const validTargets = boardWithDeadEntity.filter((e) => !e.poisonous && !e.venomous);
+			// 		const murloc = getRandomAliveMinion(validTargets, boardWithDeadEntityHero, Race.MURLOC, gameState);
+			// 		if (murloc) {
+			// 			updateVenomous(
+			// 				murloc,
+			// 				true,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				otherBoardHero,
+			// 				gameState,
+			// 			);
+			// 			gameState.spectator.registerPowerTarget(
+			// 				avenger,
+			// 				murloc,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				otherBoardHero,
+			// 			);
+			// 		}
+			// 	}
+			// 	break;
 			case CardIds.MechanoTank_BG21_023:
 				// This can be null if the avenge triggers when the last enemy minion dies as well
 				const target = getRandomMinionWithHighestHealth(otherBoard);
@@ -380,63 +376,63 @@ const handleAvenge = (
 					);
 				}
 				break;
-			case CardIds.TonyTwoTusk_BG21_031:
-				const nonGoldenMinions = boardWithDeadEntity
-					.filter((e) => e.entityId !== avenger.entityId)
-					.filter((e) => {
-						const ref = gameState.allCards.getCard(e.cardId);
-						return (
-							!!ref.battlegroundsPremiumDbfId &&
-							!!gameState.allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
-						);
-					});
-				const pirate = getRandomAliveMinion(nonGoldenMinions, boardWithDeadEntityHero, Race.PIRATE, gameState);
-				if (pirate) {
-					makeMinionGolden(
-						pirate,
-						avenger,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoard,
-						otherBoardHero,
-						gameState,
-					);
-				}
-				break;
-			case CardIds.TonyTwoTusk_BG21_031_G:
-				for (let i = 0; i < 2; i++) {
-					const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, gameState.allCards));
-					const pirate = getRandomAliveMinion(
-						nonGoldenMinions,
-						boardWithDeadEntityHero,
-						Race.PIRATE,
-						gameState,
-					);
-					if (pirate) {
-						makeMinionGolden(
-							pirate,
-							avenger,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-						);
-					}
-				}
-				break;
-			case CardIds.GhoulOfTheFeast_BG25_002:
-			case CardIds.GhoulOfTheFeast_BG25_002_G:
-				const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
-				grantStatsToMinionsOfEachType(
-					avenger,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					ghoulMultiplier * 3,
-					0,
-					gameState,
-				);
-				break;
+			// case CardIds.TonyTwoTusk_BG21_031:
+			// 	const nonGoldenMinions = boardWithDeadEntity
+			// 		.filter((e) => e.entityId !== avenger.entityId)
+			// 		.filter((e) => {
+			// 			const ref = gameState.allCards.getCard(e.cardId);
+			// 			return (
+			// 				!!ref.battlegroundsPremiumDbfId &&
+			// 				!!gameState.allCards.getCardFromDbfId(ref.battlegroundsPremiumDbfId).id
+			// 			);
+			// 		});
+			// 	const pirate = getRandomAliveMinion(nonGoldenMinions, boardWithDeadEntityHero, Race.PIRATE, gameState);
+			// 	if (pirate) {
+			// 		makeMinionGolden(
+			// 			pirate,
+			// 			avenger,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			otherBoard,
+			// 			otherBoardHero,
+			// 			gameState,
+			// 		);
+			// 	}
+			// 	break;
+			// case CardIds.TonyTwoTusk_BG21_031_G:
+			// 	for (let i = 0; i < 2; i++) {
+			// 		const nonGoldenMinions = boardWithDeadEntity.filter((e) => !isMinionGolden(e, gameState.allCards));
+			// 		const pirate = getRandomAliveMinion(
+			// 			nonGoldenMinions,
+			// 			boardWithDeadEntityHero,
+			// 			Race.PIRATE,
+			// 			gameState,
+			// 		);
+			// 		if (pirate) {
+			// 			makeMinionGolden(
+			// 				pirate,
+			// 				avenger,
+			// 				boardWithDeadEntity,
+			// 				boardWithDeadEntityHero,
+			// 				otherBoard,
+			// 				otherBoardHero,
+			// 				gameState,
+			// 			);
+			// 		}
+			// 	}
+			// 	break;
+			// case CardIds.GhoulOfTheFeast_BG25_002:
+			// case CardIds.GhoulOfTheFeast_BG25_002_G:
+			// 	const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
+			// 	grantStatsToMinionsOfEachType(
+			// 		avenger,
+			// 		boardWithDeadEntity,
+			// 		boardWithDeadEntityHero,
+			// 		ghoulMultiplier * 3,
+			// 		0,
+			// 		gameState,
+			// 	);
+			// 	break;
 			case CardIds.Bristlebach_BG26_157:
 			case CardIds.Bristlebach_BG26_157_G:
 				const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;
@@ -486,20 +482,20 @@ const handleAvenge = (
 					gameState,
 				);
 				break;
-			case CardIds.IceSickle:
-				grantRandomStats(
-					avenger,
-					boardWithDeadEntityHero.hand.filter(
-						(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-					),
-					boardWithDeadEntityHero,
-					4,
-					0,
-					null,
-					true,
-					gameState,
-				);
-				break;
+			// case CardIds.IceSickle:
+			// 	grantRandomStats(
+			// 		avenger,
+			// 		boardWithDeadEntityHero.hand.filter(
+			// 			(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+			// 		),
+			// 		boardWithDeadEntityHero,
+			// 		4,
+			// 		0,
+			// 		null,
+			// 		true,
+			// 		gameState,
+			// 	);
+			// 	break;
 			case CardIds.BoomSquad_BG27_Reward_502:
 				const highestHealthMinion = [...otherBoard].sort((a, b) => b.health - a.health)[0];
 				dealDamageToMinion(

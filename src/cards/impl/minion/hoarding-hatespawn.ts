@@ -1,4 +1,3 @@
-import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
@@ -6,7 +5,7 @@ import { getRandomMinionWithHighestHealth } from '../../../utils';
 
 export const HoardingHatespawn = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		const stats = minion.cardId === CardIds.HoardingHatespawn_BG29_872_G ? 20 : 10;
+		const stats = 10; //minion.cardId === CardIds.HoardingHatespawn_BG29_872_G ? 20 : 10;
 		const target = getRandomMinionWithHighestHealth(input.opponentBoard);
 		if (!!target) {
 			const previousAttack = target.attack;

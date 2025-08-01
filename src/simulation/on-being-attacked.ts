@@ -6,10 +6,9 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
 import { addStatsToBoard } from '../utils';
-import { getNeighbours } from './attack';
 import { FullGameState } from './internal-game-state';
 import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
-import { modifyStats, setEntityStats } from './stats';
+import { modifyStats } from './stats';
 
 export const applyOnBeingAttackedBuffs = (
 	attackerEntity: BoardEntity,
@@ -107,16 +106,16 @@ export const applyOnBeingAttackedBuffs = (
 	}
 
 	if (defendingEntity.taunt) {
-		const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj_BGS_111);
-		const goldenChampions = defendingBoard.filter(
-			(entity) => entity.cardId === CardIds.ChampionOfYshaarj_TB_BaconUps_301,
-		);
-		champions.forEach((entity) => {
-			modifyStats(entity, entity, 1, 2, defendingBoard, defendingPlayerEntity, gameState);
-		});
-		goldenChampions.forEach((entity) => {
-			modifyStats(entity, entity, 2, 4, defendingBoard, defendingPlayerEntity, gameState);
-		});
+		// const champions = defendingBoard.filter((entity) => entity.cardId === CardIds.ChampionOfYshaarj_BGS_111);
+		// const goldenChampions = defendingBoard.filter(
+		// 	(entity) => entity.cardId === CardIds.ChampionOfYshaarj_TB_BaconUps_301,
+		// );
+		// champions.forEach((entity) => {
+		// 	modifyStats(entity, entity, 1, 2, defendingBoard, defendingPlayerEntity, gameState);
+		// });
+		// goldenChampions.forEach((entity) => {
+		// 	modifyStats(entity, entity, 2, 4, defendingBoard, defendingPlayerEntity, gameState);
+		// });
 
 		defendingBoard
 			.filter(
@@ -131,17 +130,18 @@ export const applyOnBeingAttackedBuffs = (
 	}
 
 	// Based on defending entity
-	if (defendingEntity.cardId === CardIds.TormentedRitualist_BGS_201) {
-		const neighbours = getNeighbours(defendingBoard, defendingEntity);
-		neighbours.forEach((entity) => {
-			modifyStats(entity, defendingEntity, 1, 1, defendingBoard, defendingPlayerEntity, gameState);
-		});
-	} else if (defendingEntity.cardId === CardIds.TormentedRitualist_TB_BaconUps_257) {
-		const neighbours = getNeighbours(defendingBoard, defendingEntity);
-		neighbours.forEach((entity) => {
-			modifyStats(entity, defendingEntity, 2, 2, defendingBoard, defendingPlayerEntity, gameState);
-		});
-	} else if (
+	// if (defendingEntity.cardId === CardIds.TormentedRitualist_BGS_201) {
+	// 	const neighbours = getNeighbours(defendingBoard, defendingEntity);
+	// 	neighbours.forEach((entity) => {
+	// 		modifyStats(entity, defendingEntity, 1, 1, defendingBoard, defendingPlayerEntity, gameState);
+	// 	});
+	// } else if (defendingEntity.cardId === CardIds.TormentedRitualist_TB_BaconUps_257) {
+	// 	const neighbours = getNeighbours(defendingBoard, defendingEntity);
+	// 	neighbours.forEach((entity) => {
+	// 		modifyStats(entity, defendingEntity, 2, 2, defendingBoard, defendingPlayerEntity, gameState);
+	// 	});
+	// } else
+	if (
 		defendingEntity.cardId === CardIds.DozyWhelp_BG24_300 ||
 		defendingEntity.cardId === CardIds.DozyWhelp_BG24_300_G
 	) {
@@ -171,13 +171,13 @@ export const applyOnBeingAttackedBuffs = (
 			defendingEntity.health = attackerAttack + 1;
 			defendingEntity.attack = totalStats - defendingEntity.health;
 		}
-	} else if (
-		[CardIds.GraniteGuardian_BG24_001, CardIds.GraniteGuardian_BG24_001_G].includes(
-			defendingEntity.cardId as CardIds,
-		)
-	) {
-		setEntityStats(attackerEntity, attackerEntity.attack, 1, attackerBoard, attackerHero, gameState);
-		// attackerEntity.health = 1;
+		// } else if (
+		// 	[CardIds.GraniteGuardian_BG24_001, CardIds.GraniteGuardian_BG24_001_G].includes(
+		// 		defendingEntity.cardId as CardIds,
+		// 	)
+		// ) {
+		// 	setEntityStats(attackerEntity, attackerEntity.attack, 1, attackerBoard, attackerHero, gameState);
+		// 	// attackerEntity.health = 1;
 	} else if (
 		[CardIds.WaywardGrimscale_BG28_406, CardIds.WaywardGrimscale_BG28_406_G].includes(
 			defendingEntity.cardId as CardIds,

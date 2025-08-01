@@ -77,15 +77,15 @@ export const updateDivineShield = (
 			if (board[i].cardId === CardIds.BolvarFireblood_ICC_858) {
 				modifyStats(board[i], board[i], 2, 0, board, hero, gameState);
 				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
-			} else if (board[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
-				modifyStats(board[i], board[i], 4, 0, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
-			} else if (board[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
-				modifyStats(board[i], board[i], 2, 2, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
-			} else if (board[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
-				modifyStats(board[i], board[i], 4, 4, board, hero, gameState);
-				gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
+				// } else if (board[i].cardId === CardIds.BolvarFireblood_TB_BaconUps_047) {
+				// 	modifyStats(board[i], board[i], 4, 0, board, hero, gameState);
+				// 	gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
+				// } else if (board[i].cardId === CardIds.DrakonidEnforcer_BGS_067) {
+				// 	modifyStats(board[i], board[i], 2, 2, board, hero, gameState);
+				// 	gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
+				// } else if (board[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
+				// 	modifyStats(board[i], board[i], 4, 4, board, hero, gameState);
+				// 	gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
 			} else if (
 				board[i].entityId !== entity.entityId &&
 				(board[i].cardId === CardIds.HolyMecherel_BG20_401 ||
@@ -96,13 +96,13 @@ export const updateDivineShield = (
 				addCardsInHand(hero, board, [CardIds.BloodGem], gameState);
 			} else if (board[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
 				addCardsInHand(hero, board, [CardIds.BloodGem, CardIds.BloodGem], gameState);
-			} else if (
-				board[i].cardId === CardIds.CogworkCopter_BG24_008 ||
-				board[i].cardId === CardIds.CogworkCopter_BG24_008_G
-			) {
+				// } else if (
+				// 	board[i].cardId === CardIds.CogworkCopter_BG24_008 ||
+				// 	board[i].cardId === CardIds.CogworkCopter_BG24_008_G
+				// ) {
 				// When it's the opponent, the game state already contains all the buffs
 				if (board[i]?.friendly) {
-					const buff = board[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
+					const buff = 1; //board[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
 					grantRandomStats(
 						board[i],
 						hero.hand.filter(

@@ -31,7 +31,9 @@ const ATTACK_IMMEDIATELY_IDS = [
 	// See http://replays.firestoneapp.com/?reviewId=8924452a-540a-4324-8306-46900c3f9f35&turn=22&action=38
 	// CardIds.ToxicTumbleweed_TumblingAssassinToken_BG28_641t,
 ];
-const CANT_ATTACK_IDS = [CardIds.ArcaneCannon_BGS_077, CardIds.ArcaneCannon_TB_BaconUps_128];
+const CANT_ATTACK_IDS = [
+	// CardIds.ArcaneCannon_BGS_077, CardIds.ArcaneCannon_TB_BaconUps_128
+];
 
 export const buildSingleBoardEntity = (
 	cardId: string,
@@ -512,14 +514,14 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 		entity.abiityChargesLeft = defaultChargesImpl.defaultCharges(entity);
 	} else {
 		entity.abiityChargesLeft = [
-			CardIds.MarineMatriarch_BG29_610,
-			CardIds.MarineMatriarch_BG29_610_G,
-			CardIds.SoftHeartedSiren_BG26_590,
-			CardIds.SoftHeartedSiren_BG26_590_G,
-			CardIds.LongJohnCopper_BG29_831,
-			CardIds.LongJohnCopper_BG29_831_G,
-			CardIds.BristlingBuffoon_BG29_160,
-			CardIds.BristlingBuffoon_BG29_160_G,
+			// CardIds.MarineMatriarch_BG29_610,
+			// CardIds.MarineMatriarch_BG29_610_G,
+			// CardIds.SoftHeartedSiren_BG26_590,
+			// CardIds.SoftHeartedSiren_BG26_590_G,
+			// CardIds.LongJohnCopper_BG29_831,
+			// CardIds.LongJohnCopper_BG29_831_G,
+			// CardIds.BristlingBuffoon_BG29_160,
+			// CardIds.BristlingBuffoon_BG29_160_G,
 		].includes(entity.cardId as CardIds)
 			? 3
 			: [

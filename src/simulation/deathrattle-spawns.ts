@@ -18,14 +18,13 @@ import {
 	hasCorrectTribe,
 	stringifySimple,
 } from '../utils';
-import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies, processMinionDeath } from './attack';
+import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import {
 	applyEarthInvocationEnchantment,
 	applyFireInvocationEnchantment,
 	applyLeapFroggerEffect,
 	applyLightningInvocationEnchantment,
-	applyRecurringNightmareDeathrattleEffect,
 	applyWaterInvocationEnchantment,
 	computeDeathrattleMultiplier,
 } from './deathrattle-effects';
@@ -552,21 +551,21 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						);
 						break;
-					case CardIds.InfestedWolf_TB_BaconUps_026:
-						spawnedEntities.push(
-							...spawnEntities(
-								CardIds.InfestedWolf_SpiderToken,
-								2,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
+					// case CardIds.InfestedWolf_TB_BaconUps_026:
+					// 	spawnedEntities.push(
+					// 		...spawnEntities(
+					// 			CardIds.InfestedWolf_SpiderToken,
+					// 			2,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			gameState,
+					// 			deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	break;
 					case CardIds.ReplicatingMenace_BG_BOT_312:
 						spawnedEntities.push(
 							...spawnEntities(
@@ -702,21 +701,21 @@ export const spawnEntitiesFromDeathrattle = (
 							),
 						);
 						break;
-					case CardIds.SatedThreshadon_TB_BaconUps_052:
-						spawnedEntities.push(
-							...spawnEntities(
-								CardIds.SatedThreshadon_PrimalfinToken,
-								3,
-								boardWithDeadEntity,
-								boardWithDeadEntityHero,
-								otherBoard,
-								otherBoardHero,
-								gameState,
-								deadEntity.friendly,
-								false,
-							),
-						);
-						break;
+					// case CardIds.SatedThreshadon_TB_BaconUps_052:
+					// 	spawnedEntities.push(
+					// 		...spawnEntities(
+					// 			CardIds.SatedThreshadon_PrimalfinToken,
+					// 			3,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			gameState,
+					// 			deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	break;
 					case CardIds.Ghastcoiler_BGS_008:
 						spawnedEntities.push(
 							...[
@@ -910,135 +909,135 @@ export const spawnEntitiesFromDeathrattle = (
 							Race[Race.MECH],
 						);
 						break;
-					case CardIds.TheTideRazor_BGS_079:
-						spawnedEntities.push(
-							...[
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-							],
-						);
-						break;
-					case CardIds.TheTideRazor_TB_BaconUps_137:
-						spawnedEntities.push(
-							...[
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-								...spawnEntities(
-									gameState.cardsData.pirateSpawns[
-										Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
-									],
-									1,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-									deadEntity.friendly,
-									false,
-								),
-							],
-						);
-						break;
+					// case CardIds.TheTideRazor_BGS_079:
+					// 	spawnedEntities.push(
+					// 		...[
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 		],
+					// 	);
+					// 	break;
+					// case CardIds.TheTideRazor_TB_BaconUps_137:
+					// 	spawnedEntities.push(
+					// 		...[
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 			...spawnEntities(
+					// 				gameState.cardsData.pirateSpawns[
+					// 					Math.floor(Math.random() * gameState.cardsData.pirateSpawns.length)
+					// 				],
+					// 				1,
+					// 				boardWithDeadEntity,
+					// 				boardWithDeadEntityHero,
+					// 				otherBoard,
+					// 				otherBoardHero,
+					// 				gameState,
+					// 				deadEntity.friendly,
+					// 				false,
+					// 			),
+					// 		],
+					// 	);
+					// 	break;
 					case CardIds.OctosariWrapGod_BG26_804:
 					case CardIds.OctosariWrapGod_BG26_804_G:
 						// For remembered deathrattles
@@ -1500,41 +1499,41 @@ export const spawnEntitiesFromDeathrattle = (
 							);
 						}
 						break;
-					case CardIds.FireDancer_BG29_843:
-					case CardIds.FireDancer_BG29_843_G:
-						const fireDancerLoops = deadEntity.cardId === CardIds.FireDancer_BG29_843_G ? 2 : 1;
-						for (let j = 0; j < fireDancerLoops; j++) {
-							// In case there are spawns, don't target them
-							const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
-							for (const target of minionsToDamage) {
-								const isSameSide = target.friendly === deadEntity.friendly;
-								const board = isSameSide ? boardWithDeadEntity : otherBoard;
-								const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
-								dealDamageToMinion(
-									target,
-									board,
-									hero,
-									deadEntity,
-									1,
-									isSameSide ? otherBoard : boardWithDeadEntity,
-									isSameSide ? otherBoardHero : boardWithDeadEntityHero,
-									gameState,
-								);
-							}
-						}
-						// Most likely there is a death loop after each round of damage, see
-						// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
-						// Update 13/05/2024: the death process is probably between each deathrattle proc, but not each
-						// individual tick. See
-						// http://replays.firestoneapp.com/?reviewId=6d66b90d-5678-4a68-a45f-7ddb887f9450&turn=17&action=11
-						processMinionDeath(
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-						);
-						break;
+					// case CardIds.FireDancer_BG29_843:
+					// case CardIds.FireDancer_BG29_843_G:
+					// 	const fireDancerLoops = deadEntity.cardId === CardIds.FireDancer_BG29_843_G ? 2 : 1;
+					// 	for (let j = 0; j < fireDancerLoops; j++) {
+					// 		// In case there are spawns, don't target them
+					// 		const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
+					// 		for (const target of minionsToDamage) {
+					// 			const isSameSide = target.friendly === deadEntity.friendly;
+					// 			const board = isSameSide ? boardWithDeadEntity : otherBoard;
+					// 			const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
+					// 			dealDamageToMinion(
+					// 				target,
+					// 				board,
+					// 				hero,
+					// 				deadEntity,
+					// 				1,
+					// 				isSameSide ? otherBoard : boardWithDeadEntity,
+					// 				isSameSide ? otherBoardHero : boardWithDeadEntityHero,
+					// 				gameState,
+					// 			);
+					// 		}
+					// 	}
+					// 	// Most likely there is a death loop after each round of damage, see
+					// 	// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
+					// 	// Update 13/05/2024: the death process is probably between each deathrattle proc, but not each
+					// 	// individual tick. See
+					// 	// http://replays.firestoneapp.com/?reviewId=6d66b90d-5678-4a68-a45f-7ddb887f9450&turn=17&action=11
+					// 	processMinionDeath(
+					// 		boardWithDeadEntity,
+					// 		boardWithDeadEntityHero,
+					// 		otherBoard,
+					// 		otherBoardHero,
+					// 		gameState,
+					// 	);
+					// 	break;
 					case CardIds.LighterFighter_BG28_968:
 					case CardIds.LighterFighter_BG28_968_G:
 						// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
@@ -1595,8 +1594,8 @@ export const spawnEntitiesFromDeathrattle = (
 						});
 						break;
 					case CardIds.UnstableGhoul_BG_FP1_024:
-					case CardIds.UnstableGhoul_TB_BaconUps_118:
-						const damage = deadEntityCardId === CardIds.UnstableGhoul_TB_BaconUps_118 ? 2 : 1;
+						// case CardIds.UnstableGhoul_TB_BaconUps_118:
+						const damage = 1; //deadEntityCardId === CardIds.UnstableGhoul_TB_BaconUps_118 ? 2 : 1;
 						// In case there are spawns, don't target them
 						const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
 						for (const target of minionsToDamage) {
@@ -1715,28 +1714,28 @@ export const spawnEntitiesFromDeathrattle = (
 							);
 						}
 						break;
-					case CardIds.WitheredSpearhide_BG27_006:
-					case CardIds.WitheredSpearhide_BG27_006_G:
-						const witheredSpearhideCardsToAdd = Array(
-							deadEntity.cardId === CardIds.WitheredSpearhide_BG27_006_G ? 2 : 1,
-						).fill(CardIds.BloodGem);
-						addCardsInHand(
-							boardWithDeadEntityHero,
-							boardWithDeadEntity,
-							witheredSpearhideCardsToAdd,
-							gameState,
-						);
-						break;
-					case CardIds.RecurringNightmare_BG26_055:
-					case CardIds.RecurringNightmare_BG26_055_G:
-						applyRecurringNightmareDeathrattleEffect(
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							deadEntity,
-							deadEntityCardId === CardIds.RecurringNightmare_BG26_055_G,
-							gameState,
-						);
-						break;
+					// case CardIds.WitheredSpearhide_BG27_006:
+					// case CardIds.WitheredSpearhide_BG27_006_G:
+					// 	const witheredSpearhideCardsToAdd = Array(
+					// 		deadEntity.cardId === CardIds.WitheredSpearhide_BG27_006_G ? 2 : 1,
+					// 	).fill(CardIds.BloodGem);
+					// 	addCardsInHand(
+					// 		boardWithDeadEntityHero,
+					// 		boardWithDeadEntity,
+					// 		witheredSpearhideCardsToAdd,
+					// 		gameState,
+					// 	);
+					// 	break;
+					// case CardIds.RecurringNightmare_BG26_055:
+					// case CardIds.RecurringNightmare_BG26_055_G:
+					// 	applyRecurringNightmareDeathrattleEffect(
+					// 		boardWithDeadEntity,
+					// 		boardWithDeadEntityHero,
+					// 		deadEntity,
+					// 		deadEntityCardId === CardIds.RecurringNightmare_BG26_055_G,
+					// 		gameState,
+					// 	);
+					// 	break;
 					case CardIds.MotleyPhalanx_BG27_080:
 					case CardIds.MotleyPhalanx_BG27_080_G:
 						const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 2 : 1;
@@ -1984,24 +1983,24 @@ export const spawnEntitiesFromEnchantments = (
 		for (let i = 0; i < multiplier; i++) {
 			let deathrattleTriggered = true;
 			switch (enchantment.cardId) {
-				case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
-				case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
-					spawnedEntities.push(
-						...spawnEntities(
-							enchantment.cardId === CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e
-								? CardIds.RecurringNightmare_BG26_055
-								: CardIds.RecurringNightmare_BG26_055_G,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
+				// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
+				// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
+				// 	spawnedEntities.push(
+				// 		...spawnEntities(
+				// 			enchantment.cardId === CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e
+				// 				? CardIds.RecurringNightmare_BG26_055
+				// 				: CardIds.RecurringNightmare_BG26_055_G,
+				// 			1,
+				// 			boardWithDeadEntity,
+				// 			boardWithDeadEntityHero,
+				// 			otherBoard,
+				// 			otherBoardHero,
+				// 			gameState,
+				// 			deadEntity.friendly,
+				// 			false,
+				// 		),
+				// 	);
+				// 	break;
 				// Replicating Menace
 				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e:
 					spawnedEntities.push(
@@ -2124,24 +2123,24 @@ export const spawnEntitiesFromEnchantments = (
 						),
 					);
 					break;
-				case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e:
-				case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge:
-					spawnedEntities.push(
-						...spawnEntities(
-							enchantment.cardId === CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge
-								? CardIds.SurfNSurf_CrabToken_BG27_004_Gt2
-								: CardIds.SurfNSurf_CrabToken_BG27_004t2,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
+				// case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e:
+				// case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge:
+				// 	spawnedEntities.push(
+				// 		...spawnEntities(
+				// 			enchantment.cardId === CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge
+				// 				? CardIds.SurfNSurf_CrabToken_BG27_004_Gt2
+				// 				: CardIds.SurfNSurf_CrabToken_BG27_004t2,
+				// 			1,
+				// 			boardWithDeadEntity,
+				// 			boardWithDeadEntityHero,
+				// 			otherBoard,
+				// 			otherBoardHero,
+				// 			gameState,
+				// 			deadEntity.friendly,
+				// 			false,
+				// 		),
+				// 	);
+				// 	break;
 				case CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e:
 					spawnedEntities.push(
 						...spawnEntities(

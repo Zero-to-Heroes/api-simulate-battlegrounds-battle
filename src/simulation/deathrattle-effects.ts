@@ -5,7 +5,7 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
 import { updateTaunt } from '../keywords/taunt';
-import { pickMultipleRandomDifferent, pickRandom } from '../services/utils';
+import { pickMultipleRandomDifferent } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
 	getRandomMinionWithHighestHealth,
@@ -15,7 +15,7 @@ import {
 	isFish,
 	isGolden,
 } from '../utils';
-import { dealDamageToMinion, getNeighbours } from './attack';
+import { dealDamageToMinion } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
@@ -194,30 +194,30 @@ export const applyRecurringNightmareDeathrattleEffect = (
 	gameState: FullGameState,
 	multiplier = 1,
 ): void => {
-	multiplier = multiplier || 1;
-	const target = pickRandom(
-		boardWithDeadEntity
-			.filter((e) =>
-				hasCorrectTribe(e, boardWithDeadEntityHero, Race.UNDEAD, gameState.anomalies, gameState.allCards),
-			)
-			.filter(
-				(e) =>
-					e.cardId !== CardIds.RecurringNightmare_BG26_055 &&
-					e.cardId !== CardIds.RecurringNightmare_BG26_055_G,
-			),
-	);
-	if (target) {
-		target.enchantments = target.enchantments ?? [];
-		target.enchantments.push({
-			cardId: isPremium
-				? CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge
-				: CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
-			originEntityId: deadEntity.entityId,
-			repeats: multiplier > 1 ? multiplier : 1,
-			timing: gameState.sharedState.currentEntityId++,
-		});
-		gameState.spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity, null, null);
-	}
+	// multiplier = multiplier || 1;
+	// const target = pickRandom(
+	// 	boardWithDeadEntity
+	// 		.filter((e) =>
+	// 			hasCorrectTribe(e, boardWithDeadEntityHero, Race.UNDEAD, gameState.anomalies, gameState.allCards),
+	// 		)
+	// 		.filter(
+	// 			(e) =>
+	// 				e.cardId !== CardIds.RecurringNightmare_BG26_055 &&
+	// 				e.cardId !== CardIds.RecurringNightmare_BG26_055_G,
+	// 		),
+	// );
+	// if (target) {
+	// 	target.enchantments = target.enchantments ?? [];
+	// 	target.enchantments.push({
+	// 		cardId: isPremium
+	// 			? CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge
+	// 			: CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e,
+	// 		originEntityId: deadEntity.entityId,
+	// 		repeats: multiplier > 1 ? multiplier : 1,
+	// 		timing: gameState.sharedState.currentEntityId++,
+	// 	});
+	// 	gameState.spectator.registerPowerTarget(deadEntity, target, boardWithDeadEntity, null, null);
+	// }
 };
 
 // Some minions like Icesnarl can revive themselves when killing a minion, so it needs to be handled before
@@ -355,37 +355,37 @@ export const applyWheneverMinionDiesEffect = (
 		gameState.sharedState.currentAttackerEntityId != null &&
 		gameState.sharedState.currentAttackerEntityId === deadEntity.lastAffectedByEntity?.entityId
 	) {
-		if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_BGS_032) {
-			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
-			if (targets.length > 0) {
-				const target = targets[0];
-				dealDamageToMinion(
-					target,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity.lastAffectedByEntity,
-					3,
-					otherBoard,
-					otherBoardHero,
-					gameState,
-				);
-			}
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_TB_BaconUps_103) {
-			const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
-			if (targets.length > 0) {
-				const target = targets[0];
-				dealDamageToMinion(
-					target,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity.lastAffectedByEntity,
-					6,
-					otherBoard,
-					otherBoardHero,
-					gameState,
-				);
-			}
-		}
+		// if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_BGS_032) {
+		// 	const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
+		// 	if (targets.length > 0) {
+		// 		const target = targets[0];
+		// 		dealDamageToMinion(
+		// 			target,
+		// 			boardWithDeadEntity,
+		// 			boardWithDeadEntityHero,
+		// 			deadEntity.lastAffectedByEntity,
+		// 			3,
+		// 			otherBoard,
+		// 			otherBoardHero,
+		// 			gameState,
+		// 		);
+		// 	}
+		// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.HeraldOfFlame_TB_BaconUps_103) {
+		// 	const targets = boardWithDeadEntity.filter((entity) => entity.health > 0 && !entity.definitelyDead);
+		// 	if (targets.length > 0) {
+		// 		const target = targets[0];
+		// 		dealDamageToMinion(
+		// 			target,
+		// 			boardWithDeadEntity,
+		// 			boardWithDeadEntityHero,
+		// 			deadEntity.lastAffectedByEntity,
+		// 			6,
+		// 			otherBoard,
+		// 			otherBoardHero,
+		// 			gameState,
+		// 		);
+		// 	}
+		// }
 		// else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental && deadEntity.lastAffectedByEntity.attacking) {
 		// 	// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.WildfireElemental) {
 		// 	// console.log('applying WildfireElemental effect', stringifySimple(boardWithDeadEntity, allCards));
@@ -433,7 +433,7 @@ export const applyWheneverMinionDiesEffect = (
 		// 		),
 		// 	);
 		// }
-		else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn_TRL_232) {
+		if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn_TRL_232) {
 			const newEntities = spawnEntities(
 				CardIds.IronhideDirehorn_IronhideRuntToken_TRL_232t,
 				1,
@@ -446,65 +446,65 @@ export const applyWheneverMinionDiesEffect = (
 				false,
 			);
 			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn_TB_BaconUps_051) {
-			const newEntities = spawnEntities(
-				CardIds.IronhideDirehorn_IronhideRuntToken_TB_BaconUps_051t,
-				1,
-				otherBoard,
-				otherBoardHero,
-				boardWithDeadEntity,
-				boardWithDeadEntityHero,
-				gameState,
-				!deadEntity.friendly,
-				false,
-			);
-			otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {
-			const otherPirates = otherBoard
-				.filter((entity) =>
-					hasCorrectTribe(
-						entity,
-						boardWithDeadEntityHero,
-						Race.PIRATE,
-						gameState.anomalies,
-						gameState.allCards,
-					),
-				)
-				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
-			otherPirates.forEach((pirate) => {
-				modifyStats(
-					pirate,
-					deadEntity.lastAffectedByEntity,
-					2,
-					2,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					gameState,
-				);
-			});
-		} else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_TB_BaconUps_142) {
-			const otherPirates = otherBoard
-				.filter((entity) =>
-					hasCorrectTribe(
-						entity,
-						boardWithDeadEntityHero,
-						Race.PIRATE,
-						gameState.anomalies,
-						gameState.allCards,
-					),
-				)
-				.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
-			otherPirates.forEach((pirate) => {
-				modifyStats(
-					pirate,
-					deadEntity.lastAffectedByEntity,
-					4,
-					4,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					gameState,
-				);
-			});
+			// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.IronhideDirehorn_TB_BaconUps_051) {
+			// 	const newEntities = spawnEntities(
+			// 		CardIds.IronhideDirehorn_IronhideRuntToken_TB_BaconUps_051t,
+			// 		1,
+			// 		otherBoard,
+			// 		otherBoardHero,
+			// 		boardWithDeadEntity,
+			// 		boardWithDeadEntityHero,
+			// 		gameState,
+			// 		!deadEntity.friendly,
+			// 		false,
+			// 	);
+			// 	otherBoard.splice(otherBoard.length - deadEntityIndexFromRight, 0, ...newEntities);
+			// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_BGS_080) {
+			// 	const otherPirates = otherBoard
+			// 		.filter((entity) =>
+			// 			hasCorrectTribe(
+			// 				entity,
+			// 				boardWithDeadEntityHero,
+			// 				Race.PIRATE,
+			// 				gameState.anomalies,
+			// 				gameState.allCards,
+			// 			),
+			// 		)
+			// 		.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
+			// 	otherPirates.forEach((pirate) => {
+			// 		modifyStats(
+			// 			pirate,
+			// 			deadEntity.lastAffectedByEntity,
+			// 			2,
+			// 			2,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			gameState,
+			// 		);
+			// 	});
+			// } else if (deadEntity.lastAffectedByEntity.cardId === CardIds.SeabreakerGoliath_TB_BaconUps_142) {
+			// 	const otherPirates = otherBoard
+			// 		.filter((entity) =>
+			// 			hasCorrectTribe(
+			// 				entity,
+			// 				boardWithDeadEntityHero,
+			// 				Race.PIRATE,
+			// 				gameState.anomalies,
+			// 				gameState.allCards,
+			// 			),
+			// 		)
+			// 		.filter((entity) => entity.entityId !== deadEntity.lastAffectedByEntity.entityId);
+			// 	otherPirates.forEach((pirate) => {
+			// 		modifyStats(
+			// 			pirate,
+			// 			deadEntity.lastAffectedByEntity,
+			// 			4,
+			// 			4,
+			// 			boardWithDeadEntity,
+			// 			boardWithDeadEntityHero,
+			// 			gameState,
+			// 		);
+			// 	});
 		}
 	}
 };
@@ -670,8 +670,8 @@ const applyJunkbotEffect = (board: BoardEntity[], hero: BgsPlayerEntity, gameSta
 	for (let i = 0; i < board.length; i++) {
 		if (board[i].cardId === CardIds.Junkbot_GVG_106) {
 			modifyStats(board[i], board[i], 2, 2, board, hero, gameState);
-		} else if (board[i].cardId === CardIds.Junkbot_TB_BaconUps_046) {
-			modifyStats(board[i], board[i], 4, 4, board, hero, gameState);
+			// } else if (board[i].cardId === CardIds.Junkbot_TB_BaconUps_046) {
+			// 	modifyStats(board[i], board[i], 4, 4, board, hero, gameState);
 		}
 	}
 };
@@ -682,17 +682,16 @@ const applyQirajiHarbringerEffect = (
 	deadEntityIndexFromRight: number,
 	gameState: FullGameState,
 ): void => {
-	const qiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger_BGS_112);
-	const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger_TB_BaconUps_303);
-
-	// TODO: if reactivated, properly apply buffs one by one, instead of all together
-	if (qiraji.length + goldenQiraji.length > 0) {
-		const neighbours = getNeighbours(board, null, deadEntityIndexFromRight);
-		const buff = 2 * qiraji.length + 4 * goldenQiraji.length;
-		neighbours.forEach((entity) => {
-			modifyStats(entity, null, buff, buff, board, hero, gameState);
-		});
-	}
+	// const qiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger_BGS_112);
+	// const goldenQiraji = board.filter((entity) => entity.cardId === CardIds.QirajiHarbinger_TB_BaconUps_303);
+	// // TODO: if reactivated, properly apply buffs one by one, instead of all together
+	// if (qiraji.length + goldenQiraji.length > 0) {
+	// 	const neighbours = getNeighbours(board, null, deadEntityIndexFromRight);
+	// 	const buff = 2 * qiraji.length + 4 * goldenQiraji.length;
+	// 	neighbours.forEach((entity) => {
+	// 		modifyStats(entity, null, buff, buff, board, hero, gameState);
+	// 	});
+	// }
 };
 
 export const applyMonstrosity = (
@@ -808,14 +807,14 @@ const removeOldMurkEyeAttack = (
 	hero: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	const murkeyes = boardWithDeadEntity.filter(
-		(entity) => entity.cardId === CardIds.OldMurkEyeLegacy || entity.cardId === CardIds.OldMurkEyeVanilla,
-	);
-	const goldenMurkeyes = boardWithDeadEntity.filter((entity) => entity.cardId === CardIds.OldMurkEye);
-	murkeyes.forEach((entity) => {
-		modifyStats(entity, null, -1, 0, boardWithDeadEntity, hero, gameState);
-	});
-	goldenMurkeyes.forEach((entity) => {
-		modifyStats(entity, null, -2, 0, boardWithDeadEntity, hero, gameState);
-	});
+	// const murkeyes = boardWithDeadEntity.filter(
+	// 	(entity) => entity.cardId === CardIds.OldMurkEyeLegacy || entity.cardId === CardIds.OldMurkEyeVanilla,
+	// );
+	// const goldenMurkeyes = boardWithDeadEntity.filter((entity) => entity.cardId === CardIds.OldMurkEye);
+	// murkeyes.forEach((entity) => {
+	// 	modifyStats(entity, null, -1, 0, boardWithDeadEntity, hero, gameState);
+	// });
+	// goldenMurkeyes.forEach((entity) => {
+	// 	modifyStats(entity, null, -2, 0, boardWithDeadEntity, hero, gameState);
+	// });
 };

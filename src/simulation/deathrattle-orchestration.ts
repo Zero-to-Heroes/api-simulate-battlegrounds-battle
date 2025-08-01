@@ -684,10 +684,7 @@ const handlePostDeathrattleEffect = (
 		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
 	});
 
-	if (
-		deadEntityPlayerState.player.questRewards?.includes(CardIds.RitualDagger_BG24_Reward_113) ||
-		deadEntityPlayerState.player.questRewards?.includes(CardIds.RitualDagger_BG24_Reward_113_ALT)
-	) {
+	if (deadEntityPlayerState.player.questRewards?.includes(CardIds.RitualDagger_BG24_Reward_113)) {
 		const ogDeadEntity = gameState.sharedState.deaths.find((entity) => entity.entityId === deadEntity.entityId);
 		if (ogDeadEntity) {
 			ogDeadEntity.attack += 4;

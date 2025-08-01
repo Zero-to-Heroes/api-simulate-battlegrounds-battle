@@ -1,19 +1,21 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEnchantment } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { OnAttackCard } from '../../card.interface';
 
 export const StompingStegodonEnchantment: OnAttackCard = {
-	cardIds: [TempCardIds.StompingStegodonEnchantment, TempCardIds.StompingStegodonEnchantment_G],
+	cardIds: [
+		CardIds.StompingStegodon_StompingEnchantment_BG33_840e2,
+		CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2,
+	],
 	onAnyMinionAttack: (minion: BoardEnchantment, input: OnAttackInput) => {
 		if (input.isSelfAttacking) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
-		const mult = minion.cardId === TempCardIds.StompingStegodonEnchantment_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2 ? 2 : 1;
 		const candidates = input.attackingBoard.filter(
 			(e) =>
 				e !== input.attacker &&
@@ -37,9 +39,9 @@ export const StompingStegodonEnchantment: OnAttackCard = {
 			);
 			candidate.enchantments.push({
 				cardId:
-					input.attacker.cardId === TempCardIds.StompingStegodon_G
-						? TempCardIds.StompingStegodonEnchantment_G
-						: TempCardIds.StompingStegodonEnchantment,
+					input.attacker.cardId === CardIds.StompingStegodon_BG33_840_G
+						? CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2
+						: CardIds.StompingStegodon_StompingEnchantment_BG33_840e2,
 				originEntityId: input.attacker.entityId,
 				timing: input.gameState.sharedState.currentEntityId++,
 			});

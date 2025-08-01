@@ -1,13 +1,16 @@
+import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnAttackCard } from '../../card.interface';
 
 export const WhirringProtectorEnchantment: OnAttackCard = {
-	cardIds: [TempCardIds.WhirringProtectorEnchantment, TempCardIds.WhirringProtectorEnchantment_G],
+	cardIds: [
+		CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807e,
+		CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807_Ge,
+	],
 	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		const mult = minion.cardId === TempCardIds.WhirringProtectorEnchantment_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807_Ge ? 2 : 1;
 		const targets = input.attackingBoard.filter((e) => e !== minion);
 		for (const target of targets) {
 			modifyStats(target, minion, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);

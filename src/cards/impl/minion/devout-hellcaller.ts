@@ -1,15 +1,14 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { AfterDealDamageInput } from '../../../simulation/damage-effects';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { AfterDealDamageCard } from '../../card.interface';
 
 export const DevoutHellcaller: AfterDealDamageCard = {
-	cardIds: [TempCardIds.DevoutHellcaller, TempCardIds.DevoutHellcaller_G],
+	cardIds: [CardIds.DevoutHellcaller_BG33_155, CardIds.DevoutHellcaller_BG33_155_G],
 	afterDealDamage: (minion: BoardEntity, input: AfterDealDamageInput) => {
-		const mult = minion.cardId === TempCardIds.DevoutHellcaller_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.DevoutHellcaller_BG33_155_G ? 2 : 1;
 		if (
 			input.damageDealer != minion &&
 			hasCorrectTribe(

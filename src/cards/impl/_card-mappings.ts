@@ -63,7 +63,7 @@ import { EchoingRoar } from './minion/echoing-roar';
 import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { EliteNavigator } from './minion/elite-navigator';
-import { ExceptionnalCaretaker } from './minion/exceptionnal-caretaker';
+import { ExceptionalCaretaker } from './minion/exceptionnal-caretaker';
 import { FairyGillmother } from './minion/fairy-gillmother';
 import { FaunaWhisperer } from './minion/fauna-whisperer';
 import { FireForgedEvoker } from './minion/fire-forged-evoker';
@@ -240,7 +240,7 @@ import { YorikSmite } from './minion/yorik-smite';
 import { YoungMurkEye } from './minion/young-murk-eye';
 import { Yrel } from './minion/yrel';
 import { Zergling } from './minion/zergling';
-import { StandAsOne } from './quest-reward/stand-as-one';
+import { RighteousCharge } from './quest-reward/stand-as-one';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
 import { ArtisanalUrn } from './trinket/artisanal-urn';
@@ -262,7 +262,7 @@ import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
 	RaptorElder,
-	StandAsOne,
+	RighteousCharge,
 	AvalancheCaller,
 	BileSpitter,
 	BigwigBandit,
@@ -301,7 +301,7 @@ const cards = [
 	WrathscaleRogue,
 	RideOrDie,
 	AllSeeingElder,
-	ExceptionnalCaretaker,
+	ExceptionalCaretaker,
 	Yrel,
 	RuinsRenovator,
 	CampfireShadow,

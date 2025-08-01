@@ -34,12 +34,9 @@ import { Crabby } from '../../cards/impl/minion/crabby';
 import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
 import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
-import { HoardingHatespawn } from '../../cards/impl/minion/hoarding-hatespawn';
 import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
 import { PilotedWhirlOTron } from '../../cards/impl/minion/piloted-whirl-o-tron';
-import { RedWhelp } from '../../cards/impl/minion/red-whelp';
-import { SanctumRester } from '../../cards/impl/minion/sanctum-rester';
 import { Sandy } from '../../cards/impl/minion/sandy';
 import { Soulsplitter } from '../../cards/impl/minion/soulsplitter';
 import { SunScreener } from '../../cards/impl/minion/sun-screener';
@@ -228,18 +225,18 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return FleetingVigor;
 
 		// Minions
-		case CardIds.RedWhelp_BGS_019:
-		case CardIds.RedWhelp_TB_BaconUps_102:
-			return RedWhelp;
+		// case CardIds.RedWhelp_BGS_019:
+		// case CardIds.RedWhelp_TB_BaconUps_102:
+		// 	return RedWhelp;
 		case CardIds.ChoralMrrrglr_BG26_354:
 		case CardIds.ChoralMrrrglr_BG26_354_G:
 			return ChoralMrrrglr;
 		case CardIds.AmberGuardian_BG24_500:
 		case CardIds.AmberGuardian_BG24_500_G:
 			return AmberGuardian;
-		case CardIds.SanctumRester_BG26_356:
-		case CardIds.SanctumRester_BG26_356_G:
-			return SanctumRester;
+		// case CardIds.SanctumRester_BG26_356:
+		// case CardIds.SanctumRester_BG26_356_G:
+		// 	return SanctumRester;
 		case CardIds.Soulsplitter_BG25_023:
 		case CardIds.Soulsplitter_BG25_023_G:
 			return Soulsplitter;
@@ -276,9 +273,9 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.YulonFortuneGranter_BG29_811:
 		case CardIds.YulonFortuneGranter_BG29_811_G:
 			return YulonFortuneGranter;
-		case CardIds.HoardingHatespawn_BG29_872:
-		case CardIds.HoardingHatespawn_BG29_872_G:
-			return HoardingHatespawn;
+		// case CardIds.HoardingHatespawn_BG29_872:
+		// case CardIds.HoardingHatespawn_BG29_872_G:
+		// 	return HoardingHatespawn;
 		case CardIds.TheUninvitedGuest_BG29_875:
 		case CardIds.TheUninvitedGuest_BG29_875_G:
 			return TheUninvitedGuest;

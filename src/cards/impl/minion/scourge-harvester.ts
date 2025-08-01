@@ -1,15 +1,14 @@
-import { Race } from '@firestone-hs/reference-data';
+import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { OnOtherSpawnedCard } from '../../card.interface';
 
 export const ScourgeHarvester: OnOtherSpawnedCard = {
-	cardIds: [TempCardIds.ScourgeHarvester, TempCardIds.ScourgeHarvester_G],
+	cardIds: [CardIds.ScourgeHarvester_BG33_114, CardIds.ScourgeHarvester_BG33_114_G],
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput): void => {
-		const mult = minion.cardId === TempCardIds.ScourgeHarvester_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.ScourgeHarvester_BG33_114_G ? 2 : 1;
 		if (
 			hasCorrectTribe(input.spawned, input.hero, Race.UNDEAD, input.gameState.anomalies, input.gameState.allCards)
 		) {

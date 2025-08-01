@@ -1,4 +1,4 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToRandomEnemy } from '../../../simulation/attack';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
@@ -15,7 +15,7 @@ export const RedWhelp = {
 				input.gameState.allCards,
 			),
 		).length;
-		const loops = minion.cardId === CardIds.RedWhelp_TB_BaconUps_102 ? 2 : 1;
+		const loops = 1; //minion.cardId === CardIds.RedWhelp_TB_BaconUps_102 ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			dealDamageToRandomEnemy(
 				input.opponentBoard,
