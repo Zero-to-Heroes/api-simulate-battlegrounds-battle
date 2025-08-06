@@ -570,7 +570,7 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 	return entity
 		? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/entityId=${entity.entityId}/atk=${
 				entity.attack
-		  }/hp=${entity.health}/ench=${entity.enchantments?.length}`
+		  }/hp=${entity.health}/ench=${entity.enchantments?.map((e) => e.cardId).join(',')}`
 		: null;
 };
 

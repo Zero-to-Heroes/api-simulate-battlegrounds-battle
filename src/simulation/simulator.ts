@@ -33,6 +33,9 @@ export class Simulator {
 			(playerBoard?.length > 0 && opponentBoard?.length > 0)
 		) {
 			this.simulateSingleBattlePass(playerBoard, playerEntity, opponentBoard, opponentEntity);
+			if (this.hasShowShortCircuitWarning) {
+				break;
+			}
 
 			// The only case where there can only 0-attack minions on a board is when both boards
 			// are that way (otherwise one side would kill the other)

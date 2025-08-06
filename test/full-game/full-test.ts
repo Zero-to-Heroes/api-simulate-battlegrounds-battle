@@ -10,6 +10,8 @@ import jsonEvent3 from './game.json';
 console.log('starting test');
 const test = async () => {
 	Error.stackTraceLimit = Infinity;
+	process.env.FORCE_COLOR = '0';
+	process.env.NO_COLOR = '1';
 	console.log('preparing to run simulation');
 	const start = Date.now();
 	const input: BgsBattleInfo = {

@@ -8,7 +8,7 @@ import { debugState } from '../debug-state';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { addImpliedMechanics, isFish } from '../utils';
+import { addImpliedMechanics, isFish, stringifySimple } from '../utils';
 import { applyAfterAttackEffects, applyAfterAttackTrinkets } from './after-attack';
 import { onEntityDamaged } from './damage-effects';
 import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
@@ -196,17 +196,17 @@ export const doFullAttack = (
 	);
 	applyAfterStatsUpdate(gameState);
 	attackingEntity.immuneWhenAttackCharges = Math.max(0, (attackingEntity.immuneWhenAttackCharges ?? 0) - 1);
-	if (
-		defendingEntity.health > 0 &&
-		!defendingEntity.definitelyDead
-		// && (defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
-		// 	defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
-	) {
-		defendingEntity.attackImmediately = true;
-		if (defendingEntity.attackImmediately) {
-			simulateAttack(defendingBoard, defendingBoardHero, attackingBoard, attackingBoardHero, gameState);
-		}
-	}
+	// if (
+	// 	defendingEntity.health > 0 &&
+	// 	!defendingEntity.definitelyDead
+	// 	&& (defendingEntity.cardId === CardIds.YoHoOgre_BGS_060 ||
+	// 		defendingEntity.cardId === CardIds.YoHoOgre_TB_BaconUps_150)
+	// ) {
+	// 	defendingEntity.attackImmediately = true;
+	// 	if (defendingEntity.attackImmediately) {
+	// 		simulateAttack(defendingBoard, defendingBoardHero, attackingBoard, attackingBoardHero, gameState);
+	// 	}
+	// }
 };
 
 const performAttack = (
@@ -500,6 +500,7 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
 	}
 	const attacker = validAttackers[0];
+	const attackerName = allCards.getCard(attacker.cardId)?.name;
 	return attacker;
 };
 

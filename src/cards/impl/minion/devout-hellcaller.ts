@@ -8,6 +8,11 @@ import { AfterDealDamageCard } from '../../card.interface';
 export const DevoutHellcaller: AfterDealDamageCard = {
 	cardIds: [CardIds.DevoutHellcaller_BG33_155, CardIds.DevoutHellcaller_BG33_155_G],
 	afterDealDamage: (minion: BoardEntity, input: AfterDealDamageInput) => {
+		// Only other friendly minions trigger this
+		if (minion.friendly !== input.damageDealer.friendly || minion === input.damageDealer) {
+			return;
+		}
+
 		const mult = minion.cardId === CardIds.DevoutHellcaller_BG33_155_G ? 2 : 1;
 		if (
 			input.damageDealer != minion &&

@@ -8,6 +8,10 @@ import { AfterDealDamageCard } from '../../card.interface';
 export const LordOfTheRuins: AfterDealDamageCard = {
 	cardIds: [CardIds.LordOfTheRuins_BG33_154, CardIds.LordOfTheRuins_BG33_154_G],
 	afterDealDamage: (minion: BoardEntity, input: AfterDealDamageInput) => {
+		// Only friendly minions trigger this
+		if (minion.friendly !== input.damageDealer.friendly) {
+			return;
+		}
 		const mult = minion.cardId === CardIds.LordOfTheRuins_BG33_154_G ? 2 : 1;
 		if (
 			hasCorrectTribe(

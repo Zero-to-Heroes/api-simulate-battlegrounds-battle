@@ -191,6 +191,19 @@ export const onEntityDamaged = (
 				});
 			}
 		}
+		for (const entity of otherBoard) {
+			const afterDealDamageImpl = cardMappings[entity.cardId];
+			if (hasAfterDealDamage(afterDealDamageImpl)) {
+				afterDealDamageImpl.afterDealDamage(entity, {
+					damagedEntity: damagedEntity,
+					damageDealer: damageSource,
+					damage: damage,
+					board: otherBoard,
+					hero: otherHero,
+					gameState,
+				});
+			}
+		}
 	}
 	return finalSpawns;
 };

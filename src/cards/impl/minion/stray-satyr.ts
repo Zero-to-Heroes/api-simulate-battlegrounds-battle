@@ -8,6 +8,11 @@ import { AfterDealDamageCard } from '../../card.interface';
 export const StraySatyr: AfterDealDamageCard = {
 	cardIds: [CardIds.StraySatyr_BG33_151, CardIds.StraySatyr_BG33_151_G],
 	afterDealDamage: (minion: BoardEntity, input: AfterDealDamageInput) => {
+		// Only friendly minions trigger this
+		if (minion.friendly !== input.damageDealer.friendly) {
+			return;
+		}
+
 		const mult = minion.cardId === CardIds.StraySatyr_BG33_151_G ? 2 : 1;
 		if (
 			hasCorrectTribe(
@@ -18,7 +23,8 @@ export const StraySatyr: AfterDealDamageCard = {
 				input.gameState.allCards,
 			)
 		) {
-			modifyStats(minion, minion, 2 * mult, 0, input.board, input.hero, input.gameState);
+			modifyStats(minion, minion, 1 * mult, 0, input.board, input.hero, input.gameState);
+			input.gameState.spectator.registerPowerTarget(minion, minion, input.board, input.hero, null);
 		}
 	},
 };

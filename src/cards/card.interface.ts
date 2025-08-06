@@ -264,6 +264,8 @@ export const hasAfterHeroDamaged = (card: Card): card is AfterHeroDamagedCard =>
 	(card as AfterHeroDamagedCard)?.afterHeroDamaged !== undefined;
 
 export interface AfterDealDamageCard extends Card {
+	// Called whenever damage is dealt, both on the friendly and enemy side
+	// So you need to check the "friendly" flag
 	afterDealDamage: (entity: BoardEntity, input: AfterDealDamageInput) => void;
 }
 export const hasAfterDealDamage = (card: Card): card is AfterDealDamageCard =>
