@@ -14,6 +14,8 @@ export const LordOfTheRuins: AfterDealDamageCard = {
 		}
 		const mult = minion.cardId === CardIds.LordOfTheRuins_BG33_154_G ? 2 : 1;
 		if (
+			'attack' in input.damageDealer &&
+			'health' in input.damageDealer &&
 			hasCorrectTribe(
 				input.damageDealer,
 				input.hero,

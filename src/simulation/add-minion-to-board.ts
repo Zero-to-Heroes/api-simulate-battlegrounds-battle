@@ -15,7 +15,6 @@ import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { pickRandom } from '../services/utils';
 import { copyEntity, hasCorrectTribe } from '../utils';
-import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { modifyStats, setEntityStats } from './stats';
@@ -542,15 +541,6 @@ export const removeAurasFromSelf = (
 		}
 	}
 
-	const onDespawnedImpl = cardMappings[entity.cardId];
-	if (hasOnDespawned(onDespawnedImpl)) {
-		onDespawnedImpl.onDespawned(entity, {
-			hero: boardHero,
-			board: board,
-			gameState,
-		});
-	}
-
 	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.UndeadAttackBonus);
@@ -781,7 +771,6 @@ const handleAfterSpawnEffects = (
 	for (const spawned of allSpawned) {
 		handleAfterSpawnEffect(board, hero, otherBoard, otherHero, spawned, gameState);
 	}
-	updateBoardwideAuras(board, hero, gameState);
 };
 
 export const onMinionSummoned = (hero: BgsPlayerEntity, board: BoardEntity[], gameState: FullGameState): void => {

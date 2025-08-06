@@ -66,7 +66,7 @@ export const computeDeathrattleMultiplier = (
 export const applyLightningInvocationEnchantment = (
 	boardWithDeadEntity: BoardEntity[],
 	boardWithDeadEntityHero: BgsPlayerEntity,
-	deadEntity: BoardEntity,
+	deadEntity: BoardEntity | BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,

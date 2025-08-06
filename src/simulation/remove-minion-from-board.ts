@@ -2,8 +2,9 @@ import { CardIds, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasCorrectTribe } from '../utils';
-import { updateBoardwideAuras } from './auras';
 import { FullGameState } from './internal-game-state';
+import { cardMappings } from '../cards/impl/_card-mappings';
+import { hasOnDespawned } from '../cards/card.interface';
 
 export const removeMinionFromBoard = (
 	board: BoardEntity[],
@@ -13,7 +14,6 @@ export const removeMinionFromBoard = (
 ): void => {
 	const removedEntity = board.splice(index, 1)[0];
 	handleMinionRemovedAuraEffect(board, removedEntity, boardHero, gameState);
-	updateBoardwideAuras(board, boardHero, gameState);
 };
 
 export const handleMinionRemovedAuraEffect = (
@@ -22,6 +22,15 @@ export const handleMinionRemovedAuraEffect = (
 	boardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
+	const onDespawnedImpl = cardMappings[removed.cardId];
+	if (hasOnDespawned(onDespawnedImpl)) {
+		onDespawnedImpl.onDespawned(removed, {
+			hero: boardHero,
+			board: board,
+			gameState,
+		});
+	}
+
 	switch (removed.cardId) {
 		case CardIds.MurlocWarleaderLegacy_BG_EX1_507:
 		case CardIds.MurlocWarleaderLegacy_TB_BaconUps_008:

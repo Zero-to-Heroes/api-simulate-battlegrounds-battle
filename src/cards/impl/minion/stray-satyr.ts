@@ -15,6 +15,8 @@ export const StraySatyr: AfterDealDamageCard = {
 
 		const mult = minion.cardId === CardIds.StraySatyr_BG33_151_G ? 2 : 1;
 		if (
+			'attack' in input.damageDealer &&
+			'health' in input.damageDealer &&
 			hasCorrectTribe(
 				input.damageDealer,
 				input.hero,

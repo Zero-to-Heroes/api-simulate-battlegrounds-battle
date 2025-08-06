@@ -16,6 +16,8 @@ export const DevoutHellcaller: AfterDealDamageCard = {
 		const mult = minion.cardId === CardIds.DevoutHellcaller_BG33_155_G ? 2 : 1;
 		if (
 			input.damageDealer != minion &&
+			'attack' in input.damageDealer &&
+			'health' in input.damageDealer &&
 			hasCorrectTribe(
 				input.damageDealer,
 				input.hero,

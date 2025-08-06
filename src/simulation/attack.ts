@@ -643,7 +643,7 @@ export const dealDamageToMinion = (
 	target: BoardEntity,
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
-	damageSource: BoardEntity,
+	damageSource: BoardEntity | BgsPlayerEntity,
 	damage: number,
 	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
@@ -690,11 +690,11 @@ export const dealDamageToMinion = (
 			gameState,
 		);
 	}
-	if (!isDeadBeforeDamage && actualDamageDone > 0) {
-		target.lastAffectedByEntity = damageSource;
+	if (!isDeadBeforeDamage && actualDamageDone > 0 && 'attack' in damageSource && 'health' in damageSource) {
+		target.lastAffectedByEntity = damageSource as BoardEntity;
 
 		if (target.health <= 0 || target.definitelyDead) {
-			onMinionKill(damageSource, false, target, otherBoard, otherHero, board, hero, [], gameState);
+			onMinionKill(damageSource as BoardEntity, false, target, otherBoard, otherHero, board, hero, [], gameState);
 		}
 	}
 	const defendingEntityIndex = board.map((entity) => entity.entityId).indexOf(target.entityId);

@@ -18,7 +18,7 @@ export const onEntityDamaged = (
 	hero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],
 	otherHero: BgsPlayerEntity,
-	damageSource: BoardEntity,
+	damageSource: BoardEntity | BgsPlayerEntity,
 	damage: number,
 	gameState: FullGameState,
 ): readonly BoardEntity[] => {
@@ -260,7 +260,7 @@ const handleOtherEntityEffects = (
 
 export interface AfterDealDamageInput {
 	damagedEntity: BoardEntity | BgsPlayerEntity;
-	damageDealer: BoardEntity;
+	damageDealer: BoardEntity | BgsPlayerEntity;
 	damage: number;
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;

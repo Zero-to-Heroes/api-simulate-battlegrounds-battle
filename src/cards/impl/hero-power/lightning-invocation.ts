@@ -13,7 +13,7 @@ export const LightningInvocation: StartOfCombatCard = {
 				applyLightningInvocationEnchantment(
 					input.playerBoard,
 					input.playerEntity,
-					null,
+					input.playerEntity,
 					input.opponentBoard,
 					input.opponentEntity,
 					input.gameState,

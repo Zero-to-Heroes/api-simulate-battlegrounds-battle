@@ -31,6 +31,7 @@ export const RideOrDie: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCard = {
 		}
 	},
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
+		const debug = true;
 		if (
 			!hasCorrectTribe(
 				input.spawned,

@@ -15,7 +15,7 @@ export const AimRight: StartOfCombatCard = {
 					target,
 					input.opponentBoard,
 					input.opponentEntity,
-					null,
+					input.playerEntity,
 					heroPower.info2 ?? 0,
 					input.playerBoard,
 					input.playerEntity,
