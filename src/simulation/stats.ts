@@ -42,6 +42,7 @@ export const modifyStats = (
 	// All stat modifications become enchantments, excepted the ones coming from gilding a minion
 	isEnchantment = true,
 ): void => {
+	const debug = attackAmount === 10;
 	if (attackAmount === 0 && healthAmount === 0) {
 		return;
 	}

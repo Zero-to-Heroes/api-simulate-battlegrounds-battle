@@ -9,11 +9,15 @@ export const WhirringProtectorEnchantment: OnAttackCard = {
 		CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807e,
 		CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807_Ge,
 	],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		const mult = minion.cardId === CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807_Ge ? 2 : 1;
-		const targets = input.attackingBoard.filter((e) => e !== minion);
+	onAnyMinionAttack: (enchantment: BoardEntity, input: OnAttackInput) => {
+		if (!input.isSelfAttacking) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
+
+		const mult = enchantment.cardId === CardIds.WhirringProtector_WhirringProtectorEnchantment_BG33_807_Ge ? 2 : 1;
+		const targets = input.attackingBoard.filter((e) => e !== input.attacker);
 		for (const target of targets) {
-			modifyStats(target, minion, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
+			modifyStats(target, enchantment, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
