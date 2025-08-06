@@ -14,21 +14,24 @@ export const Charmwing: OnAttackCard = {
 		}
 
 		const mult = minion.cardId === CardIds.Charmwing_BG33_240_G ? 2 : 1;
-		const candidates = input.attackingBoard.filter(
-			(e) =>
-				e.cardId !== CardIds.Charmwing_BG33_240 &&
-				e.cardId !== CardIds.Charmwing_BG33_240_G &&
-				hasCorrectTribe(
-					e,
-					input.attackingHero,
-					Race.DRAGON,
-					input.gameState.anomalies,
-					input.gameState.allCards,
-				),
-		);
+		const picked = [];
 		for (let i = 0; i < 2; i++) {
+			const candidates = input.attackingBoard.filter(
+				(e) =>
+					e.cardId !== CardIds.Charmwing_BG33_240 &&
+					e.cardId !== CardIds.Charmwing_BG33_240_G &&
+					// !picked.includes(e) && // Not sure about this yet
+					hasCorrectTribe(
+						e,
+						input.attackingHero,
+						Race.DRAGON,
+						input.gameState.anomalies,
+						input.gameState.allCards,
+					),
+			);
 			const target = pickRandom(candidates);
 			if (!!target) {
+				picked.push(target);
 				for (let j = 0; j < mult; j++) {
 					modifyStats(
 						target,
