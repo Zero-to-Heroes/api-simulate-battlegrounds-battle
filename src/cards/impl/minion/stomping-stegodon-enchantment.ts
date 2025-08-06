@@ -10,12 +10,17 @@ export const StompingStegodonEnchantment: OnAttackCard = {
 		CardIds.StompingStegodon_StompingEnchantment_BG33_840e2,
 		CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2,
 	],
-	onAnyMinionAttack: (minion: BoardEnchantment, input: OnAttackInput) => {
-		if (input.isSelfAttacking) {
+	onAnyMinionAttack: (enchantment: BoardEnchantment, input: OnAttackInput) => {
+		if (!input.isSelfAttacking) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
-		const mult = minion.cardId === CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2 ? 2 : 1;
+		const mult = enchantment.cardId === CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2 ? 2 : 1;
+		const nbOfTriggers = enchantment.repeats ?? 1;
+		const enchantmentCardIdToAdd =
+			enchantment.cardId === CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2
+				? CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2
+				: CardIds.StompingStegodon_StompingEnchantment_BG33_840e2;
 		const candidates = input.attackingBoard.filter(
 			(e) =>
 				e !== input.attacker &&
@@ -37,14 +42,17 @@ export const StompingStegodonEnchantment: OnAttackCard = {
 				input.attackingHero,
 				input.gameState,
 			);
-			candidate.enchantments.push({
-				cardId:
-					input.attacker.cardId === CardIds.StompingStegodon_BG33_840_G
-						? CardIds.StompingStegodon_StompingEnchantment_BG33_840_Ge2
-						: CardIds.StompingStegodon_StompingEnchantment_BG33_840e2,
-				originEntityId: input.attacker.entityId,
-				timing: input.gameState.sharedState.currentEntityId++,
-			});
+			let existingEnchantment = candidate.enchantments.find((e) => e.cardId === enchantmentCardIdToAdd);
+			if (!existingEnchantment) {
+				existingEnchantment = {
+					cardId: enchantmentCardIdToAdd,
+					originEntityId: input.attacker.entityId,
+					timing: input.gameState.sharedState.currentEntityId++,
+					repeats: 0,
+				};
+				candidate.enchantments.push(existingEnchantment);
+			}
+			existingEnchantment.repeats += nbOfTriggers;
 		}
 
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
