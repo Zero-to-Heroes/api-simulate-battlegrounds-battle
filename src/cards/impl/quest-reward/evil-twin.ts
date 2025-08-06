@@ -3,15 +3,13 @@ import { BoardEntity } from '../../../board-entity';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { copyEntity } from '../../../utils';
 
 export const EvilTwin = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (!!input.playerBoard.length && input.playerBoard.length < 7) {
 			const highestHealthMinion = [...input.playerBoard].sort((a, b) => b.health - a.health)[0];
-			const copy: BoardEntity = {
-				...highestHealthMinion,
-				lastAffectedByEntity: null,
-			};
+			const copy: BoardEntity = copyEntity(highestHealthMinion);
 			const newMinions = spawnEntities(
 				copy.cardId,
 				1,

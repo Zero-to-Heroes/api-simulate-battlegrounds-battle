@@ -628,6 +628,7 @@ export const copyEntity = (entity: BoardEntity): BoardEntity => {
 		rememberedDeathrattles: (entity.rememberedDeathrattles ?? []).map((r) => ({ ...r })),
 		additionalCards: entity.additionalCards?.map((c) => c),
 		tags: entity.tags ? { ...entity.tags } : null,
+		lastAffectedByEntity: null,
 	};
 	return copy;
 };
