@@ -36,14 +36,25 @@ export const RaptorElder: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCard =
 		}
 	},
 	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
-		if (
-			!hasCorrectTribe(input.spawned, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards)
-		) {
-			return;
-		}
 		const mult = minion.cardId === CardIds.RaptorElder_BG33_842_G ? 2 : 1;
 		const baseBuff = input.hero.globalInfo.BeastsSummonedThisCombat * mult;
-		input.spawned.attack += attackBuff * baseBuff;
-		input.spawned.health += healthBuff * baseBuff;
+		// First put the minion itself in the aura
+		if (
+			input.applySelfAuras &&
+			hasCorrectTribe(input.spawned, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards)
+		) {
+			input.spawned.attack += attackBuff * baseBuff;
+			input.spawned.health += healthBuff * baseBuff;
+		}
+
+		// Then update the aura
+		const allTargets = input.board.filter((e) =>
+			hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
+		);
+		for (const target of allTargets) {
+			// Only the new spawn should increase the data, as we've already applied the aura before
+			target.attack += attackBuff * mult;
+			target.health += healthBuff * mult;
+		}
 	},
 };

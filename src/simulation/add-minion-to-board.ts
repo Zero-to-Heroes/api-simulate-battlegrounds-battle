@@ -53,7 +53,7 @@ export const addMinionToBoard = (
 	handleAddedMinionAuraEffect(board, boardHero, otherBoard, otherHero, minionToAdd, gameState, applySelfAuras);
 	// Important to do this here, so that "attack immediately" minions can be taken into account by the quests
 	onMinionSummoned(boardHero, board, gameState);
-	handleSpawnEffect(board, boardHero, otherBoard, otherHero, minionToAdd, gameState);
+	handleSpawnEffect(board, boardHero, otherBoard, otherHero, minionToAdd, gameState, applySelfAuras);
 	if (performAfterSpawnEffects) {
 		handleAfterSpawnEffects(board, boardHero, otherBoard, otherHero, [minionToAdd], gameState);
 	}
@@ -66,6 +66,7 @@ const handleSpawnEffect = (
 	otherHero: BgsPlayerEntity,
 	spawned: BoardEntity,
 	gameState: FullGameState,
+	applySelfAuras = true,
 ): void => {
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 
@@ -95,6 +96,7 @@ const handleSpawnEffect = (
 				board: board,
 				otherBoard: otherBoard,
 				otherHero: otherHero,
+				applySelfAuras,
 				gameState,
 			});
 		}
@@ -818,6 +820,7 @@ const handleAfterSpawnEffect = (
 				otherHero: otherHero,
 				otherBoard: otherBoard,
 				gameState,
+				applySelfAuras: false,
 			});
 		}
 	}
@@ -832,6 +835,7 @@ const handleAfterSpawnEffect = (
 				otherHero: otherHero,
 				otherBoard: otherBoard,
 				gameState,
+				applySelfAuras: false,
 			});
 		}
 
@@ -926,6 +930,7 @@ export interface OnOtherSpawnInput {
 	otherHero: BgsPlayerEntity;
 	otherBoard: BoardEntity[];
 	gameState: FullGameState;
+	applySelfAuras: boolean;
 }
 export interface OnOtherSpawnAuraInput {
 	spawned: BoardEntity;

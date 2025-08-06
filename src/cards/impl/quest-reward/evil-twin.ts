@@ -36,6 +36,7 @@ export const EvilTwin = {
 				input.opponentBoard,
 				input.opponentEntity,
 				input.gameState,
+				false,
 			);
 			input.gameState.spectator.registerPowerTarget(input.playerEntity, copy, input.playerBoard, null, null);
 			// Recompute first attacker
