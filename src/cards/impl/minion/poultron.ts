@@ -10,12 +10,19 @@ export const Poultron: AvengeCard = {
 	baseAvengeValue: (cardId) => 4,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.P0ulTr0n_BG33_371_G ? 2 : 1;
-		for (let i = 0; i < mult; i++) {
+		const previousHasAttacked = minion.hasAttacked;
+		// Not sure why, but with Windfury it looks like the divine shield is granted each time
+		// It's a bug, so once it's fixed I should remove this
+		const previousWindfury = minion.windfury;
+		const totalAttacks = mult * (minion.windfury ? 2 : 1);
+		for (let i = 0; i < totalAttacks; i++) {
+			minion.windfury = false;
 			updateDivineShield(minion, input.board, input.hero, input.otherHero, true, input.gameState);
 			minion.attackImmediately = true;
 			simulateAttack(input.board, input.hero, input.otherBoard, input.otherHero, input.gameState);
-			minion.hasAttacked = 0;
+			minion.hasAttacked = previousHasAttacked;
 			minion.attackImmediately = false;
+			minion.windfury = previousWindfury;
 		}
 	},
 };
