@@ -5,6 +5,7 @@ import { updateWindfury } from '../../../keywords/windfury';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
+import { updateDivineShield } from '../../../keywords/divine-shield';
 
 export const LightfeatherScreecher: StartOfCombatCard = {
 	cardIds: [CardIds.LightfeatherScreecher_BG33_841, CardIds.LightfeatherScreecher_BG33_841_G],
@@ -16,7 +17,14 @@ export const LightfeatherScreecher: StartOfCombatCard = {
 		for (let i = 0; i < mult; i++) {
 			const target = candidates[i];
 			if (!!target) {
-				updateTaunt(target, true, input.playerBoard, input.playerEntity, input.opponentEntity, input.gameState);
+				updateDivineShield(
+					target,
+					input.playerBoard,
+					input.playerEntity,
+					input.opponentEntity,
+					true,
+					input.gameState,
+				);
 				updateWindfury(
 					target,
 					true,

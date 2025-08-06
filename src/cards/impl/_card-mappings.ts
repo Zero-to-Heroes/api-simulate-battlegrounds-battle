@@ -117,6 +117,7 @@ import { KarmicChameleon } from './minion/karmic-chameleon';
 import { KingBagurgle } from './minion/king-bagurgle';
 import { LeeroyTheReckless } from './minion/leeroy-the-reckless';
 import { LightfangEnforcer } from './minion/lightfang-enforcer';
+import { LightfeatherScreecher } from './minion/lightfeather-screecher';
 import { LokholarFrostforger } from './minion/lokholar-frostforger';
 import { LordOfTheRuins } from './minion/lord-of-the-ruins';
 import { LostCityLooter } from './minion/lost-city-looter';
@@ -270,6 +271,7 @@ const cards = [
 	ShipwreckedRascal,
 	ColdlightDiver,
 	CanopySwinger,
+	LightfeatherScreecher,
 	HotSpringer,
 	FlotsamFlinger,
 	YoungMurkEye,
