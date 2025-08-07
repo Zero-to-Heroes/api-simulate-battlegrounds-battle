@@ -301,6 +301,20 @@ export const handleAfterMinionKillsEffect = (
 	// }
 };
 
+export const applyAfterMinionDiesEffect = (
+	deadEntity: BoardEntity,
+	deadEntityIndexFromRight: number,
+	boardWithDeadEntity: BoardEntity[],
+	boardWithDeadEntityHero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherBoardHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.DEMON, gameState.anomalies, gameState.allCards)) {
+		applySoulJugglerEffect(boardWithDeadEntity, boardWithDeadEntityHero, otherBoard, otherBoardHero, gameState);
+	}
+};
+
 export const applyWheneverMinionDiesEffect = (
 	deadEntity: BoardEntity,
 	deadEntityIndexFromRight: number,
@@ -313,9 +327,6 @@ export const applyWheneverMinionDiesEffect = (
 	// console.log('applying minion death effect', stringifySimpleCard(deadEntity, allCards));
 	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
 		applyScavengingHyenaEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-	}
-	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.DEMON, gameState.anomalies, gameState.allCards)) {
-		applySoulJugglerEffect(boardWithDeadEntity, boardWithDeadEntityHero, otherBoard, otherBoardHero, gameState);
 	}
 	if (hasCorrectTribe(deadEntity, boardWithDeadEntityHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 		applyJunkbotEffect(boardWithDeadEntity, boardWithDeadEntityHero, gameState);
@@ -530,7 +541,7 @@ export const dealDamageToAllMinions = (
 	}
 };
 
-const applySoulJugglerEffect = (
+export const applySoulJugglerEffect = (
 	boardWithJugglers: BoardEntity[],
 	boardWithJugglersHero: BgsPlayerEntity,
 	boardToAttack: BoardEntity[],

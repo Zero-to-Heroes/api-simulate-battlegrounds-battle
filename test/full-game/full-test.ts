@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsLocalService } from '@firestone-hs/reference-data';
+import { AllCardsLocalService, AllCardsService } from '@firestone-hs/reference-data';
 import { readFileSync } from 'fs';
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';
@@ -35,6 +35,7 @@ const test = async () => {
 
 	const cardsStr = readFileSync('test/full-game/cards_enUS.json').toString();
 	const allCards = new AllCardsLocalService(cardsStr);
+	// const allCards = new AllCardsService();
 	await allCards.initializeCardsDb();
 	console.log('cards initialized', allCards.getCards().length);
 	assignCards(allCards);
@@ -49,9 +50,9 @@ const test = async () => {
 	console.log('simulation took', Date.now() - start, 'ms');
 
 	const sample =
+		simulationResult.outcomeSamples.tied?.[0] ??
 		simulationResult.outcomeSamples.won?.[0] ??
 		simulationResult.outcomeSamples.lost?.[0] ??
-		simulationResult.outcomeSamples.tied?.[0] ??
 		null;
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);
