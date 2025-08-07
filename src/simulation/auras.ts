@@ -246,6 +246,8 @@ export const setImplicitDataHero = (
 	hero.globalInfo.AdditionalAttack = hero.globalInfo.AdditionalAttack ?? 0;
 	hero.globalInfo.SpellsCastThisGame = hero.globalInfo.SpellsCastThisGame ?? 0;
 	hero.globalInfo.UndeadAttackBonus = hero.globalInfo.UndeadAttackBonus ?? 0;
+	hero.globalInfo.HauntedCarapaceAttackBonus = hero.globalInfo.HauntedCarapaceAttackBonus ?? 0;
+	hero.globalInfo.HauntedCarapaceHealthBonus = hero.globalInfo.HauntedCarapaceHealthBonus ?? 0;
 	hero.globalInfo.FrostlingBonus = hero.globalInfo.FrostlingBonus ?? 0;
 	hero.globalInfo.BloodGemAttackBonus =
 		(hero.globalInfo.BloodGemAttackBonus ?? 0) +

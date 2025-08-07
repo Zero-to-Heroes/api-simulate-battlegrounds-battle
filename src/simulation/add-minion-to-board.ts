@@ -302,6 +302,30 @@ export const applyAurasToSelf = (
 		}
 	}
 
+	if (boardHero.globalInfo.HauntedCarapaceAttackBonus > 0) {
+		modifyStats(
+			spawned,
+			spawned,
+			boardHero.globalInfo.HauntedCarapaceAttackBonus,
+			0,
+			board,
+			boardHero,
+			gameState,
+			false,
+		);
+	}
+	if (boardHero.globalInfo.HauntedCarapaceHealthBonus > 0) {
+		modifyStats(
+			spawned,
+			spawned,
+			0,
+			boardHero.globalInfo.HauntedCarapaceHealthBonus,
+			board,
+			boardHero,
+			gameState,
+			false,
+		);
+	}
 	if (hasCorrectTribe(spawned, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			modifyStats(
@@ -541,6 +565,12 @@ export const removeAurasFromSelf = (
 		}
 	}
 
+	if (boardHero.globalInfo.HauntedCarapaceAttackBonus > 0) {
+		entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.HauntedCarapaceAttackBonus);
+	}
+	if (boardHero.globalInfo.HauntedCarapaceHealthBonus > 0) {
+		entity.health = Math.max(1, entity.health - boardHero.globalInfo.HauntedCarapaceHealthBonus);
+	}
 	if (hasCorrectTribe(entity, boardHero, Race.UNDEAD, gameState.anomalies, gameState.allCards)) {
 		if (boardHero.globalInfo.UndeadAttackBonus > 0) {
 			entity.attack = Math.max(0, entity.attack - boardHero.globalInfo.UndeadAttackBonus);

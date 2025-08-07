@@ -731,6 +731,18 @@ const handlePostDeathrattleEffect = (
 	// ISSUE: when we do this, we change the minion's stats before processing deathrattle effects, which can mess
 	// up the simulation in some cases (like Nightbane, Ignited)
 	// FIX: we do it in postDeathrattleEfects, not when removing minions from the board
+	if (deadEntityPlayerState.player.globalInfo.HauntedCarapaceAttackBonus > 0) {
+		deadEntity.attack = Math.max(
+			0,
+			deadEntity.attack - deadEntityPlayerState.player.globalInfo.HauntedCarapaceAttackBonus,
+		);
+	}
+	if (deadEntityPlayerState.player.globalInfo.HauntedCarapaceHealthBonus > 0) {
+		deadEntity.health = Math.max(
+			1,
+			deadEntity.health - deadEntityPlayerState.player.globalInfo.HauntedCarapaceHealthBonus,
+		);
+	}
 	if (
 		hasCorrectTribe(deadEntity, deadEntityPlayerState.player, Race.UNDEAD, gameState.anomalies, gameState.allCards)
 	) {

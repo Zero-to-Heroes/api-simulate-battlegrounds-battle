@@ -65,6 +65,8 @@ export interface BgsPlayerGlobalInfo {
 	EternalKnightsDeadThisGame?: number;
 	SanlaynScribesDeadThisGame?: number;
 	UndeadAttackBonus?: number;
+	HauntedCarapaceAttackBonus?: number;
+	HauntedCarapaceHealthBonus?: number;
 	FrostlingBonus?: number;
 	BloodGemAttackBonus?: number;
 	BloodGemHealthBonus?: number;
