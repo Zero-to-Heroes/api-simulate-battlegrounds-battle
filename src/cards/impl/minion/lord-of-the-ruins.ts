@@ -26,7 +26,7 @@ export const LordOfTheRuins: AfterDealDamageCard = {
 		) {
 			const targets = input.board.filter((e) => e !== input.damageDealer);
 			for (const target of targets) {
-				modifyStats(minion, target, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+				modifyStats(target, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 			}
 		}
 	},
