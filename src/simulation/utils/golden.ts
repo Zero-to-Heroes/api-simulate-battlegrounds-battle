@@ -88,6 +88,7 @@ export const makeMinionGolden = (
 	// target.taunt = refGoldenCard.mechanics?.includes(GameTag[GameTag.TAUNT]);
 	// target.stealth = refGoldenCard.mechanics?.includes(GameTag[GameTag.STEALTH]);
 	target.avengeCurrent = avengeCurrent;
+	target.gildedInCombat = true;
 
 	// console.log('after adding new effect', stringifySimple(targetBoard, allCards));
 };

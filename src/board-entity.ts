@@ -61,6 +61,7 @@ export interface BoardEntity {
 	tavernTier?: number;
 
 	memory?: any;
+	gildedInCombat?: boolean;
 
 	onCanceledSummon?: () => void;
 }

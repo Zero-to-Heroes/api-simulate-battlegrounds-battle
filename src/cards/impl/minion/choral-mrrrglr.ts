@@ -7,14 +7,13 @@ export const ChoralMrrrglr = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const multiplier = minion.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;
 		// When it's summoned by Y'Shaarj hero power, the info isn't set
+		const totalAttackInHand = input.playerEntity.hand?.map((e) => e.attack ?? 0).reduce((a, b) => a + b, 0) ?? 0;
+		const totalHealthInHand = input.playerEntity.hand?.map((e) => e.health ?? 0).reduce((a, b) => a + b, 0) ?? 0;
+		// If the minion is gilded in combat, the global info becomes unreliable
 		const attackBuff =
-			(input.playerEntity.globalInfo?.ChoralAttackBuff ||
-				input.playerEntity.hand?.map((e) => e.attack ?? 0).reduce((a, b) => a + b, 0)) ??
-			0;
+			(minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralAttackBuff) || totalAttackInHand || 0;
 		const healthBuff =
-			(input.playerEntity.globalInfo?.ChoralHealthBuff ||
-				input.playerEntity.hand?.map((e) => e.health ?? 0).reduce((a, b) => a + b, 0)) ??
-			0;
+			(minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralHealthBuff) || totalHealthInHand || 0;
 		modifyStats(
 			minion,
 			minion,
