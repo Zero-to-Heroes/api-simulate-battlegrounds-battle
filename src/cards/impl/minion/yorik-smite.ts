@@ -9,7 +9,7 @@ export const YorikSmite: EndOfTurnCard = {
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
 		const mult = minion.cardId === CardIds.YorikSmite_BG33_827_G ? 2 : 1;
 		for (const target of input.board) {
-			const buff = isGolden(target.cardId, input.gameState.allCards) ? 4 : 1;
+			const buff = isGolden(target.cardId, input.gameState.allCards) ? 6 : 2;
 			modifyStats(target, minion, buff * mult, buff * mult, input.board, input.hero, input.gameState);
 		}
 	},

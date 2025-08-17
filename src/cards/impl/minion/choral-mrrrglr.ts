@@ -5,6 +5,7 @@ import { modifyStats } from '../../../simulation/stats';
 
 export const ChoralMrrrglr = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
+		// Multiplier not needed if relying on global info?
 		const multiplier = minion.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;
 		// When it's summoned by Y'Shaarj hero power, the info isn't set
 		const totalAttackInHand = input.playerEntity.hand?.map((e) => e.attack ?? 0).reduce((a, b) => a + b, 0) ?? 0;

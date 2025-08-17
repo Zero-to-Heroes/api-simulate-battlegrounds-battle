@@ -12,7 +12,7 @@ export const SanguineRefiner: OnAttackCard = {
 
 		const mult = minion.cardId === CardIds.SanguineRefiner_BG33_885_G ? 2 : 1;
 		input.attackingHero.globalInfo.BloodGemAttackBonus += 1 * mult;
-		input.attackingHero.globalInfo.BloodGemHealthBonus += 2 * mult;
+		input.attackingHero.globalInfo.BloodGemHealthBonus += 1 * mult;
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

@@ -26,7 +26,7 @@ export const DevoutHellcaller: AfterDealDamageCard = {
 				input.gameState.allCards,
 			)
 		) {
-			modifyStats(minion, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
+			modifyStats(minion, minion, 1 * mult, 2 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

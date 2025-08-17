@@ -12,8 +12,8 @@ export const ShipMasterEudora: DeathrattleSpawnCard = {
 			minion,
 			input.boardWithDeadEntity,
 			input.boardWithDeadEntityHero,
-			5 * mult,
-			5 * mult,
+			8 * mult,
+			8 * mult,
 			input.gameState,
 		);
 		return [];

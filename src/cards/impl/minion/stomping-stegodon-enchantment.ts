@@ -36,8 +36,8 @@ export const StompingStegodonEnchantment: OnAttackCard = {
 			modifyStats(
 				candidate,
 				input.attacker,
-				2 * nbOfTriggers * mult,
-				2 * nbOfTriggers * mult,
+				1 * nbOfTriggers * mult,
+				1 * nbOfTriggers * mult,
 				input.attackingBoard,
 				input.attackingHero,
 				input.gameState,

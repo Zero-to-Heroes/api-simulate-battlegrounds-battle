@@ -33,8 +33,8 @@ export const StompingStegodon: OnAttackCard = {
 			modifyStats(
 				candidate,
 				minion,
-				2 * mult,
-				2 * mult,
+				1 * mult,
+				1 * mult,
 				input.attackingBoard,
 				input.attackingHero,
 				input.gameState,
