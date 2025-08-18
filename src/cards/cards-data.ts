@@ -81,7 +81,7 @@ export class CardsData {
 			// Premiums are not in bacon pool
 			.filter((card) => card.isBaconPool || this.allCards.getCard(card.battlegroundsNormalDbfId)?.isBaconPool)
 			.filter((card) => card.type?.toUpperCase() === CardType[CardType.MINION])
-			.filter((card) => !hasMechanic(card, GameTag[GameTag.BACON_BUDDY]))
+			.filter((card) => !hasMechanic(card, GameTag.BACON_BUDDY))
 			.filter((card) => card.set !== 'Vanilla')
 			.filter((card) =>
 				anomalies?.includes(CardIds.BigLeague_BG27_Anomaly_100)
@@ -100,7 +100,7 @@ export class CardsData {
 		this.minionsForTier = groupByFunction((card: ReferenceCard) => card.techLevel)(this.pool);
 		this.ghastcoilerSpawns = this.pool
 			.filter((card) => card.id !== 'BGS_008')
-			.filter((card) => hasMechanic(card, 'DEATHRATTLE'))
+			.filter((card) => hasMechanic(card, GameTag.DEATHRATTLE))
 			.filter((card) => this.isValidTribe(validTribes, card.races))
 			.map((card) => card.id);
 		this.demonSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.DEMON)).map((card) => card.id);
@@ -120,17 +120,17 @@ export class CardsData {
 			.filter((card) => isCorrectTribe(card.races, Race.DEMON))
 			.filter((card) => card.id !== CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy)
 			.map((card) => card.id);
-		this.battlecryMinions = this.pool.filter((card) => hasMechanic(card, 'BATTLECRY')).map((card) => card.id);
+		this.battlecryMinions = this.pool.filter((card) => hasMechanic(card, GameTag.BATTLECRY)).map((card) => card.id);
 		this.deathrattleMinions = this.pool
-			.filter((card) => hasMechanic(card, GameTag[GameTag.DEATHRATTLE]))
+			.filter((card) => hasMechanic(card, GameTag.DEATHRATTLE))
 			.map((card) => card.id);
 		this.pirateSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.PIRATE)).map((card) => card.id);
 		this.beastSpawns = this.pool.filter((card) => isCorrectTribe(card.races, Race.BEAST)).map((card) => card.id);
 		this.scrapScraperSpawns = this.pool
-			.filter((card) => hasMechanic(card, GameTag[GameTag.MAGNETIC]))
+			.filter((card) => hasMechanic(card, GameTag.MAGNETIC))
 			.map((card) => card.id);
 		this.endOfTurnMinions = this.pool
-			.filter((card) => hasMechanic(card, GameTag[GameTag.END_OF_TURN]))
+			.filter((card) => hasMechanic(card, GameTag.END_OF_TURN))
 			.map((card) => card.id);
 
 		this.putricidePool1 = this.allCards
@@ -268,7 +268,7 @@ export class CardsData {
 	public getRandomMechToMagnetize(tavernLimitUpper: number): string {
 		const magneticMechs = this.pool
 			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
-			.filter((m) => hasMechanic(m, GameTag[GameTag.MODULAR]));
+			.filter((m) => hasMechanic(m, GameTag.MODULAR));
 		const pool = magneticMechs.filter((m) => m.techLevel <= tavernLimitUpper);
 		return pickRandom(pool)?.id;
 	}
@@ -276,7 +276,7 @@ export class CardsData {
 	public getRandomDivineShield(tavernLimitUpper: number) {
 		const divineShieldPool = this.pool
 			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
-			.filter((m) => hasMechanic(m, GameTag[GameTag.DIVINE_SHIELD]));
+			.filter((m) => hasMechanic(m, GameTag.DIVINE_SHIELD));
 		const pool = divineShieldPool.filter((m) => m.techLevel <= tavernLimitUpper);
 		return pickRandom(pool)?.id;
 	}

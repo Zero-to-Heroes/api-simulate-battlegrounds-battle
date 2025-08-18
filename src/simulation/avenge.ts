@@ -13,7 +13,7 @@ import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
 	hasCorrectTribe,
-	hasMechanic,
+	hasEntityMechanic,
 } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
 import { playBloodGemsOn } from './blood-gems';
@@ -123,7 +123,7 @@ export const applyAvengeEffects = (
 
 	// Not an avenge, but with Avenge timing
 	const hasDeathrattle =
-		hasMechanic(gameState.allCards.getCard(deadEntity.cardId), GameTag[GameTag.DEATHRATTLE]) ||
+		hasEntityMechanic(deadEntity, GameTag.DEATHRATTLE, gameState.allCards) ||
 		deadEntity.enchantments.some((e) => isValidDeathrattleEnchantment(e.cardId));
 	if (hasDeathrattle) {
 		// These are apparently processed after Reborn is triggered

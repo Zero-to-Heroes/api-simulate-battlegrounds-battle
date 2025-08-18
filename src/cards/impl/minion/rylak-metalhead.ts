@@ -4,7 +4,7 @@ import { pickRandom } from '../../../services/utils';
 import { getNeighbours } from '../../../simulation/attack';
 import { triggerBattlecry } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { hasMechanic } from '../../../utils';
+import { hasEntityMechanic } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const RylakMetalhead: DeathrattleSpawnCard = {
@@ -14,7 +14,7 @@ export const RylakMetalhead: DeathrattleSpawnCard = {
 			(e) => input.gameState.allCards.getCard(e.cardId).name,
 		);
 		const allNeighbours = getNeighbours(input.boardWithDeadEntity, minion, input.deadEntityIndexFromRight).filter(
-			(e) => hasMechanic(input.gameState.allCards.getCard(e.cardId), GameTag[GameTag.BATTLECRY]),
+			(e) => hasEntityMechanic(e, GameTag.BATTLECRY, input.gameState.allCards),
 		);
 		const neighbours =
 			minion.cardId === CardIds.RylakMetalhead_BG26_801_G

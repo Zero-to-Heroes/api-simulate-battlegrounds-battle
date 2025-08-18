@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, CardIds, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from './bgs-player-entity';
-import { BoardEntity } from './board-entity';
+import { BoardEnchantment, BoardEntity } from './board-entity';
 import { BoardSecret } from './board-secret';
 import { hasDefaultCharges } from './cards/card.interface';
 import { CardsData } from './cards/cards-data';
@@ -68,15 +68,15 @@ export const buildSingleBoardEntity = (
 					attack: card.attack,
 					hasAttacked: 0,
 					cardId: cardId,
-					divineShield: hasMechanic(card, 'DIVINE_SHIELD'),
+					divineShield: hasMechanic(card, GameTag.DIVINE_SHIELD),
 					health: card.health,
 					maxHealth: card.health,
-					taunt: hasMechanic(card, GameTag[GameTag.TAUNT]),
-					reborn: hasMechanic(card, 'REBORN'),
-					poisonous: hasMechanic(card, GameTag[GameTag.POISONOUS]),
-					venomous: hasMechanic(card, GameTag[GameTag.VENOMOUS]),
-					stealth: hasMechanic(card, GameTag[GameTag.STEALTH]),
-					windfury: hasMechanic(card, GameTag[GameTag.WINDFURY]),
+					taunt: hasMechanic(card, GameTag.TAUNT),
+					reborn: hasMechanic(card, GameTag.REBORN),
+					poisonous: hasMechanic(card, GameTag.POISONOUS),
+					venomous: hasMechanic(card, GameTag.VENOMOUS),
+					stealth: hasMechanic(card, GameTag.STEALTH),
+					windfury: hasMechanic(card, GameTag.WINDFURY),
 					enchantments: [],
 					pendingAttackBuffs: [],
 					friendly: friendly,
@@ -97,13 +97,12 @@ export const buildSingleBoardEntity = (
 				const stitchedCard = allCards.getCard(stitchedCardId);
 				newEntity.attack = newEntity.attack + stitchedCard.attack;
 				newEntity.maxHealth = newEntity.maxHealth + stitchedCard.health;
-				newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
-				newEntity.divineShield =
-					newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
+				newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag.TAUNT);
+				newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag.DIVINE_SHIELD);
 				newEntity.hadDivineShield = newEntity.hadDivineShield || newEntity.divineShield;
-				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
-				newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
-				newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
+				newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag.POISONOUS);
+				newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag.VENOMOUS);
+				newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag.WINDFURY);
 				newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 				newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
 			}
@@ -115,14 +114,13 @@ export const buildSingleBoardEntity = (
 			// can change
 			for (const moduleCardId of originalEntity.additionalCards) {
 				const moduleCard = allCards.getCard(moduleCardId);
-				newEntity.taunt = newEntity.taunt || hasMechanic(moduleCard, GameTag[GameTag.TAUNT]);
-				newEntity.divineShield =
-					newEntity.divineShield || hasMechanic(moduleCard, GameTag[GameTag.DIVINE_SHIELD]);
+				newEntity.taunt = newEntity.taunt || hasMechanic(moduleCard, GameTag.TAUNT);
+				newEntity.divineShield = newEntity.divineShield || hasMechanic(moduleCard, GameTag.DIVINE_SHIELD);
 				newEntity.hadDivineShield = newEntity.hadDivineShield || newEntity.divineShield;
-				newEntity.poisonous = newEntity.poisonous || hasMechanic(moduleCard, GameTag[GameTag.POISONOUS]);
-				newEntity.venomous = newEntity.venomous || hasMechanic(moduleCard, GameTag[GameTag.VENOMOUS]);
-				newEntity.windfury = newEntity.windfury || hasMechanic(moduleCard, GameTag[GameTag.WINDFURY]);
-				newEntity.stealth = newEntity.stealth || hasMechanic(moduleCard, GameTag[GameTag.STEALTH]);
+				newEntity.poisonous = newEntity.poisonous || hasMechanic(moduleCard, GameTag.POISONOUS);
+				newEntity.venomous = newEntity.venomous || hasMechanic(moduleCard, GameTag.VENOMOUS);
+				newEntity.windfury = newEntity.windfury || hasMechanic(moduleCard, GameTag.WINDFURY);
+				newEntity.stealth = newEntity.stealth || hasMechanic(moduleCard, GameTag.STEALTH);
 			}
 		}
 		newEntity.health = 1;
@@ -178,12 +176,12 @@ export const buildRandomUndeadCreation = (
 	const stitchedCard = allCards.getCard(stitchedCardId);
 	newEntity.attack += stitchedCard.attack;
 	newEntity.health += stitchedCard.health;
-	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag[GameTag.TAUNT]);
-	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag[GameTag.DIVINE_SHIELD]);
-	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag[GameTag.POISONOUS]);
-	newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag[GameTag.VENOMOUS]);
-	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag[GameTag.WINDFURY]);
-	newEntity.reborn = newEntity.reborn || hasMechanic(stitchedCard, GameTag[GameTag.REBORN]);
+	newEntity.taunt = newEntity.taunt || hasMechanic(stitchedCard, GameTag.TAUNT);
+	newEntity.divineShield = newEntity.divineShield || hasMechanic(stitchedCard, GameTag.DIVINE_SHIELD);
+	newEntity.poisonous = newEntity.poisonous || hasMechanic(stitchedCard, GameTag.POISONOUS);
+	newEntity.venomous = newEntity.venomous || hasMechanic(stitchedCard, GameTag.VENOMOUS);
+	newEntity.windfury = newEntity.windfury || hasMechanic(stitchedCard, GameTag.WINDFURY);
+	newEntity.reborn = newEntity.reborn || hasMechanic(stitchedCard, GameTag.REBORN);
 	newEntity.avengeCurrent = newEntity.avengeCurrent || cardsData.avengeValue(stitchedCardId);
 	newEntity.avengeDefault = newEntity.avengeDefault || cardsData.avengeValue(stitchedCardId);
 	return newEntity;
@@ -407,8 +405,29 @@ export const getMinionsOfDifferentTypes = (
 	return result;
 };
 
-export const hasMechanic = (card: ReferenceCard, mechanic: string): boolean => {
-	return card.mechanics?.includes(mechanic);
+export const hasMechanic = (card: ReferenceCard, mechanic: GameTag): boolean => {
+	return card.mechanics?.includes(GameTag[mechanic]);
+};
+
+export const hasEntityMechanic = (
+	entity: BoardEntity | BoardEnchantment,
+	mechanic: GameTag,
+	allCards: AllCardsService,
+): boolean => {
+	const card = allCards.getCard(entity.cardId);
+	if (card.mechanics?.includes(GameTag[mechanic])) {
+		return true;
+	}
+	// Look at the base card
+	if (card.entityDbfIf) {
+		return hasMechanic(allCards.getCard(card.entityDbfIf), mechanic);
+	}
+	for (const enchant of (entity as BoardEntity).enchantments ?? []) {
+		if (hasEntityMechanic(enchant, mechanic, allCards)) {
+			return true;
+		}
+	}
+	return false;
 };
 
 export const hasCorrectTribe = (

@@ -1,4 +1,4 @@
-import { CardIds, CardType, GameTag, hasMechanic, Race } from '@firestone-hs/reference-data';
+import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';
@@ -16,6 +16,7 @@ import {
 	grantRandomStats,
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
+	hasEntityMechanic,
 	stringifySimple,
 } from '../utils';
 import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies } from './attack';
@@ -1909,7 +1910,7 @@ export const spawnEntitiesFromDeathrattle = (
 						);
 						break;
 					default:
-						if (!hasMechanic(gameState.allCards.getCard(deadEntityCardId), GameTag.DEATHRATTLE)) {
+						if (!hasEntityMechanic(deadEntity, GameTag.DEATHRATTLE, gameState.allCards)) {
 							hasTriggered = false;
 						}
 						break;

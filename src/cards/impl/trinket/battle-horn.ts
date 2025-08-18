@@ -3,7 +3,7 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { pickRandom } from '../../../services/utils';
 import { AvengeInput } from '../../../simulation/avenge';
 import { triggerBattlecry } from '../../../simulation/battlecries';
-import { hasMechanic } from '../../../utils';
+import { hasEntityMechanic } from '../../../utils';
 import { AvengeCard } from '../../card.interface';
 
 export const BattleHorn: AvengeCard = {
@@ -11,7 +11,7 @@ export const BattleHorn: AvengeCard = {
 	baseAvengeValue: (cardId: string) => 2,
 	avenge: (trinket: BoardTrinket, input: AvengeInput) => {
 		const battlecries = input.board.filter((e) =>
-			hasMechanic(input.gameState.allCards.getCard(e.cardId), GameTag[GameTag.BATTLECRY]),
+			hasEntityMechanic(e, GameTag.BATTLECRY, input.gameState.allCards),
 		);
 		const candidate = pickRandom(battlecries);
 		if (!!candidate) {

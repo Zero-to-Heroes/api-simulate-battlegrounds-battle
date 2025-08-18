@@ -24,7 +24,7 @@
 		"dist/**/*"
 	],
 	"dependencies": {
-		"@firestone-hs/reference-data": "^2.0.147"
+		"@firestone-hs/reference-data": "^2.0.148"
 	},
 	"devDependencies": {
 		"@types/aws-lambda": "8.10.31",

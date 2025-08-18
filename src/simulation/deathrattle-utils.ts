@@ -1,8 +1,8 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
-import { hasMechanic } from '../utils';
+import { hasEntityMechanic } from '../utils';
 import { FullGameState } from './internal-game-state';
 
 export const getValidDeathrattles = (
@@ -11,7 +11,7 @@ export const getValidDeathrattles = (
 	gameState: FullGameState,
 ): BoardEntity[] => {
 	return board.filter((entity) => {
-		if (hasMechanic(gameState.allCards.getCard(entity.cardId), 'DEATHRATTLE')) {
+		if (hasEntityMechanic(entity, GameTag.DEATHRATTLE, gameState.allCards)) {
 			return true;
 		}
 		if (
