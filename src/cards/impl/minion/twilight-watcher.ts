@@ -10,7 +10,7 @@ export const TwilightWatcher: OnAttackCard = {
 	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
 		if (
 			!hasCorrectTribe(
-				minion,
+				input.attacker,
 				input.attackingHero,
 				Race.DRAGON,
 				input.gameState.anomalies,
