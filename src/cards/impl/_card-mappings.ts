@@ -1,5 +1,6 @@
 import { Card } from '../card.interface';
 import { SharingIsCaring } from './bg-spell/sharing-is-caring';
+import { ShinyRing } from './bg-spell/shiny-ring';
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AllSeeingElder } from './minion/all-seeing-elder';
@@ -124,6 +125,7 @@ import { LostCityLooter } from './minion/lost-city-looter';
 import { LovesickBalladist } from './minion/lovesick-balladist';
 import { LowFlier } from './minion/low-flier';
 import { Lurker } from './minion/lurker';
+import { MagicfinApprentice } from './minion/magicfin-apprentice';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MawCaster } from './minion/maw-caster';
@@ -262,6 +264,8 @@ import { VashjirAnemone } from './trinket/vashjir-anemone';
 import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
+	ShinyRing,
+	MagicfinApprentice,
 	RaptorElder,
 	RighteousCharge,
 	AvalancheCaller,

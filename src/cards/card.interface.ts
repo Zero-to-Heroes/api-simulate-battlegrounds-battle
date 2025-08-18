@@ -20,6 +20,7 @@ import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { AfterDealDamageInput } from '../simulation/damage-effects';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
+import { FullGameState } from '../simulation/internal-game-state';
 import { OnBeforeMagnetizeInput } from '../simulation/magnetize';
 import { OnAttackInput } from '../simulation/on-attack';
 import { OnMinionAttackedInput } from '../simulation/on-being-attacked';
@@ -54,6 +55,11 @@ export interface StartOfCombatFromHandCard extends StartOfCombatCard {
 export const hasStartOfCombatFromHand = (card: Card): card is StartOfCombatFromHandCard =>
 	(card as StartOfCombatFromHandCard)?.startOfCombatFromHand !== undefined;
 export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';
+
+export interface SpellCard extends Card {
+	castSpell: (spellCardId: string, input: CastSpellInput) => void;
+}
+export const hasCastSpell = (card: Card): card is SpellCard => (card as SpellCard)?.castSpell !== undefined;
 
 // Whenever this attacks
 export interface OnAttackCard extends Card {
@@ -296,3 +302,12 @@ export interface OnBeforeMagnetizeCard extends Card {
 }
 export const hasOnBeforeMagnetize = (card: Card): card is OnBeforeMagnetizeCard =>
 	(card as OnBeforeMagnetizeCard)?.onBeforeMagnetize !== undefined;
+
+export interface CastSpellInput {
+	source: BoardEntity;
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	otherBoard: BoardEntity[];
+	otherHero: BgsPlayerEntity;
+	gameState: FullGameState;
+}
