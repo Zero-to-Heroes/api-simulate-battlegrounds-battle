@@ -11,6 +11,7 @@ export const SilentEnforcer: DeathrattleSpawnCard = {
 		const mult = minion.cardId === CardIds.SilentEnforcer_BG33_156_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const targets = [
+				// Friendly non-demons
 				...input.boardWithDeadEntity.filter(
 					(e) =>
 						!hasCorrectTribe(
@@ -21,16 +22,8 @@ export const SilentEnforcer: DeathrattleSpawnCard = {
 							input.gameState.allCards,
 						),
 				),
-				...input.otherBoard.filter(
-					(e) =>
-						!hasCorrectTribe(
-							e,
-							input.otherBoardHero,
-							Race.DEMON,
-							input.gameState.anomalies,
-							input.gameState.allCards,
-						),
-				),
+				// All opponent minions
+				...input.otherBoard,
 			];
 			for (const target of targets) {
 				dealDamageToMinion(

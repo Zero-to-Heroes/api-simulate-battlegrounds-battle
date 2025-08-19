@@ -25,7 +25,7 @@ export const TwilightWatcher: OnAttackCard = {
 			hasCorrectTribe(e, input.attackingHero, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
 		);
 		for (const target of candidates) {
-			modifyStats(target, minion, 1 * mult, 3 * mult, input.attackingBoard, input.attackingHero, input.gameState);
+			modifyStats(target, minion, 1 * mult, 2 * mult, input.attackingBoard, input.attackingHero, input.gameState);
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},

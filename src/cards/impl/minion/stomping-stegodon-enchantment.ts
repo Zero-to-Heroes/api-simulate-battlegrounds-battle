@@ -4,6 +4,7 @@ import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
 import { OnAttackCard } from '../../card.interface';
+import { stompingStegodonAttack, stompingStegodonHealth } from './stomping-stegodon';
 
 export const StompingStegodonEnchantment: OnAttackCard = {
 	cardIds: [
@@ -36,8 +37,8 @@ export const StompingStegodonEnchantment: OnAttackCard = {
 			modifyStats(
 				candidate,
 				input.attacker,
-				1 * nbOfTriggers * mult,
-				1 * nbOfTriggers * mult,
+				stompingStegodonAttack * nbOfTriggers * mult,
+				stompingStegodonHealth * nbOfTriggers * mult,
 				input.attackingBoard,
 				input.attackingHero,
 				input.gameState,

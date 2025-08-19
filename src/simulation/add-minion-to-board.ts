@@ -3,7 +3,6 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import {
 	hasAfterOtherSpawned,
-	hasOnDespawned,
 	hasOnOtherSpawned,
 	hasOnOtherAuraSpawned as hasOnOtherSpawnedAura,
 	hasOnSpawned,
@@ -128,7 +127,7 @@ const handleSpawnEffect = (
 			case CardIds.MamaBear_BGS_021:
 			case CardIds.MamaBear_TB_BaconUps_090:
 				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
-					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 8 : 4;
+					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 10 : 5;
 					modifyStats(spawned, entity, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}

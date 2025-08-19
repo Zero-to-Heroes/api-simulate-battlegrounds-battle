@@ -5,6 +5,9 @@ import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
 import { OnAttackCard } from '../../card.interface';
 
+export const stompingStegodonAttack = 2;
+export const stompingStegodonHealth = 0;
+
 export const StompingStegodon: OnAttackCard = {
 	cardIds: [CardIds.StompingStegodon_BG33_840, CardIds.StompingStegodon_BG33_840_G],
 	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
@@ -33,8 +36,8 @@ export const StompingStegodon: OnAttackCard = {
 			modifyStats(
 				candidate,
 				minion,
-				1 * mult,
-				1 * mult,
+				stompingStegodonAttack * mult,
+				stompingStegodonHealth * mult,
 				input.attackingBoard,
 				input.attackingHero,
 				input.gameState,
