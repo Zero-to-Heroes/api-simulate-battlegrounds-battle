@@ -1,11 +1,11 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnWheneverAnotherMinionAttacks, hasRally } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
 import { pickRandom } from '../services/utils';
-import { hasCorrectTribe } from '../utils';
+import { hasCorrectTribe, hasEntityMechanic } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { FullGameState } from './internal-game-state';
@@ -86,10 +86,11 @@ export const applyOnAttackEffects = (
 
 	// This assumes that only "Rally" effects trigger on attack
 	// 2025-08-20: this is false. "Whenever a friendly minion attacks" is not a rally effect
-	const rallyLoops =
-		1 +
-		(attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
-			.length ?? 0);
+	const isAttackerRallying = hasEntityMechanic(attacker, GameTag.BACON_RALLY, gameState.allCards);
+	const numberOfRallyingCries =
+		attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
+			.length ?? 0;
+	const rallyLoops = 1 + (isAttackerRallying ? numberOfRallyingCries : 0);
 	for (let i = 0; i < rallyLoops; i++) {
 		const onAttackImpl = cardMappings[attacker.cardId];
 		if (hasRally(onAttackImpl)) {
