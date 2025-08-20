@@ -555,6 +555,13 @@ export const applySoulJugglerEffect = (
 	const jugglers = boardWithJugglers.filter((entity) => entity.cardId === CardIds.SoulJuggler_BGS_002);
 	for (const juggler of jugglers) {
 		const target = getRandomMinionWithHighestHealth(boardToAttack);
+		gameState.spectator.registerPowerTarget(
+			juggler,
+			target,
+			boardWithJugglers,
+			boardWithJugglersHero,
+			boardToAttackHero,
+		);
 		dealDamageToMinion(
 			target,
 			boardToAttack,
@@ -570,6 +577,13 @@ export const applySoulJugglerEffect = (
 	for (const juggler of goldenJugglers) {
 		for (let i = 0; i < 2; i++) {
 			const target = getRandomMinionWithHighestHealth(boardToAttack);
+			gameState.spectator.registerPowerTarget(
+				juggler,
+				target,
+				boardWithJugglers,
+				boardWithJugglersHero,
+				boardToAttackHero,
+			);
 			dealDamageToMinion(
 				target,
 				boardToAttack,

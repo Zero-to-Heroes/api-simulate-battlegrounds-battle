@@ -38,6 +38,10 @@ export const orchestrateMinionDeathEffects = (
 
 	const entitiesFromDeathrattles = processDeathrattles(deathrattleInput, processAvenge);
 
+	// When a Silent Enforcer dies, it deals damage to other minions, then Soul Juggler damages the minions
+	// **before** they completely die and spawn their own deathrattles
+	handleAfterMinionsDieEffects(deathrattleInput);
+
 	// Hack to try and fix how reborn indices are handled when there are spawns during the deathrattle phase
 	// Ideally, this should probably be rewritten completely to keep the dead entities in the board itself
 	// so we can use that as a source for the spawn index. However this is a big rewrite with lots of
@@ -77,7 +81,6 @@ export const orchestrateMinionDeathEffects = (
 
 	const entitiesFromFeathermanes = processFeathermaneEffects(deathrattleInput);
 	handlePostDeathrattleEffects(deathrattleInput, [...entitiesFromDeathrattles, ...entitiesFromFeathermanes]);
-	handleAfterMinionsDieEffects(deathrattleInput);
 };
 
 const handleAfterMinionsKillEffects = (deathrattleInput: DeathrattleInput) => {
@@ -142,7 +145,6 @@ const handleWheneverMinionsDieEffects = (deathrattleInput: DeathrattleInput) => 
 };
 
 const handleAfterMinionsDieEffects = (deathrattleInput: DeathrattleInput) => {
-	// Wildfire Element is applied first, before the DR spawns
 	const processPlayerFirst = Math.random() > 0.5;
 	const playerStates = processPlayerFirst
 		? [deathrattleInput.gameState.gameState.player, deathrattleInput.gameState.gameState.opponent]
