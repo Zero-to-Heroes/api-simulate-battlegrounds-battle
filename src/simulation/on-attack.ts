@@ -24,18 +24,55 @@ export const applyOnAttackEffects = (
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 
+	for (const trinket of attackingBoardHero.trinkets ?? []) {
+		const onAttackImpl = cardMappings[trinket.cardId];
+		if (hasOnAttack(onAttackImpl)) {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(trinket, {
+				attacker: attacker,
+				isSelfAttacking: false,
+				attackingHero: attackingBoardHero,
+				attackingBoard: attackingBoard,
+				defendingEntity: defendingEntity,
+				defendingHero: defendingBoardHero,
+				defendingBoard: defendingBoard,
+				gameState,
+				playerIsFriendly: attackingBoardHero.friendly,
+			});
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
+		}
+	}
+
 	// This assumes that only "Rally" effects trigger on attack
+	// 2025-08-20: this is false. "Whenever a friendly minion attacks" is not a rally effect
 	const rallyLoops =
 		1 +
 		(attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
 			.length ?? 0);
 	for (let i = 0; i < rallyLoops; i++) {
-		for (const trinket of attackingBoardHero.trinkets ?? []) {
-			const onAttackImpl = cardMappings[trinket.cardId];
+		const onAttackImpl = cardMappings[attacker.cardId];
+		if (hasOnAttack(onAttackImpl)) {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(attacker, {
+				attacker: attacker,
+				isSelfAttacking: true,
+				attackingHero: attackingBoardHero,
+				attackingBoard: attackingBoard,
+				defendingEntity: defendingEntity,
+				defendingHero: defendingBoardHero,
+				defendingBoard: defendingBoard,
+				gameState,
+				playerIsFriendly: attackingBoardHero.friendly,
+			});
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
+		}
+		const enchantments = attacker.enchantments;
+		for (const enchantment of enchantments) {
+			const onAttackImpl = cardMappings[enchantment.cardId];
 			if (hasOnAttack(onAttackImpl)) {
-				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(trinket, {
+				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(enchantment, {
 					attacker: attacker,
-					isSelfAttacking: false,
+					isSelfAttacking: true,
 					attackingHero: attackingBoardHero,
 					attackingBoard: attackingBoard,
 					defendingEntity: defendingEntity,
@@ -48,13 +85,33 @@ export const applyOnAttackEffects = (
 				damageDoneByDefender += dmgDoneByDefender;
 			}
 		}
+	}
 
-		for (const boardEntity of attackingBoard) {
-			const onAttackImpl = cardMappings[boardEntity.cardId];
+	const attackingBoardOtherEntities = attackingBoard.filter((e) => e !== attacker);
+	for (const boardEntity of attackingBoardOtherEntities) {
+		const onAttackImpl = cardMappings[boardEntity.cardId];
+		if (hasOnAttack(onAttackImpl)) {
+			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(boardEntity, {
+				attacker: attacker,
+				isSelfAttacking: false,
+				attackingHero: attackingBoardHero,
+				attackingBoard: attackingBoard,
+				defendingEntity: defendingEntity,
+				defendingHero: defendingBoardHero,
+				defendingBoard: defendingBoard,
+				gameState,
+				playerIsFriendly: attackingBoardHero.friendly,
+			});
+			damageDoneByAttacker += dmgDoneByAttacker;
+			damageDoneByDefender += dmgDoneByDefender;
+		}
+		const enchantments = boardEntity.enchantments;
+		for (const enchantment of enchantments) {
+			const onAttackImpl = cardMappings[enchantment.cardId];
 			if (hasOnAttack(onAttackImpl)) {
-				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(boardEntity, {
+				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(enchantment, {
 					attacker: attacker,
-					isSelfAttacking: attacker === boardEntity,
+					isSelfAttacking: false,
 					attackingHero: attackingBoardHero,
 					attackingBoard: attackingBoard,
 					defendingEntity: defendingEntity,
@@ -65,25 +122,6 @@ export const applyOnAttackEffects = (
 				});
 				damageDoneByAttacker += dmgDoneByAttacker;
 				damageDoneByDefender += dmgDoneByDefender;
-			}
-			const enchantments = boardEntity.enchantments;
-			for (const enchantment of enchantments) {
-				const onAttackImpl = cardMappings[enchantment.cardId];
-				if (hasOnAttack(onAttackImpl)) {
-					const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.onAnyMinionAttack(enchantment, {
-						attacker: attacker,
-						isSelfAttacking: attacker === boardEntity,
-						attackingHero: attackingBoardHero,
-						attackingBoard: attackingBoard,
-						defendingEntity: defendingEntity,
-						defendingHero: defendingBoardHero,
-						defendingBoard: defendingBoard,
-						gameState,
-						playerIsFriendly: attackingBoardHero.friendly,
-					});
-					damageDoneByAttacker += dmgDoneByAttacker;
-					damageDoneByDefender += dmgDoneByDefender;
-				}
 			}
 		}
 
