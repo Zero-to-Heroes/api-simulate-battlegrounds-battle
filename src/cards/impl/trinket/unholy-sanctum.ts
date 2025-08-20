@@ -18,6 +18,10 @@ export const UnholySanctum: DeathrattleTriggeredCard = {
 				input.boardWithDeadEntityHero,
 				input.gameState,
 			);
+			const afterMod = target.attack;
+			if (afterMod > 10) {
+				// Nothing
+			}
 		}
 	},
 };

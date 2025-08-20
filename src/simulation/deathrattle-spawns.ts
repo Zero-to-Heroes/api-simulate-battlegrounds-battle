@@ -1,6 +1,6 @@
 import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
-import { BoardEntity } from '../board-entity';
+import { BoardEnchantment, BoardEntity } from '../board-entity';
 import { hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
@@ -17,6 +17,7 @@ import {
 	grantStatsToMinionsOfEachType,
 	hasCorrectTribe,
 	hasEntityMechanic,
+	hasMechanic,
 	stringifySimple,
 } from '../utils';
 import { dealDamageToMinion, dealDamageToRandomEnemy, findNearestEnemies } from './attack';
@@ -202,7 +203,7 @@ export const spawnEntitiesFromDeathrattle = (
 	// deathrattles
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
-	const enchantments: { cardId: string; originEntityId?: number; repeats?: number }[] = [
+	const enchantments: BoardEnchantment[] = [
 		...(deadEntity.enchantments ?? []),
 		// These seem to be first processed separately
 		// ...(deadEntity.rememberedDeathrattles ?? []),
@@ -1910,8 +1911,15 @@ export const spawnEntitiesFromDeathrattle = (
 						);
 						break;
 					default:
-						if (!hasEntityMechanic(deadEntity, GameTag.DEATHRATTLE, gameState.allCards)) {
-							hasTriggered = false;
+						if (deadEntity.additionalCards?.includes(deadEntityCardId)) {
+							if (!hasMechanic(gameState.allCards.getCard(deadEntityCardId), GameTag.DEATHRATTLE)) {
+								hasTriggered = false;
+							}
+						} else {
+							const source = [deadEntity, ...enchantments].find((e) => e.cardId === deadEntityCardId);
+							if (!hasEntityMechanic(source, GameTag.DEATHRATTLE, gameState.allCards)) {
+								hasTriggered = false;
+							}
 						}
 						break;
 				}
