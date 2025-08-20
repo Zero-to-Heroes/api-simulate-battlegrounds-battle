@@ -12,13 +12,11 @@ export const ChoralMrrrglr = {
 		const totalHealthInHand = input.playerEntity.hand?.map((e) => e.health ?? 0).reduce((a, b) => a + b, 0) ?? 0;
 		// If the minion is gilded in combat, the global info becomes unreliable
 		const attackBuff =
-			(minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralAttackBuff) ||
-			multiplier * totalAttackInHand ||
-			0;
+			multiplier *
+			((minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralAttackBuff) || totalAttackInHand || 0);
 		const healthBuff =
-			(minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralHealthBuff) ||
-			multiplier * totalHealthInHand ||
-			0;
+			multiplier *
+			((minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralHealthBuff) || totalHealthInHand || 0);
 		modifyStats(minion, minion, attackBuff, healthBuff, input.playerBoard, input.playerEntity, input.gameState);
 		return true;
 	},
