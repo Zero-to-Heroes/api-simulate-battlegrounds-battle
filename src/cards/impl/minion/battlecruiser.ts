@@ -7,9 +7,9 @@ import { RebornEffectInput } from '../../../simulation/reborn';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
 import { getRandomMinionWithHighestHealth } from '../../../utils';
-import { DeathrattleSpawnCard, OnAttackCard, RebornSelfEffectCard, StartOfCombatCard } from '../../card.interface';
+import { DeathrattleSpawnCard, RallyCard, RebornSelfEffectCard, StartOfCombatCard } from '../../card.interface';
 
-export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackCard & DeathrattleSpawnCard = {
+export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & RallyCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.LiftOff_BattlecruiserToken_BG31_HERO_801pt, CardIds.Battlecruiser_BG31_HERO_801pt_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// Enchantments can appear multiple times???
@@ -89,17 +89,13 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & OnAttackC
 		minion.windfury = input.rebornEntity.windfury;
 		minion.poisonous = input.rebornEntity.poisonous;
 	},
-	onAnyMinionAttack: (
+	rally: (
 		minion: BoardEntity,
 		input: OnAttackInput,
 	): {
 		dmgDoneByAttacker: number;
 		dmgDoneByDefender: number;
 	} => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
 		const advancedBallistics = [...(minion.enchantments ?? [])]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.AdvancedBallistics_AdvancedBallisticsEnchantment_BG31_HERO_801ptde);

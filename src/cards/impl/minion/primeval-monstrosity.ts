@@ -2,11 +2,11 @@ import { CardIds, GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { grantStatsToMinionsOfEachType, hasEntityMechanic } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const PrimevalMonstrosity: OnAttackCard = {
+export const PrimevalMonstrosity: OnWheneverAnotherMinionAttacksCard = {
 	cardIds: [CardIds.PrimevalMonstrosity_BG33_320, CardIds.PrimevalMonstrosity_BG33_320_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onWheneverAnotherMinionAttacks: (minion: BoardEntity, input: OnAttackInput) => {
 		if (hasEntityMechanic(input.attacker, GameTag.BACON_RALLY, input.gameState.allCards)) {
 			const mult = minion.cardId === CardIds.PrimevalMonstrosity_BG33_320_G ? 2 : 1;
 			grantStatsToMinionsOfEachType(

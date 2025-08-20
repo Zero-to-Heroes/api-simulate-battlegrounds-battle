@@ -3,11 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const RipsnarlCaptain: OnAttackCard = {
+export const RipsnarlCaptain: OnWheneverAnotherMinionAttacksCard = {
 	cardIds: [CardIds.RipsnarlCaptain_BGS_056, CardIds.RipsnarlCaptain_TB_BaconUps_139],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onWheneverAnotherMinionAttacks: (minion: BoardEntity, input: OnAttackInput) => {
 		if (
 			hasCorrectTribe(
 				input.attacker,

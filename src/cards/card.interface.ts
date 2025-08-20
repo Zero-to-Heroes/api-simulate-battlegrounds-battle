@@ -62,21 +62,22 @@ export interface SpellCard extends Card {
 export const hasCastSpell = (card: Card): card is SpellCard => (card as SpellCard)?.castSpell !== undefined;
 
 // Whenever this attacks
-export interface OnAttackCard extends Card {
-	onAnyMinionAttack: (
+export interface RallyCard extends Card {
+	rally: (
 		minion: BoardEntity | BoardTrinket | BoardEnchantment,
 		input: OnAttackInput,
 	) => { dmgDoneByAttacker: number; dmgDoneByDefender: number };
 }
-export const hasOnAttack = (card: Card): card is OnAttackCard =>
-	(card as OnAttackCard)?.onAnyMinionAttack !== undefined;
+export const hasRally = (card: Card): card is RallyCard => (card as RallyCard)?.rally !== undefined;
 
-// Replaced by Rally
-// export interface OnAfterAttackCard extends Card {
-// 	onAnyMinionAfterAttack: (minion: BoardEntity | BoardTrinket, input: OnAfterAttackInput) => void;
-// }
-// export const hasOnAfterAttack = (card: Card): card is OnAfterAttackCard =>
-// 	(card as OnAfterAttackCard)?.onAnyMinionAfterAttack !== undefined;
+export interface OnWheneverAnotherMinionAttacksCard extends Card {
+	onWheneverAnotherMinionAttacks: (
+		minion: BoardEntity | BoardTrinket | BoardEnchantment,
+		input: OnAttackInput,
+	) => { dmgDoneByAttacker: number; dmgDoneByDefender: number };
+}
+export const hasOnWheneverAnotherMinionAttacks = (card: Card): card is OnWheneverAnotherMinionAttacksCard =>
+	(card as OnWheneverAnotherMinionAttacksCard)?.onWheneverAnotherMinionAttacks !== undefined;
 
 export interface OnMinionAttackedCard extends Card {
 	onAttacked: (minion: BoardEntity, input: OnMinionAttackedInput) => void;

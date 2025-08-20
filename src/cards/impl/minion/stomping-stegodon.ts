@@ -3,18 +3,14 @@ import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
 export const stompingStegodonAttack = 2;
 export const stompingStegodonHealth = 0;
 
-export const StompingStegodon: OnAttackCard = {
+export const StompingStegodon: RallyCard = {
 	cardIds: [CardIds.StompingStegodon_BG33_840, CardIds.StompingStegodon_BG33_840_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (input.attacker !== minion) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const debug = minion.entityId === 10597;
 		const mult = minion.cardId === CardIds.StompingStegodon_BG33_840_G ? 2 : 1;
 		const candidates = input.attackingBoard.filter(

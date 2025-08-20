@@ -3,11 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const AdmiralElizaGoreblade: OnAttackCard = {
+export const AdmiralElizaGoreblade: OnWheneverAnotherMinionAttacksCard = {
 	cardIds: [CardIds.AdmiralElizaGoreblade_BG27_555, CardIds.AdmiralElizaGoreblade_BG27_555_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onWheneverAnotherMinionAttacks: (minion: BoardEntity, input: OnAttackInput) => {
 		if (
 			hasCorrectTribe(
 				input.attacker,

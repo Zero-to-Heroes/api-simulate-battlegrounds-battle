@@ -3,12 +3,12 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { hasCorrectTribe } from '../../../utils';
-import { DefaultScriptDataNumCard, OnAttackCard } from '../../card.interface';
+import { DefaultScriptDataNumCard, OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const FaerieDragonScale: OnAttackCard & DefaultScriptDataNumCard = {
+export const FaerieDragonScale: OnWheneverAnotherMinionAttacksCard & DefaultScriptDataNumCard = {
 	cardIds: [CardIds.FaerieDragonScale_BG32_MagicItem_363],
 	defaultScriptDataNum: (cardId: string) => 3,
-	onAnyMinionAttack: (
+	onWheneverAnotherMinionAttacks: (
 		trinket: BoardTrinket,
 		input: OnAttackInput,
 	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {

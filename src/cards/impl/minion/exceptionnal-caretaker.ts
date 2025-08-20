@@ -4,18 +4,14 @@ import { BattlecryInput } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
-import { BattlecryCard, DeathrattleSpawnCard, OnAttackCard } from '../../card.interface';
+import { BattlecryCard, DeathrattleSpawnCard, RallyCard } from '../../card.interface';
 
 const attackBuff = 2;
 const healthBuff = 2;
 
-export const ExceptionalCaretaker: OnAttackCard & DeathrattleSpawnCard & BattlecryCard = {
+export const ExceptionalCaretaker: RallyCard & DeathrattleSpawnCard & BattlecryCard = {
 	cardIds: [CardIds.ExceptionalCaretaker_BG33_701, CardIds.ExceptionalCaretaker_BG33_701_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.ExceptionalCaretaker_BG33_701_G ? 2 : 1;
 		const targets = input.attackingBoard.filter((e) => e !== minion);
 		for (const target of targets) {

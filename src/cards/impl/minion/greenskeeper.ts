@@ -3,15 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { isDead } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const Greenskeeper: OnAttackCard = {
+export const Greenskeeper: RallyCard = {
 	cardIds: [CardIds.Greenskeeper_BG30_008, CardIds.Greenskeeper_BG30_008_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const loops = minion.cardId === CardIds.Greenskeeper_BG30_008 ? 1 : 2;
 		for (let i = 0; i < loops; i++) {
 			const battlecries = input.attackingBoard.filter(

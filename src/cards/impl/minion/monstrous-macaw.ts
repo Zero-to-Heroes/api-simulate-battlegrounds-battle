@@ -4,15 +4,11 @@ import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battle
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { getValidDeathrattles } from '../../../simulation/deathrattle-utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const MonstrousMacaw: OnAttackCard = {
+export const MonstrousMacaw: RallyCard = {
 	cardIds: [CardIds.MonstrousMacaw_BGS_078, CardIds.MonstrousMacaw_TB_BaconUps_135],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (input.attacker !== minion) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const loops = minion.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
 		const targetBoard = input.attackingBoard.filter((e) => e.entityId !== minion.entityId);
 

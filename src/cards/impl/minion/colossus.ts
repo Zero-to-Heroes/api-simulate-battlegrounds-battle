@@ -2,18 +2,11 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToMinion, getNeighbours } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const Colossus: OnAttackCard = {
+export const Colossus: RallyCard = {
 	cardIds: [CardIds.WarpGate_ColossusToken_BG31_HERO_802pt, CardIds.Colossus_BG31_HERO_802pt_G],
-	onAnyMinionAttack: (
-		minion: BoardEntity,
-		input: OnAttackInput,
-	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		let dmgDoneByAttacker = 0;
 		const neighbours = getNeighbours(input.defendingBoard, input.defendingEntity);
 		const damage = minion.scriptDataNum1 || 1;

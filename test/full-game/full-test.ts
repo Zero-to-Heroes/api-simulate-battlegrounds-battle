@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsLocalService, AllCardsService } from '@firestone-hs/reference-data';
+import { AllCardsLocalService } from '@firestone-hs/reference-data';
 import { readFileSync } from 'fs';
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';

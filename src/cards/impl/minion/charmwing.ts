@@ -4,15 +4,11 @@ import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const Charmwing: OnAttackCard = {
+export const Charmwing: RallyCard = {
 	cardIds: [CardIds.Charmwing_BG33_240, CardIds.Charmwing_BG33_240_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (input.attacker !== minion) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.Charmwing_BG33_240_G ? 2 : 1;
 		const picked = [];
 		for (let i = 0; i < 2; i++) {

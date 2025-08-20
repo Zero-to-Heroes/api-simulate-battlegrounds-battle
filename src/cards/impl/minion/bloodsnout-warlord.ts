@@ -3,11 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { playBloodGemsOn } from '../../../simulation/blood-gems';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { hasEntityMechanic } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const BloodsnoutWarlord: OnAttackCard = {
+export const BloodsnoutWarlord: OnWheneverAnotherMinionAttacksCard = {
 	cardIds: [CardIds.BloodsnoutWarlord_BG33_884, CardIds.BloodsnoutWarlord_BG33_884_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onWheneverAnotherMinionAttacks: (minion: BoardEntity, input: OnAttackInput) => {
 		if (hasEntityMechanic(input.attacker, GameTag.BACON_RALLY, input.gameState.allCards)) {
 			const mult = minion.cardId === CardIds.BloodsnoutWarlord_BG33_884_G ? 2 : 1;
 			for (const target of input.attackingBoard) {

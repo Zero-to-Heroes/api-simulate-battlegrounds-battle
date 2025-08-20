@@ -2,15 +2,11 @@ import { CardIds } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const VengefulProtector: OnAttackCard = {
+export const VengefulProtector: RallyCard = {
 	cardIds: [CardIds.VengefulProtector_BG33_247, CardIds.VengefulProtector_BG33_247_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (input.attacker !== minion) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.VengefulProtector_BG33_247_G ? 2 : 1;
 		const candidates = input.attackingBoard.filter((e) => e !== minion);
 		for (const target of candidates) {

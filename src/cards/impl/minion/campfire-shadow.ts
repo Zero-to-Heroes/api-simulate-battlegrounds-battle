@@ -3,15 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const CampfireShadow: OnAttackCard = {
+export const CampfireShadow: RallyCard = {
 	cardIds: [CardIds.CampfireShadow_BG33_113, CardIds.CampfireShadow_BG33_113_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.CampfireShadow_BG33_113_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const target = pickRandom(input.defendingBoard).cardId;

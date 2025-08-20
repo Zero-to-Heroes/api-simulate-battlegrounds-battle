@@ -3,11 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const TwilightWatcher: OnAttackCard = {
+export const TwilightWatcher: OnWheneverAnotherMinionAttacksCard = {
 	cardIds: [CardIds.TwilightWatcher_BG33_245, CardIds.TwilightWatcher_BG33_245_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
+	onWheneverAnotherMinionAttacks: (minion: BoardEntity, input: OnAttackInput) => {
 		if (
 			!hasCorrectTribe(
 				input.attacker,

@@ -4,15 +4,11 @@ import { updateVenomous } from '../../../keywords/venomous';
 import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const BileSpitter: OnAttackCard = {
+export const BileSpitter: RallyCard = {
 	cardIds: [CardIds.BileSpitter_BG33_318, CardIds.BileSpitter_BG33_318_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.BileSpitter_BG33_318_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const candidates = input.attackingBoard.filter(

@@ -3,17 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { updateReborn } from '../../../keywords/reborn';
 import { updateTaunt } from '../../../keywords/taunt';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const SindoreiStraightShot: OnAttackCard = {
+export const SindoreiStraightShot: RallyCard = {
 	cardIds: [CardIds.SindoreiStraightShot_BG25_016, CardIds.SindoreiStraightShot_BG25_016_G],
-	onAnyMinionAttack: (
-		minion: BoardEntity,
-		input: OnAttackInput,
-	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
-		if (minion !== input.attacker) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
+	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		updateTaunt(
 			input.defendingEntity,
 			false,

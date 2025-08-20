@@ -4,15 +4,11 @@ import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { OnAttackCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
-export const SleepySupporter: OnAttackCard = {
+export const SleepySupporter: RallyCard = {
 	cardIds: [CardIds.SleepySupporter_BG33_241, CardIds.SleepySupporter_BG33_241_G],
-	onAnyMinionAttack: (minion: BoardEntity, input: OnAttackInput) => {
-		if (input.attacker !== minion) {
-			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
-		}
-
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.SleepySupporter_BG33_241_G ? 2 : 1;
 		const candidates = input.attackingBoard.filter(
 			(e) =>
