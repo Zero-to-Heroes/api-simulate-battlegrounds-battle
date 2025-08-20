@@ -445,6 +445,7 @@ export const processDeathrattleForMinion = (
 	// Avenge trigger before reborn
 	// http://replays.firestoneapp.com/?reviewId=5bb20eb8-e0ca-47ab-adc7-13134716d568&turn=7&action=6
 	let avengeEntities = [];
+	let afterDeathEntities = [];
 	if (processAvenge) {
 		avengeEntities = applyAvengeEffects(
 			deadEntity,
@@ -456,19 +457,19 @@ export const processDeathrattleForMinion = (
 			gameState,
 			[...drEntities, ...enchEntities],
 		);
-	}
 
-	// TODO: Feathermane should be applied after the Reborn effects have all been processed
-	// Secrets should be processed here ("at Avenge speed")
-	const afterDeathEntities = applyAfterDeathEffects(
-		deadEntity,
-		indexFromRight,
-		deadEntityPlayerState.board,
-		deadEntityPlayerState.player,
-		otherPlayerState.board,
-		otherPlayerState.player,
-		gameState,
-	);
+		// TODO: Feathermane should be applied after the Reborn effects have all been processed
+		// Secrets should be processed here ("at Avenge speed")
+		afterDeathEntities = applyAfterDeathEffects(
+			deadEntity,
+			indexFromRight,
+			deadEntityPlayerState.board,
+			deadEntityPlayerState.player,
+			otherPlayerState.board,
+			otherPlayerState.player,
+			gameState,
+		);
+	}
 	return [...drEntities, ...enchEntities, ...avengeEntities, ...afterDeathEntities];
 };
 
