@@ -14,9 +14,8 @@ export const Charmwing: RallyCard = {
 		for (let i = 0; i < 2; i++) {
 			const candidates = input.attackingBoard.filter(
 				(e) =>
-					e.cardId !== CardIds.Charmwing_BG33_240 &&
-					e.cardId !== CardIds.Charmwing_BG33_240_G &&
-					// !picked.includes(e) && // Not sure about this yet
+					!Charmwing.cardIds.includes(e.cardId) &&
+					!picked.includes(e) && // Not sure about this yet
 					hasCorrectTribe(
 						e,
 						input.attackingHero,
@@ -33,7 +32,7 @@ export const Charmwing: RallyCard = {
 						target,
 						minion,
 						0,
-						minion.health,
+						minion.maxHealth,
 						input.attackingBoard,
 						input.attackingHero,
 						input.gameState,
