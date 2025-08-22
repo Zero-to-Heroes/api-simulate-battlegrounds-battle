@@ -10,7 +10,9 @@ export const GearedGuard: RallyCard = {
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.GearedGuard_BG33_325_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
-			const possibleTargets = input.attackingBoard.filter((e) => e !== minion && !e.divineShield);
+			const possibleTargets = input.attackingBoard.filter(
+				(e) => !GearedGuard.cardIds.includes(e.cardId) && !e.divineShield,
+			);
 			if (possibleTargets.length > 0) {
 				const target = pickRandom(possibleTargets);
 				updateDivineShield(
