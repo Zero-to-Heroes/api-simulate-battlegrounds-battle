@@ -127,7 +127,7 @@ const handleSpawnEffect = (
 			case CardIds.MamaBear_BGS_021:
 			case CardIds.MamaBear_TB_BaconUps_090:
 				if (hasCorrectTribe(spawned, boardHero, Race.BEAST, gameState.anomalies, gameState.allCards)) {
-					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 10 : 5;
+					const statsBonus = entity.cardId === CardIds.MamaBear_TB_BaconUps_090 ? 12 : 6;
 					modifyStats(spawned, entity, statsBonus, statsBonus, board, boardHero, gameState);
 					gameState.spectator.registerPowerTarget(entity, entity, board, boardHero, otherHero);
 				}

@@ -5,7 +5,7 @@ import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
 import { RallyCard } from '../../card.interface';
 
-export const stompingStegodonAttack = 2;
+export const stompingStegodonAttack = 3;
 export const stompingStegodonHealth = 0;
 
 export const StompingStegodon: RallyCard = {

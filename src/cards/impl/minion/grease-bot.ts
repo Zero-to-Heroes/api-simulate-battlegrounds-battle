@@ -8,6 +8,6 @@ export const GreaseBot: OnDivineShieldUpdatedCard = {
 	cardIds: [CardIds.GreaseBot_BG21_024, CardIds.GreaseBot_BG21_024_G],
 	onDivineShieldUpdated: (minion: BoardEntity, input: OnDivineShieldUpdatedInput) => {
 		const mult = minion.cardId === CardIds.GreaseBot_BG21_024 ? 1 : 2;
-		modifyStats(input.target, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
+		modifyStats(input.target, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 	},
 };

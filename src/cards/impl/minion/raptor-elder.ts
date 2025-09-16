@@ -4,7 +4,7 @@ import { OnDespawnInput, OnOtherSpawnInput, OnSpawnInput } from '../../../simula
 import { hasCorrectTribe } from '../../../utils';
 import { OnDespawnedCard, OnOtherSpawnedCard, OnSpawnedCard } from '../../card.interface';
 
-const attackBuff = 2;
+const attackBuff = 3;
 const healthBuff = 2;
 
 export const RaptorElder: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCard = {
