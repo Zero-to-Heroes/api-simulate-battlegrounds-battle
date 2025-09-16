@@ -26,14 +26,21 @@ export const SilentEnforcer: DeathrattleSpawnCard = {
 				...input.otherBoard,
 			];
 			for (const target of targets) {
-				dealDamageToMinion(
+				input.gameState.spectator.registerPowerTarget(
+					minion,
 					target,
 					input.boardWithDeadEntity,
 					input.boardWithDeadEntityHero,
-					minion,
-					4,
+					input.otherBoardHero,
+				);
+				dealDamageToMinion(
+					target,
 					input.otherBoard,
 					input.otherBoardHero,
+					minion,
+					4,
+					input.boardWithDeadEntity,
+					input.boardWithDeadEntityHero,
 					input.gameState,
 				);
 			}
