@@ -1,4 +1,5 @@
-import { CardIds, CardType } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { CardType } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { OnCardAddedToHandInput } from '../../../simulation/cards-in-hand';
 import { addStatsToBoard } from '../../../utils';

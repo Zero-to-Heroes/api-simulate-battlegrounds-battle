@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../services/card-ids';
+import { AllCardsService, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';

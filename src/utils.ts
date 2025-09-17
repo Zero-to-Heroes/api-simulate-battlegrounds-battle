@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { ALL_BG_RACES, AllCardsService, CardIds, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
+import { CardIds } from './services/card-ids';
+import { ALL_BG_RACES, AllCardsService, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEnchantment, BoardEntity } from './board-entity';
 import { BoardSecret } from './board-secret';

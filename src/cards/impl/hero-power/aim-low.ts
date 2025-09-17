@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { pickRandom } from '../../../services/utils';
 import { dealDamageToMinion } from '../../../simulation/attack';

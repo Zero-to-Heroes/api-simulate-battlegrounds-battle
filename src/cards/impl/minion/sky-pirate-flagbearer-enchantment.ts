@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { DeathrattleSpawnEnchantmentCard } from '../../card.interface';

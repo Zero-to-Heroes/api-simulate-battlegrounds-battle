@@ -1,4 +1,5 @@
-import { ALL_BG_RACES, AllCardsService, CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { ALL_BG_RACES, AllCardsService, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { shuffleArray } from '../../../services/utils';

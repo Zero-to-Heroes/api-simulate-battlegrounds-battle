@@ -1,4 +1,5 @@
-import { CardIds, CardType } from '@firestone-hs/reference-data';
+import { CardIds } from '../services/card-ids';
+import { CardType } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnMinionKilled } from '../cards/card.interface';

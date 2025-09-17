@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { OnDivineShieldUpdatedInput } from '../../../keywords/divine-shield';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';

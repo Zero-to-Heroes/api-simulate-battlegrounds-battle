@@ -1,4 +1,5 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { updateTaunt } from '../../../keywords/taunt';
 import { pickRandom } from '../../../services/utils';

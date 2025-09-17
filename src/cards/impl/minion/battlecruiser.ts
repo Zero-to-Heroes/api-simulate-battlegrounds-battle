@@ -1,4 +1,5 @@
-import { CardIds, GameTag } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';

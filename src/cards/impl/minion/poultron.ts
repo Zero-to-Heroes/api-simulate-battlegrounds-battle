@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
 import { simulateAttack } from '../../../simulation/attack';

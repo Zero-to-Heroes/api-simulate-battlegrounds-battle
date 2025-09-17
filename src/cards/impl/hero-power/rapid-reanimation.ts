@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';

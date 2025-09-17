@@ -1,4 +1,5 @@
-import { CardIds, GameTag } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { GameTag } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { pickRandom } from '../../../services/utils';
 import { AvengeInput } from '../../../simulation/avenge';

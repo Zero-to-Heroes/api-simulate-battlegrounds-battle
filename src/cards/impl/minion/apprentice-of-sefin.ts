@@ -1,4 +1,5 @@
-import { CardIds, GameTag } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';

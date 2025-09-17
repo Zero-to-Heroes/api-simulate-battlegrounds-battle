@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardSecret } from '../../../board-secret';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';

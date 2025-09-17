@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { AllCardsService, CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from './services/card-ids';
+import { AllCardsService } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { hasDeathrattleSpawnEnchantment } from './cards/card.interface';
 import { CardsData } from './cards/cards-data';

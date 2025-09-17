@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { OnAttackInput } from '../../../simulation/on-attack';

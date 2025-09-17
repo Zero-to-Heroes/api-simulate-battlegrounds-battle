@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../services/card-ids';
 
 const MAX_LEAPFROGGER_GROUPS = 12;
 

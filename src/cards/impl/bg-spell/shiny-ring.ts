@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { addStatsToBoard } from '../../../utils';
 import { CastSpellInput, SpellCard } from '../../card.interface';
 

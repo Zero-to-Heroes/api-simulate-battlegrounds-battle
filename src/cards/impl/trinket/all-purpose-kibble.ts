@@ -1,4 +1,5 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';

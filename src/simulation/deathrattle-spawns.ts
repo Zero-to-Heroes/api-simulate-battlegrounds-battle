@@ -1,4 +1,5 @@
-import { CardIds, CardType, GameTag, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../services/card-ids';
+import { CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEnchantment, BoardEntity } from '../board-entity';
 import { hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';

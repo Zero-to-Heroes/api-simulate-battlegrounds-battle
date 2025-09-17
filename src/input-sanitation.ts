@@ -1,4 +1,5 @@
-import { AllCardsService, CardIds, normalizeHeroCardId } from '@firestone-hs/reference-data';
+import { CardIds } from './services/card-ids';
+import { AllCardsService, normalizeHeroCardId } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BgsBoardInfo } from './bgs-board-info';
 import { BgsHeroPower, BgsPlayerEntity } from './bgs-player-entity';

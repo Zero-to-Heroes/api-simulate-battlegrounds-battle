@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 
 // It's a "start of turn" card now
 export const FlotsamFlinger = {

@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';

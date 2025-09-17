@@ -1,4 +1,4 @@
-import { CardIds } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';

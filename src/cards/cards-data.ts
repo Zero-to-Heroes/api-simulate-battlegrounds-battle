@@ -1,6 +1,5 @@
 import {
 	AllCardsService,
-	CardIds,
 	CardType,
 	GameTag,
 	isBattlegroundsCard,
@@ -8,6 +7,7 @@ import {
 	ReferenceCard,
 } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
+import { CardIds } from '../services/card-ids';
 import { groupByFunction, pickRandom } from '../services/utils';
 import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
 import { hasAvenge, hasDefaultScriptDataNum } from './card.interface';

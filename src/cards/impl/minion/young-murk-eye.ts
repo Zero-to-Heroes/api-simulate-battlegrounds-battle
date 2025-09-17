@@ -1,4 +1,5 @@
-import { CardIds, GameTag, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { GameTag, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { getNeighbours } from '../../../simulation/attack';
 import { triggerBattlecry } from '../../../simulation/battlecries';

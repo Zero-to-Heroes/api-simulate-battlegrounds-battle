@@ -1,4 +1,5 @@
-import { AllCardsService, CardIds, GameTag } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
+import { AllCardsService, GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';

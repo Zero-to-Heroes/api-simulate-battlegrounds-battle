@@ -1,4 +1,5 @@
-import { CardIds, GameTag, Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../services/card-ids';
+import { GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnWheneverAnotherMinionAttacks, hasRally } from '../cards/card.interface';

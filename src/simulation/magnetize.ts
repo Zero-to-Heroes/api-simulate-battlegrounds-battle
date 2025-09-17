@@ -1,4 +1,5 @@
-import { CardIds, GameTag, ReferenceCard } from '@firestone-hs/reference-data';
+import { CardIds } from '../services/card-ids';
+import { GameTag, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnBeforeMagnetize } from '../cards/card.interface';
