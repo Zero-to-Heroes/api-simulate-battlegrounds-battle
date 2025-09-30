@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
@@ -46,6 +46,7 @@ export const FlightyScout: StartOfCombatFromHandCard = {
 		);
 
 		// This is a bug, it should recompute the first attacker
-		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
+		// Fixed in 33.6: https://replays.firestoneapp.com/?reviewId=372ceba1-cba0-4954-a4e0-8bfef2d6ba94&turn=3&action=0
+		return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
 	},
 };
