@@ -87,7 +87,7 @@ const handleSummonsWhenSpaceForPlayer = (
 		// TODO: use one of these existing tag to make it unlocked
 		else if (
 			heroPower.cardId === CardIds.Drekthar_LeadTheFrostwolves &&
-			!heroPower.locked &&
+			heroPower.locked <= 0 &&
 			!heroPower.activated
 		) {
 			handleFrostwolfFervorForPlayer(
@@ -101,7 +101,7 @@ const handleSummonsWhenSpaceForPlayer = (
 			);
 		} else if (
 			heroPower.cardId === CardIds.VanndarStormpike_LeadTheStormpikes &&
-			!heroPower.locked &&
+			heroPower.locked <= 0 &&
 			!heroPower.activated
 		) {
 			handleStormpikeStrengthForPlayer(
