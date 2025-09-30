@@ -107,7 +107,6 @@ export const applyWaterInvocationEnchantment = (
 		if (!!target) {
 			updateTaunt(target, true, boardWithDeadEntity, boardWithDeadEntityHero, otherHero, gameState);
 			updateDivineShield(target, boardWithDeadEntity, boardWithDeadEntityHero, otherHero, true, gameState);
-			modifyStats(target, sourceEntity, 0, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 		}
 	}
 };

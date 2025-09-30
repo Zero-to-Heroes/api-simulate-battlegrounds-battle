@@ -9,12 +9,20 @@ export const FragrantPhylactery: StartOfCombatCard = {
 	cardIds: [CardIds.TamsinRoame_FragrantPhylactery],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		const lowestAttack = pickRandomLowestAttack(input.playerBoard);
-		lowestAttack.enchantments.push({
-			cardId: CardIds.FragrantPhylactery_FragrantEnchantment,
-			originEntityId: trinket.entityId,
-			timing: input.gameState.sharedState.currentEntityId++,
-		});
-		input.gameState.spectator.registerPowerTarget(input.playerEntity, lowestAttack, input.playerBoard, null, null);
+		if (!!lowestAttack) {
+			lowestAttack.enchantments.push({
+				cardId: CardIds.FragrantPhylactery_FragrantEnchantment,
+				originEntityId: trinket.entityId,
+				timing: input.gameState.sharedState.currentEntityId++,
+			});
+			input.gameState.spectator.registerPowerTarget(
+				input.playerEntity,
+				lowestAttack,
+				input.playerBoard,
+				null,
+				null,
+			);
+		}
 		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 };
