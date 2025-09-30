@@ -4,7 +4,7 @@ import { modifyStats } from '../../../simulation/stats';
 import { DeathrattleSpawnEnchantmentCard } from '../../card.interface';
 
 export const FragrantPhylacteryEnchantment: DeathrattleSpawnEnchantmentCard = {
-	cardIds: [CardIds.TamsinRoame_FragrantPhylactery],
+	cardIds: [CardIds.FragrantPhylactery_FragrantEnchantment],
 	deathrattleSpawnEnchantmentEffect: (
 		minion: { cardId: string; originEntityId?: number; repeats?: number },
 		input: DeathrattleTriggeredInput,
