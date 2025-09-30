@@ -55,6 +55,10 @@ export interface BgsHeroPower {
 	used: boolean;
 	info: number | string | BoardEntity;
 	info2: number;
+	info3: number;
+	info4: number;
+	info5: number;
+	info6: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	// For Ozumat's Tentacular

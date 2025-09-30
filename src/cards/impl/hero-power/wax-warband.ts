@@ -49,8 +49,8 @@ export const WaxWarband: StartOfCombatCard = {
 						modifyStats(
 							e,
 							trinket,
-							+heroPower.info,
-							+heroPower.info,
+							+heroPower.info3,
+							+heroPower.info3,
 							input.playerBoard,
 							input.playerEntity,
 							input.gameState,
