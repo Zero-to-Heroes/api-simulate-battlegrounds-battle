@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
+import { CardIds } from '../../../services/card-ids';
 import { shuffleArray } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { hasCorrectTribe } from '../../../utils';
@@ -21,7 +21,6 @@ export const JarredFrostling = {
 		if (!!elementals?.length) {
 			const targets = elementals.slice(0, 2);
 			targets.forEach((e) => {
-				e.enchantments = e.enchantments ?? [];
 				e.enchantments.push({
 					cardId: CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e,
 					originEntityId: trinket.entityId,

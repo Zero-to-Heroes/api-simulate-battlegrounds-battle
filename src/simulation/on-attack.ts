@@ -1,14 +1,15 @@
-import { CardIds } from '../services/card-ids';
 import { GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnWheneverAnotherMinionAttacks, hasRally } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
+import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
 import { hasCorrectTribe, hasEntityMechanic } from '../utils';
 import { dealDamageToMinion, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
+import { fixEnchantments } from './enchantments';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -112,7 +113,14 @@ export const applyOnAttackEffects = (
 		for (const enchantment of enchantments) {
 			const onAttackImpl = cardMappings[enchantment.cardId];
 			if (hasRally(onAttackImpl)) {
-				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.rally(enchantment, {
+				let enchantmentToMinion: BoardEntity = {
+					...enchantment,
+					entityId: attacker.entityId,
+					attack: attacker.attack,
+					health: attacker.health,
+				};
+				enchantmentToMinion = fixEnchantments(enchantmentToMinion, gameState.allCards);
+				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.rally(enchantmentToMinion, {
 					attacker: attacker,
 					attackingHero: attackingBoardHero,
 					attackingBoard: attackingBoard,

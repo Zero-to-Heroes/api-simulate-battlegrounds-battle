@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { DeathrattleSpawnCard } from '../../card.interface';
@@ -35,7 +35,7 @@ export const CorruptedBristler: DeathrattleSpawnCard = {
 		// },
 		// GEMe2 seems to be the sum of GEMe
 		// The summons were 1145 / 1034
-		let bloodGemEnchantments = minion.enchantments?.filter(
+		let bloodGemEnchantments = minion.enchantments.filter(
 			(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
 		);
 		if (!!bloodGemEnchantments?.length) {
@@ -43,9 +43,7 @@ export const CorruptedBristler: DeathrattleSpawnCard = {
 			bloodGemAttack = lastEnchantment.tagScriptDataNum1 ?? 0;
 			bloodGemHealth = lastEnchantment.tagScriptDataNum2 ?? 0;
 		} else {
-			bloodGemEnchantments = minion.enchantments?.filter(
-				(e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment,
-			);
+			bloodGemEnchantments = minion.enchantments.filter((e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment);
 			bloodGemAttack = bloodGemEnchantments.map((e) => e.tagScriptDataNum1 ?? 0).reduce((a, b) => a + b, 0);
 			bloodGemHealth = bloodGemEnchantments.map((e) => e.tagScriptDataNum2 ?? 0).reduce((a, b) => a + b, 0);
 		}

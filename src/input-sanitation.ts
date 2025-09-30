@@ -1,10 +1,10 @@
-import { CardIds } from './services/card-ids';
 import { AllCardsService, normalizeHeroCardId } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BgsBoardInfo } from './bgs-board-info';
 import { BgsHeroPower, BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEntity } from './board-entity';
 import { CardsData } from './cards/cards-data';
+import { CardIds } from './services/card-ids';
 import { setImplicitDataHero, setMissingAuras } from './simulation/auras';
 import { fixEnchantments } from './simulation/enchantments';
 import { addImpliedMechanics } from './utils';
@@ -201,6 +201,7 @@ const buildFinalInputBoard = (
 	const hand =
 		playerInfo.player.hand
 			?.map((entity) => ({ ...entity, inInitialState: true }))
+			.map((entity) => fixEnchantments(entity, cards))
 			.map((entity) => ({ ...addImpliedMechanics(entity, cardsData), friendly: isPlayer } as BoardEntity)) ?? [];
 
 	return { board, hand };

@@ -673,7 +673,7 @@ export const removeAurasFromSelf = (
 			break;
 	}
 
-	for (const enchantment of entity.enchantments ?? []) {
+	for (const enchantment of entity.enchantments) {
 		switch (enchantment?.cardId) {
 			case CardIds.TavernLighting_TavernLightsEnchantment:
 				entity.attack = Math.max(0, entity.attack - enchantment.tagScriptDataNum1);

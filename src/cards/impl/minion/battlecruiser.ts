@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../../../simulation/on-attack';
@@ -14,7 +14,7 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & RallyCard
 	cardIds: [CardIds.LiftOff_BattlecruiserToken_BG31_HERO_801pt, CardIds.Battlecruiser_BG31_HERO_801pt_G],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// Enchantments can appear multiple times???
-		const yamatoCannons = [...(minion.enchantments ?? [])]
+		const yamatoCannons = [...minion.enchantments]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.YamatoCannon_YamatoCannonEnchantment_BG31_HERO_801ptce);
 		if (!yamatoCannons?.length) {
@@ -73,7 +73,7 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & RallyCard
 		return true;
 	},
 	rebornSelfEffect: (minion: BoardEntity, input: RebornEffectInput) => {
-		const ultraCapacitors = [...(input.rebornEntity.enchantments ?? [])]
+		const ultraCapacitors = [...input.rebornEntity.enchantments]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje);
 		if (!ultraCapacitors?.length) {
@@ -97,7 +97,7 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & RallyCard
 		dmgDoneByAttacker: number;
 		dmgDoneByDefender: number;
 	} => {
-		const advancedBallistics = [...(minion.enchantments ?? [])]
+		const advancedBallistics = [...minion.enchantments]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.AdvancedBallistics_AdvancedBallisticsEnchantment_BG31_HERO_801ptde);
 		if (!advancedBallistics?.length) {
@@ -112,7 +112,7 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & RallyCard
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const caduceusReactors = [...(minion.enchantments ?? [])]
+		const caduceusReactors = [...minion.enchantments]
 			// .reverse()
 			.filter((e) => e.cardId === CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee);
 		if (!caduceusReactors?.length) {

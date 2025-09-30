@@ -205,7 +205,7 @@ export const spawnEntitiesFromDeathrattle = (
 	// It's important to first copy the enchantments, otherwise you could end up
 	// in an infinite loop - since new enchants are added after each step
 	const enchantments: BoardEnchantment[] = [
-		...(deadEntity.enchantments ?? []),
+		...deadEntity.enchantments,
 		// These seem to be first processed separately
 		// ...(deadEntity.rememberedDeathrattles ?? []),
 	].sort((a, b) => a.timing - b.timing);
@@ -1961,7 +1961,7 @@ export const spawnEntitiesFromEnchantments = (
 	};
 
 	const spawnedEntities: BoardEntity[] = [];
-	for (const enchantment of deadEntity.enchantments || []) {
+	for (const enchantment of deadEntity.enchantments) {
 		const deathrattleImpl = cardMappings[enchantment.cardId];
 		if (hasDeathrattleSpawnEnchantment(deathrattleImpl)) {
 			for (let i = 0; i < multiplier; i++) {

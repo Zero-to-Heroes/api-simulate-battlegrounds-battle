@@ -1,6 +1,6 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
+import { CardIds } from '../services/card-ids';
 import { hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
 import { applyAfterDeathEffects } from './death-effects';
@@ -497,7 +497,7 @@ const handleNaturalDeathrattle = (
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
 			// For Corrupted Bristler
-			enchantments: deadEntity.enchantments.filter((e) => e.cardId?.startsWith(CardIds.BloodGem)) ?? [],
+			enchantments: deadEntity.enchantments.filter((e) => e.cardId?.startsWith(CardIds.BloodGem)),
 			memory:
 				dr.memory == null
 					? null

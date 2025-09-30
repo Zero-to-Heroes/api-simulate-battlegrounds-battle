@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity, BoardTrinket } from '../../../bgs-player-entity';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
@@ -13,7 +13,6 @@ export const RustyTrident: StartOfCombatCard = {
 				hasCorrectTribe(e, input.playerEntity, Race.NAGA, input.gameState.anomalies, input.gameState.allCards),
 			)
 			.forEach((e) => {
-				e.enchantments = e.enchantments ?? [];
 				e.enchantments.push({
 					cardId: CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e,
 					originEntityId: trinket?.entityId ?? 0,

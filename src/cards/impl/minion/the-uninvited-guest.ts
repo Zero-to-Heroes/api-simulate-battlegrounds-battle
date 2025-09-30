@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
 export const TheUninvitedGuest = {
@@ -11,7 +11,6 @@ export const TheUninvitedGuest = {
 		input.playerBoard
 			.filter((e) => e.entityId != minion.entityId)
 			.forEach((e) => {
-				e.enchantments = e.enchantments || [];
 				if (!e.enchantments.some((e) => e.cardId === targetEnchantment)) {
 					e.enchantments.push({
 						cardId: targetEnchantment,

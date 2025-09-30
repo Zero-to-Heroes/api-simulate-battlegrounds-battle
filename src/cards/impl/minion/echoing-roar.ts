@@ -1,12 +1,12 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { modifyStats } from '../../../simulation/stats';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const EchoingRoar: EndOfTurnCard = {
 	cardIds: [CardIds.EchoingRoar_EchoingRoarEnchantment_BG28_814e],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const enchant = minion.enchantments?.find(
+		const enchant = minion.enchantments.find(
 			(e) => e.cardId === CardIds.EchoingRoar_EchoingRoarEnchantment_BG28_814e,
 		);
 		const stats = enchant?.tagScriptDataNum1 ?? 1;

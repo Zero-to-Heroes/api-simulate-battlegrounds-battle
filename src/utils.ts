@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from './services/card-ids';
 import { ALL_BG_RACES, AllCardsService, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from './bgs-player-entity';
 import { BoardEnchantment, BoardEntity } from './board-entity';
@@ -7,6 +6,7 @@ import { BoardSecret } from './board-secret';
 import { hasDefaultCharges } from './cards/card.interface';
 import { CardsData } from './cards/cards-data';
 import { cardMappings } from './cards/impl/_card-mappings';
+import { CardIds } from './services/card-ids';
 import { pickRandom, shuffleArray } from './services/utils';
 import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
@@ -590,7 +590,7 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 	return entity
 		? `${allCards?.getCard(entity.cardId)?.name ?? entity.cardId}/entityId=${entity.entityId}/atk=${
 				entity.attack
-		  }/hp=${entity.health}/ench=${entity.enchantments?.map((e) => e.cardId).join(',')}`
+		  }/hp=${entity.health}/ench=${entity.enchantments.map((e) => e.cardId).join(',')}`
 		: null;
 };
 
@@ -643,7 +643,7 @@ export const getTeamInitialStates = (gameState: GameState, hero: BgsPlayerEntity
 export const copyEntity = (entity: BoardEntity): BoardEntity => {
 	const copy: BoardEntity = {
 		...entity,
-		enchantments: (entity.enchantments ?? []).map((ench) => ({ ...ench })),
+		enchantments: entity.enchantments.map((ench) => ({ ...ench })),
 		pendingAttackBuffs: [],
 		rememberedDeathrattles: (entity.rememberedDeathrattles ?? []).map((r) => ({ ...r })),
 		additionalCards: entity.additionalCards?.map((c) => c),

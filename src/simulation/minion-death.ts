@@ -1,7 +1,7 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { CardIds } from '../services/card-ids';
 import { pickMultipleRandomAlive } from '../services/utils';
 import { getEffectiveTribesForEntity, hasCorrectTribe } from '../utils';
 import { updateAvengeCounters } from './avenge';
@@ -163,11 +163,11 @@ export const onMinionDeadQuest = (
 					trinket.scriptDataNum1 > 0 &&
 					hasCorrectTribe(deadEntity, boardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards)
 				) {
-					let bloodGemEnchantments = deadEntity.enchantments?.filter(
+					let bloodGemEnchantments = deadEntity.enchantments.filter(
 						(e) => e.cardId === CardIds.BloodGem_BloodGemsEnchantment,
 					);
 					if (bloodGemEnchantments?.length === 0) {
-						bloodGemEnchantments = deadEntity.enchantments?.filter(
+						bloodGemEnchantments = deadEntity.enchantments.filter(
 							(e) => e.cardId === CardIds.BloodGem_BloodGemEnchantment,
 						);
 					}

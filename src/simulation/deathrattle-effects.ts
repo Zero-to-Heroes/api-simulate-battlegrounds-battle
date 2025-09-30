@@ -176,7 +176,6 @@ export const applyLeapFroggerEffect = (
 		gameState,
 	);
 	if (buffed) {
-		buffed.enchantments = buffed.enchantments ?? [];
 		buffed.enchantments.push({
 			cardId: isPremium
 				? CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge
@@ -752,7 +751,6 @@ export const rememberDeathrattles = (
 			scriptDataNum2: entity.scriptDataNum2,
 		}));
 	const validEnchantments = deadEntities
-		.filter((entity) => entity.enchantments?.length)
 		.map((entity) => entity.enchantments)
 		.reduce((a, b) => a.concat(b), [])
 		.flatMap((enchantment) => ({

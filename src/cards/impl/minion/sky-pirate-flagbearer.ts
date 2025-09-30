@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
@@ -20,7 +20,6 @@ export const SkyPirateFlagbearer: StartOfCombatCard = {
 				),
 			)
 			.forEach((e) => {
-				e.enchantments = e.enchantments || [];
 				e.enchantments.push({
 					cardId:
 						minion.cardId === CardIds.SkyPirateFlagbearer_BG30_119_G
