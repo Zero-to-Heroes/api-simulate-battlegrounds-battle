@@ -8,6 +8,11 @@ export const ExpertTechnician: DeathrattleSpawnCard = {
 	cardIds: [CardIds.ExpertTechnician_BG33_370, CardIds.ExpertTechnician_BG33_370_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const loops = minion.cardId === CardIds.ExpertTechnician_BG33_370_G ? 2 : 1;
+		// Only works when it was killed
+		if (minion.health > 0 && !minion.definitelyDead) {
+			return null;
+		}
+
 		for (let i = 0; i < loops; i++) {
 			const newAttacker = input.boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead)[0];
 			const newTarget = input.deadEntity.lastAffectedByEntity;
