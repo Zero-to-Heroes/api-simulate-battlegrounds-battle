@@ -345,6 +345,7 @@ const handleFrostwolfFervorForPlayer = (
 	gameState: FullGameState,
 ): void => {
 	if (playerBoard.length < 7) {
+		heroPower.activated = true;
 		const target = pickRandomHighestAttack(playerBoard);
 		if (!!target) {
 			const copy = copyEntity(target);
@@ -375,7 +376,6 @@ const handleFrostwolfFervorForPlayer = (
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 		}
-		heroPower.activated = true;
 	}
 };
 
@@ -390,6 +390,7 @@ const handleLockAndLoadForPlayer = (
 ): void => {
 	if (playerBoard.length < 7) {
 		const summoned = heroPower.info as BoardEntity;
+		heroPower.activated = true;
 		if (!!summoned?.cardId) {
 			const copy = copyEntity(summoned);
 			copy.attackImmediately = true;
@@ -420,7 +421,6 @@ const handleLockAndLoadForPlayer = (
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 		}
-		heroPower.activated = true;
 	}
 };
 
@@ -434,6 +434,7 @@ const handleStormpikeStrengthForPlayer = (
 	gameState: FullGameState,
 ): void => {
 	if (playerBoard.length < 7) {
+		heroPower.activated = true;
 		const target = pickRandomHighestHealth(playerBoard);
 		if (!!target) {
 			const copy = copyEntity(target);
@@ -464,7 +465,6 @@ const handleStormpikeStrengthForPlayer = (
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 		}
-		heroPower.activated = true;
 	}
 };
 
