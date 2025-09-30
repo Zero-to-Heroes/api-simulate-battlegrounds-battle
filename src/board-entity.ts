@@ -12,6 +12,7 @@ export interface BoardEntity {
 	definitelyDead?: boolean;
 	taunt?: boolean;
 	divineShield?: boolean;
+	strongDivineShield?: boolean;
 	poisonous?: boolean;
 	venomous?: boolean;
 	reborn?: boolean;

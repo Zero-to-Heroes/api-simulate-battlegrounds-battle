@@ -156,9 +156,6 @@ export class CardsData {
 		switch (cardId) {
 			case CardIds.HungeringAbomination_BG25_014:
 			case CardIds.HungeringAbomination_BG25_014_G:
-			// Not technically an avenge, but behaves as if
-			// case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
-			// case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
 			// case CardIds.IceSickle:
 			// 	return 1;
 			// case CardIds.GhoulOfTheFeast_BG25_002:
@@ -176,8 +173,6 @@ export class CardsData {
 				return 2;
 			case CardIds.BuddingGreenthumb_BG21_030:
 			case CardIds.BuddingGreenthumb_BG21_030_G:
-			// case CardIds.FrostwolfLieutenant:
-			// case CardIds.FrostwolfLieutenantBattlegrounds:
 			case CardIds.PashmarTheVengeful_BG23_014:
 			case CardIds.PashmarTheVengeful_BG23_014_G:
 			case CardIds.WitchwingNestmatron_BG21_038:
@@ -278,6 +273,14 @@ export class CardsData {
 			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((m) => hasMechanic(m, GameTag.DIVINE_SHIELD));
 		const pool = divineShieldPool.filter((m) => m.techLevel <= tavernLimitUpper);
+		return pickRandom(pool)?.id;
+	}
+
+	public getRandomRally(tavernLimitUpper: number) {
+		const targetPool = this.pool
+			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
+			.filter((m) => hasMechanic(m, GameTag.BACON_RALLY));
+		const pool = targetPool.filter((m) => m.techLevel <= tavernLimitUpper);
 		return pickRandom(pool)?.id;
 	}
 

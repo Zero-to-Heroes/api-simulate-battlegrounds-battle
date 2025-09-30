@@ -1,10 +1,11 @@
-import { CardIds } from '../services/card-ids';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnMinionAttacked } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
+import { updateReborn } from '../keywords/reborn';
 import { updateVenomous } from '../keywords/venomous';
+import { CardIds } from '../services/card-ids';
 import { addStatsToBoard } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { handlePackTactics, handleSnakeTrap, handleSplittingImage, handleVenomstrikeTrap } from './secrets';
@@ -23,6 +24,7 @@ export const applyOnBeingAttackedBuffs = (
 	for (const secret of (defendingPlayerEntity.secrets ?? []).filter((s) => !s.triggered)) {
 		switch (secret.cardId) {
 			case CardIds.AutodefenseMatrix_TB_Bacon_Secrets_07:
+			case CardIds.AutodefenseMatrix_BetterAutodefenseMatrix_TB_Bacon_Secrets_07b:
 				if (!defendingEntity.divineShield) {
 					secret.triggered = true;
 					updateDivineShield(
@@ -33,6 +35,9 @@ export const applyOnBeingAttackedBuffs = (
 						true,
 						gameState,
 					);
+					if (secret.cardId === CardIds.AutodefenseMatrix_BetterAutodefenseMatrix_TB_Bacon_Secrets_07b) {
+						defendingEntity.strongDivineShield = true;
+					}
 				}
 				break;
 			case CardIds.SplittingImage_TB_Bacon_Secrets_04:
@@ -49,6 +54,7 @@ export const applyOnBeingAttackedBuffs = (
 				}
 				break;
 			case CardIds.PackTactics_TB_Bacon_Secrets_15:
+			case CardIds.PackTactics_BetterPackTactics_TB_Bacon_Secrets_15b:
 				if (defendingBoard.length < 7) {
 					secret.triggered = true;
 					handlePackTactics(
@@ -58,6 +64,7 @@ export const applyOnBeingAttackedBuffs = (
 						attackerBoard,
 						attackerHero,
 						gameState,
+						secret.cardId,
 					);
 				}
 				break;
@@ -75,9 +82,10 @@ export const applyOnBeingAttackedBuffs = (
 				}
 				break;
 			case CardIds.VenomstrikeTrap_TB_Bacon_Secrets_01:
+			case CardIds.VenomstrikeTrap_BetterVenomstrikeTrap_TB_Bacon_Secrets_01b:
 				if (defendingBoard.length < 7) {
 					secret.triggered = true;
-					handleVenomstrikeTrap(
+					const spawns = handleVenomstrikeTrap(
 						defendingEntity,
 						defendingBoard,
 						defendingPlayerEntity,
@@ -85,6 +93,11 @@ export const applyOnBeingAttackedBuffs = (
 						attackerHero,
 						gameState,
 					);
+					if (secret.cardId === CardIds.VenomstrikeTrap_BetterVenomstrikeTrap_TB_Bacon_Secrets_01b) {
+						for (const spawn of spawns) {
+							updateReborn(spawn, true, defendingBoard, defendingPlayerEntity, attackerHero, gameState);
+						}
+					}
 				}
 				break;
 		}

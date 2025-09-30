@@ -1,7 +1,7 @@
-import { CardIds } from '../../../services/card-ids';
 import { ALL_BG_RACES, AllCardsService, Race } from '@firestone-hs/reference-data';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { shuffleArray } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
@@ -49,8 +49,8 @@ export const WaxWarband: StartOfCombatCard = {
 						modifyStats(
 							e,
 							trinket,
-							input.gameState.cardsData.getTavernLevel(e.cardId),
-							input.gameState.cardsData.getTavernLevel(e.cardId),
+							+heroPower.info,
+							+heroPower.info,
 							input.playerBoard,
 							input.playerEntity,
 							input.gameState,

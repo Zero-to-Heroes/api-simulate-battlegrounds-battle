@@ -53,12 +53,13 @@ export interface BgsHeroPower {
 	cardId: string;
 	entityId: number;
 	used: boolean;
-	info: number | string;
+	info: number | string | BoardEntity;
 	info2: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	// For Ozumat's Tentacular
 	activated?: boolean;
+	locked?: number;
 }
 
 export interface BgsPlayerGlobalInfo {

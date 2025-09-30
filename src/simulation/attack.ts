@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '../services/card-ids';
 import { AllCardsService } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
@@ -8,11 +7,12 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { debugState } from '../debug-state';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateVenomous } from '../keywords/venomous';
+import { CardIds } from '../services/card-ids';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { addImpliedMechanics, isFish, stringifySimple } from '../utils';
+import { addImpliedMechanics, isFish } from '../utils';
 import { applyAfterAttackEffects, applyAfterAttackTrinkets } from './after-attack';
 import { onEntityDamaged } from './damage-effects';
-import { applyMonstrosity, rememberDeathrattles } from './deathrattle-effects';
+import { rememberDeathrattles } from './deathrattle-effects';
 import { orchestrateMinionDeathEffects } from './deathrattle-orchestration';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
@@ -1135,21 +1135,6 @@ export const processMinionDeath = (
 			? deadMinionIndexesFromRights2
 			: deadMinionIndexesFromRights1,
 	});
-
-	board1
-		.filter(
-			(entity) =>
-				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy ||
-				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy_G,
-		)
-		.forEach((entity) => applyMonstrosity(entity, deadEntities1, board1, board1Hero, gameState));
-	board2
-		.filter(
-			(entity) =>
-				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy ||
-				entity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy_G,
-		)
-		.forEach((entity) => applyMonstrosity(entity, deadEntities2, board2, board2Hero, gameState));
 
 	// Make sure we only return when there are no more deaths to process
 	// Make sure to do this right before the end of the process

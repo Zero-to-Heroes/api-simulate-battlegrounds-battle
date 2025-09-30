@@ -1,4 +1,3 @@
-import { CardIds } from '../services/card-ids';
 import { CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEnchantment, BoardEntity } from '../board-entity';
@@ -7,6 +6,7 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { updateWindfury } from '../keywords/windfury';
+import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive, pickRandomLowestHealth } from '../services/utils';
 import {
 	addStatsToBoard,
@@ -400,9 +400,12 @@ export const spawnEntitiesFromDeathrattle = (
 					case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy:
 					case CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G:
 						const minionsToSpawnMawsworn =
-							deadEntityCardId === CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G ? 6 : 3;
+							deadEntityCardId === CardIds.MawswornSoulkeeper_TB_BaconShop_HERO_702_Buddy_G ? 4 : 2;
 						for (let i = 0; i < minionsToSpawnMawsworn; i++) {
-							const minionCardId = gameState.cardsData.getRandomMinionForTavernTier(1);
+							const minionCardId = gameState.cardsData.getRandomMinionForTribe(
+								Race.UNDEAD,
+								boardWithDeadEntityHero.tavernTier,
+							);
 							spawnedEntities.push(
 								...spawnEntities(
 									minionCardId,
@@ -446,6 +449,12 @@ export const spawnEntitiesFromDeathrattle = (
 									true,
 									randomUndeadCreation,
 								),
+							);
+							addCardsInHand(
+								boardWithDeadEntityHero,
+								boardWithDeadEntity,
+								[randomUndeadCreation],
+								gameState,
 							);
 						}
 						break;
@@ -1794,29 +1803,6 @@ export const spawnEntitiesFromDeathrattle = (
 							conjurerCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));
 						}
 						addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, conjurerCardsToAdd, gameState);
-						break;
-					case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy:
-					case CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G:
-						const shadowyLoops =
-							deadEntity.cardId === CardIds.ShadowyConstruct_BG25_HERO_103_Buddy_G ? 2 : 1;
-						for (let j = 0; j < shadowyLoops; j++) {
-							const atkBuff = deadEntity.attack;
-							const healthBuff = deadEntity.maxHealth;
-							const target = pickRandom(
-								boardWithDeadEntity.filter((e) => e.entityId !== deadEntity.entityId),
-							);
-							if (target) {
-								modifyStats(
-									target,
-									deadEntity,
-									atkBuff,
-									healthBuff,
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									gameState,
-								);
-							}
-						}
 						break;
 					case CardIds.SpikedSavior_BG29_808:
 					case CardIds.SpikedSavior_BG29_808_G:

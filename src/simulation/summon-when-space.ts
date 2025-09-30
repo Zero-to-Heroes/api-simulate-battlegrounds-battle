@@ -1,8 +1,9 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
+import { BgsHeroPower, BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateTaunt } from '../keywords/taunt';
+import { CardIds } from '../services/card-ids';
+import { pickRandomHighestAttack, pickRandomHighestHealth } from '../services/utils';
 import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
 import { spawnEntities } from './deathrattle-spawns';
@@ -74,6 +75,47 @@ const handleSummonsWhenSpaceForPlayer = (
 	for (const heroPower of targetEntity.heroPowers) {
 		if (heroPower.cardId === CardIds.Ozumat_Tentacular) {
 			handleOzumatForPlayer(
+				heroPower,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				targetEntity.friendly,
+				gameState,
+			);
+		}
+		// TODO: use one of these existing tag to make it unlocked
+		else if (
+			heroPower.cardId === CardIds.Drekthar_LeadTheFrostwolves &&
+			!heroPower.locked &&
+			!heroPower.activated
+		) {
+			handleFrostwolfFervorForPlayer(
+				heroPower,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				targetEntity.friendly,
+				gameState,
+			);
+		} else if (
+			heroPower.cardId === CardIds.VanndarStormpike_LeadTheStormpikes &&
+			!heroPower.locked &&
+			!heroPower.activated
+		) {
+			handleStormpikeStrengthForPlayer(
+				heroPower,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				targetEntity.friendly,
+				gameState,
+			);
+		} else if (heroPower.cardId === CardIds.LockAndLoadToken_BG22_HERO_000p_Alt && !heroPower.activated) {
+			handleLockAndLoadForPlayer(
+				heroPower,
 				playerBoard,
 				playerEntity,
 				opponentBoard,
@@ -250,6 +292,7 @@ const handleTwinSkyLanternsForPlayer = (
 };
 
 const handleOzumatForPlayer = (
+	heroPower: BgsHeroPower,
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
@@ -257,29 +300,71 @@ const handleOzumatForPlayer = (
 	friendly: boolean,
 	gameState: FullGameState,
 ): void => {
-	for (const heroPower of playerEntity.heroPowers) {
-		if (playerBoard.length < 7 && heroPower.activated === false) {
-			const tentacularSize = +heroPower.info;
-			const tentacular = spawnEntities(
-				CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
+	if (playerBoard.length < 7 && heroPower.activated === false) {
+		const tentacularSize = +heroPower.info;
+		const tentacular = spawnEntities(
+			CardIds.Tentacular_OzumatsTentacleToken_BG23_HERO_201pt,
+			1,
+			playerBoard,
+			playerEntity,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+			friendly,
+			true,
+			false,
+			false,
+		);
+		tentacular[0].attack = tentacularSize;
+		tentacular[0].health = tentacularSize;
+		tentacular[0].maxHealth = tentacularSize;
+		tentacular[0].maxAttack = tentacularSize;
+		const indexFromRight = 0;
+		performEntitySpawns(
+			tentacular,
+			playerBoard,
+			playerEntity,
+			playerEntity,
+			indexFromRight,
+			opponentBoard,
+			opponentEntity,
+			gameState,
+		);
+		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
+		heroPower.activated = true;
+	}
+};
+
+const handleFrostwolfFervorForPlayer = (
+	heroPower: BgsHeroPower,
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	friendly: boolean,
+	gameState: FullGameState,
+): void => {
+	if (playerBoard.length < 7) {
+		const target = pickRandomHighestAttack(playerBoard);
+		if (!!target) {
+			const copy = copyEntity(target);
+			const indexFromRight = 0;
+			const newMinions = spawnEntities(
+				copy.cardId,
 				1,
 				playerBoard,
 				playerEntity,
 				opponentBoard,
 				opponentEntity,
 				gameState,
-				friendly,
-				true,
+				playerEntity.friendly,
 				false,
 				false,
+				false,
+				copy,
 			);
-			tentacular[0].attack = tentacularSize;
-			tentacular[0].health = tentacularSize;
-			tentacular[0].maxHealth = tentacularSize;
-			tentacular[0].maxAttack = tentacularSize;
-			const indexFromRight = 0;
-			performEntitySpawns(
-				tentacular,
+			const spawns = performEntitySpawns(
+				newMinions,
 				playerBoard,
 				playerEntity,
 				playerEntity,
@@ -288,15 +373,98 @@ const handleOzumatForPlayer = (
 				opponentEntity,
 				gameState,
 			);
-			gameState.spectator.registerPowerTarget(
-				playerEntity,
-				tentacular[0],
+			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+		}
+		heroPower.activated = true;
+	}
+};
+
+const handleLockAndLoadForPlayer = (
+	heroPower: BgsHeroPower,
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	friendly: boolean,
+	gameState: FullGameState,
+): void => {
+	if (playerBoard.length < 7) {
+		const summoned = heroPower.info as BoardEntity;
+		if (!!summoned?.cardId) {
+			const copy = copyEntity(summoned);
+			copy.attackImmediately = true;
+			const indexFromRight = 0;
+			const newMinions = spawnEntities(
+				copy.cardId,
+				1,
 				playerBoard,
 				playerEntity,
+				opponentBoard,
 				opponentEntity,
+				gameState,
+				playerEntity.friendly,
+				false,
+				false,
+				false,
+				copy,
 			);
-			heroPower.activated = true;
+			const spawns = performEntitySpawns(
+				newMinions,
+				playerBoard,
+				playerEntity,
+				playerEntity,
+				indexFromRight,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+			);
+			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 		}
+		heroPower.activated = true;
+	}
+};
+
+const handleStormpikeStrengthForPlayer = (
+	heroPower: BgsHeroPower,
+	playerBoard: BoardEntity[],
+	playerEntity: BgsPlayerEntity,
+	opponentBoard: BoardEntity[],
+	opponentEntity: BgsPlayerEntity,
+	friendly: boolean,
+	gameState: FullGameState,
+): void => {
+	if (playerBoard.length < 7) {
+		const target = pickRandomHighestHealth(playerBoard);
+		if (!!target) {
+			const copy = copyEntity(target);
+			const indexFromRight = 0;
+			const newMinions = spawnEntities(
+				copy.cardId,
+				1,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+				playerEntity.friendly,
+				false,
+				false,
+				false,
+				copy,
+			);
+			const spawns = performEntitySpawns(
+				newMinions,
+				playerBoard,
+				playerEntity,
+				playerEntity,
+				indexFromRight,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+			);
+			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+		}
+		heroPower.activated = true;
 	}
 };
 

@@ -1,9 +1,9 @@
-import { CardIds } from '../services/card-ids';
 import { CardType, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnDivineShieldUpdated } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
 import { addCardsInHand } from '../simulation/cards-in-hand';
 import { FullGameState } from '../simulation/internal-game-state';
@@ -19,15 +19,19 @@ export const updateDivineShield = (
 	gameState: FullGameState,
 ): void => {
 	entity.hadDivineShield = newValue || entity.divineShield || entity.hadDivineShield;
-	entity.divineShield = newValue;
-	if (entity.divineShield) {
+	if (entity.strongDivineShield && newValue === false) {
+		entity.strongDivineShield = false;
+	} else {
+		entity.divineShield = newValue;
+	}
+	if (entity.divineShield && newValue) {
 		const boardForDrake = board;
 		const statsBonus =
 			6 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043).length +
 			12 * boardForDrake.filter((e) => e.cardId === CardIds.CyborgDrake_BG25_043_G).length;
 		// Don't trigger all "on attack changed" effects, since it's an aura
 		entity.attack += statsBonus;
-	} else {
+	} else if (!entity.divineShield) {
 		// Also consider itself
 		const boardForDrake = board;
 		const statsBonus =

@@ -1,4 +1,3 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
@@ -13,6 +12,7 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
+import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
 import { copyEntity, hasCorrectTribe } from '../utils';
 import { FullGameState } from './internal-game-state';
@@ -101,13 +101,6 @@ const handleSpawnEffect = (
 		}
 
 		switch (entity.cardId) {
-			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy:
-			case CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G:
-				if (gameState.allCards.getCard(spawned.cardId).techLevel === boardHero.tavernTier) {
-					const statsBonus = entity.cardId === CardIds.BabyYshaarj_TB_BaconShop_HERO_92_Buddy_G ? 8 : 4;
-					modifyStats(spawned, entity, statsBonus, statsBonus, board, boardHero, gameState);
-				}
-				break;
 			case CardIds.CobaltGuardian:
 				if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
 					if (!entity.divineShield) {
@@ -168,16 +161,6 @@ export const handleAddedMinionAuraEffect = (
 				if (isActuallySpawned) {
 					updateTaunt(spawned, true, board, boardHero, otherHero, gameState);
 					modifyStats(spawned, boardHero, 1, 2, board, boardHero, gameState);
-				}
-				break;
-			// case CardIds.KurtrusAshfallen_CloseThePortal:
-			// 	modifyStats(spawned, boardHero, 2, 2, board, boardHero, gameState);
-			// 	break;
-			case CardIds.Tinker_TB_BaconShop_HP_015:
-				if (isActuallySpawned) {
-					if (hasCorrectTribe(spawned, boardHero, Race.MECH, gameState.anomalies, gameState.allCards)) {
-						modifyStats(spawned, boardHero, 3, 0, board, boardHero, gameState);
-					}
 				}
 				break;
 		}

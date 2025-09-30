@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '../services/card-ids';
 import { AllCardsService, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
+import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
+import { CardIds } from '../services/card-ids';
 import { pickMultipleRandomDifferent } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
@@ -105,6 +106,7 @@ export const applyWaterInvocationEnchantment = (
 		const target: BoardEntity = validBoard[validBoard.length - 1];
 		if (!!target) {
 			updateTaunt(target, true, boardWithDeadEntity, boardWithDeadEntityHero, otherHero, gameState);
+			updateDivineShield(target, boardWithDeadEntity, boardWithDeadEntityHero, otherHero, true, gameState);
 			modifyStats(target, sourceEntity, 0, 3, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
 		}
 	}
@@ -718,29 +720,6 @@ const applyQirajiHarbringerEffect = (
 	// 		modifyStats(entity, null, buff, buff, board, hero, gameState);
 	// 	});
 	// }
-};
-
-export const applyMonstrosity = (
-	monstrosity: BoardEntity,
-	deadEntities: readonly BoardEntity[],
-	boardWithDeadEntities: BoardEntity[],
-	boardWithDeadEntityHero: BgsPlayerEntity,
-	gameState: FullGameState,
-): void => {
-	for (const deadEntity of deadEntities) {
-		modifyStats(monstrosity, null, deadEntity.attack, 0, boardWithDeadEntities, boardWithDeadEntityHero, gameState);
-		if (monstrosity.cardId === CardIds.Monstrosity_BG20_HERO_282_Buddy_G) {
-			modifyStats(
-				monstrosity,
-				null,
-				deadEntity.attack,
-				0,
-				boardWithDeadEntities,
-				boardWithDeadEntityHero,
-				gameState,
-			);
-		}
-	}
 };
 
 export const rememberDeathrattles = (

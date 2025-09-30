@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { DeathrattleSpawnCard } from '../../card.interface';
@@ -8,7 +8,7 @@ import { DeathrattleSpawnCard } from '../../card.interface';
 export const SlyRaptor: DeathrattleSpawnCard = {
 	cardIds: [CardIds.SlyRaptor_BG25_806, CardIds.SlyRaptor_BG25_806_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const raptorStat = minion.cardId === CardIds.SlyRaptor_BG25_806_G ? 10 : 5;
+		const raptorStat = minion.cardId === CardIds.SlyRaptor_BG25_806_G ? 12 : 6;
 		const target = input.gameState.cardsData.getRandomMinionForTribe(
 			Race.BEAST,
 			input.boardWithDeadEntityHero.tavernTier,

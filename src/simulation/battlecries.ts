@@ -1,10 +1,10 @@
-import { CardIds } from '../services/card-ids';
 import { AllCardsService, CardType, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasBattlecry, hasOnBattlecryTriggered } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateTaunt } from '../keywords/taunt';
+import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive } from '../services/utils';
 import {
 	addStatsToBoard,
@@ -538,31 +538,6 @@ export const triggerBattlecry = (
 						);
 					}
 					break;
-				case CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy:
-				case CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy_G:
-					const weebominationMultiplier =
-						entity.cardId === CardIds.Weebomination_TB_BaconShop_HERO_34_Buddy ? 1 : 2;
-					const weebominationTarget = pickRandom(allMinions);
-					if (weebominationTarget) {
-						const heroMaxHealth = gameState.allCards.getCard(hero.cardId)?.health ?? 40;
-						const heroMissingHealth = heroMaxHealth - hero.hpLeft;
-						const weebominationBuff = weebominationMultiplier * heroMissingHealth;
-						modifyStats(weebominationTarget, entity, 0, weebominationBuff, board, hero, gameState);
-					}
-					break;
-				// case CardIds.GoldshellWarden_BG29_803:
-				// case CardIds.GoldshellWarden_BG29_803_G:
-				// 	const goldshellMultiplier = entity.cardId === CardIds.GoldshellWarden_BG29_803_G ? 2 : 1;
-				// 	addStatsToBoard(
-				// 		entity,
-				// 		board.filter((e) => e.entityId != entity.entityId),
-				// 		hero,
-				// 		goldshellMultiplier * 2,
-				// 		goldshellMultiplier * 4,
-				// 		gameState,
-				// 		Race[Race.BEAST],
-				// 	);
-				// 	break;
 				case CardIds.ShellWhistler_BG26_045:
 				case CardIds.ShellWhistler_BG26_045_G:
 					const shellWhistlerCardsToAdd =
@@ -676,15 +651,6 @@ export const triggerBattlecry = (
 							  ];
 					addCardsInHand(hero, board, barrendsBrawlerCardsToAdd, gameState);
 					break;
-				case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy:
-				case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G:
-					const vaelastraszBonus = entity.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 6 : 3;
-					board
-						.filter((e) => e.entityId !== entity.entityId)
-						.forEach((e) => {
-							modifyStats(e, entity, vaelastraszBonus, vaelastraszBonus, board, hero, gameState);
-						});
-					break;
 				case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy:
 				case CardIds.NathanosBlightcaller_BG23_HERO_306_Buddy_G:
 					const nathanosTarget = pickRandom(board);
@@ -699,18 +665,6 @@ export const triggerBattlecry = (
 						buffTargets.forEach((e) => {
 							modifyStats(e, entity, attackBuff, healthBuff, board, hero, gameState);
 						});
-					}
-					break;
-				case CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy:
-				case CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy_G:
-					const tuskarrTarget = pickRandom(allMinions);
-					if (tuskarrTarget) {
-						gameState.spectator.registerPowerTarget(entity, tuskarrTarget, board, null, null);
-						const buffMultiplier =
-							entity.cardId === CardIds.TuskarrRaider_TB_BaconShop_HERO_18_Buddy ? 1 : 2;
-						const attackBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
-						const healthBuff = (hero.globalInfo.PiratesPlayedThisGame ?? 0) * buffMultiplier;
-						modifyStats(tuskarrTarget, entity, attackBuff, healthBuff, board, hero, gameState);
 					}
 					break;
 				case CardIds.LuckyEgg_BG30_104:

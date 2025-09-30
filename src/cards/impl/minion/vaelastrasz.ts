@@ -1,24 +1,19 @@
-import { CardIds } from '../../../services/card-ids';
+import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { modifyStats } from '../../../simulation/stats';
+import { CardIds } from '../../../services/card-ids';
+import { addCardsInHand } from '../../../simulation/cards-in-hand';
+import { OnAttackInput } from '../../../simulation/on-attack';
+import { RallyCard } from '../../card.interface';
 
-export const Vaelastrasz = {
-	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
-		const vaelastraszBonus = minion.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 6 : 3;
-		input.playerBoard
-			.filter((e) => e.entityId !== minion.entityId)
-			.forEach((e) => {
-				modifyStats(
-					e,
-					minion,
-					vaelastraszBonus,
-					vaelastraszBonus,
-					input.playerBoard,
-					input.playerEntity,
-					input.gameState,
-				);
-			});
-		return true;
+export const Vaelastrasz: RallyCard = {
+	cardIds: [CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy, CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G],
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
+		const mult = minion.cardId === CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G ? 2 : 1;
+		const addedCards: string[] = [];
+		for (let i = 0; i < mult; i++) {
+			addedCards.push(input.gameState.cardsData.getRandomMinionForTribe(Race.DRAGON, 6));
+		}
+		addCardsInHand(input.attackingHero, input.attackingBoard, addedCards, input.gameState);
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

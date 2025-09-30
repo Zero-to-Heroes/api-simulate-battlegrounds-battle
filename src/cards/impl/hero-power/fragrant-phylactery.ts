@@ -1,48 +1,20 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardTrinket } from '../../../bgs-player-entity';
-import { pickRandomLowestHealth } from '../../../services/utils';
+import { CardIds } from '../../../services/card-ids';
+import { pickRandomLowestAttack } from '../../../services/utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { modifyStats } from '../../../simulation/stats';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const FragrantPhylactery: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
 	cardIds: [CardIds.TamsinRoame_FragrantPhylactery],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
-		for (const heroPower of input.playerEntity.heroPowers) {
-			if (FragrantPhylactery.cardIds.includes(heroPower.cardId) && heroPower.used) {
-				const chosenEntity = pickRandomLowestHealth(input.playerBoard);
-				if (!chosenEntity) {
-					console.warn('could not pick any entity for tamsin');
-					return false;
-				}
-
-				input.gameState.spectator.registerPowerTarget(
-					input.playerEntity,
-					chosenEntity,
-					input.playerBoard,
-					null,
-					null,
-				);
-				const newBoard = input.playerBoard.filter((e) => e.entityId !== chosenEntity.entityId);
-				// How to mark the minion as dead
-				chosenEntity.definitelyDead = true;
-				newBoard.forEach((e) => {
-					modifyStats(
-						e,
-						trinket,
-						chosenEntity.attack,
-						chosenEntity.health,
-						newBoard,
-						input.playerEntity,
-						input.gameState,
-					);
-				});
-				// Tamsin's hero power somehow happens before the current attacker is chosen.
-				// See http://replays.firestoneapp.com/?reviewId=bce94e6b-c807-48e4-9c72-2c5c04421213&turn=6&action=9
-				// Even worse: if a scallywag token pops, it attacks before the first attacker is recomputed
-				return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
-			}
-		}
+		const lowestAttack = pickRandomLowestAttack(input.playerBoard);
+		lowestAttack.enchantments.push({
+			cardId: CardIds.FragrantPhylactery_FragrantEnchantment,
+			originEntityId: trinket.entityId,
+			timing: input.gameState.sharedState.currentEntityId++,
+		});
+		input.gameState.spectator.registerPowerTarget(input.playerEntity, lowestAttack, input.playerBoard, null, null);
+		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 };

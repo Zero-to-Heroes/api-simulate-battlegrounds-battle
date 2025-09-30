@@ -1,6 +1,6 @@
-import { CardIds } from '../services/card-ids';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { CardIds } from '../services/card-ids';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -54,6 +54,7 @@ export const handlePackTactics = (
 	attackerBoard: BoardEntity[],
 	attackerHero: BgsPlayerEntity,
 	gameState: FullGameState,
+	secretCardId: string,
 ): void => {
 	const candidateEntities = spawnEntities(
 		defendingEntity.cardId,
@@ -80,7 +81,9 @@ export const handlePackTactics = (
 		attackerHero,
 		gameState,
 	);
-	spawned.forEach((e) => setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
+	if (secretCardId === CardIds.PackTactics_TB_Bacon_Secrets_15) {
+		spawned.forEach((e) => setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
+	}
 };
 
 export const handleSnakeTrap = (
@@ -121,7 +124,7 @@ export const handleVenomstrikeTrap = (
 	attackerBoard: BoardEntity[],
 	attackerHero: BgsPlayerEntity,
 	gameState: FullGameState,
-): void => {
+) => {
 	const candidateEntities: readonly BoardEntity[] = spawnEntities(
 		CardIds.EmperorCobraLegacy_BG_EX1_170,
 		1,
@@ -133,7 +136,7 @@ export const handleVenomstrikeTrap = (
 		defendingEntity.friendly,
 		false,
 	);
-	performEntitySpawns(
+	const spawns = performEntitySpawns(
 		candidateEntities,
 		defendingBoard,
 		defendingPlayerEntity,
@@ -143,4 +146,5 @@ export const handleVenomstrikeTrap = (
 		attackerHero,
 		gameState,
 	);
+	return spawns;
 };

@@ -1,4 +1,3 @@
-import { CardIds } from '../../services/card-ids';
 import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { BoardSecret } from '../../board-secret';
@@ -17,7 +16,6 @@ import { AllWillBurn } from '../../cards/impl/hero-power/all-will-burn';
 import { EarthInvocation } from '../../cards/impl/hero-power/earth-invocation';
 import { EmbraceYourRage } from '../../cards/impl/hero-power/embrace-your-rage';
 import { FireInvocation } from '../../cards/impl/hero-power/fire-invocation';
-import { FragrantPhylactery } from '../../cards/impl/hero-power/fragrant-phylactery';
 import { LightningInvocation } from '../../cards/impl/hero-power/lightning-invocation';
 import { RapidReanimation } from '../../cards/impl/hero-power/rapid-reanimation';
 import { RebornRites } from '../../cards/impl/hero-power/reborn-rites';
@@ -30,19 +28,16 @@ import { AudaciousAnchor } from '../../cards/impl/minion/audacious-anchor';
 import { CarbonicCopy } from '../../cards/impl/minion/carbonic-copy';
 import { ChoralMrrrglr } from '../../cards/impl/minion/choral-mrrrglr';
 import { CorruptedMyrmidon } from '../../cards/impl/minion/corrupted-myrmidon';
-import { Crabby } from '../../cards/impl/minion/crabby';
 import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
 import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
 import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
-import { PilotedWhirlOTron } from '../../cards/impl/minion/piloted-whirl-o-tron';
 import { Sandy } from '../../cards/impl/minion/sandy';
 import { Soulsplitter } from '../../cards/impl/minion/soulsplitter';
 import { SunScreener } from '../../cards/impl/minion/sun-screener';
 import { TheUninvitedGuest } from '../../cards/impl/minion/the-uninvited-guest';
 import { ThousandthPaperDrake } from '../../cards/impl/minion/thousandth-paper-drake';
-import { Vaelastrasz } from '../../cards/impl/minion/vaelastrasz';
 import { YulonFortuneGranter } from '../../cards/impl/minion/yulon-fortune-granter';
 import { EvilTwin } from '../../cards/impl/quest-reward/evil-twin';
 import { StaffOfOrigination } from '../../cards/impl/quest-reward/staff-of-origination';
@@ -65,6 +60,7 @@ import { SummoningSphere } from '../../cards/impl/trinket/summoning-sphere';
 import { TinyfinOnesie } from '../../cards/impl/trinket/tinyfin-onesie';
 import { TrainingCertificate } from '../../cards/impl/trinket/training-certificate';
 import { ValorousMedallion } from '../../cards/impl/trinket/valorous-medaillion';
+import { CardIds } from '../../services/card-ids';
 import { processMinionDeath } from '../attack';
 import { SoCInput } from './start-of-combat-input';
 
@@ -187,8 +183,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return LightningInvocation;
 		case CardIds.AllWillBurn:
 			return AllWillBurn;
-		case CardIds.TamsinRoame_FragrantPhylactery:
-			return FragrantPhylactery;
 		case CardIds.EmbraceYourRage:
 			return EmbraceYourRage;
 		case CardIds.Ozumat_Tentacular:
@@ -240,9 +234,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.Soulsplitter_BG25_023:
 		case CardIds.Soulsplitter_BG25_023_G:
 			return Soulsplitter;
-		case CardIds.Crabby_BG22_HERO_000_Buddy:
-		case CardIds.Crabby_BG22_HERO_000_Buddy_G:
-			return Crabby;
 		case CardIds.CorruptedMyrmidon_BG23_012:
 		case CardIds.CorruptedMyrmidon_BG23_012_G:
 			return CorruptedMyrmidon;
@@ -261,9 +252,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.AudaciousAnchor_BG28_904:
 		case CardIds.AudaciousAnchor_BG28_904_G:
 			return AudaciousAnchor;
-		case CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy:
-		case CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G:
-			return PilotedWhirlOTron;
 		case CardIds.IrateRooster_BG29_990:
 		case CardIds.IrateRooster_BG29_990_G:
 			return IrateRooster;
@@ -282,9 +270,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.Sandy_BGDUO_125:
 		case CardIds.Sandy_BGDUO_125_G:
 			return Sandy;
-		case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy:
-		case CardIds.Vaelastrasz_TB_BaconShop_HERO_56_Buddy_G:
-			return Vaelastrasz;
 		case CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy:
 		case CardIds.ElderTaggawag_TB_BaconShop_HERO_14_Buddy_G:
 			return ElderTaggawag;

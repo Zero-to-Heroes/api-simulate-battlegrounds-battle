@@ -1,6 +1,9 @@
 import { Card } from '../card.interface';
+import { MurkysFish } from './bg-spell/murkys-fish';
 import { SharingIsCaring } from './bg-spell/sharing-is-caring';
 import { ShinyRing } from './bg-spell/shiny-ring';
+import { FragrantPhylactery } from './hero-power/fragrant-phylactery';
+import { FragrantPhylacteryEnchantment } from './hero-power/fragrant-phylactery-enchantment';
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AllSeeingElder } from './minion/all-seeing-elder';
@@ -16,6 +19,7 @@ import { AssistantGuard } from './minion/assistant-guard';
 import { AutoAssembler } from './minion/auto-assembler';
 import { AutoAssemblerEnchantment } from './minion/auto-assembler-enchantment';
 import { AvalancheCaller } from './minion/avalanche-caller';
+import { AzsharanCutlassier } from './minion/azsharan-cutlassier';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
 import { Battlecruiser } from './minion/battlecruiser';
@@ -57,6 +61,7 @@ import { DeathlyStriker } from './minion/deathly-striker';
 import { DefiantShipwright } from './minion/defiant-shipwright';
 import { DeflectoBot } from './minion/deflecto-bot';
 import { DevoutHellcaller } from './minion/devout-hellcaller';
+import { DivineSparkbot } from './minion/divine-sparkbot';
 import { DrakkariEmbalmer } from './minion/drakkari-embalmer';
 import { DreamingThornweaver } from './minion/dreaming-thornweaver';
 import { DrustfallenButcher } from './minion/drustfallen-butcher';
@@ -65,6 +70,7 @@ import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { EliteNavigator } from './minion/elite-navigator';
 import { ExceptionalCaretaker } from './minion/exceptionnal-caretaker';
+import { ExpertTechnician } from './minion/expert-technician';
 import { FairyGillmother } from './minion/fairy-gillmother';
 import { FaunaWhisperer } from './minion/fauna-whisperer';
 import { FireForgedEvoker } from './minion/fire-forged-evoker';
@@ -75,7 +81,9 @@ import { FloatingWatcher } from './minion/floating-watcher';
 import { FlotsamFlinger } from './minion/flotsam-flinger';
 import { ForestRover } from './minion/forest-rover';
 import { FountainChiller } from './minion/fountain-chiller';
+import { FriendlyBouncer } from './minion/friendly-bouncer';
 import { FriendlyGeist } from './minion/friendly-geist';
+import { FrostwolfLieutenant } from './minion/frostwolf-lieutenant';
 import { GearedGuard } from './minion/geared-guard';
 import { GemRat } from './minion/gem-rat';
 import { GemSmuggler } from './minion/gem-smuggler';
@@ -128,6 +136,7 @@ import { Lurker } from './minion/lurker';
 import { MagicfinApprentice } from './minion/magicfin-apprentice';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
+import { MasterGadrin } from './minion/master-gadrin';
 import { MawCaster } from './minion/maw-caster';
 import { MechaJaraxxus } from './minion/mecha-jaraxxus';
 import { MechagnomeInterpreter } from './minion/mechagnome-interpreter';
@@ -136,12 +145,14 @@ import { Mechorse } from './minion/mechorse';
 import { MenagerieJug } from './minion/menagerie-jug';
 import { MetallicHunter } from './minion/metallic-hunter';
 import { MisfitDragonling } from './minion/misfit-dragonling';
+import { Monstrosity } from './minion/monstrosity';
 import { MonstrousMacaw } from './minion/monstrous-macaw';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { Mothership } from './minion/mothership';
 import { Mummifier } from './minion/mummifier';
 import { MurkbrineExpeditioner } from './minion/murkbrine-expeditioner';
 import { Murky } from './minion/murky';
+import { MurkySpashFisher } from './minion/murky-spash-fisher';
 import { Mutalisk } from './minion/mutalisk';
 import { MutatedLasher } from './minion/mutated-lasher';
 import { MythraxTheUnraveler } from './minion/mythrax';
@@ -159,6 +170,8 @@ import { OranomonosTheWilted } from './minion/oranomonos-the-wilted';
 import { OutbackSmolderer } from './minion/outback-smolderer';
 import { ParchedWanderer } from './minion/parched-wanderer';
 import { PeggySturdybone } from './minion/peggy-sturdybone';
+import { PilotTheShredder } from './minion/pilot-the-shredder';
+import { PilotedWhirlOTron } from './minion/piloted-whirl-o-tron';
 import { Poultron } from './minion/poultron';
 import { PrimalfinLookout } from './minion/primalfin-lookout';
 import { PrimevalMonstrosity } from './minion/primeval-monstrosity';
@@ -187,6 +200,7 @@ import { Scallywag } from './minion/scallywag';
 import { ScourgeHarvester } from './minion/scourge-harvester';
 import { SelflessHero } from './minion/selfless-hero';
 import { Shadowdancer } from './minion/shadowdancer';
+import { ShadowConstruct } from './minion/shadowy-construct';
 import { SharpEyedSabretooth } from './minion/sharp-eyed-sabretooth';
 import { SharptoothSnapper } from './minion/sharptooth-snapper';
 import { ShellCollector } from './minion/shell-collector';
@@ -205,6 +219,7 @@ import { SleepySupporter } from './minion/sleepy-supporter';
 import { SlumberSorcerer } from './minion/slumber-sorcerer';
 import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
+import { SnackVendor } from './minion/snack-vendor';
 import { SoulRewinder } from './minion/soul-rewinder';
 import { Spacefarer } from './minion/spacefarer';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
@@ -212,9 +227,13 @@ import { SpringySpriggan } from './minion/springy-spriggan';
 import { StitchedSalvager } from './minion/stitched-salvager';
 import { StompingStegodon } from './minion/stomping-stegodon';
 import { StompingStegodonEnchantment } from './minion/stomping-stegodon-enchantment';
+import { StoneshellGuardian } from './minion/stoneshell-guardian';
+import { StormpikeLieutenant } from './minion/stormpike-lieutenant';
 import { StraySatyr } from './minion/stray-satyr';
+import { SuperConstructor } from './minion/super-constructor';
 import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
+import { Tamuzo } from './minion/tamuzo';
 import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
@@ -233,6 +252,7 @@ import { VoidEarl } from './minion/void-earl';
 import { VoidRay } from './minion/void-ray';
 import { VorkaiGuardian } from './minion/vorkai-guardian';
 import { WanderingWight } from './minion/wandering-wight';
+import { Weebomination } from './minion/weebomination';
 import { WhelpSmuggler } from './minion/whelp-smuggler';
 import { WhirringProtector } from './minion/whirring-protector';
 import { WhirringProtectorEnchantment } from './minion/whirring-protector-enchantment';
@@ -519,6 +539,7 @@ const cards = [
 	ThunderingAbomination,
 	PrizedPromoDrake,
 	TransmutedBramblewitch,
+	FriendlyBouncer,
 	ImposingPercussionist,
 	SoulRewinder,
 	Tichondrius,
@@ -527,7 +548,25 @@ const cards = [
 	BriarbackBookie,
 	Shadowdancer,
 	AshenCorruptor,
-	// AmberGuardian,
+	StoneshellGuardian,
+	MasterGadrin,
+	PilotedWhirlOTron,
+	SnackVendor,
+	ShadowConstruct,
+	Tamuzo,
+	Weebomination,
+	Monstrosity,
+	FrostwolfLieutenant,
+	PilotTheShredder,
+	StormpikeLieutenant,
+	FragrantPhylactery,
+	FragrantPhylacteryEnchantment,
+	ExpertTechnician,
+	DivineSparkbot,
+	SuperConstructor,
+	AzsharanCutlassier,
+	MurkySpashFisher,
+	MurkysFish,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

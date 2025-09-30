@@ -1,6 +1,6 @@
-import { CardIds } from '../services/card-ids';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive } from '../services/utils';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
@@ -94,6 +94,36 @@ const handleSecrets = (
 				redemptionSpawns[0].health = 1;
 				allSpawns.push(...redemptionSpawns);
 				gameState.spectator.registerPowerTarget(secret, redemptionSpawns[0], boardWithDeadEntity, null, null);
+				break;
+			case CardIds.Redemption_BetterRedemption_TB_Bacon_Secrets_10b:
+				secret.triggered = true;
+				const betterRedemptionSpawns = spawnEntities(
+					deadEntity.cardId,
+					1,
+					boardWithDeadEntity,
+					boardWithDeadEntityHero,
+					otherBoard,
+					otherBoardHero,
+					gameState,
+					deadEntity.friendly,
+					false,
+					false,
+					true,
+				);
+				for (const spawn of betterRedemptionSpawns) {
+					spawn.health = deadEntity.maxAttack;
+					spawn.maxHealth = deadEntity.maxHealth;
+					spawn.enchantments = deadEntity.enchantments;
+					spawn.divineShield = deadEntity.hadDivineShield;
+				}
+				allSpawns.push(...betterRedemptionSpawns);
+				gameState.spectator.registerPowerTarget(
+					secret,
+					betterRedemptionSpawns[0],
+					boardWithDeadEntity,
+					null,
+					null,
+				);
 				break;
 			case CardIds.Effigy_TB_Bacon_Secrets_05:
 				secret.triggered = true;

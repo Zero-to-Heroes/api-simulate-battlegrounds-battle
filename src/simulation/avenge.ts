@@ -1,4 +1,3 @@
-import { CardIds } from '../services/card-ids';
 import { GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsHeroPower, BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
@@ -7,6 +6,7 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { grantRandomDivineShield } from '../keywords/divine-shield';
 import { updateReborn } from '../keywords/reborn';
 import { updateTaunt } from '../keywords/taunt';
+import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
 import {
@@ -189,6 +189,7 @@ const handleAvenge = (
 			hero: boardWithDeadEntityHero,
 			otherBoard: otherBoard,
 			otherHero: otherBoardHero,
+			deadEntity: deadEntity,
 			gameState,
 		});
 		if (Array.isArray(newSpawns) && newSpawns?.length) {
@@ -212,17 +213,6 @@ const handleAvenge = (
 					);
 				});
 				break;
-			// case CardIds.FrostwolfLieutenant:
-			// case CardIds.FrostwolfLieutenantBattlegrounds:
-			// 	addStatsToBoard(
-			// 		avenger,
-			// 		boardWithDeadEntity,
-			// 		avenger.cardId === CardIds.FrostwolfLieutenantBattlegrounds ? 2 : 1,
-			// 		0,
-			// 		allCards,
-			// 		spectator,
-			// 	);
-			// 	break;
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 				// Only for Tavern
@@ -660,21 +650,26 @@ const handleHeroAvenge = (
 	// Not affected by Khadgar
 	switch (heroPower.cardId) {
 		case CardIds.Onyxia_Broodmother:
-			candidatesEntitiesSpawnedFromAvenge.push(
-				...spawnEntities(
-					CardIds.Onyxia_OnyxianWhelpToken,
-					1,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoard,
-					otherBoardHero,
-					gameState,
-					deadEntity.friendly,
-					false,
-					false,
-					false,
-				),
+			const broodmotherTokens = spawnEntities(
+				CardIds.Onyxia_OnyxianWhelpToken,
+				1,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				otherBoard,
+				otherBoardHero,
+				gameState,
+				deadEntity.friendly,
+				false,
+				false,
+				false,
 			);
+			broodmotherTokens.forEach((token) => {
+				token.attack += +heroPower.info;
+				token.health += +heroPower.info;
+				token.maxAttack += +heroPower.info;
+				token.maxHealth += +heroPower.info;
+			});
+			candidatesEntitiesSpawnedFromAvenge.push(...broodmotherTokens);
 			break;
 		case CardIds.VanndarStormpike_LeadTheStormpikes:
 			boardWithDeadEntity
@@ -708,6 +703,7 @@ const handleHeroAvenge = (
 
 export interface AvengeInput {
 	readonly board: BoardEntity[];
+	readonly deadEntity: BoardEntity;
 	readonly hero: BgsPlayerEntity;
 	readonly otherBoard: BoardEntity[];
 	readonly otherHero: BgsPlayerEntity;

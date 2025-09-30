@@ -60,6 +60,30 @@ export const pickRandomLowestHealth = (board: BoardEntity[]): BoardEntity => {
 	return chosenEntity;
 };
 
+export const pickRandomLowestAttack = (board: BoardEntity[]): BoardEntity => {
+	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
+	const lowestAttack = Math.min(...targetBoard.map((e) => e.attack));
+	const entitiesWithLowestAttack = targetBoard.filter((e) => e.attack === lowestAttack);
+	const chosenEntity = pickRandom(entitiesWithLowestAttack);
+	return chosenEntity;
+};
+
+export const pickRandomHighestAttack = (board: BoardEntity[]): BoardEntity => {
+	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
+	const highestAttack = Math.max(...targetBoard.map((e) => e.attack));
+	const entitiesWithHighestAttack = targetBoard.filter((e) => e.attack === highestAttack);
+	const chosenEntity = pickRandom(entitiesWithHighestAttack);
+	return chosenEntity;
+};
+
+export const pickRandomHighestHealth = (board: BoardEntity[]): BoardEntity => {
+	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
+	const highestHealth = Math.max(...targetBoard.map((e) => e.health));
+	const entitiesWithHighestHealth = targetBoard.filter((e) => e.health === highestHealth);
+	const chosenEntity = pickRandom(entitiesWithHighestHealth);
+	return chosenEntity;
+};
+
 export const encode = (input: string): string => {
 	// return compressToEncodedURIComponent(input);
 	const buff = Buffer.from(input, 'utf-8');

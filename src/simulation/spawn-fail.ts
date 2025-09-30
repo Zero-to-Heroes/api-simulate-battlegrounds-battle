@@ -1,7 +1,6 @@
-import { CardIds } from '../services/card-ids';
-import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { CardIds } from '../services/card-ids';
 import { addStatsToAliveBoard, addStatsToBoard } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -34,6 +33,6 @@ export const onMinionFailedToSpawn = (
 		.filter((e) => e.cardId === CardIds.CatacombCrasher_BG30_129 || e.cardId === CardIds.CatacombCrasher_BG30_129_G)
 		.forEach((crasher) => {
 			const mult = crasher.cardId === CardIds.CatacombCrasher_BG30_129 ? 1 : 2;
-			addStatsToAliveBoard(crasher, board, hero, 2 * mult, 2 * mult, gameState, Race[Race.UNDEAD]);
+			addStatsToAliveBoard(crasher, board, hero, 2 * mult, 2 * mult, gameState);
 		});
 };
