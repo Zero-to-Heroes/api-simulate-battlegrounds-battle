@@ -166,8 +166,6 @@ export class CardsData {
 			case CardIds.PalescaleCrocolisk_BG21_001_G:
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
-			case CardIds.VanndarStormpike_LeadTheStormpikes:
-			case CardIds.Drekthar_LeadTheFrostwolves:
 			case CardIds.Bristlebach_BG26_157:
 			case CardIds.Bristlebach_BG26_157_G:
 				return 2;

@@ -671,32 +671,6 @@ const handleHeroAvenge = (
 			});
 			candidatesEntitiesSpawnedFromAvenge.push(...broodmotherTokens);
 			break;
-		case CardIds.VanndarStormpike_LeadTheStormpikes:
-			boardWithDeadEntity
-				// .filter((entity) => !entity.definitelyDead && entity.health > 0)
-				.forEach((entity) => {
-					modifyStats(entity, heroPower, 0, 1, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-					gameState.spectator.registerPowerTarget(
-						boardWithDeadEntityHero,
-						entity,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						otherBoardHero,
-					);
-				});
-			break;
-		case CardIds.Drekthar_LeadTheFrostwolves:
-			boardWithDeadEntity.forEach((entity) => {
-				modifyStats(entity, heroPower, 1, 0, boardWithDeadEntity, boardWithDeadEntityHero, gameState);
-				gameState.spectator.registerPowerTarget(
-					boardWithDeadEntityHero,
-					entity,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					otherBoardHero,
-				);
-			});
-			break;
 	}
 	heroPower.avengeCurrent += heroPower.avengeDefault;
 };

@@ -1,6 +1,6 @@
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
-import { simulateAttack } from '../../../simulation/attack';
+import { doFullAttack } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
@@ -9,25 +9,35 @@ export const ExpertTechnician: DeathrattleSpawnCard = {
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const loops = minion.cardId === CardIds.ExpertTechnician_BG33_370_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
-			const target = input.boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead)[0];
-			if (!target) {
+			const newAttacker = input.boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead)[0];
+			const newTarget = input.deadEntity.lastAffectedByEntity;
+			if (!newAttacker?.attack || !newTarget || newTarget.health <= 0 || newTarget.definitelyDead) {
 				continue;
 			}
 
 			const previousHasAttacked = minion.hasAttacked;
 			const previousWindfury = minion.windfury;
-			target.attackImmediately = true;
-			target.windfury = false;
-			simulateAttack(
+			newAttacker.attackImmediately = true;
+			newAttacker.windfury = false;
+			doFullAttack(
+				newAttacker,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,
+				newTarget,
 				input.otherBoard,
 				input.otherBoardHero,
 				input.gameState,
 			);
-			target.hasAttacked = previousHasAttacked;
-			target.attackImmediately = false;
-			target.windfury = previousWindfury;
+			// simulateAttack(
+			// 	input.boardWithDeadEntity,
+			// 	input.boardWithDeadEntityHero,
+			// 	input.otherBoard,
+			// 	input.otherBoardHero,
+			// 	input.gameState,
+			// );
+			newAttacker.hasAttacked = previousHasAttacked;
+			newAttacker.attackImmediately = false;
+			newAttacker.windfury = previousWindfury;
 		}
 		return null;
 	},
