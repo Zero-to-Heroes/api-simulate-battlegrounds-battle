@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from '../services/card-ids';
 import { AllCardsService, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { updateStealth } from '../keywords/stealth';
+import { CardIds } from '../services/card-ids';
 import { hasCorrectTribe } from '../utils';
 import { FullGameState } from './internal-game-state';
 
@@ -259,6 +259,7 @@ export const setImplicitDataHero = (
 		(hero.questRewardEntities?.filter((e) => e.cardId === CardIds.EndlessBloodMoon).length ?? 0);
 	hero.globalInfo.GoldrinnBuffAtk = hero.globalInfo.GoldrinnBuffAtk ?? 0;
 	hero.globalInfo.GoldrinnBuffHealth = hero.globalInfo.GoldrinnBuffHealth ?? 0;
+	hero.globalInfo.GoldSpentThisGame = hero.globalInfo.GoldSpentThisGame ?? 0;
 };
 
 export const clearStealthIfNeeded = (

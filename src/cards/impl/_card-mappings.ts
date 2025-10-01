@@ -135,6 +135,7 @@ import { LovesickBalladist } from './minion/lovesick-balladist';
 import { LowFlier } from './minion/low-flier';
 import { Lurker } from './minion/lurker';
 import { MagicfinApprentice } from './minion/magicfin-apprentice';
+import { Malorne } from './minion/malorne';
 import { Manasaber } from './minion/manasaber';
 import { MarqueeTicker } from './minion/marquee-ticker';
 import { MasterGadrin } from './minion/master-gadrin';
@@ -569,6 +570,7 @@ const cards = [
 	MurkySpashFisher,
 	MurkysFish,
 	AzeriteEmpowerment,
+	Malorne,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

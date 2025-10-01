@@ -19,8 +19,8 @@ export const FragrantPhylactery: StartOfCombatCard = {
 				input.playerEntity,
 				lowestAttack,
 				input.playerBoard,
-				null,
-				null,
+				input.playerEntity,
+				input.opponentEntity,
 			);
 		}
 		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };

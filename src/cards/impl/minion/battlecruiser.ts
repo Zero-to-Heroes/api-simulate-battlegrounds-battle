@@ -70,7 +70,12 @@ export const Battlecruiser: StartOfCombatCard & RebornSelfEffectCard & RallyCard
 				}
 			}
 		}
-		return true;
+		// Since 33.6 we recompute the first attacker
+		// https://replays.firestoneapp.com/?reviewId=f7a4a78c-269c-47b5-a0ae-099123290ccd&turn=13&action=0
+		return {
+			hasTriggered: true,
+			shouldRecomputeCurrentAttacker: true,
+		};
 	},
 	rebornSelfEffect: (minion: BoardEntity, input: RebornEffectInput) => {
 		const ultraCapacitors = [...input.rebornEntity.enchantments]
