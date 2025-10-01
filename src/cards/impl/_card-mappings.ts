@@ -6,6 +6,7 @@ import { ShinyRing } from './bg-spell/shiny-ring';
 import { FragrantPhylactery } from './hero-power/fragrant-phylactery';
 import { FragrantPhylacteryEnchantment } from './hero-power/fragrant-phylactery-enchantment';
 import { GloriousGloop } from './hero-power/glorious-gloop';
+import { LoackAndLoad } from './hero-power/lock-and-load';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AllSeeingElder } from './minion/all-seeing-elder';
 import { Alleycat } from './minion/alleycat';
@@ -571,6 +572,7 @@ const cards = [
 	MurkysFish,
 	AzeriteEmpowerment,
 	Malorne,
+	LoackAndLoad,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

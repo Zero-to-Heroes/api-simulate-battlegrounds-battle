@@ -113,7 +113,11 @@ const handleSummonsWhenSpaceForPlayer = (
 				targetEntity.friendly,
 				gameState,
 			);
-		} else if (heroPower.cardId === CardIds.LockAndLoadToken_BG22_HERO_000p_Alt && !heroPower.activated) {
+		} else if (
+			heroPower.cardId === CardIds.LockAndLoadToken_BG22_HERO_000p_Alt &&
+			!heroPower.activated &&
+			heroPower.ready
+		) {
 			handleLockAndLoadForPlayer(
 				heroPower,
 				playerBoard,

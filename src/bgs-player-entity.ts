@@ -61,9 +61,11 @@ export interface BgsHeroPower {
 	info6: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
+	locked?: number;
+	// Always false when coming from the input, we set it in the appropriate place
+	ready?: boolean;
 	// For Ozumat's Tentacular
 	activated?: boolean;
-	locked?: number;
 }
 
 export interface BgsPlayerGlobalInfo {
