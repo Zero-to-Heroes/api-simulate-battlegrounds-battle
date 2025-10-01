@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { isDead } from '../../../utils';
@@ -15,6 +15,13 @@ export const Greenskeeper: RallyCard = {
 			);
 			const candidate = battlecries[battlecries.length - 1];
 			if (!!candidate) {
+				input.gameState.spectator.registerPowerTarget(
+					minion,
+					candidate,
+					input.attackingBoard,
+					input.attackingHero,
+					input.defendingHero,
+				);
 				triggerBattlecry(
 					input.attackingBoard,
 					input.attackingHero,

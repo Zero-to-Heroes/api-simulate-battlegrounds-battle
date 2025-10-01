@@ -1,4 +1,5 @@
 import { Card } from '../card.interface';
+import { AzeriteEmpowerment } from './bg-spell/azerite-empowerment';
 import { MurkysFish } from './bg-spell/murkys-fish';
 import { SharingIsCaring } from './bg-spell/sharing-is-caring';
 import { ShinyRing } from './bg-spell/shiny-ring';
@@ -567,6 +568,7 @@ const cards = [
 	AzsharanCutlassier,
 	MurkySpashFisher,
 	MurkysFish,
+	AzeriteEmpowerment,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};
