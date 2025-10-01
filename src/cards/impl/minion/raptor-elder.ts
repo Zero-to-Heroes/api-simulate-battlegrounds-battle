@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnDespawnInput, OnOtherSpawnInput, OnSpawnInput } from '../../../simulation/add-minion-to-board';
 import { hasCorrectTribe } from '../../../utils';
 import { OnDespawnedCard, OnOtherSpawnedCard, OnSpawnedCard } from '../../card.interface';
@@ -14,7 +14,7 @@ export const RaptorElder: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCard =
 		const mult = minion.cardId === CardIds.RaptorElder_BG33_842_G ? 2 : 1;
 		const baseBuff = input.hero.globalInfo.BeastsSummonedThisCombat * mult;
 		const targets = input.board
-			.filter((e) => e !== minion)
+			// .filter((e) => e !== minion)
 			.filter((e) =>
 				hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
 			);

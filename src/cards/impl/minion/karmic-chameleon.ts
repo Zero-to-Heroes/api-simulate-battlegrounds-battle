@@ -1,9 +1,10 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { AvengeInput } from '../../../simulation/avenge';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
-import { copyEntity, stringifySimple, stringifySimpleCard } from '../../../utils';
-import { AvengeCard } from '../../card.interface';
+import { copyEntity } from '../../../utils';
+import { AvengeCard, hasOnSpawned } from '../../card.interface';
+import { cardMappings } from '../_card-mappings';
 
 export const KarmicChameleon: AvengeCard = {
 	cardIds: [CardIds.KarmicChameleon_BG31_802, CardIds.KarmicChameleon_BG31_802_G],
@@ -37,6 +38,15 @@ export const KarmicChameleon: AvengeCard = {
 					input.hero,
 					input.otherHero,
 				);
+				// Also need to apply the aura, if it has one
+				const onSpawnedImpl = cardMappings[clone.cardId];
+				if (hasOnSpawned(onSpawnedImpl)) {
+					onSpawnedImpl.onSpawned(clone, {
+						hero: input.hero,
+						board: board,
+						gameState: input.gameState,
+					});
+				}
 			}
 		}
 	},
