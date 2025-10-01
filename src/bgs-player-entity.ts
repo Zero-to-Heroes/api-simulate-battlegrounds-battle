@@ -59,6 +59,9 @@ export interface BgsHeroPower {
 	info4: number;
 	info5: number;
 	info6: number;
+	scoreValue1?: number;
+	scoreValue2?: number;
+	scoreValue3?: number;
 	avengeCurrent?: number;
 	avengeDefault?: number;
 	locked?: number;

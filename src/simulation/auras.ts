@@ -185,7 +185,7 @@ export const setImplicitDataHero = (
 	for (const heroPower of hero.heroPowers) {
 		const avengeValue = cardsData.avengeValue(heroPower.cardId);
 		if (avengeValue > 0) {
-			heroPower.avengeCurrent = avengeValue;
+			heroPower.avengeCurrent = avengeValue - (heroPower.scoreValue2 ?? 0);
 			heroPower.avengeDefault = avengeValue;
 		}
 	}
