@@ -664,10 +664,10 @@ const handleHeroAvenge = (
 				false,
 			);
 			broodmotherTokens.forEach((token) => {
-				token.attack += +heroPower.info;
-				token.health += +heroPower.info;
-				token.maxAttack += +heroPower.info;
-				token.maxHealth += +heroPower.info;
+				token.attack = +heroPower.info;
+				token.health = +heroPower.info;
+				token.maxAttack = +heroPower.info;
+				token.maxHealth = +heroPower.info;
 			});
 			candidatesEntitiesSpawnedFromAvenge.push(...broodmotherTokens);
 			break;
