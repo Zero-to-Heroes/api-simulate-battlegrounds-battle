@@ -14,6 +14,7 @@ export const LoackAndLoad: StartOfCombatCard = {
 			});
 		return {
 			hasTriggered: true,
+			// 33.6 https://replays.firestoneapp.com/?reviewId=441da83c-3e40-4630-b98f-caf1932e5be7&turn=11&action=0
 			shouldRecomputeCurrentAttacker: false,
 		};
 	},

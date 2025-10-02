@@ -16,26 +16,29 @@ export const handleSummonsWhenSpace = (
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
-) => {
+): boolean => {
+	let shouldRecomputeCurrentAttacker = false;
 	if (Math.random() < 0.5) {
-		handleSummonsWhenSpaceForPlayer(
-			playerEntity,
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			gameState,
-		);
-		handleSummonsWhenSpaceForPlayer(
-			opponentEntity,
-			opponentBoard,
-			opponentEntity,
-			playerBoard,
-			playerEntity,
-			gameState,
-		);
+		shouldRecomputeCurrentAttacker =
+			handleSummonsWhenSpaceForPlayer(
+				playerEntity,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+			) || shouldRecomputeCurrentAttacker;
+		shouldRecomputeCurrentAttacker =
+			handleSummonsWhenSpaceForPlayer(
+				opponentEntity,
+				opponentBoard,
+				opponentEntity,
+				playerBoard,
+				playerEntity,
+				gameState,
+			) || shouldRecomputeCurrentAttacker;
 	} else {
-		handleSummonsWhenSpaceForPlayer(
+		shouldRecomputeCurrentAttacker = handleSummonsWhenSpaceForPlayer(
 			opponentEntity,
 			opponentBoard,
 			opponentEntity,
@@ -43,15 +46,17 @@ export const handleSummonsWhenSpace = (
 			playerEntity,
 			gameState,
 		);
-		handleSummonsWhenSpaceForPlayer(
-			playerEntity,
-			playerBoard,
-			playerEntity,
-			opponentBoard,
-			opponentEntity,
-			gameState,
-		);
+		shouldRecomputeCurrentAttacker =
+			handleSummonsWhenSpaceForPlayer(
+				playerEntity,
+				playerBoard,
+				playerEntity,
+				opponentBoard,
+				opponentEntity,
+				gameState,
+			) || shouldRecomputeCurrentAttacker;
 	}
+	return shouldRecomputeCurrentAttacker;
 };
 
 // TODO: Twin Sky Lanterns wait for 2 spaces
@@ -62,27 +67,35 @@ const handleSummonsWhenSpaceForPlayer = (
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
-) => {
+): boolean => {
+	let shouldRecomputeCurrentAttacker = false;
 	if (targetEntity.rapidReanimationMinion) {
-		handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		shouldRecomputeCurrentAttacker =
+			handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState) ||
+			shouldRecomputeCurrentAttacker;
 	}
 	if (targetEntity.questRewards?.includes(CardIds.StableAmalgamation_BG28_Reward_518)) {
-		handleStableAmalgamationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		shouldRecomputeCurrentAttacker =
+			handleStableAmalgamationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState) ||
+			shouldRecomputeCurrentAttacker;
 	}
 	if (targetEntity.secrets?.some((s) => s.cardId === CardIds.BoonOfBeetles_BG28_603)) {
-		handleBoonOfBeetlesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		shouldRecomputeCurrentAttacker =
+			handleBoonOfBeetlesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState) ||
+			shouldRecomputeCurrentAttacker;
 	}
 	for (const heroPower of targetEntity.heroPowers) {
 		if (heroPower.cardId === CardIds.Ozumat_Tentacular && heroPower.ready) {
-			handleOzumatForPlayer(
-				heroPower,
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				targetEntity.friendly,
-				gameState,
-			);
+			shouldRecomputeCurrentAttacker =
+				handleOzumatForPlayer(
+					heroPower,
+					playerBoard,
+					playerEntity,
+					opponentBoard,
+					opponentEntity,
+					targetEntity.friendly,
+					gameState,
+				) || shouldRecomputeCurrentAttacker;
 		}
 		// TODO: use one of these existing tag to make it unlocked
 		else if (
@@ -90,43 +103,46 @@ const handleSummonsWhenSpaceForPlayer = (
 			gameState.currentTurn >= 7 &&
 			!heroPower.activated
 		) {
-			handleFrostwolfFervorForPlayer(
-				heroPower,
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				targetEntity.friendly,
-				gameState,
-			);
+			shouldRecomputeCurrentAttacker =
+				handleFrostwolfFervorForPlayer(
+					heroPower,
+					playerBoard,
+					playerEntity,
+					opponentBoard,
+					opponentEntity,
+					targetEntity.friendly,
+					gameState,
+				) || shouldRecomputeCurrentAttacker;
 		} else if (
 			heroPower.cardId === CardIds.VanndarStormpike_LeadTheStormpikes &&
 			gameState.currentTurn >= 7 &&
 			!heroPower.activated
 		) {
-			handleStormpikeStrengthForPlayer(
-				heroPower,
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				targetEntity.friendly,
-				gameState,
-			);
+			shouldRecomputeCurrentAttacker =
+				handleStormpikeStrengthForPlayer(
+					heroPower,
+					playerBoard,
+					playerEntity,
+					opponentBoard,
+					opponentEntity,
+					targetEntity.friendly,
+					gameState,
+				) || shouldRecomputeCurrentAttacker;
 		} else if (
 			heroPower.cardId === CardIds.LockAndLoadToken_BG22_HERO_000p_Alt &&
 			!heroPower.activated &&
 			heroPower.ready
 		) {
-			handleLockAndLoadForPlayer(
-				heroPower,
-				playerBoard,
-				playerEntity,
-				opponentBoard,
-				opponentEntity,
-				targetEntity.friendly,
-				gameState,
-			);
+			shouldRecomputeCurrentAttacker =
+				!!handleLockAndLoadForPlayer(
+					heroPower,
+					playerBoard,
+					playerEntity,
+					opponentBoard,
+					opponentEntity,
+					targetEntity.friendly,
+					gameState,
+				) || shouldRecomputeCurrentAttacker;
 		}
 	}
 	targetEntity.trinkets
@@ -150,6 +166,7 @@ const handleSummonsWhenSpaceForPlayer = (
 		.forEach((e) => {
 			handleSharptoothSnapperForPlayer(e, playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 		});
+	return shouldRecomputeCurrentAttacker;
 };
 
 export const handleSharptoothSnapperForPlayer = (
@@ -303,7 +320,7 @@ const handleOzumatForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	friendly: boolean,
 	gameState: FullGameState,
-): void => {
+) => {
 	if (playerBoard.length < 7 && heroPower.activated === false) {
 		const tentacularSize = +heroPower.info;
 		const tentacular = spawnEntities(
@@ -337,6 +354,7 @@ const handleOzumatForPlayer = (
 		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
 		heroPower.activated = true;
 	}
+	return false;
 };
 
 const handleFrostwolfFervorForPlayer = (
@@ -347,7 +365,7 @@ const handleFrostwolfFervorForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	friendly: boolean,
 	gameState: FullGameState,
-): void => {
+) => {
 	if (playerBoard.length < 7) {
 		heroPower.activated = true;
 		const target = pickRandomHighestAttack(playerBoard);
@@ -381,6 +399,7 @@ const handleFrostwolfFervorForPlayer = (
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 		}
 	}
+	return false;
 };
 
 const handleLockAndLoadForPlayer = (
@@ -391,7 +410,7 @@ const handleLockAndLoadForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	friendly: boolean,
 	gameState: FullGameState,
-): void => {
+) => {
 	if (playerBoard.length < 7) {
 		const summoned = heroPower.info as BoardEntity;
 		heroPower.activated = true;
@@ -424,6 +443,8 @@ const handleLockAndLoadForPlayer = (
 				gameState,
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+			// 33.6 https://replays.firestoneapp.com/?reviewId=441da83c-3e40-4630-b98f-caf1932e5be7&turn=11&action=0
+			return true;
 		}
 	}
 };
@@ -436,7 +457,7 @@ const handleStormpikeStrengthForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	friendly: boolean,
 	gameState: FullGameState,
-): void => {
+) => {
 	if (playerBoard.length < 7) {
 		heroPower.activated = true;
 		const target = pickRandomHighestHealth(playerBoard);
@@ -470,6 +491,7 @@ const handleStormpikeStrengthForPlayer = (
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 		}
 	}
+	return false;
 };
 
 const handleBoonOfBeetlesForPlayer = (
@@ -503,6 +525,7 @@ const handleBoonOfBeetlesForPlayer = (
 			}
 		}
 	}
+	return false;
 };
 const handleStableAmalgamationForPlayer = (
 	playerBoard: BoardEntity[],
@@ -534,6 +557,7 @@ const handleStableAmalgamationForPlayer = (
 			}
 		}
 	}
+	return false;
 };
 
 const handleRapidReanimationForPlayer = (
@@ -579,6 +603,7 @@ const handleRapidReanimationForPlayer = (
 		// 	}
 		// });
 	}
+	return false;
 };
 
 const handleSummon = (
