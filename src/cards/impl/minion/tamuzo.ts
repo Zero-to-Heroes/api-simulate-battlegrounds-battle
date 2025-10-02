@@ -2,11 +2,11 @@ import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
-import { OnOtherSpawnedCard } from '../../card.interface';
+import { AfterOtherSpawnedCard } from '../../card.interface';
 
-export const Tamuzo: OnOtherSpawnedCard = {
+export const Tamuzo: AfterOtherSpawnedCard = {
 	cardIds: [CardIds.Tamuzo_BG23_HERO_201_Buddy, CardIds.Tamuzo_BG23_HERO_201_Buddy_G],
-	onOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
+	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
 		const mult = minion.cardId === CardIds.Tamuzo_BG23_HERO_201_Buddy_G ? 2 : 1;
 		modifyStats(
 			input.spawned,
