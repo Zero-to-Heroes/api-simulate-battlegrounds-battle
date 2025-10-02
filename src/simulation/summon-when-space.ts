@@ -73,7 +73,7 @@ const handleSummonsWhenSpaceForPlayer = (
 		handleBoonOfBeetlesForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	}
 	for (const heroPower of targetEntity.heroPowers) {
-		if (heroPower.cardId === CardIds.Ozumat_Tentacular) {
+		if (heroPower.cardId === CardIds.Ozumat_Tentacular && heroPower.ready) {
 			handleOzumatForPlayer(
 				heroPower,
 				playerBoard,
