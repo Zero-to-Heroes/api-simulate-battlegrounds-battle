@@ -266,6 +266,7 @@ import { YorikSmite } from './minion/yorik-smite';
 import { YoungMurkEye } from './minion/young-murk-eye';
 import { Yrel } from './minion/yrel';
 import { Zergling } from './minion/zergling';
+import { Zippers } from './minion/zippers';
 import { RighteousCharge } from './quest-reward/righteous-charge';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
@@ -573,6 +574,7 @@ const cards = [
 	AzeriteEmpowerment,
 	Malorne,
 	LoackAndLoad,
+	Zippers,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

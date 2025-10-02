@@ -255,7 +255,15 @@ export class CardsData {
 		if (!minionsForTier?.length) {
 			console.error('incorrect minions for tier', tavernTier);
 		}
-		return pickRandom(this.minionsForTier[tavernTier ?? 1])?.id;
+		return pickRandom(minionsForTier)?.id;
+	}
+
+	public getRandomMinionForMinTavernTier(tavernTier: number): string {
+		const minionsForTier = this.pool.filter((m) => m.techLevel >= tavernTier);
+		if (!minionsForTier?.length) {
+			console.error('incorrect minions for tier', tavernTier);
+		}
+		return pickRandom(minionsForTier)?.id;
 	}
 
 	public getRandomMechToMagnetize(tavernLimitUpper: number): string {
