@@ -354,7 +354,7 @@ const handleOzumatForPlayer = (
 		gameState.spectator.registerPowerTarget(playerEntity, tentacular[0], playerBoard, playerEntity, opponentEntity);
 		heroPower.activated = true;
 	}
-	return false;
+	return true;
 };
 
 const handleFrostwolfFervorForPlayer = (

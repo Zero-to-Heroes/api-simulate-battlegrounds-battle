@@ -8,6 +8,6 @@ export const Tentacular: StartOfCombatCard = {
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		input.playerEntity.heroPowers.find((h) => h.cardId === CardIds.Ozumat_Tentacular).activated = false;
 		input.playerEntity.heroPowers.find((h) => h.cardId === CardIds.Ozumat_Tentacular).ready = true;
-		return { hasTriggered: true, shouldRecomputeCurrentAttacker: true };
+		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},
 };
