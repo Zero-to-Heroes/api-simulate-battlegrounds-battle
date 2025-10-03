@@ -61,9 +61,11 @@ export const playBloodGemsOn = (
 	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemEnchantment);
 	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemsEnchantment);
 
-	for (let i = 0; i < quantity; i++) {
-		modifyStats(target, null, bloodGemAttack, bloodGemHealth, board, hero, gameState, false);
-	}
+	// This seems to be a single "modifyStats" call
+	// 33.6 https://replays.firestoneapp.com/?reviewId=51f93537-182d-4fb8-bf41-1b4429341e01&turn=19&action=3
+	modifyStats(target, null, quantity * bloodGemAttack, quantity * bloodGemHealth, board, hero, gameState, false);
+	// for (let i = 0; i < quantity; i++) {
+	// }
 
 	for (let i = 0; i < quantity; i++) {
 		switch (target.cardId) {
