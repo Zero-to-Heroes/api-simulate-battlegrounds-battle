@@ -3,6 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import {
 	hasAfterOtherSpawned,
+	hasOnDespawned,
 	hasOnOtherSpawned,
 	hasOnOtherAuraSpawned as hasOnOtherSpawnedAura,
 	hasOnSpawned,
@@ -498,6 +499,15 @@ export const removeAurasFromSelf = (
 	gameState: FullGameState,
 ): void => {
 	entity.attack -= Math.max(0, boardHero.globalInfo.AdditionalAttack);
+
+	const onDespawnedImpl = cardMappings[entity.cardId];
+	if (hasOnDespawned(onDespawnedImpl)) {
+		onDespawnedImpl.onDespawned(entity, {
+			hero: boardHero,
+			board: board,
+			gameState,
+		});
+	}
 
 	if (!!boardHero.questRewards?.length) {
 		for (const quest of boardHero.questRewards) {
