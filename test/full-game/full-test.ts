@@ -20,7 +20,7 @@ const test = async () => {
 			...jsonEvent3.options,
 			numberOfSimulations: 5000,
 			skipInfoLogs: false,
-			maxAcceptableDuration: 5000,
+			maxAcceptableDuration: 8000,
 			itermediateResults: 0,
 			includeOutcomeSamples: true,
 			damageConfidence: 0.95,

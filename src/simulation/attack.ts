@@ -710,15 +710,16 @@ export const getDefendingEntity = (
 ): BoardEntity => {
 	if (debugState.active) {
 		for (const forcedFaceOff of debugState.forcedFaceOff) {
-			if (debugState.isCorrectEntity(forcedFaceOff.attacker, attackingEntity))
-				if (attackingEntity.entityId === forcedFaceOff.attacker.entityId) {
-					let def = null;
-					if (!!(def = defendingBoard.find((e) => debugState.isCorrectEntity(forcedFaceOff.defender, e)))) {
-						// Remove the face-off
-						debugState.forcedFaceOff = debugState.forcedFaceOff.filter((f) => f != forcedFaceOff);
-						return def;
-					}
+			if (debugState.isCorrectEntity(forcedFaceOff.attacker, attackingEntity)) {
+				// if (attackingEntity.entityId === forcedFaceOff.attacker.entityId) {
+				const def = defendingBoard.find((e) => debugState.isCorrectEntity(forcedFaceOff.defender, e));
+				if (!!def) {
+					// Remove the face-off
+					debugState.forcedFaceOff = debugState.forcedFaceOff.filter((f) => f != forcedFaceOff);
+					return def;
 				}
+				// }
+			}
 		}
 	}
 

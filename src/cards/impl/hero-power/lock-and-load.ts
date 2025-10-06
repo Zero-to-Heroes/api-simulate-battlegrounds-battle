@@ -5,7 +5,9 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const LoackAndLoad: StartOfCombatCard = {
 	cardIds: [CardIds.LockAndLoadToken_BG22_HERO_000p_Alt],
-	startOfCombatTiming: 'start-of-combat',
+	// Happens before Wingmen (so before Illidan)
+	// 33.6 https://replays.firestoneapp.com/?reviewId=9c801dbe-b626-49e0-a08c-b8f7cc2a8077&turn=3&action=0
+	startOfCombatTiming: 'pre-combat',
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		input.playerEntity.heroPowers
 			.filter((heroPower) => heroPower.cardId === CardIds.LockAndLoadToken_BG22_HERO_000p_Alt)
@@ -14,7 +16,7 @@ export const LoackAndLoad: StartOfCombatCard = {
 			});
 		return {
 			hasTriggered: true,
-			// 33.6 https://replays.firestoneapp.com/?reviewId=441da83c-3e40-4630-b98f-caf1932e5be7&turn=11&action=0
+			// Recomputed after the minion attacks
 			shouldRecomputeCurrentAttacker: false,
 		};
 	},
