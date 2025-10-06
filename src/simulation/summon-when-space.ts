@@ -6,7 +6,6 @@ import { CardIds } from '../services/card-ids';
 import { pickRandomHighestAttack, pickRandomHighestHealth } from '../services/utils';
 import { buildSingleBoardEntity, copyEntity, hasCorrectTribe } from '../utils';
 import { removeAurasFromSelf } from './add-minion-to-board';
-import { simulateAttack } from './attack';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -445,7 +444,8 @@ const handleLockAndLoadForPlayer = (
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
 			// Do the attack right now, so that we can recompute the first attacker once the attack resolves
-			simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+			// Attack is actually performed with the "performEntitySpawns" function
+			// simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 			// 33.6 https://replays.firestoneapp.com/?reviewId=441da83c-3e40-4630-b98f-caf1932e5be7&turn=11&action=0
 			return true;
 		}
