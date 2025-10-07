@@ -1,6 +1,7 @@
 import { Card } from '../card.interface';
 import { AzeriteEmpowerment } from './bg-spell/azerite-empowerment';
 import { MurkysFish } from './bg-spell/murkys-fish';
+import { NaturalBlessing } from './bg-spell/natural-blessing';
 import { SharingIsCaring } from './bg-spell/sharing-is-caring';
 import { ShinyRing } from './bg-spell/shiny-ring';
 import { FragrantPhylactery } from './hero-power/fragrant-phylactery';
@@ -575,6 +576,7 @@ const cards = [
 	Malorne,
 	LoackAndLoad,
 	Zippers,
+	NaturalBlessing,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};
