@@ -267,6 +267,10 @@ const handleWheneverMinionsKillEffectForBoard = (
 							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy ||
 							e.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G,
 					)
+					// Can't be revived
+					// 33.6 https://replays.firestoneapp.com/?reviewId=608ddffb-6c04-4def-a8de-fd39228f4de4&turn=11&action=4
+					// Maybe should move to an "after kill" phase, where dead minions are already dead?
+					.filter((e) => e.health > 0 && !e.definitelyDead)
 					.forEach((icesnarl) => {
 						modifyStats(
 							icesnarl,

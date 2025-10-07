@@ -13,7 +13,7 @@ export const MasterGadrin: StartOfCombatCard = {
 		const targets =
 			minion.cardId === CardIds.MasterGadrin_BG20_HERO_201_Buddy_G
 				? getNeighbours(input.playerBoard, minion)
-				: [leftNeighbour];
+				: [leftNeighbour].filter((e) => !!e);
 		for (const target of targets) {
 			modifyStats(target, minion, 0, target.attack, input.playerBoard, input.playerEntity, input.gameState);
 		}
