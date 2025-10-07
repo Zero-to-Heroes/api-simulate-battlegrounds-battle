@@ -27,7 +27,6 @@ const test = async () => {
 		},
 		gameState: {
 			...jsonEvent3.gameState,
-			currentTurn: 0,
 		},
 	} as any;
 

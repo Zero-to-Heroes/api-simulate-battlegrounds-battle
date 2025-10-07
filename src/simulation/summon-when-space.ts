@@ -96,9 +96,7 @@ const handleSummonsWhenSpaceForPlayer = (
 					targetEntity.friendly,
 					gameState,
 				) || shouldRecomputeCurrentAttacker;
-		}
-		// TODO: use one of these existing tag to make it unlocked
-		else if (
+		} else if (
 			heroPower.cardId === CardIds.Drekthar_LeadTheFrostwolves &&
 			gameState.currentTurn >= 7 &&
 			!heroPower.activated
@@ -371,7 +369,7 @@ const handleFrostwolfFervorForPlayer = (
 		const target = pickRandomHighestAttack(playerBoard);
 		if (!!target) {
 			const copy = copyEntity(target);
-			const indexFromRight = 0;
+			const indexFromRight = playerBoard.length - (playerBoard.indexOf(target) + 1);
 			const newMinions = spawnEntities(
 				copy.cardId,
 				1,
@@ -466,7 +464,7 @@ const handleStormpikeStrengthForPlayer = (
 		const target = pickRandomHighestHealth(playerBoard);
 		if (!!target) {
 			const copy = copyEntity(target);
-			const indexFromRight = 0;
+			const indexFromRight = playerBoard.length - (playerBoard.indexOf(target) + 1);
 			const newMinions = spawnEntities(
 				copy.cardId,
 				1,
