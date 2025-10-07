@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { addStatsToBoard } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
@@ -19,7 +19,9 @@ export const AnubarakNerubianKing: DeathrattleSpawnCard = {
 			0,
 			input.gameState,
 			Race[Race.UNDEAD],
-			false,
+			// This causes Tentacle of C'Thun to gain stats
+			// 33.6 https://replays.firestoneapp.com/?reviewId=4267ce35-80c7-47af-b0a0-33587fdc952c&turn=25&action=7
+			true,
 		);
 		return [];
 	},
