@@ -188,6 +188,13 @@ export const setImplicitDataHero = (
 			heroPower.avengeCurrent = avengeValue - (heroPower.scoreValue2 ?? 0);
 			heroPower.avengeDefault = avengeValue;
 		}
+		if ((heroPower.info as BoardEntity)?.health) {
+			const infoAvengeValue = cardsData.avengeValue((heroPower.info as BoardEntity).cardId);
+			if (infoAvengeValue > 0) {
+				(heroPower.info as BoardEntity).avengeCurrent = infoAvengeValue;
+				(heroPower.info as BoardEntity).avengeDefault = infoAvengeValue;
+			}
+		}
 	}
 	// Backward compatibility
 	if (!!hero.questRewards?.length && !Array.isArray(hero.questRewards)) {
