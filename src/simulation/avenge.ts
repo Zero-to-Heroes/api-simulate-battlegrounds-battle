@@ -669,6 +669,7 @@ const handleHeroAvenge = (
 				token.maxAttack = +heroPower.info;
 				token.maxHealth = +heroPower.info;
 			});
+			heroPower.info = +heroPower.info + 1;
 			candidatesEntitiesSpawnedFromAvenge.push(...broodmotherTokens);
 			break;
 	}
