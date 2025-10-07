@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { setEntityStats } from '../../../simulation/stats';
 import { DefaultChargesCard, RallyCard } from '../../card.interface';

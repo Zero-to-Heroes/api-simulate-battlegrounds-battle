@@ -120,6 +120,7 @@ export const applyOnAttackEffects = (
 					health: attacker.health,
 					maxHealth: attacker.maxHealth,
 					maxAttack: attacker.maxAttack,
+					abiityChargesLeft: attacker.abiityChargesLeft,
 				};
 				enchantmentToMinion = fixEnchantments(enchantmentToMinion, gameState.allCards);
 				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.rally(enchantmentToMinion, {
