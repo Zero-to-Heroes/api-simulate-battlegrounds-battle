@@ -49,13 +49,17 @@ export const RaptorElder: OnSpawnedCard & OnOtherSpawnedCard & OnDespawnedCard =
 		}
 
 		// Then update the aura
-		const allTargets = input.board.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
-		);
-		for (const target of allTargets) {
-			// Only the new spawn should increase the data, as we've already applied the aura before
-			target.attack += attackBuff * mult;
-			target.health += healthBuff * mult;
+		if (
+			hasCorrectTribe(input.spawned, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards)
+		) {
+			const allTargets = input.board.filter((e) =>
+				hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
+			);
+			for (const target of allTargets) {
+				// Only the new spawn should increase the data, as we've already applied the aura before
+				target.attack += attackBuff * mult;
+				target.health += healthBuff * mult;
+			}
 		}
 	},
 };
