@@ -23,6 +23,7 @@ import { AutoAssembler } from './minion/auto-assembler';
 import { AutoAssemblerEnchantment } from './minion/auto-assembler-enchantment';
 import { AvalancheCaller } from './minion/avalanche-caller';
 import { AzsharanCutlassier } from './minion/azsharan-cutlassier';
+import { BabyYshaarj } from './minion/baby-yshaarj';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
 import { Battlecruiser } from './minion/battlecruiser';
@@ -577,6 +578,7 @@ const cards = [
 	LoackAndLoad,
 	Zippers,
 	NaturalBlessing,
+	BabyYshaarj,
 ];
 
 export const cardMappings: { [cardId: string]: Card } = {};

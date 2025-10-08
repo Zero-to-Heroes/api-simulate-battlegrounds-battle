@@ -1,10 +1,10 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BgsHeroPower, BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { BoardSecret } from '../board-secret';
 import { hasOnStatsChanged } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { CardIds } from '../services/card-ids';
 import { hasCorrectTribe } from '../utils';
 import { applyAurasToSelf, removeAurasFromSelf } from './add-minion-to-board';
 import { getNeighbours } from './attack';
@@ -296,15 +296,9 @@ const onStatUpdateMinions = (
 			(e) => e.cardId === CardIds.MasterOfRealities_BG21_036 || e.cardId === CardIds.MasterOfRealities_BG21_036_G,
 		);
 		masterOfRealities.forEach((master) => {
-			modifyStats(
-				master,
-				master,
-				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
-				master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1,
-				friendlyBoard,
-				friendlyBoardHero,
-				gameState,
-			);
+			const baseBuff = 2;
+			const mult = master.cardId === CardIds.MasterOfRealities_BG21_036_G ? 2 : 1;
+			modifyStats(master, master, baseBuff * mult, baseBuff * mult, friendlyBoard, friendlyBoardHero, gameState);
 		});
 	}
 	const tentaclesOfCthun = friendlyBoard

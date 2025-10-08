@@ -272,15 +272,8 @@ const handleWheneverMinionsKillEffectForBoard = (
 					// Maybe should move to an "after kill" phase, where dead minions are already dead?
 					.filter((e) => e.health > 0 && !e.definitelyDead)
 					.forEach((icesnarl) => {
-						modifyStats(
-							icesnarl,
-							icesnarl,
-							0,
-							icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1,
-							board,
-							hero,
-							gameState,
-						);
+						const mult = icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1;
+						modifyStats(icesnarl, icesnarl, 0, 2 * mult, board, hero, gameState);
 					});
 			}
 		}

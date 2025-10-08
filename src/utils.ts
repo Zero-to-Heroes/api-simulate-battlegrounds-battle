@@ -457,8 +457,15 @@ export const getEffectiveTribesForEntity = (
 	if (!entity?.cardId) {
 		return [];
 	}
-	const nativeTribes = allCards.getCard(entity.cardId).races?.map((r) => Race[r]) ?? [];
+	const refCard = allCards.getCard(entity.cardId);
+	const nativeTribes = refCard.races?.map((r) => Race[r]) ?? [];
 	if (!nativeTribes.length && anomalies?.includes(CardIds.IncubationMutation_BG31_Anomaly_112)) {
+		return [Race.ALL];
+	}
+	if (
+		refCard.mechanics?.includes(GameTag[GameTag.BACON_BUDDY]) &&
+		anomalies?.includes(CardIds.ColorfulCamaraderie_BG33_Anomaly_005)
+	) {
 		return [Race.ALL];
 	}
 	return [...nativeTribes, ...getSpecialTribesForEntity(entity, playerEntity, allCards)];

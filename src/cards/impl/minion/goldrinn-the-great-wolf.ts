@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { addStatsToBoard } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
@@ -8,7 +8,7 @@ import { DeathrattleSpawnCard } from '../../card.interface';
 export const GoldrinnTheGreatWolf: DeathrattleSpawnCard = {
 	cardIds: [CardIds.GoldrinnTheGreatWolf_BGS_018, CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const goldrinnBuff = minion.cardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 12 : 6;
+		const goldrinnBuff = minion.cardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 10 : 5;
 		addStatsToBoard(
 			minion,
 			input.boardWithDeadEntity,

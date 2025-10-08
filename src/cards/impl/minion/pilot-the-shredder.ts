@@ -1,4 +1,5 @@
 import { BoardEntity } from '../../../board-entity';
+import { updateDivineShield } from '../../../keywords/divine-shield';
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
@@ -40,6 +41,14 @@ export const PilotTheShredder: DeathrattleSpawnCard = {
 					{ ...spawn } as BoardEntity,
 				);
 				for (const s of spawns) {
+					updateDivineShield(
+						s,
+						input.boardWithDeadEntity,
+						input.boardWithDeadEntityHero,
+						input.otherBoardHero,
+						true,
+						input.gameState,
+					);
 					s.onCanceledSummon = () => (spawn.locked = false);
 					// s.backRef = spawn;
 				}

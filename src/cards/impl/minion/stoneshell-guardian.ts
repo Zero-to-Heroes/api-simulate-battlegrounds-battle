@@ -11,30 +11,24 @@ export const StoneshellGuardian: StartOfCombatCard = {
 		// let totalSpawned = 0;
 		const numberOfCopies = minion.cardId === CardIds.StoneshellGuardian_BG33_HERO_000_Buddy_G ? 2 : 1;
 		for (let i = 0; i < numberOfCopies; i++) {
-			for (let j = 0; j < 2; j++) {
-				if (!!input.playerBoard.length) {
-					const rallyMinions = input.playerBoard.filter(
-						(e) =>
-							!StoneshellGuardian.cardIds.includes(e.cardId) &&
-							hasEntityMechanic(e, GameTag.BACON_RALLY, input.gameState.allCards),
-					);
-					const target = rallyMinions[j];
-					if (!target) {
-						continue;
-					}
-					minion.enchantments.push({
-						cardId: target.cardId,
-						originEntityId: target.entityId,
-						timing: input.gameState.sharedState.currentEntityId++,
-					});
-					input.gameState.spectator.registerPowerTarget(
-						minion,
-						target,
-						input.playerBoard,
-						input.playerEntity,
-						input.opponentEntity,
-					);
-				}
+			const rallyMinions = input.playerBoard.filter(
+				(e) =>
+					!StoneshellGuardian.cardIds.includes(e.cardId) &&
+					hasEntityMechanic(e, GameTag.BACON_RALLY, input.gameState.allCards),
+			);
+			for (const target of rallyMinions) {
+				minion.enchantments.push({
+					cardId: target.cardId,
+					originEntityId: target.entityId,
+					timing: input.gameState.sharedState.currentEntityId++,
+				});
+				input.gameState.spectator.registerPowerTarget(
+					minion,
+					target,
+					input.playerBoard,
+					input.playerEntity,
+					input.opponentEntity,
+				);
 			}
 		}
 		return true;

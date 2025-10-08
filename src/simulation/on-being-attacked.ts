@@ -137,8 +137,8 @@ export const applyOnBeingAttackedBuffs = (
 					e.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy_G,
 			)
 			.forEach((entity) => {
-				const buff = entity.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy ? 1 : 2;
-				addStatsToBoard(entity, defendingBoard, defendingPlayerEntity, buff, 0, gameState);
+				const mult = entity.cardId === CardIds.WanderingTreant_TB_BaconShop_HERO_95_Buddy ? 1 : 2;
+				addStatsToBoard(entity, defendingBoard, defendingPlayerEntity, 1 * mult, 1 * mult, gameState);
 			});
 	}
 

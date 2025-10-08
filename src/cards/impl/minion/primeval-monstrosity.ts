@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { grantStatsToMinionsOfEachType, hasEntityMechanic } from '../../../utils';
 import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
@@ -15,7 +15,7 @@ export const PrimevalMonstrosity: OnWheneverAnotherMinionAttacksCard = {
 				input.attackingBoard,
 				input.attackingHero,
 				3 * mult,
-				3 * mult,
+				2 * mult,
 				input.gameState,
 			);
 		}

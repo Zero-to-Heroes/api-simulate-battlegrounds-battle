@@ -15,7 +15,7 @@ export const FragrantPhylacteryEnchantment: DeathrattleSpawnEnchantmentCard = {
 				target,
 				input.deadEntity,
 				input.deadEntity.attack,
-				0,
+				input.deadEntity.maxHealth,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,
 				input.gameState,
