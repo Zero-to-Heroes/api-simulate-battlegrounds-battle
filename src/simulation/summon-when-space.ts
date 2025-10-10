@@ -395,6 +395,8 @@ const handleFrostwolfFervorForPlayer = (
 				gameState,
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+			// 33.6.2 https://replays.firestoneapp.com/?reviewId=35bc0472-b915-4fa3-8d29-8a8d4d806745&turn=15&action=2
+			return true;
 		}
 	}
 	return false;
@@ -490,6 +492,8 @@ const handleStormpikeStrengthForPlayer = (
 				gameState,
 			);
 			gameState.spectator.registerPowerTarget(playerEntity, spawns[0], playerBoard, playerEntity, opponentEntity);
+			// 33.6.2 https://replays.firestoneapp.com/?reviewId=35bc0472-b915-4fa3-8d29-8a8d4d806745&turn=15&action=2
+			return true;
 		}
 	}
 	return false;

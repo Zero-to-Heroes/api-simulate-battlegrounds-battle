@@ -1,6 +1,6 @@
-import { CardIds } from '../../services/card-ids';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
+import { CardIds } from '../../services/card-ids';
 import { processMinionDeath, simulateAttack } from '../attack';
 import { FullGameState } from '../internal-game-state';
 import { modifyStats } from '../stats';
@@ -57,7 +57,21 @@ export const handleIllidanHeroPowers = (
 		);
 	}
 	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
-	handleSummonsWhenSpace(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	const shouldRecomputeCurrentAttacker = handleSummonsWhenSpace(
+		playerBoard,
+		playerEntity,
+		opponentBoard,
+		opponentEntity,
+		gameState,
+	);
+	if (shouldRecomputeCurrentAttacker) {
+		currentAttacker =
+			playerBoard.length > opponentBoard.length
+				? 0
+				: opponentBoard.length > playerBoard.length
+				? 1
+				: Math.round(Math.random());
+	}
 	return currentAttacker;
 };
 
