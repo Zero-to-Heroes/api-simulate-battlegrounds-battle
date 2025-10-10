@@ -64,6 +64,9 @@ export const simulateAttack = (
 			// Make sure they won't be able to attack until everyone has attacked
 			// See http://replays.firestoneapp.com/?reviewId=a1b3066d-e806-44c1-ab4b-7ef9dbf9b5b9&turn=5&action=4
 			attackingEntitiesToTheLeft.forEach((entity) => (entity.hasAttacked = 2));
+		} else {
+			// Change it right away so that new spawns don't trigger the "attack immediately" again
+			attackingEntity.attackImmediately = false;
 		}
 
 		const numberOfAttacks = attackingEntity.windfury ? 2 : 1;
@@ -501,6 +504,7 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
 	}
 	const attacker = validAttackers[0];
+	const debug = attacker.cardId === CardIds.Onyxia_OnyxianWhelpToken;
 	const attackerName = allCards.getCard(attacker.cardId)?.name;
 	return attacker;
 };

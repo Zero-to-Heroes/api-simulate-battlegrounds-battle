@@ -26,6 +26,8 @@ export const WrathscaleRogue: OnStatsChangedCard = {
 					input.hero,
 					input.gameState,
 					false,
+					true,
+					false,
 				);
 			}
 		}

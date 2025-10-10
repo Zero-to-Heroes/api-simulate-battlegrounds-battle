@@ -5,6 +5,10 @@ export const applyDebugState = () => {
 	state.active = true;
 	state.forcedCurrentAttacker = 0;
 	state.forcedFaceOffBase = [
-		{ attacker: { entityId: 7435 }, defender: { entityId: 9183 } }
+		{ attacker: { entityId: 3453 }, defender: { entityId: 4959 } },
+		{ attacker: { entityId: 4956 }, defender: { attack: 4, health: 3 } },
+		{ attacker: { entityId: 3454 }, defender: { entityId: 4963 } },
+		{ attacker: { entityId: 4960 }, defender: { attack: 4, health: 3 } },
+		{ attacker: { attack: 5, health: 5 }, defender: { entityId: 4963 } },
 	];
 };

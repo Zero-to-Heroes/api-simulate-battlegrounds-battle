@@ -42,6 +42,7 @@ export const modifyStats = (
 	registerSpectator = true,
 	// All stat modifications become enchantments, excepted the ones coming from gilding a minion
 	isEnchantment = true,
+	countsAsStatsGain = true,
 ): void => {
 	const debug = attackAmount === 10;
 	if (attackAmount === 0 && healthAmount === 0) {
@@ -197,15 +198,17 @@ export const modifyStats = (
 		});
 	}
 
-	onStatsUpdate(
-		entity,
-		realAttackAmount,
-		realHealthAmount,
-		friendlyBoard,
-		friendlyBoardHero,
-		otherBoardHero,
-		gameState,
-	);
+	if (countsAsStatsGain) {
+		onStatsUpdate(
+			entity,
+			realAttackAmount,
+			realHealthAmount,
+			friendlyBoard,
+			friendlyBoardHero,
+			otherBoardHero,
+			gameState,
+		);
+	}
 };
 
 const onStatsUpdate = (
