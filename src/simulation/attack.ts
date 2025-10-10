@@ -504,8 +504,8 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
 	}
 	const attacker = validAttackers[0];
-	const debug = attacker.cardId === CardIds.Onyxia_OnyxianWhelpToken;
-	const attackerName = allCards.getCard(attacker.cardId)?.name;
+	// const debug = attacker.cardId === CardIds.Onyxia_OnyxianWhelpToken;
+	// const attackerName = allCards.getCard(attacker.cardId)?.name;
 	return attacker;
 };
 
