@@ -75,6 +75,8 @@ export const applyLightningInvocationEnchantment = (
 ): void => {
 	// Because the golden version doubles all the remembered effects
 	const multiplier = deadEntity?.cardId === CardIds.SpiritRaptor_BG22_HERO_001_Buddy_G ? 2 : 1;
+	const previousVenomous = (deadEntity as BoardEntity).venomous;
+	(deadEntity as BoardEntity).venomous = false;
 	for (let i = 0; i < multiplier; i++) {
 		const targets = pickMultipleRandomDifferent(otherBoard, 5);
 		for (const target of targets) {
@@ -90,6 +92,7 @@ export const applyLightningInvocationEnchantment = (
 			);
 		}
 	}
+	(deadEntity as BoardEntity).venomous = previousVenomous;
 };
 
 export const applyWaterInvocationEnchantment = (

@@ -1,7 +1,7 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { updateVenomous } from '../../../keywords/venomous';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { hasCorrectTribe } from '../../../utils';
@@ -27,6 +27,13 @@ export const BileSpitter: RallyCard = {
 			);
 			const target = pickRandom(candidates);
 			if (target) {
+				input.gameState.spectator.registerPowerTarget(
+					minion,
+					target,
+					input.attackingBoard,
+					input.attackingHero,
+					input.defendingHero,
+				);
 				updateVenomous(
 					target,
 					true,
