@@ -490,6 +490,7 @@ const handleNaturalDeathrattle = (
 	for (const dr of deadEntity.rememberedDeathrattles ?? []) {
 		const entityToProcess: BoardEntity = {
 			...deadEntity,
+			originalCardId: deadEntity.cardId,
 			rememberedDeathrattles: undefined,
 			deathrattleRepeats: dr.repeats ?? 1,
 			scriptDataNum1: dr.scriptDataNum1,

@@ -454,10 +454,12 @@ export const getEffectiveTribesForEntity = (
 	anomalies: readonly string[],
 	allCards: AllCardsService,
 ): readonly Race[] => {
-	if (!entity?.cardId) {
+	// When we trigger a remembered deathrattle, the tribe is the tribe of the actual minion, not the remembered effect
+	const cardId = entity?.originalCardId ?? entity?.cardId;
+	if (!cardId) {
 		return [];
 	}
-	const refCard = allCards.getCard(entity.cardId);
+	const refCard = allCards.getCard(cardId);
 	const nativeTribes = refCard.races?.map((r) => Race[r]) ?? [];
 	if (!nativeTribes.length && anomalies?.includes(CardIds.IncubationMutation_BG31_Anomaly_112)) {
 		return [Race.ALL];
