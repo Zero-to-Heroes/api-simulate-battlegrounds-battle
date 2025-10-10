@@ -111,8 +111,10 @@ const handleSecrets = (
 					true,
 				);
 				for (const spawn of betterRedemptionSpawns) {
-					spawn.health = deadEntity.maxAttack;
+					spawn.health = deadEntity.maxHealth;
 					spawn.maxHealth = deadEntity.maxHealth;
+					spawn.attack = deadEntity.attack;
+					spawn.maxAttack = deadEntity.maxAttack;
 					spawn.enchantments = deadEntity.enchantments;
 					spawn.divineShield = deadEntity.hadDivineShield;
 				}
