@@ -11,21 +11,23 @@ export const FriendlyBouncer: RallyCard = {
 		const loops = minion.cardId === CardIds.FriendlyBouncer_BG33_700_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			const spawnId = input.gameState.cardsData.getRandomRally(input.attackingHero.tavernTier);
-			simplifiedSpawnEntitiesWithAddToBoard(
-				spawnId,
-				1,
-				{
-					boardWithDeadEntity: input.attackingBoard,
-					boardWithDeadEntityHero: input.attackingHero,
-					gameState: input.gameState,
-					deadEntity: minion,
-					otherBoard: input.defendingBoard,
-					otherBoardHero: input.defendingHero,
-				},
-				minion,
-				input.attackingBoard.length - input.attackingBoard.indexOf(minion) - 1,
-			);
-			addCardsInHand(input.attackingHero, input.attackingBoard, [spawnId], input.gameState);
+			if (!!spawnId) {
+				simplifiedSpawnEntitiesWithAddToBoard(
+					spawnId,
+					1,
+					{
+						boardWithDeadEntity: input.attackingBoard,
+						boardWithDeadEntityHero: input.attackingHero,
+						gameState: input.gameState,
+						deadEntity: minion,
+						otherBoard: input.defendingBoard,
+						otherBoardHero: input.defendingHero,
+					},
+					minion,
+					input.attackingBoard.length - input.attackingBoard.indexOf(minion) - 1,
+				);
+				addCardsInHand(input.attackingHero, input.attackingBoard, [spawnId], input.gameState);
+			}
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
