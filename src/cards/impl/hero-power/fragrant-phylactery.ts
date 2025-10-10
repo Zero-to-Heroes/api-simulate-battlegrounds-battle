@@ -11,7 +11,7 @@ export const FragrantPhylactery: StartOfCombatCard = {
 		const lowestAttack = pickRandomLowestAttack(input.playerBoard);
 		if (!!lowestAttack) {
 			lowestAttack.enchantments.push({
-				cardId: CardIds.FragrantPhylactery_FragrantEnchantment,
+				cardId: CardIds.TamsinRoame_ImpendingSacrificeEnchantment_BG20_HERO_282e2,
 				originEntityId: trinket.entityId,
 				timing: input.gameState.sharedState.currentEntityId++,
 			});
