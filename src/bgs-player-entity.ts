@@ -1,4 +1,4 @@
-import { BoardEntity } from './board-entity';
+import { BoardEnchantment, BoardEntity } from './board-entity';
 import { BoardSecret } from './board-secret';
 
 export interface BgsPlayerEntity {
@@ -42,6 +42,8 @@ export interface BgsPlayerEntity {
 	trinkets?: BoardTrinket[];
 	globalInfo?: BgsPlayerGlobalInfo;
 	startOfCombatDone?: boolean;
+	// Not really used, but needed for compatibility with BoardEntity
+	enchantments?: BoardEnchantment[];
 
 	deadEyeDamageDone?: number;
 	rapidReanimationMinion?: BoardEntity;

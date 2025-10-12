@@ -231,6 +231,7 @@ export const setImplicitDataHero = (
 	// 0 is not a valid entityId
 	hero.entityId = hero.entityId || entityIdContainer.entityId--;
 	hero.hand = hero.hand ?? [];
+	hero.enchantments = hero.enchantments ?? [];
 	if (!hero.globalInfo) {
 		hero.globalInfo = {};
 	}
