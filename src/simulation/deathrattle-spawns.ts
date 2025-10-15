@@ -1967,6 +1967,7 @@ export const spawnEntitiesFromEnchantments = (
 			for (let i = 0; i < multiplier; i++) {
 				const spawns = deathrattleImpl.deathrattleSpawnEnchantmentEffect(
 					enchantment,
+					deadEntity,
 					deathrattleTriggeredInput,
 				);
 				if (!!spawns?.length) {

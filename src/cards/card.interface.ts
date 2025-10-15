@@ -176,7 +176,8 @@ export const hasOnDeathrattleTriggered = (card: Card): card is DeathrattleTrigge
 
 export interface DeathrattleSpawnEnchantmentCard extends Card {
 	deathrattleSpawnEnchantmentEffect: (
-		minion: { cardId: string; originEntityId?: number; repeats?: number },
+		enchantment: { cardId: string; originEntityId?: number; repeats?: number },
+		minion: BoardEntity | null | undefined,
 		input: DeathrattleTriggeredInput,
 	) => readonly BoardEntity[];
 	cardIds: readonly string[];

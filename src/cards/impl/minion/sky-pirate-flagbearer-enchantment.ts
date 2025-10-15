@@ -1,3 +1,4 @@
+import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
@@ -8,7 +9,11 @@ export const SkyPirateFlagbearerEnchantment: DeathrattleSpawnEnchantmentCard = {
 		CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e,
 		CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119_Ge,
 	],
-	deathrattleSpawnEnchantmentEffect: (enchantment: { cardId: string }, input: DeathrattleTriggeredInput) => {
+	deathrattleSpawnEnchantmentEffect: (
+		enchantment: { cardId: string },
+		minion: BoardEntity | null | undefined,
+		input: DeathrattleTriggeredInput,
+	) => {
 		return simplifiedSpawnEntities(
 			enchantment.cardId === CardIds.SkyPirateFlagbearer_FlagbearingEnchantment_BG30_119e
 				? CardIds.Scallywag_BGS_061

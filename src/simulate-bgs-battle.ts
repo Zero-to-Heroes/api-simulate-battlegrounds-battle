@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { CardIds } from './services/card-ids';
 import { AllCardsService } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { hasDeathrattleSpawnEnchantment } from './cards/card.interface';
@@ -7,6 +6,7 @@ import { CardsData } from './cards/cards-data';
 import { cardMappings } from './cards/impl/_card-mappings';
 import { cloneInput3 } from './input-clone';
 import { buildFinalInput } from './input-sanitation';
+import { CardIds } from './services/card-ids';
 import { SimulationResult } from './simulation-result';
 import { FullGameState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
@@ -290,6 +290,7 @@ const VALID_DEATHRATTLE_ENCHANTMENTS = [
 	CardIds.CaduceusReactor_CaduceusReactorEnchantment_BG31_HERO_801ptee,
 	CardIds.AutoAssembler_AutoAssemblerEnchantment_BG32_172e,
 	CardIds.AutoAssembler_AutoAssemblerEnchantment_BG32_172_Ge,
+	CardIds.TamsinRoame_ImpendingSacrificeEnchantment_BG20_HERO_282e2,
 ];
 const validDeathrattleEnchantmentsFromMapping = [];
 export const isValidDeathrattleEnchantment = (cardId: string): boolean => {
