@@ -13,12 +13,13 @@ export const handleIllidanHeroPowers = (
 	opponentBoard: BoardEntity[],
 	currentAttacker: number,
 	gameState: FullGameState,
-): number => {
+): { attacker: number; force: boolean } => {
+	let shouldForce = false;
 	// console.log('current attacker before', currentAttacker);
 	// Apparently it's a toin coss about whether to handle Illidan first or Al'Akir first
 	// Auras are only relevant for Illidan, and already applied there
 	if (Math.random() < 0.5) {
-		currentAttacker = handlePlayerIllidanHeroPowers(
+		const { attacker: newAttacker, force: force1 } = handlePlayerIllidanHeroPowers(
 			playerEntity,
 			playerBoard,
 			opponentEntity,
@@ -27,17 +28,19 @@ export const handleIllidanHeroPowers = (
 			true,
 			gameState,
 		);
-		currentAttacker = handlePlayerIllidanHeroPowers(
+		const { attacker: newAttacker2, force: force2 } = handlePlayerIllidanHeroPowers(
 			opponentEntity,
 			opponentBoard,
 			playerEntity,
 			playerBoard,
-			currentAttacker,
+			newAttacker,
 			false,
 			gameState,
 		);
+		shouldForce = force1 || force2;
+		currentAttacker = newAttacker2;
 	} else {
-		currentAttacker = handlePlayerIllidanHeroPowers(
+		const { attacker: newAttacker, force: force1 } = handlePlayerIllidanHeroPowers(
 			opponentEntity,
 			opponentBoard,
 			playerEntity,
@@ -46,15 +49,17 @@ export const handleIllidanHeroPowers = (
 			false,
 			gameState,
 		);
-		currentAttacker = handlePlayerIllidanHeroPowers(
+		const { attacker: newAttacker2, force: force2 } = handlePlayerIllidanHeroPowers(
 			playerEntity,
 			playerBoard,
 			opponentEntity,
 			opponentBoard,
-			currentAttacker,
+			newAttacker,
 			true,
 			gameState,
 		);
+		shouldForce = force1 || force2;
+		currentAttacker = newAttacker2;
 	}
 	processMinionDeath(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 	const shouldRecomputeCurrentAttacker = handleSummonsWhenSpace(
@@ -64,6 +69,9 @@ export const handleIllidanHeroPowers = (
 		opponentEntity,
 		gameState,
 	);
+	if (shouldForce) {
+		return { attacker: currentAttacker, force: true };
+	}
 	if (shouldRecomputeCurrentAttacker) {
 		currentAttacker =
 			playerBoard.length > opponentBoard.length
@@ -72,7 +80,7 @@ export const handleIllidanHeroPowers = (
 				? 1
 				: Math.round(Math.random());
 	}
-	return currentAttacker;
+	return { attacker: currentAttacker, force: false };
 };
 
 const handlePlayerIllidanHeroPowers = (
@@ -83,13 +91,13 @@ const handlePlayerIllidanHeroPowers = (
 	currentAttacker: number,
 	friendly: boolean,
 	gameState: FullGameState,
-): number => {
+): { attacker: number; force: boolean } => {
 	const loops = playerEntity.trinkets?.some((t) => t.cardId === CardIds.ValdrakkenWindChimes_BG32_MagicItem_365)
 		? 2
 		: 1;
 	for (let i = 0; i < loops; i++) {
 		if (playerEntity.hpLeft <= 0) {
-			return currentAttacker;
+			return { attacker: currentAttacker, force: false };
 		}
 		for (const heroPower of playerEntity.heroPowers) {
 			if (heroPower.cardId === CardIds.Wingmen && playerBoard.length > 0) {
@@ -114,11 +122,18 @@ const handlePlayerIllidanHeroPowers = (
 				// The non-Illidan side then attacks first
 				// https://replays.firestoneapp.com/?reviewId=45f40e73-4be9-419f-9093-0c2d91a7bac2&turn=5&action=0
 				// So for now, just randomizing the attacker to try and avoid "impossible" scenarios as much as possible
-				currentAttacker = Math.random() < 0.5 ? 0 : 1;
+				// currentAttacker = Math.random() < 0.5 ? 0 : 1;
+
+				// It looks like it's always the next player that should attack after Wingmen triggers, which
+				// means we should bypass the "recompute next attacker" logic from other start of combat effects,
+				// like summoning Flight Scout
+				// 33.6.2 https://replays.firestoneapp.com/?reviewId=03b5755e-1666-4f6c-a3be-626b76bbef6d&turn=5&action=1
+				// 33.6.2 https://replays.firestoneapp.com/?reviewId=c04ab462-9fd2-47e4-8ad4-bbcc3c14c709&turn=3&action=2
+				return { attacker: currentAttacker, force: true };
 			}
 		}
 	}
-	return currentAttacker;
+	return { attacker: currentAttacker, force: false };
 };
 
 // TODO: not exactly correct, because of "attack immediately", but it's close enough

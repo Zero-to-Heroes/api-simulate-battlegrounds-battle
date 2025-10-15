@@ -61,8 +61,10 @@ export const handleStartOfCombat = (
 	];
 	let playerBoardBefore = playerBoard.map((e) => ({ ...e }));
 	let opponentBoardBefore = opponentBoard.map((e) => ({ ...e }));
+
+	let forcedAttacker = null;
 	for (const phase of phases) {
-		currentAttacker = handlePhase(
+		const { attacker: newAttacker, force: newForce } = handlePhase(
 			phase,
 			playerEntity,
 			playerBoard,
@@ -73,6 +75,10 @@ export const handleStartOfCombat = (
 			currentAttacker,
 			gameState,
 		);
+		currentAttacker = newAttacker;
+		if (newForce) {
+			forcedAttacker = newAttacker;
+		}
 		if (phase === 'PreCombatHeroPower') {
 			playerBoardBefore = playerBoard.map((e) => ({ ...e }));
 			opponentBoardBefore = opponentBoard.map((e) => ({ ...e }));
@@ -81,7 +87,7 @@ export const handleStartOfCombat = (
 	playerEntity.startOfCombatDone = true;
 	opponentEntity.startOfCombatDone = true;
 	applyAfterStatsUpdate(gameState);
-	return currentAttacker;
+	return forcedAttacker != null ? forcedAttacker : currentAttacker;
 };
 
 const handlePhase = (
@@ -94,7 +100,7 @@ const handlePhase = (
 	opponentBoardBefore: BoardEntity[],
 	currentAttacker: number,
 	gameState: FullGameState,
-): number => {
+): { attacker: number; force: boolean } => {
 	switch (phase) {
 		case 'QuestReward':
 			currentAttacker = handleStartOfCombatQuestRewards(
@@ -105,7 +111,7 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 		case 'Anomalies':
 			currentAttacker = handleStartOfCombatAnomalies(
 				playerEntity,
@@ -115,7 +121,7 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 		case 'Trinket':
 			currentAttacker = handleStartOfCombatTrinkets(
 				playerEntity,
@@ -125,7 +131,7 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 		case 'PreCombatHeroPower':
 			currentAttacker = handlePreCombatHeroPowers(
 				playerEntity,
@@ -135,9 +141,9 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 		case 'IllidanHeroPower':
-			currentAttacker = handleIllidanHeroPowers(
+			const { attacker: newAttacker, force: newForce } = handleIllidanHeroPowers(
 				playerEntity,
 				playerBoard,
 				opponentEntity,
@@ -145,7 +151,7 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: newAttacker, force: newForce };
 		case 'HeroPower':
 			currentAttacker = handleStartOfCombatHeroPowers(
 				playerEntity,
@@ -155,7 +161,7 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 		case 'Secret':
 			currentAttacker = handleStartOfCombatSecrets(
 				playerEntity,
@@ -165,7 +171,7 @@ const handlePhase = (
 				currentAttacker,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 		case 'Minion':
 			currentAttacker = handleStartOfCombatMinions(
 				playerEntity,
@@ -177,8 +183,8 @@ const handlePhase = (
 				opponentBoardBefore,
 				gameState,
 			);
-			break;
+			return { attacker: currentAttacker, force: false };
 	}
 
-	return currentAttacker;
+	return { attacker: currentAttacker, force: false };
 };
