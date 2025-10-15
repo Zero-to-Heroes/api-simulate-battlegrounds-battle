@@ -5,7 +5,7 @@ import { BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { updateStealth } from '../keywords/stealth';
 import { CardIds } from '../services/card-ids';
-import { hasCorrectTribe } from '../utils';
+import { addImpliedMechanics, hasCorrectTribe } from '../utils';
 import { FullGameState } from './internal-game-state';
 
 export const setMissingAuras = (
@@ -189,11 +189,7 @@ export const setImplicitDataHero = (
 			heroPower.avengeDefault = avengeValue;
 		}
 		if ((heroPower.info as BoardEntity)?.health) {
-			const infoAvengeValue = cardsData.avengeValue((heroPower.info as BoardEntity).cardId);
-			if (infoAvengeValue > 0) {
-				(heroPower.info as BoardEntity).avengeCurrent = infoAvengeValue;
-				(heroPower.info as BoardEntity).avengeDefault = infoAvengeValue;
-			}
+			addImpliedMechanics(heroPower.info as BoardEntity, cardsData);
 		}
 	}
 	// Backward compatibility
