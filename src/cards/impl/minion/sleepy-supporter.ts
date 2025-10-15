@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
@@ -13,7 +13,7 @@ export const SleepySupporter: RallyCard = {
 		const mult = minion.cardId === CardIds.SleepySupporter_BG33_241_G ? 2 : 1;
 		const candidates = input.attackingBoard.filter(
 			(e) =>
-				e !== minion &&
+				e !== input.attacker &&
 				hasCorrectTribe(
 					e,
 					input.attackingHero,
@@ -24,7 +24,15 @@ export const SleepySupporter: RallyCard = {
 		);
 		const target = pickRandom(candidates);
 		if (!!target) {
-			modifyStats(target, minion, 2 * mult, 3 * mult, input.attackingBoard, input.attackingHero, input.gameState);
+			modifyStats(
+				target,
+				input.attacker,
+				2 * mult,
+				3 * mult,
+				input.attackingBoard,
+				input.attackingHero,
+				input.gameState,
+			);
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},

@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { dealDamageToMinion, getNeighbours } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { RallyCard } from '../../card.interface';
@@ -15,7 +15,7 @@ export const Colossus: RallyCard = {
 				target,
 				input.defendingBoard,
 				input.defendingHero,
-				minion,
+				input.attacker,
 				damage,
 				input.attackingBoard,
 				input.attackingHero,

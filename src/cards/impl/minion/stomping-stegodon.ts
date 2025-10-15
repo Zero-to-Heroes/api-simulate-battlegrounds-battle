@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
@@ -12,11 +12,10 @@ export const stompingStegodonHealth = 0;
 export const StompingStegodon: RallyCard = {
 	cardIds: [CardIds.StompingStegodon_BG33_840, CardIds.StompingStegodon_BG33_840_G],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
-		const debug = minion.entityId === 10597;
 		const mult = minion.cardId === CardIds.StompingStegodon_BG33_840_G ? 2 : 1;
 		const candidates = input.attackingBoard.filter(
 			(e) =>
-				e !== minion &&
+				e !== input.attacker &&
 				hasCorrectTribe(
 					e,
 					input.attackingHero,
@@ -32,7 +31,7 @@ export const StompingStegodon: RallyCard = {
 		for (const candidate of candidates) {
 			modifyStats(
 				candidate,
-				minion,
+				input.attacker,
 				stompingStegodonAttack * mult,
 				stompingStegodonHealth * mult,
 				input.attackingBoard,

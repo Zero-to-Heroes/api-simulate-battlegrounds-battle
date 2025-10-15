@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { OnWheneverAnotherMinionAttacksCard, RallyCard } from '../../card.interface';
@@ -16,7 +16,23 @@ export const VoidRay: OnWheneverAnotherMinionAttacksCard & RallyCard = {
 
 const process = (minion: BoardEntity, input: OnAttackInput) => {
 	const mult = minion.cardId === CardIds.VoidRay_BG31_HERO_802pt5_G ? 2 : 1;
-	modifyStats(input.attacker, minion, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
-	modifyStats(minion, minion, 5 * mult, 0, input.attackingBoard, input.attackingHero, input.gameState);
+	modifyStats(
+		input.attacker,
+		input.attacker,
+		5 * mult,
+		0,
+		input.attackingBoard,
+		input.attackingHero,
+		input.gameState,
+	);
+	modifyStats(
+		input.attacker,
+		input.attacker,
+		5 * mult,
+		0,
+		input.attackingBoard,
+		input.attackingHero,
+		input.gameState,
+	);
 	return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 };

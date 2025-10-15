@@ -16,7 +16,7 @@ export const Greenskeeper: RallyCard = {
 			const candidate = battlecries[battlecries.length - 1];
 			if (!!candidate) {
 				input.gameState.spectator.registerPowerTarget(
-					minion,
+					input.attacker,
 					candidate,
 					input.attackingBoard,
 					input.attackingHero,

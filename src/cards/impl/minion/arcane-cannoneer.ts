@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { RallyCard } from '../../card.interface';
@@ -16,7 +16,7 @@ export const ArcaneCannoneer: RallyCard = {
 			input.defendingEntity,
 			input.defendingBoard,
 			input.defendingHero,
-			minion,
+			input.attacker,
 			1 * buff,
 			input.attackingBoard,
 			input.attackingHero,

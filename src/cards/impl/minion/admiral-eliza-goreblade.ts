@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
@@ -12,7 +12,7 @@ export const AdmiralElizaGoreblade: OnWheneverAnotherMinionAttacksCard & RallyCa
 		return process(minion, input);
 	},
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
-		return process(minion, input);
+		return process(input.attacker, input);
 	},
 };
 

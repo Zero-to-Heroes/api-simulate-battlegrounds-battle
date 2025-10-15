@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battlecries';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { getValidDeathrattles } from '../../../simulation/deathrattle-utils';
@@ -10,14 +10,14 @@ export const MonstrousMacaw: RallyCard = {
 	cardIds: [CardIds.MonstrousMacaw_BGS_078, CardIds.MonstrousMacaw_TB_BaconUps_135],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const loops = minion.cardId === CardIds.MonstrousMacaw_TB_BaconUps_135 ? 2 : 1;
-		const targetBoard = input.attackingBoard.filter((e) => e.entityId !== minion.entityId);
+		const targetBoard = input.attackingBoard.filter((e) => e.entityId !== input.attacker.entityId);
 
 		const validDeathrattles = getValidDeathrattles(targetBoard, input.attackingHero, input.gameState);
 		const leftMostDeathrattle = validDeathrattles[0];
 		for (let i = 0; i < loops; i++) {
 			if (!!leftMostDeathrattle) {
 				input.gameState.spectator.registerPowerTarget(
-					minion,
+					input.attacker,
 					leftMostDeathrattle,
 					input.attackingBoard,
 					input.attackingHero,
@@ -45,7 +45,7 @@ export const MonstrousMacaw: RallyCard = {
 				const leftMostBattlecry = validBattlecries[0];
 				if (!!leftMostBattlecry) {
 					input.gameState.spectator.registerPowerTarget(
-						minion,
+						input.attacker,
 						leftMostBattlecry,
 						input.attackingBoard,
 						input.attackingHero,

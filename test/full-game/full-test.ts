@@ -41,11 +41,11 @@ const test = async () => {
 
 	const result = await runSimulation({ body: JSON.stringify(input) });
 	const simulationResult = JSON.parse(result.body);
-	console.log('result', {
-		...simulationResult,
-		// outcomeSamples: undefined,
-	});
-	console.log(JSON.stringify(simulationResult));
+	// console.log('result', {
+	// 	...simulationResult,
+	// 	// outcomeSamples: undefined,
+	// });
+	// console.log(JSON.stringify(simulationResult));
 	console.log('simulation took', Date.now() - start, 'ms');
 
 	const sample =

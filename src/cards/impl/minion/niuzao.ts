@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
@@ -14,7 +14,7 @@ export const Niuzao: RallyCard = {
 			const target = pickRandom(input.defendingBoard.filter((e) => e.entityId != input.defendingEntity.entityId));
 			if (target) {
 				input.gameState.spectator.registerPowerTarget(
-					minion,
+					input.attacker,
 					target,
 					input.defendingBoard,
 					input.attackingHero,
@@ -24,8 +24,8 @@ export const Niuzao: RallyCard = {
 					target,
 					input.defendingBoard,
 					input.defendingHero,
-					minion,
-					minion.attack,
+					input.attacker,
+					input.attacker.attack,
 					input.attackingBoard,
 					input.attackingHero,
 					input.gameState,

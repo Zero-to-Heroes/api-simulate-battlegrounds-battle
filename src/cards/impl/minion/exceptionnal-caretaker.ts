@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { OnAttackInput } from '../../../simulation/on-attack';
@@ -13,11 +13,11 @@ export const ExceptionalCaretaker: RallyCard & DeathrattleSpawnCard & BattlecryC
 	cardIds: [CardIds.ExceptionalCaretaker_BG33_701, CardIds.ExceptionalCaretaker_BG33_701_G],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.ExceptionalCaretaker_BG33_701_G ? 2 : 1;
-		const targets = input.attackingBoard.filter((e) => e !== minion);
+		const targets = input.attackingBoard.filter((e) => e !== input.attacker);
 		for (const target of targets) {
 			modifyStats(
 				target,
-				minion,
+				input.attacker,
 				attackBuff * mult,
 				healthBuff * mult,
 				input.attackingBoard,

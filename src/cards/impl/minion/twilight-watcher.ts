@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
@@ -34,7 +34,15 @@ const process = (minion: BoardEntity, input: OnAttackInput) => {
 		hasCorrectTribe(e, input.attackingHero, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
 	);
 	for (const target of candidates) {
-		modifyStats(target, minion, 1 * mult, 3 * mult, input.attackingBoard, input.attackingHero, input.gameState);
+		modifyStats(
+			target,
+			input.attacker,
+			1 * mult,
+			3 * mult,
+			input.attackingBoard,
+			input.attackingHero,
+			input.gameState,
+		);
 	}
 	return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 };

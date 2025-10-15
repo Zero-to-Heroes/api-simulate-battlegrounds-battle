@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
@@ -31,9 +31,9 @@ export const Charmwing: RallyCard = {
 				for (let j = 0; j < mult; j++) {
 					modifyStats(
 						target,
-						minion,
+						input.attacker,
 						0,
-						minion.maxHealth,
+						input.attacker.maxHealth,
 						input.attackingBoard,
 						input.attackingHero,
 						input.gameState,

@@ -19,12 +19,12 @@ export const FriendlyBouncer: RallyCard = {
 						boardWithDeadEntity: input.attackingBoard,
 						boardWithDeadEntityHero: input.attackingHero,
 						gameState: input.gameState,
-						deadEntity: minion,
+						deadEntity: input.attacker,
 						otherBoard: input.defendingBoard,
 						otherBoardHero: input.defendingHero,
 					},
-					minion,
-					input.attackingBoard.length - input.attackingBoard.indexOf(minion) - 1,
+					input.attacker,
+					input.attackingBoard.length - input.attackingBoard.indexOf(input.attacker) - 1,
 				);
 				addCardsInHand(input.attackingHero, input.attackingBoard, [spawnId], input.gameState);
 			}
