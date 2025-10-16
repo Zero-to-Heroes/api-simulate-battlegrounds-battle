@@ -5,6 +5,8 @@ export const debugState = {
 	forcedCurrentAttacker: null as number | null,
 	forcedFaceOff: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
 	forcedFaceOffBase: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
+	// forcedRng: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
+	// forcedRngBase: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
 	isCorrectEntity: (proposedEntity: ForcedFaceOffEntity, actualEntity: BoardEntity): boolean => {
 		if (proposedEntity.entityId) {
 			return proposedEntity.entityId === actualEntity.entityId;
@@ -13,6 +15,7 @@ export const debugState = {
 	},
 	onBattleStart: () => {
 		debugState.forcedFaceOff = [...debugState.forcedFaceOffBase];
+		// debugState.forcedRng = [...debugState.forcedRngBase];
 	},
 };
 

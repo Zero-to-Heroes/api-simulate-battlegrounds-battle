@@ -210,12 +210,13 @@ export const spawnEntitiesFromDeathrattle = (
 		// ...(deadEntity.rememberedDeathrattles ?? []),
 	].sort((a, b) => a.timing - b.timing);
 
-	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? []), ...enchantments.map((e) => e.cardId)];
+	const cardIds = [deadEntity.cardId, ...(deadEntity.additionalCards ?? [])];
 
-	for (const deadEntityCardId of cardIds) {
-		for (let i = 0; i < multiplier; i++) {
-			const spawnedEntities: BoardEntity[] = [];
-			let hasTriggered = true;
+	for (let i = 0; i < multiplier; i++) {
+		const spawnedEntities: BoardEntity[] = [];
+		let hasTriggered = false;
+		for (const deadEntityCardId of cardIds) {
+			let hasTriggeredThisLoop = true;
 			const spawnEntityImpl = cardMappings[deadEntityCardId];
 			if (hasDeathrattleSpawn(spawnEntityImpl)) {
 				const spawned = spawnEntityImpl.deathrattleSpawn(deadEntity, deathrattleTriggeredInput);
@@ -1900,71 +1901,25 @@ export const spawnEntitiesFromDeathrattle = (
 					default:
 						if (deadEntity.additionalCards?.includes(deadEntityCardId)) {
 							if (!hasMechanic(gameState.allCards.getCard(deadEntityCardId), GameTag.DEATHRATTLE)) {
-								hasTriggered = false;
+								hasTriggeredThisLoop = false;
 							}
 						} else {
 							const source = [deadEntity, ...enchantments].find((e) => e.cardId === deadEntityCardId);
 							if (!hasEntityMechanic(source, GameTag.DEATHRATTLE, gameState.allCards)) {
-								hasTriggered = false;
+								hasTriggeredThisLoop = false;
 							}
 						}
 						break;
 				}
 			}
-
-			// It seems that spawns are done before the "whenever a deathrattle triggers" effects proc
-			// https://replays.firestoneapp.com/?reviewId=0e41ba87-02a8-44a7-b8d3-27c6ab36c678&turn=11&action=22
-			if (spawnedEntities?.length > 0) {
-				const actualSpawns = performEntitySpawns(
-					spawnedEntities,
-					boardWithDeadEntity,
-					boardWithDeadEntityHero,
-					deadEntity,
-					deadEntityIndexFromRight,
-					otherBoard,
-					otherBoardHero,
-					gameState,
-				);
-				finalSpawns.push(...actualSpawns);
-			}
-
-			if (hasTriggered) {
-				onDeathrattleTriggered(deathrattleTriggeredInput);
-			}
+			hasTriggered = hasTriggered || hasTriggeredThisLoop;
 		}
-	}
-	return finalSpawns;
-};
-
-export const spawnEntitiesFromEnchantments = (
-	deadEntity: BoardEntity,
-	boardWithDeadEntity: BoardEntity[],
-	boardWithDeadEntityHero: BgsPlayerEntity,
-	otherBoard: BoardEntity[],
-	otherBoardHero: BgsPlayerEntity,
-	gameState: FullGameState,
-): readonly BoardEntity[] => {
-	const multiplier = computeDeathrattleMultiplier(
-		boardWithDeadEntity,
-		boardWithDeadEntityHero,
-		deadEntity,
-		gameState.sharedState,
-	);
-
-	const deathrattleTriggeredInput: DeathrattleTriggeredInput = {
-		boardWithDeadEntity,
-		boardWithDeadEntityHero,
-		deadEntity,
-		otherBoard,
-		otherBoardHero,
-		gameState,
-	};
-
-	const spawnedEntities: BoardEntity[] = [];
-	for (const enchantment of deadEntity.enchantments) {
-		const deathrattleImpl = cardMappings[enchantment.cardId];
-		if (hasDeathrattleSpawnEnchantment(deathrattleImpl)) {
-			for (let i = 0; i < multiplier; i++) {
+		// Do it here, because enchantments are processed before the spawns from the deathrattles
+		// 33.6.2 https://replays.firestoneapp.com/?reviewId=3b025701-01f5-4527-9d53-d8d67f78c5c8&turn=7&action=4
+		for (const enchantment of deadEntity.enchantments) {
+			let hasTriggeredThisLoop = true;
+			const deathrattleImpl = cardMappings[enchantment.cardId];
+			if (hasDeathrattleSpawnEnchantment(deathrattleImpl)) {
 				const spawns = deathrattleImpl.deathrattleSpawnEnchantmentEffect(
 					enchantment,
 					deadEntity,
@@ -1973,201 +1928,212 @@ export const spawnEntitiesFromEnchantments = (
 				if (!!spawns?.length) {
 					spawnedEntities.push(...spawns);
 				}
-				onDeathrattleTriggered(deathrattleTriggeredInput);
+			} else {
+				switch (enchantment.cardId) {
+					// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
+					// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
+					// 	spawnedEntities.push(
+					// 		...spawnEntities(
+					// 			enchantment.cardId === CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e
+					// 				? CardIds.RecurringNightmare_BG26_055
+					// 				: CardIds.RecurringNightmare_BG26_055_G,
+					// 			1,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			gameState,
+					// 			deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	break;
+					// Replicating Menace
+					case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
+								3,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.LivingSpores_LivingSporesEnchantment:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.LivingSpores_PlantToken,
+								2,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.EarthInvocation_ElementEarthEnchantment:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.ElementEarth_StoneElementalToken,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875e:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.TheUninvitedGuest_ShadowToken_BG29_875t,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875_Ge:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.TheUninvitedGuest_ShadowToken_BG29_875_Gt,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					case CardIds.SneedsReplicator_ReplicateEnchantment:
+						const tavernTier =
+							deadEntity.tavernTier ?? gameState.cardsData.getTavernLevel(deadEntity.cardId);
+						spawnedEntities.push(
+							...spawnEntities(
+								gameState.cardsData.getRandomMinionForTavernTier(Math.max(1, tavernTier - 1)),
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					// case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e:
+					// case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge:
+					// 	spawnedEntities.push(
+					// 		...spawnEntities(
+					// 			enchantment.cardId === CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge
+					// 				? CardIds.SurfNSurf_CrabToken_BG27_004_Gt2
+					// 				: CardIds.SurfNSurf_CrabToken_BG27_004t2,
+					// 			1,
+					// 			boardWithDeadEntity,
+					// 			boardWithDeadEntityHero,
+					// 			otherBoard,
+					// 			otherBoardHero,
+					// 			gameState,
+					// 			deadEntity.friendly,
+					// 			false,
+					// 		),
+					// 	);
+					// 	break;
+					case CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e:
+						spawnedEntities.push(
+							...spawnEntities(
+								CardIds.FlourishingFrostling_BG26_537,
+								1,
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+								deadEntity.friendly,
+								false,
+							),
+						);
+						break;
+					default:
+						hasTriggeredThisLoop = false;
+						break;
+				}
 			}
+			hasTriggered = hasTriggered || hasTriggeredThisLoop;
 		}
 
-		for (let i = 0; i < multiplier; i++) {
-			let deathrattleTriggered = true;
-			switch (enchantment.cardId) {
-				// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
-				// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
-				// 	spawnedEntities.push(
-				// 		...spawnEntities(
-				// 			enchantment.cardId === CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e
-				// 				? CardIds.RecurringNightmare_BG26_055
-				// 				: CardIds.RecurringNightmare_BG26_055_G,
-				// 			1,
-				// 			boardWithDeadEntity,
-				// 			boardWithDeadEntityHero,
-				// 			otherBoard,
-				// 			otherBoardHero,
-				// 			gameState,
-				// 			deadEntity.friendly,
-				// 			false,
-				// 		),
-				// 	);
-				// 	break;
-				// Replicating Menace
-				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_BG_BOT_312e:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ReplicatingMenace_MicrobotToken_BG_BOT_312t,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.ReplicatingMenace_ReplicatingMenaceEnchantment_TB_BaconUps_032e:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ReplicatingMenace_MicrobotToken_TB_BaconUps_032t,
-							3,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.LivingSpores_LivingSporesEnchantment:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.LivingSpores_PlantToken,
-							2,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.EarthInvocation_ElementEarthEnchantment:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.ElementEarth_StoneElementalToken,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.BoonOfBeetles_BeetleSwarmEnchantment_BG28_603e:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.BoonOfBeetles_BeetleToken_BG28_603t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875e:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.TheUninvitedGuest_ShadowToken_BG29_875t,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.TheUninvitedGuest_UninvitedEnchantment_BG29_875_Ge:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.TheUninvitedGuest_ShadowToken_BG29_875_Gt,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				case CardIds.SneedsReplicator_ReplicateEnchantment:
-					const tavernTier = deadEntity.tavernTier ?? gameState.cardsData.getTavernLevel(deadEntity.cardId);
-					spawnedEntities.push(
-						...spawnEntities(
-							gameState.cardsData.getRandomMinionForTavernTier(Math.max(1, tavernTier - 1)),
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				// case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004e:
-				// case CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge:
-				// 	spawnedEntities.push(
-				// 		...spawnEntities(
-				// 			enchantment.cardId === CardIds.SurfNSurf_CrabRidingEnchantment_BG27_004_Ge
-				// 				? CardIds.SurfNSurf_CrabToken_BG27_004_Gt2
-				// 				: CardIds.SurfNSurf_CrabToken_BG27_004t2,
-				// 			1,
-				// 			boardWithDeadEntity,
-				// 			boardWithDeadEntityHero,
-				// 			otherBoard,
-				// 			otherBoardHero,
-				// 			gameState,
-				// 			deadEntity.friendly,
-				// 			false,
-				// 		),
-				// 	);
-				// 	break;
-				case CardIds.JarredFrostling_FrostyGlobeEnchantment_BG30_MagicItem_952e:
-					spawnedEntities.push(
-						...spawnEntities(
-							CardIds.FlourishingFrostling_BG26_537,
-							1,
-							boardWithDeadEntity,
-							boardWithDeadEntityHero,
-							otherBoard,
-							otherBoardHero,
-							gameState,
-							deadEntity.friendly,
-							false,
-						),
-					);
-					break;
-				default:
-					deathrattleTriggered = false;
-					break;
-			}
-			if (deathrattleTriggered) {
-				onDeathrattleTriggered({
-					boardWithDeadEntity: boardWithDeadEntity,
-					boardWithDeadEntityHero: boardWithDeadEntityHero,
-					deadEntity: deadEntity,
-					otherBoard: otherBoard,
-					otherBoardHero: otherBoardHero,
-					gameState: gameState,
-				});
-			}
+		// It seems that spawns are done before the "whenever a deathrattle triggers" effects proc
+		// https://replays.firestoneapp.com/?reviewId=0e41ba87-02a8-44a7-b8d3-27c6ab36c678&turn=11&action=22
+		// However 33.6.2 This doesn't work - deathrattles from a single minion seem to be processed at once, meaning no spawn before
+		// the enchantment is processed
+		// 33.6.2 https://replays.firestoneapp.com/?reviewId=3b025701-01f5-4527-9d53-d8d67f78c5c8&turn=7&action=4
+		if (spawnedEntities?.length > 0) {
+			const actualSpawns = performEntitySpawns(
+				spawnedEntities,
+				boardWithDeadEntity,
+				boardWithDeadEntityHero,
+				deadEntity,
+				deadEntityIndexFromRight,
+				otherBoard,
+				otherBoardHero,
+				gameState,
+			);
+			finalSpawns.push(...actualSpawns);
+		}
+
+		if (hasTriggered) {
+			onDeathrattleTriggered(deathrattleTriggeredInput);
 		}
 	}
-	return spawnedEntities;
+	return finalSpawns;
 };

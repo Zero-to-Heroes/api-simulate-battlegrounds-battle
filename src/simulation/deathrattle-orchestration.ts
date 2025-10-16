@@ -9,7 +9,7 @@ import {
 	applyWheneverMinionDiesEffect,
 	handleAfterMinionKillsEffect,
 } from './deathrattle-effects';
-import { spawnEntities, spawnEntitiesFromDeathrattle, spawnEntitiesFromEnchantments } from './deathrattle-spawns';
+import { spawnEntities, spawnEntitiesFromDeathrattle } from './deathrattle-spawns';
 import { FullGameState, PlayerState } from './internal-game-state';
 import { handleRebornForEntity } from './reborn';
 import { performEntitySpawns } from './spawns';
@@ -370,16 +370,8 @@ const processDeathrattleForMinions = (
 			otherPlayerState,
 			input.gameState,
 		);
-		const enchEntities = handleEnchantmentsDeathrattle(
-			deadEntity,
-			indexFromRight,
-			deadEntities,
-			deadEntityPlayerState,
-			otherPlayerState,
-			input.gameState,
-		);
 
-		entitiesFromDeathrattles.push(...drEntities, ...enchEntities);
+		entitiesFromDeathrattles.push(...drEntities);
 	}
 
 	// Avenge
@@ -437,14 +429,6 @@ export const processDeathrattleForMinion = (
 		otherPlayerState,
 		gameState,
 	);
-	const enchEntities = handleEnchantmentsDeathrattle(
-		deadEntity,
-		indexFromRight,
-		deadEntities,
-		deadEntityPlayerState,
-		otherPlayerState,
-		gameState,
-	);
 	// Avenge trigger before reborn
 	// http://replays.firestoneapp.com/?reviewId=5bb20eb8-e0ca-47ab-adc7-13134716d568&turn=7&action=6
 	let avengeEntities = [];
@@ -458,7 +442,7 @@ export const processDeathrattleForMinion = (
 			otherPlayerState.board,
 			otherPlayerState.player,
 			gameState,
-			[...drEntities, ...enchEntities],
+			[...drEntities],
 		);
 
 		// TODO: Feathermane should be applied after the Reborn effects have all been processed
@@ -473,7 +457,7 @@ export const processDeathrattleForMinion = (
 			gameState,
 		);
 	}
-	return [...drEntities, ...enchEntities, ...avengeEntities, ...afterDeathEntities];
+	return [...drEntities, ...avengeEntities, ...afterDeathEntities];
 };
 
 const handleNaturalDeathrattle = (
@@ -529,96 +513,8 @@ const handleNaturalDeathrattle = (
 		deadEntities,
 		gameState,
 	);
-	// allSpawns.push(...entitiesFromNativeDeathrattle);
-	// spawnsToSpawn.push(...entitiesFromNativeDeathrattle);
-	// Some candidate entities are not spawned, and so are ignored in further processing
-	// const actualSpawns = performEntitySpawns(
-	// 	spawnsToSpawn,
-	// 	deadEntityPlayerState.board,
-	// 	deadEntityPlayerState.player,
-	// 	deadEntity,
-	// 	modifiedIndexFromRight,
-	// 	otherPlayerState.board,
-	// 	otherPlayerState.player,
-	// 	gameState,
-	// );
-	// In case of leapfrogger, we want to first spawn the minions, then apply the frog effect
-	// TODO: revisit this once Leapfroggers are in the game again
-	// handleDeathrattleEffects(
-	// 	deadEntityPlayerState.board,
-	// 	deadEntityPlayerState.player,
-	// 	deadEntity,
-	// 	modifiedIndexFromRight,
-	// 	otherPlayerState.board,
-	// 	otherPlayerState.player,
-	// 	gameState,
-	// );
 
 	return entitiesFromNativeDeathrattle;
-};
-
-const handleEnchantmentsDeathrattle = (
-	deadEntity: BoardEntity,
-	indexFromRight: number,
-	deadEntities: BoardEntity[],
-	deadEntityPlayerState: PlayerState,
-	otherPlayerState: PlayerState,
-	gameState: FullGameState,
-	skipSpawns = false,
-) => {
-	const modifiedIndexFromRight = Math.min(deadEntityPlayerState.board.length, indexFromRight);
-	const result = [];
-	for (const dr of deadEntity.rememberedDeathrattles ?? []) {
-		const entityToProcess: BoardEntity = {
-			...deadEntity,
-			rememberedDeathrattles: undefined,
-			cardId: dr.cardId,
-			// So that cards that rely on the tavern tier use the base entity, and not the enchantment / remembered card
-			tavernTier: gameState.cardsData.getTavernLevel(deadEntity.cardId),
-			enchantments: [
-				{
-					cardId: dr.cardId,
-					originEntityId: deadEntity.entityId,
-					repeats: dr.repeats ?? 1,
-					timing: dr.timing,
-				},
-			],
-			pendingAttackBuffs: [],
-		};
-		const spawns = handleEnchantmentsDeathrattle(
-			entityToProcess,
-			indexFromRight,
-			deadEntities,
-			deadEntityPlayerState,
-			otherPlayerState,
-			gameState,
-			// We skip spawns, otherwise it will be added twice
-			true,
-		);
-		result.push(...spawns);
-	}
-	const entitiesFromEnchantments: readonly BoardEntity[] = spawnEntitiesFromEnchantments(
-		deadEntity,
-		deadEntityPlayerState.board,
-		deadEntityPlayerState.player,
-		otherPlayerState.board,
-		otherPlayerState.player,
-		gameState,
-	);
-	result.push(...entitiesFromEnchantments);
-	if (!skipSpawns) {
-		performEntitySpawns(
-			result,
-			deadEntityPlayerState.board,
-			deadEntityPlayerState.player,
-			deadEntity,
-			modifiedIndexFromRight,
-			otherPlayerState.board,
-			otherPlayerState.player,
-			gameState,
-		);
-	}
-	return result;
 };
 
 const processReborns = (deathrattleInput: DeathrattleInput) => {
