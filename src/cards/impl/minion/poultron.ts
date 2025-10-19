@@ -9,6 +9,9 @@ export const Poultron: AvengeCard = {
 	cardIds: [CardIds.P0ulTr0n_BG33_371, CardIds.P0ulTr0n_BG33_371_G],
 	baseAvengeValue: (cardId) => 4,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
+		if (minion.health <= 0 || minion.definitelyDead) {
+			return;
+		}
 		const mult = minion.cardId === CardIds.P0ulTr0n_BG33_371_G ? 2 : 1;
 		const previousHasAttacked = minion.hasAttacked;
 		// Not sure why, but with Windfury it looks like the divine shield is granted each time
