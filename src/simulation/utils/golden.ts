@@ -53,6 +53,11 @@ export const makeMinionGolden = (
 	// TODO: add a replay with Tarec to illustrate the difference with Defiant Shipwright, and
 	// check if there is something different with Tarec
 	target.cardId = goldenCard.id;
+	// 33.6.2 (https://replays.firestoneapp.com/?reviewId=3b025701-01f5-4527-9d53-d8d67f78c5c8&turn=7&action=0)
+	//    The Phylactery enchantment exists before the Golden Deathrattle power so it goes first.
+	//    This most likely means that we need to create a new entityId when gilding a minion, so that it
+	// is processed in the correct order.
+	target.entityId = gameState.sharedState.currentEntityId++;
 
 	// The rule for golden minions is to add the base stats
 	// TO CHECK: not sure that this is what actually happens (i.e. do minions that trigger on stats modifications
