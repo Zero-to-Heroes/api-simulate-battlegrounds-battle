@@ -1938,38 +1938,6 @@ export const spawnEntitiesFromDeathrattle = (
 									1, //enchantment.repeats || 1,
 								);
 								break;
-							case CardIds.EarthRecollectionEnchantment:
-								applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, gameState);
-								break;
-							case CardIds.FireRecollectionEnchantment:
-								applyFireInvocationEnchantment(
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									deadEntity,
-									deadEntity,
-									gameState,
-								);
-								break;
-							case CardIds.WaterRecollectionEnchantment:
-								applyWaterInvocationEnchantment(
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									otherBoardHero,
-									deadEntity,
-									deadEntity,
-									gameState,
-								);
-								break;
-							case CardIds.LightningRecollectionEnchantment:
-								applyLightningInvocationEnchantment(
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									deadEntity,
-									otherBoard,
-									otherBoardHero,
-									gameState,
-								);
-								break;
 							default:
 								if (deadEntity.additionalCards?.includes(deadEntityCardId)) {
 									if (
@@ -2023,6 +1991,38 @@ export const spawnEntitiesFromDeathrattle = (
 					}
 				} else {
 					switch (enchantment.cardId) {
+						case CardIds.EarthRecollectionEnchantment:
+							applyEarthInvocationEnchantment(boardWithDeadEntity, deadEntity, deadEntity, gameState);
+							break;
+						case CardIds.FireRecollectionEnchantment:
+							applyFireInvocationEnchantment(
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								deadEntity,
+								deadEntity,
+								gameState,
+							);
+							break;
+						case CardIds.WaterRecollectionEnchantment:
+							applyWaterInvocationEnchantment(
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								otherBoardHero,
+								deadEntity,
+								deadEntity,
+								gameState,
+							);
+							break;
+						case CardIds.LightningRecollectionEnchantment:
+							applyLightningInvocationEnchantment(
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								deadEntity,
+								otherBoard,
+								otherBoardHero,
+								gameState,
+							);
+							break;
 						// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055e:
 						// case CardIds.RecurringNightmare_NightmareInsideEnchantment_BG26_055_Ge:
 						// 	spawnedEntities.push(
