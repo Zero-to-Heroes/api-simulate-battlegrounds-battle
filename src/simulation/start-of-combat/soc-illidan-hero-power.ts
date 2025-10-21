@@ -103,6 +103,7 @@ const handlePlayerIllidanHeroPowers = (
 			if (heroPower.cardId === CardIds.Wingmen && playerBoard.length > 0) {
 				// After Illidan triggers, it's always the other opponent's turn
 				// https://x.com/LoewenMitchell/status/1752714583360639131?s=20
+				// Confirmed by BoarControl on Discord on 33.6.2 2025-10-20
 				handleIllidanForPlayer(
 					playerBoard,
 					playerEntity,
@@ -111,8 +112,8 @@ const handlePlayerIllidanHeroPowers = (
 					gameState,
 					currentAttacker,
 				);
+				currentAttacker = friendly ? 1 : 0;
 				// This is not true anymore: https://replays.firestoneapp.com/?reviewId=7282387d-66cd-458e-8ee1-e04c662e7bad&turn=5&action=1
-				// currentAttacker = friendly ? 1 : 0;
 				// In fact there is some adjustment going on: https://replays.firestoneapp.com/?reviewId=929f676f-47f6-494b-9619-df04174a0150&turn=11&action=0
 				// So trying another logic
 				// currentAttacker = (currentAttacker + 1) % 2;
