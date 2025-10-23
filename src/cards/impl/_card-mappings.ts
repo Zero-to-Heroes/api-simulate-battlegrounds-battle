@@ -194,6 +194,7 @@ import { RideOrDie } from './minion/ride-or-die';
 import { RipsnarlCaptain } from './minion/ripsnarl-captain';
 import { Roach } from './minion/roach';
 import { Roadboar } from './minion/roadboar';
+import { RoaringRallier } from './minion/roaring-rallier';
 import { RodeoPerformer } from './minion/rodeo-performer';
 import { RuinsRenovator } from './minion/ruins-renovator';
 import { RunedProgenitor } from './minion/runed-progenitor';
@@ -525,6 +526,7 @@ const cards = [
 	RapscallionRecruiter,
 	LovesickBalladist,
 	ObsidianRavager,
+	RoaringRallier,
 	AdmiralElizaGoreblade,
 	SkyPirateFlagbearer,
 	SkyPirateFlagbearerEnchantment,

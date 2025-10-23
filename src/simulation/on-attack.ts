@@ -139,20 +139,6 @@ export const applyOnAttackEffects = (
 		}
 	}
 
-	// Roaring Rallier
-	if (hasCorrectTribe(attacker, attackingBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)) {
-		attackingBoard
-			.filter(
-				(e) => e.cardId === CardIds.RoaringRallier_BG29_816 || e.cardId === CardIds.RoaringRallier_BG29_816_G,
-			)
-			.forEach((rallier) => {
-				if (rallier !== attacker) {
-					const stats = rallier.cardId === CardIds.RoaringRallier_BG29_816_G ? 2 : 1;
-					modifyStats(attacker, rallier, 3 * stats, 1 * stats, attackingBoard, attackingBoardHero, gameState);
-				}
-			});
-	}
-
 	// if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
 	// 	// For now the utility method only works additively, so we hack around it
 	// 	modifyStats(
