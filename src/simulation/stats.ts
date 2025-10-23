@@ -31,6 +31,25 @@ export const setEntityStats = (
 	applyAurasToSelf(entity, board, boardHero, gameState);
 };
 
+export const multiplyStats = (
+	entity: BoardEntity,
+	multiplier: number | null,
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	gameState: FullGameState,
+): void => {
+	modifyStats(
+		entity,
+		entity,
+		(multiplier - 1) * entity.maxAttack,
+		(multiplier - 1) * entity.maxHealth,
+		board,
+		hero,
+		gameState,
+	);
+	applyAurasToSelf(entity, board, hero, gameState);
+};
+
 export const modifyStats = (
 	entity: BoardEntity,
 	source: BoardEntity | BoardSecret | BoardTrinket | BgsPlayerEntity | BgsHeroPower,
