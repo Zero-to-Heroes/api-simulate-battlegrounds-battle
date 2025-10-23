@@ -169,6 +169,7 @@ import { NightmareParTeaGuest } from './minion/nightmare-par-tea-guest';
 import { NimbleHatchling } from './minion/nimble-hatchling';
 import { Niuzao } from './minion/niuzao';
 import { NoisulOfTheManyFaces } from './minion/noisul-of-the-many-faces';
+import { ObsidianRavager } from './minion/obisidian-ravager';
 import { OozelingGladiator } from './minion/oozeling-gladiator';
 import { OperaticBelcher } from './minion/operatic-belcher';
 import { OranomonosTheWilted } from './minion/oranomonos-the-wilted';
@@ -523,6 +524,7 @@ const cards = [
 	PeggySturdybone,
 	RapscallionRecruiter,
 	LovesickBalladist,
+	ObsidianRavager,
 	AdmiralElizaGoreblade,
 	SkyPirateFlagbearer,
 	SkyPirateFlagbearerEnchantment,

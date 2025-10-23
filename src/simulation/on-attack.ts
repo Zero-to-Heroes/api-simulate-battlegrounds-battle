@@ -139,35 +139,6 @@ export const applyOnAttackEffects = (
 		}
 	}
 
-	// Damage happens before the entity is buffed, e.g. before an attack buff from Roaring Rallier
-	if (
-		attacker.cardId === CardIds.ObsidianRavager_BG27_017 ||
-		attacker.cardId === CardIds.ObsidianRavager_BG27_017_G
-	) {
-		const neighbours = getNeighbours(defendingBoard, defendingEntity);
-		const targets = attacker.cardId === CardIds.ObsidianRavager_BG27_017_G ? neighbours : [pickRandom(neighbours)];
-		[defendingEntity, ...targets].forEach((target) => {
-			gameState.spectator.registerPowerTarget(
-				attacker,
-				target,
-				defendingBoard,
-				attackingBoardHero,
-				defendingBoardHero,
-			);
-			// damageDoneByAttacker +=
-			dealDamageToMinion(
-				target,
-				defendingBoard,
-				defendingBoardHero,
-				attacker,
-				attacker.attack,
-				attackingBoard,
-				attackingBoardHero,
-				gameState,
-			);
-		});
-	}
-
 	// Roaring Rallier
 	if (hasCorrectTribe(attacker, attackingBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)) {
 		attackingBoard
