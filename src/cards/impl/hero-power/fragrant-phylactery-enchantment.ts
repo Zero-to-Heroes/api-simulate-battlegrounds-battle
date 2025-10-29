@@ -11,7 +11,11 @@ export const FragrantPhylacteryEnchantment: DeathrattleSpawnEnchantmentCard = {
 		minion: BoardEntity | null | undefined,
 		input: DeathrattleTriggeredInput,
 	) => {
-		const targets = input.boardWithDeadEntity.filter((e) => e !== enchantment && e !== minion);
+		// Doesn't resurrect dead minions
+		// 33.4 https://replays.firestoneapp.com/?reviewId=44c91f87-17a0-462c-8f24-3002cbcd42d5&turn=21&action=1
+		const targets = input.boardWithDeadEntity.filter(
+			(e) => e.health > 0 && !e.definitelyDead && e !== enchantment && e !== minion,
+		);
 		for (const target of targets) {
 			modifyStats(
 				target,
