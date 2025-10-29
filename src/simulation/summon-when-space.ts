@@ -447,6 +447,9 @@ const handleLockAndLoadForPlayer = (
 			// Attack is actually performed with the "performEntitySpawns" function
 			// simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
 			// 33.6 https://replays.firestoneapp.com/?reviewId=441da83c-3e40-4630-b98f-caf1932e5be7&turn=11&action=0
+			// The minion needs to go back to the normal attacking order
+			// 34.0 https://replays.firestoneapp.com/?reviewId=6902bbda-cd04-4e2d-9643-3c87534e0986&turn=7&action=3
+			spawns[0].hasAttacked = 0;
 			return true;
 		}
 	}

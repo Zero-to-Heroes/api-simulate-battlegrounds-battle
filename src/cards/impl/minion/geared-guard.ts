@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { RallyCard } from '../../card.interface';
@@ -17,14 +17,16 @@ export const GearedGuard: RallyCard = {
 			const possibleTargets = input.attackingBoard.filter((e) => !cardIds.includes(e.cardId) && !e.divineShield);
 			if (possibleTargets.length > 0) {
 				const target = pickRandom(possibleTargets);
-				updateDivineShield(
-					target,
-					input.attackingBoard,
-					input.attackingHero,
-					input.defendingHero,
-					true,
-					input.gameState,
-				);
+				if (target != null) {
+					updateDivineShield(
+						target,
+						input.attackingBoard,
+						input.attackingHero,
+						input.defendingHero,
+						true,
+						input.gameState,
+					);
+				}
 			}
 		}
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
