@@ -225,7 +225,11 @@ export const spawnEntitiesFromDeathrattle = (
 		let hasTriggered = false;
 		for (const card of cards) {
 			const spawnedEntities: BoardEntity[] = [];
-			if ((card as BoardEntity).health !== undefined) {
+			const refCard = gameState.allCards.getCard(card.cardId);
+			if (
+				refCard.type?.toUpperCase() === CardType[CardType.MINION] &&
+				(card as BoardEntity).health !== undefined
+			) {
 				const cardIds = [card.cardId, ...((card as BoardEntity).additionalCards ?? [])];
 				for (const deadEntityCardId of cardIds) {
 					let hasTriggeredThisLoop = true;
