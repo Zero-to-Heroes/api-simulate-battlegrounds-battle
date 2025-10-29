@@ -771,7 +771,8 @@ export const rememberDeathrattles = (
 
 	if (newDeathrattles.length > 0) {
 		// Order is important - the DR are triggered in the order d the minions have died
-		if (isGolden(fish.cardId, allCards)) {
+		// The "golden" part is handled at the card level for the other non-fish cards, like Piloted Whirl-o-Tron
+		if (isFish(fish) && isGolden(fish.cardId, allCards)) {
 			// https://stackoverflow.com/questions/33305152/how-to-duplicate-elements-in-a-js-array
 			const doubleDr = newDeathrattles.reduce((res, current) => res.concat([current, current]), []);
 			fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...doubleDr];
