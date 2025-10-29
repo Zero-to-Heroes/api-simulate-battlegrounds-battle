@@ -207,7 +207,7 @@ import { Scallywag } from './minion/scallywag';
 import { ScourgeHarvester } from './minion/scourge-harvester';
 import { SelflessHero } from './minion/selfless-hero';
 import { Shadowdancer } from './minion/shadowdancer';
-import { ShadowConstruct } from './minion/shadowy-construct';
+import { ShadowyConstruct } from './minion/shadowy-construct';
 import { SharpEyedSabretooth } from './minion/sharp-eyed-sabretooth';
 import { SharptoothSnapper } from './minion/sharptooth-snapper';
 import { ShellCollector } from './minion/shell-collector';
@@ -562,7 +562,7 @@ const cards = [
 	MasterGadrin,
 	PilotedWhirlOTron,
 	SnackVendor,
-	ShadowConstruct,
+	ShadowyConstruct,
 	Tamuzo,
 	Weebomination,
 	Monstrosity,
