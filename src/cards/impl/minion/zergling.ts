@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
@@ -46,6 +46,7 @@ export const Zergling: StartOfCombatCard = {
 		}
 		// Doesn't recompute the first attacker:
 		// https://replays.firestoneapp.com/?reviewId=3cdf06e9-192d-49be-b1f8-e47e46704b2b&turn=9&action=0
-		return { hasTriggered: hasTriggered, shouldRecomputeCurrentAttacker: false };
+		// 34.0 It now does https://replays.firestoneapp.com/?reviewId=c85091fd-0f10-4ada-8f11-d6f918d66688&turn=7&action=0
+		return { hasTriggered: hasTriggered, shouldRecomputeCurrentAttacker: true };
 	},
 };
