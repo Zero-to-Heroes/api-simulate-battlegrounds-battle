@@ -16,7 +16,13 @@ export const ExpertTechnician: DeathrattleSpawnCard = {
 		for (let i = 0; i < loops; i++) {
 			const newAttacker = input.boardWithDeadEntity.filter((e) => e.health > 0 && !e.definitelyDead)[0];
 			const newTarget = input.deadEntity.lastAffectedByEntity;
-			if (!newAttacker?.attack || !newTarget || newTarget.health <= 0 || newTarget.definitelyDead) {
+			if (
+				!newAttacker?.attack ||
+				!newTarget ||
+				newTarget.health <= 0 ||
+				newTarget.definitelyDead ||
+				!input.otherBoard.includes(newTarget)
+			) {
 				continue;
 			}
 
