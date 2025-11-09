@@ -3,6 +3,7 @@ import { Race } from '@firestone-hs/reference-data';
 export interface BgsBattleOptions {
 	readonly numberOfSimulations: number;
 	readonly maxAcceptableDuration?: number;
+	readonly hideMaxSimulationDurationWarning?: boolean;
 	readonly intermediateResults?: number;
 	readonly includeOutcomeSamples?: boolean;
 	readonly damageConfidence?: number;

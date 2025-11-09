@@ -67,6 +67,7 @@ export const simulateBattle = function* (
 	// !battleInput.options?.skipInfoLogs && console.time('full-sim');
 	const start = Date.now();
 	const maxAcceptableDuration = battleInput.options?.maxAcceptableDuration || 8000;
+	const hideMaxSimulationDurationWarning = battleInput.options?.hideMaxSimulationDurationWarning ?? false;
 	const numberOfSimulations = battleInput.options?.numberOfSimulations || 8000;
 	const intermediateSteps = battleInput.options?.intermediateResults ?? 200;
 	const damageConfidence = battleInput.options?.damageConfidence ?? 0.9;
@@ -132,7 +133,7 @@ export const simulateBattle = function* (
 		};
 		const simulator = new Simulator(gameState);
 		const battleResult = simulator.simulateSingleBattle(gameState.gameState.player, gameState.gameState.opponent);
-		if (Date.now() - start > maxAcceptableDuration) {
+		if (Date.now() - start > maxAcceptableDuration && !hideMaxSimulationDurationWarning) {
 			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
 			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms');
 			break;
