@@ -25,7 +25,7 @@ export const NoisulOfTheManyFaces: OnOtherSpawnedCard = {
 		);
 		const mult = minion.cardId === CardIds.NoisulOfTheManyFaces_BG32_325_G ? 2 : 1;
 		for (const target of targets) {
-			modifyStats(target, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
+			modifyStats(target, minion, 3 * mult, 2 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

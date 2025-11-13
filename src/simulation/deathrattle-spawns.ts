@@ -1515,8 +1515,8 @@ export const spawnEntitiesFromDeathrattle = (
 								// could be spawned between the shots firing), but let's say it's good enough for now
 								const squirrelDamage =
 									deadEntity.cardId === CardIds.ElementiumSquirrelBomb_TB_BaconShop_HERO_17_Buddy_G
-										? 4
-										: 2;
+										? 8
+										: 4;
 								const numberOfDeadMechsThisCombat = gameState.sharedState.deaths
 									.filter((entity) => entity.friendly === deadEntity.friendly)
 									// eslint-disable-next-line prettier/prettier

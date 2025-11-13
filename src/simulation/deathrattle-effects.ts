@@ -276,7 +276,7 @@ const handleWheneverMinionsKillEffectForBoard = (
 					.filter((e) => e.health > 0 && !e.definitelyDead)
 					.forEach((icesnarl) => {
 						const mult = icesnarl.cardId === CardIds.IcesnarlTheMighty_BG20_HERO_100_Buddy_G ? 2 : 1;
-						modifyStats(icesnarl, icesnarl, 0, 2 * mult, board, hero, gameState);
+						modifyStats(icesnarl, icesnarl, 0, 3 * mult, board, hero, gameState);
 					});
 			}
 		}

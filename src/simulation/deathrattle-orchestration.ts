@@ -28,7 +28,6 @@ export const orchestrateMinionDeathEffects = (
 	processAvenge = true,
 	processReborn = true,
 ) => {
-	// Icesnarl / Rokara here?
 	handleAfterMinionsKillEffects(deathrattleInput);
 
 	// Not sure about this

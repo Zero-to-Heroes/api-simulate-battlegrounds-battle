@@ -12,16 +12,8 @@ export const FireForgedEvoker: StartOfCombatCard = {
 		const mult = minion.cardId === CardIds.FireForgedEvoker_BG32_822_G ? 2 : 1;
 		const atk = minion.scriptDataNum1 ?? 1 * mult * (1 + input.playerEntity.globalInfo.SpellsCastThisGame);
 		const health = minion.scriptDataNum2 ?? 1 * mult * (1 + input.playerEntity.globalInfo.SpellsCastThisGame);
-		const targetBoard = input.playerBoard.filter(
-			(e) =>
-				e.entityId !== minion.entityId &&
-				hasCorrectTribe(
-					e,
-					input.playerEntity,
-					Race.DRAGON,
-					input.gameState.anomalies,
-					input.gameState.allCards,
-				),
+		const targetBoard = input.playerBoard.filter((e) =>
+			hasCorrectTribe(e, input.playerEntity, Race.DRAGON, input.gameState.anomalies, input.gameState.allCards),
 		);
 		for (const target of targetBoard) {
 			modifyStats(target, minion, atk, health, input.playerBoard, input.playerEntity, input.gameState);

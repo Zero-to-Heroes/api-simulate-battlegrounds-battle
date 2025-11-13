@@ -33,6 +33,6 @@ export const onMinionFailedToSpawn = (
 		.filter((e) => e.cardId === CardIds.CatacombCrasher_BG30_129 || e.cardId === CardIds.CatacombCrasher_BG30_129_G)
 		.forEach((crasher) => {
 			const mult = crasher.cardId === CardIds.CatacombCrasher_BG30_129 ? 1 : 2;
-			addStatsToAliveBoard(crasher, board, hero, 1 * mult, 1 * mult, gameState);
+			addStatsToAliveBoard(crasher, board, hero, 2 * mult, 1 * mult, gameState);
 		});
 };

@@ -5,6 +5,7 @@ import { getNeighbours } from '../../../simulation/attack';
 import { triggerBattlecry } from '../../../simulation/battlecries';
 import { hasCorrectTribe, hasEntityMechanic } from '../../../utils';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
+import { pickRandom } from '../../../services/utils';
 
 export const YoungMurkEye: EndOfTurnCard = {
 	cardIds: [CardIds.YoungMurkEye_BG22_403, CardIds.YoungMurkEye_BG22_403_G],
@@ -12,16 +13,16 @@ export const YoungMurkEye: EndOfTurnCard = {
 		const allNeighbours = getNeighbours(input.board, minion, input.board.indexOf(minion)).filter((e) =>
 			hasEntityMechanic(e, GameTag.BATTLECRY, input.gameState.allCards),
 		);
-		const validNeighbors = allNeighbours.filter((e) =>
-			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
-		);
-		// const neighbours =
-		// 	minion.cardId === CardIds.YoungMurkEye_BG22_403_G
-		// 		? validNeighbors
-		// 		: [pickRandom(validNeighbors)].filter((e) => !!e);
+		// const validNeighbors = allNeighbours.filter((e) =>
+		// 	hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
+		// );
+		const neighbours =
+			minion.cardId === CardIds.YoungMurkEye_BG22_403_G
+				? allNeighbours
+				: [pickRandom(allNeighbours)].filter((e) => !!e);
 		const mult = minion.cardId === CardIds.YoungMurkEye_BG22_403_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
-			for (const neighbour of validNeighbors) {
+			for (const neighbour of neighbours) {
 				input.gameState.spectator.registerPowerTarget(
 					minion,
 					neighbour,

@@ -9,7 +9,7 @@ export const Colossus: RallyCard = {
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		let dmgDoneByAttacker = 0;
 		const neighbours = getNeighbours(input.defendingBoard, input.defendingEntity);
-		const damage = minion.scriptDataNum1 || 1;
+		const damage = minion.scriptDataNum1 || 2;
 		for (const target of neighbours) {
 			const dmg = dealDamageToMinion(
 				target,
