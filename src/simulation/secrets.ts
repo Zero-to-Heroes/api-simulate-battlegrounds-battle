@@ -1,6 +1,8 @@
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardIds } from '../services/card-ids';
+import { copyEntity } from '../utils';
+import { removeAurasFromSelf } from './add-minion-to-board';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
@@ -56,8 +58,10 @@ export const handlePackTactics = (
 	gameState: FullGameState,
 	secretCardId: string,
 ): void => {
+	const copy: BoardEntity = copyEntity(defendingEntity);
+	removeAurasFromSelf(copy, defendingBoard, defendingPlayerEntity, gameState);
 	const candidateEntities = spawnEntities(
-		defendingEntity.cardId,
+		copy.cardId,
 		1,
 		defendingBoard,
 		defendingPlayerEntity,
@@ -68,7 +72,7 @@ export const handlePackTactics = (
 		false,
 		false,
 		true,
-		{ ...defendingEntity },
+		copy,
 	);
 	const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
 	const spawned = performEntitySpawns(
