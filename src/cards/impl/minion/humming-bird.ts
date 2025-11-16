@@ -21,6 +21,13 @@ export const HummingBird: StartOfCombatCard = {
 			Race[Race.BEAST],
 		);
 		input.playerEntity.globalInfo.GoldrinnBuffAtk += attackGranted * multiplier;
+		input.gameState.spectator.registerPowerTarget(
+			minion,
+			minion,
+			input.playerBoard,
+			input.playerEntity,
+			input.opponentEntity,
+		);
 		return true;
 	},
 };

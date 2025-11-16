@@ -29,6 +29,9 @@ export const handleStartOfCombatMinions = (
 		...opponentBoard,
 	];
 
+	// UPDATE 2025-11-16 We probably want to run the Start of Combat first for one player completely, then for the other
+	// I thought it would alternate, but this apparently isn't the case:
+	// https://replays.firestoneapp.com/?reviewId=af9053ee-9ee6-440a-a09f-b7fb2f4b7a3e&turn=9&action=0
 	while (playerAttackers.length > 0 || opponentAttackers.length > 0) {
 		let shouldUpdateNextPlayer = false;
 		if (attackerForStart === 0 && playerAttackers.length > 0) {
@@ -47,7 +50,7 @@ export const handleStartOfCombatMinions = (
 				currentAttacker: currentAttacker,
 				gameState,
 			};
-			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, input);
+			const newShouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, input);
 			currentAttacker = input.currentAttacker;
 		} else if (attackerForStart === 0 && playerAttackers.length === 0) {
 			shouldUpdateNextPlayer = true;
@@ -67,7 +70,7 @@ export const handleStartOfCombatMinions = (
 				currentAttacker: currentAttacker,
 				gameState,
 			};
-			shouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, input);
+			const newShouldUpdateNextPlayer = performStartOfCombatMinionsForPlayer(attacker, input);
 			currentAttacker = input.currentAttacker;
 		} else if (attackerForStart === 1 && opponentAttackers.length === 0) {
 			shouldUpdateNextPlayer = true;
