@@ -6,7 +6,6 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
 import { CardIds } from '../services/card-ids';
 import { hasCorrectTribe, hasEntityMechanic } from '../utils';
-import { addCardsInHand } from './cards-in-hand';
 import { fixEnchantments } from './enchantments';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -179,13 +178,6 @@ export const applyOnAttackEffects = (
 					gameState,
 				);
 			});
-	} else if (
-		attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635 ||
-		attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635_G
-	) {
-		const numberOfCardsToAdd = attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635_G ? 2 : 1;
-		const cardsToAdd = Array.from({ length: numberOfCardsToAdd }).map(() => null);
-		addCardsInHand(attackingBoardHero, attackingBoard, cardsToAdd, gameState);
 	} else if (attacker.cardId === CardIds.HatefulHag_BG29_120 || attacker.cardId === CardIds.HatefulHag_BG29_120_G) {
 		const loops = attacker.cardId === CardIds.HatefulHag_BG29_120_G ? 2 : 1;
 		const attackerIndex = attackingBoard.indexOf(attacker);

@@ -15,7 +15,7 @@ import { updateDivineShield } from '../keywords/divine-shield';
 import { updateTaunt } from '../keywords/taunt';
 import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
-import { copyEntity, hasCorrectTribe } from '../utils';
+import { copyEntity, hasCorrectTribe, isVolumizer } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { onQuestProgressUpdated } from './quest';
 import { modifyStats, setEntityStats } from './stats';
@@ -345,6 +345,21 @@ export const applyAurasToSelf = (
 				spawned,
 				boardHero.globalInfo.GoldrinnBuffAtk,
 				boardHero.globalInfo.GoldrinnBuffHealth,
+				board,
+				boardHero,
+				gameState,
+				false,
+			);
+			gameState.spectator.registerPowerTarget(boardHero, spawned, board, null, null);
+		}
+	}
+	if (isVolumizer(spawned.cardId, boardHero, gameState.anomalies, gameState.allCards)) {
+		if (boardHero.globalInfo.VolumizerAttackBuff > 0 || boardHero.globalInfo.VolumizerHealthBuff > 0) {
+			modifyStats(
+				spawned,
+				spawned,
+				boardHero.globalInfo.VolumizerAttackBuff ?? 0,
+				boardHero.globalInfo.VolumizerHealthBuff ?? 0,
 				board,
 				boardHero,
 				gameState,

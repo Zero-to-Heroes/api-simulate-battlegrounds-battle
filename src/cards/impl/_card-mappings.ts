@@ -13,12 +13,14 @@ import { AllSeeingElder } from './minion/all-seeing-elder';
 import { Alleycat } from './minion/alleycat';
 import { AmplifyingLightspawn } from './minion/amplifying-lightspawn';
 import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
+import { ApexisGuardian } from './minion/apexis-guardian';
 import { ApprenticeOfSefin } from './minion/apprentice-of-sefin';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
 import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
 import { AshenCorruptor } from './minion/ashen-corruptor';
 import { AssistantGuard } from './minion/assistant-guard';
+import { AutoAccelerator } from './minion/auto-accelerator';
 import { AutoAssembler } from './minion/auto-assembler';
 import { AutoAssemblerEnchantment } from './minion/auto-assembler-enchantment';
 import { AvalancheCaller } from './minion/avalanche-caller';
@@ -34,6 +36,7 @@ import { BileSpitter } from './minion/bile-spitter';
 import { BirdBuddy } from './minion/bird-buddy';
 import { BlazingSkyfin } from './minion/blazing-skyfin';
 import { BloodsnoutWarlord } from './minion/bloodsnout-warlord';
+import { BlueVolumizer } from './minion/blue-volumizer';
 import { BlueWhelp } from './minion/blue-whelp';
 import { BoarGamer } from './minion/boar-gamer';
 import { BongoBopper } from './minion/bongo-bopper';
@@ -55,6 +58,7 @@ import { ClunkerJunker } from './minion/clunker-junker';
 import { CoilskarSapper } from './minion/coilskar-sapper';
 import { ColdlightDiver } from './minion/coldlight-diver';
 import { Colossus } from './minion/colossus';
+import { ConveyorConstruct } from './minion/conveyor-construct';
 import { CorruptedBristler } from './minion/corrupted-bristler';
 import { CruiseController } from './minion/cruise-controller';
 import { CrystalInfuserEnchantment } from './minion/crystal-infuser-enchantment';
@@ -103,6 +107,7 @@ import { GoldrinnTheGreatWolf } from './minion/goldrinn-the-great-wolf';
 import { GormlingGourmet } from './minion/gormling-gourmet';
 import { GreaseBot } from './minion/grease-bot';
 import { GreedySnaketongue } from './minion/greedy-snaketongue';
+import { GreenVolumizer } from './minion/green-volumizer';
 import { Greenskeeper } from './minion/greenskeeper';
 import { GrimscaleElegist } from './minion/grimscale-elegist';
 import { GrittyHeadhunter } from './minion/gritty-headhunter';
@@ -127,6 +132,7 @@ import { ImpulsiveTrickster } from './minion/impulsive-trickster';
 import { IndomitableMount } from './minion/indomitable-mount';
 import { InspiringUnderdog } from './minion/inspiring-underdog';
 import { InterrogatorWhitemane } from './minion/interrogator-whitemane';
+import { JunkJouster } from './minion/junk-jouster';
 import { KalecgosArcaneAspect } from './minion/kalecgos-arcane-aspect';
 import { KangorsApprentice } from './minion/kangors-apprentice';
 import { KarmicChameleon } from './minion/karmic-chameleon';
@@ -151,6 +157,7 @@ import { MechagnomeInterpreter } from './minion/mechagnome-interpreter';
 import { MechanizedGiftHorse } from './minion/mechanized-gift-horse';
 import { Mechorse } from './minion/mechorse';
 import { MenagerieJug } from './minion/menagerie-jug';
+import { MetalDispenser } from './minion/metal-dispenser';
 import { MetallicHunter } from './minion/metallic-hunter';
 import { MisfitDragonling } from './minion/misfit-dragonling';
 import { Monstrosity } from './minion/monstrosity';
@@ -193,6 +200,7 @@ import { RazorfenGeomancer } from './minion/razorfen-geomancer';
 import { RazorfenVineweaver } from './minion/razorfen-vineweaver';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
 import { RecklessCliffdiver } from './minion/reckless-cliffdiver';
+import { RedVolumizer } from './minion/red-volumizer';
 import { RicketyRepairbot } from './minion/rickety-repairbot';
 import { RideOrDie } from './minion/ride-or-die';
 import { RipsnarlCaptain } from './minion/ripsnarl-captain';
@@ -271,6 +279,7 @@ import { WanderingWight } from './minion/wandering-wight';
 import { Weebomination } from './minion/weebomination';
 import { WhelpSmuggler } from './minion/whelp-smuggler';
 import { WhelpWatcher } from './minion/whelp-watcher';
+import { WhirlingLassOMatic } from './minion/whirling-lass-o-matic';
 import { WhirringProtector } from './minion/whirring-protector';
 import { WhirringProtectorEnchantment } from './minion/whirring-protector-enchantment';
 import { WildfireElemental } from './minion/wildfire-elemental';
@@ -569,6 +578,15 @@ const cards = [
 	TwilightBroodmother,
 	WhelpWatcher,
 	TwilightHatchling,
+	BlueVolumizer,
+	RedVolumizer,
+	GreenVolumizer,
+	WhirlingLassOMatic,
+	ApexisGuardian,
+	MetalDispenser,
+	JunkJouster,
+	ConveyorConstruct,
+	AutoAccelerator,
 	Tichondrius,
 	Archimonde,
 	SanlaynScribe,

@@ -6,10 +6,11 @@ import {
 	Race,
 	ReferenceCard,
 } from '@firestone-hs/reference-data';
+import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { CardIds } from '../services/card-ids';
 import { groupByFunction, pickRandom } from '../services/utils';
-import { getRaceEnum, hasMechanic, isCorrectTribe } from '../utils';
+import { getRaceEnum, hasMechanic, isCorrectTribe, isVolumizer } from '../utils';
 import { hasAvenge, hasDefaultScriptDataNum } from './card.interface';
 import { cardMappings } from './impl/_card-mappings';
 
@@ -60,6 +61,7 @@ export class CardsData {
 	public beastSpawns: readonly string[];
 	public scrapScraperSpawns: readonly string[];
 	public endOfTurnMinions: readonly string[];
+	public magneticMinions: readonly ReferenceCard[];
 
 	public putricidePool1: readonly string[];
 	public putricidePool2: readonly string[];
@@ -132,6 +134,7 @@ export class CardsData {
 		this.endOfTurnMinions = this.pool
 			.filter((card) => hasMechanic(card, GameTag.END_OF_TURN))
 			.map((card) => card.id);
+		this.magneticMinions = this.pool.filter((card) => hasMechanic(card, GameTag.MAGNETIC));
 
 		this.putricidePool1 = this.allCards
 			.getCards()
@@ -271,6 +274,18 @@ export class CardsData {
 			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((m) => hasMechanic(m, GameTag.MODULAR));
 		const pool = magneticMechs.filter((m) => m.techLevel <= tavernLimitUpper);
+		return pickRandom(pool)?.id;
+	}
+
+	public getRandomMagneticVolumizer(
+		playerEntity: BgsPlayerEntity,
+		anomalies: readonly string[],
+		tavernLimitUpper: number,
+	): string {
+		const magneticVolumizers = this.magneticMinions.filter((m) =>
+			isVolumizer(m.id, playerEntity, anomalies, this.allCards),
+		);
+		const pool = magneticVolumizers.filter((m) => m.techLevel <= tavernLimitUpper);
 		return pickRandom(pool)?.id;
 	}
 

@@ -102,6 +102,8 @@ export interface BgsPlayerGlobalInfo {
 	TavernSpellHealthBuff?: number;
 	TavernSpellAttackBuff?: number;
 	GoldSpentThisGame?: number;
+	VolumizerHealthBuff?: number;
+	VolumizerAttackBuff?: number;
 
 	MutatedLasherAttackBuff?: number;
 	MutatedLasherHealthBuff?: number;

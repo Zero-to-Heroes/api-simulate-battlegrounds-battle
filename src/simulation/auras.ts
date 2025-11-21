@@ -264,6 +264,8 @@ export const setImplicitDataHero = (
 	hero.globalInfo.GoldrinnBuffAtk = hero.globalInfo.GoldrinnBuffAtk ?? 0;
 	hero.globalInfo.GoldrinnBuffHealth = hero.globalInfo.GoldrinnBuffHealth ?? 0;
 	hero.globalInfo.GoldSpentThisGame = hero.globalInfo.GoldSpentThisGame ?? 0;
+	hero.globalInfo.VolumizerAttackBuff = hero.globalInfo.VolumizerAttackBuff ?? 0;
+	hero.globalInfo.VolumizerHealthBuff = hero.globalInfo.VolumizerHealthBuff ?? 0;
 };
 
 export const clearStealthIfNeeded = (

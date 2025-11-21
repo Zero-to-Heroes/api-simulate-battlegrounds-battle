@@ -448,6 +448,20 @@ export const hasCorrectTribe = (
 	);
 };
 
+export const isVolumizer = (
+	cardId: string,
+	playerEntity: BgsPlayerEntity,
+	anomalies: readonly string[],
+	allCards: AllCardsService,
+): boolean => {
+	if (cardId == null) {
+		return false;
+	}
+
+	const refCard = allCards.getCard(cardId);
+	return refCard.mechanics?.includes('VOLUMIZER');
+};
+
 export const getEffectiveTribesForEntity = (
 	entity: BoardEntity,
 	playerEntity: BgsPlayerEntity,
