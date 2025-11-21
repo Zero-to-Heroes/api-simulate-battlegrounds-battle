@@ -312,6 +312,7 @@ export const hasOnBeforeMagnetize = (card: Card): card is OnBeforeMagnetizeCard 
 
 export interface CastSpellInput {
 	source: BoardEntity;
+	target: BoardEntity;
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;
 	otherBoard: BoardEntity[];

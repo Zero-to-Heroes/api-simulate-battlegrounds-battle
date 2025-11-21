@@ -1,4 +1,12 @@
 export declare const enum TempCardIds {
+	BluesySiren = 'Temp_BluesySiren',
+	BluesySiren_G = 'Temp_BluesySiren_G',
+	SunkenAdvocate = 'Temp_SunkenAdvocate',
+	SunkenAdvocate_G = 'Temp_SunkenAdvocate_G',
+	ProfoundThinker = 'Temp_ProfoundThinker',
+	ProfoundThinker_G = 'Temp_ProfoundThinker_G',
+	UnderseaMount = 'Temp_UnderseaMount',
+	UnderseaMount_G = 'Temp_UnderseaMount_G',
 	Futurefin = 'Temp_Futurefin',
 	Futurefin_G = 'Temp_Futurefin_G',
 	Dramaloc = 'Temp_Dramaloc',

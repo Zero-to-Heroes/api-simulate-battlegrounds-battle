@@ -5,6 +5,7 @@ import {
 	isBattlegroundsCard,
 	Race,
 	ReferenceCard,
+	SpellSchool,
 } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
@@ -62,6 +63,7 @@ export class CardsData {
 	public scrapScraperSpawns: readonly string[];
 	public endOfTurnMinions: readonly string[];
 	public magneticMinions: readonly ReferenceCard[];
+	public spellcraftPool: readonly ReferenceCard[];
 
 	public putricidePool1: readonly string[];
 	public putricidePool2: readonly string[];
@@ -135,6 +137,13 @@ export class CardsData {
 			.filter((card) => hasMechanic(card, GameTag.END_OF_TURN))
 			.map((card) => card.id);
 		this.magneticMinions = this.pool.filter((card) => hasMechanic(card, GameTag.MAGNETIC));
+		this.spellcraftPool = this.allCards
+			.getCards()
+			.filter((c) => c.spellSchool === SpellSchool[SpellSchool.SPELLCRAFT])
+			.filter((c) => !c.premium)
+			.filter((c) => c.set === 'Battlegrounds')
+			// Remove unimplemented ones (mainly spellcrafts that don't have sense in combat)
+			.filter((c) => cardMappings[c.id] != null);
 
 		this.putricidePool1 = this.allCards
 			.getCards()
@@ -318,6 +327,10 @@ export class CardsData {
 			.filter((m) => m.type?.toUpperCase() === CardType[CardType.MINION])
 			.filter((m) => m.techLevel <= tavernLimitUpper);
 		return pickRandom(pool)?.id;
+	}
+
+	public getRandomSpellcraft(): string {
+		return pickRandom(this.spellcraftPool)?.id;
 	}
 
 	public isGolden(card: ReferenceCard): boolean {

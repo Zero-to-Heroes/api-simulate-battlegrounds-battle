@@ -39,6 +39,7 @@ import { BlazingSkyfin } from './minion/blazing-skyfin';
 import { BloodsnoutWarlord } from './minion/bloodsnout-warlord';
 import { BlueVolumizer } from './minion/blue-volumizer';
 import { BlueWhelp } from './minion/blue-whelp';
+import { BluesySiren } from './minion/bluesy-siren';
 import { BoarGamer } from './minion/boar-gamer';
 import { BongoBopper } from './minion/bongo-bopper';
 import { Bonker } from './minion/bonker';
@@ -202,6 +203,7 @@ import { PrimalfinLookout } from './minion/primalfin-lookout';
 import { PrimevalMonstrosity } from './minion/primeval-monstrosity';
 import { PrizedPromoDrake } from './minion/prized-promo-drake';
 import { ProdigiousTusker } from './minion/prodigious-tusker';
+import { ProfoundThinker } from './minion/profound-thinker';
 import { Psychus } from './minion/psychus';
 import { Rampager } from './minion/rampager';
 import { RapscallionRecruiter } from './minion/rapscallion-recruiter';
@@ -263,6 +265,7 @@ import { StoneshellGuardian } from './minion/stoneshell-guardian';
 import { StormpikeLieutenant } from './minion/stormpike-lieutenant';
 import { StraySatyr } from './minion/stray-satyr';
 import { Stuntdrake } from './minion/stuntdrake';
+import { SunkenAdvocate } from './minion/sunken-advocate';
 import { SuperConstructor } from './minion/super-constructor';
 import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
@@ -306,6 +309,24 @@ import { Yrel } from './minion/yrel';
 import { Zergling } from './minion/zergling';
 import { Zippers } from './minion/zippers';
 import { RighteousCharge } from './quest-reward/righteous-charge';
+import { AnglersLure } from './spellcraft/anglers-lure';
+import { AzsharasHatchery } from './spellcraft/azsharas-hatchery';
+import { DeepBlues } from './spellcraft/deep-blues';
+import { EvolvingStrategy } from './spellcraft/evolving-strategy';
+import { GlowingCrown } from './spellcraft/glowing-crown';
+import { GoldGun } from './spellcraft/gold-gun';
+import { HarvestedPearl } from './spellcraft/harvested-pearl';
+import { JustKeepSwimming } from './spellcraft/just-keep-swimming';
+import { Meditation } from './spellcraft/meditation';
+import { MiniTrident } from './spellcraft/mini-trident';
+import { Reinvigoration } from './spellcraft/reinvigoration';
+import { RimeOrReason } from './spellcraft/rime-or-reason';
+import { RushingWinds } from './spellcraft/rushing-winds';
+import { SickRiffs } from './spellcraft/sick-riffs';
+import { SunkenSpells } from './spellcraft/sunken-spells';
+import { SurgingScales } from './spellcraft/surging-scales';
+import { Thaumaturgy } from './spellcraft/thaumaturgy';
+import { UnderseaMount } from './spellcraft/undersea-mount';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
 import { ArtisanalUrn } from './trinket/artisanal-urn';
@@ -601,9 +622,29 @@ const cards = [
 	RedVolumizer,
 	GreenVolumizer,
 	WhirlingLassOMatic,
+	Thaumaturgy,
+	EvolvingStrategy,
+	HarvestedPearl,
+	Reinvigoration,
+	Meditation,
+	RimeOrReason,
+	RushingWinds,
+	UnderseaMount,
+	SunkenAdvocate,
+	BluesySiren,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,
+	MiniTrident,
+	AnglersLure,
+	GlowingCrown,
+	AzsharasHatchery,
+	GoldGun,
+	SickRiffs,
+	DeepBlues,
+	JustKeepSwimming,
+	SunkenSpells,
+	SurgingScales,
 	ConveyorConstruct,
 	AutoAccelerator,
 	BuddingGreenthumb,
@@ -621,6 +662,7 @@ const cards = [
 	GhostlyYmirjar,
 	SaltscaleHoncho,
 	ExpertAviator,
+	ProfoundThinker,
 	CostumeEnthusiast,
 	Dramaloc,
 	Futurefin,

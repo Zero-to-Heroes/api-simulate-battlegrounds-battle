@@ -10,6 +10,7 @@ export const MagicfinApprentice: BattlecryCard = {
 		const spell = input.gameState.allCards.getCard(minion.scriptDataNum1).id;
 		castSpell(spell, {
 			source: minion,
+			target: null, // Target is selected
 			board: input.board,
 			hero: input.hero,
 			otherBoard: input.otherBoard,
