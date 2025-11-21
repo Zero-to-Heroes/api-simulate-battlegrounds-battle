@@ -72,11 +72,6 @@ export const onEntityDamaged = (
 				damagedEntity.abiityChargesLeft--;
 			}
 			break;
-		// case CardIds.UnforgivingTreant_BG29_846:
-		// case CardIds.UnforgivingTreant_BG29_846_G:
-		// 	const treantModifier = damagedEntity.cardId === CardIds.UnforgivingTreant_BG29_846_G ? 2 : 1;
-		// 	addStatsToBoard(damagedEntity, board, hero, treantModifier * 2, 0, gameState);
-		// 	break;
 		case CardIds.Untameabull_BG29_878:
 		case CardIds.Untameabull_BG29_878_G:
 			updateDivineShield(damagedEntity, board, hero, otherHero, true, gameState);

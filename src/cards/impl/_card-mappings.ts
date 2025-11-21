@@ -16,6 +16,7 @@ import { AnubarakNerubianKing } from './minion/anubarak-nerubian-king';
 import { ApexisGuardian } from './minion/apexis-guardian';
 import { ApprenticeOfSefin } from './minion/apprentice-of-sefin';
 import { ArcaneCannoneer } from './minion/arcane-cannoneer';
+import { Archaedas } from './minion/archaedas';
 import { Archimonde } from './minion/archimonde';
 import { AridAtrocity } from './minion/arid-atrocity';
 import { AshenCorruptor } from './minion/ashen-corruptor';
@@ -44,6 +45,7 @@ import { Bonker } from './minion/bonker';
 import { BriarbackBookie } from './minion/briarback-bookie';
 import { BronzeSteward } from './minion/bronze-steward';
 import { BubbleGunner } from './minion/bubble-gunner';
+import { BuddingGreenthumb } from './minion/budding-greenthumb';
 import { BuzzingVermin } from './minion/buzzing-vermin';
 import { CadaverCaretaker } from './minion/cadaver-caretaker';
 import { CampfireShadow } from './minion/campfire-shadow';
@@ -115,6 +117,8 @@ import { Hackerfin } from './minion/hackerfin';
 import { HandlessForsaken } from './minion/handless-forsaken';
 import { HardyOrca } from './minion/hardy-orca';
 import { HarmlessBonehead } from './minion/harmless-bonehead';
+import { HeroicUnderdog } from './minion/heroic-underdog';
+import { HighkeeperRa } from './minion/highkeeper-ra';
 import { HogWatcher } from './minion/hog-watcher';
 import { HoloRover } from './minion/holo-rover';
 import { HotSpringer } from './minion/hot-springer';
@@ -193,6 +197,7 @@ import { PrimalfinLookout } from './minion/primalfin-lookout';
 import { PrimevalMonstrosity } from './minion/primeval-monstrosity';
 import { PrizedPromoDrake } from './minion/prized-promo-drake';
 import { ProdigiousTusker } from './minion/prodigious-tusker';
+import { Psychus } from './minion/psychus';
 import { Rampager } from './minion/rampager';
 import { RapscallionRecruiter } from './minion/rapscallion-recruiter';
 import { RaptorElder } from './minion/raptor-elder';
@@ -255,6 +260,7 @@ import { SuperConstructor } from './minion/super-constructor';
 import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
 import { Tamuzo } from './minion/tamuzo';
+import { TheLastOneStanding } from './minion/the-last-one-standing';
 import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
@@ -270,6 +276,7 @@ import { TwilightPrimordium } from './minion/twilight-primordium';
 import { TwilightWatcher } from './minion/twilight-watcher';
 import { Ultralisk } from './minion/ultralisk';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
+import { UnforgivingTreant } from './minion/unforgiving-treant';
 import { ValiantTiger } from './minion/valiant-tiger';
 import { VengefulProtector } from './minion/vengeful-protector';
 import { VoidEarl } from './minion/void-earl';
@@ -284,6 +291,7 @@ import { WhirringProtector } from './minion/whirring-protector';
 import { WhirringProtectorEnchantment } from './minion/whirring-protector-enchantment';
 import { WildfireElemental } from './minion/wildfire-elemental';
 import { WispInTheShell } from './minion/wisp-in-the-shell';
+import { WitchwingNestmatron } from './minion/witchwing-nestmatron';
 import { WrathscaleRogue } from './minion/wrathscale-rogue';
 import { YorikSmite } from './minion/yorik-smite';
 import { YoungMurkEye } from './minion/young-murk-eye';
@@ -587,6 +595,14 @@ const cards = [
 	JunkJouster,
 	ConveyorConstruct,
 	AutoAccelerator,
+	BuddingGreenthumb,
+	WitchwingNestmatron,
+	UnforgivingTreant,
+	Psychus,
+	HighkeeperRa,
+	TheLastOneStanding,
+	HeroicUnderdog,
+	Archaedas,
 	Tichondrius,
 	Archimonde,
 	SanlaynScribe,

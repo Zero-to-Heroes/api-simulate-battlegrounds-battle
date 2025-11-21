@@ -172,12 +172,8 @@ export class CardsData {
 			case CardIds.Bristlebach_BG26_157:
 			case CardIds.Bristlebach_BG26_157_G:
 				return 2;
-			case CardIds.BuddingGreenthumb_BG21_030:
-			case CardIds.BuddingGreenthumb_BG21_030_G:
 			case CardIds.PashmarTheVengeful_BG23_014:
 			case CardIds.PashmarTheVengeful_BG23_014_G:
-			case CardIds.WitchwingNestmatron_BG21_038:
-			case CardIds.WitchwingNestmatron_BG21_038_G:
 			case CardIds.BoomSquad_BG27_Reward_502:
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:

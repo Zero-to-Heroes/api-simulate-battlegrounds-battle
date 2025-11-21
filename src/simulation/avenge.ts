@@ -16,7 +16,7 @@ import {
 	hasCorrectTribe,
 	hasEntityMechanic,
 } from '../utils';
-import { dealDamageToMinion, getNeighbours } from './attack';
+import { dealDamageToMinion } from './attack';
 import { playBloodGemsOn } from './blood-gems';
 import { addCardsInHand } from './cards-in-hand';
 import { spawnEntities } from './deathrattle-spawns';
@@ -198,21 +198,6 @@ const handleAvenge = (
 	} else {
 		// Don't forget to update the avenge data in cards-data
 		switch (avenger.cardId) {
-			case CardIds.BuddingGreenthumb_BG21_030:
-			case CardIds.BuddingGreenthumb_BG21_030_G:
-				const neighbours = getNeighbours(boardWithDeadEntity, avenger);
-				neighbours.forEach((entity) => {
-					modifyStats(
-						entity,
-						avenger,
-						avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 4 : 2,
-						avenger.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1,
-						boardWithDeadEntity,
-						boardWithDeadEntityHero,
-						gameState,
-					);
-				});
-				break;
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy:
 			case CardIds.StormpikeLieutenant_BG22_HERO_003_Buddy_G:
 				// Only for Tavern
@@ -283,15 +268,6 @@ const handleAvenge = (
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:
 				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-				break;
-			case CardIds.WitchwingNestmatron_BG21_038:
-			case CardIds.WitchwingNestmatron_BG21_038_G:
-				const nestmatronToAddQuantity = avenger.cardId === CardIds.WitchwingNestmatron_BG21_038_G ? 2 : 1;
-				const nestmatronCardsToAdd = [];
-				for (let i = 0; i < nestmatronToAddQuantity; i++) {
-					nestmatronCardsToAdd.push(pickRandom(gameState.cardsData.battlecryMinions));
-				}
-				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, nestmatronCardsToAdd, gameState);
 				break;
 			case CardIds.Thorncaller_BG20_105:
 			case CardIds.Thorncaller_BG20_105_G:

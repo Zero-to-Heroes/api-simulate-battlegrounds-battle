@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { BattlecryCard } from '../../card.interface';
@@ -9,8 +9,13 @@ export const OozelingGladiator: BattlecryCard = {
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const oozelingCardsToAdd =
 			minion.cardId === CardIds.OozelingGladiator_BG27_002
-				? [CardIds.TheCoinCore, CardIds.TheCoinCore]
-				: [CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore, CardIds.TheCoinCore];
+				? [CardIds.TavernCoin_BG28_810, CardIds.TavernCoin_BG28_810]
+				: [
+						CardIds.TavernCoin_BG28_810,
+						CardIds.TavernCoin_BG28_810,
+						CardIds.TavernCoin_BG28_810,
+						CardIds.TavernCoin_BG28_810,
+				  ];
 		addCardsInHand(input.hero, input.board, oozelingCardsToAdd, input.gameState);
 		return true;
 	},

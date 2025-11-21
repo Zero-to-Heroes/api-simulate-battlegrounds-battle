@@ -376,12 +376,6 @@ export const getMinionsOfDifferentTypes = (
 							(r) => !racesProcessed.includes(r),
 						),
 					);
-				const debug = getEffectiveTribesForEntity(
-					minionsWithRaces[0],
-					hero,
-					gameState.anomalies,
-					gameState.allCards,
-				);
 				if (typesBuffed >= numberOfDifferentTypes) {
 					return result;
 				}

@@ -284,16 +284,16 @@ export const triggerBattlecry = (
 				case CardIds.Murozond_TB_BaconUps_110:
 					const murozondCardsToAdd =
 						entity.cardId === CardIds.Murozond_BGS_043
-							? [CardIds.TheCoinCore]
-							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
+							? [CardIds.TavernCoin_BG28_810]
+							: [CardIds.TavernCoin_BG28_810, CardIds.TavernCoin_BG28_810];
 					addCardsInHand(hero, board, murozondCardsToAdd, gameState);
 					break;
 				case CardIds.TavernTempest_BGS_123:
 				case CardIds.TavernTempest_TB_BaconUps_162:
 					const tavernTempestCardsToAdd =
 						entity.cardId === CardIds.TavernTempest_BGS_123
-							? [CardIds.TheCoinCore]
-							: [CardIds.TheCoinCore, CardIds.TheCoinCore];
+							? [CardIds.TavernCoin_BG28_810]
+							: [CardIds.TavernCoin_BG28_810, CardIds.TavernCoin_BG28_810];
 					addCardsInHand(hero, board, tavernTempestCardsToAdd, gameState);
 					break;
 				case CardIds.UtherTheLightbringer_BG23_190:
@@ -567,8 +567,8 @@ export const triggerBattlecry = (
 					if (playerState) {
 						const cardsToAdd =
 							entity.cardId === CardIds.FriendlySaloonkeeper_BGDUO_104
-								? [CardIds.TheCoinCore]
-								: [CardIds.TheCoinCore, CardIds.TheCoinCore];
+								? [CardIds.TavernCoin_BG28_810]
+								: [CardIds.TavernCoin_BG28_810, CardIds.TavernCoin_BG28_810];
 						addCardsInHand(playerState.player, playerState.board, cardsToAdd, gameState);
 					}
 					break;

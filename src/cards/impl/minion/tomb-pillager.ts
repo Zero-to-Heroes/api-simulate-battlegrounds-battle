@@ -6,7 +6,7 @@ import { DeathrattleSpawnCard } from '../../card.interface';
 export const TombPillager: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TombPillager_BG_LOE_012],
 	deathrattleSpawn: (enchantment: { cardId: string }, input: DeathrattleTriggeredInput) => {
-		const cards = [CardIds.TheCoinCore];
+		const cards = [CardIds.TavernCoin_BG28_810];
 		addCardsInHand(input.boardWithDeadEntityHero, input.boardWithDeadEntity, cards, input.gameState);
 		return [];
 	},
