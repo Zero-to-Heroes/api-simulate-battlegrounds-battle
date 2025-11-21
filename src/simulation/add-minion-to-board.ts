@@ -853,6 +853,10 @@ const handleAfterSpawnEffect = (
 	}
 
 	for (const entity of initialBoard) {
+		if (entity.entityId === spawned.entityId) {
+			continue;
+		}
+
 		const onAfterSpawnedImpl = cardMappings[entity.cardId];
 		if (hasAfterOtherSpawned(onAfterSpawnedImpl)) {
 			onAfterSpawnedImpl.afterOtherSpawned(entity, {

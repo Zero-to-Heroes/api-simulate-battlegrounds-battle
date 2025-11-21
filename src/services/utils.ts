@@ -34,6 +34,18 @@ export const pickRandom = <T>(array: readonly T[]): T => {
 	return array[Math.floor(Math.random() * array.length)];
 };
 
+export const pickMultipleRandom = <T>(array: readonly T[], quantity: number): T[] => {
+	const picked: T[] = [];
+	for (let i = 0; i < quantity; i++) {
+		const target = array.filter((e) => !picked.includes(e));
+		const chosenEntity = pickRandom(target);
+		if (!!chosenEntity) {
+			picked.push(chosenEntity);
+		}
+	}
+	return picked;
+};
+
 export const pickRandomAlive = (board: BoardEntity[]): BoardEntity => {
 	const targetBoard = board.filter((e) => e.health > 0 && !e.definitelyDead);
 	const chosenEntity = pickRandom(targetBoard);

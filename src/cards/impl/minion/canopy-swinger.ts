@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
@@ -10,13 +10,13 @@ export const CanopySwinger: BattlecryCard = {
 	cardIds: [CardIds.CanopySwinger_BG33_896, CardIds.CanopySwinger_BG33_896_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput): boolean => {
 		const mult = minion.cardId === CardIds.CanopySwinger_BG33_896_G ? 2 : 1;
-		const targets = input.board.filter(
+		const targets = [...input.board, ...input.hero.hand].filter(
 			(e) =>
 				e !== minion &&
 				hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
 		);
 		for (const target of targets) {
-			modifyStats(target, minion, 2 * mult, 0, input.board, input.hero, input.gameState);
+			modifyStats(target, minion, 4 * mult, 0, input.board, input.hero, input.gameState);
 		}
 		return true;
 	},

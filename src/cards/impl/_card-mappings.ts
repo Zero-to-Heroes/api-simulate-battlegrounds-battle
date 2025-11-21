@@ -62,6 +62,7 @@ import { ColdlightDiver } from './minion/coldlight-diver';
 import { Colossus } from './minion/colossus';
 import { ConveyorConstruct } from './minion/conveyor-construct';
 import { CorruptedBristler } from './minion/corrupted-bristler';
+import { CostumeEnthusiast } from './minion/costume-enthusiast';
 import { CruiseController } from './minion/cruise-controller';
 import { CrystalInfuserEnchantment } from './minion/crystal-infuser-enchantment';
 import { CupcakePeddler } from './minion/cupcake-peddler';
@@ -73,6 +74,7 @@ import { DeflectoBot } from './minion/deflecto-bot';
 import { DevoutHellcaller } from './minion/devout-hellcaller';
 import { DivineSparkbot } from './minion/divine-sparkbot';
 import { DrakkariEmbalmer } from './minion/drakkari-embalmer';
+import { Dramaloc } from './minion/dramaloc';
 import { DreamingThornweaver } from './minion/dreaming-thornweaver';
 import { DrustfallenButcher } from './minion/drustfallen-butcher';
 import { EchoingRoar } from './minion/echoing-roar';
@@ -80,6 +82,7 @@ import { EfficientEngineer } from './minion/efficient-engineer';
 import { ElectricSynthesizer } from './minion/electric-synthesizer';
 import { EliteNavigator } from './minion/elite-navigator';
 import { ExceptionalCaretaker } from './minion/exceptionnal-caretaker';
+import { ExpertAviator } from './minion/expert-aviator';
 import { ExpertTechnician } from './minion/expert-technician';
 import { FairyGillmother } from './minion/fairy-gillmother';
 import { FaunaWhisperer } from './minion/fauna-whisperer';
@@ -94,6 +97,7 @@ import { FountainChiller } from './minion/fountain-chiller';
 import { FriendlyBouncer } from './minion/friendly-bouncer';
 import { FriendlyGeist } from './minion/friendly-geist';
 import { FrostwolfLieutenant } from './minion/frostwolf-lieutenant';
+import { Futurefin } from './minion/futurefin';
 import { GearedGuard } from './minion/geared-guard';
 import { GemRat } from './minion/gem-rat';
 import { GemSmuggler } from './minion/gem-smuggler';
@@ -317,6 +321,7 @@ import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
 import { GhostlyYmirjar } from './trinket/ghostly-ymirjar';
 import { HeraldSticker } from './trinket/herald-sticker';
 import { HogwashBasin } from './trinket/hogwash-basin';
+import { SaltscaleHoncho } from './trinket/saltscale-honcho';
 import { SepulchralSergeant } from './trinket/sepulchral-sergent';
 import { StharaSticker } from './trinket/sthara-sticker';
 import { UnholySanctum } from './trinket/unholy-sanctum';
@@ -614,6 +619,11 @@ const cards = [
 	SepulchralSergeant,
 	WintergraspGhoul,
 	GhostlyYmirjar,
+	SaltscaleHoncho,
+	ExpertAviator,
+	CostumeEnthusiast,
+	Dramaloc,
+	Futurefin,
 	Archaedas,
 	Tichondrius,
 	Archimonde,

@@ -1,4 +1,12 @@
 export declare const enum TempCardIds {
+	Futurefin = 'Temp_Futurefin',
+	Futurefin_G = 'Temp_Futurefin_G',
+	Dramaloc = 'Temp_Dramaloc',
+	Dramaloc_G = 'Temp_Dramaloc_G',
+	CostumeEnthusiast = 'Temp_CostumeEnthusiast',
+	CostumeEnthusiast_G = 'Temp_CostumeEnthusiast_G',
+	ExpertAviator = 'Temp_ExpertAviator',
+	ExpertAviator_G = 'Temp_ExpertAviator_G',
 	GhostlyYmirjar = 'Temp_GhostlyYmirjar',
 	GhostlyYmirjar_G = 'Temp_GhostlyYmirjar_G',
 	SpellboundSoul = 'Temp_SpellboundSoul',

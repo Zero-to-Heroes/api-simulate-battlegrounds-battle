@@ -1156,7 +1156,7 @@ export const spawnEntitiesFromDeathrattle = (
 											{ ...spawn } as BoardEntity,
 										);
 										for (const s of bassgillSpawns) {
-											s.onCanceledSummon = () => (spawn.locked = false);
+											s.onCanceledSummon = () => (s.locked = false);
 											// s.backRef = spawn;
 										}
 										spawnedEntities.push(...bassgillSpawns);
