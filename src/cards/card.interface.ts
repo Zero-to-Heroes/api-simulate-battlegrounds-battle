@@ -271,6 +271,11 @@ export interface AfterHeroDamagedCard extends Card {
 export const hasAfterHeroDamaged = (card: Card): card is AfterHeroDamagedCard =>
 	(card as AfterHeroDamagedCard)?.afterHeroDamaged !== undefined;
 
+export interface OnDamagedCard extends Card {
+	onDamaged: (entity: BoardEntity, input: OnDamagedInput) => void;
+}
+export const hasOnDamaged = (card: Card): card is OnDamagedCard => (card as OnDamagedCard)?.onDamaged !== undefined;
+
 export interface AfterDealDamageCard extends Card {
 	// Called whenever damage is dealt, both on the friendly and enemy side
 	// So you need to check the "friendly" flag
@@ -311,5 +316,13 @@ export interface CastSpellInput {
 	hero: BgsPlayerEntity;
 	otherBoard: BoardEntity[];
 	otherHero: BgsPlayerEntity;
+	gameState: FullGameState;
+}
+export interface OnDamagedInput {
+	damagedEntity: BoardEntity;
+	damageDealer: BoardEntity | BgsPlayerEntity;
+	damage: number;
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
 	gameState: FullGameState;
 }

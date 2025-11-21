@@ -8,7 +8,8 @@ import { DeathrattleSpawnCard } from '../../card.interface';
 export const GoldrinnTheGreatWolf: DeathrattleSpawnCard = {
 	cardIds: [CardIds.GoldrinnTheGreatWolf_BGS_018, CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const goldrinnBuff = minion.cardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 12 : 6;
+		const mult = minion.cardId === CardIds.GoldrinnTheGreatWolf_TB_BaconUps_085 ? 2 : 1;
+		const goldrinnBuff = 8 * mult;
 		addStatsToBoard(
 			minion,
 			input.boardWithDeadEntity,

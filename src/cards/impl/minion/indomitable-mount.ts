@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
@@ -8,7 +8,7 @@ import { DeathrattleSpawnCard } from '../../card.interface';
 export const IndomitableMount: DeathrattleSpawnCard = {
 	cardIds: [CardIds.IndomitableMount_BG30_105, CardIds.IndomitableMount_BG30_105_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const tiersToSummon = [3, 4, 5];
+		const tiersToSummon = [2, 3, 4];
 		const output = [];
 		for (const tier of tiersToSummon) {
 			const candidates = input.gameState.cardsData.beastSpawns.filter(

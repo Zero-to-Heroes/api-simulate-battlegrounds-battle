@@ -5,9 +5,7 @@ import { hasOnWheneverAnotherMinionAttacks, hasRally } from '../cards/card.inter
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
 import { CardIds } from '../services/card-ids';
-import { pickRandom } from '../services/utils';
 import { hasCorrectTribe, hasEntityMechanic } from '../utils';
-import { dealDamageToMinion, getNeighbours } from './attack';
 import { addCardsInHand } from './cards-in-hand';
 import { fixEnchantments } from './enchantments';
 import { FullGameState } from './internal-game-state';
@@ -188,29 +186,6 @@ export const applyOnAttackEffects = (
 		const numberOfCardsToAdd = attacker.cardId === CardIds.WhirlingLassOMatic_BG28_635_G ? 2 : 1;
 		const cardsToAdd = Array.from({ length: numberOfCardsToAdd }).map(() => null);
 		addCardsInHand(attackingBoardHero, attackingBoard, cardsToAdd, gameState);
-	} else if (attacker.cardId === CardIds.Rampager_BG29_809 || attacker.cardId === CardIds.Rampager_BG29_809_G) {
-		const loops = attacker.cardId === CardIds.Rampager_BG29_809_G ? 2 : 1;
-		for (let i = 0; i < loops; i++) {
-			// Don't include new spawns
-			for (const entity of [...attackingBoard]) {
-				if (entity.entityId === attacker.entityId) {
-					continue;
-				}
-				const isSameSide = entity.friendly === attacker.friendly;
-				const board = isSameSide ? attackingBoard : defendingBoard;
-				const hero = isSameSide ? attackingBoardHero : defendingBoardHero;
-				dealDamageToMinion(
-					entity,
-					board,
-					hero,
-					attacker,
-					1,
-					isSameSide ? defendingBoard : attackingBoard,
-					isSameSide ? defendingBoardHero : attackingBoardHero,
-					gameState,
-				);
-			}
-		}
 	} else if (attacker.cardId === CardIds.HatefulHag_BG29_120 || attacker.cardId === CardIds.HatefulHag_BG29_120_G) {
 		const loops = attacker.cardId === CardIds.HatefulHag_BG29_120_G ? 2 : 1;
 		const attackerIndex = attackingBoard.indexOf(attacker);

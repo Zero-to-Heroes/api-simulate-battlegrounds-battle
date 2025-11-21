@@ -94,6 +94,7 @@ import { GemSmuggler } from './minion/gem-smuggler';
 import { GeneralDrakkisath } from './minion/general-drakkisath';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { GentleStag } from './minion/gentle-stag';
+import { GildedGargoyle } from './minion/gilded-gargoyle';
 import { GleamingTrader } from './minion/gleaming-trader';
 import { GlowgulletWarlord } from './minion/glowgullet-warlord';
 import { GlowingCinder } from './minion/glowing-cinder';
@@ -107,6 +108,7 @@ import { GrimscaleElegist } from './minion/grimscale-elegist';
 import { GrittyHeadhunter } from './minion/gritty-headhunter';
 import { Hackerfin } from './minion/hackerfin';
 import { HandlessForsaken } from './minion/handless-forsaken';
+import { HardyOrca } from './minion/hardy-orca';
 import { HarmlessBonehead } from './minion/harmless-bonehead';
 import { HogWatcher } from './minion/hog-watcher';
 import { HoloRover } from './minion/holo-rover';
@@ -115,6 +117,7 @@ import { HummingBird } from './minion/humming-bird';
 import { Humongozz } from './minion/humongozz';
 import { HungrySnapjaw } from './minion/hungry-snapjaw';
 import { HunterOfGatherers } from './minion/hunter-of-gatherers';
+import { HuntingTigerShark } from './minion/hunting-tiger-shark';
 import { Hydralisk } from './minion/hydralisk';
 import { IgnitionSpecialist } from './minion/ignition-specialist';
 import { Immortal } from './minion/immortal';
@@ -183,6 +186,7 @@ import { PrimalfinLookout } from './minion/primalfin-lookout';
 import { PrimevalMonstrosity } from './minion/primeval-monstrosity';
 import { PrizedPromoDrake } from './minion/prized-promo-drake';
 import { ProdigiousTusker } from './minion/prodigious-tusker';
+import { Rampager } from './minion/rampager';
 import { RapscallionRecruiter } from './minion/rapscallion-recruiter';
 import { RaptorElder } from './minion/raptor-elder';
 import { RazorfenGeomancer } from './minion/razorfen-geomancer';
@@ -231,6 +235,7 @@ import { SoulRewinder } from './minion/soul-rewinder';
 import { Spacefarer } from './minion/spacefarer';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
+import { StalwartKodo } from './minion/stalwart-kodo';
 import { StitchedSalvager } from './minion/stitched-salvager';
 import { StompingStegodon } from './minion/stomping-stegodon';
 import { StompingStegodonEnchantment } from './minion/stomping-stegodon-enchantment';
@@ -245,6 +250,7 @@ import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
 import { Tichondrius } from './minion/tichondrius';
+import { TombPillager } from './minion/tomb-pillager';
 import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
 import { TunnelBlaster } from './minion/tunnel-blaster';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
@@ -552,6 +558,9 @@ const cards = [
 	FriendlyBouncer,
 	ImposingPercussionist,
 	SoulRewinder,
+	HardyOrca,
+	HuntingTigerShark,
+	StalwartKodo,
 	Tichondrius,
 	Archimonde,
 	SanlaynScribe,
@@ -563,6 +572,9 @@ const cards = [
 	PilotedWhirlOTron,
 	SnackVendor,
 	ShadowyConstruct,
+	TombPillager,
+	GildedGargoyle,
+	Rampager,
 	Tamuzo,
 	Weebomination,
 	Monstrosity,

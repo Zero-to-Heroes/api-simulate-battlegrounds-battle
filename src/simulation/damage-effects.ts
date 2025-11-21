@@ -1,10 +1,10 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasAfterDealDamage } from '../cards/card.interface';
+import { hasAfterDealDamage, hasOnDamaged } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
+import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive } from '../services/utils';
 import { grantStatsToMinionsOfEachType, hasCorrectTribe } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
@@ -42,6 +42,18 @@ export const onEntityDamaged = (
 	if (damagedEntity.frenzyChargesLeft > 0 && damagedEntity.health > 0 && !damagedEntity.definitelyDead) {
 		applyFrenzy(damagedEntity, friendlyBoard, friendlyHero, gameState);
 		damagedEntity.frenzyChargesLeft--;
+	}
+
+	const wheneverDamagedImpl = cardMappings[damagedEntity.cardId];
+	if (hasOnDamaged(wheneverDamagedImpl)) {
+		wheneverDamagedImpl.onDamaged(damagedEntity, {
+			damagedEntity: damagedEntity,
+			damageDealer: damageSource,
+			damage: damage,
+			board: board,
+			hero: hero,
+			gameState,
+		});
 	}
 
 	switch (damagedEntity.cardId) {
