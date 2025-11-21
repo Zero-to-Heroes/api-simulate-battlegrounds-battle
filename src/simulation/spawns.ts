@@ -15,6 +15,7 @@ export const performEntitySpawns = (
 	opponentBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
 	applySelfAuras = true,
+	forceTarget: BoardEntity = null,
 ): readonly BoardEntity[] => {
 	const aliveEntites = candidateEntities.filter((entity) => entity.health > 0 && !entity.definitelyDead);
 	const spawnedEntities = [];
@@ -58,6 +59,7 @@ export const performEntitySpawns = (
 				opponentBoard,
 				opponentBoardHero,
 				gameState,
+				forceTarget,
 			);
 			// console.debug(
 			// 	'after attack immediately\n',

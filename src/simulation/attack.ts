@@ -32,6 +32,7 @@ export const simulateAttack = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
+	forceTarget: BoardEntity = null,
 ): BoardEntity => {
 	// console.debug(
 	// 	'\nsimulating attack',
@@ -79,9 +80,9 @@ export const simulateAttack = (
 			}
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
-				const defendingEntity: BoardEntity = getDefendingEntity(defendingBoard, attackingEntity);
+				const defendingEntity: BoardEntity = forceTarget ?? getDefendingEntity(defendingBoard, attackingEntity);
 				// Can happen with a single defender that has stealth
-				if (defendingEntity) {
+				if (defendingEntity && defendingEntity.health > 0 && !defendingEntity.definitelyDead) {
 					doFullAttack(
 						attackingEntity,
 						attackingBoard,

@@ -242,6 +242,7 @@ import { StompingStegodonEnchantment } from './minion/stomping-stegodon-enchantm
 import { StoneshellGuardian } from './minion/stoneshell-guardian';
 import { StormpikeLieutenant } from './minion/stormpike-lieutenant';
 import { StraySatyr } from './minion/stray-satyr';
+import { Stuntdrake } from './minion/stuntdrake';
 import { SuperConstructor } from './minion/super-constructor';
 import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
@@ -255,6 +256,8 @@ import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
 import { TunnelBlaster } from './minion/tunnel-blaster';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TuskedCamper } from './minion/tusked-camper';
+import { TwilightBroodmother } from './minion/twilight-broodmother';
+import { TwilightHatchling } from './minion/twilight-hatchling';
 import { TwilightPrimordium } from './minion/twilight-primordium';
 import { TwilightWatcher } from './minion/twilight-watcher';
 import { Ultralisk } from './minion/ultralisk';
@@ -267,6 +270,7 @@ import { VorkaiGuardian } from './minion/vorkai-guardian';
 import { WanderingWight } from './minion/wandering-wight';
 import { Weebomination } from './minion/weebomination';
 import { WhelpSmuggler } from './minion/whelp-smuggler';
+import { WhelpWatcher } from './minion/whelp-watcher';
 import { WhirringProtector } from './minion/whirring-protector';
 import { WhirringProtectorEnchantment } from './minion/whirring-protector-enchantment';
 import { WildfireElemental } from './minion/wildfire-elemental';
@@ -561,6 +565,10 @@ const cards = [
 	HardyOrca,
 	HuntingTigerShark,
 	StalwartKodo,
+	Stuntdrake,
+	TwilightBroodmother,
+	WhelpWatcher,
+	TwilightHatchling,
 	Tichondrius,
 	Archimonde,
 	SanlaynScribe,
