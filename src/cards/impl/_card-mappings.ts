@@ -257,6 +257,7 @@ import { SoulRewinder } from './minion/soul-rewinder';
 import { Soulsplitter } from './minion/soulsplitter';
 import { Spacefarer } from './minion/spacefarer';
 import { SpellboundSoul } from './minion/spellbound-soul';
+import { SpiritDrake } from './minion/spirit-drake';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
 import { StalwartKodo } from './minion/stalwart-kodo';
@@ -638,6 +639,7 @@ const cards = [
 	RazorfenFlapper,
 	BriarbackDrummer,
 	TrenchFighter,
+	SpiritDrake,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,
