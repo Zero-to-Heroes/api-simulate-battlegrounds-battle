@@ -388,18 +388,6 @@ const handleAvenge = (
 			// 		}
 			// 	}
 			// 	break;
-			// case CardIds.GhoulOfTheFeast_BG25_002:
-			// case CardIds.GhoulOfTheFeast_BG25_002_G:
-			// 	const ghoulMultiplier = avenger.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
-			// 	grantStatsToMinionsOfEachType(
-			// 		avenger,
-			// 		boardWithDeadEntity,
-			// 		boardWithDeadEntityHero,
-			// 		ghoulMultiplier * 3,
-			// 		0,
-			// 		gameState,
-			// 	);
-			// 	break;
 			case CardIds.Bristlebach_BG26_157:
 			case CardIds.Bristlebach_BG26_157_G:
 				const bristlebachMultiplier = avenger.cardId === CardIds.Bristlebach_BG26_157_G ? 4 : 2;

@@ -159,10 +159,8 @@ export class CardsData {
 		switch (cardId) {
 			case CardIds.HungeringAbomination_BG25_014:
 			case CardIds.HungeringAbomination_BG25_014_G:
-			// case CardIds.IceSickle:
-			// 	return 1;
-			// case CardIds.GhoulOfTheFeast_BG25_002:
-			// case CardIds.GhoulOfTheFeast_BG25_002_G:
+				// case CardIds.IceSickle:
+				return 1;
 			case CardIds.MechanoTank_BG21_023:
 			case CardIds.MechanoTank_BG21_023_G:
 			case CardIds.PalescaleCrocolisk_BG21_001:

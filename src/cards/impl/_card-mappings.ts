@@ -100,6 +100,7 @@ import { GemSmuggler } from './minion/gem-smuggler';
 import { GeneralDrakkisath } from './minion/general-drakkisath';
 import { GentleDjinni } from './minion/gentle-djinni';
 import { GentleStag } from './minion/gentle-stag';
+import { GhoulOfTheFeast } from './minion/ghoul-of-the-feast';
 import { GildedGargoyle } from './minion/gilded-gargoyle';
 import { GleamingTrader } from './minion/gleaming-trader';
 import { GlowgulletWarlord } from './minion/glowgullet-warlord';
@@ -245,7 +246,9 @@ import { SlyRaptor } from './minion/sly-raptor';
 import { Smolderwing } from './minion/smolderwing';
 import { SnackVendor } from './minion/snack-vendor';
 import { SoulRewinder } from './minion/soul-rewinder';
+import { Soulsplitter } from './minion/soulsplitter';
 import { Spacefarer } from './minion/spacefarer';
+import { SpellboundSoul } from './minion/spellbound-soul';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
 import { StalwartKodo } from './minion/stalwart-kodo';
@@ -311,11 +314,14 @@ import { CrochetedSungill } from './trinket/crocheted-sungill';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
+import { GhostlyYmirjar } from './trinket/ghostly-ymirjar';
 import { HeraldSticker } from './trinket/herald-sticker';
 import { HogwashBasin } from './trinket/hogwash-basin';
+import { SepulchralSergeant } from './trinket/sepulchral-sergent';
 import { StharaSticker } from './trinket/sthara-sticker';
 import { UnholySanctum } from './trinket/unholy-sanctum';
 import { VashjirAnemone } from './trinket/vashjir-anemone';
+import { WintergraspGhoul } from './trinket/wintergrasp-ghoul';
 import { YulonSticker } from './trinket/yulon-sticker';
 
 const cards = [
@@ -602,6 +608,12 @@ const cards = [
 	HighkeeperRa,
 	TheLastOneStanding,
 	HeroicUnderdog,
+	GhoulOfTheFeast,
+	Soulsplitter,
+	SpellboundSoul,
+	SepulchralSergeant,
+	WintergraspGhoul,
+	GhostlyYmirjar,
 	Archaedas,
 	Tichondrius,
 	Archimonde,

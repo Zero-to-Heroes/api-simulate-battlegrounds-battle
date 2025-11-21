@@ -34,7 +34,6 @@ import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
 import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
 import { Sandy } from '../../cards/impl/minion/sandy';
-import { Soulsplitter } from '../../cards/impl/minion/soulsplitter';
 import { SunScreener } from '../../cards/impl/minion/sun-screener';
 import { TheUninvitedGuest } from '../../cards/impl/minion/the-uninvited-guest';
 import { ThousandthPaperDrake } from '../../cards/impl/minion/thousandth-paper-drake';
@@ -231,9 +230,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		// case CardIds.SanctumRester_BG26_356:
 		// case CardIds.SanctumRester_BG26_356_G:
 		// 	return SanctumRester;
-		case CardIds.Soulsplitter_BG25_023:
-		case CardIds.Soulsplitter_BG25_023_G:
-			return Soulsplitter;
 		case CardIds.CorruptedMyrmidon_BG23_012:
 		case CardIds.CorruptedMyrmidon_BG23_012_G:
 			return CorruptedMyrmidon;
