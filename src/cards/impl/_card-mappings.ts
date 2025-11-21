@@ -44,6 +44,7 @@ import { BoarGamer } from './minion/boar-gamer';
 import { BongoBopper } from './minion/bongo-bopper';
 import { Bonker } from './minion/bonker';
 import { BriarbackBookie } from './minion/briarback-bookie';
+import { BriarbackDrummer } from './minion/briarback-drummer';
 import { BronzeSteward } from './minion/bronze-steward';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuddingGreenthumb } from './minion/budding-greenthumb';
@@ -208,6 +209,7 @@ import { Psychus } from './minion/psychus';
 import { Rampager } from './minion/rampager';
 import { RapscallionRecruiter } from './minion/rapscallion-recruiter';
 import { RaptorElder } from './minion/raptor-elder';
+import { RazorfenFlapper } from './minion/razorfen-flapper';
 import { RazorfenGeomancer } from './minion/razorfen-geomancer';
 import { RazorfenVineweaver } from './minion/razorfen-vineweaver';
 import { RazorgoreTheUntamed } from './minion/razorgore-the-untamed';
@@ -277,6 +279,7 @@ import { ThunderingAbomination } from './minion/thundering-abomination';
 import { Tichondrius } from './minion/tichondrius';
 import { TombPillager } from './minion/tomb-pillager';
 import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
+import { TrenchFighter } from './minion/trench-fighter';
 import { TunnelBlaster } from './minion/tunnel-blaster';
 import { TurquoiseSkitterer } from './minion/turquoise-skitterer';
 import { TuskedCamper } from './minion/tusked-camper';
@@ -632,6 +635,9 @@ const cards = [
 	UnderseaMount,
 	SunkenAdvocate,
 	BluesySiren,
+	RazorfenFlapper,
+	BriarbackDrummer,
+	TrenchFighter,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,

@@ -1,4 +1,11 @@
 export declare const enum TempCardIds {
+	TrenchFighter = 'Temp_TrenchFighter',
+	TrenchFighter_G = 'Temp_TrenchFighter_G',
+	BriarbackDrummer = 'Temp_BriarbackDrummer',
+	BriarbackDrummer_G = 'Temp_BriarbackDrummer_G',
+	RazorfenFlapper = 'Temp_RazorfenFlapper',
+	RazorfenFlapper_G = 'Temp_RazorfenFlapper_G',
+	BloodGemBarrage = 'Temp_BloodGemBarrage',
 	BluesySiren = 'Temp_BluesySiren',
 	BluesySiren_G = 'Temp_BluesySiren_G',
 	SunkenAdvocate = 'Temp_SunkenAdvocate',
