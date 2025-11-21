@@ -1,7 +1,8 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { castSpell } from '../../../mechanics/cast-spell';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { DefaultChargesCard, OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
@@ -22,18 +23,21 @@ export const BluesySiren: OnWheneverAnotherMinionAttacksCard & DefaultChargesCar
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
-		const mult = minion.cardId === TempCardIds.BluesySiren_G ? 2 : 1;
 		minion.abiityChargesLeft = minion.abiityChargesLeft - 1;
-		// TODO: update Deep Blues future buffs
-		modifyStats(
-			input.attacker,
-			minion,
-			2 * mult,
-			3 * mult,
-			input.attackingBoard,
-			input.attackingHero,
-			input.gameState,
-		);
+		const spellCast =
+			minion.cardId === TempCardIds.BluesySiren_G
+				? CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502_Gt
+				: CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t;
+		castSpell(spellCast, {
+			source: minion,
+			target: minion,
+			board: input.attackingBoard,
+			hero: input.attackingHero,
+			otherBoard: input.defendingBoard,
+			otherHero: input.defendingHero,
+			gameState: input.gameState,
+		});
+
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

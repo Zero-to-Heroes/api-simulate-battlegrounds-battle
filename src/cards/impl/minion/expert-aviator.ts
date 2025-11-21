@@ -12,11 +12,15 @@ export const ExpertAviator: RallyCard = {
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		const mult = minion.cardId === TempCardIds.ExpertAviator_G ? 2 : 1;
 		const target = input.attackingHero.hand.filter((e) => !!e.maxHealth && e.cardId)[0];
-		if (!target || target.locked) {
+		if (!target) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
 		modifyStats(target, minion, 1 * mult, 1 * mult, input.attackingBoard, input.attackingHero, input.gameState);
+		if (target.locked) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
+
 		target.locked = true;
 		const spawnInput: DeathrattleTriggeredInput = {
 			boardWithDeadEntity: input.attackingBoard,
