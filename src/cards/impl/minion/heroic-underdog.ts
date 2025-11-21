@@ -7,6 +7,9 @@ import { RallyCard } from '../../card.interface';
 export const HeroicUnderdog: RallyCard = {
 	cardIds: [TempCardIds.HeroicUnderdog, TempCardIds.HeroicUnderdog_G],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
+		if (!input.defendingEntity) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		const mult = minion.cardId === TempCardIds.HeroicUnderdog_G ? 2 : 1;
 		const target = input.defendingEntity;
 		modifyStats(

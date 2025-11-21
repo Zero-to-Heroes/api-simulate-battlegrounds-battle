@@ -12,6 +12,9 @@ export const ArcaneCannoneer: RallyCard = {
 		// The info is already included in the scriptDataNum2
 		const mult = 1;
 		const buff = baseBuff * mult;
+		if (!input.defendingEntity) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		const dmg = dealDamageToMinion(
 			input.defendingEntity,
 			input.defendingBoard,

@@ -7,6 +7,9 @@ import { RallyCard } from '../../card.interface';
 export const Colossus: RallyCard = {
 	cardIds: [CardIds.WarpGate_ColossusToken_BG31_HERO_802pt, CardIds.Colossus_BG31_HERO_802pt_G],
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (!input.defendingEntity) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		let dmgDoneByAttacker = 0;
 		const neighbours = getNeighbours(input.defendingBoard, input.defendingEntity);
 		const damage = minion.scriptDataNum1 || 2;

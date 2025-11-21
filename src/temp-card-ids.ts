@@ -1,4 +1,7 @@
 export declare const enum TempCardIds {
+	HandOfDeios = 'Temp_HandOfDeios',
+	BroodOfNozdormu = 'Temp_BroodOfNozdormu',
+	WaveOfGold = 'Temp_WaveOfGold',
 	SpiritDrake = 'Temp_SpiritDrake',
 	SpiritDrake_G = 'Temp_SpiritDrake_G',
 	TrenchFighter = 'Temp_TrenchFighter',

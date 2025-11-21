@@ -3,12 +3,14 @@ import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { dealDamageToMinion, getNeighbours } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { setEntityStats } from '../../../simulation/stats';
-import { DefaultChargesCard, RallyCard } from '../../card.interface';
+import { RallyCard } from '../../card.interface';
 
 export const ObsidianRavager: RallyCard = {
 	cardIds: [CardIds.ObsidianRavager_BG27_017, CardIds.ObsidianRavager_BG27_017_G],
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (!input.defendingEntity) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		const neighbours = getNeighbours(input.defendingBoard, input.defendingEntity);
 		const targets =
 			input.attacker.cardId === CardIds.ObsidianRavager_BG27_017_G ? neighbours : [pickRandom(neighbours)];

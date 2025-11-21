@@ -9,6 +9,9 @@ import { RallyCard } from '../../card.interface';
 export const WhelpWatcher: RallyCard = {
 	cardIds: [TempCardIds.WhelpWatcher, TempCardIds.WhelpWatcher_G],
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (!input.defendingEntity) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		const spawnInput: DeathrattleTriggeredInput = {
 			boardWithDeadEntity: input.attackingBoard,
 			boardWithDeadEntityHero: input.attackingHero,

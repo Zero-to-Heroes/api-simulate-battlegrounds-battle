@@ -1,12 +1,12 @@
-import { GameTag, Race } from '@firestone-hs/reference-data';
+import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasOnWheneverAnotherMinionAttacks, hasRally } from '../cards/card.interface';
+import { hasOnWheneverAnotherMinionAttacks } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateReborn } from '../keywords/reborn';
+import { triggerRally } from '../mechanics/rally';
 import { CardIds } from '../services/card-ids';
-import { hasCorrectTribe, hasEntityMechanic } from '../utils';
-import { fixEnchantments } from './enchantments';
+import { hasCorrectTribe } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -85,56 +85,17 @@ export const applyOnAttackEffects = (
 
 	// This assumes that only "Rally" effects trigger on attack
 	// 2025-08-20: this is false. "Whenever a friendly minion attacks" is not a rally effect
-	const isAttackerRallying = hasEntityMechanic(attacker, GameTag.BACON_RALLY, gameState.allCards);
-	const numberOfRallyingCries =
-		attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
-			.length ?? 0;
-	const rallyLoops = 1 + (isAttackerRallying ? numberOfRallyingCries : 0);
-	for (let i = 0; i < rallyLoops; i++) {
-		const onAttackImpl = cardMappings[attacker.cardId];
-		if (hasRally(onAttackImpl)) {
-			const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.rally(attacker, {
-				attacker: attacker,
-				attackingHero: attackingBoardHero,
-				attackingBoard: attackingBoard,
-				defendingEntity: defendingEntity,
-				defendingHero: defendingBoardHero,
-				defendingBoard: defendingBoard,
-				gameState,
-				playerIsFriendly: attackingBoardHero.friendly,
-			});
-			damageDoneByAttacker += dmgDoneByAttacker;
-			damageDoneByDefender += dmgDoneByDefender;
-		}
-		const enchantments = attacker.enchantments;
-		for (const enchantment of enchantments) {
-			const onAttackImpl = cardMappings[enchantment.cardId];
-			if (hasRally(onAttackImpl)) {
-				let enchantmentToMinion: BoardEntity = {
-					...enchantment,
-					entityId: attacker.entityId,
-					attack: attacker.attack,
-					health: attacker.health,
-					maxHealth: attacker.maxHealth,
-					maxAttack: attacker.maxAttack,
-					abiityChargesLeft: attacker.abiityChargesLeft,
-				};
-				enchantmentToMinion = fixEnchantments(enchantmentToMinion, gameState.allCards);
-				const { dmgDoneByAttacker, dmgDoneByDefender } = onAttackImpl.rally(enchantmentToMinion, {
-					attacker: attacker,
-					attackingHero: attackingBoardHero,
-					attackingBoard: attackingBoard,
-					defendingEntity: defendingEntity,
-					defendingHero: defendingBoardHero,
-					defendingBoard: defendingBoard,
-					gameState,
-					playerIsFriendly: attackingBoardHero.friendly,
-				});
-				damageDoneByAttacker += dmgDoneByAttacker;
-				damageDoneByDefender += dmgDoneByDefender;
-			}
-		}
-	}
+	const { dmgDoneByAttacker: dmgDoneByRally, dmgDoneByDefender: dmgDoneByRallyDefender } = triggerRally(
+		attackingBoard,
+		attackingBoardHero,
+		attacker,
+		defendingBoard,
+		defendingBoardHero,
+		defendingEntity,
+		gameState,
+	);
+	damageDoneByAttacker += dmgDoneByRally;
+	damageDoneByDefender += dmgDoneByRallyDefender;
 
 	// if (attacker.cardId === CardIds.GlyphGuardian_BGS_045) {
 	// 	// For now the utility method only works additively, so we hack around it

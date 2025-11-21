@@ -1,9 +1,14 @@
 import { Card } from '../card.interface';
 import { AzeriteEmpowerment } from './bg-spell/azerite-empowerment';
+import { BroodOfNozdormu } from './bg-spell/brood-of-nozdormu';
+import { EyesOfTheEarthMother } from './bg-spell/eyes-of-the-earth-mother';
+import { HandOfDeios } from './bg-spell/hand-of-deios';
 import { MurkysFish } from './bg-spell/murkys-fish';
 import { NaturalBlessing } from './bg-spell/natural-blessing';
 import { SharingIsCaring } from './bg-spell/sharing-is-caring';
 import { ShinyRing } from './bg-spell/shiny-ring';
+import { TombTurning } from './bg-spell/tomb-turning';
+import { WaveOfGold } from './bg-spell/wave-of-gold';
 import { FragrantPhylactery } from './hero-power/fragrant-phylactery';
 import { FragrantPhylacteryEnchantment } from './hero-power/fragrant-phylactery-enchantment';
 import { GloriousGloop } from './hero-power/glorious-gloop';
@@ -642,6 +647,11 @@ const cards = [
 	TrenchFighter,
 	SpiritDrake,
 	BrinyBootlegger,
+	TombTurning,
+	BroodOfNozdormu,
+	WaveOfGold,
+	HandOfDeios,
+	EyesOfTheEarthMother,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,

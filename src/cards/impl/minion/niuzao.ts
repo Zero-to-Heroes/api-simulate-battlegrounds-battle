@@ -8,6 +8,9 @@ import { RallyCard } from '../../card.interface';
 export const Niuzao: RallyCard = {
 	cardIds: [CardIds.Niuzao_BG27_822, CardIds.Niuzao_BG27_822_G],
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+		if (!input.defendingEntity) {
+			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+		}
 		const multiplier = minion.cardId === CardIds.Niuzao_BG27_822_G ? 2 : 1;
 		let dmgDoneByAttacker = 0;
 		for (let i = 0; i < multiplier; i++) {
