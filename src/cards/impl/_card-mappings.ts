@@ -45,6 +45,7 @@ import { BongoBopper } from './minion/bongo-bopper';
 import { Bonker } from './minion/bonker';
 import { BriarbackBookie } from './minion/briarback-bookie';
 import { BriarbackDrummer } from './minion/briarback-drummer';
+import { BrinyBootlegger } from './minion/briny-bootlegger';
 import { BronzeSteward } from './minion/bronze-steward';
 import { BubbleGunner } from './minion/bubble-gunner';
 import { BuddingGreenthumb } from './minion/budding-greenthumb';
@@ -640,6 +641,7 @@ const cards = [
 	BriarbackDrummer,
 	TrenchFighter,
 	SpiritDrake,
+	BrinyBootlegger,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,

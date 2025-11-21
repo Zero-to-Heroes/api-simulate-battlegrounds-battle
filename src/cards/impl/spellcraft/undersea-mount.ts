@@ -9,7 +9,7 @@ import { CastSpellInput, SpellCard } from '../../card.interface';
 export const UnderseaMount: SpellCard = {
 	cardIds: [TempCardIds.UnderseaMount, TempCardIds.UnderseaMount_G],
 	castSpell: (spellCardId: string, input: CastSpellInput) => {
-		const mult = spellCardId === TempCardIds.UnderseaMount_G ? 1 : 2;
+		const mult = spellCardId === TempCardIds.UnderseaMount_G ? 2 : 1;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {
 			modifyStats(target, input.source, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
