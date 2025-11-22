@@ -63,6 +63,11 @@ export const modifyStats = (
 	isEnchantment = true,
 	countsAsStatsGain = true,
 ): void => {
+	// Not a minion - can happen when buffing the whole hand, so we don't have to filter first
+	if (!entity?.maxHealth) {
+		return;
+	}
+
 	const debug = attackAmount === 10;
 	if (attackAmount === 0 && healthAmount === 0) {
 		return;

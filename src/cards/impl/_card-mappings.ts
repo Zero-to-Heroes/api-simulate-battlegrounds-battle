@@ -34,6 +34,7 @@ import { AzsharanCutlassier } from './minion/azsharan-cutlassier';
 import { BabyYshaarj } from './minion/baby-yshaarj';
 import { Baneling } from './minion/baneling';
 import { Bannerboar } from './minion/bannerboar';
+import { Bassgill } from './minion/bassgill';
 import { Battlecruiser } from './minion/battlecruiser';
 import { Beetle } from './minion/beetle';
 import { BellowingTyrant } from './minion/bellowing-tyrant';
@@ -94,6 +95,7 @@ import { ExpertAviator } from './minion/expert-aviator';
 import { ExpertTechnician } from './minion/expert-technician';
 import { FairyGillmother } from './minion/fairy-gillmother';
 import { FaunaWhisperer } from './minion/fauna-whisperer';
+import { Festergut } from './minion/festergut';
 import { FireForgedEvoker } from './minion/fire-forged-evoker';
 import { FirescaleHoarder } from './minion/firescale-hoarder';
 import { FireworksFanatic } from './minion/fireworks-fanatic';
@@ -149,6 +151,7 @@ import { ImpulsiveTrickster } from './minion/impulsive-trickster';
 import { IndomitableMount } from './minion/indomitable-mount';
 import { InspiringUnderdog } from './minion/inspiring-underdog';
 import { InterrogatorWhitemane } from './minion/interrogator-whitemane';
+import { JellyBelly } from './minion/jelly-belly';
 import { JunkJouster } from './minion/junk-jouster';
 import { KalecgosArcaneAspect } from './minion/kalecgos-arcane-aspect';
 import { KangorsApprentice } from './minion/kangors-apprentice';
@@ -182,6 +185,7 @@ import { MonstrousMacaw } from './minion/monstrous-macaw';
 import { MoonsteelJuggernaut } from './minion/moonsteel-juggernaut';
 import { Mothership } from './minion/mothership';
 import { Mummifier } from './minion/mummifier';
+import { Murcules } from './minion/murcules';
 import { MurkbrineExpeditioner } from './minion/murkbrine-expeditioner';
 import { Murky } from './minion/murky';
 import { MurkySpashFisher } from './minion/murky-spash-fisher';
@@ -202,6 +206,7 @@ import { OperaticBelcher } from './minion/operatic-belcher';
 import { OranomonosTheWilted } from './minion/oranomonos-the-wilted';
 import { OutbackSmolderer } from './minion/outback-smolderer';
 import { ParchedWanderer } from './minion/parched-wanderer';
+import { PashmarTheVengeful } from './minion/pashmar-the-vengeful';
 import { PeggySturdybone } from './minion/peggy-sturdybone';
 import { PilotTheShredder } from './minion/pilot-the-shredder';
 import { PilotedWhirlOTron } from './minion/piloted-whirl-o-tron';
@@ -236,6 +241,7 @@ import { SandSwirler } from './minion/sand-swirler';
 import { SanguineRefiner } from './minion/sanguine-refiner';
 import { SanlaynScribe } from './minion/sanlayn-scribe';
 import { Scallywag } from './minion/scallywag';
+import { Scourfin } from './minion/scourfin';
 import { ScourgeHarvester } from './minion/scourge-harvester';
 import { SelflessHero } from './minion/selfless-hero';
 import { Shadowdancer } from './minion/shadowdancer';
@@ -264,6 +270,7 @@ import { Soulsplitter } from './minion/soulsplitter';
 import { Spacefarer } from './minion/spacefarer';
 import { SpellboundSoul } from './minion/spellbound-soul';
 import { SpiritDrake } from './minion/spirit-drake';
+import { SpiritOfAir } from './minion/spirit-of-air';
 import { SpiritedWhimsydrake } from './minion/spirited-whimsydrake';
 import { SpringySpriggan } from './minion/springy-spriggan';
 import { StalwartKodo } from './minion/stalwart-kodo';
@@ -284,6 +291,44 @@ import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
 import { ThunderingAbomination } from './minion/thundering-abomination';
 import { Tichondrius } from './minion/tichondrius';
+import { TimewarpedAlleycat } from './minion/timewarped-alleycat';
+import { TimewarpedArm } from './minion/timewarped-arm';
+import { TimewarpedDeathswarmer } from './minion/timewarped-deathswarmer';
+import { TimewarpedFestergut } from './minion/timewarped-festergut';
+import { TimewarpedGeomancer } from './minion/timewarped-geomancer';
+import { TimewarpedGuard } from './minion/timewarped-guard';
+import { TimewarpedHyena } from './minion/timewarped-hyena';
+import { TimewarpedJazzer } from './minion/timewarped-jazzer';
+import { TimewarpedJellyBelly } from './minion/timewarped-jelly-belly';
+import { TimewarpedNelliesShip } from './minion/timewarped-nellies-ship';
+import { TimewarpedPashmar } from './minion/timewarped-pashmar';
+import { TimewarpedPillager } from './minion/timewarped-pillager';
+import { TimewarpedPiper } from './minion/timewarped-piper';
+import { TimewarpedRagnaros } from './minion/timewarped-ragnaros';
+import { TimewarpedRecycler } from './minion/timewarped-recycler';
+import { TimewarpedSapper } from './minion/timewarped-sapper';
+import { TimewarpedSaurolisk } from './minion/timewarped-saurolisk';
+import { TimewarpedSellemental } from './minion/timewarped-sellemental';
+import { TimewarpedSpiritOfAir } from './minion/timewarped-spirit-of-air';
+import { TimewarpedSporebat } from './minion/timewarped-sporebat';
+import { TimewarpedThorncaller } from './minion/timewarped-thorncaller';
+import { TimewrappedBassgill } from './minion/timewrapped-bassgill';
+import { TimewrappedBotani } from './minion/timewrapped-botani';
+import { TimewrappedCopter } from './minion/timewrapped-copter';
+import { TimewrappedDragonling } from './minion/timewrapped-dragonling';
+import { TimewrappedElegist } from './minion/timewrapped-elegist';
+import { TimewrappedHunter } from './minion/timewrapped-hunter';
+import { TimewrappedKilrek } from './minion/timewrapped-kilrek';
+import { TimewrappedLowFlier } from './minion/timewrapped-low-flier';
+import { TimewrappedMothership } from './minion/timewrapped-mothership';
+import { TimewrappedMurcules } from './minion/timewrapped-murcules';
+import { TimewrappedRedWhelp } from './minion/timewrapped-red-whelp';
+import { TimewrappedRewinder } from './minion/timewrapped-rewinder';
+import { TimewrappedScourfin } from './minion/timewrapped-scourfin';
+import { TimewrappedSensei } from './minion/timewrapped-sensei';
+import { TimewrappedShadowdancer } from './minion/timewrapped-shadowdancer';
+import { TimewrappedVaelastrasz } from './minion/timewrapped-vaelastrasz';
+import { TimewrappedWhelpSmuggler } from './minion/timewrapped-whelp-smuggler';
 import { TombPillager } from './minion/tomb-pillager';
 import { TransmutedBramblewitch } from './minion/transmuted-bramblewitch';
 import { TrenchFighter } from './minion/trench-fighter';
@@ -336,6 +381,8 @@ import { SickRiffs } from './spellcraft/sick-riffs';
 import { SunkenSpells } from './spellcraft/sunken-spells';
 import { SurgingScales } from './spellcraft/surging-scales';
 import { Thaumaturgy } from './spellcraft/thaumaturgy';
+import { TimewarpedEelectrify } from './spellcraft/timewarped-eelectrify';
+import { TimewrappedShoal } from './spellcraft/timewrapped-shoal';
 import { UnderseaMount } from './spellcraft/undersea-mount';
 import { AllPurposeKibble } from './trinket/all-purpose-kibble';
 import { ArmOfTheEmpire } from './trinket/arm-of-the-empire';
@@ -652,6 +699,53 @@ const cards = [
 	WaveOfGold,
 	HandOfDeios,
 	EyesOfTheEarthMother,
+	JellyBelly,
+	TimewarpedJellyBelly,
+	TimewarpedDeathswarmer,
+	TimewarpedRecycler,
+	TimewarpedPillager,
+	Festergut,
+	TimewarpedFestergut,
+	PashmarTheVengeful,
+	TimewarpedPashmar,
+	TimewarpedEelectrify,
+	TimewarpedSapper,
+	TimewarpedPiper,
+	TimewarpedThorncaller,
+	TimewarpedGeomancer,
+	TimewarpedJazzer,
+	TimewarpedAlleycat,
+	TimewarpedSaurolisk,
+	TimewarpedHyena,
+	TimewarpedSporebat,
+	TimewarpedNelliesShip,
+	TimewarpedSellemental,
+	TimewarpedRagnaros,
+	TimewrappedBotani,
+	SpiritOfAir,
+	TimewarpedSpiritOfAir,
+	TimewarpedArm,
+	TimewrappedWhelpSmuggler,
+	TimewrappedShoal,
+	TimewarpedGuard,
+	TimewrappedSensei,
+	TimewrappedCopter,
+	TimewrappedHunter,
+	TimewrappedMothership,
+	Scourfin,
+	TimewrappedScourfin,
+	Bassgill,
+	TimewrappedBassgill,
+	Murcules,
+	TimewrappedMurcules,
+	TimewrappedElegist,
+	TimewrappedRewinder,
+	TimewrappedShadowdancer,
+	TimewrappedKilrek,
+	TimewrappedDragonling,
+	TimewrappedLowFlier,
+	TimewrappedRedWhelp,
+	TimewrappedVaelastrasz,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,

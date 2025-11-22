@@ -263,7 +263,6 @@ const handleAvenge = (
 				break;
 			case CardIds.PashmarTheVengeful_BG23_014:
 			case CardIds.PashmarTheVengeful_BG23_014_G:
-				addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
 				break;
 			case CardIds.TremblingTrolley_BG28_967:
 			case CardIds.TremblingTrolley_BG28_967_G:

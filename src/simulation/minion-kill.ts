@@ -1,9 +1,9 @@
-import { CardIds } from '../services/card-ids';
 import { CardType } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnMinionKilled } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
@@ -47,21 +47,6 @@ export const onMinionKill = (
 	}
 
 	switch (killer.cardId) {
-		case CardIds.Murcules_BG27_023:
-		case CardIds.Murcules_BG27_023_G:
-			const murculesTarget = pickRandom(
-				killerHero.hand
-					.filter((e) => !!e?.cardId)
-					.filter(
-						(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-					),
-			);
-			if (murculesTarget) {
-				const murculesStats = killer.cardId === CardIds.Murcules_BG27_023 ? 2 : 4;
-				modifyStats(murculesTarget, killer, murculesStats, murculesStats, killerBoard, killerHero, gameState);
-				gameState.spectator.registerPowerTarget(killer, murculesTarget, killerBoard, killerHero, victimHero);
-			}
-			break;
 		case CardIds.Mannoroth_BG27_507:
 		case CardIds.Mannoroth_BG27_507_G:
 			if (killer.health > 0 && !killer.definitelyDead && killer.abiityChargesLeft > 0) {

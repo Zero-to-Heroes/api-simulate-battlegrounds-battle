@@ -1,0 +1,48 @@
+import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
+import { addCardsInHand } from '../../../simulation/cards-in-hand';
+import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
+import { spawnEntities } from '../../../simulation/deathrattle-spawns';
+import { buildRandomUndeadCreation } from '../../../utils';
+import { DeathrattleSpawnCard } from '../../card.interface';
+
+export const Festergut: DeathrattleSpawnCard = {
+	cardIds: [CardIds.Festergut_BG25_HERO_100_Buddy, CardIds.Festergut_BG25_HERO_100_Buddy_G],
+	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+		const mult = minion.cardId === CardIds.Festergut_BG25_HERO_100_Buddy_G ? 2 : 1;
+		const spawnedEntities: BoardEntity[] = [];
+		for (let i = 0; i < mult; i++) {
+			const randomUndeadCreation = buildRandomUndeadCreation(
+				input.boardWithDeadEntityHero,
+				input.boardWithDeadEntity,
+				input.gameState.allCards,
+				input.deadEntity.friendly,
+				input.gameState.cardsData,
+				input.gameState.sharedState,
+			);
+			spawnedEntities.push(
+				...spawnEntities(
+					randomUndeadCreation.cardId,
+					1,
+					input.boardWithDeadEntity,
+					input.boardWithDeadEntityHero,
+					input.otherBoard,
+					input.otherBoardHero,
+					input.gameState,
+					input.deadEntity.friendly,
+					false,
+					false,
+					true,
+					randomUndeadCreation,
+				),
+			);
+			addCardsInHand(
+				input.boardWithDeadEntityHero,
+				input.boardWithDeadEntity,
+				[randomUndeadCreation],
+				input.gameState,
+			);
+		}
+		return spawnedEntities;
+	},
+};

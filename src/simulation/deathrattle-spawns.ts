@@ -4,13 +4,11 @@ import { BoardEnchantment, BoardEntity } from '../board-entity';
 import { hasDeathrattleSpawn, hasDeathrattleSpawnEnchantment } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
-import { updateTaunt } from '../keywords/taunt';
-import { updateWindfury } from '../keywords/windfury';
 import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive, pickRandomLowestHealth } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
-	buildRandomUndeadCreation,
 	buildSingleBoardEntity,
 	getTeammateInitialState,
 	grantRandomAttack,
@@ -437,43 +435,6 @@ export const spawnEntitiesFromDeathrattle = (
 											deadEntity.friendly,
 											false,
 										),
-									);
-								}
-								break;
-							case CardIds.Festergut_BG25_HERO_100_Buddy:
-							case CardIds.Festergut_BG25_HERO_100_Buddy_G:
-								const minionsToSpawnFestergut =
-									deadEntityCardId === CardIds.Festergut_BG25_HERO_100_Buddy_G ? 2 : 1;
-								for (let i = 0; i < minionsToSpawnFestergut; i++) {
-									const randomUndeadCreation = buildRandomUndeadCreation(
-										boardWithDeadEntityHero,
-										boardWithDeadEntity,
-										gameState.allCards,
-										deadEntity.friendly,
-										gameState.cardsData,
-										gameState.sharedState,
-									);
-									spawnedEntities.push(
-										...spawnEntities(
-											randomUndeadCreation.cardId,
-											1,
-											boardWithDeadEntity,
-											boardWithDeadEntityHero,
-											otherBoard,
-											otherBoardHero,
-											gameState,
-											deadEntity.friendly,
-											false,
-											false,
-											true,
-											randomUndeadCreation,
-										),
-									);
-									addCardsInHand(
-										boardWithDeadEntityHero,
-										boardWithDeadEntity,
-										[randomUndeadCreation],
-										gameState,
 									);
 								}
 								break;
@@ -1107,62 +1068,6 @@ export const spawnEntitiesFromDeathrattle = (
 								});
 								spawnedEntities.push(...octoSpawns);
 								break;
-							case CardIds.Bassgill_BG26_350:
-							case CardIds.Bassgill_BG26_350_G:
-								const bassgillIterations = deadEntity.cardId === CardIds.Bassgill_BG26_350_G ? 2 : 1;
-								for (let i = 0; i < bassgillIterations; i++) {
-									const hand =
-										boardWithDeadEntityHero.hand
-											?.filter((e) =>
-												hasCorrectTribe(
-													e,
-													boardWithDeadEntityHero,
-													Race.MURLOC,
-													gameState.anomalies,
-													gameState.allCards,
-												),
-											)
-											.filter((e) => !!e?.cardId)
-											.filter((e) => !e.locked) ?? [];
-									const highestHealth = Math.max(
-										...hand.filter((c) => c.health).map((c) => c.health),
-									);
-									const highestHealthMinions = highestHealth
-										? hand.filter((c) => c.health === highestHealth)
-										: null;
-									const spawn = !!highestHealthMinions?.length
-										? pickRandom(highestHealthMinions)
-										: hand.filter((c) => c.cardId).length
-										? pickRandom(hand.filter((c) => c.cardId))
-										: null;
-									if (spawn) {
-										spawn.locked = true;
-										// Technically it should not be removed from hand, but rather flagged
-										// Probably very low impact doing it like this
-										// spawn.locked = true;
-										// removeCardFromHand(boardWithDeadEntityHero, spawn);
-										const bassgillSpawns = spawnEntities(
-											spawn.cardId,
-											1,
-											boardWithDeadEntity,
-											boardWithDeadEntityHero,
-											otherBoard,
-											otherBoardHero,
-											gameState,
-											deadEntity.friendly,
-											false,
-											false,
-											true,
-											{ ...spawn } as BoardEntity,
-										);
-										for (const s of bassgillSpawns) {
-											s.onCanceledSummon = () => (s.locked = false);
-											// s.backRef = spawn;
-										}
-										spawnedEntities.push(...bassgillSpawns);
-									}
-								}
-								break;
 							case CardIds.CultistSthara_BG27_081:
 							case CardIds.CultistSthara_BG27_081_G:
 								const cultistStharaSpawnNumber =
@@ -1259,56 +1164,6 @@ export const spawnEntitiesFromDeathrattle = (
 										false,
 									),
 								);
-								break;
-							case CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy:
-							case CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy_G:
-								const iterations =
-									deadEntityCardId === CardIds.SpiritOfAir_TB_BaconShop_HERO_76_Buddy_G ? 2 : 1;
-								for (let j = 0; j < iterations; j++) {
-									let validTargets = boardWithDeadEntity.filter((entity) => !entity.divineShield);
-									if (!validTargets?.length) {
-										validTargets = boardWithDeadEntity.filter((entity) => !entity.taunt);
-										if (!validTargets?.length) {
-											validTargets = boardWithDeadEntity.filter((entity) => !entity.windfury);
-										}
-									}
-									const target = pickRandom(validTargets);
-									if (target) {
-										if (!target.divineShield) {
-											updateDivineShield(
-												target,
-												boardWithDeadEntity,
-												boardWithDeadEntityHero,
-												otherBoardHero,
-												true,
-												gameState,
-											);
-										}
-										updateTaunt(
-											target,
-											true,
-											boardWithDeadEntity,
-											boardWithDeadEntityHero,
-											otherBoardHero,
-											gameState,
-										);
-										updateWindfury(
-											target,
-											true,
-											boardWithDeadEntity,
-											boardWithDeadEntityHero,
-											otherBoardHero,
-											gameState,
-										);
-										gameState.spectator.registerPowerTarget(
-											deadEntity,
-											target,
-											boardWithDeadEntity,
-											boardWithDeadEntityHero,
-											otherBoardHero,
-										);
-									}
-								}
 								break;
 							case CardIds.NadinaTheRed_BGS_040:
 							case CardIds.NadinaTheRed_TB_BaconUps_154:
@@ -1424,6 +1279,7 @@ export const spawnEntitiesFromDeathrattle = (
 								}
 								break;
 							case CardIds.Leapfrogger_BG21_000:
+							case TempCardIds.TimewarpedLeapfrogger:
 								// console.log('\t', 'Leapfrogger from DR', deadEntity.entityId);
 								applyLeapFroggerEffect(
 									boardWithDeadEntity,
@@ -1435,6 +1291,7 @@ export const spawnEntitiesFromDeathrattle = (
 								);
 								break;
 							case CardIds.Leapfrogger_BG21_000_G:
+							case TempCardIds.TimewarpedLeapfrogger_G:
 								applyLeapFroggerEffect(
 									boardWithDeadEntity,
 									boardWithDeadEntityHero,
@@ -1714,24 +1571,6 @@ export const spawnEntitiesFromDeathrattle = (
 										);
 									}
 								}
-								break;
-							case CardIds.Scourfin_BG26_360:
-							case CardIds.Scourfin_BG26_360_G:
-								const statsScourfin = deadEntityCardId === CardIds.Scourfin_BG26_360_G ? 10 : 5;
-								grantRandomStats(
-									deadEntity,
-									boardWithDeadEntityHero.hand.filter(
-										(e) =>
-											gameState.allCards.getCard(e.cardId).type?.toUpperCase() ===
-											CardType[CardType.MINION],
-									),
-									boardWithDeadEntityHero,
-									statsScourfin,
-									statsScourfin,
-									null,
-									true,
-									gameState,
-								);
 								break;
 							case CardIds.SanguineChampion_BG23_017:
 							case CardIds.SanguineChampion_BG23_017_G:

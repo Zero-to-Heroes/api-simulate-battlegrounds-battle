@@ -1,8 +1,8 @@
-import { CardIds } from '../services/card-ids';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasRebornEffect, hasRebornSelfEffect } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
+import { CardIds } from '../services/card-ids';
 import { addStatsToBoard } from '../utils';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
@@ -146,20 +146,6 @@ export const handleRebornForEntity = (
 					boardWithKilledMinionHero,
 					multiplier * 1,
 					multiplier * 3,
-					gameState,
-				);
-			});
-		boardWithKilledMinion
-			.filter((e) => e.cardId === CardIds.JellyBelly_BG25_005 || e.cardId === CardIds.JellyBelly_BG25_005_G)
-			.forEach((e) => {
-				const multiplier = e.cardId === CardIds.JellyBelly_BG25_005_G ? 2 : 1;
-				modifyStats(
-					e,
-					e,
-					multiplier * 2,
-					multiplier * 3,
-					boardWithKilledMinion,
-					boardWithKilledMinionHero,
 					gameState,
 				);
 			});
