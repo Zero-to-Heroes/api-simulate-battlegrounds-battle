@@ -26,7 +26,6 @@ import { WaxWarband } from '../../cards/impl/hero-power/wax-warband';
 import { AmberGuardian } from '../../cards/impl/minion/amber-guardian';
 import { AudaciousAnchor } from '../../cards/impl/minion/audacious-anchor';
 import { CarbonicCopy } from '../../cards/impl/minion/carbonic-copy';
-import { ChoralMrrrglr } from '../../cards/impl/minion/choral-mrrrglr';
 import { CorruptedMyrmidon } from '../../cards/impl/minion/corrupted-myrmidon';
 import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
@@ -218,12 +217,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return FleetingVigor;
 
 		// Minions
-		// case CardIds.RedWhelp_BGS_019:
-		// case CardIds.RedWhelp_TB_BaconUps_102:
-		// 	return RedWhelp;
-		case CardIds.ChoralMrrrglr_BG26_354:
-		case CardIds.ChoralMrrrglr_BG26_354_G:
-			return ChoralMrrrglr;
 		case CardIds.AmberGuardian_BG24_500:
 		case CardIds.AmberGuardian_BG24_500_G:
 			return AmberGuardian;

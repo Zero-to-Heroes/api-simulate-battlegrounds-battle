@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { getNeighbours } from '../../../simulation/attack';
 import { playBloodGemsOn } from '../../../simulation/blood-gems';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
@@ -11,7 +11,16 @@ export const SkulkingBristlemane: StartOfCombatCard = {
 		const mult = minion.cardId === CardIds.SkulkingBristlemane_BG32_434_G ? 2 : 1;
 		const neighbours = getNeighbours(input.playerBoard, minion);
 		for (const neighbour of neighbours) {
-			playBloodGemsOn(minion, neighbour, 1 * mult, input.playerBoard, input.playerEntity, input.gameState);
+			playBloodGemsOn(
+				minion,
+				neighbour,
+				1 * mult,
+				input.playerBoard,
+				input.playerEntity,
+				input.opponentBoard,
+				input.opponentEntity,
+				input.gameState,
+			);
 		}
 		return { hasTriggered: true, shouldRecomputeCurrentAttacker: false };
 	},

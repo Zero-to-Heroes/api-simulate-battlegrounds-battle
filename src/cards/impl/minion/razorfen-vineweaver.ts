@@ -15,6 +15,8 @@ export const RazorfenVineweaver: RallyCard = {
 			3 * mult,
 			input.attackingBoard,
 			input.attackingHero,
+			input.defendingBoard,
+			input.defendingHero,
 			input.gameState,
 		);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };

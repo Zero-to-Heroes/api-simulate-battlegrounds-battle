@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { playBloodGemsOn } from '../../../simulation/blood-gems';
 import { BattlecryCard } from '../../card.interface';
@@ -10,7 +10,18 @@ export const GemSmuggler: BattlecryCard = {
 		const mult = minion.cardId === CardIds.GemSmuggler_BG25_155 ? 1 : 2;
 		input.board
 			.filter((e) => e.entityId !== minion.entityId)
-			.forEach((e) => playBloodGemsOn(minion, e, 2 * mult, input.board, input.hero, input.gameState));
+			.forEach((e) =>
+				playBloodGemsOn(
+					minion,
+					e,
+					2 * mult,
+					input.board,
+					input.hero,
+					input.otherBoard,
+					input.otherHero,
+					input.gameState,
+				),
+			);
 		return true;
 	},
 };

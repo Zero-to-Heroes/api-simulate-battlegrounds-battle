@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
@@ -8,6 +8,7 @@ import { StartOfCombatCard } from '../../card.interface';
 
 export const PrizedPromoDrake: StartOfCombatCard = {
 	cardIds: [CardIds.PrizedPromoDrake_BG21_014, CardIds.PrizedPromoDrake_BG21_014_G],
+	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const mult = minion.cardId === CardIds.PrizedPromoDrake_BG21_014_G ? 2 : 1;
 		const targets = input.playerBoard.filter((e) =>

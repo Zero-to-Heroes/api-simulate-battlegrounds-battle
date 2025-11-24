@@ -6,6 +6,7 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateTaunt } from '../keywords/taunt';
 import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive } from '../services/utils';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -24,27 +25,30 @@ import { performEntitySpawns } from './spawns';
 import { modifyStats } from './stats';
 import { isMinionGolden, makeMinionGolden } from './utils/golden';
 
+const DOUBLE_BATTLECRY_CARD_IDS = [
+	CardIds.BrannBronzebeard_BG_LOE_077,
+	CardIds.MoiraBronzebeard_BG27_518,
+	CardIds.BrannsBlessing_BG28_509,
+	TempCardIds.TimewarpedDeios,
+];
+const TRIPLE_BATTLECRY_CARD_IDS = [
+	CardIds.BrannBronzebeard_TB_BaconUps_045,
+	CardIds.MoiraBronzebeard_BG27_518_G,
+	TempCardIds.TimewarpedDeios_G,
+];
+
 export const computeBattlecryMultiplier = (
 	board: BoardEntity[],
 	boardHero: BgsPlayerEntity,
 	sharedState: SharedState,
 ): number => {
-	const brann = board.find(
-		(entity) =>
-			entity.cardId === CardIds.BrannBronzebeard_BG_LOE_077 ||
-			// Should be a playtesting relic
-			// entity.cardId === CardIds.BrannBronzebeard_BrannBronzebeardMurlocdragonToken_BG_LOE_077t ||
-			entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
-	);
-	const brannBlessings = boardHero.secrets?.some((e) => e.cardId === CardIds.BrannsBlessing_BG28_509);
-	const brannBonus = !!brann || brannBlessings ? 2 : 0;
-	const goldenBrann = board.find(
-		(entity) =>
-			entity.cardId === CardIds.BrannBronzebeard_TB_BaconUps_045 ||
-			// entity.cardId === CardIds.BrannBronzebeard_BrannBronzebeardMurlocdragonToken_TB_BaconUps_045t ||
-			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
-	);
-	const goldenBrannBonus = !!goldenBrann ? 3 : 0;
+	const cardIds = [...board.map((e) => e.cardId), ...(boardHero.secrets?.map((e) => e.cardId) ?? [])];
+	const triggerMult = cardIds.some((cardId) => TRIPLE_BATTLECRY_CARD_IDS.includes(cardId as CardIds))
+		? 3
+		: cardIds.some((cardId) => DOUBLE_BATTLECRY_CARD_IDS.includes(cardId as CardIds))
+		? 2
+		: 1;
+
 	const gilneanWarHorns =
 		boardHero.questRewardEntities?.filter((entity) => entity.cardId === CardIds.GilneanWarHorn)?.length ?? 0;
 	const echoesOfArgus = sharedState.anomalies.includes(CardIds.EchoesOfArgus_BG27_Anomaly_802) ? 1 : 0;
@@ -52,7 +56,7 @@ export const computeBattlecryMultiplier = (
 		(t) => t.cardId === CardIds.WarDrum_BG32_MagicItem_416 && t.scriptDataNum1 > 0,
 	);
 
-	let multiplier = echoesOfArgus + Math.max(goldenBrannBonus, brannBonus, 1) + gilneanWarHorns;
+	let multiplier = echoesOfArgus + triggerMult + gilneanWarHorns;
 	if (warDrum) {
 		multiplier = multiplier * 2;
 		warDrum.scriptDataNum1--;

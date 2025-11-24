@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { magnetizeToTarget } from '../../../simulation/magnetize';
@@ -21,7 +21,16 @@ export const ClunkerJunker: BattlecryCard = {
 					input.hero.tavernTier ?? 1,
 				);
 				input.gameState.spectator.registerPowerTarget(minion, junkerTarget, input.board, null, null);
-				magnetizeToTarget(junkerTarget, minion, minionToMagnetize, input.board, input.hero, input.gameState);
+				magnetizeToTarget(
+					junkerTarget,
+					minion,
+					minionToMagnetize,
+					input.board,
+					input.hero,
+					input.otherBoard,
+					input.otherHero,
+					input.gameState,
+				);
 			}
 		}
 		return true;

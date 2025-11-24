@@ -1,5 +1,7 @@
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasPlayedBloodGemsOnMe } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { CardIds } from '../services/card-ids';
 import { findLast, pickRandom } from '../services/utils';
@@ -13,6 +15,8 @@ export const playBloodGemsOn = (
 	quantity: number,
 	board: BoardEntity[],
 	hero: BgsPlayerEntity,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 	registerTarget = true,
 ) => {
@@ -40,26 +44,22 @@ export const playBloodGemsOn = (
 	const bloodGemAttack = bloodGemBaseAttack * cronesMult;
 	const bloodGemHealth = bloodGemBaseHealth * cronesMult;
 
-	const applyBloodGemEnchantment = (enchantmentCardId: string) => {
-		let enchantment = findLast(target.enchantments, (e) => e.cardId === enchantmentCardId);
-		if (!enchantment) {
-			enchantment = {
-				cardId: enchantmentCardId,
-				originEntityId: source.entityId,
-				timing: 0,
-				tagScriptDataNum1: 0,
-				tagScriptDataNum2: 0,
-			};
-			target.enchantments.push(enchantment);
-		}
-		for (let i = 0; i < quantity; i++) {
-			enchantment.tagScriptDataNum1 += bloodGemAttack;
-			enchantment.tagScriptDataNum2 += bloodGemHealth;
-		}
-	};
-
-	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemEnchantment);
-	applyBloodGemEnchantment(CardIds.BloodGem_BloodGemsEnchantment);
+	applyBloodGemEnchantment(
+		CardIds.BloodGem_BloodGemEnchantment,
+		target,
+		source,
+		quantity,
+		bloodGemAttack,
+		bloodGemHealth,
+	);
+	applyBloodGemEnchantment(
+		CardIds.BloodGem_BloodGemsEnchantment,
+		target,
+		source,
+		quantity,
+		bloodGemAttack,
+		bloodGemHealth,
+	);
 
 	// This seems to be a single "modifyStats" call
 	// 33.6 https://replays.firestoneapp.com/?reviewId=51f93537-182d-4fb8-bf41-1b4429341e01&turn=19&action=3
@@ -85,7 +85,17 @@ export const playBloodGemsOn = (
 				const roogugTarget = pickRandom(roogugTargets);
 				if (roogugTarget) {
 					const roogugBuff = target.cardId === CardIds.GeomagusRoogug_BG28_583_G ? 2 : 1;
-					playBloodGemsOn(target, roogugTarget, roogugBuff, board, hero, gameState, false);
+					playBloodGemsOn(
+						target,
+						roogugTarget,
+						roogugBuff,
+						board,
+						hero,
+						otherBoard,
+						otherHero,
+						gameState,
+						false,
+					);
 				}
 				break;
 			case CardIds.AggemThorncurse_BG20_302:
@@ -102,9 +112,63 @@ export const playBloodGemsOn = (
 					gameState,
 				);
 				for (const candidate of candidates) {
-					playBloodGemsOn(target, candidate, aggemGemsToPlay, board, hero, gameState, false);
+					playBloodGemsOn(
+						target,
+						candidate,
+						aggemGemsToPlay,
+						board,
+						hero,
+						otherBoard,
+						otherHero,
+						gameState,
+						false,
+					);
 				}
 				break;
+			default:
+				const playedBloodGemsOnMeImpl = cardMappings[target.cardId];
+				if (hasPlayedBloodGemsOnMe(playedBloodGemsOnMeImpl)) {
+					playedBloodGemsOnMeImpl.playedBloodGemsOnMe(target, {
+						board: board,
+						hero: hero,
+						otherBoard: otherBoard,
+						otherHero: otherHero,
+						gameState: gameState,
+					});
+				}
 		}
 	}
 };
+
+export const applyBloodGemEnchantment = (
+	enchantmentCardId: string,
+	target: BoardEntity,
+	source: BoardEntity | BoardTrinket,
+	quantity: number,
+	bloodGemAttack: number,
+	bloodGemHealth: number,
+) => {
+	let enchantment = findLast(target.enchantments, (e) => e.cardId === enchantmentCardId);
+	if (!enchantment) {
+		enchantment = {
+			cardId: enchantmentCardId,
+			originEntityId: source.entityId,
+			timing: 0,
+			tagScriptDataNum1: 0,
+			tagScriptDataNum2: 0,
+		};
+		target.enchantments.push(enchantment);
+	}
+	for (let i = 0; i < quantity; i++) {
+		enchantment.tagScriptDataNum1 += bloodGemAttack;
+		enchantment.tagScriptDataNum2 += bloodGemHealth;
+	}
+};
+
+export interface PlayedBloodGemsOnMeInput {
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	otherBoard: BoardEntity[];
+	otherHero: BgsPlayerEntity;
+	gameState: FullGameState;
+}

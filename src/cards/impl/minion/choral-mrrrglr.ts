@@ -1,9 +1,12 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
+import { StartOfCombatCard } from '../../card.interface';
 
-export const ChoralMrrrglr = {
+export const ChoralMrrrglr: StartOfCombatCard = {
+	cardIds: [CardIds.ChoralMrrrglr_BG26_354, CardIds.ChoralMrrrglr_BG26_354_G],
+	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// Multiplier not needed if relying on global info?
 		const multiplier = minion.cardId === CardIds.ChoralMrrrglr_BG26_354_G ? 2 : 1;

@@ -1,8 +1,8 @@
-import { CardIds } from '../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { updateStealth } from '../keywords/stealth';
+import { CardIds } from '../services/card-ids';
 import { hasCorrectTribe } from '../utils';
 import { playBloodGemsOn } from './blood-gems';
 import { FullGameState } from './internal-game-state';
@@ -113,7 +113,16 @@ export const applyAfterAttackTrinkets = (
 					for (const entity of attackingBoard.filter((e) =>
 						hasCorrectTribe(e, attackingBoardHero, Race.QUILBOAR, gameState.anomalies, gameState.allCards),
 					)) {
-						playBloodGemsOn(trinket, entity, 1, attackingBoard, attackingBoardHero, gameState);
+						playBloodGemsOn(
+							trinket,
+							entity,
+							1,
+							attackingBoard,
+							attackingBoardHero,
+							defendingBoard,
+							defendingBoardHero,
+							gameState,
+						);
 						gameState.spectator.registerPowerTarget(
 							trinket,
 							entity,

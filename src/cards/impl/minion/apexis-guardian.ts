@@ -28,6 +28,8 @@ export const ApexisGuardian: DeathrattleSpawnCard = {
 						cardToMagnetize,
 						input.boardWithDeadEntity,
 						input.boardWithDeadEntityHero,
+						input.otherBoard,
+						input.otherBoardHero,
 						input.gameState,
 					);
 				}

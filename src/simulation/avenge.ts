@@ -410,6 +410,8 @@ const handleAvenge = (
 								1,
 								boardWithDeadEntity,
 								boardWithDeadEntityHero,
+								otherBoard,
+								otherBoardHero,
 								gameState,
 							);
 							gameState.spectator.registerPowerTarget(

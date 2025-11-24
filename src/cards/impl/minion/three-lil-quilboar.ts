@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { playBloodGemsOn } from '../../../simulation/blood-gems';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { hasCorrectTribe } from '../../../utils';
@@ -25,6 +25,8 @@ export const ThreeLilQuilboar: DeathrattleSpawnCard = {
 				numberOfBloodGems,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,
+				input.otherBoard,
+				input.otherBoardHero,
 				input.gameState,
 			);
 		}

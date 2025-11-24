@@ -1,14 +1,13 @@
-import { CardType, Race } from '@firestone-hs/reference-data';
+import { Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { hasOnDivineShieldUpdated } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { pickRandom } from '../services/utils';
-import { addCardsInHand } from '../simulation/cards-in-hand';
 import { FullGameState } from '../simulation/internal-game-state';
 import { modifyStats } from '../simulation/stats';
-import { grantRandomStats, hasCorrectTribe } from '../utils';
+import { hasCorrectTribe } from '../utils';
 
 export const updateDivineShield = (
 	entity: BoardEntity,
@@ -59,7 +58,8 @@ export const updateDivineShield = (
 					otherHero: otherHero,
 					gameState: gameState,
 					target: entity,
-					previousValue: entity.hadDivineShield,
+					newValue: false,
+					previousValue: true,
 				});
 			}
 		}
@@ -73,7 +73,8 @@ export const updateDivineShield = (
 					otherHero: otherHero,
 					gameState: gameState,
 					target: entity,
-					previousValue: entity.hadDivineShield,
+					newValue: false,
+					previousValue: true,
 				});
 			}
 		}
@@ -97,32 +98,28 @@ export const updateDivineShield = (
 					board[i].cardId === CardIds.HolyMecherel_BG20_401_G)
 			) {
 				updateDivineShield(board[i], board, hero, otherHero, true, gameState);
-			} else if (board[i].cardId === CardIds.Gemsplitter_BG21_037) {
-				addCardsInHand(hero, board, [CardIds.BloodGem], gameState);
-			} else if (board[i].cardId === CardIds.Gemsplitter_BG21_037_G) {
-				addCardsInHand(hero, board, [CardIds.BloodGem, CardIds.BloodGem], gameState);
-				// } else if (
-				// 	board[i].cardId === CardIds.CogworkCopter_BG24_008 ||
-				// 	board[i].cardId === CardIds.CogworkCopter_BG24_008_G
-				// ) {
-				// When it's the opponent, the game state already contains all the buffs
-				if (board[i]?.friendly) {
-					const buff = 1; //board[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
-					grantRandomStats(
-						board[i],
-						hero.hand.filter(
-							(e) =>
-								gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-						),
-						hero,
-						buff,
-						buff,
-						null,
-						true,
-						gameState,
-					);
-				}
 			}
+			// } else if (
+			// 	board[i].cardId === CardIds.CogworkCopter_BG24_008 ||
+			// 	board[i].cardId === CardIds.CogworkCopter_BG24_008_G
+			// ) {
+			// When it's the opponent, the game state already contains all the buffs
+			// if (board[i]?.friendly) {
+			// 	const buff = 1; //board[i].cardId === CardIds.CogworkCopter_BG24_008_G ? 2 : 1;
+			// 	grantRandomStats(
+			// 		board[i],
+			// 		hero.hand.filter(
+			// 			(e) =>
+			// 				gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
+			// 		),
+			// 		hero,
+			// 		buff,
+			// 		buff,
+			// 		null,
+			// 		true,
+			// 		gameState,
+			// 	);
+			// }
 		}
 	}
 };
@@ -164,5 +161,6 @@ export interface OnDivineShieldUpdatedInput {
 	otherHero: BgsPlayerEntity;
 	gameState: FullGameState;
 	target: BoardEntity;
+	newValue: boolean;
 	previousValue: boolean;
 }

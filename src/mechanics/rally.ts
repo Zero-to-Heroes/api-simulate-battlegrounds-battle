@@ -6,7 +6,11 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { fixEnchantments } from '../simulation/enchantments';
 import { FullGameState } from '../simulation/internal-game-state';
+import { TempCardIds } from '../temp-card-ids';
 import { hasEntityMechanic } from '../utils';
+
+const DOUBLE_RALLY_CARD_IDS: string[] = [TempCardIds.TimewarpedDeios];
+const TRIPLE_RALLY_CARD_IDS: string[] = [TempCardIds.TimewarpedDeios_G];
 
 export const triggerRally = (
 	attackingBoard: BoardEntity[],
@@ -20,10 +24,22 @@ export const triggerRally = (
 	let damageDoneByAttacker = 0;
 	let damageDoneByDefender = 0;
 	const isAttackerRallying = hasEntityMechanic(attacker, GameTag.BACON_RALLY, gameState.allCards);
+
+	const cardIds = [
+		...attackingBoard.map((e) => e.cardId),
+		...(attackingBoardHero.secrets?.map((e) => e.cardId) ?? []),
+	];
+	const triggerMult = cardIds.some((cardId) => TRIPLE_RALLY_CARD_IDS.includes(cardId))
+		? 3
+		: cardIds.some((cardId) => DOUBLE_RALLY_CARD_IDS.includes(cardId))
+		? 2
+		: 1;
 	const numberOfRallyingCries =
 		attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
 			.length ?? 0;
-	const rallyLoops = 1 + (isAttackerRallying ? numberOfRallyingCries : 0);
+	const multiplier = triggerMult + numberOfRallyingCries;
+	const rallyLoops = 1 + (isAttackerRallying ? multiplier : 0);
+
 	for (let i = 0; i < rallyLoops; i++) {
 		const onAttackImpl = cardMappings[attacker.cardId];
 		if (hasRally(onAttackImpl)) {

@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { getNeighbours } from '../../../simulation/attack';
 import { playBloodGemsOn } from '../../../simulation/blood-gems';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
@@ -10,7 +10,17 @@ export const Bannerboar: EndOfTurnCard = {
 		const mult = minion.cardId === CardIds.Bannerboar_BG20_201 ? 1 : 2;
 		const neighbors = getNeighbours(input.board, minion);
 		for (const neighbor of neighbors) {
-			playBloodGemsOn(minion, neighbor, 1 * mult, input.board, input.hero, input.gameState, true);
+			playBloodGemsOn(
+				minion,
+				neighbor,
+				1 * mult,
+				input.board,
+				input.hero,
+				input.otherBoard,
+				input.otherHero,
+				input.gameState,
+				true,
+			);
 		}
 	},
 };

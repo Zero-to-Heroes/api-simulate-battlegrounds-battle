@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { magnetizeToTarget } from '../../../simulation/magnetize';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
@@ -9,7 +9,16 @@ export const RicketyRepairbot: EndOfTurnCard = {
 		const mult = minion.cardId === CardIds.RicketyRepairbot_BG32_173_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const minionToMagnetize = input.gameState.cardsData.getRandomMechToMagnetize(input.hero.tavernTier ?? 1);
-			magnetizeToTarget(minion, minion, minionToMagnetize, input.board, input.hero, input.gameState);
+			magnetizeToTarget(
+				minion,
+				minion,
+				minionToMagnetize,
+				input.board,
+				input.hero,
+				input.otherBoard,
+				input.otherHero,
+				input.gameState,
+			);
 		}
 	},
 };

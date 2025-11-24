@@ -9,6 +9,7 @@ import { updateTaunt } from '../keywords/taunt';
 import { CardIds } from '../services/card-ids';
 import { pickMultipleRandomDifferent } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
+import { TempCardIds } from '../temp-card-ids';
 import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
@@ -26,6 +27,12 @@ import { SharedState } from './shared-state';
 import { modifyStats } from './stats';
 
 const DEATHRATTLES_REQUIRE_MEMORY = [CardIds.StitchedSalvager_BG31_999, CardIds.StitchedSalvager_BG31_999_G];
+const DOUBLE_DEATHRATTLE_CARD_IDS = [
+	CardIds.MoiraBronzebeard_BG27_518,
+	CardIds.TitusTribute_BG28_843,
+	TempCardIds.TimewarpedDeios,
+];
+const TRIPLE_DEATHRATTLE_CARD_IDS = [CardIds.MoiraBronzebeard_BG27_518_G, TempCardIds.TimewarpedDeios_G];
 
 export const computeDeathrattleMultiplier = (
 	board: BoardEntity[],
@@ -33,17 +40,13 @@ export const computeDeathrattleMultiplier = (
 	deadEntity: BoardEntity,
 	sharedState: SharedState,
 ): number => {
-	const rivendare =
-		!!board.find(
-			(entity) =>
-				entity.cardId === CardIds.BaronRivendare_BG_FP1_031 ||
-				entity.cardId === CardIds.MoiraBronzebeard_BG27_518,
-		) || boardHero.secrets?.some((e) => e.cardId === CardIds.TitusTribute_BG28_843);
-	const goldenRivendare = board.find(
-		(entity) =>
-			entity.cardId === CardIds.BaronRivendare_TB_BaconUps_055 ||
-			entity.cardId === CardIds.MoiraBronzebeard_BG27_518_G,
-	);
+	const cardIds = [...board.map((e) => e.cardId), ...(boardHero.secrets?.map((e) => e.cardId) ?? [])];
+	const triggerMult = cardIds.some((cardId) => TRIPLE_DEATHRATTLE_CARD_IDS.includes(cardId as CardIds))
+		? 3
+		: cardIds.some((cardId) => DOUBLE_DEATHRATTLE_CARD_IDS.includes(cardId as CardIds))
+		? 2
+		: 1;
+
 	const titus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354).length;
 	const goldenTitus = board.filter((entity) => entity.cardId === CardIds.TitusRivendare_BG25_354_G).length;
 	const deathlyPhylacteries = boardHero.trinkets.filter(
@@ -55,13 +58,7 @@ export const computeDeathrattleMultiplier = (
 	const scourgeMultiplier = deadEntity.additionalCards?.includes(CardIds.ScourgeTroll) ? 2 : 1;
 
 	const multiplier =
-		scourgeMultiplier *
-		((goldenRivendare ? 3 : rivendare ? 2 : 1) +
-			deathlyPhylacteries +
-			titus +
-			2 * goldenTitus +
-			tombs +
-			echoesOfArgus);
+		scourgeMultiplier * (triggerMult + deathlyPhylacteries + titus + 2 * goldenTitus + tombs + echoesOfArgus);
 	return multiplier;
 };
 

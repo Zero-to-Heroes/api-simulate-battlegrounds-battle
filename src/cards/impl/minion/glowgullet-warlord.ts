@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { playBloodGemsOn } from '../../../simulation/blood-gems';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
@@ -21,6 +21,8 @@ export const GlowgulletWarlord: DeathrattleSpawnCard = {
 				1 * mult,
 				input.boardWithDeadEntity,
 				input.boardWithDeadEntityHero,
+				input.otherBoard,
+				input.otherBoardHero,
 				input.gameState,
 			),
 		);

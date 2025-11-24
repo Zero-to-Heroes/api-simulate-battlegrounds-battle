@@ -1,10 +1,12 @@
-import { CardIds } from '../../../services/card-ids';
 import { AllCardsService, GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { BattlecryCard, hasEndOfTurn } from '../../card.interface';
 import { cardMappings } from '../_card-mappings';
+import { TimewarpedMurkEye } from './timewarped-murk-eye';
+import { YoungMurkEye } from './young-murk-eye';
 
 export const EfficientEngineer: BattlecryCard = {
 	cardIds: [CardIds.EfficientEngineer_BG31_301, CardIds.EfficientEngineer_BG31_301_G],
@@ -13,10 +15,7 @@ export const EfficientEngineer: BattlecryCard = {
 		const allCards = input.gameState.allCards;
 		for (let i = 0; i < mult; i++) {
 			const candidates = input.board
-				.filter(
-					(e) =>
-						![CardIds.YoungMurkEye_BG22_403, CardIds.YoungMurkEye_BG22_403_G].includes(e.cardId as CardIds),
-				)
+				.filter((e) => ![...YoungMurkEye.cardIds, ...TimewarpedMurkEye.cardIds].includes(e.cardId as CardIds))
 				.filter(
 					(m) =>
 						hasEndOfTurnMechanics(m.cardId, allCards) ||

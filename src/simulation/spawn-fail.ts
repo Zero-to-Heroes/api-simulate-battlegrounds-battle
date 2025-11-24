@@ -1,5 +1,7 @@
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
+import { hasOnSpawnFail } from '../cards/card.interface';
+import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { addStatsToAliveBoard, addStatsToBoard } from '../utils';
 import { FullGameState } from './internal-game-state';
@@ -13,6 +15,18 @@ export const onMinionFailedToSpawn = (
 ) => {
 	if (entity?.onCanceledSummon) {
 		entity.onCanceledSummon();
+	}
+
+	for (const boardEntity of board) {
+		const onSpawnFailImp = cardMappings[boardEntity.cardId];
+		if (hasOnSpawnFail(onSpawnFailImp)) {
+			onSpawnFailImp.onSpawnFail(boardEntity, {
+				failedSpawn: entity,
+				board: board,
+				hero: hero,
+				gameState: gameState,
+			});
+		}
 	}
 
 	hero.trinkets

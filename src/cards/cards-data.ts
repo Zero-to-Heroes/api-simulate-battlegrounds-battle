@@ -344,7 +344,7 @@ export class CardsData {
 			.some((raceEnum) => raceEnum === Race.ALL || !validTribes?.length || validTribes.includes(raceEnum));
 	}
 
-	public getRandomTavernSpell(): string {
+	public getRandomTavernSpell(options?: { exactTavernTier?: number; maxTavernTier?: number }): string {
 		return null;
 	}
 }

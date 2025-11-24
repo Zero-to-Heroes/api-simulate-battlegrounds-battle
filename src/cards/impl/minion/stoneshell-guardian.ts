@@ -2,14 +2,24 @@ import { GameTag } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
+import { TempCardIds } from '../../../temp-card-ids';
 import { hasEntityMechanic } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const StoneshellGuardian: StartOfCombatCard = {
-	cardIds: [CardIds.StoneshellGuardian_BG33_HERO_000_Buddy, CardIds.StoneshellGuardian_BG33_HERO_000_Buddy_G],
+	cardIds: [
+		CardIds.StoneshellGuardian_BG33_HERO_000_Buddy,
+		CardIds.StoneshellGuardian_BG33_HERO_000_Buddy_G,
+		TempCardIds.TimewarpedStoneshell,
+		TempCardIds.TimewarpedStoneshell_G,
+	],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		// let totalSpawned = 0;
-		const numberOfCopies = minion.cardId === CardIds.StoneshellGuardian_BG33_HERO_000_Buddy_G ? 2 : 1;
+		const numberOfCopies =
+			minion.cardId === CardIds.StoneshellGuardian_BG33_HERO_000_Buddy_G ||
+			minion.cardId === TempCardIds.TimewarpedStoneshell_G
+				? 2
+				: 1;
 		for (let i = 0; i < numberOfCopies; i++) {
 			const rallyMinions = input.playerBoard.filter(
 				(e) =>

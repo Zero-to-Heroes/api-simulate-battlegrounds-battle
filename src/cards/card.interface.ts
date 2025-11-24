@@ -16,12 +16,13 @@ import {
 import { OnAfterDeathInput, OnDeathInput, OnMinionKilledInput } from '../simulation/attack';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
+import { PlayedBloodGemsOnMeInput } from '../simulation/blood-gems';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { AfterDealDamageInput } from '../simulation/damage-effects';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { FullGameState } from '../simulation/internal-game-state';
-import { OnBeforeMagnetizeInput } from '../simulation/magnetize';
+import { OnAfterMagnetizeInput, OnBeforeMagnetizeInput } from '../simulation/magnetize';
 import { OnAttackInput } from '../simulation/on-attack';
 import { OnMinionAttackedInput } from '../simulation/on-being-attacked';
 import { RebornEffectInput } from '../simulation/reborn';
@@ -309,6 +310,31 @@ export interface OnBeforeMagnetizeCard extends Card {
 }
 export const hasOnBeforeMagnetize = (card: Card): card is OnBeforeMagnetizeCard =>
 	(card as OnBeforeMagnetizeCard)?.onBeforeMagnetize !== undefined;
+
+export interface OnAfterMagnetizeCard extends Card {
+	onAfterMagnetize: (entity: BoardEntity, input: OnAfterMagnetizeInput) => void;
+}
+export const hasOnAfterMagnetize = (card: Card): card is OnAfterMagnetizeCard =>
+	(card as OnAfterMagnetizeCard)?.onAfterMagnetize !== undefined;
+
+export interface OnSpawnFailCard extends Card {
+	onSpawnFail: (entity: BoardEntity, input: OnSpawnFailInput) => void;
+}
+export const hasOnSpawnFail = (card: Card): card is OnSpawnFailCard =>
+	(card as OnSpawnFailCard)?.onSpawnFail !== undefined;
+
+export interface PlayedBloodGemsOnMeCard extends Card {
+	playedBloodGemsOnMe: (entity: BoardEntity, input: PlayedBloodGemsOnMeInput) => void;
+}
+export const hasPlayedBloodGemsOnMe = (card: Card): card is PlayedBloodGemsOnMeCard =>
+	(card as PlayedBloodGemsOnMeCard)?.playedBloodGemsOnMe !== undefined;
+
+export interface OnSpawnFailInput {
+	failedSpawn: BoardEntity;
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	gameState: FullGameState;
+}
 
 export interface CastSpellInput {
 	source: BoardEntity;
