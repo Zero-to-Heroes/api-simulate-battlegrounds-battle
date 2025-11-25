@@ -1,5 +1,5 @@
 import { BoardEntity } from '../../../board-entity';
-import { castSpell } from '../../../mechanics/cast-spell';
+import { castTavernSpell } from '../../../mechanics/cast-tavern-spell';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
 import { TempCardIds } from '../../../temp-card-ids';
@@ -11,7 +11,8 @@ export const ProfoundThinker: BattlecryCard = {
 		const mult = minion.cardId === TempCardIds.ProfoundThinker_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const spell = input.gameState.cardsData.getRandomSpellcraft();
-			castSpell(spell, {
+			castTavernSpell(spell, {
+				spellCardId: spell,
 				source: minion,
 				target: minion,
 				board: input.board,

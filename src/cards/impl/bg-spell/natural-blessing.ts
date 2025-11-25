@@ -3,11 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const NaturalBlessing: SpellCard = {
+export const NaturalBlessing: TavernSpellCard = {
 	cardIds: [CardIds.NaturalBlessing_BG28_845],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const baseAttack = input.gameState.allCards.getCard(spellCardId).tags[GameTag[GameTag.TAG_SCRIPT_DATA_NUM_1]];
 		const baseHealth = input.gameState.allCards.getCard(spellCardId).tags[GameTag[GameTag.TAG_SCRIPT_DATA_NUM_2]];
 		const attack = baseAttack + input.hero.globalInfo.TavernSpellAttackBuff;

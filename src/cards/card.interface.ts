@@ -16,7 +16,7 @@ import {
 import { OnAfterDeathInput, OnDeathInput, OnMinionKilledInput } from '../simulation/attack';
 import { AvengeInput } from '../simulation/avenge';
 import { BattlecryInput, OnBattlecryTriggeredInput } from '../simulation/battlecries';
-import { PlayedBloodGemsOnMeInput } from '../simulation/blood-gems';
+import { PlayedBloodGemsOnAnyInput, PlayedBloodGemsOnMeInput } from '../simulation/blood-gems';
 import { OnCardAddedToHandInput } from '../simulation/cards-in-hand';
 import { AfterDealDamageInput } from '../simulation/damage-effects';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
@@ -57,10 +57,23 @@ export const hasStartOfCombatFromHand = (card: Card): card is StartOfCombatFromH
 	(card as StartOfCombatFromHandCard)?.startOfCombatFromHand !== undefined;
 export type StartOfCombatTiming = 'start-of-combat' | 'pre-combat' | 'illidan';
 
-export interface SpellCard extends Card {
-	castSpell: (spellCardId: string, input: CastSpellInput) => void;
+export interface TavernSpellCard extends Card {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => void;
 }
-export const hasCastSpell = (card: Card): card is SpellCard => (card as SpellCard)?.castSpell !== undefined;
+export const hasCastTavernSpell = (card: Card): card is TavernSpellCard =>
+	(card as TavernSpellCard)?.castTavernSpell !== undefined;
+
+export interface OnTavernSpellCastCard extends Card {
+	onTavernSpellCast: (entity: BoardEntity | BoardTrinket, input: CastSpellInput) => void;
+}
+export const hasOnTavernSpellCast = (card: Card): card is OnTavernSpellCastCard =>
+	(card as OnTavernSpellCastCard)?.onTavernSpellCast !== undefined;
+
+export interface AfterTavernSpellCastCard extends Card {
+	afterTavernSpellCast: (entity: BoardEntity | BoardTrinket, input: CastSpellInput) => void;
+}
+export const hasAfterTavernSpellCast = (card: Card): card is AfterTavernSpellCastCard =>
+	(card as AfterTavernSpellCastCard)?.afterTavernSpellCast !== undefined;
 
 // Whenever this attacks
 export interface RallyCard extends Card {
@@ -329,6 +342,12 @@ export interface PlayedBloodGemsOnMeCard extends Card {
 export const hasPlayedBloodGemsOnMe = (card: Card): card is PlayedBloodGemsOnMeCard =>
 	(card as PlayedBloodGemsOnMeCard)?.playedBloodGemsOnMe !== undefined;
 
+export interface PlayedBloodGemsOnAnyCard extends Card {
+	playedBloodGemsOnAny: (entity: BoardEntity, input: PlayedBloodGemsOnAnyInput) => void;
+}
+export const hasPlayedBloodGemsOnAny = (card: Card): card is PlayedBloodGemsOnAnyCard =>
+	(card as PlayedBloodGemsOnAnyCard)?.playedBloodGemsOnAny !== undefined;
+
 export interface OnSpawnFailInput {
 	failedSpawn: BoardEntity;
 	board: BoardEntity[];
@@ -337,7 +356,8 @@ export interface OnSpawnFailInput {
 }
 
 export interface CastSpellInput {
-	source: BoardEntity;
+	spellCardId: string;
+	source: BoardEntity | BoardTrinket | BgsPlayerEntity;
 	target: BoardEntity;
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;

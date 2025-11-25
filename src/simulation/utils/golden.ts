@@ -1,5 +1,5 @@
 import { AllCardsService, GameTag } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from '../../bgs-player-entity';
+import { BgsPlayerEntity, BoardTrinket } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
 import { eternalKnightAttack, eternalKnightHealth } from '../../cards/impl/trinket/eternal-portrait';
 import { CardIds } from '../../services/card-ids';
@@ -11,7 +11,7 @@ import { modifyStats } from '../stats';
 
 export const makeMinionGolden = (
 	target: BoardEntity,
-	source: BoardEntity | BgsPlayerEntity,
+	source: BoardEntity | BgsPlayerEntity | BoardTrinket,
 	targetBoard: BoardEntity[],
 	targetBoardHero: BgsPlayerEntity,
 	otherBoard: BoardEntity[],

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { ALL_BG_RACES, AllCardsService, GameTag, Race, ReferenceCard } from '@firestone-hs/reference-data';
-import { BgsPlayerEntity } from './bgs-player-entity';
+import { BgsPlayerEntity, BoardTrinket } from './bgs-player-entity';
 import { BoardEnchantment, BoardEntity } from './board-entity';
 import { BoardSecret } from './board-secret';
 import { hasDefaultCharges } from './cards/card.interface';
@@ -630,6 +630,10 @@ export const isPilotedWhirlOTron = (entity: BoardEntity): boolean => {
 
 export const isGolden = (cardId: string, allCards: AllCardsService): boolean => {
 	return allCards.getCard(cardId).premium;
+};
+
+export const isBoardEntity = (entity: BoardEntity | BoardTrinket): entity is BoardEntity => {
+	return entity != null && 'maxHealth' in entity;
 };
 
 export const getPlayerState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {

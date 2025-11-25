@@ -77,6 +77,7 @@ import { CaptainBonerender } from './minion/captain-bonerender';
 import { CarapaceRaiser } from './minion/carapace-raiser';
 import { Carrier } from './minion/carrier';
 import { ChampionOfThePrimus } from './minion/champion-of-the-primus';
+import { ChargingCzarina } from './minion/charging-czarina';
 import { Charlga } from './minion/charlga';
 import { Charmwing } from './minion/charmwing';
 import { ChoralMrrrglr } from './minion/choral-mrrrglr';
@@ -118,6 +119,7 @@ import { FlightyScout } from './minion/flighty-scout';
 import { FloatingWatcher } from './minion/floating-watcher';
 import { FlotsamFlinger } from './minion/flotsam-flinger';
 import { ForestRover } from './minion/forest-rover';
+import { ForsakenWeaver } from './minion/forsaken-weaver';
 import { FountainChiller } from './minion/fountain-chiller';
 import { FriendlyBouncer } from './minion/friendly-bouncer';
 import { FriendlyGeist } from './minion/friendly-geist';
@@ -221,11 +223,13 @@ import { OozelingGladiator } from './minion/oozeling-gladiator';
 import { OperaticBelcher } from './minion/operatic-belcher';
 import { OranomonosTheWilted } from './minion/oranomonos-the-wilted';
 import { OutbackSmolderer } from './minion/outback-smolderer';
+import { PaintSmudger } from './minion/paint-smudger';
 import { ParchedWanderer } from './minion/parched-wanderer';
 import { PashmarTheVengeful } from './minion/pashmar-the-vengeful';
 import { PeggySturdybone } from './minion/peggy-sturdybone';
 import { PilotTheShredder } from './minion/pilot-the-shredder';
 import { PilotedWhirlOTron } from './minion/piloted-whirl-o-tron';
+import { Plankwalker } from './minion/plankwalker';
 import { Poultron } from './minion/poultron';
 import { PrimalfinLookout } from './minion/primalfin-lookout';
 import { PrimevalMonstrosity } from './minion/primeval-monstrosity';
@@ -312,11 +316,13 @@ import { TimewarpedAlleycat } from './minion/timewarped-alleycat';
 import { TimewarpedArchimonde } from './minion/timewarped-archimonde';
 import { TimewarpedArm } from './minion/timewarped-arm';
 import { TimewarpedBassgill } from './minion/timewarped-bassgill';
+import { TimewarpedBloodbinder } from './minion/timewarped-bloodbinder';
 import { TimewarpedBonker } from './minion/timewarped-bonker';
 import { TimewarpedBotani } from './minion/timewarped-botani';
 import { TimewarpedBristler } from './minion/timewarped-bristler';
 import { TimewarpedCalligrapher } from './minion/timewarped-calligrapher';
 import { TimewarpedCaretaker } from './minion/timewarped-caretaker';
+import { TimewarpedCenturion } from './minion/timewarped-centurion';
 import { TimewarpedChameleon } from './minion/timewarped-chameleon';
 import { TimewarpedClefthoof } from './minion/timewarped-clefthoof';
 import { TimewarpedCopter } from './minion/timewarped-copter';
@@ -324,6 +330,7 @@ import { TimewarpedDeadstomper } from './minion/timewarped-deadstomper';
 import { TimewarpedDeathswarmer } from './minion/timewarped-deathswarmer';
 import { TimewarpedDragonling } from './minion/timewarped-dragonling';
 import { TimewarpedDuskmaw } from './minion/timewarped-duskmaw';
+import { TimewarpedElectron } from './minion/timewarped-electron';
 import { TimewarpedElegist } from './minion/timewarped-elegist';
 import { TimewarpedExpeditioner } from './minion/timewarped-expeditioner';
 import { TimewarpedFestergut } from './minion/timewarped-festergut';
@@ -336,6 +343,7 @@ import { TimewarpedGreaseBot } from './minion/timewarped-grease-bot';
 import { TimewarpedGreenskeeper } from './minion/timewarped-greenskeeper';
 import { TimewarpedGuard } from './minion/timewarped-guard';
 import { TimewarpedHawkstrider } from './minion/timewarped-hawkstrider';
+import { TimewarpedHootail } from './minion/timewarped-hooktail';
 import { TimewarpedHunter } from './minion/timewarped-hunter';
 import { TimewarpedHyena } from './minion/timewarped-hyena';
 import { TimewarpedImmortal } from './minion/timewarped-immortal';
@@ -345,6 +353,7 @@ import { TimewarpedJellyBelly } from './minion/timewarped-jelly-belly';
 import { TimewarpedJungleKing } from './minion/timewarped-jungle-king';
 import { TimewarpedKarathress } from './minion/timewarped-karathress';
 import { TimewarpedKilrek } from './minion/timewarped-kilrek';
+import { TimewarpedLabRat } from './minion/timewarped-lab-rat';
 import { TimewarpedLilQuilboar } from './minion/timewarped-lil-quilboar';
 import { TimewarpedLowFlier } from './minion/timewarped-low-flier';
 import { TimewarpedMothership } from './minion/timewarped-mothership';
@@ -352,6 +361,7 @@ import { TimewarpedMrrrglr } from './minion/timewarped-mrrrglr';
 import { TimewarpedMurcules } from './minion/timewarped-murcules';
 import { TimewarpedMurkEye } from './minion/timewarped-murk-eye';
 import { TimewarpedMurky } from './minion/timewarped-murky';
+import { TimewarpedNalaa } from './minion/timewarped-nalaa';
 import { TimewarpedNelliesShip } from './minion/timewarped-nellies-ship';
 import { TimewarpedPainter } from './minion/timewarped-painter';
 import { TimewarpedPaleofin } from './minion/timewarped-paleofin';
@@ -874,6 +884,16 @@ const cards = [
 	TimewarpedPromoDrake,
 	TimewarpedDuskmaw,
 	TimewarpedPrimscale,
+	Plankwalker,
+	ChargingCzarina,
+	PaintSmudger,
+	ForsakenWeaver,
+	TimewarpedBloodbinder,
+	TimewarpedLabRat,
+	TimewarpedNalaa,
+	TimewarpedElectron,
+	TimewarpedHootail,
+	TimewarpedCenturion,
 	ApexisGuardian,
 	MetalDispenser,
 	JunkJouster,

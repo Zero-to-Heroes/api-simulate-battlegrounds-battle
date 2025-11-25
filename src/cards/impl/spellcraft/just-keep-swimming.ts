@@ -2,14 +2,14 @@ import { updateStealth } from '../../../keywords/stealth';
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const JustKeepSwimming: SpellCard = {
+export const JustKeepSwimming: TavernSpellCard = {
 	cardIds: [
 		CardIds.SilentSwimmer_JustKeepSwimmingToken_BG26_171t,
 		CardIds.SilentSwimmer_JustKeepSwimmingToken_BG26_171_Gt,
 	],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === CardIds.SilentSwimmer_JustKeepSwimmingToken_BG26_171t ? 1 : 2;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

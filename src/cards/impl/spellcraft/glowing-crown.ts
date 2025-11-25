@@ -1,11 +1,11 @@
 import { updateDivineShield } from '../../../keywords/divine-shield';
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const GlowingCrown: SpellCard = {
+export const GlowingCrown: TavernSpellCard = {
 	cardIds: [CardIds.Glowscale_GlowingCrownToken_BG23_008t, CardIds.Glowscale_GlowingCrownToken_BG23_008_Gt],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board.filter((e) => !e.divineShield));
 		if (!!target) {
 			updateDivineShield(target, input.board, input.hero, input.otherHero, true, input.gameState);

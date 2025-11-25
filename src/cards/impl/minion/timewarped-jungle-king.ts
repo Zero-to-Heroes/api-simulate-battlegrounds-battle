@@ -4,9 +4,9 @@ import { OnOtherSpawnInput } from '../../../simulation/add-minion-to-board';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
-import { AfterOtherSpawnedCard } from '../../card.interface';
+import { AfterOtherSpawnedCard, AfterTavernSpellCastCard, CastSpellInput } from '../../card.interface';
 
-export const TimewarpedJungleKing: AfterOtherSpawnedCard = {
+export const TimewarpedJungleKing: AfterOtherSpawnedCard & AfterTavernSpellCastCard = {
 	cardIds: [TempCardIds.TimewarpedJungleKing, TempCardIds.TimewarpedJungleKing_G],
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnInput) => {
 		if (
@@ -26,5 +26,9 @@ export const TimewarpedJungleKing: AfterOtherSpawnedCard = {
 			input.hero,
 			input.gameState,
 		);
+	},
+	afterTavernSpellCast: (entity: BoardEntity, input: CastSpellInput) => {
+		entity.scriptDataNum1 = entity.scriptDataNum1 ?? 0;
+		entity.scriptDataNum1++;
 	},
 };

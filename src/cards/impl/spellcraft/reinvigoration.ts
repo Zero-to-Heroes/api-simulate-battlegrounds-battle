@@ -4,11 +4,11 @@ import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const Reinvigoration: SpellCard = {
+export const Reinvigoration: TavernSpellCard = {
 	cardIds: [CardIds.WearyMage_ReinvigorationToken_BG31_830t, CardIds.WearyMage_ReinvigorationToken_BG31_830_Gt],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === CardIds.WearyMage_ReinvigorationToken_BG31_830_Gt ? 1 : 2;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

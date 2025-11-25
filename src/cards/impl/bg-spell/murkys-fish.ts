@@ -3,11 +3,11 @@ import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const MurkysFish: SpellCard = {
+export const MurkysFish: TavernSpellCard = {
 	cardIds: [CardIds.MurkysFish_BG33_898],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const murlocs = input.board.filter((e) =>
 			hasCorrectTribe(e, input.hero, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards),
 		);

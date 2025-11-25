@@ -1,6 +1,6 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
-import { castSpell } from '../../../mechanics/cast-spell';
+import { castTavernSpell } from '../../../mechanics/cast-tavern-spell';
 import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { TempCardIds } from '../../../temp-card-ids';
@@ -28,8 +28,9 @@ export const BluesySiren: OnWheneverAnotherMinionAttacksCard & DefaultChargesCar
 			minion.cardId === TempCardIds.BluesySiren_G
 				? CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502_Gt
 				: CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t;
-		castSpell(spellCast, {
-			source: minion,
+		castTavernSpell(spellCast, {
+			spellCardId: spellCast,
+			source: input.attackingHero,
 			target: minion,
 			board: input.attackingBoard,
 			hero: input.attackingHero,

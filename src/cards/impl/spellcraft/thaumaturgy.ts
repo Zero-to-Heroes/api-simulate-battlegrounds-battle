@@ -1,11 +1,11 @@
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const Thaumaturgy: SpellCard = {
+export const Thaumaturgy: TavernSpellCard = {
 	cardIds: [CardIds.Thaumaturgist_ThaumaturgyToken_BG31_924t, CardIds.Thaumaturgist_ThaumaturgyToken_BG31_924_Gt],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === CardIds.Thaumaturgist_ThaumaturgyToken_BG31_924t ? 1 : 2;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

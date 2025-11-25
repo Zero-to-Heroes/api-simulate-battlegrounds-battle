@@ -5,11 +5,11 @@ import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity, hasCorrectTribe } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const TimewarpedConch: SpellCard = {
+export const TimewarpedConch: TavernSpellCard = {
 	cardIds: [TempCardIds.TimewarpedConch],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target =
 			input.target ??
 			pickRandom(

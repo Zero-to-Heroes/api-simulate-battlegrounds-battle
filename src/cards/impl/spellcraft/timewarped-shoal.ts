@@ -3,11 +3,11 @@ import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const TimewarpedShoal: SpellCard = {
+export const TimewarpedShoal: TavernSpellCard = {
 	cardIds: [TempCardIds.TimewarpedShoal, TempCardIds.TimewarpedShoal_G],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === TempCardIds.TimewarpedShoal_G ? 2 : 1;
 		const nagas = input.board.filter((entity) =>
 			hasCorrectTribe(entity, input.hero, Race.NAGA, input.gameState.anomalies, input.gameState.allCards),

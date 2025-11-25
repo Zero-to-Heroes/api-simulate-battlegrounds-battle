@@ -4,11 +4,11 @@ import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const TimewarpedCloningDevice: SpellCard = {
+export const TimewarpedCloningDevice: TavernSpellCard = {
 	cardIds: [TempCardIds.TimewarpedCloningDevice],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {
 			const copy = copyEntity(target);

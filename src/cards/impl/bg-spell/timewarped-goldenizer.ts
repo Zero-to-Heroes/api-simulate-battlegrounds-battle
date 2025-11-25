@@ -2,11 +2,11 @@ import { pickRandom } from '../../../services/utils';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
 import { TempCardIds } from '../../../temp-card-ids';
 import { isGolden } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const TimewarpedGoldenizer: SpellCard = {
+export const TimewarpedGoldenizer: TavernSpellCard = {
 	cardIds: [TempCardIds.TimewarpedGoldenizer],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target =
 			input.target ?? pickRandom(input.board.filter((e) => !isGolden(e.cardId, input.gameState.allCards)));
 		if (!!target) {

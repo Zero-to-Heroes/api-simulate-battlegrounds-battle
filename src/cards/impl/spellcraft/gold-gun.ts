@@ -3,11 +3,11 @@ import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
 import { hasCorrectTribe } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const GoldGun: SpellCard = {
+export const GoldGun: TavernSpellCard = {
 	cardIds: [CardIds.GretaGoldGun_GoldGunToken],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target =
 			input.target ??
 			pickRandom(

@@ -1,6 +1,6 @@
 import { BgsPlayerEntity, BoardTrinket } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasPlayedBloodGemsOnMe } from '../cards/card.interface';
+import { hasPlayedBloodGemsOnAny, hasPlayedBloodGemsOnMe } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { CardIds } from '../services/card-ids';
@@ -10,7 +10,7 @@ import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
 export const playBloodGemsOn = (
-	source: BoardEntity | BoardTrinket,
+	source: BoardEntity | BoardTrinket | BgsPlayerEntity,
 	target: BoardEntity,
 	quantity: number,
 	board: BoardEntity[],
@@ -137,13 +137,28 @@ export const playBloodGemsOn = (
 					});
 				}
 		}
+
+		for (const boardEntity of board) {
+			const playedBloodGemsOnAnyImpl = cardMappings[boardEntity.cardId];
+			if (hasPlayedBloodGemsOnAny(playedBloodGemsOnAnyImpl)) {
+				playedBloodGemsOnAnyImpl.playedBloodGemsOnAny(boardEntity, {
+					source: source,
+					target: target,
+					board: board,
+					hero: hero,
+					otherBoard: otherBoard,
+					otherHero: otherHero,
+					gameState: gameState,
+				});
+			}
+		}
 	}
 };
 
 export const applyBloodGemEnchantment = (
 	enchantmentCardId: string,
 	target: BoardEntity,
-	source: BoardEntity | BoardTrinket,
+	source: BoardEntity | BoardTrinket | BgsPlayerEntity,
 	quantity: number,
 	bloodGemAttack: number,
 	bloodGemHealth: number,
@@ -166,6 +181,16 @@ export const applyBloodGemEnchantment = (
 };
 
 export interface PlayedBloodGemsOnMeInput {
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	otherBoard: BoardEntity[];
+	otherHero: BgsPlayerEntity;
+	gameState: FullGameState;
+}
+
+export interface PlayedBloodGemsOnAnyInput {
+	source: BoardEntity | BoardTrinket | BgsPlayerEntity;
+	target: BoardEntity;
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;
 	otherBoard: BoardEntity[];

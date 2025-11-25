@@ -1,11 +1,11 @@
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const TimewarpedEelectrify: SpellCard = {
+export const TimewarpedEelectrify: TavernSpellCard = {
 	cardIds: [TempCardIds.TimewarpedEelectrify, TempCardIds.TimewarpedEelectrify_G],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === TempCardIds.TimewarpedEelectrify_G ? 2 : 1;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

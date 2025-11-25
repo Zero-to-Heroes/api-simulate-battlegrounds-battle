@@ -1,5 +1,5 @@
 import { BoardEntity } from '../../../board-entity';
-import { castSpell } from '../../../mechanics/cast-spell';
+import { castTavernSpell } from '../../../mechanics/cast-tavern-spell';
 import { PlayedBloodGemsOnMeInput } from '../../../simulation/blood-gems';
 import { TempCardIds } from '../../../temp-card-ids';
 import { DefaultChargesCard, PlayedBloodGemsOnMeCard } from '../../card.interface';
@@ -18,8 +18,9 @@ export const TimewarpedTwirler: PlayedBloodGemsOnMeCard & DefaultChargesCard = {
 			entity.abiityChargesLeft--;
 			const mult = entity.cardId === TempCardIds.TimewarpedTwirler_G ? 2 : 1;
 			for (let i = 0; i < mult; i++) {
-				castSpell(TempCardIds.BloodGemBarrage, {
-					source: entity,
+				castTavernSpell(TempCardIds.BloodGemBarrage, {
+					spellCardId: TempCardIds.BloodGemBarrage,
+					source: input.hero,
 					target: null,
 					board: input.board,
 					hero: input.hero,

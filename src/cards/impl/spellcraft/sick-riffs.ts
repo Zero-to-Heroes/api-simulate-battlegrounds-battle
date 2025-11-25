@@ -1,11 +1,11 @@
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const SickRiffs: SpellCard = {
+export const SickRiffs: TavernSpellCard = {
 	cardIds: [CardIds.ReefRiffer_SickRiffsToken_BG26_501t, CardIds.ReefRiffer_SickRiffsToken_BG26_501_Gt],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === CardIds.ReefRiffer_SickRiffsToken_BG26_501t ? 1 : 2;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

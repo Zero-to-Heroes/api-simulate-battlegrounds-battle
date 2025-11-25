@@ -2,11 +2,11 @@ import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
 import { isGolden } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const EyesOfTheEarthMother: SpellCard = {
+export const EyesOfTheEarthMother: TavernSpellCard = {
 	cardIds: [CardIds.EyesOfTheEarthMother_EBG_Spell_017],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const targets = input.board.filter((e) => e.tavernTier <= 4 && !isGolden(e.cardId, input.gameState.allCards));
 		const target = pickRandom(targets);
 		if (!target) {

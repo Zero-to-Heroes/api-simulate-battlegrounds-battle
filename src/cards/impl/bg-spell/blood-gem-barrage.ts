@@ -1,9 +1,9 @@
 import { TempCardIds } from '../../../temp-card-ids';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const BloodGemBarrage: SpellCard = {
+export const BloodGemBarrage: TavernSpellCard = {
 	cardIds: [TempCardIds.BloodGemBarrage],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		// Do nothing in combat
 	},
 };

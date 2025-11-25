@@ -3,14 +3,14 @@ import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { triggerBattlecry } from '../../../simulation/battlecries';
 import { hasEntityMechanic } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const SurgingScales: SpellCard = {
+export const SurgingScales: TavernSpellCard = {
 	cardIds: [
 		CardIds.DraconicDeathscale_SurgingScalesToken_BG29_870t,
 		CardIds.DraconicDeathscale_SurgingScalesToken_BG29_870_Gt,
 	],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === CardIds.DraconicDeathscale_SurgingScalesToken_BG29_870_Gt ? 1 : 2;
 		const target =
 			input.target ??

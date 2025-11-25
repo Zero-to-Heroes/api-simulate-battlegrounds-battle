@@ -1,11 +1,11 @@
 import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const GoldGun: SpellCard = {
+export const GoldGun: TavernSpellCard = {
 	cardIds: [CardIds.TheGoldenHammer_TheGoldenHammerToken],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {
 			makeMinionGolden(

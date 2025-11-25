@@ -4,11 +4,11 @@ import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
 import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
-import { CastSpellInput, SpellCard } from '../../card.interface';
+import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
-export const UnderseaMount: SpellCard = {
+export const UnderseaMount: TavernSpellCard = {
 	cardIds: [TempCardIds.UnderseaMount, TempCardIds.UnderseaMount_G],
-	castSpell: (spellCardId: string, input: CastSpellInput) => {
+	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const mult = spellCardId === TempCardIds.UnderseaMount_G ? 2 : 1;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {
