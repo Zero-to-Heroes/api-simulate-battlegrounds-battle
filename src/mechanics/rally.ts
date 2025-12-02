@@ -37,7 +37,7 @@ export const triggerRally = (
 		attackingBoardHero.questRewardEntities?.filter((r) => r.cardId === CardIds.RallyingCry_BG33_Reward_021)
 			.length ?? 0;
 	const multiplier = triggerMult + numberOfRallyingCries;
-	const rallyLoops = 1 + (isAttackerRallying ? multiplier : 0);
+	const rallyLoops = !isAttackerRallying ? 1 : multiplier;
 
 	for (let i = 0; i < rallyLoops; i++) {
 		const onAttackImpl = cardMappings[attacker.cardId];
