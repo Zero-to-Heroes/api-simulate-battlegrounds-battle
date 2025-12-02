@@ -19,6 +19,9 @@ export const TimewarpedExpeditioner: OnStatsChangedCard = {
 					input.board,
 					input.hero,
 					input.gameState,
+					true,
+					true,
+					false,
 				);
 			}
 			if (minionsInHand.length > 1) {
@@ -31,6 +34,9 @@ export const TimewarpedExpeditioner: OnStatsChangedCard = {
 					input.board,
 					input.hero,
 					input.gameState,
+					true,
+					true,
+					false,
 				);
 			}
 		}
