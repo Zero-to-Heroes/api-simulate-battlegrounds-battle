@@ -9,8 +9,16 @@ export const DeepBlues: TavernSpellCard = {
 		const mult = spellCardId === CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t ? 1 : 2;
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {
-			// TODO: use Deep Blue buff value
-			modifyStats(target, input.source, 2 * mult, 3 * mult, input.board, input.hero, input.gameState);
+			const currentBuff = input.hero.globalInfo.DeepBluesPlayed;
+			modifyStats(
+				target,
+				input.source,
+				2 * currentBuff * mult,
+				3 * currentBuff * mult,
+				input.board,
+				input.hero,
+				input.gameState,
+			);
 			input.gameState.spectator.registerPowerTarget(
 				input.source,
 				target,

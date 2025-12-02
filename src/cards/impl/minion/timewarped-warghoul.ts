@@ -17,7 +17,12 @@ export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 				!TimewarpedWarghoul.cardIds.includes(e.cardId),
 		);
 		const neighbours =
-			minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G ? allNeighbours : [pickRandom(allNeighbours)];
+			minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G
+				? allNeighbours
+				: [pickRandom(allNeighbours)].filter((e) => !!e);
+		if (neighbours.length === 0) {
+			return [];
+		}
 		for (const neighbour of neighbours) {
 			input.gameState.spectator.registerPowerTarget(
 				minion,

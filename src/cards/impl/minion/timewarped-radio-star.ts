@@ -8,6 +8,10 @@ import { DeathrattleSpawnCard } from '../../card.interface';
 export const TimewarpedRadioStar: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TimewarpedRadioStar_BG34_Giant_330, CardIds.TimewarpedRadioStar_BG34_Giant_330_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
+		// E.g deathrattle is triggered by Hand of Deios at the start of combat
+		if (!minion.lastAffectedByEntity) {
+			return [];
+		}
 		const mult = minion.cardId === CardIds.TimewarpedRadioStar_BG34_Giant_330_G ? 2 : 1;
 		const clone = copyEntity(minion.lastAffectedByEntity);
 		clone.health = clone.maxHealth;
