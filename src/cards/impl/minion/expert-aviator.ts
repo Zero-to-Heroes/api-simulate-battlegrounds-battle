@@ -5,6 +5,7 @@ import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns'
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { modifyStats } from '../../../simulation/stats';
+import { copyEntity } from '../../../utils';
 import { RallyCard } from '../../card.interface';
 
 export const ExpertAviator: RallyCard = {
@@ -22,6 +23,7 @@ export const ExpertAviator: RallyCard = {
 		}
 
 		target.locked = true;
+		const clone = copyEntity(target);
 		const spawnInput: DeathrattleTriggeredInput = {
 			boardWithDeadEntity: input.attackingBoard,
 			boardWithDeadEntityHero: input.attackingHero,
@@ -30,7 +32,7 @@ export const ExpertAviator: RallyCard = {
 			otherBoard: input.defendingBoard,
 			otherBoardHero: input.defendingHero,
 		};
-		const spawns = simplifiedSpawnEntities(target.cardId, 1, spawnInput);
+		const spawns = simplifiedSpawnEntities(clone.cardId, 1, spawnInput, clone);
 		for (const s of spawns) {
 			s.onCanceledSummon = () => (s.locked = false);
 		}
