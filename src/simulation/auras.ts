@@ -266,6 +266,7 @@ export const setImplicitDataHero = (
 	hero.globalInfo.GoldSpentThisGame = hero.globalInfo.GoldSpentThisGame ?? 0;
 	hero.globalInfo.VolumizerAttackBuff = hero.globalInfo.VolumizerAttackBuff ?? 0;
 	hero.globalInfo.VolumizerHealthBuff = hero.globalInfo.VolumizerHealthBuff ?? 0;
+	hero.globalInfo.DeepBluesPlayed = hero.globalInfo.DeepBluesPlayed ?? 0;
 };
 
 export const clearStealthIfNeeded = (

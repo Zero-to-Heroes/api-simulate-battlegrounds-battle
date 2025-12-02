@@ -104,6 +104,7 @@ export interface BgsPlayerGlobalInfo {
 	GoldSpentThisGame?: number;
 	VolumizerHealthBuff?: number;
 	VolumizerAttackBuff?: number;
+	DeepBluesPlayed?: number;
 
 	MutatedLasherAttackBuff?: number;
 	MutatedLasherHealthBuff?: number;
