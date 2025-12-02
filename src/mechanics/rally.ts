@@ -6,11 +6,10 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { fixEnchantments } from '../simulation/enchantments';
 import { FullGameState } from '../simulation/internal-game-state';
-import { TempCardIds } from '../temp-card-ids';
 import { hasEntityMechanic } from '../utils';
 
-const DOUBLE_RALLY_CARD_IDS: string[] = [TempCardIds.TimewarpedDeios];
-const TRIPLE_RALLY_CARD_IDS: string[] = [TempCardIds.TimewarpedDeios_G];
+const DOUBLE_RALLY_CARD_IDS: string[] = [CardIds.TimewarpedDeios_BG34_Giant_376];
+const TRIPLE_RALLY_CARD_IDS: string[] = [CardIds.TimewarpedDeios_BG34_Giant_376_G];
 
 export const triggerRally = (
 	attackingBoard: BoardEntity[],

@@ -1,15 +1,15 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const TimewarpedScourfin: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.TimewarpedScourfin, TempCardIds.TimewarpedScourfin_G],
+	cardIds: [CardIds.TimewarpedScourfin_BG34_Giant_017, CardIds.TimewarpedScourfin_BG34_Giant_017_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedScourfin_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedScourfin_BG34_Giant_017_G ? 2 : 1;
 		let target = pickRandom(input.boardWithDeadEntityHero.hand.filter((e) => !e.locked && !!e.maxHealth));
 		if (!target) {
 			target = pickRandom(input.boardWithDeadEntityHero.hand.filter((e) => !!e.maxHealth));

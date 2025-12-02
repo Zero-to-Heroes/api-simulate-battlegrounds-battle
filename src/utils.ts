@@ -11,7 +11,6 @@ import { pickRandom, shuffleArray } from './services/utils';
 import { FullGameState, GameState, PlayerState } from './simulation/internal-game-state';
 import { SharedState } from './simulation/shared-state';
 import { modifyStats } from './simulation/stats';
-import { TempCardIds } from './temp-card-ids';
 
 const CLEAVE_IDS = [
 	CardIds.CaveHydra_BG_LOOT_078,
@@ -22,8 +21,8 @@ const CLEAVE_IDS = [
 	CardIds.BladeCollector_BG26_817_G,
 	CardIds.KerriganQueenOfBlades_UltraliskToken_BG31_HERO_811t10,
 	CardIds.Ultralisk_BG31_HERO_811t10_G,
-	TempCardIds.TimewarpedUltralisk,
-	TempCardIds.TimewarpedUltralisk_G,
+	CardIds.TimewarpedUltralisk_BG34_Treasure_994,
+	CardIds.TimewarpedUltralisk_BG34_Treasure_994_G,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
@@ -456,7 +455,7 @@ export const isVolumizer = (
 	}
 
 	const refCard = allCards.getCard(cardId);
-	return refCard.mechanics?.includes('VOLUMIZER');
+	return refCard.mechanics?.includes('BACON_VOLUMIZER');
 };
 
 export const getEffectiveTribesForEntity = (
@@ -539,8 +538,8 @@ export const addImpliedMechanics = (entity: BoardEntity, cardsData: CardsData): 
 		CardIds.Warpwing_BG24_004_G,
 		CardIds.KerriganQueenOfBlades_ViperToken_BG31_HERO_811t8,
 		CardIds.Viper_BG31_HERO_811t8_G,
-		TempCardIds.TimewarpedViper,
-		TempCardIds.TimewarpedViper_G,
+		CardIds.TimewarpedViper_BG34_Treasure_990,
+		CardIds.TimewarpedViper_BG34_Treasure_990_G,
 	].includes(entity.cardId as CardIds)
 		? 99999
 		: null;

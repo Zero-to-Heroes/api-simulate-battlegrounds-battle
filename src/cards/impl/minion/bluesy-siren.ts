@@ -3,12 +3,11 @@ import { BoardEntity } from '../../../board-entity';
 import { castTavernSpell } from '../../../mechanics/cast-tavern-spell';
 import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { DefaultChargesCard, OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
 export const BluesySiren: OnWheneverAnotherMinionAttacksCard & DefaultChargesCard = {
-	cardIds: [TempCardIds.BluesySiren, TempCardIds.BluesySiren_G],
+	cardIds: [CardIds.BluesySiren_BG34_931, CardIds.BluesySiren_BG34_931_G],
 	defaultCharges: (entity: BoardEntity) => 3,
 	onWheneverAnotherMinionAttacks: (minion: BoardEntity, input: OnAttackInput) => {
 		if (
@@ -25,7 +24,7 @@ export const BluesySiren: OnWheneverAnotherMinionAttacksCard & DefaultChargesCar
 
 		minion.abiityChargesLeft = minion.abiityChargesLeft - 1;
 		const spellCast =
-			minion.cardId === TempCardIds.BluesySiren_G
+			minion.cardId === CardIds.BluesySiren_BG34_931_G
 				? CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502_Gt
 				: CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t;
 		castTavernSpell(spellCast, {

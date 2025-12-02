@@ -1,13 +1,13 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { TempCardIds } from '../../../temp-card-ids';
 import { addStatsToBoard } from '../../../utils';
 import { DeathrattleTriggeredCard } from '../../card.interface';
 
 export const TimewarpedGhoulAcabra: DeathrattleTriggeredCard = {
-	cardIds: [TempCardIds.TimewarpedGhoulAcabra, TempCardIds.TimewarpedGhoulAcabra_G],
+	cardIds: [CardIds.TimewarpedGhoulAcabra_BG34_Giant_609, CardIds.TimewarpedGhoulAcabra_BG34_Giant_609_G],
 	onDeathrattleTriggered: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedGhoulAcabra_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedGhoulAcabra_BG34_Giant_609_G ? 2 : 1;
 		addStatsToBoard(
 			minion,
 			input.boardWithDeadEntity,

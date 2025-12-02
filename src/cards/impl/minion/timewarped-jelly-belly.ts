@@ -1,13 +1,13 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { RebornEffectInput } from '../../../simulation/reborn';
-import { TempCardIds } from '../../../temp-card-ids';
 import { addStatsToBoard } from '../../../utils';
 import { RebornEffectCard } from '../../card.interface';
 
 export const TimewarpedJellyBelly: RebornEffectCard = {
-	cardIds: [TempCardIds.TimewarpedJellyBelly, TempCardIds.TimewarpedJellyBelly_G],
+	cardIds: [CardIds.TimewarpedJellyBelly_BG34_Giant_024, CardIds.TimewarpedJellyBelly_BG34_Giant_024_G],
 	rebornEffect: (minion: BoardEntity, input: RebornEffectInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedJellyBelly_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedJellyBelly_BG34_Giant_024_G ? 2 : 1;
 		addStatsToBoard(
 			minion,
 			input.boardWithKilledMinion,

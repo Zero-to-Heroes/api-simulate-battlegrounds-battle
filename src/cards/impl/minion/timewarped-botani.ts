@@ -1,12 +1,12 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
-import { TempCardIds } from '../../../temp-card-ids';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const TimewarpedBotani: EndOfTurnCard = {
-	cardIds: [TempCardIds.TimewarpedBotani, TempCardIds.TimewarpedBotani_G],
+	cardIds: [CardIds.TimewarpedBotani_BG34_Giant_594, CardIds.TimewarpedBotani_BG34_Giant_594_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedBotani_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedBotani_BG34_Giant_594_G ? 2 : 1;
 		const cardsToAdd = [];
 		for (let i = 0; i < mult; i++) {
 			cardsToAdd.push(input.gameState.cardsData.getRandomMinionForTavernTier(input.hero.tavernTier ?? 3));

@@ -1,12 +1,12 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { modifyStats, OnStatsChangedInput } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnStatsChangedCard } from '../../card.interface';
 
 export const TimewarpedExpeditioner: OnStatsChangedCard = {
-	cardIds: [TempCardIds.TimewarpedExpeditioner, TempCardIds.TimewarpedExpeditioner_G],
+	cardIds: [CardIds.TimewarpedExpeditioner_BG34_Giant_317, CardIds.TimewarpedExpeditioner_BG34_Giant_317_G],
 	onStatsChanged: (minion: BoardEntity, input: OnStatsChangedInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedExpeditioner_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedExpeditioner_BG34_Giant_317_G ? 2 : 1;
 		if ((input.attackAmount > 0 || input.healthAmount > 0) && input.target === minion) {
 			const minionsInHand = input.hero.hand.filter((c) => !!c?.maxHealth);
 			if (minionsInHand.length > 0) {

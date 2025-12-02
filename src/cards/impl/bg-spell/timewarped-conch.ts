@@ -1,14 +1,14 @@
 import { Race } from '@firestone-hs/reference-data';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity, hasCorrectTribe } from '../../../utils';
 import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
 export const TimewarpedConch: TavernSpellCard = {
-	cardIds: [TempCardIds.TimewarpedConch],
+	cardIds: [CardIds.TimewarpedConch_BG34_Treasure_951],
 	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target =
 			input.target ??

@@ -1,13 +1,13 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnMinionAttackedInput } from '../../../simulation/on-being-attacked';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { OnMinionAttackedCard } from '../../card.interface';
 
 export const TimewarpedArm: OnMinionAttackedCard = {
-	cardIds: [TempCardIds.TimewarpedArm, TempCardIds.TimewarpedArm_G],
+	cardIds: [CardIds.TimewarpedArm_BG34_Giant_027, CardIds.TimewarpedArm_BG34_Giant_027_G],
 	onAttacked: (minion: BoardEntity, input: OnMinionAttackedInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedArm_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedArm_BG34_Giant_027_G ? 2 : 1;
 		modifyStats(
 			input.defendingEntity,
 			minion,

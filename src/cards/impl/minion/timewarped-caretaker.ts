@@ -1,15 +1,15 @@
-import { CardIds, Race } from '@firestone-hs/reference-data';
+import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { addStatsToBoard } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const TimewarpedCaretaker: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.TimewarpedCaretaker, TempCardIds.TimewarpedCaretaker_G],
+	cardIds: [CardIds.TimewarpedCaretaker_BG34_Giant_618, CardIds.TimewarpedCaretaker_BG34_Giant_618_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
-		const mult = minion.cardId === TempCardIds.TimewarpedCaretaker_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedCaretaker_BG34_Giant_618_G ? 2 : 1;
 		const spawns = simplifiedSpawnEntities(CardIds.SkeletonToken, 6 * mult, input);
 		spawns.forEach((e) => {
 			e.onCanceledSummon = () => {

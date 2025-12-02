@@ -1,15 +1,15 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { dealDamageToMinion } from '../../../simulation/attack';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const TimewarpedClefthoof: EndOfTurnCard = {
-	cardIds: [TempCardIds.TimewarpedClefthoof, TempCardIds.TimewarpedClefthoof_G],
+	cardIds: [CardIds.TimewarpedClefthoof_BG34_PreMadeChamp_090, CardIds.TimewarpedClefthoof_BG34_PreMadeChamp_090_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedClefthoof_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedClefthoof_BG34_PreMadeChamp_090_G ? 2 : 1;
 		const candidates = input.board.filter((e) =>
 			hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
 		);

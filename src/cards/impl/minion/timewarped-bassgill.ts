@@ -1,15 +1,15 @@
 import { BoardEntity } from '../../../board-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const TimewarpedBassgill: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.TimewarpedBassgill, TempCardIds.TimewarpedBassgill_G],
+	cardIds: [CardIds.TimewarpedBassgill_BG34_Giant_071, CardIds.TimewarpedBassgill_BG34_Giant_071_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedBassgill_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedBassgill_BG34_Giant_071_G ? 2 : 1;
 		const spawnedEntities: BoardEntity[] = [];
 		for (let i = 0; i < mult; i++) {
 			const hand = input.boardWithDeadEntityHero.hand.filter((e) => !!e?.cardId).filter((e) => !e.locked) ?? [];

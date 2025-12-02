@@ -4,14 +4,13 @@ import { hasMinionBattlecry, triggerBattlecry } from '../../../simulation/battle
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { hasValidDeathrattle } from '../../../simulation/deathrattle-utils';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { TempCardIds } from '../../../temp-card-ids';
 import { isDead } from '../../../utils';
 import { RallyCard } from '../../card.interface';
 
 export const TimewarpedGreenskeeper: RallyCard = {
-	cardIds: [TempCardIds.TimewarpedGreenskeeper, TempCardIds.TimewarpedGreenskeeper_G],
+	cardIds: [CardIds.TimewarpedGreenskeeper_BG34_Giant_041, CardIds.TimewarpedGreenskeeper_BG34_Giant_041_G],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
-		const loops = minion.cardId === CardIds.Greenskeeper_BG30_008 ? 1 : 2;
+		const loops = minion.cardId === CardIds.TimewarpedGreenskeeper_BG34_Giant_041_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			const battlecries = input.attackingBoard.filter(
 				(e) => !isDead(e) && hasMinionBattlecry(e, input.gameState),

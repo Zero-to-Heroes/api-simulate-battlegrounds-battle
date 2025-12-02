@@ -1,13 +1,13 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { TempCardIds } from '../../../temp-card-ids';
 import { grantStatsToMinionsOfEachType } from '../../../utils';
 import { RallyCard } from '../../card.interface';
 
 export const TheLastOneStanding: RallyCard = {
-	cardIds: [TempCardIds.TheLastOneStanding, TempCardIds.TheLastOneStanding_G],
+	cardIds: [CardIds.TheLastOneStanding_BG34_320, CardIds.TheLastOneStanding_BG34_320_G],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
-		const mult = minion.cardId === TempCardIds.TheLastOneStanding_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TheLastOneStanding_BG34_320_G ? 2 : 1;
 		grantStatsToMinionsOfEachType(
 			minion,
 			input.attackingBoard,

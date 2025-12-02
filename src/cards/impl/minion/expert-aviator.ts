@@ -1,16 +1,16 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { performEntitySpawns } from '../../../simulation/spawns';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { RallyCard } from '../../card.interface';
 
 export const ExpertAviator: RallyCard = {
-	cardIds: [TempCardIds.ExpertAviator, TempCardIds.ExpertAviator_G],
+	cardIds: [CardIds.ExpertAviator_BG34_140, CardIds.ExpertAviator_BG34_140_G],
 	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
-		const mult = minion.cardId === TempCardIds.ExpertAviator_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.ExpertAviator_BG34_140_G ? 2 : 1;
 		const target = input.attackingHero.hand.filter((e) => !!e.maxHealth && e.cardId)[0];
 		if (!target) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };

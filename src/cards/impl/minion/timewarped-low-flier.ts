@@ -1,12 +1,12 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const TimewarpedLowFlier: EndOfTurnCard = {
-	cardIds: [TempCardIds.TimewarpedLowFlier, TempCardIds.TimewarpedLowFlier_G],
+	cardIds: [CardIds.TimewarpedLowFlier_BG34_Giant_065, CardIds.TimewarpedLowFlier_BG34_Giant_065_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedLowFlier_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedLowFlier_BG34_Giant_065_G ? 2 : 1;
 
 		const attackTargets = input.board.filter((e) => e.attack < minion.attack);
 		for (const target of attackTargets) {

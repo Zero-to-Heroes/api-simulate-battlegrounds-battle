@@ -3,7 +3,6 @@ import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { rememberDeathrattles } from '../../../simulation/deathrattle-effects';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasEntityMechanic } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
@@ -11,13 +10,13 @@ export const PilotedWhirlOTron: StartOfCombatCard = {
 	cardIds: [
 		CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy,
 		CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G,
-		TempCardIds.TimewarpedWhirlOTron,
-		TempCardIds.TimewarpedWhirlOTron_G,
+		CardIds.TimewarpedWhirlOTron_BG34_Giant_599,
+		CardIds.TimewarpedWhirlOTron_BG34_Giant_599_G,
 	],
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const mult =
 			minion.cardId === CardIds.PilotedWhirlOTron_BG21_HERO_030_Buddy_G ||
-			minion.cardId === TempCardIds.TimewarpedWhirlOTron_G
+			minion.cardId === CardIds.TimewarpedWhirlOTron_BG34_Giant_599_G
 				? 2
 				: 1;
 		const targets = input.playerBoard

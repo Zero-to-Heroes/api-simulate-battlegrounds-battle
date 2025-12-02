@@ -1,10 +1,10 @@
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
 export const TimewarpedRatInTheCage: TavernSpellCard = {
-	cardIds: [TempCardIds.TimewarpedRatInTheCage],
+	cardIds: [CardIds.TimewarpedRatInACage_BG34_Treasure_905],
 	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

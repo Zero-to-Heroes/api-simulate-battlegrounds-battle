@@ -1,14 +1,14 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const CostumeEnthusiast: StartOfCombatCard = {
-	cardIds: [TempCardIds.CostumeEnthusiast, TempCardIds.CostumeEnthusiast_G],
+	cardIds: [CardIds.CostumeEnthusiast_BG34_142, CardIds.CostumeEnthusiast_BG34_142_G],
 	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (minion: BoardEntity, input: SoCInput): boolean => {
-		const mult = minion.cardId === TempCardIds.CostumeEnthusiast_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.CostumeEnthusiast_BG34_142_G ? 2 : 1;
 		const target = input.playerEntity.hand
 			.filter((e) => e.attack != null && !!e.cardId)
 			.sort((a, b) => b.attack - a.attack)[0];

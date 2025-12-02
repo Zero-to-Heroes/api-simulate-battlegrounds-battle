@@ -1,15 +1,15 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { AvengeInput } from '../../../simulation/avenge';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { AvengeCard } from '../../card.interface';
 
 export const Stuntdrake: AvengeCard = {
-	cardIds: [TempCardIds.Stuntdrake, TempCardIds.Stuntdrake_G],
+	cardIds: [CardIds.Stuntdrake_BG34_732, CardIds.Stuntdrake_BG34_732_G],
 	baseAvengeValue: (cardId: string) => 3,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
-		const loops = minion.cardId === TempCardIds.Stuntdrake_G ? 2 : 1;
+		const loops = minion.cardId === CardIds.Stuntdrake_BG34_732_G ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			const picked: BoardEntity[] = [];
 			for (let j = 0; j < 2; j++) {

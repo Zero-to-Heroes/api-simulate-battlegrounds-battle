@@ -1,14 +1,14 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { OnStatsChangedInput } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { addStatsToAliveBoard } from '../../../utils';
 import { DeathrattleSpawnCard, OnStatsChangedCard } from '../../card.interface';
 
 export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
-	cardIds: [TempCardIds.SepulcralSergeant, TempCardIds.SepulcralSergeant_G],
+	cardIds: [CardIds.SepulchralSergeant_BG34_111, CardIds.SepulchralSergeant_BG34_111_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const mult = minion.cardId === TempCardIds.SepulcralSergeant_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.SepulchralSergeant_BG34_111_G ? 2 : 1;
 		const base = minion.scriptDataNum1 || 2;
 		const buff = base * mult;
 		addStatsToAliveBoard(

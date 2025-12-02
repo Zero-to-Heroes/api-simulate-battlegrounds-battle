@@ -1,13 +1,13 @@
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { spawnEntities } from '../../../simulation/deathrattle-spawns';
 import { performEntitySpawns } from '../../../simulation/spawns';
-import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity } from '../../../utils';
 import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
 export const TimewarpedCloningDevice: TavernSpellCard = {
-	cardIds: [TempCardIds.TimewarpedCloningDevice],
+	cardIds: [CardIds.TimewarpedCloningDevice_BG34_Treasure_302],
 	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

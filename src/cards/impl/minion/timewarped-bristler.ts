@@ -5,12 +5,11 @@ import { pickMultipleRandom } from '../../../services/utils';
 import { applyBloodGemEnchantment } from '../../../simulation/blood-gems';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const TimewarpedBristler: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.TimewarpedBristler, TempCardIds.TimewarpedBristler_G],
+	cardIds: [CardIds.TimewarpedBristler_BG34_Giant_104, CardIds.TimewarpedBristler_BG34_Giant_104_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		let bloodGemAttack = 0;
 		let bloodGemHealth = 0;
@@ -37,7 +36,7 @@ export const TimewarpedBristler: DeathrattleSpawnCard = {
 			),
 		);
 
-		const mult = minion.cardId === TempCardIds.TimewarpedBristler_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedBristler_BG34_Giant_104_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const targets = pickMultipleRandom(candidates, 2);
 			for (const target of targets) {

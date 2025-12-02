@@ -1,13 +1,13 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAfterMagnetizeInput } from '../../../simulation/magnetize';
 import { makeMinionGolden } from '../../../simulation/utils/golden';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { OnAfterMagnetizeCard } from '../../card.interface';
 
 export const TimewarpedProbius: OnAfterMagnetizeCard = {
-	cardIds: [TempCardIds.TimewarpedProbius, TempCardIds.TimewarpedProbius_G],
+	cardIds: [CardIds.TimewarpedProbius_BG34_Giant_121, CardIds.TimewarpedProbius_BG34_Giant_121_G],
 	onAfterMagnetize: (entity: BoardEntity, input: OnAfterMagnetizeInput) => {
 		if (
 			hasCorrectTribe(

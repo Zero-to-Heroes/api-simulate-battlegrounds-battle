@@ -1,13 +1,13 @@
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { removeAurasFromSelf } from '../../../simulation/add-minion-to-board';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
-import { TempCardIds } from '../../../temp-card-ids';
 import { copyEntity } from '../../../utils';
 import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
 // Not a true implementation, but something that's close enough for now
 export const TimewarpedThief: TavernSpellCard = {
-	cardIds: [TempCardIds.TimewarpedThief],
+	cardIds: [CardIds.TimewarpedThief_BG34_Treasure_966],
 	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board);
 		if (!!target) {

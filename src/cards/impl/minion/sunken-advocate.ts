@@ -1,15 +1,15 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnAttackInput } from '../../../simulation/on-attack';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { RallyCard } from '../../card.interface';
 
 export const SunkenAdvocate: RallyCard = {
-	cardIds: [TempCardIds.SunkenAdvocate, TempCardIds.SunkenAdvocate_G],
+	cardIds: [CardIds.SunkenAdvocate_BG34_930, CardIds.SunkenAdvocate_BG34_930_G],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
-		const mult = minion.cardId === TempCardIds.SunkenAdvocate_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.SunkenAdvocate_BG34_930_G ? 2 : 1;
 		const targets = input.attackingBoard.filter(
 			(e) =>
 				e !== input.attacker &&

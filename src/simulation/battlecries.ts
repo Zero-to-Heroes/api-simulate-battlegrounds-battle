@@ -6,7 +6,6 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateTaunt } from '../keywords/taunt';
 import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -29,12 +28,12 @@ const DOUBLE_BATTLECRY_CARD_IDS = [
 	CardIds.BrannBronzebeard_BG_LOE_077,
 	CardIds.MoiraBronzebeard_BG27_518,
 	CardIds.BrannsBlessing_BG28_509,
-	TempCardIds.TimewarpedDeios,
+	CardIds.TimewarpedDeios_BG34_Giant_376,
 ];
 const TRIPLE_BATTLECRY_CARD_IDS = [
 	CardIds.BrannBronzebeard_TB_BaconUps_045,
 	CardIds.MoiraBronzebeard_BG27_518_G,
-	TempCardIds.TimewarpedDeios_G,
+	CardIds.TimewarpedDeios_BG34_Giant_376_G,
 ];
 
 export const computeBattlecryMultiplier = (

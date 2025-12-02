@@ -2,11 +2,13 @@ import { BoardEntity } from '../../../board-entity';
 import { onTavernSpellCast } from '../../../mechanics/cast-tavern-spell';
 import { CardIds } from '../../../services/card-ids';
 import { PlayedBloodGemsOnAnyInput } from '../../../simulation/blood-gems';
-import { TempCardIds } from '../../../temp-card-ids';
 import { PlayedBloodGemsOnAnyCard } from '../../card.interface';
 
 export const TimewarpedBloodbinder: PlayedBloodGemsOnAnyCard = {
-	cardIds: [TempCardIds.TimewarpedBloodbinder, TempCardIds.TimewarpedBloodbinder_G],
+	cardIds: [
+		CardIds.TimewarpedBloodbinder_BG34_PreMadeChamp_076,
+		CardIds.TimewarpedBloodbinder_BG34_PreMadeChamp_076_G,
+	],
 	playedBloodGemsOnAny: (minion: BoardEntity, input: PlayedBloodGemsOnAnyInput) => {
 		onTavernSpellCast(CardIds.BloodGem, {
 			spellCardId: CardIds.BloodGem,

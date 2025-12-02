@@ -1,16 +1,16 @@
 import { GameTag } from '@firestone-hs/reference-data';
 import { BoardSecret } from '../../../board-secret';
 import { triggerRally } from '../../../mechanics/rally';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { triggerBattlecry } from '../../../simulation/battlecries';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasEntityMechanic } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const HandOfDeios: StartOfCombatCard = {
-	cardIds: [TempCardIds.HandOfDeios],
+	cardIds: [CardIds.HandOfDeios_BG34_991],
 	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (secret: BoardSecret, input: SoCInput) => {
 		// Battlecry

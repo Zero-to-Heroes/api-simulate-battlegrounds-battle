@@ -1,15 +1,15 @@
 import { ReferenceCard } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { Mutable, pickRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { magnetizeToTarget } from '../../../simulation/magnetize';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const ApexisGuardian: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.ApexisGuardian, TempCardIds.ApexisGuardian_G],
+	cardIds: [CardIds.ApexisGuardian_BG34_173, CardIds.ApexisGuardian_BG34_173_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
-		const loops = minion.cardId === TempCardIds.ApexisGuardian_G ? 2 : 1;
+		const loops = minion.cardId === CardIds.ApexisGuardian_BG34_173_G ? 2 : 1;
 		const possibleTargets = input.boardWithDeadEntity.filter(
 			(e) => e.health > 0 && !e.definitelyDead && e !== minion,
 		);
@@ -18,7 +18,7 @@ export const ApexisGuardian: DeathrattleSpawnCard = {
 			if (target) {
 				for (let j = 0; j < loops; j++) {
 					const cardToMagnetize: Mutable<ReferenceCard> = {
-						...input.gameState.allCards.getCard(TempCardIds.GreenVolumizer),
+						...input.gameState.allCards.getCard(CardIds.AutoAccelerator_GreenVolumizerToken_BG34_170t3),
 					};
 					cardToMagnetize.attack = 0;
 					cardToMagnetize.health = 0;

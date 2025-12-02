@@ -6,7 +6,6 @@ import { cardMappings } from '../cards/impl/_card-mappings';
 import { updateDivineShield } from '../keywords/divine-shield';
 import { CardIds } from '../services/card-ids';
 import { pickRandom, pickRandomAlive, pickRandomLowestHealth } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	addStatsToBoard,
 	buildSingleBoardEntity,
@@ -1150,7 +1149,7 @@ export const spawnEntitiesFromDeathrattle = (
 								}
 								break;
 							case CardIds.Leapfrogger_BG21_000:
-							case TempCardIds.TimewarpedLeapfrogger:
+							case CardIds.TimewarpedLeapfrogger_BG34_Giant_031:
 								// console.log('\t', 'Leapfrogger from DR', deadEntity.entityId);
 								applyLeapFroggerEffect(
 									boardWithDeadEntity,
@@ -1162,7 +1161,7 @@ export const spawnEntitiesFromDeathrattle = (
 								);
 								break;
 							case CardIds.Leapfrogger_BG21_000_G:
-							case TempCardIds.TimewarpedLeapfrogger_G:
+							case CardIds.TimewarpedLeapfrogger_BG34_Giant_031_G:
 								applyLeapFroggerEffect(
 									boardWithDeadEntity,
 									boardWithDeadEntityHero,

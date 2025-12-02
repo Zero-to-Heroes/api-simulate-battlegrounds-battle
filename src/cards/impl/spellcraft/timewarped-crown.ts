@@ -1,10 +1,13 @@
 import { updateDivineShield } from '../../../keywords/divine-shield';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
-import { TempCardIds } from '../../../temp-card-ids';
 import { CastSpellInput, TavernSpellCard } from '../../card.interface';
 
 export const TimewarpedCrown: TavernSpellCard = {
-	cardIds: [TempCardIds.TimewarpedCrown, TempCardIds.TimewarpedCrown_G],
+	cardIds: [
+		CardIds.TimewarpedGlowscale_TimewarpedCrownToken_BG34_Giant_035t,
+		CardIds.TimewarpedCrown_BG34_Giant_035t_G,
+	],
 	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
 		const target = input.target ?? pickRandom(input.board.filter((e) => !e.divineShield));
 		if (!!target) {

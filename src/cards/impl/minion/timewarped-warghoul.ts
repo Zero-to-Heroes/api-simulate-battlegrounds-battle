@@ -1,14 +1,14 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { getNeighbours } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orchestration';
 import { hasValidDeathrattle } from '../../../simulation/deathrattle-utils';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const TimewarpedWarghoul: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.TimewarpedWarghoul, TempCardIds.TimewarpedWarghoul_G],
+	cardIds: [CardIds.TimewarpedWarghoul_BG34_Giant_331, CardIds.TimewarpedWarghoul_BG34_Giant_331_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const allNeighbours = getNeighbours(input.boardWithDeadEntity, minion, input.deadEntityIndexFromRight).filter(
 			(e) =>
@@ -17,7 +17,7 @@ export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 				!TimewarpedWarghoul.cardIds.includes(e.cardId),
 		);
 		const neighbours =
-			minion.cardId === TempCardIds.TimewarpedWarghoul_G ? allNeighbours : [pickRandom(allNeighbours)];
+			minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G ? allNeighbours : [pickRandom(allNeighbours)];
 		for (const neighbour of neighbours) {
 			input.gameState.spectator.registerPowerTarget(
 				minion,

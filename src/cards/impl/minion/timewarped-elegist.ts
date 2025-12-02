@@ -1,12 +1,12 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { EndOfTurnCard, EndOfTurnInput } from '../../card.interface';
 
 export const TimewarpedElegist: EndOfTurnCard = {
-	cardIds: [TempCardIds.TimewarpedElegist, TempCardIds.TimewarpedElegist_G],
+	cardIds: [CardIds.TimewarpedElegist_BG34_Giant_310, CardIds.TimewarpedElegist_BG34_Giant_310_G],
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
-		const mult = minion.cardId === TempCardIds.TimewarpedElegist_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.TimewarpedElegist_BG34_Giant_310_G ? 2 : 1;
 		const targets = [...input.board, ...input.hero.hand];
 		for (const target of targets) {
 			modifyStats(target, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);

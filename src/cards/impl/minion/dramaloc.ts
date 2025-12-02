@@ -1,14 +1,14 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { pickMultipleRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
-import { TempCardIds } from '../../../temp-card-ids';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const Dramaloc: DeathrattleSpawnCard = {
-	cardIds: [TempCardIds.Dramaloc, TempCardIds.Dramaloc_G],
+	cardIds: [CardIds.Dramaloc_BG34_143, CardIds.Dramaloc_BG34_143_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
-		const mult = minion.cardId === TempCardIds.Dramaloc_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.Dramaloc_BG34_143_G ? 2 : 1;
 		const statsSource = input.boardWithDeadEntityHero.hand
 			.filter((e) => e.attack != null && !!e.cardId)
 			.sort((a, b) => b.attack - a.attack)[0];

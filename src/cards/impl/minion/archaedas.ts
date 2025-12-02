@@ -1,13 +1,13 @@
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
-import { TempCardIds } from '../../../temp-card-ids';
 import { BattlecryCard } from '../../card.interface';
 
 export const Archaedas: BattlecryCard = {
-	cardIds: [TempCardIds.Archaedas, TempCardIds.Archaedas_G],
+	cardIds: [CardIds.Archaedas_BG34_651, CardIds.Archaedas_BG34_651_G],
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
-		const mult = minion.cardId === TempCardIds.Archaedas_G ? 2 : 1;
+		const mult = minion.cardId === CardIds.Archaedas_BG34_651_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
 			const minionToAdd = input.gameState.cardsData.getRandomMinionForTavernTier(5);
 			if (!!minionToAdd) {

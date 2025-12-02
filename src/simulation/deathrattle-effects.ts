@@ -9,7 +9,6 @@ import { updateTaunt } from '../keywords/taunt';
 import { CardIds } from '../services/card-ids';
 import { pickMultipleRandomDifferent } from '../services/utils';
 import { isValidDeathrattleEnchantment } from '../simulate-bgs-battle';
-import { TempCardIds } from '../temp-card-ids';
 import {
 	getRandomMinionWithHighestHealth,
 	grantRandomStats,
@@ -30,9 +29,9 @@ const DEATHRATTLES_REQUIRE_MEMORY = [CardIds.StitchedSalvager_BG31_999, CardIds.
 const DOUBLE_DEATHRATTLE_CARD_IDS = [
 	CardIds.MoiraBronzebeard_BG27_518,
 	CardIds.TitusTribute_BG28_843,
-	TempCardIds.TimewarpedDeios,
+	CardIds.TimewarpedDeios_BG34_Giant_376,
 ];
-const TRIPLE_DEATHRATTLE_CARD_IDS = [CardIds.MoiraBronzebeard_BG27_518_G, TempCardIds.TimewarpedDeios_G];
+const TRIPLE_DEATHRATTLE_CARD_IDS = [CardIds.MoiraBronzebeard_BG27_518_G, CardIds.TimewarpedDeios_BG34_Giant_376_G];
 
 export const computeDeathrattleMultiplier = (
 	board: BoardEntity[],

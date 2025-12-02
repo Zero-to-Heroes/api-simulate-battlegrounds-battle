@@ -5,7 +5,6 @@ import { hasOnAfterMagnetize, hasOnBeforeMagnetize } from '../cards/card.interfa
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { Mutable } from '../services/utils';
-import { TempCardIds } from '../temp-card-ids';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -29,9 +28,9 @@ export const magnetizeToTarget = (
 	const modularCard =
 		typeof cardToMagnetize === 'string' ? { ...gameState.allCards.getCard(cardToMagnetize) } : cardToMagnetize;
 
-	const magnetMult = board.some((e) => e.cardId === TempCardIds.DoubleDemolisher_G)
+	const magnetMult = board.some((e) => e.cardId === CardIds.DoubleDemolisher_BG34_177_G)
 		? 3
-		: board.some((e) => e.cardId === TempCardIds.DoubleDemolisher)
+		: board.some((e) => e.cardId === CardIds.DoubleDemolisher_BG34_177)
 		? 2
 		: 1;
 	for (let i = 0; i < magnetMult; i++) {

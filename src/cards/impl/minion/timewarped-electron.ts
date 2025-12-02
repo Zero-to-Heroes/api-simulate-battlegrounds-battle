@@ -2,14 +2,13 @@ import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { magnetizeToTarget } from '../../../simulation/magnetize';
-import { TempCardIds } from '../../../temp-card-ids';
 import { hasCorrectTribe } from '../../../utils';
 import { AfterTavernSpellCastCard, CastSpellInput } from '../../card.interface';
 
 export const TimewarpedElectron: AfterTavernSpellCastCard = {
-	cardIds: [TempCardIds.TimewarpedElectron, TempCardIds.TimewarpedElectron_G],
+	cardIds: [CardIds.TimewarpedElectron_BG34_Giant_610, CardIds.TimewarpedElectron_BG34_Giant_610_G],
 	afterTavernSpellCast: (entity: BoardEntity, input: CastSpellInput) => {
-		const mult = entity.cardId === TempCardIds.TimewarpedElectron_G ? 2 : 1;
+		const mult = entity.cardId === CardIds.TimewarpedElectron_BG34_Giant_610_G ? 2 : 1;
 		entity.scriptDataNum1 = entity.scriptDataNum1 ?? 0;
 		entity.scriptDataNum1++;
 		if (entity.scriptDataNum1 % 2 === 0) {
