@@ -304,6 +304,7 @@ import { StraySatyr } from './minion/stray-satyr';
 import { Stuntdrake } from './minion/stuntdrake';
 import { SunkenAdvocate } from './minion/sunken-advocate';
 import { SuperConstructor } from './minion/super-constructor';
+import { SurfNSurfCrabRiding } from './minion/surf-n-surf-crab-riding';
 import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
 import { Tamuzo } from './minion/tamuzo';
@@ -896,6 +897,7 @@ const cards = [
 	TimewarpedCenturion,
 	ApexisGuardian,
 	MetalDispenser,
+	SurfNSurfCrabRiding,
 	JunkJouster,
 	MiniTrident,
 	AnglersLure,
