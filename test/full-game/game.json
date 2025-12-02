@@ -94,6 +94,8 @@
                 "BattlecriesTriggeredThisGame": 3,
                 "GoldSpentThisGame": 51,
                 "SanlaynScribesDeadThisGame": 0,
+				"VolumizerAttackBuff": 17,
+				"VolumizerHealthBuff": 3,
                 "FriendlyMinionsDeadLastCombat": 0
             }
         },

@@ -1,10 +1,11 @@
 import { GameTag, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasOnAfterMagnetize, hasOnBeforeMagnetize } from '../cards/card.interface';
+import { hasOnAfterMagnetize, hasOnBeforeMagnetize, hasOnBeforeMagnetizeSelf } from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { Mutable } from '../services/utils';
+import { buildSingleBoardEntity } from '../utils';
 import { FullGameState } from './internal-game-state';
 import { modifyStats } from './stats';
 
@@ -27,6 +28,18 @@ export const magnetizeToTarget = (
 
 	const modularCard =
 		typeof cardToMagnetize === 'string' ? { ...gameState.allCards.getCard(cardToMagnetize) } : cardToMagnetize;
+	const modularBoardEntity = buildSingleBoardEntity(
+		modularCard.id,
+		hero,
+		board,
+		gameState.allCards,
+		hero.friendly,
+		gameState.sharedState.currentEntityId++,
+		false,
+		gameState.cardsData,
+		gameState.sharedState,
+		null,
+	);
 
 	const magnetMult = board.some((e) => e.cardId === CardIds.DoubleDemolisher_BG34_177_G)
 		? 3
@@ -34,6 +47,16 @@ export const magnetizeToTarget = (
 		? 2
 		: 1;
 	for (let i = 0; i < magnetMult; i++) {
+		const onBeforeMagnetizeSelfImpl = cardMappings[modularBoardEntity.cardId];
+		if (hasOnBeforeMagnetizeSelf(onBeforeMagnetizeSelfImpl)) {
+			onBeforeMagnetizeSelfImpl.onBeforeMagnetizeSelf(modularBoardEntity, {
+				board: board,
+				hero: hero,
+				magnetizeTarget: target,
+				gameState: gameState,
+			});
+		}
+
 		for (const boardEntity of board) {
 			const onBeforeMagnetizeImpl = cardMappings[boardEntity.cardId];
 			if (hasOnBeforeMagnetize(onBeforeMagnetizeImpl)) {
@@ -50,8 +73,8 @@ export const magnetizeToTarget = (
 		modifyStats(
 			target,
 			source,
-			modularCard.attack + 2 * electromagneticDevices + 4 * greaterElecromagneticDevices,
-			modularCard.health + 2 * electromagneticDevices + 4 * greaterElecromagneticDevices,
+			modularBoardEntity.attack + 2 * electromagneticDevices + 4 * greaterElecromagneticDevices,
+			modularBoardEntity.health + 2 * electromagneticDevices + 4 * greaterElecromagneticDevices,
 			board,
 			hero,
 			gameState,
@@ -115,6 +138,13 @@ export interface OnBeforeMagnetizeInput {
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;
 	magnetizedCard: Mutable<ReferenceCard>;
+	magnetizeTarget: BoardEntity;
+	gameState: FullGameState;
+}
+
+export interface OnBeforeMagnetizeSelfInput {
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
 	magnetizeTarget: BoardEntity;
 	gameState: FullGameState;
 }

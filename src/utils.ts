@@ -445,7 +445,7 @@ export const hasCorrectTribe = (
 };
 
 export const isVolumizer = (
-	cardId: string,
+	cardId: string | number,
 	playerEntity: BgsPlayerEntity,
 	anomalies: readonly string[],
 	allCards: AllCardsService,
