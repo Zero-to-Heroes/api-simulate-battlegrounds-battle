@@ -9,7 +9,8 @@ export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
 	cardIds: [CardIds.SepulchralSergeant_BG34_111, CardIds.SepulchralSergeant_BG34_111_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.SepulchralSergeant_BG34_111_G ? 2 : 1;
-		const base = minion.scriptDataNum1 || 2;
+		// Not sure about that +1
+		const base = 1 + (minion.scriptDataNum1 || 1);
 		const buff = base * mult;
 		addStatsToAliveBoard(
 			minion,
@@ -22,6 +23,8 @@ export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
 		return [];
 	},
 	onStatsChanged: (minion: BoardEntity, input: OnStatsChangedInput) => {
-		minion.scriptDataNum1 = (minion.scriptDataNum1 || 2) + 2;
+		if (input.target === minion && input.attackAmount > 0) {
+			minion.scriptDataNum1 = (minion.scriptDataNum1 || 2) + 1;
+		}
 	},
 };
