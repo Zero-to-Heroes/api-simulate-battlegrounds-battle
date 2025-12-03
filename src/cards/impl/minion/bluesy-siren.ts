@@ -30,7 +30,7 @@ export const BluesySiren: OnWheneverAnotherMinionAttacksCard & DefaultChargesCar
 		castTavernSpell(spellCast, {
 			spellCardId: spellCast,
 			source: input.attackingHero,
-			target: minion,
+			target: input.attacker,
 			board: input.attackingBoard,
 			hero: input.attackingHero,
 			otherBoard: input.defendingBoard,
