@@ -28,6 +28,9 @@ const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
 	CardIds.Scallywag_SkyPirateToken_TB_BaconUps_141t,
 	CardIds.Onyxia_OnyxianWhelpToken,
+	CardIds.TwilightWhelp_WhelpToken,
+	CardIds.TwilightHatchling_TwilightWhelpToken_BG34_630t,
+	CardIds.TwilightHatchling_TwilightWhelpToken_BG34_630_Gt,
 	// CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t,
 	// CardIds.Interceptor_BG31_HERO_802pt1t_G,
 	// The token doesn't attack immediately natively, only when spawned by the spell
