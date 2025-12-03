@@ -41,7 +41,7 @@ export const SilentEnforcer: DeathrattleSpawnCard = {
 					input.otherBoard,
 					input.otherBoardHero,
 					minion,
-					4,
+					2,
 					input.boardWithDeadEntity,
 					input.boardWithDeadEntityHero,
 					input.gameState,
