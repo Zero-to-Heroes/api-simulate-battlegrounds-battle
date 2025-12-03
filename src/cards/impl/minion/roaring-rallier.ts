@@ -1,16 +1,17 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
-import { pickRandom } from '../../../services/utils';
-import { dealDamageToMinion, getNeighbours } from '../../../simulation/attack';
 import { OnAttackInput } from '../../../simulation/on-attack';
-import { modifyStats, setEntityStats } from '../../../simulation/stats';
+import { modifyStats } from '../../../simulation/stats';
 import { hasCorrectTribe } from '../../../utils';
-import { DefaultChargesCard, RallyCard } from '../../card.interface';
+import { OnWheneverAnotherMinionAttacksCard } from '../../card.interface';
 
-export const RoaringRallier: RallyCard = {
+export const RoaringRallier: OnWheneverAnotherMinionAttacksCard = {
 	cardIds: [CardIds.RoaringRallier_BG29_816, CardIds.RoaringRallier_BG29_816_G],
-	rally: (minion: BoardEntity, input: OnAttackInput): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
+	onWheneverAnotherMinionAttacks: (
+		minion: BoardEntity,
+		input: OnAttackInput,
+	): { dmgDoneByAttacker: number; dmgDoneByDefender: number } => {
 		if (
 			hasCorrectTribe(
 				input.attacker,
