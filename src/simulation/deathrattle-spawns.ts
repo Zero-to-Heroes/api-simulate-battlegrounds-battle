@@ -219,10 +219,13 @@ export const spawnEntitiesFromDeathrattle = (
 		);
 
 	for (let i = 0; i < multiplier; i++) {
-		let hasTriggered = false;
+		// Looks like the "on deathrattle triggered" triggers once per deathrattle effect
+		// const numberOfTriggers = 0;
 		for (const card of cards) {
+			let hasTriggered = false;
 			const spawnedEntities: BoardEntity[] = [];
 			const refCard = gameState.allCards.getCard(card.cardId);
+
 			if (
 				refCard.type?.toUpperCase() === CardType[CardType.MINION] &&
 				(card as BoardEntity).health !== undefined
@@ -542,21 +545,6 @@ export const spawnEntitiesFromDeathrattle = (
 									),
 								);
 								break;
-							// case CardIds.InfestedWolf_TB_BaconUps_026:
-							// 	spawnedEntities.push(
-							// 		...spawnEntities(
-							// 			CardIds.InfestedWolf_SpiderToken,
-							// 			2,
-							// 			boardWithDeadEntity,
-							// 			boardWithDeadEntityHero,
-							// 			otherBoard,
-							// 			otherBoardHero,
-							// 			gameState,
-							// 			deadEntity.friendly,
-							// 			false,
-							// 		),
-							// 	);
-							// 	break;
 							case CardIds.ReplicatingMenace_BG_BOT_312:
 								spawnedEntities.push(
 									...spawnEntities(
@@ -692,21 +680,6 @@ export const spawnEntitiesFromDeathrattle = (
 									),
 								);
 								break;
-							// case CardIds.SatedThreshadon_TB_BaconUps_052:
-							// 	spawnedEntities.push(
-							// 		...spawnEntities(
-							// 			CardIds.SatedThreshadon_PrimalfinToken,
-							// 			3,
-							// 			boardWithDeadEntity,
-							// 			boardWithDeadEntityHero,
-							// 			otherBoard,
-							// 			otherBoardHero,
-							// 			gameState,
-							// 			deadEntity.friendly,
-							// 			false,
-							// 		),
-							// 	);
-							// 	break;
 							case CardIds.Ghastcoiler_BGS_008:
 								spawnedEntities.push(
 									...[
@@ -739,7 +712,6 @@ export const spawnEntitiesFromDeathrattle = (
 									],
 								);
 								break;
-
 							case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy:
 							case CardIds.Kilrek_TB_BaconShop_HERO_37_Buddy_G:
 								const kilrekCardsToAddQuantity =
@@ -755,7 +727,6 @@ export const spawnEntitiesFromDeathrattle = (
 									gameState,
 								);
 								break;
-
 							case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy:
 							case CardIds.BrannsEpicEgg_TB_BaconShop_HERO_43_Buddy_G:
 								const brannSpawns = [];
@@ -781,7 +752,6 @@ export const spawnEntitiesFromDeathrattle = (
 								}
 								addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, brannSpawns, gameState);
 								break;
-
 							case CardIds.Ghastcoiler_TRLA_149:
 							case CardIds.Ghastcoiler_TB_BaconUps_057:
 								const ghastcoilerLoop =
@@ -1018,7 +988,6 @@ export const spawnEntitiesFromDeathrattle = (
 									}
 								}
 								break;
-
 							// Putricide-only
 							case CardIds.FoulEgg_BG26_RLK_833:
 								spawnedEntities.push(
@@ -1291,41 +1260,6 @@ export const spawnEntitiesFromDeathrattle = (
 									);
 								}
 								break;
-							// case CardIds.FireDancer_BG29_843:
-							// case CardIds.FireDancer_BG29_843_G:
-							// 	const fireDancerLoops = deadEntity.cardId === CardIds.FireDancer_BG29_843_G ? 2 : 1;
-							// 	for (let j = 0; j < fireDancerLoops; j++) {
-							// 		// In case there are spawns, don't target them
-							// 		const minionsToDamage = [...otherBoard, ...boardWithDeadEntity];
-							// 		for (const target of minionsToDamage) {
-							// 			const isSameSide = target.friendly === deadEntity.friendly;
-							// 			const board = isSameSide ? boardWithDeadEntity : otherBoard;
-							// 			const hero = isSameSide ? boardWithDeadEntityHero : otherBoardHero;
-							// 			dealDamageToMinion(
-							// 				target,
-							// 				board,
-							// 				hero,
-							// 				deadEntity,
-							// 				1,
-							// 				isSameSide ? otherBoard : boardWithDeadEntity,
-							// 				isSameSide ? otherBoardHero : boardWithDeadEntityHero,
-							// 				gameState,
-							// 			);
-							// 		}
-							// 	}
-							// 	// Most likely there is a death loop after each round of damage, see
-							// 	// http://replays.firestoneapp.com/?reviewId=4b6e4d8d-fc83-4795-b450-4cd0c3a518be&turn=17&action=2
-							// 	// Update 13/05/2024: the death process is probably between each deathrattle proc, but not each
-							// 	// individual tick. See
-							// 	// http://replays.firestoneapp.com/?reviewId=6d66b90d-5678-4a68-a45f-7ddb887f9450&turn=17&action=11
-							// 	processMinionDeath(
-							// 		boardWithDeadEntity,
-							// 		boardWithDeadEntityHero,
-							// 		otherBoard,
-							// 		otherBoardHero,
-							// 		gameState,
-							// 	);
-							// 	break;
 							case CardIds.LighterFighter_BG28_968:
 							case CardIds.LighterFighter_BG28_968_G:
 								// FIXME: I don't think this way of doing things is really accurate (as some deathrattles
@@ -1448,7 +1382,6 @@ export const spawnEntitiesFromDeathrattle = (
 								const piperBuff = deadEntityCardId === CardIds.PricklyPiper_BG26_160 ? 1 : 2;
 								boardWithDeadEntityHero.globalInfo.BloodGemAttackBonus += piperBuff;
 								break;
-
 							// Putricide-only
 							case CardIds.Banshee_BG_RLK_957:
 								addStatsToBoard(
@@ -1486,28 +1419,6 @@ export const spawnEntitiesFromDeathrattle = (
 									);
 								}
 								break;
-							// case CardIds.WitheredSpearhide_BG27_006:
-							// case CardIds.WitheredSpearhide_BG27_006_G:
-							// 	const witheredSpearhideCardsToAdd = Array(
-							// 		deadEntity.cardId === CardIds.WitheredSpearhide_BG27_006_G ? 2 : 1,
-							// 	).fill(CardIds.BloodGem);
-							// 	addCardsInHand(
-							// 		boardWithDeadEntityHero,
-							// 		boardWithDeadEntity,
-							// 		witheredSpearhideCardsToAdd,
-							// 		gameState,
-							// 	);
-							// 	break;
-							// case CardIds.RecurringNightmare_BG26_055:
-							// case CardIds.RecurringNightmare_BG26_055_G:
-							// 	applyRecurringNightmareDeathrattleEffect(
-							// 		boardWithDeadEntity,
-							// 		boardWithDeadEntityHero,
-							// 		deadEntity,
-							// 		deadEntityCardId === CardIds.RecurringNightmare_BG26_055_G,
-							// 		gameState,
-							// 	);
-							// 	break;
 							case CardIds.MotleyPhalanx_BG27_080:
 							case CardIds.MotleyPhalanx_BG27_080_G:
 								const motleyBuff = deadEntity.cardId === CardIds.MotleyPhalanx_BG27_080_G ? 2 : 1;
@@ -1919,11 +1830,19 @@ export const spawnEntitiesFromDeathrattle = (
 					finalSpawns.push(...actualSpawns);
 				}
 			}
+
+			// 2025-12-03: this triggers at every loop
+			// https://replays.firestoneapp.com/?reviewId=8a0bbb48-10f8-4d91-8008-b3b7b9c9d7ba&turn=19&action=2
+			// See the first spawn getting buffed twice, and the second spawn buffed once
+			if (hasTriggered) {
+				onDeathrattleTriggered(deathrattleTriggeredInput);
+				// numberOfTriggers++;
+			}
 		}
 
-		if (hasTriggered) {
-			onDeathrattleTriggered(deathrattleTriggeredInput);
-		}
+		// for (let i = 0; i < numberOfTriggers; i++) {
+		// 	onDeathrattleTriggered(deathrattleTriggeredInput);
+		// }
 	}
 	return finalSpawns;
 };
