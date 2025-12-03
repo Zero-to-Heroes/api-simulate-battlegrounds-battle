@@ -28,7 +28,7 @@ export const WhelpWatcher: RallyCard = {
 		spawns.forEach((e) => {
 			e.attackImmediately = true;
 		});
-		performEntitySpawns(
+		const spawned = performEntitySpawns(
 			spawns,
 			spawnInput.boardWithDeadEntity,
 			spawnInput.boardWithDeadEntityHero,
@@ -40,6 +40,11 @@ export const WhelpWatcher: RallyCard = {
 			true,
 			input.defendingEntity,
 		);
+		// 2025-12-03: not sure, that might be a HS bug
+		// https://replays.firestoneapp.com/?reviewId=67e46c7c-9ac8-41d5-8712-d12e44bef9f9&turn=9&action=6
+		spawned.forEach((e) => {
+			e.hasAttacked = 0;
+		});
 		return {
 			dmgDoneByAttacker: 0,
 			dmgDoneByDefender: 0,
