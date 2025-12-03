@@ -39,6 +39,10 @@ export const magnetizeToTarget = (
 		gameState.cardsData,
 		gameState.sharedState,
 		null,
+		null,
+		{
+			referenceCardToUse: modularCard,
+		},
 	);
 
 	const magnetMult = board.some((e) => e.cardId === CardIds.DoubleDemolisher_BG34_177_G)

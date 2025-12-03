@@ -50,8 +50,12 @@ export const buildSingleBoardEntity = (
 	sharedState: SharedState,
 	entityToSpawn: BoardEntity,
 	originalEntity: BoardEntity = null,
+	options: {
+		referenceCardToUse: ReferenceCard;
+	} = null,
 ): BoardEntity => {
-	const card = allCards.getCard(cardId);
+	const trueRefCard = allCards.getCard(cardId);
+	const card = options?.referenceCardToUse ?? trueRefCard;
 	const attackImmediately = ATTACK_IMMEDIATELY_IDS.indexOf(cardId as CardIds) !== -1;
 	const newEntity = !!entityToSpawn
 		? ({
@@ -73,7 +77,8 @@ export const buildSingleBoardEntity = (
 					cardId: cardId,
 					divineShield: hasMechanic(card, GameTag.DIVINE_SHIELD),
 					health: card.health,
-					maxHealth: card.health,
+					maxHealth: card.health || trueRefCard.health,
+					maxAttack: card.attack || trueRefCard.attack,
 					taunt: hasMechanic(card, GameTag.TAUNT),
 					reborn: hasMechanic(card, GameTag.REBORN),
 					poisonous: hasMechanic(card, GameTag.POISONOUS),

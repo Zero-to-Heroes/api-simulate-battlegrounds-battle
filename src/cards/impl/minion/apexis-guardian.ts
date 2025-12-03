@@ -49,6 +49,8 @@ export const ApexisGuardian: DeathrattleSpawnCard = {
 					input.otherBoardHero,
 					input.gameState,
 				);
+				// TMP, just to get a stop in the actions
+				// input.gameState.spectator.registerPlayerAttack(input.boardWithDeadEntity, input.otherBoard, 0);
 			}
 		}
 		return [];
