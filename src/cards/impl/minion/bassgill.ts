@@ -15,7 +15,8 @@ export const Bassgill: DeathrattleSpawnCard = {
 		for (let i = 0; i < mult; i++) {
 			const hand =
 				input.boardWithDeadEntityHero.hand
-					?.filter((e) =>
+					?.filter((e) => !!e?.cardId)
+					.filter((e) =>
 						hasCorrectTribe(
 							e,
 							input.boardWithDeadEntityHero,
@@ -24,7 +25,6 @@ export const Bassgill: DeathrattleSpawnCard = {
 							input.gameState.allCards,
 						),
 					)
-					.filter((e) => !!e?.cardId)
 					.filter((e) => !e.locked) ?? [];
 			const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
 			const highestHealthMinions = highestHealth ? hand.filter((c) => c.health === highestHealth) : null;

@@ -236,7 +236,7 @@ const handleOtherEntityEffects = (
 				const stats = e.cardId === CardIds.IridescentSkyblazer_BG29_806_G ? 2 : 1;
 				const target = pickRandom(board.filter((e) => e.entityId !== entity.entityId));
 				if (!!target) {
-					modifyStats(target, e, 2 * stats, stats, board, hero, gameState);
+					modifyStats(target, e, 2 * stats, 1 * stats, board, hero, gameState);
 				}
 			});
 		board
