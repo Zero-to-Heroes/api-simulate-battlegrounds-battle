@@ -50,8 +50,8 @@ const test = async () => {
 
 	const sample =
 		simulationResult.outcomeSamples.tied?.[0] ??
-		simulationResult.outcomeSamples.lost?.[0] ??
 		simulationResult.outcomeSamples.won?.[0] ??
+		simulationResult.outcomeSamples.lost?.[0] ??
 		null;
 	const base64 = encode(JSON.stringify(sample));
 	console.log(base64);

@@ -1621,30 +1621,6 @@ export const spawnEntitiesFromDeathrattle = (
 							// Add all the deathrattles that don't have an effect on combat
 							// case CardIds.FieryFelblood_BG29_877:
 							// case CardIds.FieryFelblood_BG29_877_G:
-							// Enchantments
-							case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
-								addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
-								break;
-							case CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e:
-								addCardsInHand(
-									boardWithDeadEntityHero,
-									boardWithDeadEntity,
-									[CardIds.BloodGem],
-									gameState,
-								);
-								break;
-							case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
-							case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
-								// console.log('\t', 'Leapfrogger enchantment', enchantment.repeats);
-								applyLeapFroggerEffect(
-									boardWithDeadEntity,
-									boardWithDeadEntityHero,
-									deadEntity,
-									deadEntityCardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
-									gameState,
-									1, //enchantment.repeats || 1,
-								);
-								break;
 							default:
 								if (deadEntity.additionalCards?.includes(deadEntityCardId)) {
 									if (
@@ -1902,6 +1878,25 @@ export const spawnEntitiesFromDeathrattle = (
 									deadEntity.friendly,
 									false,
 								),
+							);
+							break;
+						// Enchantments
+						case CardIds.RustyTrident_TridentsTreasureEnchantment_BG30_MagicItem_917e:
+							addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [null], gameState);
+							break;
+						case CardIds.HoggyBank_GemInTheBankEnchantment_BG30_MagicItem_411e:
+							addCardsInHand(boardWithDeadEntityHero, boardWithDeadEntity, [CardIds.BloodGem], gameState);
+							break;
+						case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e:
+						case CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge:
+							// console.log('\t', 'Leapfrogger enchantment', enchantment.repeats);
+							applyLeapFroggerEffect(
+								boardWithDeadEntity,
+								boardWithDeadEntityHero,
+								deadEntity,
+								enchantment.cardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge,
+								gameState,
+								enchantment.repeats || 1,
 							);
 							break;
 						default:
