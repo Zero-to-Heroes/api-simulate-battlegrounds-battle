@@ -7,20 +7,26 @@ import { processDeathrattleForMinion } from '../../../simulation/deathrattle-orc
 import { hasValidDeathrattle } from '../../../simulation/deathrattle-utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
+let callStackDepth = 0; // Global variable to track call stack depth
+
 export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TimewarpedWarghoul_BG34_Giant_331, CardIds.TimewarpedWarghoul_BG34_Giant_331_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
+		callStackDepth++;
 		const allNeighbours = getNeighbours(input.boardWithDeadEntity, minion, input.deadEntityIndexFromRight).filter(
 			(e) =>
 				!!e &&
 				hasValidDeathrattle(e, input.boardWithDeadEntityHero, input.gameState) &&
-				!TimewarpedWarghoul.cardIds.includes(e.cardId),
+				!TimewarpedWarghoul.cardIds.includes(e.cardId) &&
+				!e.enchantments?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)) &&
+				!e.rememberedDeathrattles?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)),
 		);
 		const neighbours =
 			minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G
 				? allNeighbours
 				: [pickRandom(allNeighbours)].filter((e) => !!e);
 		if (neighbours.length === 0) {
+			callStackDepth--;
 			return [];
 		}
 		for (const neighbour of neighbours) {
@@ -43,6 +49,7 @@ export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 				false,
 			);
 		}
+		callStackDepth--;
 		return [];
 	},
 };
