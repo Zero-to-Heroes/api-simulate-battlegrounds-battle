@@ -18,9 +18,9 @@ export const TimewarpedElectron: AfterTavernSpellCastCard = {
 			for (const target of targets) {
 				for (let i = 0; i < mult; i++) {
 					magnetizeToTarget(
-						target,
+						[target],
 						entity,
-						CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t,
+						[CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t],
 						input.board,
 						input.hero,
 						input.otherBoard,

@@ -22,9 +22,9 @@ export const ClunkerJunker: BattlecryCard = {
 				);
 				input.gameState.spectator.registerPowerTarget(minion, junkerTarget, input.board, null, null);
 				magnetizeToTarget(
-					junkerTarget,
+					[junkerTarget],
 					minion,
-					minionToMagnetize,
+					[minionToMagnetize],
 					input.board,
 					input.hero,
 					input.otherBoard,

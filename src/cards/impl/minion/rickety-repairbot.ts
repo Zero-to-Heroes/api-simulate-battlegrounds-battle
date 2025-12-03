@@ -10,9 +10,9 @@ export const RicketyRepairbot: EndOfTurnCard = {
 		for (let i = 0; i < mult; i++) {
 			const minionToMagnetize = input.gameState.cardsData.getRandomMechToMagnetize(input.hero.tavernTier ?? 1);
 			magnetizeToTarget(
+				[minion],
 				minion,
-				minion,
-				minionToMagnetize,
+				[minionToMagnetize],
 				input.board,
 				input.hero,
 				input.otherBoard,
