@@ -308,6 +308,7 @@ import { SurfNSurfCrabRiding } from './minion/surf-n-surf-crab-riding';
 import { SurfingSylvar } from './minion/surfing-slyvar';
 import { Swampstriker } from './minion/swampstriker';
 import { Tamuzo } from './minion/tamuzo';
+import { TheGladIator } from './minion/the-glad-iator';
 import { TheLastOneStanding } from './minion/the-last-one-standing';
 import { Thorncaller } from './minion/thorncaller';
 import { ThreeLilQuilboar } from './minion/three-lil-quilboar';
@@ -900,6 +901,7 @@ const cards = [
 	MetalDispenser,
 	SurfNSurfCrabRiding,
 	CrabMount,
+	TheGladIator,
 	JunkJouster,
 	MiniTrident,
 	AnglersLure,
