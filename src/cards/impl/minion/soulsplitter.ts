@@ -1,10 +1,9 @@
-import { GameTag, Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { updateReborn } from '../../../keywords/reborn';
 import { CardIds } from '../../../services/card-ids';
-import { pickRandom } from '../../../services/utils';
+import { pickMultipleRandom } from '../../../services/utils';
+import { hasValidDeathrattle } from '../../../simulation/deathrattle-utils';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
-import { hasCorrectTribe, hasEntityMechanic } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const Soulsplitter: StartOfCombatCard = {
@@ -12,37 +11,19 @@ export const Soulsplitter: StartOfCombatCard = {
 	startOfCombatTiming: 'start-of-combat',
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const numberOfTargets = minion.cardId === CardIds.Soulsplitter_BG25_023_G ? 2 : 1;
-		for (let i = 0; i < numberOfTargets; i++) {
-			const undeadsWithoutReborn = input.playerBoard
-				.filter(
-					(e) =>
-						hasCorrectTribe(
-							e,
-							input.playerEntity,
-							Race.UNDEAD,
-							input.gameState.anomalies,
-							input.gameState.allCards,
-						) && hasEntityMechanic(e, GameTag.REBORN, input.gameState.allCards),
-				)
-				.filter((e) => !e.reborn);
-			const chosenUndead = pickRandom(undeadsWithoutReborn);
-			if (chosenUndead) {
-				updateReborn(
-					chosenUndead,
-					true,
-					input.playerBoard,
-					input.playerEntity,
-					input.opponentEntity,
-					input.gameState,
-				);
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					chosenUndead,
-					input.playerBoard,
-					input.playerEntity,
-					input.opponentEntity,
-				);
-			}
+		const candidates = input.playerBoard.filter(
+			(e) => hasValidDeathrattle(e, input.playerEntity, input.gameState) && !e.reborn,
+		);
+		const targets = pickMultipleRandom(candidates, numberOfTargets);
+		for (const target of targets) {
+			updateReborn(target, true, input.playerBoard, input.playerEntity, input.opponentEntity, input.gameState);
+			input.gameState.spectator.registerPowerTarget(
+				minion,
+				target,
+				input.playerBoard,
+				input.playerEntity,
+				input.opponentEntity,
+			);
 		}
 		return true;
 	},
