@@ -1,5 +1,6 @@
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
+import { pickRandomAlive } from '../../../services/utils';
 import { getNeighbours } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
@@ -12,11 +13,25 @@ export const ImpulsiveTrickster: DeathrattleSpawnCard = {
 		const hasImpulsivePortrait = input.boardWithDeadEntityHero.trinkets?.some(
 			(t) => t.cardId === CardIds.ImpulsivePortrait_BG32_MagicItem_820,
 		);
-		const targets = hasImpulsivePortrait
-			? getNeighbours(input.boardWithDeadEntity, input.deadEntity, input.deadEntityIndexFromRight)
-			: input.boardWithDeadEntity.filter((e) => e != minion);
-		for (let j = 0; j < mult; j++) {
-			for (const target of targets) {
+		if (hasImpulsivePortrait) {
+			const targets = getNeighbours(input.boardWithDeadEntity, input.deadEntity, input.deadEntityIndexFromRight);
+			for (let j = 0; j < mult; j++) {
+				for (const target of targets) {
+					modifyStats(
+						target,
+						minion,
+						0,
+						minion.maxHealth,
+						input.boardWithDeadEntity,
+						input.boardWithDeadEntityHero,
+						input.gameState,
+					);
+				}
+			}
+		} else {
+			const candidates = input.boardWithDeadEntity.filter((e) => e != minion);
+			for (let j = 0; j < mult; j++) {
+				const target = pickRandomAlive(candidates);
 				modifyStats(
 					target,
 					minion,
