@@ -18,8 +18,12 @@ export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 				!!e &&
 				hasValidDeathrattle(e, input.boardWithDeadEntityHero, input.gameState) &&
 				!TimewarpedWarghoul.cardIds.includes(e.cardId) &&
-				!e.enchantments?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)) &&
-				!e.rememberedDeathrattles?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)),
+				// The Warghoul will proc all the Whirl-O-Trons deathrattles but the copied deathrattle
+				// cannot re-proc on the Warghoul itself. (If you manage to get a set up with 2 Whirl-O-Trons,
+				// Macaw and Warghoul then congrats! Things may start to loop)
+				e.entityId !== minion.entityId,
+			// !e.enchantments?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)) &&
+			// !e.rememberedDeathrattles?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)),
 		);
 		const neighbours =
 			minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G
@@ -28,6 +32,9 @@ export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 		if (neighbours.length === 0) {
 			callStackDepth--;
 			return [];
+		}
+		if (callStackDepth > 10) {
+			console.log('warning: timewarped warghoul call stack depth is too deep');
 		}
 		for (const neighbour of neighbours) {
 			input.gameState.spectator.registerPowerTarget(
