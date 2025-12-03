@@ -1,28 +1,30 @@
 import { BoardEntity } from '../../../board-entity';
 import { castTavernSpell } from '../../../mechanics/cast-tavern-spell';
 import { CardIds } from '../../../services/card-ids';
-import { BattlecryInput } from '../../../simulation/battlecries';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
-import { BattlecryCard } from '../../card.interface';
+import { OnAttackInput } from '../../../simulation/on-attack';
+import { RallyCard } from '../../card.interface';
 
-export const ProfoundThinker: BattlecryCard = {
+export const ProfoundThinker: RallyCard = {
 	cardIds: [CardIds.ProfoundThinker_BG34_929, CardIds.ProfoundThinker_BG34_929_G],
-	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
+	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.ProfoundThinker_BG34_929_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
-			const spell = input.gameState.cardsData.getRandomSpellcraft();
+			const spell = input.gameState.cardsData.getRandomSpellcraft({
+				maxTavernTier: input.attackingHero.tavernTier ?? 3,
+			});
 			castTavernSpell(spell, {
 				spellCardId: spell,
 				source: minion,
 				target: minion,
-				board: input.board,
-				hero: input.hero,
-				otherBoard: input.otherBoard,
-				otherHero: input.otherHero,
+				board: input.attackingBoard,
+				hero: input.attackingHero,
+				otherBoard: input.defendingBoard,
+				otherHero: input.defendingHero,
 				gameState: input.gameState,
 			});
-			addCardsInHand(input.hero, input.board, [spell], input.gameState);
+			addCardsInHand(input.attackingHero, input.attackingBoard, [spell], input.gameState);
 		}
-		return true;
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 };

@@ -440,6 +440,7 @@ import { Zippers } from './minion/zippers';
 import { RighteousCharge } from './quest-reward/righteous-charge';
 import { AnglersLure } from './spellcraft/anglers-lure';
 import { AzsharasHatchery } from './spellcraft/azsharas-hatchery';
+import { CrabMount } from './spellcraft/crab-mount';
 import { DeepBlues } from './spellcraft/deep-blues';
 import { EvolvingStrategy } from './spellcraft/evolving-strategy';
 import { GlowingCrown } from './spellcraft/glowing-crown';
@@ -898,6 +899,7 @@ const cards = [
 	ApexisGuardian,
 	MetalDispenser,
 	SurfNSurfCrabRiding,
+	CrabMount,
 	JunkJouster,
 	MiniTrident,
 	AnglersLure,

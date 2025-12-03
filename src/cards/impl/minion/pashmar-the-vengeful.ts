@@ -11,7 +11,9 @@ export const PashmarTheVengeful: AvengeCard = {
 		const mult = minion.cardId === CardIds.PashmarTheVengeful_BG23_014_G ? 2 : 1;
 		const cardsToAdd = [];
 		for (let i = 0; i < mult; i++) {
-			cardsToAdd.push(input.gameState.cardsData.getRandomSpellcraft());
+			cardsToAdd.push(
+				input.gameState.cardsData.getRandomSpellcraft({ maxTavernTier: input.hero.tavernTier ?? 3 }),
+			);
 		}
 		addCardsInHand(input.hero, input.board, cardsToAdd, input.gameState);
 	},

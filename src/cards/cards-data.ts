@@ -327,8 +327,11 @@ export class CardsData {
 		return pickRandom(pool)?.id;
 	}
 
-	public getRandomSpellcraft(): string {
-		return pickRandom(this.spellcraftPool)?.id;
+	public getRandomSpellcraft(options: { maxTavernTier?: number }): string {
+		const pool = this.spellcraftPool.filter((c) =>
+			options.maxTavernTier ? c.techLevel <= options.maxTavernTier : true,
+		);
+		return pickRandom(pool)?.id;
 	}
 
 	public isGolden(card: ReferenceCard): boolean {

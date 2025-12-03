@@ -11,7 +11,9 @@ export const TimewarpedPashmar: AvengeCard = {
 		const mult = minion.cardId === CardIds.TimewarpedPashmar_BG34_Giant_211_G ? 2 : 1;
 		const cardsToAdd = [];
 		for (let i = 0; i < mult; i++) {
-			cardsToAdd.push(input.gameState.cardsData.getRandomSpellcraft());
+			cardsToAdd.push(
+				input.gameState.cardsData.getRandomSpellcraft({ maxTavernTier: input.hero.tavernTier ?? 3 }),
+			);
 		}
 		for (let i = 0; i < mult; i++) {
 			cardsToAdd.push(input.gameState.cardsData.getRandomTavernSpell());
