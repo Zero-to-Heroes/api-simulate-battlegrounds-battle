@@ -1,8 +1,10 @@
+import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { pickMultipleRandom } from '../../../services/utils';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { modifyStats } from '../../../simulation/stats';
+import { hasCorrectTribe } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
 export const Dramaloc: DeathrattleSpawnCard = {
@@ -14,20 +16,28 @@ export const Dramaloc: DeathrattleSpawnCard = {
 			.sort((a, b) => b.attack - a.attack)[0];
 		if (!!statsSource) {
 			for (let i = 0; i < mult; i++) {
-				for (let j = 0; j < 2; j++) {
-					const candidates = input.boardWithDeadEntity.filter((e) => e !== minion);
-					const targets = pickMultipleRandom(candidates, 2);
-					for (const target of targets) {
-						modifyStats(
-							target,
-							minion,
-							statsSource.attack,
-							statsSource.health,
-							input.boardWithDeadEntity,
+				const candidates = input.boardWithDeadEntity.filter(
+					(e) =>
+						e !== minion &&
+						hasCorrectTribe(
+							e,
 							input.boardWithDeadEntityHero,
-							input.gameState,
-						);
-					}
+							Race.MURLOC,
+							input.gameState.anomalies,
+							input.gameState.allCards,
+						),
+				);
+				const targets = pickMultipleRandom(candidates, 2);
+				for (const target of targets) {
+					modifyStats(
+						target,
+						minion,
+						statsSource.attack,
+						statsSource.health,
+						input.boardWithDeadEntity,
+						input.boardWithDeadEntityHero,
+						input.gameState,
+					);
 				}
 			}
 		}
