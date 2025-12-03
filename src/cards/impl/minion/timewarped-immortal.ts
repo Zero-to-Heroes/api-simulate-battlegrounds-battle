@@ -10,8 +10,8 @@ export const TimewarpedImmortal: StartOfCombatCard = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const multiplier = minion.cardId === CardIds.TimewarpedImmortal_BG34_Giant_597_G ? 2 : 1;
 		const neighbours = getNeighbours(input.playerBoard, minion);
-		const neighboursAttack = neighbours.map((entity) => entity.attack).reduce((a, b) => a + b, 0);
-		const neighboursHealth = neighbours.map((entity) => entity.health).reduce((a, b) => a + b, 0);
+		const neighboursAttack = neighbours.map((entity) => entity.maxAttack).reduce((a, b) => a + b, 0);
+		const neighboursHealth = neighbours.map((entity) => entity.maxHealth).reduce((a, b) => a + b, 0);
 		modifyStats(
 			minion,
 			minion,
