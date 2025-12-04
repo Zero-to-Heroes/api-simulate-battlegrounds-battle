@@ -12,7 +12,11 @@ export const PilotTheShredder: DeathrattleSpawnCard = {
 		const mult = minion.cardId === CardIds.SneedsNewShredder_BG21_HERO_030t_G ? 2 : 1;
 		const allSpawns = [];
 		for (let i = 0; i < mult; i++) {
-			const hand = input.boardWithDeadEntityHero.hand.filter((e) => !!e?.cardId).filter((e) => !e.locked) ?? [];
+			const hand =
+				input.boardWithDeadEntityHero.hand.filter((e) => !!e?.cardId) ??
+				// 2025-12-04: it can summon a minion that is locked by another way, like Flighty scout
+				// .filter((e) => !e.locked)
+				[];
 			const highestHealth = Math.max(...hand.filter((c) => c.health).map((c) => c.health));
 			const highestHealthMinions = highestHealth ? hand.filter((c) => c.health === highestHealth) : null;
 			const spawn = !!highestHealthMinions?.length
@@ -21,7 +25,8 @@ export const PilotTheShredder: DeathrattleSpawnCard = {
 				? pickRandom(hand.filter((c) => c.cardId))
 				: null;
 			if (spawn) {
-				spawn.locked = true;
+				// 2025-12-04: actually doesn't look like it gets locked
+				// spawn.locked = true;
 				// Technically it should not be removed from hand, but rather flagged
 				// Probably very low impact doing it like this
 				// spawn.locked = true;
