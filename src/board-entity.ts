@@ -27,6 +27,7 @@ export interface BoardEntity {
 	inInitialState?: boolean;
 	// For Build-An-Undead and Zilliax
 	additionalCards?: readonly string[] | null;
+	dynamicInfo?: readonly any[] | null;
 	tags?: { [tag: number]: number };
 
 	// When using this as a remembered deathrattle
