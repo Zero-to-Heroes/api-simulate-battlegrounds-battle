@@ -34,7 +34,7 @@ export const ApexisGuardian: DeathrattleSpawnCard = {
 				),
 		);
 		magnetizeToTarget(
-			() => pickMultipleRandomDifferent(possibleTargets, 3),
+			() => pickMultipleRandomDifferent(possibleTargets, 2),
 			minion,
 			cardsToMagnetize,
 			input.boardWithDeadEntity,
