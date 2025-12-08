@@ -31,20 +31,20 @@ const process = (minion: BoardEntity, input: OnAttackInput) => {
 	}
 
 	minion.abiityChargesLeft = minion.abiityChargesLeft - 1;
-	const spellCast =
-		minion.cardId === CardIds.BluesySiren_BG34_931_G
-			? CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502_Gt
-			: CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t;
-	castTavernSpell(spellCast, {
-		spellCardId: spellCast,
-		source: input.attackingHero,
-		target: input.attacker,
-		board: input.attackingBoard,
-		hero: input.attackingHero,
-		otherBoard: input.defendingBoard,
-		otherHero: input.defendingHero,
-		gameState: input.gameState,
-	});
+	const mult = minion.cardId === CardIds.BluesySiren_BG34_931_G ? 2 : 1;
+	for (let i = 0; i < mult; i++) {
+		const spellCast = CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t;
+		castTavernSpell(spellCast, {
+			spellCardId: spellCast,
+			source: input.attackingHero,
+			target: input.attacker,
+			board: input.attackingBoard,
+			hero: input.attackingHero,
+			otherBoard: input.defendingBoard,
+			otherHero: input.defendingHero,
+			gameState: input.gameState,
+		});
+	}
 
 	return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 };
