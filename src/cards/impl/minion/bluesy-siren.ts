@@ -18,6 +18,10 @@ export const BluesySiren: OnWheneverAnotherMinionAttacksCard & RallyCard & Defau
 };
 
 const process = (minion: BoardEntity, input: OnAttackInput) => {
+	if (minion.abiityChargesLeft <= 0) {
+		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
+	}
+
 	if (
 		!hasCorrectTribe(
 			input.attacker,
