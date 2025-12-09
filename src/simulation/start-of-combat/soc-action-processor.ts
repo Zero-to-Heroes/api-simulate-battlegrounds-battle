@@ -19,7 +19,6 @@ import { FireInvocation } from '../../cards/impl/hero-power/fire-invocation';
 import { LightningInvocation } from '../../cards/impl/hero-power/lightning-invocation';
 import { RapidReanimation } from '../../cards/impl/hero-power/rapid-reanimation';
 import { RebornRites } from '../../cards/impl/hero-power/reborn-rites';
-import { SwattingInsects } from '../../cards/impl/hero-power/swatting-insects';
 import { Tentacular } from '../../cards/impl/hero-power/tentacular';
 import { WaterInvocation } from '../../cards/impl/hero-power/water-invocation';
 import { WaxWarband } from '../../cards/impl/hero-power/wax-warband';
@@ -169,8 +168,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 			return SummoningSphere;
 
 		// Hero powers
-		case CardIds.SwattingInsects:
-			return SwattingInsects;
 		case CardIds.EarthInvocationToken:
 			return EarthInvocation;
 		case CardIds.WaterInvocationToken:

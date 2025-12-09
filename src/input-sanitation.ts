@@ -1,4 +1,4 @@
-import { AllCardsService, normalizeHeroCardId } from '@firestone-hs/reference-data';
+import { AllCardsService } from '@firestone-hs/reference-data';
 import { BgsBattleInfo } from './bgs-battle-info';
 import { BgsBoardInfo } from './bgs-board-info';
 import { BgsHeroPower, BgsPlayerEntity } from './bgs-player-entity';
@@ -101,7 +101,10 @@ export const buildFinalInput = (
 					},
 			  }
 			: null,
-		gameState: battleInput.gameState,
+		gameState: {
+			...battleInput.gameState,
+			anomalies: battleInput.gameState.anomalies?.filter((a) => !!a) ?? ([] as readonly string[]),
+		},
 	} as BgsBattleInfo;
 	return inputReady;
 };
@@ -171,17 +174,20 @@ const sanitizeHeroPower = (
 	player: BgsPlayerEntity,
 	cards: AllCardsService,
 ): BgsHeroPower => {
-	if (index !== 0) {
-		return hp;
-	}
-
-	hp.cardId =
-		player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
-		(normalizeHeroCardId(player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
-			? player.questRewardEntities?.[0]?.cardId
-			: null) ??
-		hp.cardId;
 	return hp;
+	// FIXME: fix this when the situation presents itself. At the moment, we already have trinkets / hero powers / quest rewards
+	// handled separately, so maybe there is no need to map a quest reward to one of Sire D.'s hero power
+	// if (index !== 0) {
+	// 	return hp;
+	// }
+
+	// hp.cardId =
+	// 	player.trinkets.find((t) => t.scriptDataNum6 === 3)?.cardId ??
+	// 	(normalizeHeroCardId(player.cardId, cards) === CardIds.SireDenathrius_BG24_HERO_100
+	// 		? player.questRewardEntities?.[0]?.cardId
+	// 		: null) ??
+	// 	hp.cardId;
+	// return hp;
 };
 
 const buildFinalInputBoard = (

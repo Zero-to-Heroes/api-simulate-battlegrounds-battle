@@ -27,6 +27,7 @@ import { FragrantPhylactery } from './hero-power/fragrant-phylactery';
 import { FragrantPhylacteryEnchantment } from './hero-power/fragrant-phylactery-enchantment';
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { LoackAndLoad } from './hero-power/lock-and-load';
+import { SwattingInsects } from './hero-power/swatting-insects';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AllSeeingElder } from './minion/all-seeing-elder';
 import { Alleycat } from './minion/alleycat';
@@ -902,6 +903,7 @@ const cards = [
 	SurfNSurfCrabRiding,
 	CrabMount,
 	TheGladIator,
+	SwattingInsects,
 	JunkJouster,
 	MiniTrident,
 	AnglersLure,

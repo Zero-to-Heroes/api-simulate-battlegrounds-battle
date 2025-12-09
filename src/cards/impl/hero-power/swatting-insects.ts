@@ -2,11 +2,13 @@ import { BoardTrinket } from '../../../bgs-player-entity';
 import { updateDivineShield } from '../../../keywords/divine-shield';
 import { updateTaunt } from '../../../keywords/taunt';
 import { updateWindfury } from '../../../keywords/windfury';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const SwattingInsects: StartOfCombatCard = {
 	startOfCombatTiming: 'pre-combat',
+	cardIds: [CardIds.SwattingInsects],
 	startOfCombat: (trinket: BoardTrinket, input: SoCInput) => {
 		if (input.playerBoard.length > 0) {
 			const firstEntity = input.playerBoard[0];
