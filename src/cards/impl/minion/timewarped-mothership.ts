@@ -9,7 +9,7 @@ export const TimewarpedMothership: AvengeCard = {
 	baseAvengeValue: (cardId: string) => 5,
 	avenge: (minion: BoardEntity, input: AvengeInput): void => {
 		const cards = minion.cardId === CardIds.TimewarpedMothership_BG34_Giant_598_G ? 2 : 1;
-		const cardsAdded = Array(cards).map(() =>
+		const cardsAdded = Array.from({ length: cards }).map(() =>
 			input.gameState.cardsData.getRandomProtossMinion(input.hero.tavernTier),
 		);
 		addCardsInHand(input.hero, input.board, cardsAdded, input.gameState);

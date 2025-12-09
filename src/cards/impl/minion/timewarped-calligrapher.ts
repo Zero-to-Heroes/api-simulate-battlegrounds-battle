@@ -13,19 +13,19 @@ export const TimewarpedCalligrapher: RallyCard & BattlecryCard & DeathrattleSpaw
 	],
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedCalligrapher_BG34_PreMadeChamp_091_G ? 2 : 1;
-		const cardsToAdd = Array(mult).map(() => input.gameState.cardsData.getRandomTavernSpell());
+		const cardsToAdd = Array.from({ length: mult }).map(() => input.gameState.cardsData.getRandomTavernSpell());
 		addCardsInHand(input.attackingHero, input.attackingBoard, cardsToAdd, input.gameState);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedCalligrapher_BG34_PreMadeChamp_091_G ? 2 : 1;
-		const cardsToAdd = Array(mult).map(() => input.gameState.cardsData.getRandomTavernSpell());
+		const cardsToAdd = Array.from({ length: mult }).map(() => input.gameState.cardsData.getRandomTavernSpell());
 		addCardsInHand(input.hero, input.board, cardsToAdd, input.gameState);
 		return true;
 	},
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedCalligrapher_BG34_PreMadeChamp_091_G ? 2 : 1;
-		const cardsToAdd = Array(mult).map(() => input.gameState.cardsData.getRandomTavernSpell());
+		const cardsToAdd = Array.from({ length: mult }).map(() => input.gameState.cardsData.getRandomTavernSpell());
 		addCardsInHand(input.boardWithDeadEntityHero, input.boardWithDeadEntity, cardsToAdd, input.gameState);
 		return [];
 	},

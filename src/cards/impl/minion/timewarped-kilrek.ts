@@ -10,7 +10,7 @@ export const TimewarpedKilrek: DeathrattleSpawnCard = {
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedKilrek_BG34_Giant_584_G ? 2 : 1;
 		const tavernTier = input.boardWithDeadEntityHero.tavernTier ?? 3;
-		const cardsToAdd = Array(mult).map(() =>
+		const cardsToAdd = Array.from({ length: mult }).map(() =>
 			input.gameState.cardsData.getRandomMinionForTribe(Race.DEMON, tavernTier),
 		);
 		addCardsInHand(input.boardWithDeadEntityHero, input.boardWithDeadEntity, cardsToAdd, input.gameState);
