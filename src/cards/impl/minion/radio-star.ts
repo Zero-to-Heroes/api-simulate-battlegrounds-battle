@@ -11,7 +11,7 @@ export const RadioStar: DeathrattleSpawnCard = {
 		const mult = minion.cardId === CardIds.RadioStar_BG25_399_G ? 2 : 1;
 		const clone = copyEntity(minion.lastAffectedByEntity);
 		clone.health = clone.maxHealth;
-		const radioEntities = Array(mult).map(() => ({
+		const radioEntities = Array.from({ length: mult }).map(() => ({
 			...clone,
 			entityId: input.gameState.sharedState.currentEntityId++,
 		}));
