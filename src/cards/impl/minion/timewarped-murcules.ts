@@ -7,7 +7,7 @@ import { OnMinionKilledCard } from '../../card.interface';
 export const TimewarpedMurcules: OnMinionKilledCard = {
 	cardIds: [CardIds.TimewarpedMurcules_BG34_Giant_207, CardIds.TimewarpedMurcules_BG34_Giant_207_G],
 	onMinionKilled: (minion: BoardEntity, input: OnMinionKilledInput) => {
-		if (input.killer !== minion || !input.killerIsAttacking) {
+		if (input.killer !== minion) {
 			return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 		}
 
