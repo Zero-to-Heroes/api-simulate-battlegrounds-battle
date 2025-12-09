@@ -9,11 +9,7 @@ export const TwilightBroodmother: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TwilightBroodmother_BG34_731, CardIds.TwilightBroodmother_BG34_731_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const totalSpawns = minion.cardId === CardIds.TwilightBroodmother_BG34_731_G ? 4 : 2;
-		const spawns = simplifiedSpawnEntities(
-			CardIds.TwilightHatchling_TwilightWhelpToken_BG34_630t,
-			totalSpawns,
-			input,
-		);
+		const spawns = simplifiedSpawnEntities(CardIds.TwilightHatchling_BG34_630, totalSpawns, input);
 		spawns.forEach((e) => {
 			updateTaunt(
 				e,
