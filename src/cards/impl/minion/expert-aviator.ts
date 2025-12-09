@@ -34,7 +34,7 @@ export const ExpertAviator: RallyCard = {
 		};
 		const spawns = simplifiedSpawnEntities(clone.cardId, 1, spawnInput, clone);
 		for (const s of spawns) {
-			s.onCanceledSummon = () => (s.locked = false);
+			s.onCanceledSummon = () => (target.locked = false);
 		}
 		performEntitySpawns(
 			spawns,
