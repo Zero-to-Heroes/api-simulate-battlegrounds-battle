@@ -10,7 +10,7 @@ export const TimewarpedCaretaker: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TimewarpedCaretaker_BG34_Giant_618, CardIds.TimewarpedCaretaker_BG34_Giant_618_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const mult = minion.cardId === CardIds.TimewarpedCaretaker_BG34_Giant_618_G ? 2 : 1;
-		const spawns = simplifiedSpawnEntities(CardIds.SkeletonToken, 6 * mult, input);
+		const spawns = simplifiedSpawnEntities(CardIds.SkeletonToken, 4 * mult, input);
 		spawns.forEach((e) => {
 			e.onCanceledSummon = () => {
 				input.boardWithDeadEntityHero.globalInfo.UndeadAttackBonus += 1;

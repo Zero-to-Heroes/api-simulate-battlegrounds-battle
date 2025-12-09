@@ -13,7 +13,7 @@ export const TimewarpedSylvar: EndOfTurnCard = {
 		const neighbours = getNeighbours(input.board, minion);
 		for (let i = 0; i < goldenMinions + 1; i++) {
 			neighbours.forEach((target) =>
-				modifyStats(target, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState),
+				modifyStats(target, minion, 8 * mult, 8 * mult, input.board, input.hero, input.gameState),
 			);
 		}
 	},

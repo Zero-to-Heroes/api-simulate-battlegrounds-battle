@@ -1,8 +1,7 @@
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
-import { OnStatsChangedInput } from '../../../simulation/stats';
-import { addStatsToAliveBoard } from '../../../utils';
+import { modifyStats, OnStatsChangedInput } from '../../../simulation/stats';
 import { DeathrattleSpawnCard, OnStatsChangedCard } from '../../card.interface';
 
 export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
@@ -12,14 +11,18 @@ export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
 		// Not sure about that +1
 		const base = 1 + (minion.scriptDataNum1 || 1);
 		const buff = base * mult;
-		addStatsToAliveBoard(
-			minion,
-			input.boardWithDeadEntity,
-			input.boardWithDeadEntityHero,
-			0,
-			buff,
-			input.gameState,
-		);
+		const targets = input.boardWithDeadEntity.filter((e) => e != minion && e.health > 0 && !e.definitelyDead);
+		for (const target of targets) {
+			modifyStats(
+				target,
+				minion,
+				0,
+				buff,
+				input.boardWithDeadEntity,
+				input.boardWithDeadEntityHero,
+				input.gameState,
+			);
+		}
 		return [];
 	},
 	onStatsChanged: (minion: BoardEntity, input: OnStatsChangedInput) => {

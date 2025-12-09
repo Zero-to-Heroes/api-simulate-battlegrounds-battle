@@ -10,6 +10,6 @@ export const TimewarpedDuskmaw: AvengeCard = {
 	baseAvengeValue: (cardId: string) => 1,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedDuskmaw_BG34_PreMadeChamp_020_G ? 2 : 1;
-		addStatsToBoard(minion, input.board, input.hero, 3 * mult, 3 * mult, input.gameState, Race[Race.DRAGON]);
+		addStatsToBoard(minion, input.board, input.hero, 4 * mult, 3 * mult, input.gameState, Race[Race.DRAGON]);
 	},
 };

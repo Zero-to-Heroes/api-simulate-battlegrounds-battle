@@ -14,8 +14,8 @@ export const StalwartKodo: OnOtherSpawnedCard & DefaultChargesCard = {
 			modifyStats(
 				input.spawned,
 				minion,
-				minion.attack * mult,
-				minion.health * mult,
+				minion.maxAttack * mult,
+				minion.maxHealth * mult,
 				input.board,
 				input.hero,
 				input.gameState,

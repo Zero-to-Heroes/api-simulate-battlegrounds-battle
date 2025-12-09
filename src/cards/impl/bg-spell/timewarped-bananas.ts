@@ -8,7 +8,7 @@ export const TimewarpedBananas: TavernSpellCard = {
 		const numberOfCardsToAdd = 10 - input.hero.hand.length;
 		const cardsToAdd = Array(numberOfCardsToAdd).fill(CardIds.TavernDishBanana_BG28_897);
 		addCardsInHand(input.hero, input.board, cardsToAdd, input.gameState);
-		input.hero.globalInfo.TavernSpellAttackBuff += 2;
-		input.hero.globalInfo.TavernSpellHealthBuff += 2;
+		input.hero.globalInfo.TavernSpellAttackBuff += 3;
+		input.hero.globalInfo.TavernSpellHealthBuff += 3;
 	},
 };

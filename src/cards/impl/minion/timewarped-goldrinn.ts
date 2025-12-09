@@ -9,18 +9,19 @@ export const TimewarpedGoldrinn: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TimewarpedGoldrinn_BG34_Giant_362, CardIds.TimewarpedGoldrinn_BG34_Giant_362_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedGoldrinn_BG34_Giant_362_G ? 2 : 1;
-		const goldrinnBuff = 2 * mult;
+		const goldrinnAttackBuff = 3 * mult;
+		const goldrinnHealthBuff = 2 * mult;
 		addStatsToBoard(
 			minion,
 			input.boardWithDeadEntity,
 			input.boardWithDeadEntityHero,
-			goldrinnBuff,
-			goldrinnBuff,
+			goldrinnAttackBuff,
+			goldrinnHealthBuff,
 			input.gameState,
 			Race[Race.BEAST],
 		);
-		input.boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += goldrinnBuff;
-		input.boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += goldrinnBuff;
+		input.boardWithDeadEntityHero.globalInfo.GoldrinnBuffAtk += goldrinnAttackBuff;
+		input.boardWithDeadEntityHero.globalInfo.GoldrinnBuffHealth += goldrinnHealthBuff;
 		return [];
 	},
 };

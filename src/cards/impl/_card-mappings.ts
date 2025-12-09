@@ -211,6 +211,7 @@ import { MurkySpashFisher } from './minion/murky-spash-fisher';
 import { Mutalisk } from './minion/mutalisk';
 import { MutatedLasher } from './minion/mutated-lasher';
 import { MythraxTheUnraveler } from './minion/mythrax';
+import { NalaaTheRedeemer } from './minion/nalaa-the-redeemer';
 import { NeonAgent } from './minion/neon-agent';
 import { NerubianDeathswarmer } from './minion/nerubian-deathswarmer';
 import { NestSwarmer } from './minion/nest-swarmer';
@@ -418,6 +419,7 @@ import { TwilightWatcher } from './minion/twilight-watcher';
 import { Ultralisk } from './minion/ultralisk';
 import { UltravioletAscendant } from './minion/ultraviolet-ascendant';
 import { UnforgivingTreant } from './minion/unforgiving-treant';
+import { UtilityDrone } from './minion/utility-drone';
 import { ValiantTiger } from './minion/valiant-tiger';
 import { VengefulProtector } from './minion/vengeful-protector';
 import { VoidEarl } from './minion/void-earl';
@@ -900,10 +902,12 @@ const cards = [
 	TimewarpedCenturion,
 	ApexisGuardian,
 	MetalDispenser,
+	UtilityDrone,
 	SurfNSurfCrabRiding,
 	CrabMount,
 	TheGladIator,
 	SwattingInsects,
+	NalaaTheRedeemer,
 	JunkJouster,
 	MiniTrident,
 	AnglersLure,

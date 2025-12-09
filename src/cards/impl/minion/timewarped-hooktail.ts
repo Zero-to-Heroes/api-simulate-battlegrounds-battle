@@ -7,6 +7,6 @@ export const TimewarpedHootail: OnTavernSpellCastCard = {
 	cardIds: [CardIds.TimewarpedHooktail_BG34_Giant_015, CardIds.TimewarpedHooktail_BG34_Giant_015_G],
 	onTavernSpellCast: (entity: BoardEntity, input: CastSpellInput) => {
 		const mult = entity.cardId === CardIds.TimewarpedHooktail_BG34_Giant_015_G ? 2 : 1;
-		addStatsToBoard(entity, input.board, input.hero, 2 * mult, 1 * mult, input.gameState);
+		addStatsToBoard(entity, input.board, input.hero, 2 * mult, 2 * mult, input.gameState);
 	},
 };

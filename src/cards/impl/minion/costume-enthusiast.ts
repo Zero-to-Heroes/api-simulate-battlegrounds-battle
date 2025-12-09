@@ -17,7 +17,7 @@ export const CostumeEnthusiast: StartOfCombatCard = {
 				minion,
 				minion,
 				target.attack * mult,
-				target.health * mult,
+				0,
 				input.playerBoard,
 				input.playerEntity,
 				input.gameState,

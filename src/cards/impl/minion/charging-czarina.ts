@@ -10,7 +10,7 @@ export const ChargingCzarina: OnTavernSpellCastCard = {
 		const mult = entity.cardId === CardIds.ChargingCzarina_BG28_741_G ? 2 : 1;
 		const targets = input.board.filter((e) => e.divineShield);
 		for (const target of targets) {
-			modifyStats(target, entity, 3 * mult, 0, input.board, input.hero, input.gameState);
+			modifyStats(target, entity, 4 * mult, 0, input.board, input.hero, input.gameState);
 		}
 	},
 };

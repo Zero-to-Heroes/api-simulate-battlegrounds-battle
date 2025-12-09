@@ -9,6 +9,6 @@ export const GhoulOfTheFeast: AvengeCard = {
 	baseAvengeValue: (cardId: string) => 1,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.GhoulOfTheFeast_BG25_002_G ? 2 : 1;
-		grantStatsToMinionsOfEachType(minion, input.board, input.hero, 1 * mult, 2 * mult, input.gameState);
+		grantStatsToMinionsOfEachType(minion, input.board, input.hero, 2 * mult, 2 * mult, input.gameState);
 	},
 };

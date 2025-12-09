@@ -12,7 +12,7 @@ export const TimewarpedSaurolisk: DeathrattleTriggeredCard = {
 			minion,
 			minion,
 			3 * mult,
-			3 * mult,
+			2 * mult,
 			input.boardWithDeadEntity,
 			input.boardWithDeadEntityHero,
 			input.gameState,

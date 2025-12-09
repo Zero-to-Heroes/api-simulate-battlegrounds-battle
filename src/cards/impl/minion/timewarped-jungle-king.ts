@@ -20,8 +20,8 @@ export const TimewarpedJungleKing: AfterOtherSpawnedCard & AfterTavernSpellCastC
 		modifyStats(
 			input.spawned,
 			minion,
+			3 * baseBuff * mult,
 			2 * baseBuff * mult,
-			1 * baseBuff * mult,
 			input.board,
 			input.hero,
 			input.gameState,

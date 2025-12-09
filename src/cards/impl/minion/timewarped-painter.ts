@@ -9,10 +9,18 @@ export const TimewarpedPainter: EndOfTurnCard = {
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
 		const targets = getNeighbours(input.board, minion);
 		const mult = minion.cardId === CardIds.TimewarpedPainter_BG34_Giant_319_G ? 2 : 1;
-		const baseBuff = minion.scriptDataNum1 ?? 2;
+		const baseBuff = minion.scriptDataNum1 ?? 1;
 		for (const target of targets) {
 			input.gameState.spectator.registerPowerTarget(minion, target, input.board, input.hero, input.otherHero);
-			modifyStats(target, minion, baseBuff * mult, baseBuff * mult, input.board, input.hero, input.gameState);
+			modifyStats(
+				target,
+				minion,
+				2 * baseBuff * mult,
+				1 * baseBuff * mult,
+				input.board,
+				input.hero,
+				input.gameState,
+			);
 		}
 	},
 };

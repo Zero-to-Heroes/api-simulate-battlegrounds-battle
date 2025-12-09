@@ -12,7 +12,7 @@ export const BuddingGreenthumb: AvengeCard = {
 		const mult = minion.cardId === CardIds.BuddingGreenthumb_BG21_030_G ? 2 : 1;
 		const neighbours = getNeighbours(input.board, minion);
 		neighbours.forEach((entity) => {
-			modifyStats(entity, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
+			modifyStats(entity, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 		});
 	},
 };

@@ -9,6 +9,10 @@ export const TimewarpedElectron: AfterTavernSpellCastCard = {
 	cardIds: [CardIds.TimewarpedElectron_BG34_Giant_610, CardIds.TimewarpedElectron_BG34_Giant_610_G],
 	afterTavernSpellCast: (entity: BoardEntity, input: CastSpellInput) => {
 		const mult = entity.cardId === CardIds.TimewarpedElectron_BG34_Giant_610_G ? 2 : 1;
+		const cardIdToMagnetize =
+			entity.cardId === CardIds.TimewarpedElectron_BG34_Giant_610_G
+				? CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t
+				: CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171_Gt;
 		entity.scriptDataNum1 = entity.scriptDataNum1 ?? 0;
 		entity.scriptDataNum1++;
 		if (entity.scriptDataNum1 % 2 === 0) {
@@ -20,7 +24,7 @@ export const TimewarpedElectron: AfterTavernSpellCastCard = {
 					magnetizeToTarget(
 						[target],
 						entity,
-						[CardIds.MoonsteelJuggernaut_MoonsteelSatelliteToken_BG31_171t],
+						[cardIdToMagnetize],
 						input.board,
 						input.hero,
 						input.otherBoard,

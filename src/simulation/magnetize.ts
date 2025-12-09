@@ -149,6 +149,12 @@ export const magnetizeToTarget = (
 	}
 };
 
+export const getMagnetizations = (entity: BoardEntity, gameState: FullGameState) => {
+	return entity.enchantments.filter((e) =>
+		gameState.allCards.getCard(e.cardId).mechanics?.includes(GameTag[GameTag.MODULAR]),
+	).length;
+};
+
 export interface OnBeforeMagnetizeInput {
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;

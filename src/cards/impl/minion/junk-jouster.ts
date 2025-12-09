@@ -12,6 +12,6 @@ export const JunkJouster: OnBeforeMagnetizeCard = {
 			return;
 		}
 		const mult = entity.cardId === CardIds.JunkJouster_BG34_175_G ? 2 : 1;
-		addStatsToBoard(entity, input.board, input.hero, 3 * mult, 1 * mult, input.gameState);
+		addStatsToBoard(entity, input.board, input.hero, 3 * mult, 2 * mult, input.gameState);
 	},
 };

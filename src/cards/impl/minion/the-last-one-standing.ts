@@ -12,8 +12,8 @@ export const TheLastOneStanding: RallyCard = {
 			minion,
 			input.attackingBoard,
 			input.attackingHero,
-			7 * mult,
-			7 * mult,
+			9 * mult,
+			9 * mult,
 			input.gameState,
 		);
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };

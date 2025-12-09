@@ -9,7 +9,7 @@ export const RedVolumizer: OnBeforeMagnetizeSelfCard = {
 	cardIds: [CardIds.AutoAccelerator_RedVolumizerToken_BG34_170t, CardIds.RedVolumizer_BG34_170t_G],
 	onBeforeMagnetizeSelf: (entity: BoardEntity, input: OnBeforeMagnetizeSelfInput) => {
 		const mult = entity.cardId === CardIds.RedVolumizer_BG34_170t_G ? 2 : 1;
-		const buff = 3 * mult;
+		const buff = 2 * mult;
 		updateVolumizerBuffs(input.hero, input.board, buff, 0, input.gameState);
 		modifyStats(
 			entity,

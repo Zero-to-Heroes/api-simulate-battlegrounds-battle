@@ -33,7 +33,7 @@ export const Dramaloc: DeathrattleSpawnCard = {
 						target,
 						minion,
 						statsSource.attack,
-						statsSource.health,
+						0,
 						input.boardWithDeadEntity,
 						input.boardWithDeadEntityHero,
 						input.gameState,

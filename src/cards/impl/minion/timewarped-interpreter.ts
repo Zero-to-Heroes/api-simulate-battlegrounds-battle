@@ -9,6 +9,6 @@ export const TimewarpedInterpreter: OnBeforeMagnetizeCard = {
 	cardIds: [CardIds.TimewarpedInterpreter_BG34_Giant_120, CardIds.TimewarpedInterpreter_BG34_Giant_120_G],
 	onBeforeMagnetize: (entity: BoardEntity, input: OnBeforeMagnetizeInput) => {
 		const mult = entity.cardId === CardIds.TimewarpedInterpreter_BG34_Giant_120_G ? 2 : 1;
-		addStatsToBoard(entity, input.board, input.hero, 3 * mult, 1 * mult, input.gameState, Race[Race.MECH]);
+		addStatsToBoard(entity, input.board, input.hero, 3 * mult, 2 * mult, input.gameState, Race[Race.MECH]);
 	},
 };

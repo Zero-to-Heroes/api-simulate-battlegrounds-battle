@@ -5,7 +5,7 @@ import { AfterTavernSpellCastCard, CastSpellInput, DefaultChargesCard } from '..
 
 export const TimewarpedCenturion: AfterTavernSpellCastCard & DefaultChargesCard = {
 	cardIds: [CardIds.TimewarpedCenturion_BG34_PreMadeChamp_200, CardIds.TimewarpedCenturion_BG34_PreMadeChamp_200_G],
-	defaultCharges: (entity: BoardEntity) => 2,
+	defaultCharges: (entity: BoardEntity) => 3,
 	afterTavernSpellCast: (entity: BoardEntity, input: CastSpellInput) => {
 		if (entity.abiityChargesLeft <= 0) {
 			return;

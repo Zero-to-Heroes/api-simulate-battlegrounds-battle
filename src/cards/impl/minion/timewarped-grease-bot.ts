@@ -8,6 +8,6 @@ export const TimewarpedGreaseBot: OnDivineShieldUpdatedCard = {
 	cardIds: [CardIds.TimewarpedGreaseBot_BG34_Giant_656, CardIds.TimewarpedGreaseBot_BG34_Giant_656_G],
 	onDivineShieldUpdated: (minion: BoardEntity, input: OnDivineShieldUpdatedInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedGreaseBot_BG34_Giant_656_G ? 2 : 1;
-		addStatsToBoard(input.target, input.board, input.hero, 2 * mult, 2 * mult, input.gameState);
+		addStatsToBoard(input.target, input.board, input.hero, 3 * mult, 3 * mult, input.gameState);
 	},
 };

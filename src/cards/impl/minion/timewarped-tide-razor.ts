@@ -11,7 +11,7 @@ export const TimewarpedTideRazor: DeathrattleSpawnCard = {
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedTideRazor_BG34_Giant_328_G ? 2 : 1;
 		const spawnedEntities: BoardEntity[] = [];
-		for (let i = 0; i < 3 * mult; i++) {
+		for (let i = 0; i < 4 * mult; i++) {
 			const cardToAdd = input.gameState.cardsData.getRandomMinionForTribe(
 				Race.PIRATE,
 				input.boardWithDeadEntityHero.tavernTier ?? 5,

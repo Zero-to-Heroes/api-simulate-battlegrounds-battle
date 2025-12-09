@@ -15,7 +15,7 @@ export const TimewarpedSensei: EndOfTurnCard = {
 			if (
 				hasCorrectTribe(neighbour, input.hero, Race.MECH, input.gameState.anomalies, input.gameState.allCards)
 			) {
-				modifyStats(neighbour, minion, 3 * mult, 2 * mult, input.board, input.hero, input.gameState);
+				modifyStats(neighbour, minion, 3 * mult, 3 * mult, input.board, input.hero, input.gameState);
 			}
 		}
 	},
