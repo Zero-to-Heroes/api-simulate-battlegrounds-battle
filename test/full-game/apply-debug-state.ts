@@ -2,24 +2,19 @@ import { debugState } from '../../src/debug-state';
 
 export const applyDebugState = () => {
 	const state = debugState;
-	state.active = false;
+	state.active = true;
 	state.forcedCurrentAttacker = 1;
 	state.forcedFaceOffBase = [
-		{ attacker: { entityId: 5428 }, defender: { entityId: 3807 } },
-		{ attacker: { entityId: 3798 }, defender: { entityId: 5435 } },
-		{ attacker: { entityId: 5429 }, defender: { entityId: 4622 } },
-		{ attacker: { entityId: 3800 }, defender: { entityId: 5438 } },
-		{ attacker: { entityId: 5431 }, defender: { entityId: 3805 } },
-		{ attacker: { entityId: 3802 }, defender: { entityId: 5435 } },
-		{ attacker: { entityId: 5433 }, defender: { entityId: 3798 } },
-		{ attacker: { entityId: 3803 }, defender: { entityId: 5431 } },
-		{ attacker: { entityId: 5434 }, defender: { entityId: 4622 } },
-		{ attacker: { entityId: 3807 }, defender: { entityId: 5429 } },
-		{ attacker: { entityId: 5429 }, defender: { entityId: 4622 } },
-		{ attacker: { entityId: 3798 }, defender: { entityId: 5434 } },
-		{ attacker: { entityId: 5431 }, defender: { entityId: 3803 } },
-		{ attacker: { entityId: 3800 }, defender: { entityId: 5429 } },
-		{ attacker: { entityId: 5429 }, defender: { entityId: 5718 } },
-		{ attacker: { entityId: 5718 }, defender: { entityId: 5431 } },
+		{ attacker: { entityId: 7483 }, defender: { entityId: 6587 } },
+		{ attacker: { entityId: 5489 }, defender: { entityId: 7484 } },
+		{ attacker: { attack: 7, health: 1 }, defender: { entityId: 5505 } },
+		{ attacker: { entityId: 5493 }, defender: { entityId: 8130 } },
+		{ attacker: { entityId: 8130 }, defender: { entityId: 5501 } },
+		{ attacker: { entityId: 8130 }, defender: { entityId: 5505 } },
+		{ attacker: { entityId: 5497 }, defender: { entityId: 7486 } },
+		{ attacker: { entityId: 7488 }, defender: { entityId: 5489 } },
+		{ attacker: { entityId: 6587 }, defender: { entityId: 7492 } },
+		{ attacker: { entityId: 7491 }, defender: { entityId: 5497 } },
+		{ attacker: { entityId: 5497 }, defender: { entityId: 7488 } },
 	];
 };

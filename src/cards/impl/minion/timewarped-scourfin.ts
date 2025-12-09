@@ -26,7 +26,11 @@ export const TimewarpedScourfin: DeathrattleSpawnCard = {
 			);
 			if (!target.locked) {
 				target.locked = true;
-				return simplifiedSpawnEntities(target.cardId, 1, input, target);
+				const spawns = simplifiedSpawnEntities(target.cardId, 1, input, target);
+				for (const s of spawns) {
+					s.onCanceledSummon = () => (target.locked = false);
+				}
+				return spawns;
 			}
 		}
 		return [];
