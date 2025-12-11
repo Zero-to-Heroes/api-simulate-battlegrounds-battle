@@ -8,10 +8,12 @@ export const TimewarpedSteamer: EndOfTurnCard = {
 	endOfTurn: (minion: BoardEntity, input: EndOfTurnInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedSteamer_BG34_PreMadeChamp_038_G ? 2 : 1;
 		const cardsToAdd = [
-			...Array(mult).fill(CardIds.AutoAccelerator_BlueVolumizerToken_BG34_170t2),
-			...Array(mult).fill(CardIds.AutoAccelerator_GreenVolumizerToken_BG34_170t3),
-			...Array(mult).fill(CardIds.AutoAccelerator_RedVolumizerToken_BG34_170t),
+			CardIds.AutoAccelerator_BlueVolumizerToken_BG34_170t2,
+			CardIds.AutoAccelerator_GreenVolumizerToken_BG34_170t3,
+			CardIds.AutoAccelerator_RedVolumizerToken_BG34_170t,
 		];
-		addCardsInHand(input.hero, input.board, cardsToAdd, input.gameState);
+		for (let i = 0; i < mult; i++) {
+			addCardsInHand(input.hero, input.board, cardsToAdd, input.gameState);
+		}
 	},
 };
