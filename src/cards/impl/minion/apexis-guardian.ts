@@ -12,14 +12,7 @@ export const ApexisGuardian: DeathrattleSpawnCard = {
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const loops = minion.cardId === CardIds.ApexisGuardian_BG34_173_G ? 2 : 1;
 		const cardsToMagnetize = [];
-		for (let i = 0; i < loops; i++) {
-			const cardToMagnetize: Mutable<ReferenceCard> = {
-				...input.gameState.allCards.getCard(CardIds.AutoAccelerator_GreenVolumizerToken_BG34_170t3),
-			};
-			cardToMagnetize.attack = 0;
-			cardToMagnetize.health = 0;
-			cardsToMagnetize.push(cardToMagnetize);
-		}
+		// Magnetizes to the same targets
 		const possibleTargets = input.boardWithDeadEntity.filter(
 			(e) =>
 				e.health > 0 &&
@@ -33,8 +26,22 @@ export const ApexisGuardian: DeathrattleSpawnCard = {
 					input.gameState.allCards,
 				),
 		);
+		const targets = pickMultipleRandomDifferent(possibleTargets, 2);
+		for (let i = 0; i < loops; i++) {
+			const cardIdToMagnetize = input.gameState.cardsData.getRandomMagneticVolumizer(
+				input.boardWithDeadEntityHero,
+				input.gameState.anomalies,
+				6,
+			);
+			const cardToMagnetize: Mutable<ReferenceCard> = {
+				...input.gameState.allCards.getCard(cardIdToMagnetize),
+			};
+			// cardToMagnetize.attack = 0;
+			// cardToMagnetize.health = 0;
+			cardsToMagnetize.push(cardToMagnetize);
+		}
 		magnetizeToTarget(
-			() => pickMultipleRandomDifferent(possibleTargets, 2),
+			targets,
 			minion,
 			cardsToMagnetize,
 			input.boardWithDeadEntity,
