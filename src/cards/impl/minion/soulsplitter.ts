@@ -15,7 +15,6 @@ export const Soulsplitter: StartOfCombatCard = {
 		const numberOfTargets = minion.cardId === CardIds.Soulsplitter_BG25_023_G ? 2 : 1;
 		const candidates = input.playerBoard.filter(
 			(e) =>
-				hasValidDeathrattle(e, input.playerEntity, input.gameState) &&
 				!e.reborn &&
 				hasCorrectTribe(
 					e,
