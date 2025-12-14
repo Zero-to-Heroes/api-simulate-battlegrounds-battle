@@ -41,7 +41,7 @@ export const TimewarpedBassgill: DeathrattleSpawnCard = {
 					{ ...spawn } as BoardEntity,
 				);
 				for (const s of bassgillSpawns) {
-					s.onCanceledSummon = () => (s.locked = false);
+					s.onCanceledSummon = () => (spawn.locked = false);
 					updateDivineShield(
 						s,
 						input.boardWithDeadEntity,
