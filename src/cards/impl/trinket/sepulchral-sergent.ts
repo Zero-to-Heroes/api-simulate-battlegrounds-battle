@@ -8,9 +8,8 @@ export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
 	cardIds: [CardIds.SepulchralSergeant_BG34_111, CardIds.SepulchralSergeant_BG34_111_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.SepulchralSergeant_BG34_111_G ? 2 : 1;
-		// Not sure about that +1
-		const base = 1 + (minion.scriptDataNum1 || 1);
-		const buff = base * mult;
+		const base = minion.scriptDataNum1 || 1 * mult;
+		const buff = base;
 		const targets = input.boardWithDeadEntity.filter((e) => e != minion && e.health > 0 && !e.definitelyDead);
 		for (const target of targets) {
 			modifyStats(
