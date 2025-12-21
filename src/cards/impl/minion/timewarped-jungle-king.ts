@@ -15,20 +15,16 @@ export const TimewarpedJungleKing: AfterOtherSpawnedCard & AfterTavernSpellCastC
 			return;
 		}
 
-		const baseBuff = minion.scriptDataNum1 ?? 1;
 		const mult = minion.cardId === CardIds.TimewarpedJungleKing_BG34_PreMadeChamp_004_G ? 2 : 1;
-		modifyStats(
-			input.spawned,
-			minion,
-			3 * baseBuff * mult,
-			2 * baseBuff * mult,
-			input.board,
-			input.hero,
-			input.gameState,
-		);
+		const atkBuff = minion.scriptDataNum1 ?? 3 * mult;
+		const healthBuff = minion.scriptDataNum2 ?? 2 * mult;
+		modifyStats(input.spawned, minion, atkBuff, healthBuff, input.board, input.hero, input.gameState);
 	},
 	afterTavernSpellCast: (entity: BoardEntity, input: CastSpellInput) => {
+		const mult = entity.cardId === CardIds.TimewarpedJungleKing_BG34_PreMadeChamp_004_G ? 2 : 1;
 		entity.scriptDataNum1 = entity.scriptDataNum1 ?? 0;
-		entity.scriptDataNum1++;
+		entity.scriptDataNum1 += 3 * mult;
+		entity.scriptDataNum2 = entity.scriptDataNum2 ?? 0;
+		entity.scriptDataNum2 += 2 * mult;
 	},
 };
