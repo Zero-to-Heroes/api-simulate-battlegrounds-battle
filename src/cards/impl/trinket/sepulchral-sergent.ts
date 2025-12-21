@@ -26,7 +26,8 @@ export const SepulchralSergeant: DeathrattleSpawnCard & OnStatsChangedCard = {
 	},
 	onStatsChanged: (minion: BoardEntity, input: OnStatsChangedInput) => {
 		if (input.target === minion && input.attackAmount > 0) {
-			minion.scriptDataNum1 = (minion.scriptDataNum1 || 2) + 1;
+			const mult = minion.cardId === CardIds.SepulchralSergeant_BG34_111_G ? 2 : 1;
+			minion.scriptDataNum1 = (minion.scriptDataNum1 || 2) + 2 * mult;
 		}
 	},
 };

@@ -3,10 +3,11 @@ import { debugState } from '../../src/debug-state';
 export const applyDebugState = () => {
 	const state = debugState;
 	state.active = true;
-	state.forcedCurrentAttacker = 1;
+	state.forcedCurrentAttacker = 0;
 	state.forcedFaceOffBase = [
-		{ attacker: { entityId: 25972 }, defender: { entityId: 24223 } },
-		{ attacker: { attack: 1, health: 1 }, defender: { entityId: 25992 } },
-		{ attacker: { attack: 6, health: 26 }, defender: { entityId: 24975 } },
+		{ attacker: { entityId: 19344 }, defender: { entityId: 20503 } },
+		{ attacker: { entityId: 20486 }, defender: { entityId: 19352 } },
+		{ attacker: { entityId: 20486 }, defender: { entityId: 19538 } },
+		{ attacker: { attack: 8, health: 5561 }, defender: { entityId: 19538 } },
 	];
 };
