@@ -473,6 +473,7 @@ import { BattleHorn } from './trinket/battle-horn';
 import { BeetleBand } from './trinket/beetle-band';
 import { BirdFeeder } from './trinket/bird-feeder';
 import { CrochetedSungill } from './trinket/crocheted-sungill';
+import { DaggerspineThrasher } from './trinket/daggerspine-thrasher';
 import { DivineSignet } from './trinket/divine-signet';
 import { EclecticShrine } from './trinket/eclectic-shrine';
 import { FaerieDragonScale } from './trinket/faerie-dragon-scale';
@@ -515,6 +516,7 @@ const cards = [
 	TuskedCamper,
 	NimbleHatchling,
 	BlueWhelp,
+	DaggerspineThrasher,
 	TwilightWatcher,
 	VengefulProtector,
 	PrimevalMonstrosity,
