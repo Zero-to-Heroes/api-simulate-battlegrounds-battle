@@ -74,6 +74,9 @@ export const handlePackTactics = (
 		true,
 		copy,
 	);
+	if (secretCardId === CardIds.PackTactics_TB_Bacon_Secrets_15) {
+		candidateEntities.forEach((e) => setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
+	}
 	const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
 	const spawned = performEntitySpawns(
 		candidateEntities,
@@ -90,9 +93,6 @@ export const handlePackTactics = (
 		// 33.6.2 https://replays.firestoneapp.com/?reviewId=06e89a29-8f63-4c55-bdac-d908ed6e5857&turn=9&action=1
 		e.hasAttacked = defendingEntity.hasAttacked;
 	});
-	if (secretCardId === CardIds.PackTactics_TB_Bacon_Secrets_15) {
-		spawned.forEach((e) => setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
-	}
 };
 
 export const handleSnakeTrap = (
