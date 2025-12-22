@@ -1052,16 +1052,6 @@ export const processMinionDeath = (
 	// 	stringifySimple(deadEntities1, gameState.allCards),
 	// 	stringifySimple(deadEntities2, gameState.allCards),
 	// );
-	board1
-		.filter((entity) => isFish(entity))
-		.forEach((entity) =>
-			rememberDeathrattles(entity, deadEntities1, gameState.cardsData, gameState.allCards, gameState.sharedState),
-		);
-	board2
-		.filter((entity) => isFish(entity))
-		.forEach((entity) =>
-			rememberDeathrattles(entity, deadEntities2, gameState.cardsData, gameState.allCards, gameState.sharedState),
-		);
 
 	gameState.spectator.registerDeadEntities(
 		deadMinionIndexesFromRights1,
@@ -1158,6 +1148,20 @@ export const processMinionDeath = (
 
 	// Apply "after minion death" effects
 	handleAfterMinionsDeaths(board1, deadEntities1, board1Hero, board2, deadEntities2, board2Hero, gameState);
+
+	// Only when all deathrattles have resolved
+	// 2025-12-20: https://replays.firestoneapp.com/?reviewId=7d8f9af4-b484-4256-976b-ff9df8847b50&turn=5&action=0
+	// Confirmed by dev that the fish doesn't get the deathrattle in this case
+	board1
+		.filter((entity) => isFish(entity))
+		.forEach((entity) =>
+			rememberDeathrattles(entity, deadEntities1, gameState.cardsData, gameState.allCards, gameState.sharedState),
+		);
+	board2
+		.filter((entity) => isFish(entity))
+		.forEach((entity) =>
+			rememberDeathrattles(entity, deadEntities2, gameState.cardsData, gameState.allCards, gameState.sharedState),
+		);
 };
 
 const handleAfterMinionsDeaths = (
