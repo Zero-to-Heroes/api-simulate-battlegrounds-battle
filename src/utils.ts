@@ -466,6 +466,17 @@ export const isVolumizer = (
 	return refCard.mechanics?.includes('BACON_VOLUMIZER');
 };
 
+/**
+ * Useful in cases where a volumizer is summoned from hand, where the volumizer buff is already applied
+ */
+export const alreadyHasVolumizerBuff = (
+	entity: BoardEntity,
+	playerEntity: BgsPlayerEntity,
+	gameState: FullGameState,
+): boolean => {
+	return entity.enchantments?.some((e) => e.cardId?.includes('BG34_170'));
+};
+
 export const getEffectiveTribesForEntity = (
 	entity: BoardEntity,
 	playerEntity: BgsPlayerEntity,
