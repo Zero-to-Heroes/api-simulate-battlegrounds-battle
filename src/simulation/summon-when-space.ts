@@ -69,11 +69,6 @@ const handleSummonsWhenSpaceForPlayer = (
 	gameState: FullGameState,
 ): boolean => {
 	let shouldRecomputeCurrentAttacker = false;
-	if (targetEntity.rapidReanimationMinion) {
-		shouldRecomputeCurrentAttacker =
-			handleRapidReanimationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState) ||
-			shouldRecomputeCurrentAttacker;
-	}
 	if (targetEntity.questRewards?.includes(CardIds.StableAmalgamation_BG28_Reward_518)) {
 		shouldRecomputeCurrentAttacker =
 			handleStableAmalgamationForPlayer(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState) ||
@@ -139,6 +134,19 @@ const handleSummonsWhenSpaceForPlayer = (
 					opponentBoard,
 					opponentEntity,
 					targetEntity.friendly,
+					gameState,
+				) || shouldRecomputeCurrentAttacker;
+		} else if (
+			heroPower.cardId === CardIds.TeronGorefiend_RapidReanimation &&
+			(heroPower.info as BoardEntity)?.cardId
+		) {
+			shouldRecomputeCurrentAttacker =
+				handleRapidReanimationForPlayer(
+					heroPower,
+					playerBoard,
+					playerEntity,
+					opponentBoard,
+					opponentEntity,
 					gameState,
 				) || shouldRecomputeCurrentAttacker;
 		}
@@ -572,29 +580,28 @@ const handleStableAmalgamationForPlayer = (
 };
 
 const handleRapidReanimationForPlayer = (
+	heroPower: BgsHeroPower,
 	playerBoard: BoardEntity[],
 	playerEntity: BgsPlayerEntity,
 	opponentBoard: BoardEntity[],
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	const indexFromRight =
-		playerEntity.rapidReanimationIndexFromLeft === 0
-			? Math.max(0, playerBoard.length - playerEntity.rapidReanimationIndexFromLeft)
-			: playerEntity.rapidReanimationIndexFromRight;
+	const indexFromRight = heroPower.info2 === 0 ? Math.max(0, playerBoard.length - heroPower.info2) : heroPower.info2;
+	const rapidReanimationMinion = heroPower.info as BoardEntity;
 	const hasSummoned = handleSummon(
 		playerBoard,
 		playerEntity,
 		opponentBoard,
 		opponentEntity,
 		gameState,
-		playerEntity.rapidReanimationMinion.cardId,
+		rapidReanimationMinion.cardId,
 		indexFromRight,
 		true, // (Goldrinn gets buffed, so it seems we reapply auras? This is a mess tbh)
-		playerEntity.rapidReanimationMinion,
+		rapidReanimationMinion,
 	);
 	if (hasSummoned) {
-		playerEntity.rapidReanimationMinion = null;
+		heroPower.info = null;
 		// Hard-coding a correction for Ancestral Automaton
 		// Shold not be necessary if we reapply auras
 		// hasSummoned.forEach((entity) => {

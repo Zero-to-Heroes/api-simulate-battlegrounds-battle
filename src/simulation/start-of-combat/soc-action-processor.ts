@@ -59,6 +59,7 @@ import { TrainingCertificate } from '../../cards/impl/trinket/training-certifica
 import { ValorousMedallion } from '../../cards/impl/trinket/valorous-medaillion';
 import { CardIds } from '../../services/card-ids';
 import { processMinionDeath } from '../attack';
+import { handleSummonsWhenSpace } from '../summon-when-space';
 import { SoCInput } from './start-of-combat-input';
 
 export const performStartOfCombatAction = (
@@ -98,6 +99,15 @@ export const performStartOfCombatAction = (
 						// It looks like it doesn't look for the "summons when space" between Stitched Salvager's SoC and
 						// Hawkstrider Herald SoC
 						true,
+					);
+					// https://replays.firestoneapp.com/?reviewId=6293597f-28fa-472e-ba8c-35f6b7deef58&turn=31&action=6
+					// The first RapidReanimation triggers, resummons the target, then the second RapidReanimation triggers
+					handleSummonsWhenSpace(
+						input.playerBoard,
+						input.playerEntity,
+						input.opponentBoard,
+						input.opponentEntity,
+						input.gameState,
 					);
 				}
 				if (typeof hasTriggered !== 'boolean' && hasTriggered.shouldRecomputeCurrentAttacker) {

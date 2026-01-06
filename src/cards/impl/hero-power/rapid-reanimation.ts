@@ -43,13 +43,14 @@ export const RapidReanimation: StartOfCombatCard = {
 					// 	? input.playerBoard.indexOf(minionThatWillDie)
 					// 	: input.playerBoard.indexOf(minionThatWillDie) + 1;
 					// input.playerBoard.indexOf(minionThatWillDie)
-					input.playerEntity.rapidReanimationIndexFromRight =
-						input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
+					// input.playerEntity.rapidReanimationIndexFromRight =
+					// 	input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
 					const minionToCopy = copyEntity(minionThatWillDie);
 					// We don't reapply auras when resummoning
 					// Actually we should: a dead Goldrinn is then buffed by the auras upon resummon
+					heroPower.info = minionToCopy;
+					heroPower.info2 = input.playerBoard.length - 1 - rapidReanimationIndexFromLeft;
 					removeAurasFromSelf(minionToCopy, input.playerBoard, input.playerEntity, input.gameState);
-					input.playerEntity.rapidReanimationMinion = minionToCopy;
 					minionThatWillDie.definitelyDead = true;
 					input.gameState.spectator.registerPowerTarget(
 						input.playerEntity,
