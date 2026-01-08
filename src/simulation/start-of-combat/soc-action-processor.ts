@@ -102,6 +102,7 @@ export const performStartOfCombatAction = (
 					);
 					// https://replays.firestoneapp.com/?reviewId=6293597f-28fa-472e-ba8c-35f6b7deef58&turn=31&action=6
 					// The first RapidReanimation triggers, resummons the target, then the second RapidReanimation triggers
+					// So we need to process the resummon as soon as the minion dies, and before processing the second RapidReanimation
 					handleSummonsWhenSpace(
 						input.playerBoard,
 						input.playerEntity,
