@@ -587,7 +587,11 @@ const handleRapidReanimationForPlayer = (
 	opponentEntity: BgsPlayerEntity,
 	gameState: FullGameState,
 ) => {
-	const indexFromRight = heroPower.info2 === 0 ? Math.max(0, playerBoard.length - heroPower.info2) : heroPower.info2;
+	// Not sure why we would do this
+	// 2026-01-08: When the sacrificed minion is the far-right one, we want to resurrect it there
+	// https://replays.firestoneapp.com/?reviewId=4e5d8239-2d8d-41db-9b8f-35b5179c28fb&turn=7&action=4
+	// const indexFromRight = heroPower.info2 === 0 ? Math.max(0, playerBoard.length - heroPower.info2) : heroPower.info2;
+	const indexFromRight = heroPower.info2;
 	const rapidReanimationMinion = heroPower.info as BoardEntity;
 	const hasSummoned = handleSummon(
 		playerBoard,
