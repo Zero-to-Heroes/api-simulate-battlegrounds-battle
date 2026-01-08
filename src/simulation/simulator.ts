@@ -158,10 +158,22 @@ export class Simulator {
 				: Math.round(Math.random());
 		this.gameState.sharedState.currentEntityId =
 			Math.max(
-				...playerBoard.map((entity) => entity.entityId),
-				...opponentBoard.map((entity) => entity.entityId),
-				...(playerEntity.hand?.map((entity) => entity.entityId) ?? []),
-				...(opponentEntity.hand?.map((entity) => entity.entityId) ?? []),
+				...playerBoard.flatMap((entity) => [
+					entity.entityId,
+					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+				]),
+				...opponentBoard.flatMap((entity) => [
+					entity.entityId,
+					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+				]),
+				...(playerEntity.hand?.flatMap((entity) => [
+					entity.entityId,
+					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+				]) ?? []),
+				...(opponentEntity.hand?.flatMap((entity) => [
+					entity.entityId,
+					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+				]) ?? []),
 			) + 1;
 		const suggestedNewCurrentAttacker = handleStartOfCombat(
 			playerEntity,
