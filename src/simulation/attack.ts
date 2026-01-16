@@ -32,7 +32,10 @@ export const simulateAttack = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
-	forceTarget: BoardEntity = null,
+	options?: {
+		skipSummonWhenSpace?: boolean;
+		forceTarget?: BoardEntity;
+	},
 ): BoardEntity => {
 	// console.debug(
 	// 	'\nsimulating attack',
@@ -80,7 +83,8 @@ export const simulateAttack = (
 			}
 			// Check that didn't die
 			if (attackingBoard.find((entity) => entity.entityId === attackingEntity.entityId)) {
-				const defendingEntity: BoardEntity = forceTarget ?? getDefendingEntity(defendingBoard, attackingEntity);
+				const defendingEntity: BoardEntity =
+					options?.forceTarget ?? getDefendingEntity(defendingBoard, attackingEntity);
 				// Can happen with a single defender that has stealth
 				if (defendingEntity && defendingEntity.health > 0 && !defendingEntity.definitelyDead) {
 					doFullAttack(
@@ -91,6 +95,7 @@ export const simulateAttack = (
 						defendingBoard,
 						defendingBoardHero,
 						gameState,
+						options,
 					);
 				} else {
 					// Solves the edge case of Sky Pirate vs a stealth board
@@ -112,6 +117,9 @@ export const doFullAttack = (
 	defendingBoard: BoardEntity[],
 	defendingBoardHero: BgsPlayerEntity,
 	gameState: FullGameState,
+	options?: {
+		skipSummonWhenSpace?: boolean;
+	},
 ) => {
 	const isAttackingImmediately = attackingEntity.attackImmediately;
 	gameState.spectator.registerAttack(
@@ -185,7 +193,7 @@ export const doFullAttack = (
 		defendingBoard,
 		defendingBoardHero,
 		gameState,
-		isAttackingImmediately,
+		options?.skipSummonWhenSpace || isAttackingImmediately,
 	);
 
 	applyAfterAttackTrinkets(

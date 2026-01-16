@@ -163,13 +163,17 @@ const handleIllidanForPlayer = (
 
 	// Attacks
 	firstAttacker.attackImmediately = true;
-	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+	simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState, {
+		skipSummonWhenSpace: true,
+	});
 	// See http://replays.firestoneapp.com/?reviewId=f16b7a49-c2a2-4ac5-a9eb-a75f83246f70&turn=6&action=8
 	firstAttacker.hasAttacked = 0;
 	firstAttacker.attackImmediately = false;
 	if (!!secondAttacker && !secondAttacker.definitelyDead && secondAttacker.health > 0) {
 		secondAttacker.attackImmediately = true;
-		simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState);
+		simulateAttack(playerBoard, playerEntity, opponentBoard, opponentEntity, gameState, {
+			skipSummonWhenSpace: true,
+		});
 		secondAttacker.hasAttacked = 0;
 		secondAttacker.attackImmediately = false;
 	}

@@ -59,7 +59,7 @@ export const performEntitySpawns = (
 				opponentBoard,
 				opponentBoardHero,
 				gameState,
-				forceTarget,
+				{ forceTarget: forceTarget },
 			);
 			// console.debug(
 			// 	'after attack immediately\n',
