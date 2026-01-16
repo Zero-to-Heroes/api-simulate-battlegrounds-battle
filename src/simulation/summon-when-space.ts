@@ -94,6 +94,7 @@ const handleSummonsWhenSpaceForPlayer = (
 		} else if (
 			heroPower.cardId === CardIds.Drekthar_LeadTheFrostwolves &&
 			gameState.currentTurn >= 7 &&
+			heroPower.ready &&
 			!heroPower.activated
 		) {
 			shouldRecomputeCurrentAttacker =
@@ -109,6 +110,7 @@ const handleSummonsWhenSpaceForPlayer = (
 		} else if (
 			heroPower.cardId === CardIds.VanndarStormpike_LeadTheStormpikes &&
 			gameState.currentTurn >= 7 &&
+			heroPower.ready &&
 			!heroPower.activated
 		) {
 			shouldRecomputeCurrentAttacker =

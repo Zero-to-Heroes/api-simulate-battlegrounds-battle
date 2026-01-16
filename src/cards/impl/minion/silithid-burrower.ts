@@ -30,6 +30,6 @@ export const SilithidBurrower: DeathrattleSpawnCard & AvengeCard = {
 	},
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.SilithidBurrower_BG29_871_G ? 2 : 1;
-		minion.scriptDataNum1 = (minion.scriptDataNum1 || 1) + 1 * mult;
+		minion.scriptDataNum1 = (minion.scriptDataNum1 || mult) + 1 * mult;
 	},
 };

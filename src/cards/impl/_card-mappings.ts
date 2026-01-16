@@ -25,8 +25,10 @@ import { TombTurning } from './bg-spell/tomb-turning';
 import { WaveOfGold } from './bg-spell/wave-of-gold';
 import { FragrantPhylactery } from './hero-power/fragrant-phylactery';
 import { FragrantPhylacteryEnchantment } from './hero-power/fragrant-phylactery-enchantment';
+import { FrostwolfFervor } from './hero-power/frostwolf-fervor';
 import { GloriousGloop } from './hero-power/glorious-gloop';
 import { LoackAndLoad } from './hero-power/lock-and-load';
+import { Stormpike } from './hero-power/stormpike';
 import { SwattingInsects } from './hero-power/swatting-insects';
 import { AdmiralElizaGoreblade } from './minion/admiral-eliza-goreblade';
 import { AllSeeingElder } from './minion/all-seeing-elder';
@@ -517,6 +519,8 @@ const cards = [
 	NimbleHatchling,
 	BlueWhelp,
 	DaggerspineThrasher,
+	FrostwolfFervor,
+	Stormpike,
 	TwilightWatcher,
 	VengefulProtector,
 	PrimevalMonstrosity,
