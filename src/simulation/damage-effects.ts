@@ -50,8 +50,8 @@ export const onEntityDamaged = (
 			damagedEntity: damagedEntity,
 			damageDealer: damageSource,
 			damage: damage,
-			board: board,
-			hero: hero,
+			board: friendlyBoard,
+			hero: friendlyHero,
 			gameState,
 		});
 	}
@@ -63,8 +63,8 @@ export const onEntityDamaged = (
 				const wingedChimeraModifier = damagedEntity.cardId === CardIds.WingedChimera_BG29_844_G ? 2 : 1;
 				grantStatsToMinionsOfEachType(
 					damagedEntity,
-					board,
-					hero,
+					friendlyBoard,
+					friendlyHero,
 					wingedChimeraModifier * 1,
 					wingedChimeraModifier * 1,
 					gameState,
@@ -74,13 +74,19 @@ export const onEntityDamaged = (
 			break;
 		case CardIds.Untameabull_BG29_878:
 		case CardIds.Untameabull_BG29_878_G:
-			updateDivineShield(damagedEntity, board, hero, otherHero, true, gameState);
-			gameState.spectator.registerPowerTarget(damagedEntity, damagedEntity, board, hero, otherHero);
+			updateDivineShield(damagedEntity, friendlyBoard, friendlyHero, enemyHero, true, gameState);
+			gameState.spectator.registerPowerTarget(
+				damagedEntity,
+				damagedEntity,
+				friendlyBoard,
+				friendlyHero,
+				enemyHero,
+			);
 			break;
 		case CardIds.TrustyPup_BG29_800:
 		case CardIds.TrustyPup_BG29_800_G:
 			const trustyPupStats = damagedEntity.cardId === CardIds.TrustyPup_BG29_800_G ? 2 : 1;
-			modifyStats(damagedEntity, damagedEntity, trustyPupStats, 0, board, hero, gameState);
+			modifyStats(damagedEntity, damagedEntity, trustyPupStats, 0, friendlyBoard, friendlyHero, gameState);
 			break;
 		case CardIds.SilverGoose_BG29_801:
 		case CardIds.SilverGoose_BG29_801_G:
@@ -90,124 +96,66 @@ export const onEntityDamaged = (
 						? CardIds.SilverGoose_SilverFledglingToken_BG29_801_Gt
 						: CardIds.SilverGoose_SilverFledglingToken_BG29_801t,
 					1,
-					board,
-					hero,
-					otherBoard,
-					otherHero,
+					friendlyBoard,
+					friendlyHero,
+					enemyBoard,
+					enemyHero,
 					gameState,
 					damagedEntity.friendly,
 					false,
 				),
 			);
 			break;
-		// case CardIds.CraftyAranasi_BG29_821:
-		// case CardIds.CraftyAranasi_BG29_821_G:
-		// 	const aranasiLoops = damagedEntity.cardId === CardIds.CraftyAranasi_BG29_821_G ? 2 : 1;
-		// 	for (let i = 0; i < aranasiLoops; i++) {
-		// 		dealDamageToRandomEnemy(
-		// 			enemyBoard,
-		// 			enemyHero,
-		// 			damagedEntity,
-		// 			5,
-		// 			friendlyBoard,
-		// 			friendlyHero,
-		// 			gameState,
-		// 		);
-		// 	}
-		// 	break;
-		// case CardIds.MarineMatriarch_BG29_610:
-		// case CardIds.MarineMatriarch_BG29_610_G:
-		// 	if (damagedEntity.abiityChargesLeft > 0) {
-		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.MarineMatriarch_BG29_610_G ? 2 : 1;
-		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
-		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
-		// 		damagedEntity.abiityChargesLeft--;
-		// 	}
-		// 	break;
-		// case CardIds.VeryHungryWinterfinner_BG29_300:
-		// case CardIds.VeryHungryWinterfinner_BG29_300_G:
-		// 	const winterfinnerStats = damagedEntity.cardId === CardIds.VeryHungryWinterfinner_BG29_300_G ? 2 : 1;
-		// 	const minionInHand = pickRandom(
-		// 		hero.hand.filter(
-		// 			(e) => gameState.allCards.getCard(e.cardId).type?.toUpperCase() === CardType[CardType.MINION],
-		// 		),
-		// 	);
-		// 	if (!!minionInHand) {
-		// 		minionInHand.attack += 2 * winterfinnerStats;
-		// 		minionInHand.health += winterfinnerStats;
-		// 		minionInHand.maxHealth += winterfinnerStats;
-		// 		gameState.spectator.registerPowerTarget(damagedEntity, minionInHand, board, hero, otherHero);
-		// 	}
-		// 	break;
-		// case CardIds.SoftHeartedSiren_BG26_590:
-		// case CardIds.SoftHeartedSiren_BG26_590_G:
-		// 	if (damagedEntity.abiityChargesLeft > 0) {
-		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.SoftHeartedSiren_BG26_590_G ? 2 : 1;
-		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
-		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
-		// 		damagedEntity.abiityChargesLeft--;
-		// 	}
-		// 	break;
-		// case CardIds.LongJohnCopper_BG29_831:
-		// case CardIds.LongJohnCopper_BG29_831_G:
-		// 	if (damagedEntity.abiityChargesLeft > 0) {
-		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.LongJohnCopper_BG29_831_G ? 2 : 1;
-		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => null);
-		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
-		// 		damagedEntity.abiityChargesLeft--;
-		// 	}
-		// 	break;
-		// case CardIds.BristlingBuffoon_BG29_160:
-		// case CardIds.BristlingBuffoon_BG29_160_G:
-		// 	if (damagedEntity.abiityChargesLeft > 0) {
-		// 		const numbersOfCardsToAdd = damagedEntity.cardId === CardIds.BristlingBuffoon_BG29_160_G ? 2 : 1;
-		// 		const cardsToAdd = Array.from({ length: numbersOfCardsToAdd }).map(() => CardIds.BloodGem);
-		// 		addCardsInHand(hero, board, cardsToAdd, gameState);
-		// 		damagedEntity.abiityChargesLeft--;
-		// 	}
-		// 	break;
 	}
 
-	handleOtherEntityEffects(damagedEntity, board, hero, otherBoard, otherHero, spawnedEntities, gameState);
+	handleOtherEntityEffects(
+		damagedEntity,
+		friendlyBoard,
+		friendlyHero,
+		enemyBoard,
+		enemyHero,
+		spawnedEntities,
+		gameState,
+	);
 	const finalSpawns = performEntitySpawns(
 		spawnedEntities,
-		board,
-		hero,
+		friendlyBoard,
+		friendlyHero,
 		damagedEntity,
-		board.length - (board.indexOf(damagedEntity) + 1),
-		otherBoard,
-		otherHero,
+		friendlyBoard.length - (friendlyBoard.indexOf(damagedEntity) + 1),
+		enemyBoard,
+		enemyHero,
 		gameState,
 	);
 
-	const entityRightToSpawns = board[board.indexOf(damagedEntity) + 1];
+	const entityRightToSpawns = friendlyBoard[friendlyBoard.indexOf(damagedEntity) + 1];
 	finalSpawns.forEach((e) => {
 		e.hasAttacked = damagedEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
 	});
 
 	if (damage > 0) {
-		for (const entity of board) {
+		for (const entity of friendlyBoard) {
 			const afterDealDamageImpl = cardMappings[entity.cardId];
 			if (hasAfterDealDamage(afterDealDamageImpl)) {
 				afterDealDamageImpl.afterDealDamage(entity, {
 					damagedEntity: damagedEntity,
 					damageDealer: damageSource,
 					damage: damage,
-					board: board,
-					hero: hero,
+					board: friendlyBoard,
+					hero: friendlyHero,
 					gameState,
 				});
 			}
 		}
-		for (const entity of otherBoard) {
+		for (const entity of enemyBoard) {
 			const afterDealDamageImpl = cardMappings[entity.cardId];
 			if (hasAfterDealDamage(afterDealDamageImpl)) {
 				afterDealDamageImpl.afterDealDamage(entity, {
 					damagedEntity: damagedEntity,
 					damageDealer: damageSource,
 					damage: damage,
-					board: otherBoard,
-					hero: otherHero,
+					board: enemyBoard,
+					hero: enemyHero,
 					gameState,
 				});
 			}
