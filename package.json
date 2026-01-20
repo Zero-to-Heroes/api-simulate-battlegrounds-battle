@@ -1,6 +1,6 @@
 {
 	"name": "@firestone-hs/simulate-bgs-battle",
-	"version": "1.1.676",
+	"version": "1.1.677",
 	"description": "",
 	"scripts": {
 		"lint": "eslint --color --fix --ext .ts .",

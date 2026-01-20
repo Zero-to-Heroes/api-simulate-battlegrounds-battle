@@ -14,7 +14,7 @@ export const Stuntdrake: AvengeCard = {
 			const picked: BoardEntity[] = [];
 			for (let j = 0; j < 2; j++) {
 				const possibleTargets = input.board.filter(
-					(e) => e.entityId !== minion.entityId && !picked.includes(e),
+					(e) => !Stuntdrake.cardIds.includes(e.cardId) && !picked.includes(e),
 				);
 				const target = pickRandom(possibleTargets);
 				if (!!target) {
