@@ -15,7 +15,7 @@ export const BloodsnoutWarlord: OnWheneverAnotherMinionAttacksCard = {
 				playBloodGemsOn(
 					minion,
 					target,
-					2 * mult,
+					3 * mult,
 					input.attackingBoard,
 					input.attackingHero,
 					input.defendingBoard,

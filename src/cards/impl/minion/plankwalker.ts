@@ -11,7 +11,7 @@ export const Plankwalker: OnTavernSpellCastCard = {
 		const mult = entity.cardId === CardIds.Plankwalker_BG34_521_G ? 2 : 1;
 		const targets = pickMultipleRandom(input.board, 3);
 		for (const target of targets) {
-			modifyStats(target, entity, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+			modifyStats(target, entity, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
 		}
 	},
 };

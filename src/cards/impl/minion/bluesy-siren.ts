@@ -40,7 +40,7 @@ const process = (minion: BoardEntity, input: OnAttackInput) => {
 		const spellCast = CardIds.DeepBlueCrooner_DeepBluesToken_BG26_502t;
 		castTavernSpell(spellCast, {
 			spellCardId: spellCast,
-			source: input.attackingHero,
+			source: minion,
 			target: input.attacker,
 			board: input.attackingBoard,
 			hero: input.attackingHero,

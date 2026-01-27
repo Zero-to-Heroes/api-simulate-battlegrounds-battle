@@ -5,7 +5,7 @@ import { AvengeCard } from '../../card.interface';
 
 export const TimewarpedRecycler: AvengeCard = {
 	cardIds: [CardIds.TimewarpedRecycler_BG34_Giant_082, CardIds.TimewarpedRecycler_BG34_Giant_082_G],
-	baseAvengeValue: (cardId: string) => 6,
+	baseAvengeValue: (cardId: string) => 4,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		// Do nothing in combat
 	},

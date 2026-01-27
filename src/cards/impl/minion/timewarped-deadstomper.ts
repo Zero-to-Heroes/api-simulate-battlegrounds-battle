@@ -9,7 +9,7 @@ export const TimewarpedDeadstomper: AfterOtherSpawnedCard = {
 	afterOtherSpawned: (minion: BoardEntity, input: OnOtherSpawnAuraInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedDeadstomper_BG34_Giant_654_G ? 2 : 1;
 		input.board.forEach((e) => {
-			modifyStats(e, minion, 3 * mult, 0, input.board, input.hero, input.gameState);
+			modifyStats(e, minion, 4 * mult, 0, input.board, input.hero, input.gameState);
 		});
 	},
 };

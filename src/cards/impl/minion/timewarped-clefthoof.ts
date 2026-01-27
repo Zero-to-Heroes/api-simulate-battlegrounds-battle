@@ -15,7 +15,7 @@ export const TimewarpedClefthoof: EndOfTurnCard = {
 		);
 		for (let i = 0; i < 3 * mult; i++) {
 			for (const candidate of candidates) {
-				modifyStats(candidate, minion, 1, 2, input.board, input.hero, input.gameState);
+				modifyStats(candidate, minion, 2, 2, input.board, input.hero, input.gameState);
 				dealDamageToMinion(
 					candidate,
 					input.board,

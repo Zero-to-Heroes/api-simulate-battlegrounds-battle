@@ -12,7 +12,7 @@ export const TimewarpedJellyBelly: RebornEffectCard = {
 			minion,
 			input.boardWithKilledMinion,
 			input.boardWithKilledMinionHero,
-			1 * mult,
+			2 * mult,
 			2 * mult,
 			input.gameState,
 		);

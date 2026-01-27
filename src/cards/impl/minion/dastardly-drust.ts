@@ -22,9 +22,9 @@ export const DastardlyDrust: OnCardAddedToHandCard = {
 			const targets = input.board;
 			for (const target of targets) {
 				if (isGolden(target.cardId, input.gameState.allCards)) {
-					modifyStats(target, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
+					modifyStats(target, minion, 4 * mult, 2 * mult, input.board, input.hero, input.gameState);
 				} else {
-					modifyStats(target, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
+					modifyStats(target, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
 				}
 			}
 		}

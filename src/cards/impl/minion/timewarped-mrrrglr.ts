@@ -1,8 +1,10 @@
+import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { getNeighbours } from '../../../simulation/attack';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 import { modifyStats } from '../../../simulation/stats';
+import { hasCorrectTribe } from '../../../utils';
 import { StartOfCombatCard } from '../../card.interface';
 
 export const TimewarpedMrrrglr: StartOfCombatCard = {
@@ -22,15 +24,17 @@ export const TimewarpedMrrrglr: StartOfCombatCard = {
 			(minion.gildedInCombat ? 0 : input.playerEntity.globalInfo.ChoralHealthBuff) || totalHealthInHand || 0;
 		for (let i = 0; i < mult; i++) {
 			for (const target of targets) {
-				modifyStats(
-					target,
-					minion,
-					attackBuff,
-					healthBuff,
-					input.playerBoard,
-					input.playerEntity,
-					input.gameState,
-				);
+				if (hasCorrectTribe(target, input.playerEntity, Race.MURLOC, input.gameState.anomalies, input.gameState.allCards)) {
+					modifyStats(
+						target,
+						minion,
+						attackBuff,
+						healthBuff,
+						input.playerBoard,
+						input.playerEntity,
+						input.gameState,
+					);
+				}
 			}
 		}
 		return true;

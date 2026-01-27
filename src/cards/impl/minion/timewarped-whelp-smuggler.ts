@@ -8,7 +8,7 @@ export const TimewarpedWhelpSmuggler: OnStatsChangedCard = {
 	onStatsChanged: (minion: BoardEntity, input: OnStatsChangedInput) => {
 		if (input.attackAmount > 0) {
 			const buff = minion.cardId === CardIds.TimewarpedWhelpSmuggler_BG34_Giant_064_G ? 2 : 1;
-			modifyStats(input.target, minion, 0, 1 * buff, input.board, input.hero, input.gameState);
+			modifyStats(input.target, minion, 0, 3 * buff, input.board, input.hero, input.gameState);
 		}
 	},
 };

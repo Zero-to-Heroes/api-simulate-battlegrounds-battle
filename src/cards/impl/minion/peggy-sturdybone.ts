@@ -1,6 +1,6 @@
-import { CardIds } from '../../../services/card-ids';
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { OnCardAddedToHandInput } from '../../../simulation/cards-in-hand';
 import { modifyStats } from '../../../simulation/stats';
 import { getRandomAliveMinion } from '../../../utils';
@@ -16,11 +16,12 @@ export const PeggySturdybone: OnCardAddedToHandCard = {
 			input.gameState,
 		);
 		if (pirate) {
+			const mult = minion.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1;
 			modifyStats(
 				pirate,
 				minion,
-				minion.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
-				minion.cardId === CardIds.PeggySturdybone_BG25_032_G ? 2 : 1,
+				2 * mult,
+				1 * mult,
 				input.board,
 				input.hero,
 				input.gameState,

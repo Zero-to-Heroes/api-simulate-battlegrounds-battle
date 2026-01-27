@@ -12,7 +12,7 @@ export const Bonker: RallyCard = {
 			playBloodGemsOn(
 				minion,
 				target,
-				1 * mult,
+				2 * mult,
 				input.attackingBoard,
 				input.attackingHero,
 				input.defendingBoard,

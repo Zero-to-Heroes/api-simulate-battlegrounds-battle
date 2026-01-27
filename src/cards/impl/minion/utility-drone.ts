@@ -14,8 +14,8 @@ export const UtilityDrone: EndOfTurnCard = {
 				modifyStats(
 					target,
 					minion,
-					3 * magnetizations * mult,
-					3 * magnetizations * mult,
+					4 * magnetizations * mult,
+					4 * magnetizations * mult,
 					input.board,
 					input.hero,
 					input.gameState,
