@@ -1,9 +1,9 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { AvengeInput } from '../../../simulation/avenge';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
-import { modifyStats } from '../../../simulation/stats';
+import { modifyStats, setEntityStats } from '../../../simulation/stats';
 import { AvengeCard } from '../../card.interface';
 
 export const Carrier: AvengeCard = {
@@ -18,7 +18,7 @@ export const Carrier: AvengeCard = {
 			otherBoard: input.otherBoard,
 			otherBoardHero: input.otherHero,
 		};
-		const singleStatBuff = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 6 : 3;
+		const singleStatBuff = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 10 : 5;
 		const statBuff = minion.scriptDataNum1 ?? 0;
 		const cardId =
 			minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G
@@ -26,6 +26,8 @@ export const Carrier: AvengeCard = {
 				: CardIds.Carrier_InterceptorToken_BG31_HERO_802pt1t;
 		const spawned = simplifiedSpawnEntities(cardId, 1, spawnInput);
 		spawned.forEach((e) => {
+			// Because the data in the files is still 3/3 or 6/6 for the golden version
+			setEntityStats(e, singleStatBuff, singleStatBuff, input.board, input.hero, input.gameState);
 			modifyStats(e, minion, statBuff, statBuff, input.board, input.hero, input.gameState, false);
 		});
 		minion.scriptDataNum1 = statBuff + singleStatBuff;
