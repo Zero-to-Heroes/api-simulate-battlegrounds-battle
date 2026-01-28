@@ -10,7 +10,6 @@ export const BlueVolumizer: OnBeforeMagnetizeSelfCard = {
 	onBeforeMagnetizeSelf: (entity: BoardEntity, input: OnBeforeMagnetizeSelfInput) => {
 		const mult = entity.cardId === CardIds.BlueVolumizer_BG34_170t2_G ? 2 : 1;
 		const buff = 2 * mult;
-		updateVolumizerBuffs(input.hero, input.board, 0, buff, input.gameState);
 		modifyStats(
 			entity,
 			entity,
@@ -20,5 +19,7 @@ export const BlueVolumizer: OnBeforeMagnetizeSelfCard = {
 			input.hero,
 			input.gameState,
 		);
+		// The aura buff is not applied to itself
+		updateVolumizerBuffs(input.hero, input.board, 0, buff, input.gameState);
 	},
 };
