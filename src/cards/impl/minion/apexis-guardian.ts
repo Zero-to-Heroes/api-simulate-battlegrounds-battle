@@ -76,7 +76,7 @@ const handleEffect = (minion: BoardEntity, input: {
 		minion,
 		cardsToMagnetize,
 		input.board,
-		input.otherHero,
+		input.hero,
 		input.otherBoard,
 		input.otherHero,
 		input.gameState,
