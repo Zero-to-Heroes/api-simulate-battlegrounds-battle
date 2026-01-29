@@ -130,7 +130,7 @@ export const onEntityDamaged = (
 
 	const entityRightToSpawns = friendlyBoard[friendlyBoard.indexOf(damagedEntity) + 1];
 	finalSpawns.forEach((e) => {
-		e.hasAttacked = damagedEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
+		e.hasAttacked = damagedEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? undefined;
 	});
 
 	if (damage > 0) {

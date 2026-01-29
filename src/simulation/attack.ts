@@ -507,14 +507,12 @@ const getAttackingEntity = (attackingBoard: BoardEntity[], allCards: AllCardsSer
 
 	if (validAttackers.some((entity) => entity.attackImmediately)) {
 		validAttackers = validAttackers.filter((entity) => entity.attackImmediately);
-	} else if (validAttackers.every((e) => e.hasAttacked)) {
-		attackingBoard.forEach((e) => (e.hasAttacked = 0));
+	} else if (validAttackers.every((e) => e.hasAttacked != null)) {
+		attackingBoard.forEach((e) => (e.hasAttacked = undefined));
 	} else {
-		validAttackers = validAttackers.filter((entity) => !entity.hasAttacked);
+		validAttackers = validAttackers.filter((entity) => entity.hasAttacked == undefined);
 	}
 	const attacker = validAttackers[0];
-	// const debug = attacker.cardId === CardIds.Onyxia_OnyxianWhelpToken;
-	// const attackerName = allCards.getCard(attacker.cardId)?.name;
 	return attacker;
 };
 

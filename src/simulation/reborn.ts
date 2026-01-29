@@ -26,7 +26,7 @@ export const handleRebornForEntity = (
 	) {
 		entityToSpawn = {
 			...deadEntity,
-			hasAttacked: 0,
+			hasAttacked: undefined,
 			health: deadEntity.maxHealth,
 			divineShield: deadEntity.hadDivineShield,
 			reborn: false,
@@ -110,7 +110,7 @@ export const handleRebornForEntity = (
 			? null
 			: boardWithKilledMinion[boardWithKilledMinion.length - deadMinionIndexFromRight];
 	entitiesThatWereReborn.forEach((entity) => {
-		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
+		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? undefined;
 	});
 
 	// Arfus

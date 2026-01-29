@@ -461,7 +461,7 @@ const handleLockAndLoadForPlayer = (
 			// 34.0 https://replays.firestoneapp.com/?reviewId=6902bbda-cd04-4e2d-9643-3c87534e0986&turn=7&action=3
 			// Can be null if it dies after being spawned
 			if (spawns[0]) {
-				spawns[0].hasAttacked = 0;
+				spawns[0].hasAttacked = undefined;
 			}
 			return true;
 		}

@@ -70,13 +70,13 @@ export const buildSingleBoardEntity = (
 				damageMultiplier: 1,
 				frenzyChargesLeft: 1,
 				friendly: friendly,
-				hasAttacked: 0,
+				hasAttacked: undefined,
 		  } as BoardEntity)
 		: addImpliedMechanics(
 				{
 					entityId: entityId,
 					attack: card.attack,
-					hasAttacked: 0,
+					hasAttacked: undefined,
 					cardId: cardId,
 					divineShield: hasMechanic(card, GameTag.DIVINE_SHIELD),
 					health: card.health,

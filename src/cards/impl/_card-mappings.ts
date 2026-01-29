@@ -338,6 +338,7 @@ import { TimewarpedDragonling } from './minion/timewarped-dragonling';
 import { TimewarpedDuskmaw } from './minion/timewarped-duskmaw';
 import { TimewarpedElectron } from './minion/timewarped-electron';
 import { TimewarpedElegist } from './minion/timewarped-elegist';
+import { TimewarpedEmbalmer } from './minion/timewarped-embalmer';
 import { TimewarpedExpeditioner } from './minion/timewarped-expeditioner';
 import { TimewarpedFestergut } from './minion/timewarped-festergut';
 import { TimewarpedGeist } from './minion/timewarped-geist';
@@ -891,6 +892,7 @@ const cards = [
 	TimewarpedPaleofin,
 	TimewarpedTrickster,
 	TimewarpedArchimonde,
+	TimewarpedEmbalmer,
 	TimewarpedCalligrapher,
 	TimewarpedGreenskeeper,
 	TimewarpedPromoDrake,

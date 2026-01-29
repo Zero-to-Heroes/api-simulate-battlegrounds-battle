@@ -617,7 +617,7 @@ const handlePostDeathrattleEffect = (
 	// If the minion right to the spawned minion has already attacked, then the spawned
 	// minion cannot attack
 	spawnedEntities.forEach((entity) => {
-		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? 0;
+		entity.hasAttacked = deadEntity.hasAttacked > 1 ? 1 : entityRightToSpawns?.hasAttacked ?? undefined;
 	});
 
 	if (deadEntityPlayerState.player.questRewards?.includes(CardIds.RitualDagger_BG24_Reward_113)) {
