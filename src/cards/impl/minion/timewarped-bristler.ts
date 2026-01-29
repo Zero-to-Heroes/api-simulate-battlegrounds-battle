@@ -26,14 +26,16 @@ export const TimewarpedBristler: DeathrattleSpawnCard = {
 			bloodGemHealth = bloodGemEnchantments.map((e) => e.tagScriptDataNum2 ?? 0).reduce((a, b) => a + b, 0);
 		}
 
-		const candidates = input.boardWithDeadEntity.filter((e) =>
-			hasCorrectTribe(
-				e,
-				input.boardWithDeadEntityHero,
-				Race.QUILBOAR,
-				input.gameState.anomalies,
-				input.gameState.allCards,
-			),
+		const candidates = input.boardWithDeadEntity.filter(
+			(e) =>
+				!TimewarpedBristler.cardIds.includes(e.cardId) &&
+				hasCorrectTribe(
+					e,
+					input.boardWithDeadEntityHero,
+					Race.QUILBOAR,
+					input.gameState.anomalies,
+					input.gameState.allCards,
+				),
 		);
 
 		const mult = minion.cardId === CardIds.TimewarpedBristler_BG34_Giant_104_G ? 2 : 1;
