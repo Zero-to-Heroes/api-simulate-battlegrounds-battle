@@ -476,8 +476,8 @@ const handleNaturalDeathrattle = (
 			originalCardId: deadEntity.cardId,
 			rememberedDeathrattles: undefined,
 			deathrattleRepeats: dr.repeats ?? 1,
-			scriptDataNum1: dr.scriptDataNum1,
-			scriptDataNum2: dr.scriptDataNum2,
+			scriptDataNum1: dr.tagScriptDataNum1,
+			scriptDataNum2: dr.tagScriptDataNum2,
 			cardId: dr.cardId,
 			pendingAttackBuffs: [],
 			// For Corrupted Bristler

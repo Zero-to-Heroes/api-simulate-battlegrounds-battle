@@ -39,14 +39,7 @@ export interface BoardEntity {
 
 	// We only store the card id, because we want all the attack and other data to be computed at runtime, based on the
 	// current stats of the Fish
-	rememberedDeathrattles?: {
-		cardId: string;
-		timing: number;
-		repeats: number;
-		memory?: any;
-		scriptDataNum1?: number;
-		scriptDataNum2?: number;
-	}[];
+	rememberedDeathrattles?: BoardEnchantment[];
 	deathrattleRepeats?: number;
 	damageMultiplier?: number;
 	locked?: boolean;
@@ -83,4 +76,5 @@ export interface BoardEnchantment {
 	timing: number;
 	repeats?: number;
 	value?: number;
+	memory?: any;
 }

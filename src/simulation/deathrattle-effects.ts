@@ -175,14 +175,23 @@ export const applyLeapFroggerEffect = (
 		gameState,
 	);
 	if (buffed) {
+		const enchantmentCardId = isPremium
+			? CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge
+			: CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e;
 		buffed.enchantments.push({
-			cardId: isPremium
-				? CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge
-				: CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e,
+			cardId: enchantmentCardId,
 			originEntityId: deadEntity.entityId,
 			repeats: multiplier > 1 ? multiplier : 1,
 			timing: gameState.sharedState.currentEntityId++,
 		});
+		const leapfroggerDeathrattles = groupLeapfroggerDeathrattles(buffed.enchantments);
+		const nonLeapfroggerEnchants = buffed.enchantments.filter(
+			(d) =>
+				!d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000) &&
+				!d.cardId?.startsWith(CardIds.TimewarpedLeapfrogger_BG34_Giant_031),
+		);
+		const newEnchants = [...leapfroggerDeathrattles, ...nonLeapfroggerEnchants];
+		buffed.enchantments = newEnchants;
 	}
 };
 

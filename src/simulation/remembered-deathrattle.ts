@@ -1,10 +1,9 @@
+import { BoardEnchantment } from '../board-entity';
 import { CardIds } from '../services/card-ids';
 
 const MAX_LEAPFROGGER_GROUPS = 12;
 
-export const groupLeapfroggerDeathrattles = (
-	rememberedDeathrattles: { cardId: string; timing: number; repeats: number }[],
-): { cardId: string; timing: number; repeats: number }[] => {
+export const groupLeapfroggerDeathrattles = (rememberedDeathrattles: BoardEnchantment[]): BoardEnchantment[] => {
 	const candidates = rememberedDeathrattles
 		.filter((deathrattle) => deathrattle.cardId?.startsWith(CardIds.Leapfrogger_BG21_000))
 		.map((d) => {
@@ -18,15 +17,13 @@ export const groupLeapfroggerDeathrattles = (
 	return [...normalGroups, ...goldenGroups];
 };
 
-const groupDeathrattles = (
-	candidates: { cardId: string; timing: number; repeats: number }[],
-): { cardId: string; timing: number; repeats: number }[] => {
+const groupDeathrattles = (candidates: BoardEnchantment[]): BoardEnchantment[] => {
 	const totalRepeats = candidates.reduce((acc, next) => acc + next.repeats, 0);
 	if (totalRepeats <= MAX_LEAPFROGGER_GROUPS) {
 		return candidates;
 	}
 
-	const result: { cardId: string; timing: number; repeats: number }[] = [];
+	const result: BoardEnchantment[] = [];
 	const repeatsPerGroup = Math.ceil(totalRepeats / MAX_LEAPFROGGER_GROUPS);
 	let repeatsLeft = totalRepeats;
 	for (let i = 0; i < MAX_LEAPFROGGER_GROUPS; i++) {

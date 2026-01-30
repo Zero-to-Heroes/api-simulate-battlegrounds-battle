@@ -3,7 +3,7 @@ import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
 import { debugState } from '../debug-state';
 import { SingleSimulationResult } from '../single-simulation-result';
-import { stringifySimple } from '../utils';
+import { stringifySimple, stringifySimpleCard } from '../utils';
 import { simulateAttack } from './attack';
 import { clearStealthIfNeeded } from './auras';
 import { FullGameState, PlayerState } from './internal-game-state';
@@ -27,11 +27,81 @@ export class Simulator {
 		let playerEntity: BgsPlayerEntity = playerState.player;
 		let opponentBoard: BoardEntity[] = opponentState.board;
 		let opponentEntity: BgsPlayerEntity = opponentState.player;
+
+		const allEntityIds = [
+			...playerBoard.flatMap((entity) => [
+				entity.entityId,
+				...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+			]),
+			...opponentBoard.flatMap((entity) => [
+				entity.entityId,
+				...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+			]),
+			...(playerEntity.hand?.flatMap((entity) => [
+				entity.entityId,
+				...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+			]) ?? []),
+			...(opponentEntity.hand?.flatMap((entity) => [
+				entity.entityId,
+				...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
+			]) ?? []),
+		];
+		this.gameState.sharedState.currentEntityId = Math.max(...allEntityIds) + 1;
+
 		while (
 			!playerEntity.startOfCombatDone ||
 			!opponentEntity.startOfCombatDone ||
 			(playerBoard?.length > 0 && opponentBoard?.length > 0)
 		) {
+			const allEntityIds = [
+				...playerBoard.flatMap((entity) => {
+					const result = [entity.entityId, ...(entity.enchantments?.map((e) => e.originEntityId) ?? [])];
+					if (result.length > 200) {
+						console.log(
+							'too many entities for entity',
+							result.length,
+							stringifySimpleCard(entity, this.gameState.allCards),
+						);
+					}
+					return result;
+				}),
+				...opponentBoard.flatMap((entity) => {
+					const result = [entity.entityId, ...(entity.enchantments?.map((e) => e.originEntityId) ?? [])];
+					if (result.length > 200) {
+						console.log(
+							'too many entities for entity',
+							result.length,
+							stringifySimpleCard(entity, this.gameState.allCards),
+						);
+					}
+					return result;
+				}),
+				...playerEntity.hand.flatMap((entity) => {
+					const result = [entity.entityId, ...(entity.enchantments?.map((e) => e.originEntityId) ?? [])];
+					if (result.length > 200) {
+						console.log(
+							'too many entities for entity',
+							result.length,
+							stringifySimpleCard(entity, this.gameState.allCards),
+						);
+					}
+					return result;
+				}),
+				...opponentEntity.hand.flatMap((entity) => {
+					const result = [entity.entityId, ...(entity.enchantments?.map((e) => e.originEntityId) ?? [])];
+					if (result.length > 200) {
+						console.log(
+							'too many entities for entity',
+							result.length,
+							stringifySimpleCard(entity, this.gameState.allCards),
+						);
+					}
+					return result;
+				}),
+			];
+			if (allEntityIds.length > 10000) {
+				console.log('allEntityIds2', allEntityIds, new Error().stack);
+			}
 			this.simulateSingleBattlePass(playerBoard, playerEntity, opponentBoard, opponentEntity);
 			if (this.hasShowShortCircuitWarning) {
 				break;
@@ -156,25 +226,6 @@ export class Simulator {
 				: effectiveOpponentBoardLength > effectivePlayerBoardLength
 				? 1
 				: Math.round(Math.random());
-		this.gameState.sharedState.currentEntityId =
-			Math.max(
-				...playerBoard.flatMap((entity) => [
-					entity.entityId,
-					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
-				]),
-				...opponentBoard.flatMap((entity) => [
-					entity.entityId,
-					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
-				]),
-				...(playerEntity.hand?.flatMap((entity) => [
-					entity.entityId,
-					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
-				]) ?? []),
-				...(opponentEntity.hand?.flatMap((entity) => [
-					entity.entityId,
-					...(entity.enchantments?.map((e) => e.originEntityId) ?? []),
-				]) ?? []),
-			) + 1;
 		const suggestedNewCurrentAttacker = handleStartOfCombat(
 			playerEntity,
 			playerBoard,
