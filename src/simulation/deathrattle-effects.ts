@@ -186,9 +186,7 @@ export const applyLeapFroggerEffect = (
 		});
 		const leapfroggerDeathrattles = groupLeapfroggerDeathrattles(buffed.enchantments);
 		const nonLeapfroggerEnchants = buffed.enchantments.filter(
-			(d) =>
-				!d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000) &&
-				!d.cardId?.startsWith(CardIds.TimewarpedLeapfrogger_BG34_Giant_031),
+			(d) => !d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000),
 		);
 		const newEnchants = [...leapfroggerDeathrattles, ...nonLeapfroggerEnchants];
 		buffed.enchantments = newEnchants;
@@ -785,24 +783,14 @@ export const rememberDeathrattles = (
 			fish.rememberedDeathrattles = [...(fish.rememberedDeathrattles || []), ...newDeathrattles];
 		}
 
-		if (
-			newDeathrattles.some(
-				(d) =>
-					d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000) ||
-					d.cardId?.startsWith(CardIds.TimewarpedLeapfrogger_BG34_Giant_031),
-			)
-		) {
+		if (newDeathrattles.some((d) => d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000))) {
 			// Not sure exactly why, but if a leapfrogger dies first, then a manasaber,
 			// when the fish dies, the manasaber's effect (spawning tokens) is triggered first
 			// https://replays.firestoneapp.com/?reviewId=521733fb-8ba1-4663-9a87-3da58e8a09c8&turn=21&action=3
 			// HACK: So I will hardcode a rule for now to put leapfrogger effects last
 			const leapfroggerDeathrattles = groupLeapfroggerDeathrattles(fish.rememberedDeathrattles);
 			fish.rememberedDeathrattles = [
-				...fish.rememberedDeathrattles.filter(
-					(d) =>
-						!d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000) &&
-						!d.cardId?.startsWith(CardIds.TimewarpedLeapfrogger_BG34_Giant_031),
-				),
+				...fish.rememberedDeathrattles.filter((d) => !d.cardId?.startsWith(CardIds.Leapfrogger_BG21_000)),
 				...leapfroggerDeathrattles,
 			];
 		}

@@ -7,13 +7,17 @@ export const groupLeapfroggerDeathrattles = (rememberedDeathrattles: BoardEnchan
 	const candidates = rememberedDeathrattles
 		.filter((deathrattle) => deathrattle.cardId?.startsWith(CardIds.Leapfrogger_BG21_000))
 		.map((d) => {
-			if (d.cardId.endsWith('e')) {
-				return { ...d, cardId: d.cardId.slice(0, -1) };
+			if (!d.cardId.endsWith('e')) {
+				return { ...d, cardId: `${d.cardId}e` };
 			}
 			return d;
 		});
-	const normalGroups = groupDeathrattles(candidates.filter((d) => d.cardId === CardIds.Leapfrogger_BG21_000));
-	const goldenGroups = groupDeathrattles(candidates.filter((d) => d.cardId === CardIds.Leapfrogger_BG21_000_G));
+	const normalGroups = groupDeathrattles(
+		candidates.filter((d) => d.cardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000e),
+	);
+	const goldenGroups = groupDeathrattles(
+		candidates.filter((d) => d.cardId === CardIds.Leapfrogger_LeapfrogginEnchantment_BG21_000_Ge),
+	);
 	return [...normalGroups, ...goldenGroups];
 };
 
