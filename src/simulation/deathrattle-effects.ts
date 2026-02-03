@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AllCardsService, GameTag, Race } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
-import { BoardEntity } from '../board-entity';
+import { BoardEnchantment, BoardEntity } from '../board-entity';
 import { CardsData } from '../cards/cards-data';
 import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
 import { updateDivineShield } from '../keywords/divine-shield';
@@ -742,25 +742,31 @@ export const rememberDeathrattles = (
 
 	const debug = deadEntities.some((e) => e.cardId === CardIds.CorruptedBristler_BG32_431);
 
-	const validDeathrattles = deadEntities
+	const validDeathrattles: BoardEnchantment[] = deadEntities
 		.filter((entity) => allCards.getCard(entity.cardId).mechanics?.includes(GameTag[GameTag.DEATHRATTLE]))
 		.filter((e) => !DEATHRATTLES_REQUIRE_MEMORY.includes(e.cardId as CardIds) || e.memory)
-		.map((entity) => ({
-			cardId: entity.cardId,
-			repeats: 1,
-			timing: sharedState.currentEntityId++,
-			memory: entity.memory,
-			scriptDataNum1: entity.scriptDataNum1,
-			scriptDataNum2: entity.scriptDataNum2,
-		}));
-	const validEnchantments = deadEntities
+		.map((entity) => {
+			const result: BoardEnchantment = {
+				cardId: entity.cardId,
+				repeats: 1,
+				timing: sharedState.currentEntityId++,
+				memory: entity.memory,
+				tagScriptDataNum1: entity.scriptDataNum1,
+				tagScriptDataNum2: entity.scriptDataNum2,
+			};
+			return result;
+		});
+	const validEnchantments: BoardEnchantment[] = deadEntities
 		.map((entity) => entity.enchantments)
 		.reduce((a, b) => a.concat(b), [])
-		.flatMap((enchantment) => ({
-			cardId: enchantment.cardId,
-			repeats: enchantment.repeats ?? 1,
-			timing: sharedState.currentEntityId++,
-		}))
+		.flatMap((enchantment) => {
+			const result: BoardEnchantment = {
+				cardId: enchantment.cardId,
+				repeats: enchantment.repeats ?? 1,
+				timing: sharedState.currentEntityId++,
+			};
+			return result;
+		})
 		.filter((enchantment) => isValidDeathrattleEnchantment(enchantment.cardId));
 	// Multiple fish
 	const deadEntityRememberedDeathrattles =
