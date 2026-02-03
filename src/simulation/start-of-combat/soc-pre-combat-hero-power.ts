@@ -1,6 +1,6 @@
-import { CardIds } from '../../services/card-ids';
 import { BgsPlayerEntity } from '../../bgs-player-entity';
 import { BoardEntity } from '../../board-entity';
+import { CardIds } from '../../services/card-ids';
 import { FullGameState } from '../internal-game-state';
 import { handleSummonsWhenSpace } from '../summon-when-space';
 import { performStartOfCombatAction } from './soc-action-processor';
@@ -87,7 +87,7 @@ const handlePreCombatHeroPowersForPlayer = (input: SoCInput): number => {
 		}
 
 		for (const heroPower of input.playerEntity.heroPowers) {
-			performStartOfCombatAction(heroPower.cardId, input.playerEntity, input, true, 'pre-combat');
+			performStartOfCombatAction(heroPower.cardId, heroPower, input, true, 'pre-combat');
 		}
 	}
 
