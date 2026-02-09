@@ -97,13 +97,19 @@ export interface BgsPlayerGlobalInfo {
 	ChoralHealthBuff?: number;
 	BeetleAttackBuff?: number;
 	BeetleHealthBuff?: number;
+	// There is some naming confusion. This is "elementals grant more stats", not "elementals have more stats"
 	ElementalAttackBuff?: number;
 	ElementalHealthBuff?: number;
+	// Same for these pirates
+	PirateAttackBuff?: number;
+	PirateHealthBuff?: number;
 	TavernSpellHealthBuff?: number;
 	TavernSpellAttackBuff?: number;
 	GoldSpentThisGame?: number;
 	VolumizerHealthBuff?: number;
 	VolumizerAttackBuff?: number;
+	WhelpAttackBuff?: number;
+	WhelpHealthBuff?: number;
 	DeepBluesPlayed?: number;
 
 	MutatedLasherAttackBuff?: number;

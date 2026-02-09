@@ -566,6 +566,7 @@ export const getNeighbours = (
 	board: BoardEntity[],
 	entity: BoardEntity,
 	deadEntityIndexFromRight?: number,
+	alwaysIncludeBoth = false,
 ): readonly BoardEntity[] => {
 	const neighbours = [];
 	// When triggering DR with Hawkstrider, the entity is still on the board
@@ -586,10 +587,14 @@ export const getNeighbours = (
 		const index = board.map((e) => e.entityId).indexOf(entity.entityId);
 		if (index - 1 >= 0) {
 			neighbours.push(board[index - 1]);
+		} else if (alwaysIncludeBoth) {
+			neighbours.push(null);
 		}
 		// neighbours.push(entity);
 		if (index + 1 < board.length) {
 			neighbours.push(board[index + 1]);
+		} else if (alwaysIncludeBoth) {
+			neighbours.push(null);
 		}
 	}
 	return neighbours;

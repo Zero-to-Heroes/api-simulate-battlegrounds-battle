@@ -96,6 +96,22 @@ export const modifyStats = (
 		healthAmount += friendlyBoardHero.globalInfo.ElementalHealthBuff;
 	}
 
+	if (
+		entity?.entityId !== source?.entityId &&
+		hasCorrectTribe(
+			source as BoardEntity,
+			friendlyBoardHero,
+			Race.PIRATE,
+			gameState.anomalies,
+			gameState.allCards,
+		) &&
+		// Safeguard
+		attackAmount >= 0 &&
+		healthAmount >= 0
+	) {
+		attackAmount += friendlyBoardHero.globalInfo.PirateAttackBuff;
+		healthAmount += friendlyBoardHero.globalInfo.PirateHealthBuff;
+	}
 	// The only spell for now that grants stats is the Fleeting Vigor secret, and the stats it grants
 	// are in scriptDataNum1 and 2
 	// if (
@@ -225,6 +241,7 @@ export const modifyStats = (
 	if (countsAsStatsGain) {
 		onStatsUpdate(
 			entity,
+			source,
 			realAttackAmount,
 			realHealthAmount,
 			friendlyBoard,
@@ -237,6 +254,7 @@ export const modifyStats = (
 
 const onStatsUpdate = (
 	entity: BoardEntity,
+	source: BoardEntity | BoardSecret | BoardTrinket | BgsPlayerEntity | BgsHeroPower,
 	realAttackAmount: number,
 	realHealthAmount: number,
 	friendlyBoard: BoardEntity[],
@@ -244,7 +262,16 @@ const onStatsUpdate = (
 	otherHero: BgsPlayerEntity,
 	gameState: FullGameState,
 ): void => {
-	onStatUpdateMinions(entity, realAttackAmount, realHealthAmount, friendlyBoard, friendlyHero, otherHero, gameState);
+	onStatUpdateMinions(
+		entity,
+		source,
+		realAttackAmount,
+		realHealthAmount,
+		friendlyBoard,
+		friendlyHero,
+		otherHero,
+		gameState,
+	);
 	onStatUpdateQuests(entity, friendlyBoard, friendlyHero, gameState);
 };
 
@@ -294,6 +321,7 @@ const onStatUpdateQuests = (
 
 const onStatUpdateMinions = (
 	entity: BoardEntity,
+	source: BoardEntity | BoardSecret | BoardTrinket | BgsPlayerEntity | BgsHeroPower,
 	attackAmount: number,
 	healthAmount: number,
 	friendlyBoard: BoardEntity[],
@@ -307,6 +335,7 @@ const onStatUpdateMinions = (
 			if (hasOnStatsChanged(onStatsChangedImpl)) {
 				onStatsChangedImpl.onStatsChanged(boardEntity, {
 					target: entity,
+					source: source,
 					attackAmount: attackAmount,
 					healthAmount: healthAmount,
 					board: friendlyBoard,
@@ -343,6 +372,7 @@ const onStatUpdateMinions = (
 
 export interface OnStatsChangedInput {
 	target: BoardEntity;
+	source: BoardEntity | BoardSecret | BoardTrinket | BgsPlayerEntity | BgsHeroPower;
 	attackAmount: number;
 	healthAmount: number;
 	board: BoardEntity[];

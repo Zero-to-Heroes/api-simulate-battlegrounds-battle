@@ -15,11 +15,9 @@ import { getRaceEnum, hasMechanic, isCorrectTribe, isVolumizer } from '../utils'
 import { hasAvenge, hasDefaultScriptDataNum } from './card.interface';
 import { cardMappings } from './impl/_card-mappings';
 
-export const WHELP_CARD_IDS = [
-	// CardIds.RedWhelp_BGS_019,
-	// CardIds.RedWhelp_TB_BaconUps_102,
-	CardIds.Onyxia_OnyxianWhelpToken,
-];
+export const isWhelp = (cardId: string, allCards: AllCardsService): boolean => {
+	return allCards.getCard(cardId).mechanics?.includes(GameTag[GameTag.WHELP]);
+};
 
 export const validBonusKeywords = [
 	GameTag.TAUNT,

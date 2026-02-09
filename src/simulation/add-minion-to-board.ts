@@ -8,7 +8,7 @@ import {
 	hasOnOtherAuraSpawned as hasOnOtherSpawnedAura,
 	hasOnSpawned,
 } from '../cards/card.interface';
-import { WHELP_CARD_IDS } from '../cards/cards-data';
+import { isWhelp } from '../cards/cards-data';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { eternalKnightAttack, eternalKnightHealth } from '../cards/impl/trinket/eternal-portrait';
 import { updateDivineShield } from '../keywords/divine-shield';
@@ -71,7 +71,7 @@ const handleSpawnEffect = (
 	const cardIds = [spawned.cardId, ...(spawned.additionalCards ?? [])];
 
 	// https://twitter.com/LoewenMitchell/status/1491879869457879040
-	if (cardIds.some((cardId) => WHELP_CARD_IDS.includes(cardId as CardIds))) {
+	if (cardIds.some((cardId) => isWhelp(cardId, gameState.allCards))) {
 		const manyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps_BG22_HERO_305_Buddy);
 		const goldenManyWhelps = board.filter((entity) => entity.cardId === CardIds.ManyWhelps_BG22_HERO_305_Buddy_G);
 		manyWhelps.forEach((entity) => {
@@ -352,6 +352,19 @@ export const applyAurasToSelf = (
 			);
 			gameState.spectator.registerPowerTarget(boardHero, spawned, board, null, null);
 		}
+	}
+	if (isWhelp(spawned.cardId, gameState.allCards)) {
+		modifyStats(
+			spawned,
+			spawned,
+			boardHero.globalInfo.WhelpAttackBuff ?? 0,
+			boardHero.globalInfo.WhelpHealthBuff ?? 0,
+			board,
+			boardHero,
+			gameState,
+			false,
+		);
+		gameState.spectator.registerPowerTarget(boardHero, spawned, board, null, null);
 	}
 	if (
 		isVolumizer(spawned.cardId, boardHero, gameState.anomalies, gameState.allCards) &&

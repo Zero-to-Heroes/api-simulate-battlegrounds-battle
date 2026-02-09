@@ -22,7 +22,10 @@ export const handleRebornForEntity = (
 	let entityToSpawn: BoardEntity = null;
 	if (
 		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005 ||
-		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005_G
+		deadEntity.cardId === CardIds.SinrunnerBlanchy_BG24_005_G ||
+		deadEntity.enchantments?.some(
+			(e) => e.cardId === CardIds.UltraCapacitor_UltraCapacitorEnchantment_BG31_HERO_801ptje,
+		)
 	) {
 		entityToSpawn = {
 			...deadEntity,

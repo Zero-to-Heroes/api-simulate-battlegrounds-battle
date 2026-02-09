@@ -23,6 +23,8 @@ const CLEAVE_IDS = [
 	CardIds.Ultralisk_BG31_HERO_811t10_G,
 	CardIds.TimewarpedUltralisk_BG34_Treasure_994,
 	CardIds.TimewarpedUltralisk_BG34_Treasure_994_G,
+	CardIds.TimewarpedCollector_BG34_Giant_680,
+	CardIds.TimewarpedCollector_BG34_Giant_680_G,
 ];
 const ATTACK_IMMEDIATELY_IDS = [
 	CardIds.Scallywag_SkyPirateToken_BGS_061t,
@@ -442,7 +444,8 @@ export const hasCorrectTribe = (
 	anomalies: readonly string[],
 	allCards: AllCardsService,
 ): boolean => {
-	if (entity == null) {
+	// Safeguard against abusive casts
+	if (entity == null || !entity.maxHealth) {
 		return false;
 	}
 	const effectiveTribesForEntity = getEffectiveTribesForEntity(entity, playerEntity, anomalies, allCards);
@@ -637,8 +640,7 @@ export const stringifySimpleCard = (entity: BoardEntity, allCards: AllCardsServi
 export const isFish = (entity: BoardEntity): boolean => {
 	return (
 		entity.cardId?.startsWith(CardIds.AvatarOfNzoth_FishOfNzothToken) ||
-		entity.cardId?.startsWith(CardIds.FishOfNzoth) ||
-		entity.additionalCards?.includes(CardIds.DevourerOfSouls_BG_RLK_538)
+		entity.cardId?.startsWith(CardIds.FishOfNzoth)
 	);
 };
 
@@ -682,6 +684,12 @@ export const getTeamInitialStates = (gameState: GameState, hero: BgsPlayerEntity
 	return gameState.playerInitial.player?.friendly === hero?.friendly
 		? [gameState.playerInitial, gameState.playerInitial.teammate].filter((p) => p)
 		: [gameState.opponentInitial, gameState.opponentInitial.teammate].filter((p) => p);
+};
+
+export const getPlayerInitialState = (gameState: GameState, hero: BgsPlayerEntity): PlayerState => {
+	return gameState.playerInitial.player?.friendly === hero?.friendly
+		? gameState.playerInitial
+		: gameState.opponentInitial;
 };
 
 export const copyEntity = (entity: BoardEntity): BoardEntity => {

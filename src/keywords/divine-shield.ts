@@ -92,12 +92,6 @@ export const updateDivineShield = (
 				// } else if (board[i].cardId === CardIds.DrakonidEnforcer_TB_BaconUps_117) {
 				// 	modifyStats(board[i], board[i], 4, 4, board, hero, gameState);
 				// 	gameState.spectator.registerPowerTarget(board[i], board[i], board, hero, otherHero);
-			} else if (
-				board[i].entityId !== entity.entityId &&
-				(board[i].cardId === CardIds.HolyMecherel_BG20_401 ||
-					board[i].cardId === CardIds.HolyMecherel_BG20_401_G)
-			) {
-				updateDivineShield(board[i], board, hero, otherHero, true, gameState);
 			}
 			// } else if (
 			// 	board[i].cardId === CardIds.CogworkCopter_BG24_008 ||

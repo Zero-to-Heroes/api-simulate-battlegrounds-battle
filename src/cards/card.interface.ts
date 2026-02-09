@@ -22,7 +22,12 @@ import { AfterDealDamageInput } from '../simulation/damage-effects';
 import { AfterHeroDamagedInput } from '../simulation/damage-to-hero';
 import { DeathrattleTriggeredInput } from '../simulation/deathrattle-on-trigger';
 import { FullGameState } from '../simulation/internal-game-state';
-import { OnAfterMagnetizeInput, OnBeforeMagnetizeInput, OnBeforeMagnetizeSelfInput } from '../simulation/magnetize';
+import {
+	OnAfterMagnetizeInput,
+	OnAfterMagnetizeSelfInput,
+	OnBeforeMagnetizeInput,
+	OnBeforeMagnetizeSelfInput,
+} from '../simulation/magnetize';
 import { OnAttackInput } from '../simulation/on-attack';
 import { OnMinionAttackedInput } from '../simulation/on-being-attacked';
 import { RebornEffectInput } from '../simulation/reborn';
@@ -330,6 +335,12 @@ export interface OnBeforeMagnetizeSelfCard extends Card {
 export const hasOnBeforeMagnetizeSelf = (card: Card): card is OnBeforeMagnetizeSelfCard =>
 	(card as OnBeforeMagnetizeSelfCard)?.onBeforeMagnetizeSelf !== undefined;
 
+export interface OnAfterMagnetizeSelfCard extends Card {
+	onAfterMagnetizeSelf: (entity: BoardEntity, input: OnAfterMagnetizeSelfInput) => void;
+}
+export const hasOnAfterMagnetizeSelf = (card: Card): card is OnAfterMagnetizeSelfCard =>
+	(card as OnAfterMagnetizeSelfCard)?.onAfterMagnetizeSelf !== undefined;
+
 export interface OnAfterMagnetizeCard extends Card {
 	onAfterMagnetize: (entity: BoardEntity, input: OnAfterMagnetizeInput) => void;
 }
@@ -377,5 +388,6 @@ export interface OnDamagedInput {
 	damage: number;
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;
+	otherHero: BgsPlayerEntity;
 	gameState: FullGameState;
 }

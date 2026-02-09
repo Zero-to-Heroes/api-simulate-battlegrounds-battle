@@ -1,5 +1,6 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../board-entity';
+import { isWhelp } from '../cards/cards-data';
 import { CardIds } from '../services/card-ids';
 import { hasCorrectTribe } from '../utils';
 import { applyAvengeEffects } from './avenge';
@@ -660,6 +661,14 @@ const handlePostDeathrattleEffect = (
 			deadEntity.attack = Math.max(
 				0,
 				deadEntity.attack - deadEntityPlayerState.player.globalInfo.GoldrinnBuffAtk,
+			);
+		}
+	}
+	if (isWhelp(deadEntity.cardId, gameState.allCards)) {
+		if (deadEntityPlayerState.player.globalInfo.WhelpAttackBuff > 0) {
+			deadEntity.attack = Math.max(
+				0,
+				deadEntity.attack - deadEntityPlayerState.player.globalInfo.WhelpAttackBuff,
 			);
 		}
 	}

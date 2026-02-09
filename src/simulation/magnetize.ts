@@ -1,7 +1,12 @@
 import { GameTag, ReferenceCard } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../bgs-player-entity';
 import { BoardEntity } from '../board-entity';
-import { hasOnAfterMagnetize, hasOnBeforeMagnetize, hasOnBeforeMagnetizeSelf } from '../cards/card.interface';
+import {
+	hasOnAfterMagnetize,
+	hasOnAfterMagnetizeSelf,
+	hasOnBeforeMagnetize,
+	hasOnBeforeMagnetizeSelf,
+} from '../cards/card.interface';
 import { cardMappings } from '../cards/impl/_card-mappings';
 import { CardIds } from '../services/card-ids';
 import { Mutable } from '../services/utils';
@@ -132,6 +137,16 @@ export const magnetizeToTarget = (
 					entity.health += drBoomBases * 2 + drBoomGoldens * 4;
 				}
 
+				const onAfterMagnetizeSelfImpl = cardMappings[modularBoardEntity.cardId];
+				if (hasOnAfterMagnetizeSelf(onAfterMagnetizeSelfImpl)) {
+					onAfterMagnetizeSelfImpl.onAfterMagnetizeSelf(modularBoardEntity, {
+						board: board,
+						hero: hero,
+						magnetizeTarget: target,
+						gameState: gameState,
+					});
+				}
+
 				const onAfterMagnetizeImpl = cardMappings[modularCard.id];
 				if (hasOnAfterMagnetize(onAfterMagnetizeImpl)) {
 					onAfterMagnetizeImpl.onAfterMagnetize(target, {
@@ -164,6 +179,13 @@ export interface OnBeforeMagnetizeInput {
 }
 
 export interface OnBeforeMagnetizeSelfInput {
+	board: BoardEntity[];
+	hero: BgsPlayerEntity;
+	magnetizeTarget: BoardEntity;
+	gameState: FullGameState;
+}
+
+export interface OnAfterMagnetizeSelfInput {
 	board: BoardEntity[];
 	hero: BgsPlayerEntity;
 	magnetizeTarget: BoardEntity;

@@ -1,4 +1,3 @@
-import { CardIds } from '../../../services/card-ids';
 import { GameTag } from '@firestone-hs/reference-data';
 import { BgsPlayerEntity } from '../../../bgs-player-entity';
 import { BoardEntity } from '../../../board-entity';
@@ -8,6 +7,7 @@ import { updateStealth } from '../../../keywords/stealth';
 import { updateTaunt } from '../../../keywords/taunt';
 import { updateVenomous } from '../../../keywords/venomous';
 import { updateWindfury } from '../../../keywords/windfury';
+import { CardIds } from '../../../services/card-ids';
 import { pickRandom } from '../../../services/utils';
 import { FullGameState } from '../../../simulation/internal-game-state';
 import { modifyStats } from '../../../simulation/stats';
@@ -21,7 +21,7 @@ export const ApprenticeOfSefin: EndOfTurnCard = {
 		for (let i = 0; i < mult; i++) {
 			grantRandomBonusKeywords(minion, mult, input.board, input.hero, input.otherHero, input.gameState);
 		}
-		modifyStats(minion, minion, 4 * mult, 4 * mult, input.board, input.hero, input.gameState);
+		modifyStats(minion, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 		return true;
 	},
 };

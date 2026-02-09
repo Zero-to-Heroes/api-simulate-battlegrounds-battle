@@ -243,6 +243,8 @@ export const setImplicitDataHero = (
 	hero.globalInfo.BeetleHealthBuff = hero.globalInfo.BeetleHealthBuff ?? 0;
 	hero.globalInfo.ElementalAttackBuff = hero.globalInfo.ElementalAttackBuff ?? 0;
 	hero.globalInfo.ElementalHealthBuff = hero.globalInfo.ElementalHealthBuff ?? 0;
+	hero.globalInfo.PirateAttackBuff = hero.globalInfo.PirateAttackBuff ?? 0;
+	hero.globalInfo.PirateHealthBuff = hero.globalInfo.PirateHealthBuff ?? 0;
 	hero.globalInfo.TavernSpellAttackBuff = hero.globalInfo.TavernSpellAttackBuff ?? 0;
 	hero.globalInfo.TavernSpellHealthBuff = hero.globalInfo.TavernSpellHealthBuff ?? 0;
 	hero.globalInfo.MutatedLasherAttackBuff = hero.globalInfo.MutatedLasherAttackBuff ?? 0;
@@ -263,6 +265,8 @@ export const setImplicitDataHero = (
 		(hero.questRewardEntities?.filter((e) => e.cardId === CardIds.EndlessBloodMoon).length ?? 0);
 	hero.globalInfo.GoldrinnBuffAtk = hero.globalInfo.GoldrinnBuffAtk ?? 0;
 	hero.globalInfo.GoldrinnBuffHealth = hero.globalInfo.GoldrinnBuffHealth ?? 0;
+	hero.globalInfo.WhelpAttackBuff = hero.globalInfo.WhelpAttackBuff ?? 0;
+	hero.globalInfo.WhelpHealthBuff = hero.globalInfo.WhelpHealthBuff ?? 0;
 	hero.globalInfo.GoldSpentThisGame = hero.globalInfo.GoldSpentThisGame ?? 0;
 	hero.globalInfo.VolumizerAttackBuff = hero.globalInfo.VolumizerAttackBuff ?? 0;
 	hero.globalInfo.VolumizerHealthBuff = hero.globalInfo.VolumizerHealthBuff ?? 0;

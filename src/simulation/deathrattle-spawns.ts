@@ -102,7 +102,7 @@ export const spawnEntities = (
 	// In most cases the business of knowing the number of minions to handle is left to the caller
 	// Bascially, use limitSpawns = true only if the source does not trigger if there is not enough room,
 	// e.g. Toxic Tumbleweed. Otherwise, it will prevent the "spawn failed" event.
-	limitSpawns: boolean,
+	limitSpawns = false,
 	spawnReborn = false,
 	useKhadgar = true,
 	boardEntityToSpawn: BoardEntity = null,

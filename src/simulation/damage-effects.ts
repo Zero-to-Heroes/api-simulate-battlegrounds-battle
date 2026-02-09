@@ -52,6 +52,7 @@ export const onEntityDamaged = (
 			damage: damage,
 			board: friendlyBoard,
 			hero: friendlyHero,
+			otherHero: enemyHero,
 			gameState,
 		});
 	}
