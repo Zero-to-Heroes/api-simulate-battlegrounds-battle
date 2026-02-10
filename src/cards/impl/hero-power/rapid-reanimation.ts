@@ -21,9 +21,10 @@ export const RapidReanimation: StartOfCombatCard = {
 				)
 				.sort(
 					(a, b) =>
-						a.enchantments.find((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment)
+						// Take the bigger entityId, as it's usually the last one played
+						b.enchantments.find((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment)
 							.originEntityId -
-							b.enchantments.find((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment)
+							a.enchantments.find((e) => e.cardId === CardIds.RapidReanimation_ImpendingDeathEnchantment)
 								.originEntityId || b.entityId - a.entityId,
 				)[0];
 			if (minionThatWillDie) {
