@@ -358,6 +358,7 @@ import { TimewarpedGoldrinn } from './minion/timewarped-goldrinn';
 import { TimewarpedGreaseBot } from './minion/timewarped-grease-bot';
 import { TimewarpedGreenskeeper } from './minion/timewarped-greenskeeper';
 import { TimewarpedGuard } from './minion/timewarped-guard';
+import { TimewarpedHag } from './minion/timewarped-hag';
 import { TimewarpedHawkstrider } from './minion/timewarped-hawkstrider';
 import { TimewarpedHootail } from './minion/timewarped-hooktail';
 import { TimewarpedHunter } from './minion/timewarped-hunter';
@@ -612,6 +613,7 @@ const cards = [
 	MawCaster,
 	DastardlyDrust,
 	EliteNavigator,
+	TimewarpedHag,
 	SurfingSylvar,
 	GoldGrubber,
 	UnholySanctum,
