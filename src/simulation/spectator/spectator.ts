@@ -253,6 +253,36 @@ export class Spectator {
 		this.addAction(action);
 	}
 
+	public registerPowerTargets(
+		sourceEntity: BoardEntity | BgsPlayerEntity | BoardSecret | BoardTrinket,
+		targetEntities: (BoardEntity | BgsPlayerEntity)[],
+		targetBoard: BoardEntity[],
+		hero1: BgsPlayerEntity,
+		hero2: BgsPlayerEntity,
+	): void {
+		if (!this.enabled) {
+			return;
+		}
+		if (!targetEntities?.length) {
+			return;
+		}
+		// console.log('registerPowerTarget', stringifySimpleCard(sourceEntity), stringifySimpleCard(targetEntity), new Error().stack);
+		const friendlyBoard = targetBoard?.every((entity) => entity.friendly) ? targetBoard : null;
+		const opponentBoard = targetBoard?.every((entity) => !entity.friendly) ? targetBoard : null;
+		const friendlyHero = hero1?.friendly ? hero1 : hero2?.friendly ? hero2 : null;
+		const opponentHero = hero1?.friendly ? hero2 : hero2?.friendly ? hero1 : null;
+		const action: GameAction = buildGameAction(friendlyHero, opponentHero, {
+			type: 'power-target',
+			sourceEntityId: sourceEntity.entityId,
+			targetEntityIds: targetEntities.map((entity) => entity.entityId),
+			playerBoard: this.sanitize(friendlyBoard),
+			opponentBoard: this.sanitize(opponentBoard),
+			playerHand: this.sanitize(friendlyHero?.hand),
+			opponentHand: this.sanitize(opponentHero?.hand),
+		});
+		this.addAction(action);
+	}
+
 	public registerMinionsSpawn(
 		sourceEntity: BoardEntity | BgsPlayerEntity | BoardTrinket,
 		boardOnWhichToSpawn: BoardEntity[],

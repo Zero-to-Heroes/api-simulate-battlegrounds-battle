@@ -1,7 +1,7 @@
 import { Race } from '@firestone-hs/reference-data';
 import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
-import { dealDamageToMinion } from '../../../simulation/attack';
+import { dealDamageToMinions } from '../../../simulation/attack';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { hasCorrectTribe } from '../../../utils';
 import { DeathrattleSpawnCard } from '../../card.interface';
@@ -28,25 +28,23 @@ export const SilentEnforcer: DeathrattleSpawnCard = {
 				// All opponent minions
 				...opponentMinionsAliveAtStart,
 			];
-			for (const target of targets) {
-				input.gameState.spectator.registerPowerTarget(
-					minion,
-					target,
-					input.boardWithDeadEntity,
-					input.boardWithDeadEntityHero,
-					input.otherBoardHero,
-				);
-				dealDamageToMinion(
-					target,
-					input.otherBoard,
-					input.otherBoardHero,
-					minion,
-					2,
-					input.boardWithDeadEntity,
-					input.boardWithDeadEntityHero,
-					input.gameState,
-				);
-			}
+			input.gameState.spectator.registerPowerTargets(
+				minion,
+				targets,
+				input.boardWithDeadEntity,
+				input.boardWithDeadEntityHero,
+				input.otherBoardHero,
+			);
+			dealDamageToMinions(
+				targets,
+				input.otherBoard,
+				input.otherBoardHero,
+				minion,
+				2,
+				input.boardWithDeadEntity,
+				input.boardWithDeadEntityHero,
+				input.gameState,
+			);
 		}
 		return [];
 	},

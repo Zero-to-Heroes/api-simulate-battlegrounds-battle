@@ -719,6 +719,90 @@ export const dealDamageToMinion = (
 	return actualDamageDone;
 };
 
+// Because the "onEntityDamaged" effect is only called once all the minions are damaged
+export const dealDamageToMinions = (
+	targets: BoardEntity[],
+	board: BoardEntity[],
+	hero: BgsPlayerEntity,
+	damageSource: BoardEntity | BgsPlayerEntity,
+	damage: number,
+	otherBoard: BoardEntity[],
+	otherHero: BgsPlayerEntity,
+	gameState: FullGameState,
+): number => {
+	// console.log('dealing damage to', damage, stringifySimpleCard(defendingEntity, allCards));
+	if (!targets?.length) {
+		return 0;
+	}
+
+	const actualDamagesDone = [];
+	const areDeadBeforeDamage = targets.map((target) => target.definitelyDead || target.health <= 0);
+
+	for (const target of targets) {
+		// Why do we use a fakeAttacker? Is that for the "attacking" prop?
+		// That prop is only used for Overkill, and even in that case it looks like it would work
+		// without it
+		const fakeAttacker = {
+			...(damageSource || {}),
+			entityId: -1,
+			attack: damage,
+			// attacking: true,
+		} as BoardEntity;
+		const actualDamageDone = bumpEntities(target, fakeAttacker, board, hero, otherBoard, otherHero, gameState);
+		actualDamagesDone.push(actualDamageDone);
+
+		// Do it after the damage has been done, so that entities that update on DS lose / gain (CyborgDrake) don't
+		// cause wrong results to happen
+		// TODO: why isn't it done in bumpEntities?
+		// Because of how "bump" works: we do it first for the attacker, then the defender, and we only want to update
+		// the divine shield once both bumps are done
+		// The problem is with the Frenzy: bumpEntities can trigger the frenzy, and which can act on the divine shield
+		if (fakeAttacker.attack > 0 && target.divineShield) {
+			updateDivineShield(target, board, hero, otherHero, false, gameState);
+		}
+	}
+
+	const spawns = [];
+	for (let i = 0; i < targets.length; i++) {
+		const target = targets[i];
+		const actualDamageDone = actualDamagesDone[i];
+		const isDeadBeforeDamage = areDeadBeforeDamage[i];
+		if (actualDamageDone > 0) {
+			// TODO: handle entities that have been spawned here to adjust the dead entity index from parent stack
+			const newSpawns = onEntityDamaged(
+				target,
+				board,
+				hero,
+				otherBoard,
+				otherHero,
+				damageSource,
+				actualDamageDone,
+				gameState,
+			);
+		}
+		if (!isDeadBeforeDamage && actualDamageDone > 0 && 'attack' in damageSource && 'health' in damageSource) {
+			target.lastAffectedByEntity = damageSource as BoardEntity;
+
+			if (target.health <= 0 || target.definitelyDead) {
+				onMinionKill(
+					damageSource as BoardEntity,
+					false,
+					target,
+					otherBoard,
+					otherHero,
+					board,
+					hero,
+					[],
+					gameState,
+				);
+			}
+		}
+		const defendingEntityIndex = board.map((entity) => entity.entityId).indexOf(target.entityId);
+		board[defendingEntityIndex] = target;
+	}
+	return actualDamagesDone.reduce((a, b) => a + b, 0);
+};
+
 export const getDefendingEntity = (
 	defendingBoard: BoardEntity[],
 	attackingEntity: BoardEntity,

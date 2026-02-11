@@ -10,7 +10,10 @@ export const debugState = {
 	isCorrectEntity: (proposedEntity: ForcedFaceOffEntity, actualEntity: BoardEntity): boolean => {
 		if (proposedEntity.entityId) {
 			return proposedEntity.entityId === actualEntity.entityId;
+		} else if (proposedEntity.cardId) {
+			return proposedEntity.cardId === actualEntity.cardId;
 		}
+
 		return proposedEntity.attack === actualEntity.attack && proposedEntity.health === actualEntity.health;
 	},
 	onBattleStart: () => {
@@ -21,6 +24,7 @@ export const debugState = {
 
 export interface ForcedFaceOffEntity {
 	entityId?: number;
+	cardId?: string;
 	attack?: number;
 	health?: number;
 }
