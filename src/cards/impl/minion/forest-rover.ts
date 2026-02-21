@@ -1,5 +1,5 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { BattlecryInput } from '../../../simulation/battlecries';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
@@ -14,14 +14,14 @@ export const ForestRover: DeathrattleSpawnCard & BattlecryCard = {
 	},
 	battlecry: (minion: BoardEntity, input: BattlecryInput) => {
 		const mult = minion.cardId === CardIds.ForestRover_BG31_801_G ? 2 : 1;
-		input.hero.globalInfo.BeetleAttackBuff = input.hero.globalInfo.BeetleAttackBuff + 1 * mult;
+		input.hero.globalInfo.BeetleAttackBuff = input.hero.globalInfo.BeetleAttackBuff + 2 * mult;
 		input.hero.globalInfo.BeetleHealthBuff = input.hero.globalInfo.BeetleHealthBuff + 1 * mult;
 		input.board
 			.filter((e) =>
 				[CardIds.BoonOfBeetles_BeetleToken_BG28_603t, CardIds.Beetle_BG28_603t_G].includes(e.cardId as CardIds),
 			)
 			.forEach((e) => {
-				modifyStats(e, minion, 1 * mult, 1 * mult, input.board, input.hero, input.gameState);
+				modifyStats(e, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
 			});
 		return true;
 	},

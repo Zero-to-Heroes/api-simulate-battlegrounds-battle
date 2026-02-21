@@ -16,7 +16,7 @@ export const TimewarpedPainter: EndOfTurnCard = {
 				target,
 				minion,
 				2 * baseBuff * mult,
-				1 * baseBuff * mult,
+				2 * baseBuff * mult,
 				input.board,
 				input.hero,
 				input.gameState,

@@ -1,12 +1,12 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardEntity } from '../../../board-entity';
+import { CardIds } from '../../../services/card-ids';
 import { DeathrattleTriggeredInput } from '../../../simulation/deathrattle-on-trigger';
 import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns';
 import { modifyStats } from '../../../simulation/stats';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
-const atkBuff = 1;
-const hpBuff = 2;
+const atkBuff = 5;
+const hpBuff = 5;
 
 export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.TurquoiseSkitterer_BG31_809, CardIds.TurquoiseSkitterer_BG31_809_G],

@@ -6,7 +6,7 @@ import { AvengeCard } from '../../card.interface';
 
 export const TimewarpedPashmar: AvengeCard = {
 	cardIds: [CardIds.TimewarpedPashmar_BG34_Giant_211, CardIds.TimewarpedPashmar_BG34_Giant_211_G],
-	baseAvengeValue: (cardId: string) => 4,
+	baseAvengeValue: (cardId: string) => 3,
 	avenge: (minion: BoardEntity, input: AvengeInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedPashmar_BG34_Giant_211_G ? 2 : 1;
 		const cardsToAdd = [];

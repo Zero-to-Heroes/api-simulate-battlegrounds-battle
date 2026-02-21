@@ -8,7 +8,7 @@ export const TimewarpedGeist: DeathrattleSpawnCard = {
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput): readonly BoardEntity[] => {
 		const mult = minion.cardId === CardIds.TimewarpedGeist_BG34_Giant_034_G ? 2 : 1;
 		input.boardWithDeadEntityHero.globalInfo.TavernSpellAttackBuff += 2 * mult;
-		input.boardWithDeadEntityHero.globalInfo.TavernSpellHealthBuff += 1 * mult;
+		input.boardWithDeadEntityHero.globalInfo.TavernSpellHealthBuff += 2 * mult;
 		return [];
 	},
 };
