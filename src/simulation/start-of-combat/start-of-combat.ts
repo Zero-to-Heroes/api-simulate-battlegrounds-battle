@@ -39,6 +39,15 @@ export const handleStartOfCombat = (
 	}
 
 	// UPDATE 2024-10-10: changed in 30.6, according to a message from Mitchell on Discord
+	// UPDATE 2026-02-21:
+	// K I double checked in-game and documentation and this is the trigger order:
+	// Trinket/Quest Reward
+	// Pre-combat hero powers (e.g. Lich King)
+	// Combat First hero powers (e.g. Illidan)
+	// Start of combat hero powers (e.g. Basically all other hero powers)
+	// Spells (e.g. Fleeting Vigor)
+	// Minions in hand (e.g. Flighty Scout)
+	// Minions in play (e.g. Promo-Drake)
 	const phases: readonly StartOfCombatPhase[] = [
 		'QuestReward',
 		'Anomalies',
@@ -50,7 +59,7 @@ export const handleStartOfCombat = (
 		// Update: this seems to have changed: https://x.com/LoewenMitchell/status/1737588920139825335?s=20
 		// now you have all hero powers trigger in a first phase, then you have Illidan, and once everything has triggered, you have Tavish
 		// All Hero powers are split up in to 3 categories:
-		// 1st - Precombat Hero Power Triggers  (things we want to go before Illidan e.g. Lich King)
+		// 1st - Precombat Hero Power Triggers  (things we want to go before Illidan e.g. Lich King). Should be Lich King, Teron, Brukan
 		// 2nd - Hero Power Triggers First In Combat (Illidan)
 		// 3rd - All other Start of Combat Hero Powers
 		'PreCombatHeroPower',
