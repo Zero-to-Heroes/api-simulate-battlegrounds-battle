@@ -24,11 +24,36 @@ import { performEntitySpawns } from './spawns';
 // - After ALL deathrattles and avenges are done, Reborn triggers
 // - (Ideally after all of that I would want Feathermane to trigger, but that is not what it does right now.
 // Right now it triggers at deathrattle speed rather than after Reborn speed)
+let _deathEffectsDepth = 0;
+
 export const orchestrateMinionDeathEffects = (
 	deathrattleInput: DeathrattleInput,
 	processAvenge = true,
 	processReborn = true,
 ) => {
+	_deathEffectsDepth++;
+	if (_deathEffectsDepth > 100) {
+		console.error('Infinite recursion detected at depth', _deathEffectsDepth);
+		console.error(
+			'Player dead entities:',
+			deathrattleInput.playerDeadEntities.map((e) => e.cardId),
+		);
+		console.error(
+			'Opponent dead entities:',
+			deathrattleInput.opponentDeadEntities.map((e) => e.cardId),
+		);
+		console.error(
+			'Player board:',
+			deathrattleInput.gameState.gameState.player.board.map((e) => e.cardId),
+		);
+		console.error(
+			'Opponent board:',
+			deathrattleInput.gameState.gameState.opponent.board.map((e) => e.cardId),
+		);
+		_deathEffectsDepth--;
+		return;
+	}
+
 	handleAfterMinionsKillEffects(deathrattleInput);
 
 	// Not sure about this
@@ -82,6 +107,8 @@ export const orchestrateMinionDeathEffects = (
 
 	const entitiesFromFeathermanes = processFeathermaneEffects(deathrattleInput);
 	handlePostDeathrattleEffects(deathrattleInput, [...entitiesFromDeathrattles, ...entitiesFromFeathermanes]);
+
+	_deathEffectsDepth--;
 };
 
 const handleAfterMinionsKillEffects = (deathrattleInput: DeathrattleInput) => {
