@@ -11,7 +11,11 @@ export const TimewarpedMythrax: StartOfCombatCard = {
 	startOfCombat: (minion: BoardEntity, input: SoCInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedMythrax_BG34_Giant_684_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
-			const candidates = getMinionsOfDifferentTypes(input.playerBoard, input.playerEntity, input.gameState);
+			const candidates = getMinionsOfDifferentTypes(
+				input.playerBoard.filter((e) => !TimewarpedMythrax.cardIds.includes(e.cardId)),
+				input.playerEntity,
+				input.gameState,
+			);
 			const targets = pickMultipleRandomDifferent(candidates, 3);
 			const totalAttack = targets.reduce((acc, target) => acc + (target.attack ?? 0), 0);
 			const totalHealth = targets.reduce((acc, target) => acc + (target.health ?? 0), 0);

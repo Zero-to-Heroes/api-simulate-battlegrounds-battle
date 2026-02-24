@@ -313,6 +313,7 @@ import { StoneshellGuardian } from './minion/stoneshell-guardian';
 import { StormpikeLieutenant } from './minion/stormpike-lieutenant';
 import { StraySatyr } from './minion/stray-satyr';
 import { Stuntdrake } from './minion/stuntdrake';
+import { SunderedMatriarch } from './minion/sundered-matriarch';
 import { SunkenAdvocate } from './minion/sunken-advocate';
 import { SuperConstructor } from './minion/super-constructor';
 import { SurfNSurfCrabRiding } from './minion/surf-n-surf-crab-riding';
@@ -614,6 +615,7 @@ const cards = [
 	DastardlyDrust,
 	EliteNavigator,
 	TimewarpedHag,
+	SunderedMatriarch,
 	SurfingSylvar,
 	GoldGrubber,
 	UnholySanctum,

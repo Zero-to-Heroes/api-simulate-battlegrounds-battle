@@ -5,8 +5,8 @@ import { simplifiedSpawnEntities } from '../../../simulation/deathrattle-spawns'
 import { modifyStats } from '../../../simulation/stats';
 import { DeathrattleSpawnCard } from '../../card.interface';
 
-const atkBuff = 5;
-const hpBuff = 5;
+const atkBuff = 4;
+const hpBuff = 4;
 
 export const TurquoiseSkitterer: DeathrattleSpawnCard & DeathrattleSpawnCard = {
 	cardIds: [CardIds.TurquoiseSkitterer_BG31_809, CardIds.TurquoiseSkitterer_BG31_809_G],

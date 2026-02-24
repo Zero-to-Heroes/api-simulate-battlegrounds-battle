@@ -9,13 +9,13 @@ export const VeteransTactics: TavernSpellCard = {
 		CardIds.AzsharanVeteran_VeteransTacticsToken_BG34_407_Gt,
 	],
 	castTavernSpell: (spellCardId: string, input: CastSpellInput) => {
-		let totalKeywords = 1; // Base is 1, even without other keywords
+		let totalKeywords = 0;
 		for (const bonusKeyword of validBonusKeywords) {
 			if (input.board.some((e) => hasKeyword(e, bonusKeyword))) {
 				totalKeywords++;
 			}
 		}
-		const loops = 1 + totalKeywords;
+		const loops = totalKeywords;
 		const mult = spellCardId === CardIds.AzsharanVeteran_VeteransTacticsToken_BG34_407_Gt ? 2 : 1;
 		for (let i = 0; i < loops; i++) {
 			addStatsToBoard(input.source, input.board, input.hero, 2 * mult, 1 * mult, input.gameState);

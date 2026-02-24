@@ -1,10 +1,10 @@
-import { CardIds } from '../../../services/card-ids';
 import { BoardTrinket } from '../../../bgs-player-entity';
 import { updateReborn } from '../../../keywords/reborn';
 import { updateTaunt } from '../../../keywords/taunt';
+import { CardIds } from '../../../services/card-ids';
 import { SoCInput } from '../../../simulation/start-of-combat/start-of-combat-input';
 
-export const eternalKnightAttack = 3;
+export const eternalKnightAttack = 4;
 export const eternalKnightHealth = 1;
 
 export const EternalPortrait = {

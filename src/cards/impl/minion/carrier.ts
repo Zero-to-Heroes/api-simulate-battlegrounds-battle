@@ -18,7 +18,7 @@ export const Carrier: AvengeCard = {
 			otherBoard: input.otherBoard,
 			otherBoardHero: input.otherHero,
 		};
-		const singleStatBuff = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 10 : 5;
+		const singleStatBuff = minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G ? 14 : 7;
 		const statBuff = minion.scriptDataNum1 ?? 0;
 		const cardId =
 			minion.cardId === CardIds.Carrier_BG31_HERO_802pt1_G

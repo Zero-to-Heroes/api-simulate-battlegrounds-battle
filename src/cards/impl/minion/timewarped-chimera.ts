@@ -8,7 +8,7 @@ export const TimewarpedChimera: OnDamagedCard = {
 	onDamaged: (minion: BoardEntity, input: OnDamagedInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedChimera_BG34_Giant_679_G ? 2 : 1;
 		for (let i = 0; i < mult; i++) {
-			grantStatsToMinionsOfEachType(minion, input.board, input.hero, 1, 1, input.gameState);
+			grantStatsToMinionsOfEachType(minion, input.board, input.hero, 2, 1, input.gameState);
 		}
 		return true;
 	},

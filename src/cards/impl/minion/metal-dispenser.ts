@@ -2,6 +2,7 @@ import { BoardEntity } from '../../../board-entity';
 import { CardIds } from '../../../services/card-ids';
 import { AvengeInput } from '../../../simulation/avenge';
 import { addCardsInHand } from '../../../simulation/cards-in-hand';
+import { magnetizeToTarget } from '../../../simulation/magnetize';
 import { AvengeCard } from '../../card.interface';
 
 export const MetalDispenser: AvengeCard = {
@@ -14,6 +15,16 @@ export const MetalDispenser: AvengeCard = {
 				input.hero,
 				input.gameState.anomalies,
 				input.hero.tavernTier ?? 1,
+			);
+			magnetizeToTarget(
+				[minion],
+				minion,
+				[cardId],
+				input.board,
+				input.hero,
+				input.otherBoard,
+				input.otherHero,
+				input.gameState,
 			);
 			addCardsInHand(input.hero, input.board, [cardId], input.gameState);
 		}
