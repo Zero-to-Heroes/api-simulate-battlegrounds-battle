@@ -14,7 +14,7 @@ export const MetalDispenser: AvengeCard = {
 			const cardId = input.gameState.cardsData.getRandomMagneticVolumizer(
 				input.hero,
 				input.gameState.anomalies,
-				input.hero.tavernTier ?? 1,
+				6,
 			);
 			magnetizeToTarget(
 				[minion],
