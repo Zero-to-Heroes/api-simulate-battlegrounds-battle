@@ -134,7 +134,8 @@ export const modifyStats = (
 	const poetMultipliers =
 		isEnchantment &&
 		hasCorrectTribe(entity, friendlyBoardHero, Race.DRAGON, gameState.anomalies, gameState.allCards)
-			? neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 || 1
+			? neighbours.filter((e) => e.cardId === CardIds.PersistentPoet_BG29_813_G).length * 2 +
+					friendlyBoard.filter((e) => e.cardId === CardIds.TimewarpedPoet_BG34_Giant_314_G).length * 2 || 1
 			: 1;
 	const tarecgosaMultiplier = isEnchantment && entity.cardId === CardIds.Tarecgosa_BG21_015_G ? 2 : 1;
 
