@@ -14,8 +14,15 @@ export const Felhorn: BattlecryCard = {
 		for (let i = 0; i < loops; i++) {
 			const targets = input.board.filter(
 				(e) =>
-					hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards) ||
-					hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards),
+					e != minion &&
+					(hasCorrectTribe(e, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards) ||
+						hasCorrectTribe(
+							e,
+							input.hero,
+							Race.DEMON,
+							input.gameState.anomalies,
+							input.gameState.allCards,
+						)),
 			);
 			for (const target of targets) {
 				modifyStats(target, minion, 1, 2, input.board, input.hero, input.gameState);
