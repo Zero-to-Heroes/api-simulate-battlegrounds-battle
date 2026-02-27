@@ -29,7 +29,6 @@ import { CorruptedMyrmidon } from '../../cards/impl/minion/corrupted-myrmidon';
 import { DiremuckForager } from '../../cards/impl/minion/diremuck-forager';
 import { ElderTaggawag } from '../../cards/impl/minion/elder-taggawag';
 import { HawkstriderHerald } from '../../cards/impl/minion/hawkstrider-herald';
-import { IrateRooster } from '../../cards/impl/minion/irate-rooster';
 import { MantidQueen } from '../../cards/impl/minion/mantid-queen';
 import { Sandy } from '../../cards/impl/minion/sandy';
 import { SunScreener } from '../../cards/impl/minion/sun-screener';
@@ -249,9 +248,6 @@ const getStartOfCombatAction = (cardId: string): StartOfCombatCard => {
 		case CardIds.AudaciousAnchor_BG28_904:
 		case CardIds.AudaciousAnchor_BG28_904_G:
 			return AudaciousAnchor;
-		case CardIds.IrateRooster_BG29_990:
-		case CardIds.IrateRooster_BG29_990_G:
-			return IrateRooster;
 		case CardIds.ThousandthPaperDrake_BG29_810:
 		case CardIds.ThousandthPaperDrake_BG29_810_G:
 			return ThousandthPaperDrake;

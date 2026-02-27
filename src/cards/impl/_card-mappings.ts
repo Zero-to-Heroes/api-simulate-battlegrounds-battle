@@ -175,6 +175,7 @@ import { ImpulsiveTrickster } from './minion/impulsive-trickster';
 import { IndomitableMount } from './minion/indomitable-mount';
 import { InspiringUnderdog } from './minion/inspiring-underdog';
 import { InterrogatorWhitemane } from './minion/interrogator-whitemane';
+import { IrateRooster } from './minion/irate-rooster';
 import { JellyBelly } from './minion/jelly-belly';
 import { JunkJouster } from './minion/junk-jouster';
 import { KalecgosArcaneAspect } from './minion/kalecgos-arcane-aspect';
@@ -606,6 +607,7 @@ const cards = [
 	GlowingCinder,
 	SandSwirler,
 	Bonker,
+	IrateRooster,
 	Thorncaller,
 	VashjirAnemone,
 	GlowgulletWarlord,
