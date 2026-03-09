@@ -20,7 +20,7 @@ export const ApexisGuardian: DeathrattleSpawnCard & RallyCard = {
 			otherBoard: input.otherBoard,
 			otherHero: input.otherBoardHero,
 		});
-		return []
+		return [];
 	},
 	rally: (minion: BoardEntity, input: OnAttackInput) => {
 		handleEffect(minion, {
@@ -32,16 +32,19 @@ export const ApexisGuardian: DeathrattleSpawnCard & RallyCard = {
 		});
 		return { dmgDoneByAttacker: 0, dmgDoneByDefender: 0 };
 	},
-}
+};
 
-const handleEffect = (minion: BoardEntity, input: {
-	board: BoardEntity[];
-	hero: BgsPlayerEntity;
-	gameState: FullGameState;
-	otherBoard: BoardEntity[];
-	otherHero: BgsPlayerEntity;
-}) => {
-	const loops = minion.cardId === CardIds.ApexisGuardian_BG34_173_G ? 2 : 1;
+const handleEffect = (
+	minion: BoardEntity,
+	input: {
+		board: BoardEntity[];
+		hero: BgsPlayerEntity;
+		gameState: FullGameState;
+		otherBoard: BoardEntity[];
+		otherHero: BgsPlayerEntity;
+	},
+) => {
+	const mult = minion.cardId === CardIds.ApexisGuardian_BG34_173_G ? 2 : 1;
 	const cardsToMagnetize = [];
 	// Magnetizes to the same targets
 	const possibleTargets = input.board.filter(
@@ -49,16 +52,10 @@ const handleEffect = (minion: BoardEntity, input: {
 			e.health > 0 &&
 			!e.definitelyDead &&
 			e !== minion &&
-			hasCorrectTribe(
-				e,
-				input.otherHero,
-				Race.MECH,
-				input.gameState.anomalies,
-				input.gameState.allCards,
-			),
+			hasCorrectTribe(e, input.otherHero, Race.MECH, input.gameState.anomalies, input.gameState.allCards),
 	);
-	const targets = pickMultipleRandomDifferent(possibleTargets, 1);
-	for (let i = 0; i < loops; i++) {
+	const targets = pickMultipleRandomDifferent(possibleTargets, mult);
+	for (const target of targets) {
 		const cardIdToMagnetize = input.gameState.cardsData.getRandomMagneticVolumizer(
 			input.otherHero,
 			input.gameState.anomalies,
@@ -70,17 +67,16 @@ const handleEffect = (minion: BoardEntity, input: {
 		// cardToMagnetize.attack = 0;
 		// cardToMagnetize.health = 0;
 		cardsToMagnetize.push(cardToMagnetize);
+		magnetizeToTarget(
+			[target],
+			minion,
+			cardsToMagnetize,
+			input.board,
+			input.hero,
+			input.otherBoard,
+			input.otherHero,
+			input.gameState,
+		);
 	}
-	magnetizeToTarget(
-		targets,
-		minion,
-		cardsToMagnetize,
-		input.board,
-		input.hero,
-		input.otherBoard,
-		input.otherHero,
-		input.gameState,
-	);
 	return [];
-}
-
+};
