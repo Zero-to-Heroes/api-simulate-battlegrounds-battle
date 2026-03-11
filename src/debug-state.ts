@@ -5,8 +5,8 @@ export const debugState = {
 	forcedCurrentAttacker: null as number | null,
 	forcedFaceOff: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
 	forcedFaceOffBase: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
-	// forcedRng: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
-	// forcedRngBase: [] as { attacker: ForcedFaceOffEntity; defender: ForcedFaceOffEntity }[],
+	/** Forced random picks: source -> target. Matched by source entity (like face-offs match by attacker). */
+	forcedRandomPicks: [] as { source: ForcedFaceOffEntity; target: ForcedFaceOffEntity }[],
 	isCorrectEntity: (proposedEntity: ForcedFaceOffEntity, actualEntity: BoardEntity): boolean => {
 		if (proposedEntity.entityId) {
 			return proposedEntity.entityId === actualEntity.entityId;
@@ -16,9 +16,10 @@ export const debugState = {
 
 		return proposedEntity.attack === actualEntity.attack && proposedEntity.health === actualEntity.health;
 	},
+	forcedRandomPicksBase: [] as { source: ForcedFaceOffEntity; target: ForcedFaceOffEntity }[],
 	onBattleStart: () => {
 		debugState.forcedFaceOff = [...debugState.forcedFaceOffBase];
-		// debugState.forcedRng = [...debugState.forcedRngBase];
+		debugState.forcedRandomPicks = [...debugState.forcedRandomPicksBase];
 	},
 };
 

@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import { BgsBattleInfo } from '../../src/bgs-battle-info';
 import { encode } from '../../src/services/utils';
 import runSimulation, { assignCards } from '../../src/simulate-bgs-battle';
-import { applyDebugState } from './apply-debug-state';
 import jsonEvent3 from './game.json';
 
 console.log('starting test');
@@ -30,7 +29,7 @@ const test = async () => {
 		},
 	} as any;
 
-	applyDebugState();
+	// Debug state is applied by the simulator from input.debugState when present (e.g. from bug report)
 
 	const cardsStr = readFileSync('test/full-game/cards_enUS.json').toString();
 	const allCards = new AllCardsLocalService(cardsStr);

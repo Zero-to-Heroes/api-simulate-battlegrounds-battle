@@ -4,6 +4,7 @@ import { BgsBattleInfo } from './bgs-battle-info';
 import { hasDeathrattleSpawnEnchantment } from './cards/card.interface';
 import { CardsData } from './cards/cards-data';
 import { cardMappings } from './cards/impl/_card-mappings';
+import { debugState } from './debug-state';
 import { cloneInput3 } from './input-clone';
 import { buildFinalInput } from './input-sanitation';
 import { CardIds } from './services/card-ids';
@@ -95,91 +96,119 @@ export const simulateBattle = function* (
 
 	const spectator = new Spectator(includeOutcomeSamples);
 	const inputReady = buildFinalInput(battleInput, cards, cardsData);
-	!battleInput.options?.skipInfoLogs && console.time('simulation');
-	const outcomes = {};
-	for (let i = 0; i < numberOfSimulations; i++) {
-		const input: BgsBattleInfo = cloneInput3(inputReady);
-		const inputClone: BgsBattleInfo = cloneInput3(inputReady);
-		const gameState: FullGameState = {
-			allCards: cards,
-			cardsData: cardsData,
-			spectator: spectator,
-			sharedState: new SharedState(),
-			currentTurn: input.gameState.currentTurn,
-			validTribes: input.gameState.validTribes,
-			anomalies: input.gameState.anomalies,
-			gameState: {
-				player: {
-					player: input.playerBoard.player,
-					board: input.playerBoard.board,
-					teammate: input.playerTeammateBoard,
-				},
-				opponent: {
-					player: input.opponentBoard.player,
-					board: input.opponentBoard.board,
-					teammate: input.opponentTeammateBoard,
-				},
-				playerInitial: {
-					player: inputClone.playerBoard.player,
-					board: inputClone.playerBoard.board,
-					teammate: inputClone.playerTeammateBoard,
-				},
-				opponentInitial: {
-					player: inputClone.opponentBoard.player,
-					board: inputClone.opponentBoard.board,
-					teammate: inputClone.opponentTeammateBoard,
-				},
-			},
-		};
-		const simulator = new Simulator(gameState);
-		const battleResult = simulator.simulateSingleBattle(gameState.gameState.player, gameState.gameState.opponent);
-		if (Date.now() - start > maxAcceptableDuration && !hideMaxSimulationDurationWarning) {
-			// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
-			console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms');
-			break;
-		}
-		if (!battleResult) {
-			continue;
-		}
-		if (battleResult.result === 'won') {
-			simulationResult.won++;
-			simulationResult.damageWon += battleResult.damageDealt;
-			simulationResult.damageWons.push(battleResult.damageDealt);
-			if (battleResult.damageDealt >= battleInput.opponentBoard.player.hpLeft) {
-				simulationResult.wonLethal++;
-			}
-		} else if (battleResult.result === 'lost') {
-			simulationResult.lost++;
-			simulationResult.damageLost += battleResult.damageDealt;
-			simulationResult.damageLosts.push(battleResult.damageDealt);
-			outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
-			if (
-				battleInput.playerBoard.player.hpLeft &&
-				battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft
-			) {
-				simulationResult.lostLethal++;
-			}
-		} else if (battleResult.result === 'tied') {
-			simulationResult.tied++;
-		}
-		spectator.commitBattleResult(battleResult.result);
 
-		// Yield intermediate result every 200 iterations
-		if (!!intermediateSteps && i > 0 && i % intermediateSteps === 0) {
-			updateSimulationResult(simulationResult, inputReady, damageConfidence);
-			yield simulationResult;
+	// Apply debug state from input when present (e.g. from bug report)
+	if (battleInput.debugState) {
+		debugState.active = true;
+		debugState.forcedCurrentAttacker = battleInput.debugState.forcedCurrentAttacker;
+		debugState.forcedFaceOffBase = battleInput.debugState.forcedFaceOffBase.map((f) => ({
+			attacker: { ...f.attacker },
+			defender: { ...f.defender },
+		}));
+		const rawPicks =
+			battleInput.debugState.forcedRandomPicks ??
+			battleInput.debugState.forcedTimewarpedWarghoulTargets?.map((target) => ({
+				source: { cardId: 'BG34_Giant_331' },
+				target,
+			})) ??
+			[];
+		debugState.forcedRandomPicksBase = rawPicks.map((p) => ({
+			source: { ...p.source },
+			target: { ...p.target },
+		}));
+	}
+
+	try {
+		!battleInput.options?.skipInfoLogs && console.time('simulation');
+		const outcomes = {};
+		for (let i = 0; i < numberOfSimulations; i++) {
+			const input: BgsBattleInfo = cloneInput3(inputReady);
+			const inputClone: BgsBattleInfo = cloneInput3(inputReady);
+			const gameState: FullGameState = {
+				allCards: cards,
+				cardsData: cardsData,
+				spectator: spectator,
+				sharedState: new SharedState(),
+				currentTurn: input.gameState.currentTurn,
+				validTribes: input.gameState.validTribes,
+				anomalies: input.gameState.anomalies,
+				gameState: {
+					player: {
+						player: input.playerBoard.player,
+						board: input.playerBoard.board,
+						teammate: input.playerTeammateBoard,
+					},
+					opponent: {
+						player: input.opponentBoard.player,
+						board: input.opponentBoard.board,
+						teammate: input.opponentTeammateBoard,
+					},
+					playerInitial: {
+						player: inputClone.playerBoard.player,
+						board: inputClone.playerBoard.board,
+						teammate: inputClone.playerTeammateBoard,
+					},
+					opponentInitial: {
+						player: inputClone.opponentBoard.player,
+						board: inputClone.opponentBoard.board,
+						teammate: inputClone.opponentTeammateBoard,
+					},
+				},
+			};
+			const simulator = new Simulator(gameState);
+			const battleResult = simulator.simulateSingleBattle(gameState.gameState.player, gameState.gameState.opponent);
+			if (Date.now() - start > maxAcceptableDuration && !hideMaxSimulationDurationWarning) {
+				// Can happen in case of inifinite boards, or a bug. Don't hog the user's computer in that case
+				console.warn('Stopping simulation after', i, 'iterations and ', Date.now() - start, 'ms');
+				break;
+			}
+			if (!battleResult) {
+				continue;
+			}
+			if (battleResult.result === 'won') {
+				simulationResult.won++;
+				simulationResult.damageWon += battleResult.damageDealt;
+				simulationResult.damageWons.push(battleResult.damageDealt);
+				if (battleResult.damageDealt >= battleInput.opponentBoard.player.hpLeft) {
+					simulationResult.wonLethal++;
+				}
+			} else if (battleResult.result === 'lost') {
+				simulationResult.lost++;
+				simulationResult.damageLost += battleResult.damageDealt;
+				simulationResult.damageLosts.push(battleResult.damageDealt);
+				outcomes[battleResult.damageDealt] = (outcomes[battleResult.damageDealt] ?? 0) + 1;
+				if (
+					battleInput.playerBoard.player.hpLeft &&
+					battleResult.damageDealt >= battleInput.playerBoard.player.hpLeft
+				) {
+					simulationResult.lostLethal++;
+				}
+			} else if (battleResult.result === 'tied') {
+				simulationResult.tied++;
+			}
+			spectator.commitBattleResult(battleResult.result);
+
+			// Yield intermediate result every 200 iterations
+			if (!!intermediateSteps && i > 0 && i % intermediateSteps === 0) {
+				updateSimulationResult(simulationResult, inputReady, damageConfidence);
+				yield simulationResult;
+			}
+		}
+		updateSimulationResult(simulationResult, inputReady, damageConfidence);
+		!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
+		spectator.prune();
+		simulationResult.outcomeSamples = spectator.buildOutcomeSamples(battleInput.gameState);
+		// Avoid sending this verbose data
+
+		simulationResult.damageWons = [];
+		simulationResult.damageLosts = [];
+		// !battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
+		return simulationResult;
+	} finally {
+		if (battleInput.debugState) {
+			debugState.active = false;
 		}
 	}
-	updateSimulationResult(simulationResult, inputReady, damageConfidence);
-	!battleInput.options?.skipInfoLogs && console.timeEnd('simulation');
-	spectator.prune();
-	simulationResult.outcomeSamples = spectator.buildOutcomeSamples(battleInput.gameState);
-	// Avoid sending this verbose data
-
-	simulationResult.damageWons = [];
-	simulationResult.damageLosts = [];
-	// !battleInput.options?.skipInfoLogs && console.timeEnd('full-sim');
-	return simulationResult;
 };
 
 const updateSimulationResult = (simulationResult: SimulationResult, input: BgsBattleInfo, damageConfidence: number) => {

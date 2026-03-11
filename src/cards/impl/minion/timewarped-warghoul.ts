@@ -25,10 +25,14 @@ export const TimewarpedWarghoul: DeathrattleSpawnCard = {
 			// !e.enchantments?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)) &&
 			// !e.rememberedDeathrattles?.some((e) => TimewarpedWarghoul.cardIds.includes(e.cardId)),
 		);
-		const neighbours =
-			minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G
-				? allNeighbours
-				: [pickRandom(allNeighbours)].filter((e) => !!e);
+		let neighbours: BoardEntity[];
+		if (minion.cardId === CardIds.TimewarpedWarghoul_BG34_Giant_331_G) {
+			neighbours = allNeighbours;
+		} else {
+			// Non-golden: pick one random neighbour
+			const chosen = pickRandom(allNeighbours, minion);
+			neighbours = chosen ? [chosen] : [];
+		}
 		if (neighbours.length === 0) {
 			callStackDepth--;
 			return [];

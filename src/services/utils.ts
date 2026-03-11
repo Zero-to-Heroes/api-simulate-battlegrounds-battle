@@ -1,4 +1,5 @@
 import { BoardEntity } from '../board-entity';
+import { debugState } from '../debug-state';
 
 function partitionArray<T>(array: readonly T[], partitionSize: number): readonly T[][] {
 	const workingCopy: T[] = [...array];
@@ -27,12 +28,34 @@ export const groupByFunction =
 
 export { partitionArray, sleep };
 
-export const pickRandom = <T>(array: readonly T[]): T => {
+export function pickRandom<T>(array: readonly T[]): T;
+export function pickRandom<T extends BoardEntity>(array: readonly T[], sourceEntity: BoardEntity): T;
+export function pickRandom<T>(array: readonly T[], sourceEntity?: BoardEntity): T {
 	if (!array?.length) {
 		return null;
 	}
+	if (
+		sourceEntity &&
+		debugState.active &&
+		array.length > 0 &&
+		typeof array[0] === 'object' &&
+		array[0] != null &&
+		'entityId' in array[0]
+	) {
+		const forced = debugState.forcedRandomPicks.find((p) =>
+			debugState.isCorrectEntity(p.source, sourceEntity),
+		);
+		if (forced) {
+			const match = (array as unknown as BoardEntity[]).find((c) =>
+				debugState.isCorrectEntity(forced.target, c),
+			);
+			// Always consume when we have a matching source - each trigger gets its own pick (e.g. Titus doubles Warghoul)
+			debugState.forcedRandomPicks = debugState.forcedRandomPicks.filter((p) => p !== forced);
+			if (match) return match as T;
+		}
+	}
 	return array[Math.floor(Math.random() * array.length)];
-};
+}
 
 export const pickMultipleRandom = <T>(array: readonly T[], quantity: number): T[] => {
 	const picked: T[] = [];
