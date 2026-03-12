@@ -1194,6 +1194,50 @@
 			{ "attacker": { "cardId": "BG25_010", "attack": 33, "health": 1 }, "defender": { "entityId": 11415 } },
 			{ "attacker": { "entityId": 11415 }, "defender": { "cardId": "BG25_010t", "attack": 33, "health": 1 } },
 			{ "attacker": { "cardId": "BG25_010t", "attack": 34, "health": 1 }, "defender": { "entityId": 11436 } }
+		],
+		"forcedRandomPicks": [
+			{
+				"source": {
+					"entityId": 8303
+				},
+				"target": {
+					"cardId": "BG32_880",
+					"attack": 6,
+					"health": 1
+				}
+			},
+			{
+				"source": {
+					"entityId": 8303
+				},
+				"target": {
+					"cardId": "BG25_007",
+					"attack": 3,
+					"health": 1
+				}
+			},
+			{
+				"source": {
+					"entityId": 8286
+				},
+				"target": {
+					"cardId": "BG25_007",
+					"attack": 24,
+					"health": 1
+				}
+			},
+			{
+				"source": {
+					"cardId": "BG34_Giant_331",
+					"attack": 33,
+					"health": 1
+				},
+				"target": {
+					"cardId": "BG25_007",
+					"attack": 27,
+					"health": 1
+				}
+			}
 		]
 	}
 }

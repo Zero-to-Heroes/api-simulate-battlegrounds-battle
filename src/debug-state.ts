@@ -10,11 +10,18 @@ export const debugState = {
 	isCorrectEntity: (proposedEntity: ForcedFaceOffEntity, actualEntity: BoardEntity): boolean => {
 		if (proposedEntity.entityId) {
 			return proposedEntity.entityId === actualEntity.entityId;
-		} else if (proposedEntity.cardId) {
-			return proposedEntity.cardId === actualEntity.cardId;
 		}
-
-		return proposedEntity.attack === actualEntity.attack && proposedEntity.health === actualEntity.health;
+		if (proposedEntity.cardId) {
+			const cardMatches = proposedEntity.cardId === actualEntity.cardId;
+			if (proposedEntity.attack != null && proposedEntity.health != null) {
+				return cardMatches && proposedEntity.attack === actualEntity.attack && proposedEntity.health === actualEntity.health;
+			}
+			return cardMatches;
+		}
+		return (
+			proposedEntity.attack === actualEntity.attack &&
+			proposedEntity.health === actualEntity.health
+		);
 	},
 	forcedRandomPicksBase: [] as { source: ForcedFaceOffEntity; target: ForcedFaceOffEntity }[],
 	onBattleStart: () => {

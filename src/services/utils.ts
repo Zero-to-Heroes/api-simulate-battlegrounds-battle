@@ -42,16 +42,14 @@ export function pickRandom<T>(array: readonly T[], sourceEntity?: BoardEntity): 
 		array[0] != null &&
 		'entityId' in array[0]
 	) {
-		const forced = debugState.forcedRandomPicks.find((p) =>
-			debugState.isCorrectEntity(p.source, sourceEntity),
-		);
+		const forced = debugState.forcedRandomPicks.find((p) => debugState.isCorrectEntity(p.source, sourceEntity));
 		if (forced) {
-			const match = (array as unknown as BoardEntity[]).find((c) =>
-				debugState.isCorrectEntity(forced.target, c),
-			);
+			const match = (array as unknown as BoardEntity[]).find((c) => debugState.isCorrectEntity(forced.target, c));
 			// Always consume when we have a matching source - each trigger gets its own pick (e.g. Titus doubles Warghoul)
 			debugState.forcedRandomPicks = debugState.forcedRandomPicks.filter((p) => p !== forced);
-			if (match) return match as T;
+			if (match) {
+				return match as T;
+			}
 		}
 	}
 	return array[Math.floor(Math.random() * array.length)];
