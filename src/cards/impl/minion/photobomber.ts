@@ -9,7 +9,8 @@ export const Photobomber: DeathrattleSpawnCard = {
 	cardIds: [CardIds.Photobomber_BG34_780, CardIds.Photobomber_BG34_780_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const loops = minion.cardId === CardIds.Photobomber_BG34_780_G ? 2 : 1;
-		const damage = minion.scriptDataNum1 || 2 + input.boardWithDeadEntityHero.globalInfo.TavernSpellsCastThisGame;
+		const damage =
+			minion.scriptDataNum1 || 2 * (1 + input.boardWithDeadEntityHero.globalInfo.TavernSpellsCastThisGame);
 		for (let i = 0; i < loops; i++) {
 			const target = pickRandomHighestHealth(input.otherBoard);
 			if (!!target) {
