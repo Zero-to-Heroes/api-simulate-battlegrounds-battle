@@ -6,7 +6,6 @@ import { removeAurasFromSelf } from './add-minion-to-board';
 import { spawnEntities } from './deathrattle-spawns';
 import { FullGameState } from './internal-game-state';
 import { performEntitySpawns } from './spawns';
-import { setEntityStats } from './stats';
 
 export const handleSplittingImage = (
 	defendingEntity: BoardEntity,
@@ -75,7 +74,14 @@ export const handlePackTactics = (
 		copy,
 	);
 	if (secretCardId === CardIds.PackTactics_TB_Bacon_Secrets_15) {
-		candidateEntities.forEach((e) => setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
+		// Don't use setEntityStats, because it will be applied when adding the minion to the board
+		candidateEntities.forEach((e) => {
+			e.health = 3;
+			e.maxHealth = 3;
+			e.attack = 3;
+			e.maxAttack = 3;
+		});
+		//setEntityStats(e, 3, 3, defendingBoard, defendingPlayerEntity, gameState));
 	}
 	const indexFromRight = defendingBoard.length - (defendingBoard.indexOf(defendingEntity) + 1);
 	const spawned = performEntitySpawns(
