@@ -9,8 +9,8 @@ export const TimewarpedGoldrinn: DeathrattleSpawnCard = {
 	cardIds: [CardIds.TimewarpedGoldrinn_BG34_Giant_362, CardIds.TimewarpedGoldrinn_BG34_Giant_362_G],
 	deathrattleSpawn: (minion: BoardEntity, input: DeathrattleTriggeredInput) => {
 		const mult = minion.cardId === CardIds.TimewarpedGoldrinn_BG34_Giant_362_G ? 2 : 1;
-		const goldrinnAttackBuff = 3 * mult;
-		const goldrinnHealthBuff = 3 * mult;
+		const goldrinnAttackBuff = 4 * mult;
+		const goldrinnHealthBuff = 4 * mult;
 		addStatsToBoard(
 			minion,
 			input.boardWithDeadEntity,

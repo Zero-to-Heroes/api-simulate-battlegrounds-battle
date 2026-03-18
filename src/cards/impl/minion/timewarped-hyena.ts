@@ -14,7 +14,7 @@ export const TimewarpedHyena: OnAfterDeathCard = {
 			if (
 				hasCorrectTribe(deadEntity, input.hero, Race.BEAST, input.gameState.anomalies, input.gameState.allCards)
 			) {
-				modifyStats(minion, minion, 2 * mult, 1 * mult, input.board, input.hero, input.gameState);
+				modifyStats(minion, minion, 2 * mult, 2 * mult, input.board, input.hero, input.gameState);
 			}
 		}
 	},

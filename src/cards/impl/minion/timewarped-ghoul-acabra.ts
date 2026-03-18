@@ -12,7 +12,7 @@ export const TimewarpedGhoulAcabra: DeathrattleTriggeredCard = {
 			minion,
 			input.boardWithDeadEntity,
 			input.boardWithDeadEntityHero,
-			2 * mult,
+			3 * mult,
 			2 * mult,
 			input.gameState,
 		);

@@ -17,8 +17,8 @@ export const TimewarpedMurcules: OnMinionKilledCard = {
 			modifyStats(
 				murculesTarget,
 				minion,
-				3 * mult,
-				3 * mult,
+				4 * mult,
+				4 * mult,
 				input.attackingBoard,
 				input.attackingHero,
 				input.gameState,
